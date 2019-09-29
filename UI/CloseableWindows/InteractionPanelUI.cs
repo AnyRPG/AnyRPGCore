@@ -1,0 +1,285 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InteractionPanelUI : WindowContentController {
+
+    #region Singleton
+    private static InteractionPanelUI instance;
+
+    public static InteractionPanelUI MyInstance
+    {
+        get
+        {
+            if (instance == null) {
+                instance = FindObjectOfType<InteractionPanelUI>();
+            }
+
+            return instance;
+        }
+    }
+
+    #endregion
+
+    private Interactable interactable;
+
+    [SerializeField]
+    private GameObject interactableButtonPrefab;
+
+    [SerializeField]
+    private Transform interactableButtonParent;
+
+    [SerializeField]
+    private GameObject questPrefab;
+
+    private List<InteractionPanelQuestScript> questScripts = new List<InteractionPanelQuestScript>();
+
+    [SerializeField]
+    private GameObject availableArea;
+
+    [SerializeField]
+    private GameObject availableQuestArea;
+
+    [SerializeField]
+    private GameObject completeQuestArea;
+
+    private List<GameObject> interactionPanelScripts = new List<GameObject>();
+
+    protected bool startHasRun = false;
+    protected bool eventReferencesInitialized = false;
+
+    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+
+    public Interactable MyInteractable { get => interactable; set => interactable = value; }
+
+    private void Start() {
+        startHasRun = true;
+        CreateEventReferences();
+    }
+
+    private void OnEnable() {
+        //Debug.Log("InteractionPanelUI.OnEnable()");
+        CreateEventReferences();
+    }
+
+    private void CreateEventReferences() {
+        //Debug.Log("PlayerManager.CreateEventReferences()");
+        if (eventReferencesInitialized || !startHasRun) {
+            return;
+        }
+        SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+        eventReferencesInitialized = true;
+    }
+
+    private void CleanupEventReferences() {
+        //Debug.Log("PlayerManager.CleanupEventReferences()");
+        if (!eventReferencesInitialized) {
+            return;
+        }
+        SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
+        eventReferencesInitialized = false;
+    }
+
+    public void OnDisable() {
+        //Debug.Log("PlayerManager.OnDisable()");
+        CleanupEventReferences();
+    }
+
+    public void CheckPrerequisites(Skill skill) {
+        //Debug.Log("InteractionPanelUI.CheckPrerequisites(skill)");
+        CheckPrerequisites();
+    }
+
+    public void CheckPrerequisites(Quest quest) {
+        //Debug.Log("InteractionPanelUI.CheckPrerequisites(quest)");
+        CheckPrerequisites();
+    }
+
+    public void CheckPrerequisites() {
+        //Debug.Log("InteractionPanelUI.CheckPrerequisites()");
+        if (interactable == null) {
+            //Debug.Log("InteractionPanelUI.CheckPrerequisites(): no interactable. exiting");
+            return;
+        }
+        if (isActiveAndEnabled == false || PopupWindowManager.MyInstance.interactionWindow.IsOpen == false) {
+            //Debug.Log("InteractionPanelUI.CheckPrerequisites(): window is not active. exiting");
+            return;
+        }
+        ShowInteractables();
+    }
+
+    public void ShowInteractablesCommon(Interactable interactable) {
+        //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ")");
+        ClearButtons();
+
+        // updated to only use valid interactables
+        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
+            return;
+        }
+        List<IInteractable> currentInteractables = interactable.GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+        if (currentInteractables.Count == 0) {
+            // this could have been a refresh from while a quest was open overtop.  close it if there are no valid interactables
+            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            return;
+        }
+
+        // going to just pop the first available interaction window for now and see how that feels
+        bool optionOpened = false;
+        foreach (IInteractable _interactable in currentInteractables) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "Checking for valid button");
+            // handle questgiver
+            if (_interactable is QuestGiver) {
+                foreach (QuestNode questNode in (_interactable as QuestGiver).MyQuests) {
+                    Quest quest = questNode.MyQuest;
+                    //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest);
+                    string displayText = string.Empty;
+                    string questStatus = quest.GetStatus();
+                    if (questStatus == "complete" && questNode.MyEndQuest == true) {
+                        displayText = "<color=yellow>?</color> ";
+                    } else if (questNode.MyStartQuest == true && questStatus == "available") {
+                        displayText = "<color=yellow>!</color> ";
+                    }
+                    // only display complete and available quests here
+
+                    if (displayText != string.Empty) {
+                        GameObject go = Instantiate(questPrefab, availableQuestArea.transform);
+                        InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
+                        qs.MyQuest = quest;
+                        qs.MyQuestGiver = (_interactable as QuestGiver);
+                        if (qs == null) {
+                            Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
+                        }
+
+                        displayText += quest.MyName;
+
+                        qs.MyText.text = displayText;
+
+                        //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
+                        qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, quest.MyExperienceLevel);
+                        //quests.Add(go);
+                        questScripts.Add(qs);
+                        if (quest.IsComplete && !quest.TurnedIn) {
+                            go.transform.SetParent(completeQuestArea.transform);
+                        } else if (!quest.IsComplete && QuestLog.MyInstance.HasQuest(quest.MyName) == false) {
+                            go.transform.SetParent(availableQuestArea.transform);
+                        }
+
+                    }
+
+                }
+            }
+
+            // handle generic stuff
+            if (_interactable.MyName != null && _interactable.MyName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
+                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
+                GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
+                InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
+                iPS.MyText.text = _interactable.MyInteractionPanelTitle;
+                iPS.MyText.color = Color.white;
+                iPS.MyInteractableOption = _interactable;
+                //Interactables.Add(go);
+                interactionPanelScripts.Add(go);
+            }
+        }
+
+        if (PopupWindowManager.MyInstance.dialogWindow.IsOpen) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Dialog Window is open, returning to prevent other windows from popping");
+            // if we are mid dialog, we don't want to pop another window yet
+            return;
+        }
+
+        // priority open - completed quest first
+        foreach (InteractionPanelQuestScript questScript in questScripts) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for complete quest");
+            if (questScript.MyQuest.IsComplete) {
+                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is complete, selecting");
+                questScript.Select();
+                optionOpened = true;
+                return;
+            }
+        }
+
+        // priority open - available quest second
+        foreach (InteractionPanelQuestScript questScript in questScripts) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for available quest");
+            if (questScript.MyQuest.GetStatus() == "available") {
+                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is available, selecting");
+                questScript.Select();
+                optionOpened = true;
+                return;
+            }
+        }
+
+        // priority open - any other current interactable third, but only if there is one
+        if (currentInteractables.Count > 1) {
+            return;
+        }
+        foreach (GameObject interactionPanelScript in interactionPanelScripts) {
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
+            InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
+            if (iPS.MyInteractableOption.CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
+                iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                optionOpened = true;
+                return;
+            }
+        }
+
+    }
+
+    public void ShowInteractables() {
+        //Debug.Log("InteractionPanelUI.ShowInteractables()");
+        if (interactable != null) {
+            //Debug.Log("InteractionPanelUI.ShowInteractables() interactable: " + interactable.MyName);
+            ShowInteractablesCommon(interactable);
+        } else {
+            Debug.Log("InteractionPanelUI.ShowInteractables() interactable IS NULL!!!");
+        }
+    }
+
+    public void ShowInteractables(Interactable interactable) {
+        //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
+        this.interactable = interactable;
+        ShowInteractablesCommon(this.interactable);
+    }
+
+    public void ClearButtons() {
+        //Debug.Log("InteractionPanelUI.ClearButtons()");
+        // clear the skill list so any skill left over from a previous time opening the window aren't shown
+        foreach (InteractionPanelQuestScript qs in questScripts) {
+            qs.transform.SetParent(null);
+            Destroy(qs.gameObject);
+        }
+        questScripts.Clear();
+
+        foreach (GameObject go in interactionPanelScripts) {
+            InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
+            go.transform.SetParent(null);
+            Destroy(go);
+        }
+        interactionPanelScripts.Clear();
+    }
+
+    public override void OnCloseWindow() {
+        //Debug.Log("InteractionPanelUI.OnCloseWindow()");
+        //ClearButtons();
+        base.OnCloseWindow();
+        // testing clear this so window doesn't pop open again when it's closed
+        interactable = null;
+    }
+
+    public override void OnOpenWindow() {
+        Debug.Log("InteractionPanelUI.OnOpenWindow()");
+
+        // this has to be done first, because the next line after could close the window and set the interactable to null
+        PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.MyName);
+
+        ShowInteractables();
+
+        // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
+        base.OnOpenWindow();
+    }
+}

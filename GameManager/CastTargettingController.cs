@@ -1,0 +1,78 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class CastTargettingController : MonoBehaviour {
+
+    [SerializeField]
+    private Projector castTargettingProjector;
+
+    [SerializeField]
+    private Vector3 offset;
+
+    private Color circleColor;
+
+    private float circleRadius;
+
+    public Color MyCircleColor { get => circleColor; set => circleColor = value; }
+
+    void Start() {
+        if (castTargettingProjector == null) {
+            Debug.LogError("Assign castTargettingProjector in inspector!");
+        }
+        circleColor = castTargettingProjector.material.color;
+    }
+
+    void Update() {
+        //Debug.Log("CastTargettingController.Update()");
+        FollowMouse();
+    }
+
+    private void SetOutOfRange(bool outOfRange) {
+        //Debug.Log("CastTargettingController.HandleOutOfRange()");
+        if (outOfRange == true) {
+            if (castTargettingProjector.enabled) {
+                castTargettingProjector.enabled = false;
+            }
+        } else {
+            if (!castTargettingProjector.enabled) {
+                castTargettingProjector.enabled = true;
+            }
+        }
+    }
+
+    private void FollowMouse() {
+        //Debug.Log("CastTargettingController.FollowMouse()");
+        if (!EventSystem.current.IsPointerOverGameObject()) {
+            Ray ray = CameraManager.MyInstance.MyMainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            //if (Physics.Raycast(ray, out hit, 100)) {
+            if (Physics.Raycast(ray, out hit, 100, PlayerManager.MyInstance.MyCharacter.MyCharacterController.movementMask.value)) {
+                //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
+                Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 4, hit.point.z);
+                if (Vector3.Distance(hit.point, PlayerManager.MyInstance.MyPlayerUnitObject.transform.position) < 40f) {
+                    //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
+                    this.transform.position = cameraPoint;
+                }
+            } else {
+                //Debug.Log("CastTargettingController.FollowMouse() did not hit movement mask: " + hit.transform.gameObject.name);
+                SetOutOfRange(true);
+            }
+        }
+    }
+
+    public void SetCircleColor(Color newColor) {
+        //Debug.Log("CastTargettingController.SetCircleColor()");
+        circleColor = newColor;
+        castTargettingProjector.material.color = circleColor;
+    }
+
+    public void SetCircleRadius(float newRadius) {
+        //Debug.Log("CastTargettingController.SetCircleRadius()");
+        this.circleRadius = newRadius;
+    }
+
+
+}
