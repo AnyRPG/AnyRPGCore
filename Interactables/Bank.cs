@@ -26,4 +26,9 @@ public class Bank : InteractableOption
         base.StopInteract();
         PopupWindowManager.MyInstance.bankWindow.CloseWindow();
     }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

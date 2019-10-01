@@ -64,7 +64,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
         //SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
         foreach (IInteractable _interactable in interactable.MyInteractables) {
             if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
-                _interactable.MiniMapStatusUpdateHandler -= OnMiniMapStatusUpdate;
+                _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
             }
         }
         eventReferencesInitialized = false;
@@ -103,7 +103,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
             }
             if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
                 //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): adding minimap status handler");
-                _interactable.MiniMapStatusUpdateHandler += OnMiniMapStatusUpdate;
+                _interactable.MiniMapStatusUpdateHandler += HandleMiniMapStatusUpdate;
             } else {
                 //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): unit had no icon or text, not setting up status handler");
             }
@@ -129,7 +129,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
         contentParent.localPosition = proportionalPosition - uiOffset;
     }
 
-    public void OnMiniMapStatusUpdate(IInteractable _interactable) {
+    public void HandleMiniMapStatusUpdate(IInteractable _interactable) {
         //Debug.Log("MiniMapIndicatorController.OnMiniMapStatusUpdate()");
         if (miniMapLayers[_interactable] == null) {
             //Debug.Log("MiniMapIndicatorController.OnMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");

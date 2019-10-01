@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GatheringNode : InteractableOption
-{
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
+public class GatheringNode : InteractableOption {
+
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     /// <summary>
     /// The ability to cast in order to mine this node
@@ -26,6 +26,7 @@ public class GatheringNode : InteractableOption
     public BaseAbility MyAbility { get => realAbility; }
 
     protected override void Awake() {
+        //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
         base.Awake();
         realAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
     }
@@ -63,7 +64,7 @@ public class GatheringNode : InteractableOption
     /// Pick an item up off the ground and put it in the inventory
     /// </summary>
     void PickUp () {
-        Debug.Log("GatheringNode.Pickup()");
+        //Debug.Log("GatheringNode.Pickup()");
         LootUI.MyInstance.CreatePages(lootTable.GetLoot());
         CreateEventReferences();
         PopupWindowManager.MyInstance.lootWindow.OpenWindow();
@@ -139,5 +140,8 @@ public class GatheringNode : InteractableOption
         return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true ? 1 : 0);
     }
 
-
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

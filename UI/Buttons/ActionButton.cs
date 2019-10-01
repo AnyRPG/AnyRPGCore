@@ -66,7 +66,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     }
 
     public void OnClick() {
-        Debug.Log("ActionButton.OnClick()");
+        //Debug.Log("ActionButton.OnClick()");
         // this may seem like duplicate with the next method, but right now it is used to simulate click events when keypresses happen
         if (HandScript.MyInstance.MyMoveable != null || Input.GetKey(KeyCode.LeftShift)) {
             // if we have something in the handscript we are trying to drop an item, not use one
@@ -83,7 +83,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     }
 
     public void OnPointerClick(PointerEventData eventData) {
-        Debug.Log("ActionButton: OnPointerClick()");
+        //Debug.Log("ActionButton: OnPointerClick()");
 
         // left click
         if (eventData.button == PointerEventData.InputButton.Left) {
@@ -100,7 +100,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
                 // attempt to put down
                 if (HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is IUseable) {
                     if (UIManager.MyInstance.MyActionBarManager.MyFromButton != null) {
-                        Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
+                        //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
                         // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
                         if (MyUseable != null) {
                             UIManager.MyInstance.MyActionBarManager.MyFromButton.ClearUseable();
@@ -192,7 +192,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
 
         // attempt to remove unlearned spells from the bars
         if (removeStaleActions) {
-            Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
+            //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
             if (MyUseable != null && (MyUseable is IAbility)) {
                 if (!PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyUseable.MyName)) {
                     MyUseable = null;

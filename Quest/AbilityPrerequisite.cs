@@ -9,25 +9,25 @@ public class AbilityPrerequisite : IPrerequisite {
     private string prerequisiteName;
 
     public virtual bool IsMet(BaseCharacter baseCharacter) {
-        Debug.Log("AbilityPrerequisite.IsMet()");
+        //Debug.Log("AbilityPrerequisite.IsMet()");
         if (baseCharacter == null) {
-            Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter is null!");
+            //Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter is null!");
             return false;
         }
         if (baseCharacter.MyCharacterAbilityManager == null) {
-            Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter.MyCharacterAbilityManager is null!");
+            //Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter.MyCharacterAbilityManager is null!");
             return false;
         }
         if (baseCharacter.MyCharacterAbilityManager.MyAbilityList == null) {
-            Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter.MyCharacterAbilityManager.MySkillList is null!");
+            //Debug.Log("AbilityPrerequisite.IsMet(): baseCharacter.MyCharacterAbilityManager.MySkillList is null!");
             return false;
         }
         if (baseCharacter.MyCharacterAbilityManager.HasAbility(prerequisiteName)) {
-            Debug.Log("AbilityPrerequisite.IsMet; " + prerequisiteName + "; abilitymanager has ability. returning TRUE");
+            //Debug.Log("AbilityPrerequisite.IsMet; " + prerequisiteName + "; abilitymanager has ability. returning TRUE");
             return true;
         }
 
-        Debug.Log("AbilityPrerequisite.IsMet; " + prerequisiteName + "returning FALSE");
+        //Debug.Log("AbilityPrerequisite.IsMet; " + prerequisiteName + "returning FALSE");
         return false;
     }
 }

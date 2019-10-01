@@ -75,7 +75,7 @@ public class SkillTrainerUI : WindowContentController {
     }
 
     public void ShowSkillsCommon(SkillTrainer skillTrainer) {
-        Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
+        //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
 
         ClearSkills();
 
@@ -108,12 +108,12 @@ public class SkillTrainerUI : WindowContentController {
 
 
     public void ShowSkills() {
-        Debug.Log("SkillTrainerUI.ShowSkills()");
+        //Debug.Log("SkillTrainerUI.ShowSkills()");
         ShowSkillsCommon(skillTrainer);
     }
 
     public void ShowSkills(SkillTrainer skillTrainer) {
-        Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
+        //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
         this.skillTrainer = skillTrainer;
         ShowSkillsCommon(this.skillTrainer);
     }
@@ -127,7 +127,7 @@ public class SkillTrainerUI : WindowContentController {
 
     // Enable or disable learn and unlearn buttons based on what is selected
     private void UpdateButtons(string skillName) {
-        Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
+        //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
         if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skillName)) {
             learnButton.gameObject.SetActive(false);
             learnButton.GetComponent<Button>().enabled = false;
@@ -149,7 +149,7 @@ public class SkillTrainerUI : WindowContentController {
     }
 
     public void ShowDescription(string skillName) {
-        Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
+        //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
         ClearDescription();
 
         if (skillName == null && skillName == string.Empty) {
@@ -175,14 +175,14 @@ public class SkillTrainerUI : WindowContentController {
     }
 
     public void ClearDescription() {
-        Debug.Log("SkillTrainerUI.ClearDescription()");
+        //Debug.Log("SkillTrainerUI.ClearDescription()");
         skillDescription.text = string.Empty;
         ClearRewardButtons();
         DeselectSkillScripts();
     }
 
     public void DeselectSkillScripts() {
-        Debug.Log("SkillTrainerUI.DeselectSkillScripts()");
+        //Debug.Log("SkillTrainerUI.DeselectSkillScripts()");
         foreach (SkillTrainerSkillScript skill in skillScripts) {
             if (skill != MySelectedSkillTrainerSkillScript) {
                 skill.DeSelect();
@@ -210,7 +210,7 @@ public class SkillTrainerUI : WindowContentController {
     }
 
     public void LearnSkill() {
-        Debug.Log("SkillTrainerUI.LearnSkill()");
+        //Debug.Log("SkillTrainerUI.LearnSkill()");
         if (currentSkillName != null && currentSkillName != string.Empty) {
             //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkillName);

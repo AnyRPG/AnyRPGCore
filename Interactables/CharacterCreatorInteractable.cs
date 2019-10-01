@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class CharacterCreatorInteractable : InteractableOption {
 
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
     [SerializeField]
     private GameObject spawnPrefab;
 
@@ -12,7 +14,6 @@ public class CharacterCreatorInteractable : InteractableOption {
 
     private BoxCollider boxCollider;
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage : base.MyIcon); }
     public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.MyNamePlateImage); }
@@ -97,5 +98,10 @@ public class CharacterCreatorInteractable : InteractableOption {
     public override int GetCurrentOptionCount() {
         //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
         return GetValidOptionCount();
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
     }
 }

@@ -119,7 +119,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     }
 
     public void RemoveItem(Item item) {
-        //Debug.Log("SlotScript.RemoveItem(" + item.itemName + ")");
+        //Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
         if (!IsEmpty) {
             //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
             MyItems.Remove(item);
@@ -140,7 +140,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     }
 
     private void DropItemFromInventorySlot() {
-        Debug.Log("Dropping an item from an inventory slot");
+        //Debug.Log("Dropping an item from an inventory slot");
         if (PutItemBack() || MergeItems(InventoryManager.MyInstance.FromSlot) || SwapItems(InventoryManager.MyInstance.FromSlot) || AddItems(InventoryManager.MyInstance.FromSlot.MyItems)) {
             HandScript.MyInstance.Drop();
             InventoryManager.MyInstance.FromSlot = null;
@@ -206,10 +206,23 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                 Equipment equipment = (Equipment)HandScript.MyInstance.MyMoveable;
                 // probably don't need to do this, since dequip should drop the equipment in the bag anyway
                 //AddItem(equipment);
-                CharacterPanel.MyInstance.MySelectedButton.DequipEquipment();
+
+                CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
                 HandScript.MyInstance.Drop();
             }
         }
+    }
+
+    public int GetCurrentSlotIndex() {
+        List<SlotScript> inventorySlots = InventoryManager.MyInstance.GetSlots();
+        for (int i = 0; i < inventorySlots.Count; i++) {
+            if (inventorySlots[i] == this) {
+                return i;
+            }
+        }
+
+        // didn't find anything, this will send whatever needs this to the default slot
+        return -1;
     }
 
     public void HandleRightClick() {

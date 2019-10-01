@@ -220,7 +220,7 @@ public class LoadGamePanel : WindowContentController {
     }
 
     public void NewGame() {
-        Debug.Log("LoadGamePanel.NewGame()");
+        //Debug.Log("LoadGamePanel.NewGame()");
         SystemWindowManager.MyInstance.newGameMenuWindow.OpenWindow();
     }
 

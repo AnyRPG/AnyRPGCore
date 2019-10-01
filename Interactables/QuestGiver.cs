@@ -48,9 +48,8 @@ public class QuestGiver : InteractableOption, IQuestGiver {
             //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
             HandleCharacterSpawn();
         }
-        SystemEventManager.MyInstance.OnPrerequisiteUpdated += UpdateQuestStatus;
 
-        namePlateUnit.OnInitializeNamePlate += UpdateQuestStatus;
+        namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
         eventReferencesInitialized = true;
     }
 
@@ -58,10 +57,9 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         //Debug.Log("QuestGiver.CleanupEventReferences()");
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterSpawn;
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated -= UpdateQuestStatus;
         }
         if (namePlateUnit != null) {
-            namePlateUnit.OnInitializeNamePlate -= UpdateQuestStatus;
+            namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
         }
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null && PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents != null) {
             PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
@@ -110,7 +108,7 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
         InitializeQuestGiver();
 
-        UpdateQuestStatus();
+        HandlePrerequisiteUpdates();
     }
 
     public void InitWindow(ICloseableWindowContents questGiverUI) {
@@ -184,7 +182,6 @@ public class QuestGiver : InteractableOption, IQuestGiver {
             SetIndicatorText(indicatorType, namePlateUnit.MyNamePlate.MyQuestIndicator);
         }
         //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() About to fire MiniMapUpdateHandler");
-        MiniMapStatusUpdateHandler(this);
     }
 
     public string GetIndicatorType() {
@@ -285,6 +282,12 @@ public class QuestGiver : InteractableOption, IQuestGiver {
 
     public void HandleCompleteQuest() {
         // do nothing for now - used in questStartItem
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        UpdateQuestStatus();
+        MiniMapStatusUpdateHandler(this);
     }
 
 }

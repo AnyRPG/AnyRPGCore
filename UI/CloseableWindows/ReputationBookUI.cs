@@ -40,7 +40,7 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
     }
 
     public void CreatePages() {
-        Debug.Log("ReputationBookUI.CreatePages()");
+        //Debug.Log("ReputationBookUI.CreatePages()");
         pages.Clear();
         List<FactionDisposition> page = new List<FactionDisposition>();
         for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.MyDispositionDictionary.Count; i++) {

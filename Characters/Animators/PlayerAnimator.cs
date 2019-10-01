@@ -43,7 +43,7 @@ public class PlayerAnimator : CharacterAnimator {
             SetAnimationProfileOverride((newItem as Weapon).MyDefaultAttackAnimationProfile);
         } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.MainHand) {
             //animator.SetLayerWeight(1, 0);
-            Debug.Log("resetting animation profile");
+            //Debug.Log("resetting animation profile");
             ResetAnimationProfile();
         }
 
@@ -70,5 +70,6 @@ public class PlayerAnimator : CharacterAnimator {
         //Debug.Log(gameObject.name + ".PlayerAnimator.ClearAnimationBlockers()");
         base.ClearAnimationBlockers();
     }
+
 
 }

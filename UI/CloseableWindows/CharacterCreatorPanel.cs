@@ -151,9 +151,9 @@ public class CharacterCreatorPanel : WindowContentController {
     }
 
     private void SetPreviewTarget() {
-        Debug.Log("CharacterPanel.SetPreviewTarget()");
+        //Debug.Log("CharacterPanel.SetPreviewTarget()");
         if (umaAvatar != null) {
-            Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
+            //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
             return;
         }
         //spawn correct preview unit
@@ -635,7 +635,7 @@ public class CharacterCreatorPanel : WindowContentController {
     }
 
     public void SaveCharacter() {
-        Debug.Log("CharacterCreatorPanel.SaveCharacter()");
+        //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
         SaveManager.MyInstance.SaveUMASettings(umaAvatar.GetCurrentRecipe());
 
         // replace a default player unit with an UMA player unit when a save occurs

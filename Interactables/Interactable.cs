@@ -199,6 +199,9 @@ public class Interactable : MonoBehaviour, IDescribable {
         }
         Spawn();
         InstantiateMiniMapIndicator();
+        foreach (IInteractable _interactable in interactables) {
+            _interactable.HandlePrerequisiteUpdates();
+        }
     }
 
     public void Spawn() {
@@ -417,8 +420,9 @@ public class Interactable : MonoBehaviour, IDescribable {
         return currentInteractables;
     }
 
-    public void OnMouseOver() {
-        //Debug.Log(gameObject.name + ".Interactable.OnMouseOver()");
+    public void OnMouseHover() {
+        //Debug.Log(gameObject.name + ".Interactable.OnMouseHover()");
+        // rename from onMouseOver to OnMouseHover to avoid unity senting it mouse events.
         if (PlayerManager.MyInstance == null) {
             return;
         }
@@ -469,20 +473,18 @@ public class Interactable : MonoBehaviour, IDescribable {
 
     }
 
-    public void OnMouseEnter() {
-        //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter()");
-        // just skipping the next check since it's done in onmouseover anyway
+    // TESTING: DISABLE UNITY ONMOUSEOVER CODE AND USE OUR OWN RAYCAST INSTEAD SINCE UNITY DOESN'T ALLOW SETTING CULLING MASK ON MOUSE :( ...
+    
         /*
-        if (EventSystem.current.IsPointerOverGameObject()) {
-            Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): should not activate mouseover when windows are in front of things");
-            return;   
-        }
-        */
+    public void OnMouseEnter() {
+        Debug.Log(gameObject.name + ".Interactable.OnMouseEnter()");
         OnMouseOver();
     }
+    */
 
-    public void OnMouseExit() {
-        //Debug.Log(gameObject.name + ".Interactable.OnMouseExit()");
+    public void OnMouseOut() {
+        // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
+        //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
         if (PlayerManager.MyInstance == null) {
             return;
         }

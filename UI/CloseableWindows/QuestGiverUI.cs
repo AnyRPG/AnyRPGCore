@@ -112,7 +112,7 @@ public class QuestGiverUI : WindowContentController {
     }
 
     public void ShowQuestsCommon(IQuestGiver questGiver) {
-        Debug.Log("QuestGiverUI.ShowQuestsCommon()");
+        //Debug.Log("QuestGiverUI.ShowQuestsCommon()");
         if (questGiver == null) {
             Debug.Log("QuestGiverUI.ShowQuestsCommon() QUESTGIVER IS NULL!!!");
             return;
@@ -218,7 +218,7 @@ public class QuestGiverUI : WindowContentController {
     }
 
     public void ShowQuests(IQuestGiver questGiver) {
-        Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
+        //Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
         this.questGiver = questGiver;
         ShowQuestsCommon(this.questGiver);
     }
@@ -350,7 +350,7 @@ public class QuestGiverUI : WindowContentController {
     }
 
     public void AcceptQuest() {
-        Debug.Log("QuestGiverUI.AcceptQuest()");
+        //Debug.Log("QuestGiverUI.AcceptQuest()");
         if (currentQuestName != null && currentQuestName != string.Empty) {
             //if (MySelectedQuestGiverQuestScript != null && MySelectedQuestGiverQuestScript.MyQuest != null) {
             // TESTING, DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
@@ -442,9 +442,9 @@ public class QuestGiverUI : WindowContentController {
 
         // faction rewards
         if (questToComplete.MyFactionRewards.Count > 0) {
-            Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
+            //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
             foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
-                Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
+                //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                 PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).faction, (rewardButton.MyDescribable as FactionNode).reputationAmount);
             }
         }

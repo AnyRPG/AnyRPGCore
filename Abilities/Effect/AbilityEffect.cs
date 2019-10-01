@@ -189,7 +189,7 @@ public abstract class AbilityEffect : DescribableResource {
     }
 
     public virtual void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
+        //Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
         /*
         if (abilityEffectInput != null) {
             this.abilityEffectInput = abilityEffectInput;
@@ -208,7 +208,7 @@ public abstract class AbilityEffect : DescribableResource {
     /// <param name="source"></param>
     /// <param name="target"></param>
     protected void PerformAbilityEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
-        Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
+        //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
         //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects(): effectOutput.healthAmount: " + effectOutput.healthAmount);
         foreach (AbilityEffect abilityEffect in abilityEffectList) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects() found: " + abilityEffect.abilityEffectName);
@@ -217,29 +217,29 @@ public abstract class AbilityEffect : DescribableResource {
     }
 
     protected void PerformAbilityEffect(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
-        Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
+        //Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
 
         // give the ability a chance to auto-selfcast if the original target was null
         GameObject finalTarget = abilityEffect.ReturnTarget(source, target);
         //Debug.Log("FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
         if (abilityEffect.CanUseOn(finalTarget, source)) {
-            Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. casting ability effect: " + abilityEffect);
+            //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. casting ability effect: " + abilityEffect);
             AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
             _abilityEffect.Cast(source, finalTarget, target, effectOutput);
         } else {
-            Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
+            //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
         }
 
     }
 
     public virtual void PerformAbilityHitEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
-        Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
         PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
     }
 
     public virtual void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
         PerformAbilityHitEffects(source, target, abilityEffectInput);
         if (OnHitAudioClip != null) {
             AudioManager.MyInstance.PlayEffect(OnHitAudioClip);

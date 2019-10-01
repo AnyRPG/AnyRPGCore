@@ -85,22 +85,26 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     }
     */
 
-    public override void LearnAbility(string abilityName) {
+    public override bool LearnAbility(string abilityName) {
         //Debug.Log("PlayerAbilityManager.LearnAbility()");
-        base.LearnAbility(abilityName);
-        SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
-
+        bool returnValue = base.LearnAbility(abilityName);
+        if (returnValue) {
+            SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
+        }
+        return returnValue;
     }
 
     public void LoadAbility(string abilityName) {
         //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + ")");
         IAbility ability = SystemAbilityManager.MyInstance.GetResource(abilityName) as IAbility;
-        string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
-        if (!abilityList.ContainsKey(keyName)) {
-            //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
-            abilityList[keyName] = ability;
+        if (ability != null) {
+            // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
+            string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
+            if (!abilityList.ContainsKey(keyName)) {
+                //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
+                abilityList[keyName] = ability;
+            }
         }
-
     }
 
     public override void UpdateAbilityList(int newLevel) {
@@ -114,15 +118,18 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     public override void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
         base.PerformAbility(ability, target, groundTarget);
-        if (ability.MyCanSimultaneousCast == false && ability.MyIgnoreGlobalCoolDown == false) {
+        // TESTING, DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
+        if (ability.MyCanSimultaneousCast == false && ability.MyIgnoreGlobalCoolDown != true && ability.MyAbilityCastingTime == 0f) {
             InitiateGlobalCooldown(ability);
+        } else {
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
         }
         OnPerformAbility(ability);
         SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
     }
 
     public void InitiateGlobalCooldown(IAbility ability) {
-        Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
+        //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
         if (globalCoolDownCoroutine == null) {
             globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown());
         } else {
@@ -132,7 +139,7 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     }
 
     public IEnumerator BeginGlobalCoolDown() {
-        Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
+        //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
         remainingGlobalCoolDown = 1f;
         while (remainingGlobalCoolDown > 0f) {
             remainingGlobalCoolDown -= Time.deltaTime;
@@ -149,6 +156,11 @@ public class PlayerAbilityManager : CharacterAbilityManager {
             StopCoroutine(globalCoolDownCoroutine);
             globalCoolDownCoroutine = null;
         }
+    }
+
+    public override void StopCasting() {
+        //Debug.Log(gameObject.name + ".PlayerAbilityManager.StopCasting()");
+        base.StopCasting();
     }
 
 }

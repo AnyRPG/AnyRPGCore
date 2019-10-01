@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Vendor : InteractableOption 
-{
+public class Vendor : InteractableOption {
+
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     [SerializeField]
@@ -37,4 +37,8 @@ public class Vendor : InteractableOption
         PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

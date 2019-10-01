@@ -21,4 +21,5 @@ public interface IInteractable : IDescribable {
     void HandleConfirmAction();
     int GetValidOptionCount();
     int GetCurrentOptionCount();
+    void HandlePrerequisiteUpdates();
 }

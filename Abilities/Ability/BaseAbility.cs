@@ -168,7 +168,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     }
 
     public void Use() {
-        Debug.Log("BaseAbility.Use()");
+        //Debug.Log("BaseAbility.Use()");
         PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
     }
 
@@ -196,9 +196,9 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     }
 
     public virtual bool CanUseOn(GameObject target, BaseCharacter source) {
-        Debug.Log("BaseAbility.CanUseOn()");
+        //Debug.Log("BaseAbility.CanUseOn()");
         if (requiresTarget == false) {
-            Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
+            //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
             return true;
         }
 
@@ -206,12 +206,12 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
             if (target.GetComponent<CharacterUnit>() != null) { 
                 if (target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget == true) {
                     //Debug.Log("This ability requires a live target");
-                    CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
+                    //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
                     return false;
                 }
                 if (target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
-                    //Debug.Log("This ability requires a live target");
-                    CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
+                    //Debug.Log("This ability requires a dead target");
+                    //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                     return false;
                 }
             }
@@ -260,47 +260,59 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     /// <returns></returns>
     public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
         //Debug.Log("BaseAbility.ReturnTarget()");
-        CharacterUnit targetCharacterUnit = null;
+        // before we get here, a validity check has already been performed, so no need to unset any targets
+        // we are only concerned with redirecting the target to self if auto-selfcast is enabled
+
         if (sourceCharacter == null) {
             Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
         }
+
+        // create target booleans
+        bool targetIsFriendly = false;
+        bool targetIsEnemy = false;
+        bool targetIsSelf = false;
         if (target != null) {
-
-            targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null) {
-                if (!canCastOnEnemy) {
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
-                        //Debug.Log("we cannot cast this on an enemy but the target was an enemy.  set target to null");
-                        target = null;
-                    }
+                if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
+                    targetIsEnemy = true;
                 }
-                if (!canCastOnFriendly) {
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
-                        //Debug.Log("we cannot cast this on a friendly target but the target was friendly.  set target to null");
-                        target = null;
-                    }
+                if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
+                    targetIsFriendly = true;
                 }
             }
         }
+        if (target == sourceCharacter.MyCharacterUnit.gameObject) {
+            targetIsSelf = true;
+        }
 
-        // convert null target to self if possible
-        if (target == null) {
-            if (autoSelfCast == true) {
-                //Debug.Log("target is null and autoselfcast is true.  setting target to self");
+        // correct match conditions.  if any of these are met, the target is already valid
+        if (canCastOnFriendly && targetIsFriendly) {
+            return target;
+        }
+        if (canCastOnEnemy && targetIsEnemy) {
+            return target;
+        }
+
+        // we don't have valid friendly or enemy target.  see if we need to auto-target self or not
+        if (canCastOnSelf) {
+            if (targetIsSelf) {
+                return target;
+            }
+            // self is a valid targe, but target was not self.  check for auto-self cast
+            if (autoSelfCast) {
                 target = sourceCharacter.MyCharacterUnit.gameObject;
+                return target;
             }
         }
 
-        if (!canCastOnSelf && target == sourceCharacter.MyCharacterUnit.gameObject) {
-            //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
-            target = null;
-        }
-
+        // if we reached here, the target was not redirected to self, so we have to return the original target
+        // and since it wasn't friendly or an enemy or self, it is likely a trade/crafting node
         return target;
     }
 
     public virtual void StartCasting(BaseCharacter source) {
-        Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
+        //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
         //Debug.Log("setting casting animation");
         if (castingAnimationClip != null) {
             source.MyCharacterUnit.MyCharacterAnimator.HandleCastingAbility(castingAnimationClip, this);
@@ -322,7 +334,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     }
 
     public virtual void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target) {
-        Debug.Log("BaseAbility.OnCastTimeChanged()");
+        //Debug.Log("BaseAbility.OnCastTimeChanged()");
         // overwrite me
     }
 

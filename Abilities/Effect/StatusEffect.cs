@@ -67,6 +67,7 @@ public class StatusEffect : LengthEffect {
     public bool MyStun { get => stun; set => stun = value; }
     public bool MyLevitate { get => levitate; set => levitate = value; }
     public float MyDuration { get => duration; set => duration = value; }
+    public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
 
     public override void CancelEffect() {
         base.CancelEffect();
@@ -297,7 +298,7 @@ public class StatusEffect : LengthEffect {
                 statusText += "s";
             }
         }
-        return string.Format("{0}\n{1}{2}", descriptionFinal, durationLabel, statusText);
+        return base.GetSummary() + string.Format("\n{0}\n{1}{2}", descriptionFinal, durationLabel, statusText);
     }
 
 

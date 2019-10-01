@@ -410,12 +410,12 @@ public class SaveManager : MonoBehaviour {
     }
 
     public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
-        Debug.Log("Savemanager.SaveActionBarData()");
+        //Debug.Log("Savemanager.SaveActionBarData()");
         foreach (ActionButton actionButton in UIManager.MyInstance.MyActionBarManager.GetActionButtons()) {
             ActionBarSaveData saveData = new ActionBarSaveData();
             saveData.MyName = (actionButton.MyUseable == null ? string.Empty : (actionButton.MyUseable as IDescribable).MyName);
             saveData.isItem = (actionButton.MyUseable == null ? false : (actionButton.MyUseable is Item ? true : false));
-            Debug.Log("Savemanager.SaveActionBarData(): saveData.MyName:" + saveData.MyName + "; saveData.isItem" + saveData.isItem);
+            //Debug.Log("Savemanager.SaveActionBarData(): saveData.MyName:" + saveData.MyName + "; saveData.isItem" + saveData.isItem);
             anyRPGSaveData.actionBarSaveData.Add(saveData);
         }
     }
@@ -867,7 +867,7 @@ public class SaveManager : MonoBehaviour {
     }
 
     public void SaveWindowPositions() {
-        Debug.Log("Savemanager.SaveWindowPositions()");
+        //Debug.Log("Savemanager.SaveWindowPositions()");
 
         PlayerPrefs.SetFloat("AbilityBookWindowX", PopupWindowManager.MyInstance.abilityBookWindow.transform.position.x);
         PlayerPrefs.SetFloat("AbilityBookWindowY", PopupWindowManager.MyInstance.abilityBookWindow.transform.position.y);
@@ -913,7 +913,7 @@ public class SaveManager : MonoBehaviour {
         PlayerPrefs.SetFloat("MessageFeedManagerX", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.x);
         PlayerPrefs.SetFloat("MessageFeedManagerY", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.y);
 
-        Debug.Log("Saving FloatingCastBarController: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
+        //Debug.Log("Saving FloatingCastBarController: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
         PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.MyInstance.MyFloatingCastBarController.transform.position.x);
         PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
 

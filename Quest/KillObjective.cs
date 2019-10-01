@@ -39,7 +39,7 @@ public class KillObjective : QuestObjective {
 
     public override void OnAbandonQuest() {
         base.OnAbandonQuest();
-        if (PlayerManager.MyInstance != null) {
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat != null) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent -= UpdateKillCount;
         }
     }

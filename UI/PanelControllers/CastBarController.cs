@@ -112,7 +112,7 @@ public class CastBarController : DraggableWindow {
     }
 
     public void OnCastTimeChanged(IAbility ability, float currentTime) {
-        Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
+        //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
 
         if (currentTime <= ability.MyAbilityCastingTime) {
             // first set text because bar width is based on text size

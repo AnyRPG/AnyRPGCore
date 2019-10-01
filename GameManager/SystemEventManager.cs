@@ -73,12 +73,12 @@ public class SystemEventManager : MonoBehaviour {
     }
 
     public void NotifyOnInventoryTransparencyUpdate() {
-        Debug.Log("SystemEventManager.OnInventoryTransparencyUpdate()");
+        //Debug.Log("SystemEventManager.OnInventoryTransparencyUpdate()");
         OnInventoryTransparencyUpdate();
     }
 
     public void NotifyOnPagedButtonsTransparencyUpdate() {
-        Debug.Log("SystemEventManager.NotifyOnPagedButtonsTransparencyUpdate()");
+        //Debug.Log("SystemEventManager.NotifyOnPagedButtonsTransparencyUpdate()");
         OnPagedButtonsTransparencyUpdate();
     }
 
@@ -115,6 +115,7 @@ public class SystemEventManager : MonoBehaviour {
     }
 
     public void NotifyOnPlayerUnitSpawn() {
+        //Debug.Log("SystemEventManager.NotifyOnPlayerUnitSpawn()");
         OnPlayerUnitSpawn();
     }
 

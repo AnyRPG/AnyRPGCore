@@ -25,7 +25,7 @@ public class DirectAbility : InstantEffectAbility {
     }
 
     public override void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target) {
-        Debug.Log("DirectAbility.OnCastTimeChanged()");
+        //Debug.Log("DirectAbility.OnCastTimeChanged()");
         base.OnCastTimeChanged(currentCastTime, source, target);
     }
 

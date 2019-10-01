@@ -9,6 +9,7 @@ public class Scroll : Item, IUseable
     private BaseAbility ability;
 
     public override void Use() {
+        //Debug.Log("Scroll.Use()");
         base.Use();
         PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
         Remove();

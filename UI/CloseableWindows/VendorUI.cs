@@ -66,12 +66,14 @@ public class VendorUI : WindowContentController, IPagedWindowContents {
     }
 
     public override void OnCloseWindow() {
+        //Debug.Log("VendorUI.OnCloseWindow()");
         base.OnCloseWindow();
         ClearButtons();
     }
 
     public override void OnOpenWindow() {
         //Debug.Log("VendorUI.OnOpenWindow()");
+        ClearButtons();
         base.OnOpenWindow();
         LoadPage(0);
         OnOpenWindowHandler(this);

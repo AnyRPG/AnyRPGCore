@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class AnimatedAbility : BaseAbility {
 
     public override void Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
-        Debug.Log("AnimatedAbility.Cast()");
+        //Debug.Log("AnimatedAbility.Cast()");
         base.Cast(source, target, groundTarget);
         if (animationClip != null) {
-            Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
+            //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
             // this type of ability is allowed to interrupt other types of animations, so clear them all
             source.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
@@ -31,9 +31,7 @@ public class AnimatedAbility : BaseAbility {
     }
 
     public void HandleAbilityHit(BaseCharacter source, GameObject target) {
-        Debug.Log("AnimatedAbility.HandleAbilityHit(): setting waiting for animated ability to false");
-        // will the next hit after a resurrect perform the ability effects from a hit that was started pre-death?
-        // FIXED - IN ANIMATOR HOPEFULLY, WHICH NOW TRACKS ABILITY CASTS
+        //Debug.Log("AnimatedAbility.HandleAbilityHit(): setting waiting for animated ability to false");
         PerformAbilityEffects(source, target, Vector3.zero);
     }
 
@@ -44,13 +42,13 @@ public class AnimatedAbility : BaseAbility {
     }
 
     public override bool CanUseOn(GameObject target, BaseCharacter source) {
-        Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
+        //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
         if (source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-            Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") FAILING.  ALREADY IN PROGRESS");
+            //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") FAILING.  ALREADY IN PROGRESS");
             CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + MyName + ". Waiting for another ability to finish.");
             return false;
         }
-        Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
+        //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
         return base.CanUseOn(target, source);
     }
 

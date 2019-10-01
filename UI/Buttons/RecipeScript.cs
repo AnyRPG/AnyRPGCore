@@ -18,7 +18,7 @@ public class RecipeScript : HighlightButton {
     }
 
     public override void Select() {
-        Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipeName);
+        //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipeName);
 
         base.Select();
         CraftingUI.MyInstance.MySelectedRecipeScript = this;

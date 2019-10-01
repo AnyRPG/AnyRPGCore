@@ -11,7 +11,7 @@ public class ResurrectEffect : InstantEffect {
     /// <param name="source"></param>
     /// <param name="target"></param>
     public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
+        //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
         AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
         abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
         ResurrectTarget(target);
@@ -21,7 +21,7 @@ public class ResurrectEffect : InstantEffect {
     private void ResurrectTarget(GameObject target) {
         CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
         if (characterUnit == null) {
-            Debug.Log("CharacterUnit is null? target despawn during cast?");
+            //Debug.Log("CharacterUnit is null? target despawn during cast?");
             return;
         }
         characterUnit.MyCharacter.MyCharacterStats.Revive();
@@ -43,7 +43,7 @@ public class ResurrectEffect : InstantEffect {
 
     public override CharacterUnit ReturnTarget(CharacterUnit source, CharacterUnit target) {
         if (target == null) {
-            Debug.Log("Ressurect spell cast, but there was no target");
+            //Debug.Log("Ressurect spell cast, but there was no target");
             return null;
         }
         CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();

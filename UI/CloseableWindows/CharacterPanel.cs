@@ -31,13 +31,47 @@ public class CharacterPanel : WindowContentController {
     private Text statsDescription;
 
     [SerializeField]
-    AnyRPGCharacterPreviewCameraController previewCameraController;
+    private AnyRPGCharacterPreviewCameraController previewCameraController;
+
+    [SerializeField]
+    private Color emptySlotColor;
+
+    [SerializeField]
+    private Color fullSlotColor;
 
     public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
     public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
 
     public CharacterButton MySelectedButton { get; set; }
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+
+    private void Start() {
+        //Debug.Log("CharacterPanel.Start()");
+        head.MyEmptyBackGroundColor = emptySlotColor;
+        head.MyFullBackGroundColor = fullSlotColor;
+        head.UpdateVisual();
+        shoulders.MyEmptyBackGroundColor = emptySlotColor;
+        shoulders.MyFullBackGroundColor = fullSlotColor;
+        shoulders.UpdateVisual();
+        chest.MyEmptyBackGroundColor = emptySlotColor;
+        chest.MyFullBackGroundColor = fullSlotColor;
+        chest.UpdateVisual();
+        hands.MyEmptyBackGroundColor = emptySlotColor;
+        hands.MyFullBackGroundColor = fullSlotColor;
+        hands.UpdateVisual();
+        legs.MyEmptyBackGroundColor = emptySlotColor;
+        legs.MyFullBackGroundColor = fullSlotColor;
+        legs.UpdateVisual();
+        feet.MyEmptyBackGroundColor = emptySlotColor;
+        feet.MyFullBackGroundColor = fullSlotColor;
+        feet.UpdateVisual();
+        mainhand.MyEmptyBackGroundColor = emptySlotColor;
+        mainhand.MyFullBackGroundColor = fullSlotColor;
+        mainhand.UpdateVisual();
+        offhand.MyEmptyBackGroundColor = emptySlotColor;
+        offhand.MyFullBackGroundColor = fullSlotColor;
+        offhand.UpdateVisual();
+    }
 
     public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
         switch (newEquipment.equipSlot) {

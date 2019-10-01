@@ -59,11 +59,11 @@ public class CutSceneBarController : MonoBehaviour {
         topBar.gameObject.SetActive(true);
         bottomBar.gameObject.SetActive(true);
         captionBar.gameObject.SetActive(true);
+        UIManager.MyInstance.ActivatePlayerUI();
         UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(false);
         UIManager.MyInstance.MyPopupWindowContainer.SetActive(false);
         UIManager.MyInstance.MyPopupPanelContainer.SetActive(false);
         UIManager.MyInstance.MyCombatTextCanvas.SetActive(false);
-        UIManager.MyInstance.ActivatePlayerUI();
         UIManager.MyInstance.MyCutSceneBarsCanvas.SetActive(true);
         coroutine = StartCoroutine(LoadCutSceneBars(cutSceneBarHeight, cutSceneLoadTime));
     }

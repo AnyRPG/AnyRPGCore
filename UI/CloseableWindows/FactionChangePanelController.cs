@@ -26,7 +26,7 @@ public class FactionChangePanelController : WindowContentController {
     private string factionName;
 
     public void Setup(string newFactionName) {
-        Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
+        //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
         factionName = newFactionName;
         factionButton.AddFaction(factionName);
         PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(factionName);
@@ -35,7 +35,7 @@ public class FactionChangePanelController : WindowContentController {
     }
 
     public void ShowAbilityRewards() {
-        Debug.Log("FactionChangePanelController.ShowAbilityRewards()");
+        //Debug.Log("FactionChangePanelController.ShowAbilityRewards()");
 
         ClearRewardIcons();
         // show ability rewards
@@ -57,7 +57,7 @@ public class FactionChangePanelController : WindowContentController {
     }
 
     private void ClearRewardIcons() {
-        Debug.Log("FactionChangePanelController.ClearRewardIcons()");
+        //Debug.Log("FactionChangePanelController.ClearRewardIcons()");
 
         foreach (RewardButton rewardIcon in abilityRewardIcons) {
             Destroy(rewardIcon.gameObject);
@@ -66,24 +66,24 @@ public class FactionChangePanelController : WindowContentController {
     }
 
     public void CancelAction() {
-        Debug.Log("FactionChangePanelController.CancelAction()");
+        //Debug.Log("FactionChangePanelController.CancelAction()");
         PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
     }
 
     public void ConfirmAction() {
-        Debug.Log("FactionChangePanelController.ConfirmAction()");
+        //Debug.Log("FactionChangePanelController.ConfirmAction()");
         PlayerManager.MyInstance.SetPlayerFaction(factionName);
         OnConfirmAction();
         PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
     }
 
     public override void OnOpenWindow() {
-        Debug.Log("FactionChangePanelController.OnOpenWindow()");
+        //Debug.Log("FactionChangePanelController.OnOpenWindow()");
         base.OnOpenWindow();
     }
 
     public override void OnCloseWindow() {
-        Debug.Log("FactionChangePanelController.OnCloseWindow()");
+        //Debug.Log("FactionChangePanelController.OnCloseWindow()");
         base.OnCloseWindow();
         OnCloseWindowHandler(this);
     }

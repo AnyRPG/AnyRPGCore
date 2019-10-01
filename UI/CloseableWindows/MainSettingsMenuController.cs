@@ -650,11 +650,13 @@ public class MainSettingsMenuController : WindowContentController {
     public void InventoryOpacitySliderUpdate() {
         PlayerPrefs.SetFloat("InventoryOpacity", inventoryOpacitySlider.value);
         UIManager.MyInstance.UpdateInventoryOpacity();
+        SystemEventManager.MyInstance.NotifyOnInventoryTransparencyUpdate();
     }
 
     public void InventorySlotOpacitySliderUpdate() {
         PlayerPrefs.SetFloat("InventorySlotOpacity", inventorySlotOpacitySlider.value);
         UIManager.MyInstance.UpdateInventoryOpacity();
+        SystemEventManager.MyInstance.NotifyOnInventoryTransparencyUpdate();
     }
 
     public void ActionBarOpacitySliderUpdate() {

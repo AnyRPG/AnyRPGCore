@@ -146,4 +146,7 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
         return GetValidOptionCount();
     }
 
+    public virtual void HandlePrerequisiteUpdates() {
+        // overwrite me
+    }
 }

@@ -121,7 +121,7 @@ public class QuestDetailsArea : MonoBehaviour {
 
         if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards) {
+            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(rewardButton.MyDescribable.MyName)) {
                 rewardButton.Unselect();
             }
         }
@@ -192,7 +192,7 @@ public class QuestDetailsArea : MonoBehaviour {
         for (int i = 0; i < quest.MyFactionRewards.Count; i++) {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, factionIconsArea.transform).GetComponent<RewardButton>();
             rewardIcon.OnAttempSelect += HandleAttemptSelect;
-            Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
+            //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
             rewardIcon.SetDescribable(quest.MyFactionRewards[i]);
             factionRewardIcons.Add(rewardIcon);
         }

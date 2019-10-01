@@ -25,11 +25,22 @@ public class NamePlateCanvasController : MonoBehaviour {
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
 
-    void Start() {
+    private bool LocalComponentsInitialized = false;
+
+    public void Awake() {
+        GetLocalComponents();
+    }
+
+    private void GetLocalComponents() {
+        if (LocalComponentsInitialized) {
+            return;
+        }
         //Fetch the Raycaster from the GameObject (the Canvas)
         m_Raycaster = GetComponent<GraphicRaycaster>();
         //Fetch the Event System from the Scene
         m_EventSystem = GetComponent<EventSystem>();
+
+        LocalComponentsInitialized = true;
     }
 
     public bool MouseOverNamePlate() {

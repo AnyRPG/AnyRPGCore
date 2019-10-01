@@ -126,7 +126,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
         // reduce the autoattack cooldown
         if (attackCooldown > 0f ) {
-            Debug.Log(gameObject.name + ".CharacterCombat.Update(): attackCooldown: " + attackCooldown);
+            //Debug.Log(gameObject.name + ".CharacterCombat.Update(): attackCooldown: " + attackCooldown);
             attackCooldown -= Time.deltaTime;
         }
 
@@ -159,7 +159,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     }
 
     public void SetWaitingForAutoAttack(bool newValue) {
-        Debug.Log(gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
+        //Debug.Log(gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
         MyWaitingForAutoAttack = newValue;
     }
 
@@ -170,7 +170,9 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
             //Debug.Log("Casting Reflection On Take Damage");
             // this could maybe be done better through an event subscription
-            statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter as BaseCharacter, target.MyCharacterUnit.gameObject, abilityAffectInput);
+            if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
+                statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter as BaseCharacter, target.MyCharacterUnit.gameObject, abilityAffectInput);
+            }
         }
 
         if (target != null && PlayerManager.MyInstance && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
@@ -222,8 +224,10 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
         inCombat = false;
         SetWaitingForAutoAttack(false);
-        baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
-        if (baseCharacter.MyCharacterUnit != null) {
+        if (baseCharacter != null && baseCharacter.MyCharacterAbilityManager != null) {
+            baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
+        }
+        if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
             baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("InCombat", false);
         }
         DeActivateAutoAttack();
@@ -266,39 +270,52 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     }
 
     protected virtual bool CanPerformAutoAttack(BaseCharacter characterTarget) {
-        Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ")");
+        //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ")");
+        if (!AutoAttackTargetIsValid(characterTarget)) {
+            return false;
+        }
         if (!baseCharacter.MyCharacterController.IsTargetInHitBox(characterTarget.MyCharacterUnit.gameObject)) {
             // target is too far away, can't attack
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") target is too far away, can't attack");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") target is too far away, can't attack");
             return false;
         }
         if (attackCooldown > 0f) {
             // still waiting for attack cooldown, can't attack
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") still waiting for attack cooldown (" + attackCooldown + "), can't attack");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") still waiting for attack cooldown (" + attackCooldown + "), can't attack");
             return false;
         }
         if (MyWaitingForAutoAttack == true) {
             // there is an existing autoattack in progress, can't start a new auto-attack
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") autoattack in progress, can't start a new auto-attack");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") autoattack in progress, can't start a new auto-attack");
             return false;
         }
         if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
             // if we have an ability manager and there is an outstanding special attack in progress, can't auto-attack
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") special attack in progress, can't auto-attack");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") special attack in progress, can't auto-attack");
             return false;
         }
         if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true) {
             // there is a spell cast in progress, can't start a new auto-attack
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
             return false;
         }
         if (MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator != null && MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.WaitingForAnimation() == true) {
             // all though there are no casts in progress, a current animation is still finishing, so we can't start a new auto-attack yet
             // this can happen when an animation for a casted ability lasts longer than the actual cast time, for abilities that do their damage part way through the animation
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
             return false;
         }
         // there are no blockers to an attack, we can start an auto-attack
+        return true;
+    }
+
+    protected virtual bool AutoAttackTargetIsValid(BaseCharacter characterTarget) {
+        if (Faction.RelationWith(characterTarget, MyBaseCharacter as BaseCharacter) > -1) {
+            return false;
+        }
+        if (!characterTarget.MyCharacterStats.IsAlive) {
+            return false;
+        }
         return true;
     }
 
@@ -308,29 +325,29 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     /// </summary>
     /// <param name="characterTarget"></param>
     public virtual void Attack (BaseCharacter characterTarget) {
-        Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ")");
+        //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ")");
         if (characterTarget == null) {
             //Debug.Log("You must have a target to attack");
             //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
         } else {
-            // ensure the target is alive before attacking it
-            if (characterTarget.MyCharacterStats.IsAlive) {
-                if (!inCombat) {
-                    EnterCombat(characterTarget);
-                }
-                ActivateAutoAttack();
-                if (CanPerformAutoAttack(characterTarget)) {
-                    // block further auto-attacks while this one is outstanding
-                    Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") canperformattack: setwaitingforautoattack");
-                    SetWaitingForAutoAttack(true);
+            // perform a faction/liveness check and disable auto-attack if it is not valid
+            if (!AutoAttackTargetIsValid(characterTarget)) {
+                DeActivateAutoAttack();
+                return;
+            }
+            if (!inCombat) {
+                EnterCombat(characterTarget);
+            }
+            ActivateAutoAttack();
+            if (CanPerformAutoAttack(characterTarget)) {
+                // block further auto-attacks while this one is outstanding
+                //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") canperformattack: setwaitingforautoattack");
+                SetWaitingForAutoAttack(true);
 
-                    // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                    OnAttack(characterTarget);
+                // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
+                OnAttack(characterTarget);
 
-                    lastCombatEvent = Time.time;
-                }
-            } else {
-                //Debug.Log(gameObject.name + ": You cannot attack a dead target: " + target.name);
+                lastCombatEvent = Time.time;
             }
         }
     }
@@ -360,6 +377,13 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         }
 
         if (MyBaseCharacter.MyCharacterController.MyTarget != null && targetCharacterUnit != null) {
+
+            // check for friendly target in case it somehow turned friendly mid swing
+            BaseCharacter targetCharacter = targetCharacterUnit.MyBaseCharacter;
+            if (targetCharacter != null && !AutoAttackTargetIsValid(targetCharacter)) {
+                DeActivateAutoAttack();
+                return false;
+            }
             //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() OpponentCombat is not null. About to deal damage");
             targetCharacterUnit.MyCharacter.MyCharacterCombat.TakeDamage(baseCharacter.MyCharacterStats.MyMeleeDamage, baseCharacter.MyCharacterUnit.transform.position, baseCharacter as BaseCharacter, CombatType.normal, CombatMagnitude.normal, "Attack");
             OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
@@ -372,9 +396,13 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
                 baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitAbility);
             }
             return true;
-        } else if (baseCharacter.MyCharacterUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
-            OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
-            return true;
+        } else {
+            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                if (baseCharacter.MyCharacterUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
+                    OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+                    return true;
+                }
+            }
         }
         return false;
     }

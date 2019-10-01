@@ -223,6 +223,7 @@ public class UIManager : MonoBehaviour {
 
     public void DeactivatePlayerUI() {
         playerUI.SetActive(false);
+        HideToolTip();
     }
 
     public void ActivatePlayerUI() {
@@ -659,7 +660,6 @@ public class UIManager : MonoBehaviour {
             PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
-        SystemEventManager.MyInstance.NotifyOnInventoryTransparencyUpdate();
     }
 
     public void UpdatePopupWindowOpacity() {

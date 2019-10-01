@@ -31,7 +31,7 @@ public class AOEEffect : FixedLengthEffect {
     /// <param name="source"></param>
     /// <param name="target"></param>
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
         if (abilityEffectInput == null) {
             abilityEffectInput = new AbilityEffectOutput();
         }
@@ -50,7 +50,7 @@ public class AOEEffect : FixedLengthEffect {
     }
 
     private void TargetAOEHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
         List<GameObject> validTargets = GetValidTargets(source, target, abilityEffectInput, hitAbilityEffectList);
         foreach (GameObject validTarget in validTargets) {
             PerformAOEHit(source, validTarget, 1f / validTargets.Count, abilityEffectInput);
@@ -72,20 +72,20 @@ public class AOEEffect : FixedLengthEffect {
     }
 
     private List<GameObject> GetValidTargets(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
-        Debug.Log(MyName + "AOEEffect.GetValidTargets()");
+        //Debug.Log(MyName + "AOEEffect.GetValidTargets()");
 
         Vector3 aoeSpawnCenter = Vector3.zero;
         if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
-            Debug.Log("AOEEffect.Cast(): Setting AOE center to target");
+            //Debug.Log("AOEEffect.Cast(): Setting AOE center to target");
             aoeSpawnCenter = target.transform.position;
         } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
             //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
             aoeSpawnCenter = source.MyCharacterUnit.transform.position;
         } else if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
-            Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
+            //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
             aoeSpawnCenter = abilityEffectInput.prefabLocation;
         } else {
-            Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
+            //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
         }
         aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
         Collider[] colliders = new Collider[0];

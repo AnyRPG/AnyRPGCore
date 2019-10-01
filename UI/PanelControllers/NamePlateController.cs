@@ -223,7 +223,7 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
         //Debug.Log("CheckForDisableHealthBar()");
         if (namePlateUnit.HasHealth() && isPlayerUnitNamePlate) {
             //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth == PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                     DisableHealthBar();
                     return;
@@ -349,6 +349,9 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnClick(BaseEventData eventData) {
         //Debug.Log("NamePlateController: OnClick()");
+        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            return;
+        }
 
         PointerEventData pointerEventData = eventData as PointerEventData;
         if (pointerEventData.button == PointerEventData.InputButton.Left) {
@@ -361,13 +364,13 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerEnter(PointerEventData eventData) {
         if (namePlateUnit.MyInteractable != null) {
-            namePlateUnit.MyInteractable.OnMouseOver();
+            namePlateUnit.MyInteractable.OnMouseHover();
         }
     }
 
     public void OnPointerExit(PointerEventData eventData) {
         if (namePlateUnit.MyInteractable != null) {
-            namePlateUnit.MyInteractable.OnMouseExit();
+            namePlateUnit.MyInteractable.OnMouseOut();
         }
     }
 
@@ -379,6 +382,7 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
     }
 
     private void HandleLeftClick() {
+        //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
         if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as INamePlateUnit)) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterController.SetTarget((namePlateUnit as MonoBehaviour).gameObject);
         }

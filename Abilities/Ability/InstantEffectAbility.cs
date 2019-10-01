@@ -12,16 +12,16 @@ public class InstantEffectAbility : BaseAbility {
     }
 
     public override bool CanUseOn(GameObject target, BaseCharacter source) {
-        Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + ")");
+        //Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + ")");
         if (!base.CanUseOn(target, source)) {
             return false;
         }
-        if (source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-            Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + "): waiting for an animated ability. can't cast");
+        if (source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true && !MyCanSimultaneousCast) {
+            //Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + "): waiting for an animated ability. can't cast");
             return false;
         }
-        if (source.MyCharacterAbilityManager.MyIsCasting) {
-            Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + "): already casting. can't cast");
+        if (source.MyCharacterAbilityManager.MyIsCasting && !MyCanSimultaneousCast) {
+            //Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + "): already casting. can't cast");
             return false;
         }
         return true;

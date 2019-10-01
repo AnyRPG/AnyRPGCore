@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class PortalInteractable : InteractableOption {
 
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
     /// <summary>
     /// The ability to cast in order to use this portal
     /// </summary>
     [SerializeField]
     private BaseAbility ability;
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
 
     public IAbility MyAbility { get => ability; }
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage : base.MyIcon); }
@@ -59,6 +60,11 @@ public class PortalInteractable : InteractableOption {
     public override int GetCurrentOptionCount() {
         //Debug.Log(gameObject.name + ".PortalInteractable.GetCurrentOptionCount()");
         return GetValidOptionCount();
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
     }
 
 }

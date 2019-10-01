@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit {
 
-    public event System.Action OnInitializeNamePlate = delegate { };
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
+    public event System.Action OnInitializeNamePlate = delegate { };
     public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
     public event Action<int, int> HealthBarNeedsUpdate = delegate { };
     public event System.Action<GameObject> OnDespawn = delegate { };
@@ -115,9 +116,6 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         } else {
             //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
         }
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
-        }
         eventReferencesInitialized = true;
     }
 
@@ -132,9 +130,6 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
             baseCharacter.MyCharacterStats.OnDie -= HandleNamePlateNeedsRemoval;
             baseCharacter.MyCharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
             baseCharacter.MyCharacterStats.OnReviveComplete -= InitializeNamePlate;
-        }
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
         }
         eventReferencesInitialized = false;
     }
@@ -152,11 +147,6 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         if (NamePlateManager.MyInstance != null) {
             NamePlateManager.MyInstance.RemoveNamePlate(this as INamePlateUnit);
         }
-    }
-
-    public void HandleReputationChange() {
-        //Debug.Log(gameObject.name + ".CharacterUnit.HandleReputationChange()");
-        MiniMapStatusUpdateHandler(this);
     }
 
     public override void GetComponentReferences() {
@@ -276,6 +266,11 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
 
     public override int GetCurrentOptionCount() {
         return GetValidOptionCount();
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
     }
 
 }

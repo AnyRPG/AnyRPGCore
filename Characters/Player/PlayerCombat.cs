@@ -75,13 +75,14 @@ public class PlayerCombat : CharacterCombat {
         if (baseCharacter.MyCharacterController.MyTarget == null && autoAttackActive == true) {
             //Debug.Log(gameObject.name + ": HandleAutoAttack(): target is null.  deactivate autoattack");
             DeActivateAutoAttack();
+            return;
         }
 
         if (autoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
             //Debug.Log("player controller is in combat and target is not null");
             //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
-            CharacterStats _characterStats = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats as CharacterStats;
-            if (baseCharacter.MyCharacterStats.IsAlive) {
+            BaseCharacter targetCharacter = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter;
+            if (targetCharacter != null && AutoAttackTargetIsValid(targetCharacter)) {
                 //Debug.Log("the target is alive.  Attacking");
                 Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
                 return;
@@ -185,11 +186,11 @@ public class PlayerCombat : CharacterCombat {
     }
 
     public override bool AttackHit_AnimationEvent() {
-        Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
+        //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
         if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget != null) {
             // TESTING, THIS WAS MESSING WITH ABILITIES THAT DONT' NEED A TARGET LIKE GROUND SLAM - OR NOT, ITS JUST FOR THE WHITE HIT...!!
             //if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget) {
-            Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
+            //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
             MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.MyCharacterController.MyTarget);
         }
         bool attackSucceeded = base.AttackHit_AnimationEvent();

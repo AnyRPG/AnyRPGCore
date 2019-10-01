@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class LootableCharacter : InteractableOption {
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     [SerializeField]
     private LootTable lootTable;
@@ -227,4 +227,8 @@ public class LootableCharacter : InteractableOption {
         lootTable.HandleRevive();
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

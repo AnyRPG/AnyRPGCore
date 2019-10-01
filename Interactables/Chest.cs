@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Chest : InteractableOption {
 
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
     [SerializeField]
     private CloseableWindow chestWindow;
 
@@ -13,8 +15,6 @@ public class Chest : InteractableOption {
 
     [SerializeField]
     private BagPanel bag;
-
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
 
     public override bool Interact(CharacterUnit source) {
         if (!chestWindow.IsOpen) {
@@ -66,4 +66,8 @@ public class Chest : InteractableOption {
         return true;
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

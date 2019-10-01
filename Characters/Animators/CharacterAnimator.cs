@@ -145,7 +145,7 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public void ResetAnimationProfile() {
-        Debug.Log("CharacterAnimator.ResetAnimationProfile()");
+        //Debug.Log("CharacterAnimator.ResetAnimationProfile()");
         currentAttackAnimationProfile = defaultAttackAnimationProfile;
         // testing reset should now actually change back to the original animations
         SetAnimationClipOverrides();
@@ -301,7 +301,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     // regular melee auto-attack
     protected virtual void HandleAttack(BaseCharacter targetCharacterUnit) {
-        Debug.Log(gameObject.name + ".CharacterAnimator.HandleAttack()");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAttack()");
         if (animator == null) {
             return;
         }
@@ -345,7 +345,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     // non melee ability (spell) cast
     public virtual void HandleCastingAbility(AnimationClip animationClip, BaseAbility baseAbility) {
-        Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
         if (animator == null) {
             return;
         }
@@ -353,7 +353,7 @@ public class CharacterAnimator : MonoBehaviour {
         // override the default attack animation
         overrideController["AnyRPGMagicSlowCasting"] = animationClip;
         float animationLength = animationClip.length;
-        Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
 
         SetCasting(true);
         // this should not be necessary since we track the length of animation through the casting time
@@ -369,15 +369,15 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public IEnumerator WaitForAnimation(BaseAbility baseAbility, float animationLength, bool clearAutoAttack, bool clearAnimatedAttack, bool clearCasting) {
-        Debug.Log(gameObject.name + ".WaitForAnimation(" + animationLength + ")");
+        //Debug.Log(gameObject.name + ".WaitForAnimation(" + animationLength + ")");
         float remainingTime = animationLength;
-        Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
+        //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
         while (remainingTime > 0f && (characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting)) {
-            Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): inside loop: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
+            //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): inside loop: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
             remainingTime -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
+        //Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
         attackCoroutine = null;
         if (clearAutoAttack) {
             ClearAutoAttack();
@@ -397,7 +397,7 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public void ClearAnimatedAttack(BaseAbility baseAbility) {
-        Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
         characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
         (baseAbility as AnimatedAbility).CleanupEventReferences(characterUnit.MyCharacter);
         SetAttacking(false);
@@ -432,6 +432,10 @@ public class CharacterAnimator : MonoBehaviour {
         if (currentAbility != null && currentAbility is AnimatedAbility) {
             (currentAbility as AnimatedAbility).CleanupEventReferences(characterUnit.MyCharacter);
         }
+        // add these to prevent characters from dying floating or upright
+        HandleUnLevitated();
+        HandleUnStunned();
+
         SetAttacking(false);
         SetCasting(false);
         SetTrigger("DeathTrigger");
@@ -479,7 +483,7 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public virtual void SetCasting(bool varValue) {
-        //Debug.Log("CharacterAnimator.SetCasting(" + varValue + ")");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
         if (animator == null) {
             return;
         }

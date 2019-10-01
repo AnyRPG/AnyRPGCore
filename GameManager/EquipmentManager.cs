@@ -177,7 +177,7 @@ public class EquipmentManager : MonoBehaviour {
         SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, oldItem);
     }
 
-    public Equipment Unequip(EquipmentSlot equipmentSlot) {
+    public Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
         if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
             //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
@@ -197,7 +197,11 @@ public class EquipmentManager : MonoBehaviour {
                     PlayerManager.MyInstance.MyAvatar.BuildCharacter();
                 }
 
-                InventoryManager.MyInstance.AddItem(oldItem);
+                if (slotIndex != -1) {
+                    InventoryManager.MyInstance.AddItem(oldItem, slotIndex);
+                } else {
+                    InventoryManager.MyInstance.AddItem(oldItem);
+                }
             }
             //Debug.Log("zeroing equipment slot");
             currentEquipment[equipmentSlot] = null;

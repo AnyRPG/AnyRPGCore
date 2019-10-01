@@ -96,56 +96,10 @@ public class LootUI : WindowContentController, IPagedWindowContents {
                 }
             }
         }
-        // TESTING THIS CODE SHOULD NOT BE NEEDED
-        /*
-        List<LootDrop> lootList = new List<LootDrop>();
-
-        // get all loot into a list
-        foreach (List<LootDrop> page in pages) {
-            foreach (LootDrop lootDrop in page) {
-                lootList.Add(lootDrop);
-            }
-        }
-        Debug.Log("LootUI.TakeAllLoot(): lootList size: " + lootList.Count);
-        */
-        // take all items in the list
-        //foreach (LootDrop lootDrop in lootList) {
-        /*
-        Item newItem = SystemItemManager.MyInstance.GetNewItem(lootDrop.MyItem.MyName);
-        if (newItem != null) {
-            Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
-            //InventoryManager.MyInstance.AddItem(newItem);
-        }
-        */
-        /*
-            if ((lootDrop.MyItem as CurrencyItem) is CurrencyItem) {
-                Debug.Log("LootUI.TakeAllLoot(): item is currency: " + lootDrop.MyItem.MyName);
-                if (InventoryManager.MyInstance.AddItem(lootDrop.MyItem)) {
-                    Debug.Log("LootUI.TakeAllLoot(): successfully added to inventory: " + lootDrop.MyItem.MyName);
-                    TakeLoot(lootDrop.MyItem);
-                    Debug.Log("LootUI.TakeAllLoot(): using: " + lootDrop.MyItem.MyName);
-                    (lootDrop.MyItem as CurrencyItem).Use();
-                }
-            } else if ((lootDrop.MyItem as QuestStartItem) is QuestStartItem) {
-                Debug.Log("LootUI.TakeAllLoot(): item is questStartItem: " + lootDrop.MyItem.MyName);
-                if (InventoryManager.MyInstance.AddItem(lootDrop.MyItem)) {
-                    Debug.Log("LootUI.TakeAllLoot(): successfully added to inventory: " + lootDrop.MyItem.MyName);
-                    TakeLoot(lootDrop.MyItem);
-                    Debug.Log("LootUI.TakeAllLoot(): using: " + lootDrop.MyItem.MyName);
-                    (lootDrop.MyItem as QuestStartItem).Use();
-                }
-            } else {
-                Debug.Log("LootUI.TakeAllLoot(): item is normal item");
-                if (InventoryManager.MyInstance.AddItem(lootDrop.MyItem)) {
-                    TakeLoot(lootDrop.MyItem);
-                }
-            }
-        }
-        */
     }
 
     public void TakeLoot(Item loot) {
-        Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
+        //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
         LootDrop lootDrop = pages[pageIndex].Find(x => x.MyItem.MyName == loot.MyName);
 

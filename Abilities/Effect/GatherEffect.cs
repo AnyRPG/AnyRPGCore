@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GatherEffect : DirectEffect {
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log("GatherAbility.Cast(" + source.name + ", " + target.name + ")");
+        //Debug.Log("GatherAbility.Cast(" + source.name + ", " + target.name + ")");
         base.Cast(source, target, originalTarget, abilityEffectInput);
 
         target.GetComponent<GatheringNode>().Gather();

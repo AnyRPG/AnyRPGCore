@@ -52,11 +52,11 @@ public class LengthEffect: AbilityEffect {
     public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log(MyName + ".LengthEffect.Cast(" + source.name + ")");
+        //Debug.Log(MyName + ".LengthEffect.Cast(" + source.name + ")");
         Vector3 spawnLocation = Vector3.zero;
         Transform prefabParent = null;
         if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
-            Debug.Log(resourceName + ".AbilityEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+            //Debug.Log(resourceName + ".AbilityEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
             //spawnLocation = source.GetComponent<Collider>().bounds.center;
             spawnLocation = abilityEffectInput.prefabLocation;
             prefabParent = null;
@@ -88,7 +88,7 @@ public class LengthEffect: AbilityEffect {
             float finalZ = (prefabParent == null ? spawnLocation.z + prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);
             //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
             Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
-            Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + "; abilityEffectPrefab: " + abilityEffectPrefab);
+            //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + "; abilityEffectPrefab: " + abilityEffectPrefab);
             //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.Euler(prefabRotation), prefabParent);
             //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.Euler(prefabRotation), prefabParent);
             //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.LookRotation(prefabRotation), prefabParent);

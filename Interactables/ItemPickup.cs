@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ItemPickup : InteractableOption {
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     public Item item;
 
@@ -53,4 +53,8 @@ public class ItemPickup : InteractableOption {
         return true;
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

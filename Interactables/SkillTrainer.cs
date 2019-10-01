@@ -98,5 +98,8 @@ public class SkillTrainer : InteractableOption
         return ((GetCurrentOptionCount() > 0 && MyPrerequisitesMet) ? true : false);
     }
 
-
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

@@ -12,12 +12,12 @@ public class NameChangePanelController : WindowContentController {
 
 
     public void CancelAction() {
-        Debug.Log("NameChangePanelController.CancelAction()");
+        //Debug.Log("NameChangePanelController.CancelAction()");
         SystemWindowManager.MyInstance.nameChangeWindow.CloseWindow();
     }
 
     public void ConfirmAction() {
-        Debug.Log("NameChangePanelController.ConfirmAction()");
+        //Debug.Log("NameChangePanelController.ConfirmAction()");
         if (textInput.text != null && textInput.text != string.Empty) {
             PlayerManager.MyInstance.SetPlayerName(textInput.text);
             OnConfirmAction();

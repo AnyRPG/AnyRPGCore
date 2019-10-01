@@ -169,6 +169,7 @@ public class UnitFrameController : DraggableWindow {
             statusEffectPanelController.SetTarget(namePlateUnit as CharacterUnit);
         }
         if (isActiveAndEnabled) {
+            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + "):  WE ARE NOW ACTIVE AND ENABLED");
             TargetInitialization();
         } else {
             //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
@@ -230,6 +231,11 @@ public class UnitFrameController : DraggableWindow {
             baseCharacter.MyCharacterStats.OnManaChanged += OnManaChanged;
             SystemEventManager.MyInstance.OnLevelChanged += OnLevelChanged;
             SystemEventManager.MyInstance.OnReputationChange += OnReputationChange;
+        } else {
+            // manually set everything to 1 if this is an inanimate unit
+            OnHealthChanged(1, 1);
+            OnManaChanged(1, 1);
+            OnLevelChanged(1);
         }
     }
 
@@ -259,7 +265,16 @@ public class UnitFrameController : DraggableWindow {
     }
 
     public void OnHealthChanged(int maxHealth, int currentHealth) {
-        float healthPercent = (float)currentHealth / maxHealth;
+
+        // prevent division by zero
+        int displayedMaxHealth = maxHealth;
+        int displayedCurrentHealth = currentHealth;
+        if (displayedMaxHealth == 0) {
+            displayedMaxHealth = 1;
+            displayedCurrentHealth = 1;
+        }
+
+        float healthPercent = (float)displayedCurrentHealth / displayedMaxHealth;
         //Debug.Log("UnitFrameController: setting healthSlider width to " + (healthPercent * originalHealthSliderWidth).ToString());
 
         // code for an actual image, not currently used
@@ -270,7 +285,7 @@ public class UnitFrameController : DraggableWindow {
             healthSlider.GetComponent<LayoutElement>().preferredWidth = healthPercent * originalHealthSliderWidth;
         }
         if (healthText != null) {
-            healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString() + " (" + healthPercent * 100 + "%)";
+            healthText.text = displayedCurrentHealth.ToString() + " / " + displayedMaxHealth.ToString() + " (" + healthPercent * 100 + "%)";
         }
     }
 

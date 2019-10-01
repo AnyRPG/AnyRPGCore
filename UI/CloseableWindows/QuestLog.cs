@@ -37,15 +37,15 @@ public class QuestLog : MonoBehaviour  {
     }
 
     public void LoadQuest(QuestSaveData questSaveData) {
-        Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
+        //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
         Quest quest = SystemQuestManager.MyInstance.GetResource(questSaveData.MyName);
         if (quest == null) {
-            Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
+            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
             return;
         }
         if (!questSaveData.inLog) {
-            Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
+            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
             quest.TurnedIn = questSaveData.turnedIn;
             return;
         }
@@ -93,7 +93,7 @@ public class QuestLog : MonoBehaviour  {
         foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.abilityObjectives) {
             foreach (QuestObjective existingQuestObjective in quest.MyAbilityObjectives) {
                 if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                    Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
+                    //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
                     existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
                 }
             }

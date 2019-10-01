@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DialogInteractable : InteractableOption {
 
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
     private BoxCollider boxCollider;
 
     [SerializeField]
@@ -20,7 +22,6 @@ public class DialogInteractable : InteractableOption {
     public int MyDialogIndex { get => dialogIndex; set => dialogIndex = value; }
     public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
     public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
 
@@ -28,7 +29,6 @@ public class DialogInteractable : InteractableOption {
         //Debug.Log("NameChangeInteractable.Awake()");
         base.Awake();
         namePlateUnit = GetComponent<INamePlateUnit>();
-
     }
 
     protected override void Start() {
@@ -44,11 +44,10 @@ public class DialogInteractable : InteractableOption {
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-        SystemEventManager.MyInstance.OnPrerequisiteUpdated += UpdateDialogStatus;
+        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePrerequisiteUpdates;
         if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
             Debug.Log(gameObject.name + ".DialogInteractable.CreateEventSubscriptions(): player unit is already spawned.");
-            HandlePlayerUnitSpawn();
+            HandlePrerequisiteUpdates();
         } else {
             //Debug.Log(gameObject.name + ".DialogInteractable.CreateEventSubscriptions(): player unit is not yet spawned");
         }
@@ -59,8 +58,7 @@ public class DialogInteractable : InteractableOption {
         //Debug.Log("PlayerManager.CleanupEventReferences()");
         base.CleanupEventReferences();
         if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated -= UpdateDialogStatus;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePrerequisiteUpdates;
         }
         CleanupConfirm();
         eventReferencesInitialized = false;
@@ -90,22 +88,15 @@ public class DialogInteractable : InteractableOption {
         } else {
             namePlateUnit.MyNamePlate.MyDialogIndicatorImage.gameObject.SetActive(true);
         }
-        MiniMapStatusUpdateHandler(this);
-    }
-
-    public void HandlePlayerUnitSpawn() {
-        //Debug.Log(gameObject.name + ".DialogInteractable.HandlePlayerUnitSpawn()");
-
-        UpdateDialogStatus();
     }
 
     public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-        Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventReferences(ICloseableWindowContents)");
+        //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventReferences(ICloseableWindowContents)");
         CleanupEventReferences();
     }
 
     public override void HandleConfirmAction() {
-        Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
+        //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
         base.HandleConfirmAction();
 
         // just to be safe
@@ -206,4 +197,9 @@ public class DialogInteractable : InteractableOption {
         return GetCurrentOptionList().Count;
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        UpdateDialogStatus();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

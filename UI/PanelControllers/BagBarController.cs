@@ -23,7 +23,7 @@ public class BagBarController : MonoBehaviour {
     public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
 
     private void Awake() {
-        Debug.Log("BagBarController.Awake()");
+        //Debug.Log("BagBarController.Awake()");
         GetLocalComponents();
     }
 

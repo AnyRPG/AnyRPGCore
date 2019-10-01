@@ -35,18 +35,18 @@ public class BagPanel : WindowContentController {
     }
 
     public virtual List<Item> GetItems() {
-        Debug.Log("BagPanel.GetItems() slots count: " + slots.Count);
+        //Debug.Log("BagPanel.GetItems() slots count: " + slots.Count);
         List<Item> items = new List<Item>();
 
         foreach (SlotScript slot in slots) {
-            Debug.Log("BagPanel.GetItems(): found slot");
+            //Debug.Log("BagPanel.GetItems(): found slot");
             if (!slot.IsEmpty) {
-                Debug.Log("BagPanel.GetItems(): found slot and it is not empty");
+                //Debug.Log("BagPanel.GetItems(): found slot and it is not empty");
                 foreach (Item item in slot.MyItems) {
                     items.Add(item);
                 }
             } else {
-                Debug.Log("BagPanel.GetItems(): found slot and it is empty");
+                //Debug.Log("BagPanel.GetItems(): found slot and it is empty");
             }
         }
         return items;

@@ -149,14 +149,14 @@ public class InventoryManager : MonoBehaviour {
         //Debug.Log("InventoryManager.ClearData()");
         // keep the bag nodes, but clear their data. bag nodes are associated with physical windows and there is no point in re-initiating those
         foreach (BagNode bagNode in bagNodes) {
-            Debug.Log("InventoryManager.ClearData(): got a bag node");
+            //Debug.Log("InventoryManager.ClearData(): got a bag node");
             //bagNode.MyBag = null;
             // TESTING
             if (bagNode.MyIsBankNode == false) {
-                Debug.Log("Got a bag node, removing!");
+                //Debug.Log("Got a bag node, removing!");
                 RemoveBag(bagNode.MyBag);
             } else {
-                Debug.Log("Got a bank node, not removing!");
+                //Debug.Log("Got a bank node, not removing!");
             }
         }
         bagWindowPositionsSet = false;
@@ -183,14 +183,14 @@ public class InventoryManager : MonoBehaviour {
 
 
     public void CreateDefaultBackpack() {
-        Debug.Log("InventoryManager.CreateDefaultBackpack(): testing put backback in bank at start instead of equipping");
+        //Debug.Log("InventoryManager.CreateDefaultBackpack()");
         Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBackpackItemName) as Bag;
         AddItem(bag, true);
         //bag.Use();
     }
 
     public void CreateDefaultBankBag() {
-        Debug.Log("InventoryManager.CreateDefaultBankBag(): testing put backback in bank at start instead of equipping");
+        //Debug.Log("InventoryManager.CreateDefaultBankBag()");
         Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBankBagItemName) as Bag;
         AddBag(bag, true);
     }
@@ -280,7 +280,7 @@ public class InventoryManager : MonoBehaviour {
                 MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                 //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
             } else {
-                Debug.Log("WTF WE DON'T HAVE A WINDOW HERE!!!!!!! " + i);
+                //Debug.Log(WE DON'T HAVE A WINDOW HERE!!!!!!! " + i);
             }
         }
 
@@ -288,7 +288,7 @@ public class InventoryManager : MonoBehaviour {
 
 
     public void AddBag(Bag bag, bool addBank = false) {
-        Debug.Log("InventoryManager.AddBag(Bag, " + addBank + ")");
+        //Debug.Log("InventoryManager.AddBag(Bag, " + addBank + ")");
 
         foreach (BagNode bagNode in bagNodes) {
             if (bagNode.MyBag == null && bagNode.MyIsBankNode == addBank) {
@@ -407,42 +407,7 @@ public class InventoryManager : MonoBehaviour {
                         bag.MyBagPanel = null;
                     }
                 }
-                /*
-                Debug.Log("InventoryManager.RemoveBag(): forcing immediate layout rebuild so the window position set works hopefully");
-                LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryContainer.GetComponent<RectTransform>());
-
-                Debug.Log("InventoryManager.RemoveBag(): NOW ATTEMPTING MANUAL GRID LAYOUT GROUP RECALCULATION INSTEAD FUCK YOU UNITY!!!! GOD DAMN WHY DOES NONE OF THIS SHIT WORK...");
                 
-                GridLayoutGroup gridLayoutGroup = inventoryContainer.GetComponent<GridLayoutGroup>();
-                //gridLayoutGroup
-                gridLayoutGroup.CalculateLayoutInputHorizontal();
-                gridLayoutGroup.CalculateLayoutInputVertical();
-                gridLayoutGroup.SetLayoutHorizontal();
-                gridLayoutGroup.SetLayoutVertical();
-
-                Debug.Log("InventoryManager.RemoveBag(): FUCK UNITY ATTEMPTING DEACTIVATE");
-                inventoryContainer.gameObject.SetActive(false);
-                Debug.Log("InventoryManager.RemoveBag(): FUCK UNITY ATTEMPTING REACTIVATE");
-                inventoryContainer.gameObject.SetActive(true);
-
-                Debug.Log("InventoryManager.RemoveBag(): forcing immediate layout rebuild so the window position set works hopefully ON INDIVIDUAL WINDOW CONTAINERS");
-
-                foreach (GameObject windowHolder in inventoryWindowHolders) {
-                    LayoutRebuilder.ForceRebuildLayoutImmediate(windowHolder.GetComponent<RectTransform>());
-                }
-                // RIGHT HERE WE MAY WANT TO RE-LOAD BAG WINDOW POSITIONS BECAUSE THE GRID GROUP APPEARS TO BE SNAPPING THESE BACK AS A RESULT OF THE SIZE CHANGE OF THE BAG WINDOW
-                SetWindowPositions();
-
-                Debug.Log("InventoryManager.RemoveBag(): FUCK UNITY ATTEMPTING DEACTIVATE 2");
-                inventoryContainer.gameObject.SetActive(false);
-                Debug.Log("InventoryManager.RemoveBag(): FUCK UNITY ATTEMPTING REACTIVATE 2");
-                inventoryContainer.gameObject.SetActive(true);
-
-                Canvas.ForceUpdateCanvases();
-                SceneView.RepaintAll();
-
-                SetWindowPositions();
-                */
                 return;
             }
         }

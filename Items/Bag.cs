@@ -44,14 +44,14 @@ public class Bag : Item, IUseable {
     }
 
     public override void Use() {
-        Debug.Log("Bag.Use()");
+        //Debug.Log("Bag.Use()");
         base.Use();
         bool addToBank = false;
         if (MyBagNode != null) {
             addToBank = MyBagNode.MyIsBankNode;
         }
         if (InventoryManager.MyInstance.CanAddBag(addToBank)) {
-            Debug.Log("Bag.Use(): we can add the bag");
+            //Debug.Log("Bag.Use(): we can add the bag");
 
             if (MyBagNode == null) {
                 InventoryManager.MyInstance.AddBag(this);

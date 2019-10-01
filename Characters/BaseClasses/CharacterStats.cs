@@ -19,6 +19,10 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     [SerializeField]
     private int level;
 
+    // a stat multiplier to make creatures more difficult
+    [SerializeField]
+    protected int toughness;
+
     // keep track of current level
     private int currentLevel;
 
@@ -74,6 +78,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
     public Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get => primaryStatModifiers; }
     public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
+    public int MyToughness { get => toughness; set => toughness = value; }
 
     protected virtual void Awake() {
         //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
@@ -116,10 +121,11 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
 
     protected virtual int GetAddModifiers(StatBuffType statBuffType) {
+        //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
         int returnValue = 0;
         foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
             if (statusEffectNode.MyStatusEffect.MyStatBuffTypes.Contains(statBuffType)) {
-                returnValue = statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
+                returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
             }
         }
         returnValue += primaryStatModifiers[statBuffType].GetValue();
@@ -267,11 +273,13 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
     public virtual void SetLevel(int newLevel) {
         //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
+        // arbitrary toughness cap of 5 for now.  add this as system configuration option later maybe
+        int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
         currentLevel = newLevel;
-        stamina = currentLevel * 10;
-        intellect = currentLevel * 10;
-        strength = currentLevel * 10;
-        agility = currentLevel * 10;
+        stamina = currentLevel * 10 * usedToughNess;
+        intellect = currentLevel * 10 * usedToughNess;
+        strength = currentLevel * 10 * usedToughNess;
+        agility = currentLevel * 10 * usedToughNess;
         ResetHealth();
         ResetMana();
     }
@@ -390,7 +398,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     public virtual void ReviveComplete() {
-        //Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
+        Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
         isAlive = true;
         ClearInvalidStatusEffects();
         ResetHealth();
@@ -411,20 +419,34 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     protected virtual void ClearInvalidStatusEffects() {
-        //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects()");
-        List<string> RemoveList = new List<string>();
+        Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects()");
+        //List<string> RemoveList = new List<string>();
+        List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
         foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
             if (statusEffectNode.MyStatusEffect.MyRequireDeadTarget == true) {
+                Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
+                /*
                 if (statusEffectNode.MyMonitorCoroutine != null) {
                     StopCoroutine(statusEffectNode.MyMonitorCoroutine);
                 }
-                Destroy(statusEffectNode.MyStatusEffect, 0.1f);
-                RemoveList.Add(statusEffectNode.MyStatusEffect.MyName);
+                */
+                //Destroy(statusEffectNode.MyStatusEffect, 0.1f);
+                //RemoveList.Add(statusEffectNode.MyStatusEffect.MyName);
+                statusEffectNodes.Add(statusEffectNode);
             }
         }
+        /*
         foreach (string removeString in RemoveList) {
+            Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + removeString + " calling remove");
             MyStatusEffects.Remove(removeString);
+            clear
         }
+        */
+        foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
+            statusEffectNode.CancelStatusEffect();
+        }
+
     }
 
     public IEnumerator Tick(BaseCharacter source, AbilityEffectOutput abilityEffectInput, BaseCharacter target, StatusEffect statusEffect) {

@@ -115,7 +115,7 @@ public class CraftingUI : WindowContentController {
                 qs.SetRecipeName(recipe.MyName);
                 recipeScripts.Add(qs);
             } else {
-                Debug.Log("Recipe Output is null!");
+                //Debug.Log("Recipe Output is null!");
             }
         }
 
@@ -139,7 +139,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void UpdateSelected() {
-        Debug.Log("CraftingUI.UpdateSelected()");
+        //Debug.Log("CraftingUI.UpdateSelected()");
         if (selectedRecipeScript != null) {
             craftAmount = 1;
             ShowDescription(selectedRecipeScript.MyRecipeName);
@@ -147,7 +147,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void ShowDescription(string recipeName) {
-        Debug.Log("CraftingUI.ShowDescription(" + recipeName + ")");
+        //Debug.Log("CraftingUI.ShowDescription(" + recipeName + ")");
         ClearDescription();
 
         if (recipeName == null && recipeName == string.Empty) {
@@ -157,7 +157,7 @@ public class CraftingUI : WindowContentController {
 
         Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
         if (recipe == null) {
-            Debug.Log("SkillTrainerUI.ShowDescription(" + recipeName + "): failed to get skill from SystemSkillManager");
+            //Debug.Log("SkillTrainerUI.ShowDescription(" + recipeName + "): failed to get skill from SystemSkillManager");
         }
 
         recipeDescription.text = string.Format("<b>{0}</b>", recipe.MyOutput.MyName, recipe.MyDescription);
@@ -180,7 +180,7 @@ public class CraftingUI : WindowContentController {
 
 
     private bool CanCraft(Recipe recipe) {
-        Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
+        //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
         for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
             if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) < recipe.MyCraftingMaterials[i].MyCount) {
                 return false;
@@ -190,7 +190,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void ClearDescription() {
-        Debug.Log("CraftingUI.ClearDescription()");
+        //Debug.Log("CraftingUI.ClearDescription()");
         craftAmount = 1;
         //recipeDetailsArea.SetActive(false);
         recipeDescription.text = string.Empty;
@@ -200,7 +200,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void DeselectRecipes() {
-        Debug.Log("CraftingUI.DeselectRecipes()");
+        //Debug.Log("CraftingUI.DeselectRecipes()");
         foreach (RecipeScript recipe in recipeScripts) {
             if (recipe != MySelectedRecipeScript) {
                 recipe.DeSelect();
@@ -221,10 +221,10 @@ public class CraftingUI : WindowContentController {
     }
 
     public override void OnCloseWindow() {
-        Debug.Log("craftingUI.OnCloseWindow()");
+        //Debug.Log("craftingUI.OnCloseWindow()");
         base.OnCloseWindow();
         DeactivateButtons();
-        Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
+        //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
         MySelectedRecipeScript = null;
     }
 
@@ -265,12 +265,13 @@ public class CraftingUI : WindowContentController {
     }
 
     public void CraftAll() {
+        //Debug.Log("CraftingUI.CraftAll()");
         if (MySelectedRecipeScript != null) {
             craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
             UpdateCraftAmountArea();
             BeginCrafting();
         } else {
-            Debug.Log("MySelectedRecipeScript is null!");
+            //Debug.Log("MySelectedRecipeScript is null!");
         }
     }
 
@@ -294,7 +295,7 @@ public class CraftingUI : WindowContentController {
 
         Recipe recipe = SystemRecipeManager.MyInstance.GetResource(craftingQueue[0]);
         // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
-        if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetResource(recipe.MyOutput.MyName))) {
+        if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(recipe.MyOutput.MyName))) {
             foreach (CraftingMaterial craftingMaterial in recipe.MyCraftingMaterials) {
                 //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                 for (int i = 0; i < craftingMaterial.MyCount; i++) {
@@ -308,6 +309,9 @@ public class CraftingUI : WindowContentController {
                 if (craftAction == null) {
                     //Debug.Log("CraftingUI.CraftNextItem(). CraftAction is null!");
                 }
+                // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
+                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+
                 PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAction as IAbility);
             }
         } else {
@@ -365,8 +369,8 @@ public class CraftingUI : WindowContentController {
 
     public void CancelCrafting() {
         Debug.Log("CraftingUI.CancelCrafting()");
-        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
         craftingQueue.Clear();
+        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
     }
 
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CraftingNode : InteractableOption {
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler;
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     /// <summary>
     /// The ability to cast in order to mine this node
@@ -41,6 +41,11 @@ public class CraftingNode : InteractableOption {
         text.fontSize = 50;
         text.color = Color.blue;
         return true;
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
     }
 
 }

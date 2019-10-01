@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
-{
+public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
+
     /// <summary>
     /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
     /// </summary>
@@ -19,6 +19,50 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     [SerializeField]
     private Image icon;
+
+    [SerializeField]
+    private Image backGroundImage;
+
+    private Image emptySlotImage;
+
+    private Color emptyBackGroundColor;
+
+    private Color fullBackGroundColor;
+
+    public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
+    public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
+    public string MyName {
+        get {
+            if (equippedEquipment != null) {
+                return equippedEquipment.MyName;
+            } else {
+                return "Empty Equipment Slot";
+            }
+        }
+    }
+
+    public Sprite MyIcon { get => icon.sprite; set => icon.sprite = value; }
+
+    private bool LocalComponentsGotten = false;
+
+    private void Awake() {
+        GetLocalComponents();
+    }
+
+    private void Start() {
+        GetLocalComponents();
+    }
+
+    private void GetLocalComponents() {
+        if (LocalComponentsGotten == true) {
+            return;
+        }
+        if (emptySlotImage == null) {
+            emptySlotImage = GetComponent<Image>();
+        }
+
+        LocalComponentsGotten = true;
+    }
 
     public void OnPointerClick(PointerEventData eventData) {
         if (eventData.button == PointerEventData.InputButton.Left) {
@@ -47,9 +91,6 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         //remove from the inventory
         newEquipment.Remove();
 
-        icon.enabled = true;
-        icon.sprite = newEquipment.MyIcon;
-        icon.color = Color.white;
         if (newEquipment != equippedEquipment) {
             EquipmentManager.MyInstance.Equip(newEquipment);
             this.equippedEquipment = newEquipment;
@@ -57,7 +98,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         this.equippedEquipment.MyCharacterButton = this;
         //HandScript.MyInstance.DeleteItem();
         if (HandScript.MyInstance.MyMoveable == (newEquipment as IMoveable)) {
-            Debug.Log("dropping moveable from handscript");
+            //Debug.Log("dropping moveable from handscript");
             HandScript.MyInstance.Drop();
         }
 
@@ -73,36 +114,70 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         } else {
             UIManager.MyInstance.HideToolTip();
         }
+        UpdateVisual();
+    }
+
+    public void UpdateVisual() {
+        //Debug.Log("CharacterButton.UpdateVisual()");
+
+        GetLocalComponents();
+
+        if (equippedEquipment != null) {
+            if (fullBackGroundColor != null) {
+                backGroundImage.color = fullBackGroundColor;
+            }
+            emptySlotImage.color = new Color32(0, 0, 0, 0);
+            icon.enabled = true;
+            icon.color = Color.white;
+            icon.sprite = equippedEquipment.MyIcon;
+        } else {
+            if (emptyBackGroundColor != null) {
+                backGroundImage.color = emptyBackGroundColor;
+            }
+            emptySlotImage.color = Color.white;
+            icon.color = new Color32(0, 0, 0, 0);
+            icon.sprite = null;
+            icon.enabled = false;
+        }
     }
 
     public void SetEquipment(Equipment newEquipment) {
-        icon.enabled = true;
-        icon.sprite = newEquipment.MyIcon;
-        icon.color = Color.white;
         this.equippedEquipment = newEquipment;
         this.equippedEquipment.MyCharacterButton = this;
+        UpdateVisual();
     }
 
 
 
-public void DequipEquipment() {
-        icon.color = Color.white;
-        icon.enabled = false;
-        Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
+public void DequipEquipment(int slotIndex = -1) {
+        //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
         equippedEquipment.MyCharacterButton = null;
-        EquipmentManager.MyInstance.Unequip(equipmentSlot);
+        EquipmentManager.MyInstance.Unequip(equipmentSlot, slotIndex);
         equippedEquipment = null;
+        UpdateVisual();
     }
 
 
     public void OnPointerEnter(PointerEventData eventData) {
-        if (equippedEquipment != null) {
-            UIManager.MyInstance.ShowToolTip(transform.position, equippedEquipment);
-        }
+        UIManager.MyInstance.ShowToolTip(transform.position, this);
     }
 
     public void OnPointerExit(PointerEventData eventData) {
         UIManager.MyInstance.HideToolTip();
+    }
+
+    public string GetDescription() {
+        if (equippedEquipment != null) {
+            return equippedEquipment.GetDescription();
+        }
+        return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}", GetSummary());
+    }
+
+    public string GetSummary() {
+        if (equippedEquipment != null) {
+            return equippedEquipment.GetSummary();
+        }
+        return "Drag equipment here to equip it";
     }
 
 }

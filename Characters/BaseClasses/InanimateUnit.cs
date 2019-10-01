@@ -56,21 +56,12 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
     protected override void Start() {
         //Debug.Log(gameObject.name + ".InanimateUnit.Start()");
         base.Start();
-        SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
         InitializeNamePlate();
     }
 
     public override void CleanupEventReferences() {
         //Debug.Log(gameObject.name + ".InanimateUnit.CleanupEventReferences()");
         base.CleanupEventReferences();
-        if (QuestLog.MyInstance != null) {
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
-        }
-    }
-
-    public void HandlePrerequisiteUpdates() {
-        //Debug.Log(gameObject.name + ".InanimateUnit.HandleQuestCompleted()");
-        InitializeNamePlate();
     }
 
     public void InitializeNamePlate() {
@@ -116,5 +107,11 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
 
     public void OnDestroy() {
         CleanupEventReferences();
+    }
+
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+        InitializeNamePlate();
     }
 }

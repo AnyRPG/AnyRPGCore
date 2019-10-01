@@ -16,7 +16,7 @@ public class ColorSelectionController : MonoBehaviour {
     public GameObject LabelPrefab;
 
     public void Setup(DynamicCharacterAvatar avatar, string colorName, GameObject colorPanel, SharedColorTable colorTable) {
-        Debug.Log("AvailableColorsHandler.Setup(): colorPanel.name: " + colorPanel.name);
+        //Debug.Log("AvailableColorsHandler.Setup(): colorPanel.name: " + colorPanel.name);
         ColorName = colorName;
         Avatar = avatar;
         ColorPanel = colorPanel;

@@ -63,7 +63,7 @@ public class InputManager : MonoBehaviour {
         bool shift = (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.RightShift));
         foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
             // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
-            if (Input.GetKeyDown(keyBindNode.MyKeyCode) && keyBindNode.MyKeyBindID == keyBindID && (keyBindNode.MyKeyBindType == KeyBindType.Normal || (control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift))) {
+            if (Input.GetKeyDown(keyBindNode.MyKeyCode) && keyBindNode.MyKeyBindID == keyBindID && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
                 //Debug.Log(keyBindNode.MyKeyCode + " true!");
                 return true;
             }

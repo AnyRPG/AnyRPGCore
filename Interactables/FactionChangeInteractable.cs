@@ -49,7 +49,7 @@ public class FactionChangeInteractable : InteractableOption {
     }
 
     public override bool Interact(CharacterUnit source) {
-        Debug.Log(gameObject.name + ".FactionChangeInteractable.Interact()");
+        //Debug.Log(gameObject.name + ".FactionChangeInteractable.Interact()");
         if (eventReferencesInitialized == true) {
             return false;
         }
@@ -91,8 +91,12 @@ public class FactionChangeInteractable : InteractableOption {
     }
 
     public override int GetCurrentOptionCount() {
-        Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+        //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
         return GetValidOptionCount();
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

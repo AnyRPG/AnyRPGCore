@@ -168,7 +168,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     }
 
     public void DeActivateTargettingMode() {
-        Debug.Log("CharacterAbilityManager.DeActivateTargettingMode()");
+        //Debug.Log("CharacterAbilityManager.DeActivateTargettingMode()");
         targettingModeActive = false;
         CastTargettingManager.MyInstance.DisableProjector();
     }
@@ -211,13 +211,15 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
         }
     }
 
-    public virtual void LearnAbility(string abilityName) {
+    public virtual bool LearnAbility(string abilityName) {
         //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
         string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
         BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
         if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
             abilityList[keyName] = baseAbility;
+            return true;
         }
+        return false;
     }
 
     public void UnlearnAbility(string abilityName) {
@@ -242,7 +244,8 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     /// <param name="target"></param>
     /// <returns></returns>
     public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
-        //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Enter Ienumerator");
+        float startTime = Time.time;
+        //Debug.Log("CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
         bool canCast = true;
         if (ability.MyRequiresTarget == false || ability.MyCanCastOnEnemy == false) {
             // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -251,22 +254,22 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
             KillStopCastNormal();
         }
         if (ability.MyRequiresGroundTarget == true) {
-            Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
+            //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
             ActivateTargettingMode(ability.MyGroundTargetColor);
             while (WaitingForTarget() == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() waiting for target");
                 yield return null;
             }
             if (GetGroundTarget() == Vector3.zero) {
-                Debug.Log("Ground Targetting: groundtarget is vector3.zero, cannot cast");
+                //Debug.Log("Ground Targetting: groundtarget is vector3.zero, cannot cast");
                 canCast = false;
             }
         }
         if (canCast == true) {
-            Debug.Log("Ground Targetting: cancast is true");
+            //Debug.Log("Ground Targetting: cancast is true");
             // TESTING ORDERING
             if (!ability.MyCanSimultaneousCast) {
-                Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
+                //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
                 // i think this should work
                 //isCasting = true;
                 //isCasting = true;
@@ -278,7 +281,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
                 currentCastTime += Time.deltaTime;
 
                 // call this first because it updates the cast bar
-                Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
+                //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
                 OnCastTimeChanged(ability, currentCastTime);
 
                 // now call the ability on casttime changed (really only here for channeled stuff to do damage)
@@ -286,14 +289,22 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
                 yield return null;
             }
-            Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
+        }
+
+        //Debug.Log(gameObject + ".CharacterAbilityManager.PerformAbilityCast(). nulling tag: " + startTime);
+        currentCast = null;
+
+        // I REALLY HOPE THIS DOESN'T BREAK SHIT.  BECAUSE UNITY IS RETARDED AND DOESN'T ACTUALLY STOP A COROUTINE WHEN YOU CALL STOP FUCKING COROUTINE, WE HAVE TO SET THAT SHIT TO NULL AND THEN COMPLETE THE ROUTINE
+        // OTHERWISE WE WILL ATTEMPT TO PERFORM A CAST AND IT WILL NOT BE STOPPED EVEN THOUGH WE TOLD IT TO STOP AND EVERYTHING ELSE AFTER THAT DEPENDS ON IT ACTUALLY BEING FUCKING STOPPED WILL FAIL.
+        if (canCast) {
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
             if (!ability.MyCanSimultaneousCast) {
                 OnCastStop(MyBaseCharacter as BaseCharacter);
                 MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.SetCasting(false);
             }
             PerformAbility(ability, target, GetGroundTarget());
+
         }
-        currentCast = null;
     }
 
     public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
@@ -310,6 +321,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     /// </summary>
     /// <param name="ability"></param>
     public void BeginAbility(IAbility ability) {
+        //Debug.Log("CharacterAbilitymanager.BeginAbility()");
         if (ability == null) {
             //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
             return;
@@ -325,7 +337,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     }
 
     private void BeginAbilityCommon(IAbility ability, GameObject target) {
-        Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
         IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
         string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
 
@@ -337,13 +349,14 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
         // check if the ability is on cooldown
         if (usedAbility.MyRemainingCoolDown > 0f) {
-            Debug.Log(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
+            //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
+            // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
             return;
         }
 
         // check if we have enough mana
         if (MyBaseCharacter.MyCharacterStats.currentMana < usedAbility.MyAbilityManaCost) {
-            Debug.Log("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+            //CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
             return;
         }
 
@@ -352,7 +365,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
         // perform ability dependent checks
         if (!usedAbility.CanUseOn(finalTarget, baseCharacter as BaseCharacter) == true) {
-            //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : ) was false.  exiting");
+            //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
             return;
         }
 
@@ -369,7 +382,8 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
                 // start the cast (or cast targetting projector)
                 currentCast = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
             } else {
-                CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
+                //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
+                // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
                 //Debug.Log("A cast was already in progress!");
             }
         }
@@ -381,7 +395,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     /// <param name="ability"></param>
     /// <param name="target"></param>
     public virtual void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
-        Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
+        //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
         GameObject finalTarget = target;
         if (finalTarget != null) {
             //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + " on " + finalTarget.name);
@@ -412,14 +426,16 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
         StopCasting();
     }
 
-    public void StopCasting() {
+    public virtual void StopCasting() {
         //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting()");
-        if (currentCast != null && isCasting == true) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
+        // TESTING - REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
+        if (currentCast != null) {
+            //if (currentCast != null && isCasting == true) {
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
             StopCoroutine(currentCast);
             currentCast = null;
         } else {
-            //Debug.Log("currentCast is null, nothing to stop");
+            //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
         }
         MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
         OnCastStop(MyBaseCharacter as BaseCharacter);

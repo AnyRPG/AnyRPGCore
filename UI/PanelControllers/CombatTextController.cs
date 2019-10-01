@@ -147,10 +147,19 @@ public class CombatTextController : MonoBehaviour
             fadeOutTimer -= Time.fixedDeltaTime;
             
             alpha -= fadeRate * Time.fixedDeltaTime;
+
+            // fade text
             Color tmp = text.color;
             tmp.a = alpha;
             text.color = tmp;
-            
+
+            // fade image
+            if (image.sprite != null) {
+                Color imageColor = image.color;
+                imageColor.a = alpha;
+                image.color = imageColor;
+            }
+
             randomY += (movementSpeed * directionMultiplier);
         } else {
             Destroy(this.gameObject);

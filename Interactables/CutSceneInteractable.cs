@@ -84,5 +84,9 @@ public class CutSceneInteractable : InteractableOption {
         CleanupEventReferences();
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 
 }

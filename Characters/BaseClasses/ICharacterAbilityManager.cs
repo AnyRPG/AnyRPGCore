@@ -20,7 +20,7 @@ public interface ICharacterAbilityManager {
     void BeginDestroyAbilityEffectObject(GameObject abilityEffectObject, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect);
     IEnumerator PerformAbilityCast(IAbility ability, GameObject target);
     void StopCasting();
-    void LearnAbility(string abilityName);
+    bool LearnAbility(string abilityName);
     void UnlearnAbility(string abilityName);
     void ActivateTargettingMode(Color groundTargetColor);
     void DeActivateTargettingMode();

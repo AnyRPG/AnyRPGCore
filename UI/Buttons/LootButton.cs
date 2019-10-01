@@ -29,7 +29,7 @@ public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExit
     }
 
     public bool TakeLoot() {
-        Debug.Log("LootButton.TakeLoot()");
+        //Debug.Log("LootButton.TakeLoot()");
         bool result = InventoryManager.MyInstance.AddItem(MyLoot);
         if (result) {
             //Debug.Log("LootButton.TakeLoot(): added item to inventory");

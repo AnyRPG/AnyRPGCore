@@ -168,7 +168,7 @@ public class QuestLogUI : WindowContentController {
     }
 
     public override void OnCloseWindow() {
-        Debug.Log("QuestLogUI.OnCloseWindow()");
+        //Debug.Log("QuestLogUI.OnCloseWindow()");
         base.OnCloseWindow();
         ClearQuests();
         DeactivateButtons();

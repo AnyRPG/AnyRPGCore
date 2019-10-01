@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class NameChangeInteractable : InteractableOption {
 
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
     [SerializeField]
     private GameObject spawnPrefab;
 
@@ -12,7 +14,6 @@ public class NameChangeInteractable : InteractableOption {
 
     private BoxCollider boxCollider;
 
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.MyIcon); }
     public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.MyNamePlateImage); }
@@ -126,4 +127,8 @@ public class NameChangeInteractable : InteractableOption {
         return GetValidOptionCount();
     }
 
+    public override void HandlePrerequisiteUpdates() {
+        base.HandlePrerequisiteUpdates();
+        MiniMapStatusUpdateHandler(this);
+    }
 }

@@ -238,21 +238,49 @@ public class PlayerController : BaseController {
         int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
         int layerMask = ~(playerMask | ignoreMask | spellMask);
 
-        if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
+        bool disableMouseOver = false;
+        bool mouseOverNamePlate = false;
+        if (NamePlateCanvasController.MyInstance != null) {
+            mouseOverNamePlate = NamePlateCanvasController.MyInstance.MouseOverNamePlate();
+        }
 
-            //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
-            Interactable _interactable = mouseOverhit.collider.GetComponent<Interactable>();
+        if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
+            if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
 
+                // should we getcomponents in parents instead?  that would mean if the mouse went outside the collider, it would still glow
+                Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
+                if (newInteractable == null) {
+                    // TESTING, THIS SHOULD HELP WITH MOUSEOVER BODIES LAYING ON THEIR SIDE THAT ARE LOOTABLE
+                    newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
+                }
+                //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null") + "; new: " + (newInteractable != null ? newInteractable.MyName : "null"));
 
-            if (mouseOverInteractable != null && mouseOverInteractable != _interactable) {
-                mouseOverInteractable.OnMouseExit();
+                if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
+                    // since we hit something, and our existing thing was not null, we have to exit the old one
+                    //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null")+ "; new: " + (newInteractable != null ? newInteractable.MyName : "null" ));
+
+                    mouseOverInteractable.OnMouseOut();
+                }
+
+                if (newInteractable != null && mouseOverInteractable != newInteractable) {
+                    // we have a new interactable, activate mouseover
+
+                    //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
+                    newInteractable.OnMouseHover();
+                }
+                mouseOverInteractable = newInteractable;
             }
-            mouseOverInteractable = _interactable;
+        } else {
+            disableMouseOver = true;
+            //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateCanvasController.MyInstance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
+        }
+
+        if (disableMouseOver) {
+            // we did not hit any interactable, check if a current interactable is set and unset it
             if (mouseOverInteractable != null) {
-                //Debug.Log("setting interaction target to " + mouseOverhit.collider.gameObject.name);
-                mouseOverInteractable.OnMouseOver();
+                mouseOverInteractable.OnMouseOut();
+                mouseOverInteractable = null;
             }
-            //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
         }
 
     }
@@ -287,11 +315,11 @@ public class PlayerController : BaseController {
         }
 
         //if (InputManager.MyInstance.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-        if (mouseOverInteractable == null) {
+        if (mouseOverInteractable == null && !NamePlateCanvasController.MyInstance.MouseOverNamePlate()) {
             // Stop focusing any object
             //RemoveFocus();
             ClearTarget();
-        } else {
+        } else if (mouseOverInteractable != null) {
             SetTarget(mouseOverInteractable.gameObject);
         }
         //}
@@ -320,6 +348,10 @@ public class PlayerController : BaseController {
 
     private bool InteractionSucceeded() {
         //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
+
+        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            return false;
+        }
         //if (IsTargetInHitBox(target)) {
         if (interactable.Interact(baseCharacter.MyCharacterUnit)) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
@@ -360,8 +392,8 @@ public class PlayerController : BaseController {
                 tabTargetIndex = 0;
             }
             GameObject _gameObject = hitColliders[tabTargetIndex].gameObject;
-            CharacterUnit _characterUnit = _gameObject.GetComponent<CharacterUnit>();
-            if (_characterUnit != null && _characterUnit.MyCharacter.MyCharacterStats.IsAlive == true && Faction.RelationWith(_characterUnit.MyCharacter, baseCharacter.MyFactionName) < 0) {
+            CharacterUnit targetCharacterUnit = _gameObject.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.MyFactionName) <= -1) {
                 if (closestTarget == null) {
                     closestTarget = _gameObject;
                 }
@@ -378,9 +410,13 @@ public class PlayerController : BaseController {
 
         // reset to closest unit every 3 seconds if starting a new round of tabbing.
         if (timeSinceLastTab.TotalSeconds > 3f) {
-            SetTarget(closestTarget);
+            if (closestTarget != null) {
+                SetTarget(closestTarget);
+            }
         } else {
-            SetTarget(preferredTarget);
+            if (preferredTarget != null) {
+                SetTarget(preferredTarget);
+            }
         }
     }
 
@@ -506,12 +542,19 @@ public class PlayerController : BaseController {
     }
 
     public override void SetTarget(GameObject newTarget) {
+        //Debug.Log("PlayerController.SetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
+        if (newTarget == null) {
+            return;
+        }
         base.SetTarget(newTarget);
         //Debug.Log("TESTING ICHARACTERUNIT FOR INANIMATE UNIT FRAMES");
-        if (newTarget.GetComponent<INamePlateUnit>()!= null) {
+        if (newTarget.GetComponent<INamePlateUnit>() != null) {
+            //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
             UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget);
             NamePlateManager.MyInstance.SetFocus(newTarget.GetComponent<INamePlateUnit>());
             OnSetTarget(target);
+        } else {
+            //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
         }
     }
 
