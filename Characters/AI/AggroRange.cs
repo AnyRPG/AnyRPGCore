@@ -19,6 +19,7 @@ public class AggroRange : MonoBehaviour {
         if (aggroCollider == null) {
             Debug.Log("AggroRange.Awake(): aggroCollider is null!");
         }
+        DisableAggro();
     }
 
     private void Start() {
@@ -46,6 +47,10 @@ public class AggroRange : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider collider) {
+        if (baseCharacter == null) {
+            return;
+        }
+        //Debug.Log((baseCharacter == null ? "null" : baseCharacter.gameObject.name) + ".AggroRange.OnTriggerEnter()");
         // if a player enters our sphere, target him (which has the effect of agro because the idle state will follow any target the enemycontroller has)
         //if (collider.gameObject.GetComponent<PlayerStats>() != null) {
         CharacterUnit _characterUnit = collider.gameObject.GetComponent<CharacterUnit>();
@@ -70,28 +75,34 @@ public class AggroRange : MonoBehaviour {
         }
     }
 
-    private void OnTriggerExit(Collider collider) {
-        //Debug.Log(baseCharacter.gameObject.name + ": the object that exited our sphere collider had a baseCharacter attached to it and the relationship is < 0");
-        CharacterUnit _characterUnit = collider.gameObject.GetComponent<CharacterUnit>();
-        if (_characterUnit == null) {
-            // This was not a charcter, and therefore we do not have to remove it from our aggro table
+    // this code was really messed up.  it removes objects from aggro tables without dropping combat so you get stuck in combat.
+    // also, we shouldn't really remove anyone from an agro table until the cooldown has passed so a better place for this type of thing is in charactercombat during the elapsed combat event time
+    /*
+
+private void OnTriggerExit(Collider collider) {
+    Debug.Log(baseCharacter.gameObject.name + ".AggroRange.OnTriggerExit()");
+    CharacterUnit _characterUnit = collider.gameObject.GetComponent<CharacterUnit>();
+    if (_characterUnit == null) {
+        // This was not a charcter, and therefore we do not have to remove it from our aggro table
+        return;
+    }
+    BaseCharacter otherBaseCharacter = _characterUnit.MyCharacter;
+    if (otherBaseCharacter != null) {
+        //Debug.Log("AggroRange.OnTriggerExit: otherBaseCharacter: " + otherBaseCharacter);
+        if (otherBaseCharacter.MyCharacterCombat == null) {
+            //Debug.Log("otherBaseCharacter.MyCharacterCombat is null");
             return;
         }
-        BaseCharacter otherBaseCharacter = _characterUnit.MyCharacter;
-        if (otherBaseCharacter != null) {
-            //Debug.Log("AggroRange.OnTriggerExit: otherBaseCharacter: " + otherBaseCharacter);
-            if (otherBaseCharacter.MyCharacterCombat == null) {
-                //Debug.Log("otherBaseCharacter.MyCharacterCombat is null");
-                return;
-            }
-            if (otherBaseCharacter.MyCharacterCombat.MyAggroTable == null) {
-                Debug.Log("otherBaseCharacter.MyCharacterCombat.MyAggroTable is null");
-                return;
-            }
-            otherBaseCharacter.MyCharacterCombat.MyAggroTable.AttemptRemoveAndBroadcast(_characterUnit);
-        } else {
-            Debug.Log("otherbasecharacter is null");
+        if (otherBaseCharacter.MyCharacterCombat.MyAggroTable == null) {
+            Debug.Log("otherBaseCharacter.MyCharacterCombat.MyAggroTable is null");
+            return;
         }
+
+        otherBaseCharacter.MyCharacterCombat.MyAggroTable.AttemptRemoveAndBroadcast(_characterUnit);
+    } else {
+        Debug.Log("otherbasecharacter is null");
     }
 
+}
+    */
 }

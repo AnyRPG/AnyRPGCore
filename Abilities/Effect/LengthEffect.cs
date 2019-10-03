@@ -133,7 +133,7 @@ public class LengthEffect: AbilityEffect {
         PerformAbilityCompleteEffects(source, target, abilityEffectInput);
     }
 
-    public virtual void CancelEffect() {
+    public virtual void CancelEffect(BaseCharacter targetCharacter) {
         if (abilityEffectObject != null) {
             // give slight delay to allow for graphic effects to finish
             Destroy(abilityEffectObject, prefabDestroyDelay);

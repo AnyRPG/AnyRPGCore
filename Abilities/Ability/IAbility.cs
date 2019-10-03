@@ -20,6 +20,9 @@ public interface IAbility {
     bool MyCanCastOnSelf { get; }
     bool MyCanCastOnFriendly { get; }
     float MyRemainingCoolDown { get; set; }
+    AnimationClip MyAnimationClip { get; set; }
+    AnimationClip MyCastingAnimationClip { get; set; }
+
 
     bool CanUseOn(GameObject target, BaseCharacter source);
     void Cast(BaseCharacter source, GameObject target, Vector3 GroundTarget);

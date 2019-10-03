@@ -29,7 +29,7 @@ public class BagNode {
             if (value != null) {
                 OnAddBagHandler(bag);
             } else {
-                Debug.Log("BagNode.MyBag = null");
+                //Debug.Log("BagNode.MyBag = null");
                 OnRemoveBagHandler();
                 if (MyBagPanel != null) {
                     MyBagPanel.ClearSlots();

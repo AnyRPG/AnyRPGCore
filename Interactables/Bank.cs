@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bank : InteractableOption
-{
+public class Bank : InteractableOption {
+
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyBankNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyBankNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Start() {
         base.Start();
@@ -28,6 +31,7 @@ public class Bank : InteractableOption
     }
 
     public override void HandlePrerequisiteUpdates() {
+        //Debug.Log(gameObject.name + ".Bank.HandldePrerequisiteUpdates()");
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }

@@ -17,6 +17,7 @@ public class QuestGiver : InteractableOption, IQuestGiver {
     private bool questGiverInitialized = false;
 
     public QuestNode[] MyQuests { get => quests; }
+
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage : base.MyIcon); }
     public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage : base.MyNamePlateImage); }
 
@@ -43,10 +44,10 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterSpawn;
+        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
         if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
             //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
-            HandleCharacterSpawn();
+            HandlePlayerUnitSpawn();
         }
 
         namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
@@ -56,7 +57,7 @@ public class QuestGiver : InteractableOption, IQuestGiver {
     public override void CleanupEventReferences() {
         //Debug.Log("QuestGiver.CleanupEventReferences()");
         if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
         }
         if (namePlateUnit != null) {
             namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
@@ -104,7 +105,7 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         questGiverInitialized = true;
     }
 
-    public void HandleCharacterSpawn() {
+    public void HandlePlayerUnitSpawn() {
         //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
         InitializeQuestGiver();
 

@@ -7,17 +7,15 @@ public class NameChangeInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.MyNamePlateImage); }
+
     [SerializeField]
     private GameObject spawnPrefab;
 
     private GameObject spawnReference;
 
     private BoxCollider boxCollider;
-
-
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.MyNamePlateImage); }
-
 
     protected override void Awake() {
         //Debug.Log("NameChangeInteractable.Awake()");
@@ -43,6 +41,7 @@ public class NameChangeInteractable : InteractableOption {
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindowHandler -= CleanupEventReferences;
         }
+        eventReferencesInitialized = false;
 
     }
 
@@ -67,7 +66,7 @@ public class NameChangeInteractable : InteractableOption {
     }
 
     private void DestroySpawn() {
-        Debug.Log(gameObject.name + ".NameChangeInteractable.DestroySpawn()");
+        //Debug.Log(gameObject.name + ".NameChangeInteractable.DestroySpawn()");
         if (spawnReference != null) {
             Destroy(spawnReference);
             spawnReference = null;

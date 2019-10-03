@@ -7,6 +7,9 @@ public class Vendor : InteractableOption {
 
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.MyNamePlateImage); }
+
     [SerializeField]
     private VendorItem[] items;
 

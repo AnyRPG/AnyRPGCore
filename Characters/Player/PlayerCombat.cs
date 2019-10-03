@@ -89,13 +89,13 @@ public class PlayerCombat : CharacterCombat {
             }
             // autoattack is active, but we were unable to attack the target because they were dead, or not a lootable character, or didn't have an interactable.
             // There is no reason for autoattack to remain active under these circumstances
-            Debug.Log(gameObject.name + ": target is not attackable.  deactivate autoattack");
+            //Debug.Log(gameObject.name + ": target is not attackable.  deactivate autoattack");
             DeActivateAutoAttack();
         }
     }
 
     public override bool EnterCombat(BaseCharacter target) {
-        //Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyDisplayName != null ? target.MyDisplayName : "null") + ")");
+        Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyCharacterName != null ? target.MyCharacterName : "null") + ")");
         if (baseCharacter.MyCharacterStats.IsAlive == false) {
             Debug.Log("Player is dead but was asked to enter combat!!!");
             return false;
@@ -166,8 +166,19 @@ public class PlayerCombat : CharacterCombat {
         AttemptRegen();
     }
 
+    public override void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {
+        Debug.Log("PlayerCombat.OnKillConfirmed()");
+        base.OnKillConfirmed(sourceCharacter, creditPercent);
+    }
+
+
+    public override void TryToDropCombat() {
+        Debug.Log("PlayerCombat.TryToDropCombat()");
+        base.TryToDropCombat();
+    }
+
     protected override void DropCombat() {
-        //Debug.Log("PlayerCombat.DropCombat()");
+        Debug.Log("PlayerCombat.DropCombat()");
         if (!inCombat) {
             return;
         }

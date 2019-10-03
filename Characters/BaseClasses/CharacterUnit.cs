@@ -18,7 +18,7 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
     private BaseCharacter baseCharacter = null;
 
     [SerializeField]
-    protected float despawnDelay;
+    protected float despawnDelay = 20f;
 
     private NamePlateController namePlate;
 
@@ -48,6 +48,7 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
     [SerializeField]
     private Vector3 playerPreviewInitialOffset;
 
+    private Coroutine despawnCoroutine;
 
     public BaseCharacter MyCharacter {
         get => baseCharacter;
@@ -75,6 +76,22 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
     public bool HasHealth() {
         //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
         return true;
+    }
+
+    public void HandleReviveComplete() {
+        InitializeNamePlate();
+
+        // give chance to update minimap and put character indicator back on it
+        HandlePrerequisiteUpdates();
+    }
+
+    public void HandleDie(CharacterStats _characterStats) {
+        HandleNamePlateNeedsRemoval(_characterStats);
+        
+        // give a chance to blank out minimap indicator
+        // when the engine is upgraded to support multiplayer, this may need to be revisited.
+        // some logic to still show minimap icons for dead players in your group so you can find and res them could be necessary
+        HandlePrerequisiteUpdates();
     }
 
     public void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
@@ -110,9 +127,9 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
             return;
         }
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-            baseCharacter.MyCharacterStats.OnDie += HandleNamePlateNeedsRemoval;
+            baseCharacter.MyCharacterStats.OnDie += HandleDie;
             baseCharacter.MyCharacterStats.OnHealthChanged += HandleHealthBarNeedsUpdate;
-            baseCharacter.MyCharacterStats.OnReviveComplete += InitializeNamePlate;
+            baseCharacter.MyCharacterStats.OnReviveComplete += HandleReviveComplete;
         } else {
             //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
         }
@@ -127,9 +144,9 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         base.CleanupEventReferences();
 
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-            baseCharacter.MyCharacterStats.OnDie -= HandleNamePlateNeedsRemoval;
+            baseCharacter.MyCharacterStats.OnDie -= HandleDie;
             baseCharacter.MyCharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
-            baseCharacter.MyCharacterStats.OnReviveComplete -= InitializeNamePlate;
+            baseCharacter.MyCharacterStats.OnReviveComplete -= HandleReviveComplete;
         }
         eventReferencesInitialized = false;
     }
@@ -146,6 +163,9 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         CleanupEventReferences();
         if (NamePlateManager.MyInstance != null) {
             NamePlateManager.MyInstance.RemoveNamePlate(this as INamePlateUnit);
+        }
+        if (despawnCoroutine != null) {
+            StopCoroutine(despawnCoroutine);
         }
     }
 
@@ -243,8 +263,25 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ")");
         //gameObject.SetActive(false);
         // TEST ADDING A MANDATORY DELAY
-        Destroy(gameObject, Mathf.Clamp(despawnDelay + this.despawnDelay, 0.1f, Mathf.Infinity));
+        if (despawnCoroutine == null) {
+            StartCoroutine(PerformDespawnDelay(despawnDelay));
+        }
+        // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
         OnDespawn(gameObject);
+    }
+
+    public IEnumerator PerformDespawnDelay(float despawnDelay) {
+        // add all possible delays together
+        float totalDelay = despawnDelay + this.despawnDelay + SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
+        while (totalDelay > 0f) {
+            totalDelay -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (baseCharacter.MyCharacterStats.IsAlive == false) {
+            // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened
+            Destroy(gameObject);
+        }
     }
 
     public override string GetDescription() {
@@ -261,14 +298,17 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
     // TESTING, USE CANINTERACT TO ALLOW ATTACK, BUT GETVALIDOPTIONCOUNT TO SUPPRESS WINDOW
     // MORE TESTING, CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
     public override int GetValidOptionCount() {
+        //Debug.Log(gameObject.name + ".CharacterUnit.GetValidOptionCount()");
         return (MyCharacter.MyCharacterStats.IsAlive == true ? 1 : 0);
     }
 
     public override int GetCurrentOptionCount() {
+        //Debug.Log(gameObject.name + ".CharacterUnit.GetCurrentOptionCount()");
         return GetValidOptionCount();
     }
 
     public override void HandlePrerequisiteUpdates() {
+        //Debug.Log(gameObject.name + ".CharacterUnit.HandlePrerequisiteUpdates()");
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }

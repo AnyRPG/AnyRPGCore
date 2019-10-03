@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillTrainer : InteractableOption
-{
+public class SkillTrainer : InteractableOption {
+
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.MyNamePlateImage); }
 
     [SerializeField]
     private Skill[] skills;
@@ -15,8 +18,6 @@ public class SkillTrainer : InteractableOption
 
     public Skill[] MySkills { get => skills; }
 
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Awake() {
         base.Awake();
@@ -91,14 +92,23 @@ public class SkillTrainer : InteractableOption
                 optionCount++;
             }
         }
+        //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount(); return: " + optionCount);
         return optionCount;
     }
 
     public override bool CanInteract(CharacterUnit source) {
-        return ((GetCurrentOptionCount() > 0 && MyPrerequisitesMet) ? true : false);
+        //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
+        bool returnValue = ((GetCurrentOptionCount() > 0 && MyPrerequisitesMet) ? true : false);
+        //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
+        return returnValue;
+    }
+
+    public override bool CanShowMiniMapIcon() {
+        return CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
     }
 
     public override void HandlePrerequisiteUpdates() {
+        //Debug.Log(gameObject.name + ".SkillTrainer.HandlePrerequisiteUpdates()");
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }

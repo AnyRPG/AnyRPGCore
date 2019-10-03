@@ -11,6 +11,9 @@ public class LootableCharacter : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
+
     [SerializeField]
     private LootTable lootTable;
 
@@ -18,8 +21,6 @@ public class LootableCharacter : InteractableOption {
 
     public LootTable MyLootTable { get => lootTable; }
     public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Awake() {
         base.Awake();
@@ -73,6 +74,7 @@ public class LootableCharacter : InteractableOption {
             } else if (MyLootTable.MyDroppedItems.Count > 0) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
+
                 PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
             }
         } else {
@@ -99,8 +101,22 @@ public class LootableCharacter : InteractableOption {
         if (MyLootTable.MyDroppedItems.Count == 0) {
             //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table had no dropped items, despawning");
             SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
+
+            // cancel loot sparkle here because despawn takes a while
+            List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.MyLootSparkleAbility.abilityEffects;
+            foreach (AbilityEffect abilityEffect in sparkleEffects) {
+                //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
+                if (characterUnit.MyBaseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyName))) {
+                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
+                    characterUnit.MyBaseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyName)].CancelStatusEffect();
+                }
+            }
+
             Despawn();
         }
+
+        // this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon
+        HandlePrerequisiteUpdates();
 
     }
 
@@ -111,7 +127,8 @@ public class LootableCharacter : InteractableOption {
             return false;
         }
         
-        if (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && lootTable != null) {
+        // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
+        if (lootTable != null && GetCurrentOptionCount() > 0) {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
             return true;
         }

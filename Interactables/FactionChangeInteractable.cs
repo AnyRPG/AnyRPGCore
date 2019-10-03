@@ -12,6 +12,7 @@ public class FactionChangeInteractable : InteractableOption {
     private string factionName;
 
     public string MyFactionName { get => factionName; set => factionName = value; }
+
     public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage : base.MyIcon); }
     public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage : base.MyNamePlateImage); }
 

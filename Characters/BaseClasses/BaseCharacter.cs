@@ -8,9 +8,6 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
     protected string characterName;
 
     [SerializeField]
-    protected Faction faction;
-
-    [SerializeField]
     protected string factionName;
 
     [SerializeField]
@@ -42,19 +39,13 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
     public string MyFactionName {
         get {
             if (MyCharacterController != null && MyCharacterController.MyUnderControl) {
-                return MyCharacterController.MyMasterUnit.factionName;
+                return MyCharacterController.MyMasterUnit.MyFactionName;
             }
             if (factionName != null && factionName != string.Empty) {
                 //Debug.Log(gameObject.name + ".MyFactionName: factionName has value: " + factionName);
                 return factionName;
-            } else {
-                if (faction != null) {
-                    //Debug.Log(gameObject.name + ".MyFactionName: faction is not null, returning: " + faction.MyName);
-                    return faction.MyName;
-                }
-                //Debug.Log(gameObject.name + ".MyFactionName: faction and factionname are empty, returning string.empty!");
-                return string.Empty;
             }
+            return string.Empty;
         }
         set => factionName = value;
     }

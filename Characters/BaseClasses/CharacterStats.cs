@@ -37,7 +37,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     public int currentHealth { get; private set; }
     public int currentMana { get; private set; }
 
-    private float hitBox = 1f;
+    private float hitBox = 1.5f;
 
     protected Stat meleeDamageModifiers = new Stat();
     protected Stat armorModifiers = new Stat();
@@ -179,8 +179,9 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
         //Debug.Log("statuseffects count: " + statusEffects.Count);
 
         StatusEffect comparedStatusEffect = null;
-        if (statusEffects.ContainsKey(statusEffect.MyName)) {
-            comparedStatusEffect = statusEffects[statusEffect.MyName].MyStatusEffect;
+        string peparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyName);
+        if (statusEffects.ContainsKey(peparedString)) {
+            comparedStatusEffect = statusEffects[peparedString].MyStatusEffect;
         }
 
         //Debug.Log("comparedStatusEffect: " + comparedStatusEffect);
@@ -198,7 +199,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
             // add to effect list since it was not in there
             StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyName) as StatusEffect;
             StatusEffectNode newStatusEffectNode = new StatusEffectNode();
-            statusEffects.Add(_statusEffect.MyName, newStatusEffectNode);
+            statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.MyName), newStatusEffectNode);
             _statusEffect.Initialize(source, target.GetComponent<CharacterUnit>().MyCharacter, abilityEffectInput);
             Coroutine newCoroutine = StartCoroutine(Tick(source, abilityEffectInput, target.GetComponent<CharacterUnit>().MyCharacter, _statusEffect));
             newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
@@ -240,11 +241,12 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
     public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
         //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
-        if (statusEffects.ContainsKey(statusEffect.MyName)) {
-            if (statusEffects[statusEffect.MyName].MyMonitorCoroutine != null) {
-                StopCoroutine(statusEffects[statusEffect.MyName].MyMonitorCoroutine);
+        string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyName);
+        if (statusEffects.ContainsKey(preparedString)) {
+            if (statusEffects[preparedString].MyMonitorCoroutine != null) {
+                StopCoroutine(statusEffects[preparedString].MyMonitorCoroutine);
             }
-            statusEffects.Remove(statusEffect.MyName);
+            statusEffects.Remove(preparedString);
         }
 
         // should reset health back down after buff expires
@@ -419,30 +421,16 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     protected virtual void ClearInvalidStatusEffects() {
-        Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects()");
+        //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects()");
         //List<string> RemoveList = new List<string>();
         List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
         foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-            Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
+            //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
             if (statusEffectNode.MyStatusEffect.MyRequireDeadTarget == true) {
-                Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
-                /*
-                if (statusEffectNode.MyMonitorCoroutine != null) {
-                    StopCoroutine(statusEffectNode.MyMonitorCoroutine);
-                }
-                */
-                //Destroy(statusEffectNode.MyStatusEffect, 0.1f);
-                //RemoveList.Add(statusEffectNode.MyStatusEffect.MyName);
+                //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
                 statusEffectNodes.Add(statusEffectNode);
             }
         }
-        /*
-        foreach (string removeString in RemoveList) {
-            Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + removeString + " calling remove");
-            MyStatusEffects.Remove(removeString);
-            clear
-        }
-        */
         foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
             statusEffectNode.CancelStatusEffect();
         }
@@ -452,20 +440,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     public IEnumerator Tick(BaseCharacter source, AbilityEffectOutput abilityEffectInput, BaseCharacter target, StatusEffect statusEffect) {
         //Debug.Log(MyName + ".StatusEffect.Tick() start");
         BaseCharacter characterSource = source;
-        if (statusEffect.MyDisableAnimator == true) {
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
-            target.MyCharacterController.FreezeCharacter();
-        }
-
-        if (statusEffect.MyStun == true) {
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
-            target.MyCharacterController.StunCharacter();
-        }
-        if (statusEffect.MyLevitate == true) {
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
-            target.MyCharacterController.LevitateCharacter();
-        }
-
+        statusEffect.ApplyControlEffects(target);
         statusEffect.SetRemainingDuration(statusEffect.MyDuration);
         //Debug.Log("duration: " + duration);
         //nextTickTime = remainingDuration - tickRate;
@@ -478,7 +453,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
         //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
         while (statusEffect.GetRemainingDuration() >= 0 && target != null) {
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() loop");
+            //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);
 
             // check for tick first so we can do final tick;
@@ -495,18 +470,9 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
         if (target != null) {
             if (source != null & target.MyCharacterUnit != null) {
                 statusEffect.CastComplete(source, target.MyCharacterUnit.gameObject, abilityEffectInput);
-                if (statusEffect.MyDisableAnimator == true) {
-                    target.MyCharacterController.UnFreezeCharacter();
-                }
-                if (statusEffect.MyStun == true) {
-                    target.MyCharacterController.UnStunCharacter();
-                }
-                if (statusEffect.MyLevitate == true) {
-                    target.MyCharacterController.UnLevitateCharacter();
-                }
             }
         }
 
-        statusEffects[statusEffect.MyName].CancelStatusEffect();
+        statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
     }
 }

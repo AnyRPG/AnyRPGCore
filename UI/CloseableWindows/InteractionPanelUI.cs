@@ -129,7 +129,7 @@ public class InteractionPanelUI : WindowContentController {
         // going to just pop the first available interaction window for now and see how that feels
         bool optionOpened = false;
         foreach (IInteractable _interactable in currentInteractables) {
-            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "Checking for valid button");
+            //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "; type: " + _interactable.GetType() + "; Checking for valid button");
             // handle questgiver
             if (_interactable is QuestGiver) {
                 foreach (QuestNode questNode in (_interactable as QuestGiver).MyQuests) {
@@ -170,19 +170,22 @@ public class InteractionPanelUI : WindowContentController {
                     }
 
                 }
+            } else {
+                // this block used to be outside the else statement, but for now we don't want quests to show as an interaction option because they are handled separately above
+                // handle generic stuff
+                if (_interactable.MyName != null && _interactable.MyName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
+                    //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
+                    GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
+                    InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
+                    iPS.MyText.text = _interactable.MyInteractionPanelTitle;
+                    iPS.MyText.color = Color.white;
+                    iPS.MyInteractableOption = _interactable;
+                    //Interactables.Add(go);
+                    interactionPanelScripts.Add(go);
+                }
+
             }
 
-            // handle generic stuff
-            if (_interactable.MyName != null && _interactable.MyName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
-                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
-                GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
-                InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
-                iPS.MyText.text = _interactable.MyInteractionPanelTitle;
-                iPS.MyText.color = Color.white;
-                iPS.MyInteractableOption = _interactable;
-                //Interactables.Add(go);
-                interactionPanelScripts.Add(go);
-            }
         }
 
         if (PopupWindowManager.MyInstance.dialogWindow.IsOpen) {

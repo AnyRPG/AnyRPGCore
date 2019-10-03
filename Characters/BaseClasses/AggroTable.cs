@@ -15,9 +15,12 @@ public class AggroTable {
             List<AggroNode> removeNodes = new List<AggroNode>();
             // we need to remove stale nodes on each check because we could have aggro'd a target that was already fighting with someone and not got the message it died if we didn't hit it first
             foreach (AggroNode node in aggroNodes) {
-                if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.MyCharacter, MyBaseCharacter) > -1) {
-                    // we could be in combat with someone who has switched faction from a faction buff mid combat
+                if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.MyCharacter, MyBaseCharacter) > -1 || node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive == false) {
+                    //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
+                    // we could be in combat with someone who has switched faction from a faction buff mid combat or died
                     removeNodes.Add(node);
+                } else {
+                    //Debug.Log("node.aggroTarget: " + node.aggroTarget == null ? "null" : node.aggroTarget.name + "; isalive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                 }
             }
             foreach (AggroNode node in removeNodes) {
@@ -47,13 +50,18 @@ public class AggroTable {
 
     /// <summary>
     /// Add an object to the aggro table or update its agro amount if it is already in the aggro table
+    /// RETURN TRUE IF THIS IS A NEW ENTRY, FALSE IF NOT
     /// </summary>
     /// <param name="_aggroTable"></param>
-    /// <param name="target"></param>
+    /// <param name="targetCharacterUnit"></param>
     /// <param name="aggroAmount"></param>
     /// return true if new entry to the table
-    public bool AddToAggroTable(CharacterUnit target, int aggroAmount) {
+    public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
         //Debug.Log("AggroTable.AddToAggroTable(): target: " + target.name + "; amount: " + aggroAmount);
+
+        if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
+            return false;
+        }
 
         bool isAlreadyInAggroTable = false;
 
@@ -61,7 +69,7 @@ public class AggroTable {
         if (aggroNodes.Count != 0) {
             // loop through the table and see if the target is already in it.
             foreach (AggroNode aggroNode in aggroNodes) {
-                if (aggroNode.aggroTarget == target) {
+                if (aggroNode.aggroTarget == targetCharacterUnit) {
                     aggroNode.aggroValue += aggroAmount;
                     isAlreadyInAggroTable = true;
                     //Debug.Log(gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
@@ -72,7 +80,7 @@ public class AggroTable {
         if (!isAlreadyInAggroTable) {
             //Debug.Log(gameObject.name + " adding new entry " + target.name + " to aggro table");
             AggroNode aggroNode = new AggroNode();
-            aggroNode.aggroTarget = target;
+            aggroNode.aggroTarget = targetCharacterUnit;
             aggroNode.aggroValue = aggroAmount;
             aggroNodes.Add(aggroNode);
         }
@@ -100,11 +108,12 @@ public class AggroTable {
     /// <summary>
     /// Meant to be called internally. Remove a single object and broadcast to them to clear us from their aggro table if they have less than 0 agro
     /// </summary>
-    /// <param name="target"></param>
-    public void AttemptRemoveAndBroadcast(CharacterUnit target) {
+    /// <param name="targetCharacterUnit"></param>
+    public void AttemptRemoveAndBroadcast(CharacterUnit targetCharacterUnit) {
+        Debug.Log((baseCharacter == null ? "null" : baseCharacter.MyCharacterName) + ".AggroTable.AttemptRemoveAndBroadCast(" + targetCharacterUnit + ")");
         foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
-            if (aggroNode.aggroTarget == target && aggroNode.aggroValue < 0) {
-                Debug.Log(baseCharacter.name + ": Removing " + target.name + " from aggro table");
+            if (aggroNode.aggroTarget == targetCharacterUnit && aggroNode.aggroValue < 0) {
+                Debug.Log(baseCharacter.name + ": Removing " + targetCharacterUnit.name + " from aggro table");
                 aggroNode.aggroTarget.MyCharacter.MyCharacterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.MyCharacterUnit);
                 aggroNodes.Remove(aggroNode);
             }

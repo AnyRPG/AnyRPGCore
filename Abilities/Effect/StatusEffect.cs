@@ -69,8 +69,9 @@ public class StatusEffect : LengthEffect {
     public float MyDuration { get => duration; set => duration = value; }
     public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
 
-    public override void CancelEffect() {
-        base.CancelEffect();
+    public override void CancelEffect(BaseCharacter targetCharacter) {
+        base.CancelEffect(targetCharacter);
+        RemoveControlEffects(targetCharacter);
         ClearNodeScripts();
     }
 
@@ -301,7 +302,36 @@ public class StatusEffect : LengthEffect {
         return base.GetSummary() + string.Format("\n{0}\n{1}{2}", descriptionFinal, durationLabel, statusText);
     }
 
+    public void ApplyControlEffects(BaseCharacter targetCharacter) {
+        if (MyDisableAnimator == true) {
+            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
+            targetCharacter.MyCharacterController.FreezeCharacter();
+        }
 
+        if (MyStun == true) {
+            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
+            targetCharacter.MyCharacterController.StunCharacter();
+        }
+        if (MyLevitate == true) {
+            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
+            targetCharacter.MyCharacterController.LevitateCharacter();
+        }
+    }
+
+    public void RemoveControlEffects(BaseCharacter targetCharacter) {
+        if (targetCharacter == null) {
+            return;
+        }
+        if (MyDisableAnimator == true) {
+            targetCharacter.MyCharacterController.UnFreezeCharacter();
+        }
+        if (MyStun == true) {
+            targetCharacter.MyCharacterController.UnStunCharacter();
+        }
+        if (MyLevitate == true) {
+            targetCharacter.MyCharacterController.UnLevitateCharacter();
+        }
+    }
 }
 
 public enum StatBuffType { Stamina, Strength, Intellect, Agility, MovementSpeed }

@@ -24,7 +24,7 @@ public class DeathState : IState
 
     public void Update() {
         if (aiController.MyBaseCharacter.MyCharacterStats.IsAlive) {
-            //Debug.Log("No Longer Dead!");
+            Debug.Log("No Longer Dead!");
             aiController.ChangeState(new ReturnState());
         }
         return;

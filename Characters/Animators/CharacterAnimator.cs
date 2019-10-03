@@ -473,12 +473,13 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public void HandleStunned() {
-        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleStunned()");
         SetTrigger("StunTrigger");
         SetBool("Stunned", true);
     }
 
     public void HandleUnStunned() {
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleUnStunned()");
         SetBool("Stunned", false);
     }
 

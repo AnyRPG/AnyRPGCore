@@ -7,6 +7,21 @@ public class CraftingNode : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    // crafting nodes are special.  The image is based on what ability it supports
+
+    public override Sprite MyIcon {
+        get {
+            return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyIcon);
+        }
+    }
+
+    public override Sprite MyNamePlateImage {
+        get {
+            return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
+        }
+    }
+    public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyName : base.MyInteractionPanelTitle); }
+
     /// <summary>
     /// The ability to cast in order to mine this node
     /// </summary>

@@ -125,6 +125,7 @@ public class PlayerManager : MonoBehaviour {
         SystemEventManager.MyInstance.OnLevelLoad += OnLevelLoad;
         SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
         SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
+        SystemEventManager.MyInstance.OnPlayerDeath += HandlePlayerDeath;
         eventReferencesInitialized = true;
     }
 
@@ -133,10 +134,13 @@ public class PlayerManager : MonoBehaviour {
         if (!eventReferencesInitialized) {
             return;
         }
-        SystemEventManager.MyInstance.OnLevelUnload -= DespawnPlayerUnit;
-        SystemEventManager.MyInstance.OnLevelLoad -= OnLevelLoad;
-        SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
-        SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
+        if (SystemEventManager.MyInstance != null) {
+            SystemEventManager.MyInstance.OnLevelUnload -= DespawnPlayerUnit;
+            SystemEventManager.MyInstance.OnLevelLoad -= OnLevelLoad;
+            SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
+            SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
+            SystemEventManager.MyInstance.OnPlayerDeath -= HandlePlayerDeath;
+        }
         eventReferencesInitialized = false;
     }
 
@@ -150,7 +154,7 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void ExitGameHandler() {
-        Debug.Log("PlayerManager.ExitGameHandler()");
+        //Debug.Log("PlayerManager.ExitGameHandler()");
         DespawnPlayerUnit();
         DespawnPlayerConnection();
         SaveManager.MyInstance.ClearSystemManagedCharacterData();
@@ -169,7 +173,7 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void SetPlayerFaction(string factionName) {
-        Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
+        //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
         if (factionName != null && factionName != string.Empty) {
             MyCharacter.JoinFaction(factionName);
         }
@@ -232,6 +236,15 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+    public void PlayDeathEffect() {
+        //Debug.Log("PlayerManager.PlayDeathEffect()");
+        if (MyPlayerUnitSpawned == false) {
+            return;
+        }
+        //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
+        MyCharacter.MyCharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyDeathAbility as IAbility), MyCharacter.MyCharacterUnit.gameObject);
+    }
+
     public void Initialize() {
         //Debug.Log("PlayerManager.Initialize()");
         SpawnPlayerConnection();
@@ -252,15 +265,17 @@ public class PlayerManager : MonoBehaviour {
         playerUnitSpawned = false;
     }
 
-    public void KillPlayer () {
-        // put a delay or some animation here
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        /*
+    public void HandlePlayerDeath () {
+        Debug.Log("PlayerManager.KillPlayer()");
+        PlayDeathEffect();
+    }
+
+    public void RespawnPlayer() {
+        Debug.Log("PlayerManager.RespawnPlayer()");
         DespawnPlayerUnit();
         MyCharacter.MyCharacterStats.ResetHealth();
         MyCharacter.MyCharacterStats.ResetMana();
         SpawnPlayerUnit();
-        */
     }
 
     public void RevivePlayerUnit() {
@@ -333,8 +348,10 @@ public class PlayerManager : MonoBehaviour {
         playerUnitSpawned = true;
         SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn();
 
-        // do this just in case things that would not update before the player unit spawned that are now initialized due to that last call have a chance to react
-        SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+        // do this just in case things that would not update before the player unit spawned that are now initialized due to that last call have a chance to react : EDIT BELOW
+        // this should no longer be necessary and it is causing double calls every time the player unit spawns.  if it is needed, then whatever is supposed to use it, should instead react to
+        // notifyonplayerunitspawn
+        //SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
     }
 
     public void InitializeUMA() {

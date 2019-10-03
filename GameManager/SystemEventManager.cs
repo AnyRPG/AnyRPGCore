@@ -39,6 +39,7 @@ public class SystemEventManager : MonoBehaviour {
     public event System.Action OnDeleteSaveData = delegate { };
     public event System.Action<BaseCharacter, CharacterUnit, int, string> OnTakeDamage = delegate { };
     public event System.Action OnXPGained = delegate { };
+    public event System.Action OnPlayerDeath = delegate { };
 
     // Player Manager
     public event System.Action OnPlayerConnectionSpawn = delegate { };
@@ -70,6 +71,10 @@ public class SystemEventManager : MonoBehaviour {
 
     private void Start() {
         //Debug.Log("SystemGameManager.Start()");
+    }
+
+    public void NotifyOnPlayerDeath() {
+        OnPlayerDeath();
     }
 
     public void NotifyOnInventoryTransparencyUpdate() {
@@ -197,6 +202,7 @@ public class SystemEventManager : MonoBehaviour {
     public void NotifyOnQuestStatusUpdated() {
         //Debug.Log("SystemEventManager.NotifyOnQuestStatusUpdated");
         OnQuestStatusUpdated();
+        // having these two separate seems to be ok for now.  the items that react to the first event do not react to the second, nor do they send prerequisiteupdates so no double calls should happen
         OnPrerequisiteUpdated();
     }
 

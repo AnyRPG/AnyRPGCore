@@ -104,6 +104,7 @@ public class AIController : BaseController {
     }
 
     public void OnMasterMovement() {
+        Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
         SetMasterRelativeDestination();
     }
 
@@ -112,6 +113,7 @@ public class AIController : BaseController {
             // only do this stuff if we actually have a master
             return;
         }
+        Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
         // stand to the right of master by one meter
         Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
@@ -136,7 +138,11 @@ public class AIController : BaseController {
         if (target != null) {
             distanceToTarget = Vector3.Distance(target.transform.position, transform.position);
         }
-
+        if (MyControlLocked) {
+            // can't allow any action if we are stunned/frozen/etc
+            Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
+            return;
+        }
         currentState.Update();
     }
 
@@ -280,9 +286,12 @@ public class AIController : BaseController {
     }
 
     public void DisableAggro() {
+        //Debug.Log(gameObject.name + "AIController.DisableAggro()");
         if (aggroRange != null) {
             aggroRange.DisableAggro();
+            return;
         }
+        //Debug.Log(gameObject.name + "AIController.DisableAggro(): AGGRORANGE IS NULL!");
     }
 
     public void EnableAggro() {

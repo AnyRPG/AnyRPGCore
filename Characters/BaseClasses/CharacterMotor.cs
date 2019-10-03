@@ -65,6 +65,25 @@ public class CharacterMotor : MonoBehaviour {
             return;
         }
 
+        // TESTING MOVE THIS ABOVE THE TARGET NULL CHECK BECAUSE ALL MOVETOPOINT COMMANDS BELOW WOULD NOT ALLOW A FRAME TO RESET THE NAVMESHAGENT AND THIS BLOCK WOULD BE CALLED IN THE SAME FRAME
+        // set this here and let it actually take effect on the next fixedupdate.  This should have resulted in at least 1 fixedupdate for agent to let its path reset
+        if (setMoveDestination) {
+            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
+            moveToDestination = true;
+            // check if position is valid
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(destinationPosition, out hit, 10.0f, NavMesh.AllAreas)) {
+                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " on NavMesh found closest point: " + hit.position + ")");
+                destinationPosition = hit.position;
+            } else {
+                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " was not on NavMesh!");
+            }
+            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): calling: characterUnit.MyAgent.SetDestination(" + destinationPosition + ")");
+            characterUnit.MyAgent.SetDestination(destinationPosition);
+            setMoveDestination = false;
+        }
+
+
         if (target != null) {
             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate() target = " + target.name);
             // sometimes objects are above the ground.  if you don't ignore height you may try to move upward.
@@ -73,13 +92,44 @@ public class CharacterMotor : MonoBehaviour {
             //Debug.Log("Target is " + target.ToString() + " and target position is " + target.position.ToString() + " and my position is " + transform.position.ToString());
             //if (distanceToTarget > 0.1f) {
             if (characterUnit.MyCharacter.MyCharacterController.IsTargetInHitBox(target)) {
-                //target.GetComponent<Interactable>().Interact(gameObject);
+                Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Target is in hitbox.  Stop following target.");
                 StopFollowingTarget();
             } else {
-                if (Vector3.Distance(target.transform.position, characterUnit.MyAgent.destination) > characterUnit.MyAgent.stoppingDistance * 2) {
-                    //Debug.Log(gameObject.name + ": FixedUpdate() agent.destination: " + characterUnit.MyAgent.destination + " but should be " + target.transform.position + ". Issuing MoveToPoint()");
-                    MoveToPoint(target.transform.position);
+                // the below logic is causing enemies moving toward each other to constantly stutter as they calculate new paths.
+                // it also causes the enemies to basically halt as long as the character is moving
+                // i think some better logic would be:
+                // 1. if i am more than 2 meters from target position, target position can be fuzzy to within 2 meter radius.
+                // in other words, don't recalculate position until enemy has moved more than 2 meters
+                // because they are already moving in each others direction, they will cancel movement when they get in the hitbox anyway
+
+                if (Vector3.Distance(target.transform.position, transform.position) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 2)) {
+                    // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
+                    Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): More than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position));
+
+                    if (Vector3.Distance(target.transform.position, destinationPosition) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox) {
+                        // the target has moved more than 1 hitbox from our destination position, re-adjust heading
+                        //Debug.Log(gameObject.name + ": FixedUpdate() destinationPosition: " + destinationPosition + " distance: " + Vector3.Distance(target.transform.position, destinationPosition) + ". Issuing MoveToPoint()");
+                        MoveToPoint(target.transform.position);
+                    } else {
+                        Debug.Log(gameObject.name + ": FixedUpdate() NOT RECALCULATING! destinationPosition: " + destinationPosition + " distance: " + Vector3.Distance(target.transform.position, destinationPosition));
+                        // we are more than 2 meters from the target, and they are less than 2 meters from their last position, destinations may not match but are close enough that there is no point in re-calculating
+                    }
                 } else {
+                    // they are not in our hitbox yet, but they are closer than 2 meters, we need to move directly to them.  we are likely 0.5 meters out of hitbox range at this point
+                    //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position) + ". Issuing MoveToPoint (maybe)");
+
+                    Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + target.transform.position + "; destination: " + destinationPosition);
+                    // TESTING NEW CONDITIONS TO HOPEFULLY AVOID DEADZONE
+                    if (Vector3.Distance(target.transform.position, destinationPosition) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox || Vector3.Distance(target.transform.position, characterUnit.MyAgent.destination) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox) {
+                        //if (target.transform.position != destinationPosition || destinationPosition != characterUnit.MyAgent.destination) {
+                        // testing, prevent resetting move position every frame if target is standing still
+                        //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + target.transform.position + "; destination: " + destinationPosition + " does not match");
+                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; characterUnit.MyAgent.destination: " + characterUnit.MyAgent.destination + "; pathpending: " + characterUnit.MyAgent.pathPending);
+                        MoveToPoint(target.transform.position);
+                    } else {
+                        Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): DOING NOTHING BECAUSE CURRENT DESTINATION SHOULD BE WITHIN HITBOX!!! current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; characterUnit.MyAgent.destination: " + characterUnit.MyAgent.destination + "; pathpending: " + characterUnit.MyAgent.pathPending);
+                    }
+
                     //Debug.Log(gameObject.name + "(" + transform.position + "): CharacterMotor.Update(): destination is: " + agent.destination + "; target: " + target.transform.position);
                 }
                 //lastTargetLocation = target.transform.position;
@@ -115,22 +165,6 @@ public class CharacterMotor : MonoBehaviour {
             }
         }
 
-        // set this here and let it actually take effect on the next fixedupdate.  This should have resulted in at least 1 fixedupdate for agent to let its path reset
-        if (setMoveDestination) {
-            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
-            moveToDestination = true;
-            // check if position is valid
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(destinationPosition, out hit, 10.0f, NavMesh.AllAreas)) {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " on NavMesh found closest point: " + hit.position + ")");
-                destinationPosition = hit.position;
-            } else {
-                Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " was not on NavMesh!");
-            }
-            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): calling: characterUnit.MyAgent.SetDestination(" + destinationPosition + ")");
-            characterUnit.MyAgent.SetDestination(destinationPosition);
-            setMoveDestination = false;
-        }
     }
 
     private void SetMovePoint() {
@@ -229,7 +263,7 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void RotateToward(Vector3 rotateDirection) {
-        Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
+        //Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
         if (frozen) {
             return;
         }
@@ -239,7 +273,7 @@ public class CharacterMotor : MonoBehaviour {
             characterUnit.MyAgent.updateRotation = true;
             characterUnit.MyAgent.velocity = rotateDirection;
         } else {
-            Debug.Log("nav mesh agent is disabled");
+            //Debug.Log("nav mesh agent is disabled");
             characterUnit.MyRigidBody.velocity = rotateDirection;
         }
     }

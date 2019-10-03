@@ -131,16 +131,22 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     public void InitiateGlobalCooldown(IAbility ability) {
         //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
         if (globalCoolDownCoroutine == null) {
-            globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown());
+            // testing, set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
+            float animationTime = 0f;
+            if (ability.MyAnimationClip != null) {
+                animationTime = ability.MyAnimationClip.length;
+            }
+            globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown(animationTime));
         } else {
             Debug.Log("INVESTIGATE: GCD COROUTINE WAS NOT NULL");
         }
 
     }
 
-    public IEnumerator BeginGlobalCoolDown() {
+    public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
         //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
-        remainingGlobalCoolDown = 1f;
+        // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've got issues anyway...
+        remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
         while (remainingGlobalCoolDown > 0f) {
             remainingGlobalCoolDown -= Time.deltaTime;
             //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);

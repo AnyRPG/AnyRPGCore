@@ -192,15 +192,17 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
     }
 
-    public void TryToDropCombat() {
+    public virtual void TryToDropCombat() {
         if (inCombat == false) {
+            Debug.Log(gameObject.name + ".TryToDropCombat(): incombat = false. returning");
             return;
         }
         //Debug.Log(gameObject.name + " trying to drop combat.");
         if (aggroTable.MyTopAgroNode == null) {
-            //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode is null. Dropping combat.");
+            Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode is null. Dropping combat.");
             DropCombat();
         } else {
+            Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
             // this next condition should prevent crashes as a result of level unloads
             if (MyBaseCharacter.MyCharacterUnit != null) {
                 foreach (AggroNode aggroNode in MyAggroTable.MyAggroNodes) {
@@ -216,12 +218,15 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             }
 
             // we made it through the loop without returning.  we are allowed to leave combat.
+            // FYI THIS CODE ALLOWS YOU TO DROP COMBAT WHILE STILL ON SOMETHING'S AGRO TABLE
+            // THIS SHOULD NOT BE AN ISSUE THOUGH, BECAUSE OnTriggerEnter IN AGGRONODE WILL RE-ADD WHEN THE THING CATCHES UP TO YOU AND GETS BACK IN RANGE
+            // DOING THIS SO YOU DON'T LOSE KILL CREDIT IF YOU WALK AWAY TO DO OUT OF COMBAT REGEN
             DropCombat();
         }
     }
 
     protected virtual void DropCombat() {
-        //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
+        Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
         inCombat = false;
         SetWaitingForAutoAttack(false);
         if (baseCharacter != null && baseCharacter.MyCharacterAbilityManager != null) {
@@ -254,7 +259,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     /// <param name="target"></param>
     /// return true if this is a new entry, false if not
     public virtual bool EnterCombat(BaseCharacter target) {
-        //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyDisplayName != null ? target.MyDisplayName : "null") + ")");
+        //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + ")");
         // try commenting this out to fix bug where things that have agrod but done no damage don't get death notifications
         //if (!inCombat) {
         //Debug.Log(gameObject.name + " Entering Combat with " + target.name);
@@ -262,10 +267,10 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         lastCombatEvent = Time.time;
         // maybe do this in update?
         baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("InCombat", true);
+        inCombat = true;
         if (aggroTable.AddToAggroTable(target.MyCharacterUnit, 0)) {
             return true;
         }
-        inCombat = true;
         return false;
     }
 
@@ -439,11 +444,11 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
                 TakeDamageCommon(damage, source, combatType, combatMagnitude, abilityName);
             }
         } else {
-            Debug.Log("Something is trying to damage our dead character!!!");
+            //Debug.Log("Something is trying to damage our dead character!!!");
         }
     }
 
-    public void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {
+    public virtual void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {
         //Debug.Log(gameObject.name + " received death broadcast from " + sourceCharacter.name);
         if (sourceCharacter != null) {
             OnKillEvent(sourceCharacter, creditPercent);

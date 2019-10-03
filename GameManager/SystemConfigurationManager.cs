@@ -26,6 +26,9 @@ public class SystemConfigurationManager : MonoBehaviour {
     private DirectAbility levelUpAbility;
 
     [SerializeField]
+    private DirectAbility deathAbility;
+
+    [SerializeField]
     private DirectAbility lootSparkleAbility;
 
     [SerializeField]
@@ -39,6 +42,20 @@ public class SystemConfigurationManager : MonoBehaviour {
 
     [SerializeField]
     private AudioClip defaultHitSoundEffect;
+
+    // an image to use if there is more than 1 valid interactable option
+    [SerializeField]
+    private Sprite multipleInteractionNamePlateImage;
+
+    // a separate image if only crafting is available, but more than 1 craft skill can be shown
+    [SerializeField]
+    private Sprite multipleCraftNamePlateImage;
+
+    [SerializeField]
+    private Sprite bankInteractionPanelImage;
+
+    [SerializeField]
+    private Sprite bankNamePlateImage;
 
     [SerializeField]
     private Sprite questGiverInteractionPanelImage;
@@ -83,6 +100,12 @@ public class SystemConfigurationManager : MonoBehaviour {
     private Sprite factionChangeNamePlateImage;
 
     [SerializeField]
+    private Sprite vendorInteractionPanelImage;
+
+    [SerializeField]
+    private Sprite vendorNamePlateImage;
+
+    [SerializeField]
     private Sprite portalInteractionPanelImage;
 
     [SerializeField]
@@ -93,6 +116,10 @@ public class SystemConfigurationManager : MonoBehaviour {
 
     [SerializeField]
     private Sprite skillTrainerNamePlateImage;
+
+    // the default amount of time before a unit despawns after killed and looted
+    [SerializeField]
+    private float defaultDespawnTimer;
 
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
@@ -121,6 +148,14 @@ public class SystemConfigurationManager : MonoBehaviour {
     public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
     public DirectAbility MyDoWhiteDamageAbility { get => doWhiteDamageAbility; set => doWhiteDamageAbility = value; }
     public DirectAbility MyTakeDamageAbility { get => takeDamageAbility; set => takeDamageAbility = value; }
+    public DirectAbility MyDeathAbility { get => deathAbility; set => deathAbility = value; }
+    public Sprite MyMultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
+    public float MyDefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
+    public Sprite MyBankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
+    public Sprite MyBankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
+    public Sprite MyVendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
+    public Sprite MyVendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
+    public Sprite MyMultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
 
     private void Awake() {
         //Debug.Log("PlayerManager.Awake()");

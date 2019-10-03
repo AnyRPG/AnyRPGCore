@@ -169,7 +169,10 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     public void Use() {
         //Debug.Log("BaseAbility.Use()");
-        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
+        // testing - warp in canCast to prevent casting any ability without the proper weapon affinity
+        if (CanCast()) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
+        }
     }
 
     public IEnumerator BeginAbilityCoolDown() {

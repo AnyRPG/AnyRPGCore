@@ -8,9 +8,10 @@ using UnityEngine.UI;
 public class InanimateUnit : InteractableOption, INamePlateUnit  {
 
     public event System.Action OnInitializeNamePlate = delegate { };
-    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
     public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
     public event Action<int, int> HealthBarNeedsUpdate = delegate { };
+
+    public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
     [SerializeField]
     private string displayName = string.Empty;

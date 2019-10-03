@@ -25,7 +25,7 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
     private float positionOffset;
 
     [SerializeField]
-    private Image dialogIndicatorImage;
+    private Image genericIndicatorImage;
 
     private INamePlateUnit namePlateUnit;
 
@@ -44,7 +44,7 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
     public Text MyCharacterName { get => characterName; set => characterName = value; }
     public Text MyQuestIndicator { get => questIndicator; }
     public GameObject MyQuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
-    public Image MyDialogIndicatorImage { get => dialogIndicatorImage; set => dialogIndicatorImage = value; }
+    public Image MyGenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
 
     private void Awake() {
         //Debug.Log(gameObject.name + ".NamePlateController.Awake()");
@@ -107,7 +107,7 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
         healthSliderWidth = (int)(healthSlider.GetComponent<LayoutElement>().preferredWidth);
         //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.InitializeLocalComponents(): healthSliderWidth: " + healthSliderWidth);
         MyQuestIndicatorBackground.SetActive(false);
-        MyDialogIndicatorImage.gameObject.SetActive(false);
+        MyGenericIndicatorImage.gameObject.SetActive(false);
 
         // ensure we update the nameplate color when the player spawns
         SetFactionColor();

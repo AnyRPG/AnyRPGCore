@@ -23,7 +23,8 @@ public class StatusEffectNode {
     }
 
     public void CancelStatusEffect() {
-        MyStatusEffect.CancelEffect();
+        //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + MyStatusEffect.MyName);
+        MyStatusEffect.CancelEffect(characterStats.MyBaseCharacter as BaseCharacter);
         characterStats.HandleStatusEffectRemoval(statusEffect);
     }
 }

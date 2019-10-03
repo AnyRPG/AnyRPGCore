@@ -19,6 +19,9 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     [SerializeField]
     protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
+    [SerializeField]
+    private INamePlateUnit namePlateUnit;
+
     protected Interactable interactable;
 
     protected bool componentReferencesInitialized = false;
@@ -26,7 +29,7 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
 
     protected bool eventReferencesInitialized = false;
 
-    public string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
+    public virtual string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
     public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
     public bool MyPrerequisitesMet {
@@ -45,7 +48,7 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     public virtual Sprite MyIcon { get => interactionPanelImage;  }
     public virtual Sprite MyNamePlateImage { get => namePlateImage; }
 
-    public string MyName { get => (interactionPanelTitle != null && interactionPanelTitle != string.Empty ? interactionPanelTitle : (interactable != null ? interactable.MyName : "interactable is null!")); }
+    public string MyName { get => (MyInteractionPanelTitle != null && MyInteractionPanelTitle != string.Empty ? MyInteractionPanelTitle : (interactable != null ? interactable.MyName : "interactable is null!")); }
 
     protected virtual void Awake () {
         //Debug.Log(gameObject.name + ".InteractableOption.Awake(). Setting interactable");
@@ -70,18 +73,14 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
         if (interactable == null) {
             //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences(): " + interactable is null);
         }
+        namePlateUnit = GetComponent<INamePlateUnit>();
+
         componentReferencesInitialized = true;
     }
 
     public virtual bool CanInteract(CharacterUnit source) {
         return MyPrerequisitesMet;
     }
-
-    /*
-    public virtual void InitWindow(ICloseableWindowContents vendorUI) {
-        (vendorUI as VendorUI).CreatePages(items);
-    }
-    */
 
     public virtual bool Interact(CharacterUnit source) {
         //Debug.Log(gameObject.name + ".InteractableOption.Interact()");
@@ -108,7 +107,8 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     }
 
     public virtual void SetMiniMapIcon(Image icon) {
-        if (GetCurrentOptionCount() > 0) {
+        //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
+        if (CanShowMiniMapIcon()) {
             icon.sprite = MyNamePlateImage;
             icon.color = Color.white;
         } else {
@@ -116,6 +116,10 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
             icon.color = new Color32(0, 0, 0, 0);
         }
         return;
+    }
+
+    public virtual bool CanShowMiniMapIcon() {
+        return (GetCurrentOptionCount() > 0);
     }
 
     public virtual string GetDescription() {
@@ -149,4 +153,5 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     public virtual void HandlePrerequisiteUpdates() {
         // overwrite me
     }
+
 }

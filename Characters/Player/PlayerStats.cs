@@ -101,8 +101,9 @@ public class PlayerStats : CharacterStats
     public override void Die() {
         base.Die();
         // Kill the player
-        PlayerManager.MyInstance.KillPlayer();
+        SystemEventManager.MyInstance.NotifyOnPlayerDeath();
     }
+
 
     public void LevelUpHandler(int NewLevel) {
         MessageFeedManager.MyInstance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", NewLevel.ToString()));

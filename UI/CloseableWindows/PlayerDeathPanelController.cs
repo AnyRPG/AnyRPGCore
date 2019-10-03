@@ -7,9 +7,9 @@ public class PlayerDeathPanelController : WindowContentController {
 
     public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
 
-    public void SpawnPlayer() {
+    public void RespawnPlayer() {
         SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseWindow();
-        PlayerManager.MyInstance.SpawnPlayerUnit();
+        PlayerManager.MyInstance.RespawnPlayer();
     }
 
     public void RevivePlayer() {

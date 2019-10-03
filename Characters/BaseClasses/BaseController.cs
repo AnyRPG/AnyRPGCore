@@ -14,8 +14,11 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     protected bool walking = false;
 
     private bool frozen = false;
+    private bool stunned = false;
+    private bool levitated = false;
 
-    private float hitBoxSizeMultiplier = 1.5f;
+    // disabled for now, should not have this number in multiple places, just increased hitbox size instead and multiplied capsule height by hitbox size directly.  end numbers should be the same
+    //private float hitBoxSizeMultiplier = 1.5f;
 
     // is this unit under the control of a master unit
     protected bool underControl = false;
@@ -28,10 +31,17 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     public GameObject MyTarget { get => target; }
     public ICharacter MyBaseCharacter { get => baseCharacter; }
     public float MyMovementSpeed { get => (walking == false ? baseCharacter.MyCharacterStats.MyMovementSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed); }
-    public bool MyFrozen { get => frozen; }
     public bool MyUnderControl { get => underControl; set => underControl = value; }
     public BaseCharacter MyMasterUnit { get => masterUnit; set => masterUnit = value; }
-
+    public bool MyFrozen { get => frozen; }
+    public bool MyStunned { get => stunned; set => stunned = value; }
+    public bool MyLevitated { get => levitated; set => levitated = value; }
+    public bool MyControlLocked {
+        get {
+            //Debug.Log(gameObject.name + ".BaseController.MyControlLocked: frozen: " + MyFrozen + "; stunned: "  + MyStunned + "; mylevitated: " + MyLevitated);
+            return (MyFrozen || MyStunned || MyLevitated);
+        }
+    }
 
     protected virtual void Awake() {
         // overwrite me
@@ -97,28 +107,28 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     public void StunCharacter() {
         //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): ");
-        frozen = true;
+        stunned = true;
         MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleStunned();
         MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FreezeCharacter();
     }
 
     public void UnStunCharacter() {
         //Debug.Log(gameObject.name + ".BaseController.UnStunCharacter(): ");
-        frozen = false;
+        stunned = false;
         MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleUnStunned();
         MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.UnFreezeCharacter();
     }
 
     public void LevitateCharacter() {
         //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
-        frozen = true;
+        levitated = true;
         MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleLevitated();
         MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FreezeCharacter();
     }
 
     public void UnLevitateCharacter() {
         //Debug.Log(gameObject.name + ".BaseController.UnLevitateCharacter(): ");
-        frozen = false;
+        levitated = false;
         MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleUnLevitated();
         MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.UnFreezeCharacter();
     }
@@ -159,7 +169,9 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
         if (baseCharacter.MyCharacterUnit == null) {
             return Vector3.zero;
         }
-        return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
+        // testing disable size multiplier and just put it straight into the hitbox.  it is messing with character motor because we stop moving toward a character that is 0.5 units outside of the hitbox
+        //return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
+        return new Vector3(baseCharacter.MyCharacterStats.MyHitBox, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * baseCharacter.MyCharacterStats.MyHitBox, baseCharacter.MyCharacterStats.MyHitBox);
     }
 
     public bool IsTargetInHitBox(GameObject newTarget) {

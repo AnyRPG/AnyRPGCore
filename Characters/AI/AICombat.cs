@@ -6,7 +6,7 @@ public class AICombat : CharacterCombat
 {
     public override void Start() {
         base.Start();
-        baseCharacter.MyCharacterStats.OnDie += Die;
+        baseCharacter.MyCharacterStats.OnDie += HandleDie;
     }
 
     protected override void Update() {
@@ -43,7 +43,7 @@ public class AICombat : CharacterCombat
     }
     */
 
-    public void Die(CharacterStats _characterStats) {
+    public void HandleDie(CharacterStats _characterStats) {
         //Debug.Log(gameObject.name + ".AICombat.Die()");
         if (!((baseCharacter.MyCharacterController as AIController).MyCurrentState is DeathState)) {
 

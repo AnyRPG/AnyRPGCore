@@ -10,4 +10,5 @@ public interface ICharacterUnit {
     CharacterAnimator MyCharacterAnimator { get; }
 
     void InitializeNamePlate();
+    string MyDisplayName { get; }
 }

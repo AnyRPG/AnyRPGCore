@@ -86,7 +86,7 @@ public class Interactable : MonoBehaviour, IDescribable {
     protected virtual void Awake() {
         //Debug.Log(gameObject.name + ".Interactable.Awake()");
         if (SystemGameManager.MyInstance == null) {
-            Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
+            //Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
         }
         InitializeComponents();
         temporaryMaterials = null;
@@ -94,7 +94,7 @@ public class Interactable : MonoBehaviour, IDescribable {
             temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
         }
         if (temporaryMaterial == null) {
-            Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
+            //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
             glowOnMouseOver = false;
         }
 
@@ -107,15 +107,6 @@ public class Interactable : MonoBehaviour, IDescribable {
         //interactionTransform = transform;
         //InitializeMaterials();
         CreateEventReferences();
-        namePlateUnit = GetComponent<INamePlateUnit>();
-        if (namePlateUnit != null) {
-            if (namePlateUnit.MyDisplayName != null && namePlateUnit.MyDisplayName != string.Empty) {
-                interactableName = namePlateUnit.MyDisplayName;
-            }
-        } else {
-            //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
-            //Debug.Log(gameObject.name + ".Interactable.Start(): namePlateUnit is null!!!");
-        }
     }
 
     public virtual void CreateEventReferences() {
@@ -166,6 +157,18 @@ public class Interactable : MonoBehaviour, IDescribable {
         }
         boxCollider = GetComponent<BoxCollider>();
         interactables = GetComponents<IInteractable>();
+
+        // MOVED THIS HERE FROM START
+        namePlateUnit = GetComponent<INamePlateUnit>();
+        if (namePlateUnit != null) {
+            if (namePlateUnit.MyDisplayName != null && namePlateUnit.MyDisplayName != string.Empty) {
+                interactableName = namePlateUnit.MyDisplayName;
+            }
+        } else {
+            //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
+            //Debug.Log(gameObject.name + ".Interactable.Start(): namePlateUnit is null!!!");
+        }
+
         foreach (IInteractable interactable in interactables) {
             //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
         }
@@ -202,7 +205,53 @@ public class Interactable : MonoBehaviour, IDescribable {
         foreach (IInteractable _interactable in interactables) {
             _interactable.HandlePrerequisiteUpdates();
         }
+        UpdateNamePlateImage();
     }
+
+    public void UpdateNamePlateImage() {
+
+        //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage()");
+        if (PlayerManager.MyInstance.MyCharacter == null) {
+            //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
+            return;
+        }
+        if (namePlateUnit == null || namePlateUnit.MyNamePlate == null) {
+            //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplate is null!");
+            return;
+        }
+        int currentInteractableCount = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count;
+        //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
+
+        // determine if one of our current interactables is a questgiver
+        bool questGiverCurrent = false;
+        foreach (InteractableOption interactableOption in GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            if (interactableOption is QuestGiver) {
+                questGiverCurrent = true;
+            }
+        }
+        //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): MADE IT PAST QUESTIVER CHECK!!");
+
+        if (currentInteractableCount == 0 || questGiverCurrent == true) {
+            // questgiver should override all other nameplate images since it's special and appears separately
+            namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
+            //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): interactable count is zero or questgiver is true");
+        } else {
+            //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
+            if (currentInteractableCount == 1) {
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
+                if (GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)[0].MyNamePlateImage != null) {
+                    //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
+                    namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                    namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)[0].MyNamePlateImage;
+                }
+            } else {
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
+                namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
+            }
+        }
+    }
+
 
     public void Spawn() {
         //Debug.Log(gameObject.name + ".Interactable.Spawn()");
@@ -273,8 +322,10 @@ public class Interactable : MonoBehaviour, IDescribable {
                 miniMapIndicatorReady = true;
                 return true;
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length == 0!!!!!");
+                Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length == 0!!!!!");
             }
+        } else {
+            //Debug.Log("Already Instantiated");
         }
         return false;
     }
@@ -383,8 +434,9 @@ public class Interactable : MonoBehaviour, IDescribable {
 
         List<IInteractable> validInteractables = new List<IInteractable>();
         foreach (IInteractable _interactable in interactables) {
-            // TESTING, HOPE THIS DOESN'T BREAK STUFF!!!
-            if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
+            if (_interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
+                // HAD TO REMOVE THE FIRST CONDITION BECAUSE IT WAS BREAKING MINIMAP UPDATES - MONITOR FOR WHAT REMOVING THAT BREAKS...
+                //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                 validInteractables.Add(_interactable);
             } else {
@@ -448,13 +500,17 @@ public class Interactable : MonoBehaviour, IDescribable {
         if (PlayerManager.MyInstance.MyPlayerUnitObject == gameObject) {
             return;
         }
-        if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
+
+        // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
+        // added pivot so the tooltip doesn't bounce around
+        UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MyMouseOverWindow.transform.position, this);
+
+        // testing, switch this to current interactables - valid means it will glow if its spawned, even if there is nothing to interact with
+        if (GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
+            //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No valid Interactables.  Not glowing.");
             return;
         }
-
-        // new mouseover code uses old mouseover window as anchor position but does not show it because it doesn't properly resize or handle idescribables
-        UIManager.MyInstance.ShowToolTip(UIManager.MyInstance.MyMouseOverWindow.transform.position, this);
 
         if (glowOnMouseOver) {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
@@ -567,13 +623,23 @@ public class Interactable : MonoBehaviour, IDescribable {
 
         string nameString = MyName;
         if (MyName == string.Empty) {
-            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
+            ICharacterUnit baseCharacter = GetComponent<ICharacterUnit>();
             if (baseCharacter != null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
-                nameString = baseCharacter.MyCharacterName;
+                nameString = baseCharacter.MyDisplayName;
             }
         }
-        return string.Format("{0}\n{1}", nameString, GetSummary());
+        Color textColor = Color.white;
+        string factionString = string.Empty;
+        if (namePlateUnit != null && namePlateUnit.MyFactionName != string.Empty) {
+            //Debug.Log(gameObject.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
+            textColor = Faction.GetFactionColor(namePlateUnit);
+            factionString = "\n" + namePlateUnit.MyFactionName;
+        } else {
+            //Debug.Log(gameObject.name + ".Interactable.GetDescription():  namePlateUnit is null: " + (namePlateUnit == null));
+        }
+        return string.Format("<color=#{0}>{1}{2}</color>\n{3}", ColorUtility.ToHtmlStringRGB(textColor), nameString, factionString, GetSummary());
+        // this would be where quest tracker info goes if we want to add that in the future -eg: Kill 5 skeletons : 1/5
     }
 
     public virtual string GetSummary() {
@@ -581,13 +647,20 @@ public class Interactable : MonoBehaviour, IDescribable {
 
         string returnString = string.Empty;
 
-        List<IInteractable> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+
+        // switched this to current interactables so that we don't see mouseover options that we can't current interact with
+        //List<IInteractable> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+        List<IInteractable> currentInteractables = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
 
         // perform default interaction or open a window if there are multiple valid interactions
-        foreach (IInteractable _interactable in validInteractables) {
-            returnString += (returnString == string.Empty ? "" : "\n") + _interactable.GetSummary();
+        List<string> returnStrings = new List<string>();
+        foreach (IInteractable _interactable in currentInteractables) {
+            if (!(_interactable is INamePlateUnit)) {
+                // we already put the character name in the description so skip it here
+                returnStrings.Add(_interactable.GetSummary());
+            }
         }
-
+        returnString = string.Join("\n", returnStrings);
         return string.Format("{0}", returnString);
     }
 

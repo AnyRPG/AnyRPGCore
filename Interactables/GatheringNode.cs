@@ -7,6 +7,21 @@ public class GatheringNode : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    // gathering nodes are special.  The image is based on what ability it supports
+    public override Sprite MyIcon {
+        get {
+            return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyIcon);
+        }
+    }
+
+    public override Sprite MyNamePlateImage {
+        get {
+            return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
+        }
+    }
+    public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyName : base.MyInteractionPanelTitle); }
+
+
     /// <summary>
     /// The ability to cast in order to mine this node
     /// </summary>
@@ -47,6 +62,9 @@ public class GatheringNode : InteractableOption {
     }
 
     private IEnumerator StartSpawnCountdown() {
+        Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
+        // TESTING - THIS SHOULD DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
+        HandlePrerequisiteUpdates();
         currentTimer = spawnTimer;
         while (currentTimer > 0) {
             //Debug.Log("Spawn Timer: " + currentTimer);
@@ -54,6 +72,7 @@ public class GatheringNode : InteractableOption {
             yield return new WaitForSeconds(1);
         }
         interactable.Spawn();
+        HandlePrerequisiteUpdates();
     }
 
     public void Gather() {
@@ -135,9 +154,8 @@ public class GatheringNode : InteractableOption {
     }
 
     public override int GetCurrentOptionCount() {
-        // overwrite me or everything is valid as long as prerequisites are met, which isn't the case for things like dialog, which have multiple options
-        //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
-        return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true ? 1 : 0);
+        //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
+        return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
     }
 
     public override void HandlePrerequisiteUpdates() {

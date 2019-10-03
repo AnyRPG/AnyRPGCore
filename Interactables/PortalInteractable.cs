@@ -7,6 +7,9 @@ public class PortalInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyPortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyPortalNamePlateImage : base.MyNamePlateImage); }
+
     /// <summary>
     /// The ability to cast in order to use this portal
     /// </summary>
@@ -15,8 +18,6 @@ public class PortalInteractable : InteractableOption {
 
 
     public IAbility MyAbility { get => ability; }
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyPortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyPortalNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Awake() {
         //Debug.Log("Portal.Awake()");

@@ -8,27 +8,23 @@ public class DialogInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
+
     private BoxCollider boxCollider;
 
     [SerializeField]
     private List<Dialog> dialogList;
-
-    // put this in interactableoption?
-    [SerializeField]
-    private INamePlateUnit namePlateUnit;
 
     private int dialogIndex = -1;
 
     public int MyDialogIndex { get => dialogIndex; set => dialogIndex = value; }
     public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }
 
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Awake() {
         //Debug.Log("NameChangeInteractable.Awake()");
         base.Awake();
-        namePlateUnit = GetComponent<INamePlateUnit>();
     }
 
     protected override void Start() {
@@ -68,26 +64,6 @@ public class DialogInteractable : InteractableOption {
         //Debug.Log("PlayerManager.OnDisable()");
         base.OnDisable();
         CleanupEventReferences();
-    }
-
-    public void UpdateDialogStatus() {
-
-        //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus()");
-        if (PlayerManager.MyInstance.MyCharacter == null) {
-            //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): player has no character");
-            return;
-        }
-        if (namePlateUnit.MyNamePlate == null) {
-            //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): nameplate is null!");
-            return;
-        }
-        int validOptionCount = GetCurrentOptionList().Count;
-        //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): validoptionCount: " + validOptionCount);
-        if (validOptionCount == 0) {
-            namePlateUnit.MyNamePlate.MyDialogIndicatorImage.gameObject.SetActive(false);
-        } else {
-            namePlateUnit.MyNamePlate.MyDialogIndicatorImage.gameObject.SetActive(true);
-        }
     }
 
     public void CleanupEventReferences(ICloseableWindowContents windowContents) {
@@ -194,12 +170,12 @@ public class DialogInteractable : InteractableOption {
     }
 
     public override int GetCurrentOptionCount() {
+        //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionCount()");
         return GetCurrentOptionList().Count;
     }
 
     public override void HandlePrerequisiteUpdates() {
         base.HandlePrerequisiteUpdates();
-        UpdateDialogStatus();
         MiniMapStatusUpdateHandler(this);
     }
 }

@@ -10,6 +10,7 @@ public interface IInteractable : IDescribable {
     string MyInteractionPanelTitle { get; set; }
     Interactable MyInteractable { get; set; }
     bool MyPrerequisitesMet { get; }
+    Sprite MyNamePlateImage { get; }
 
     bool CanInteract(CharacterUnit source);
     bool Interact(CharacterUnit source);

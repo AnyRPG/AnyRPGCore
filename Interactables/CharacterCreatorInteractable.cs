@@ -7,16 +7,15 @@ public class CharacterCreatorInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage : base.MyIcon); }
+    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.MyNamePlateImage); }
+
     [SerializeField]
     private GameObject spawnPrefab;
 
     private GameObject spawnReference;
 
     private BoxCollider boxCollider;
-
-
-    public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage : base.MyIcon); }
-    public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.MyNamePlateImage); }
 
     protected override void Awake() {
         //Debug.Log("Portal.Awake()");
@@ -56,13 +55,15 @@ public class CharacterCreatorInteractable : InteractableOption {
 
     public override void CleanupEventReferences() {
         base.CleanupEventReferences();
-        if (SystemWindowManager.MyInstance != null) {
+        if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.characterCreatorWindow != null && SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents != null) {
             (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction -= HandleConfirmAction;
             (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindowHandler -= CleanupEventReferences;
         }
     }
 
     public override bool Interact(CharacterUnit source) {
+        // was there a reason why we didn't have base.Interact here before or just an oversight?
+        base.Interact(source);
         SystemWindowManager.MyInstance.characterCreatorWindow.OpenWindow();
         (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction += HandleConfirmAction;
         (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindowHandler += CleanupEventReferences;
