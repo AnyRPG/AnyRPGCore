@@ -25,7 +25,7 @@ public interface IAbility {
 
 
     bool CanUseOn(GameObject target, BaseCharacter source);
-    void Cast(BaseCharacter source, GameObject target, Vector3 GroundTarget);
+    bool Cast(BaseCharacter source, GameObject target, Vector3 GroundTarget);
     string GetDescription();
     string GetSummary();
     GameObject ReturnTarget(BaseCharacter source, GameObject target);

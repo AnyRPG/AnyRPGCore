@@ -6,24 +6,35 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "NewAnimatedAbility", menuName = "Abilities/AnimatedAbility")]
 public class AnimatedAbility : BaseAbility {
 
-    public override void Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
-        //Debug.Log("AnimatedAbility.Cast()");
-        base.Cast(source, target, groundTarget);
-        if (animationClip != null) {
-            //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
+    public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        Debug.Log(MyName + ".AnimatedAbility.Cast()");
+        if (base.Cast(source, target, groundTarget)) {
+            if (animationClip != null) {
+                //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
-            // this type of ability is allowed to interrupt other types of animations, so clear them all
-            source.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                // this type of ability is allowed to interrupt other types of animations, so clear them all
+                source.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
-            // now block further animations of other types from starting
-            source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
+                // now block further animations of other types from starting
+                source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
 
-            // perform the actual animation
-            source.MyCharacterUnit.MyCharacterAnimator.HandleAbility(animationClip, this);
+                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                BaseCharacter targetBaseCharacter = null;
+                if (targetCharacterUnit != null) {
+                    targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;
+                }
 
-            // unblock 
-            source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+                // perform the actual animation
+                source.MyCharacterUnit.MyCharacterAnimator.HandleAbility(animationClip, this, targetBaseCharacter);
+
+                // unblock 
+                source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+            }
+            return true;
+        } else {
+            Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
         }
+        return false;
     }
 
     public void CleanupEventReferences(BaseCharacter source) {
@@ -31,7 +42,7 @@ public class AnimatedAbility : BaseAbility {
     }
 
     public void HandleAbilityHit(BaseCharacter source, GameObject target) {
-        //Debug.Log("AnimatedAbility.HandleAbilityHit(): setting waiting for animated ability to false");
+        Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit(): setting waiting for animated ability to false");
         PerformAbilityEffects(source, target, Vector3.zero);
     }
 

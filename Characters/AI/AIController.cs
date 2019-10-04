@@ -140,7 +140,7 @@ public class AIController : BaseController {
         }
         if (MyControlLocked) {
             // can't allow any action if we are stunned/frozen/etc
-            Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
+            //Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
             return;
         }
         currentState.Update();

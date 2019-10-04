@@ -306,6 +306,8 @@ public class CharacterAnimator : MonoBehaviour {
             return;
         }
 
+        characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
+
         // pick a random attack animation
         int attackIndex = Random.Range(0, currentAttackAnimationProfile.MyProfileNodes.Length);
         //Debug.Log(gameObject.name + ".CharacterAnimator: OnAttack(): attack index set to: " + attackIndex);
@@ -322,12 +324,12 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     // special melee attack
-    public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility) {
-        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility()");
+    public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
+        Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
         if (animator == null) {
             return;
         }
-
+        characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
         // override the default attack animation
         overrideController[replaceableAnimationName] = animationClip;
         float animationLength = animationClip.length;

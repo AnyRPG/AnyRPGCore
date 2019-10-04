@@ -13,6 +13,7 @@ public interface ICharacterCombat {
     ICharacter MyBaseCharacter { get; set; }
     AudioClip MyDefaultHitSoundEffect { get; set; }
     AudioClip MyOverrideHitSoundEffect { get; set; }
+    BaseCharacter MySwingTarget { get; set; }
 
 
     bool MyWaitingForAutoAttack { get; set; }
@@ -26,7 +27,7 @@ public interface ICharacterCombat {
     bool EnterCombat(BaseCharacter target);
     bool GetInCombat();
     void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent);
-    void OnTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
+    void ProcessTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
     void Start();
     void TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
     void TryToDropCombat();

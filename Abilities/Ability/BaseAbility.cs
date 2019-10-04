@@ -185,21 +185,21 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
         }
     }
 
-    public virtual void Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+    public virtual bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
         //Debug.Log(resourceName + ".BaseAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
         if (!CanCast()) {
-            CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
-            return;
+            //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
+            return false;
         }
 
         SystemAbilityManager.MyInstance.StartCoroutine(BeginAbilityCoolDown());
-
+        return true;
         // notify subscribers
         //OnAbilityCast(this);
     }
 
     public virtual bool CanUseOn(GameObject target, BaseCharacter source) {
-        //Debug.Log("BaseAbility.CanUseOn()");
+        //Debug.Log(MyName + ".BaseAbility.CanUseOn()");
         if (requiresTarget == false) {
             //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
             return true;
@@ -240,7 +240,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
     public virtual void PerformAbilityEffects(BaseCharacter source, GameObject target, Vector3 groundTarget) {
-        //Debug.Log(abilityName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
+        Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
         if (abilityEffects.Count == 0) {
             //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
             // this is fine for channeled abilities

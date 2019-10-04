@@ -693,6 +693,7 @@ public class UIManager : MonoBehaviour {
         SystemWindowManager.MyInstance.keyBindConfirmWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         SystemWindowManager.MyInstance.playMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         SystemWindowManager.MyInstance.settingsMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+        SystemWindowManager.MyInstance.playerOptionsMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
     }
 
     public void SetLayerRecursive(GameObject objectName, int newLayer) {

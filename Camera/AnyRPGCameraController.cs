@@ -168,9 +168,11 @@ public class AnyRPGCameraController : MonoBehaviour {
         Debug.DrawLine(targetPosition, wantedPosition, Color.cyan);
         RaycastHit wallHit = new RaycastHit();
         int playerMask = 1 << LayerMask.NameToLayer("Player");
+        // added characterUnit to prevent enemies from surrounding the player and forcing his camera inward so he can't see out of the crowd
+        int characterUnitMask = 1 << LayerMask.NameToLayer("CharacterUnit");
         int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
         int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
-        int layerMask = ~(playerMask | ignoreMask | spellMask);
+        int layerMask = ~(playerMask | ignoreMask | spellMask | characterUnitMask);
         if (Physics.Linecast(targetPosition, wantedPosition, out wallHit, layerMask)) {
             //Debug.Log("hit: " + wallHit.transform.name);
             Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);

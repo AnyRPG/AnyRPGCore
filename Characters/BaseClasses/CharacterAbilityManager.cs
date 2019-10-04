@@ -30,6 +30,11 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
     protected bool eventReferencesInitialized = false;
 
+    // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
+    protected float initialGlobalCoolDown;
+
+    public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
+
     public float MyRemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
 
     private bool waitingForAnimatedAbility = false;

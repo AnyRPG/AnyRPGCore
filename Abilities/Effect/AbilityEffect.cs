@@ -133,7 +133,7 @@ public abstract class AbilityEffect : DescribableResource {
     }
 
     public virtual bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
-        //Debug.Log(abilityEffectName + ".AbilityEffect.CanUseOn()");
+        //Debug.Log(MyName + ".AbilityEffect.CanUseOn()");
         if (requiresTarget == true) {
 
             if (target == null) {
@@ -154,6 +154,7 @@ public abstract class AbilityEffect : DescribableResource {
                 }
 
                 if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget) {
+                    Debug.Log(target.name + " is not alive and this ability effect requires a live target!");
                     return false;
                 }
 

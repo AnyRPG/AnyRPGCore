@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class DirectEffect : FixedLengthEffect {
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        //Debug.Log("DirectEffect.Cast()");
+        //Debug.Log(MyName + ".DirectEffect.Cast()");
         base.Cast(source, target, originalTarget, abilityEffectInput);
     }
 

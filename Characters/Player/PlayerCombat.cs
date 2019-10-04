@@ -167,18 +167,18 @@ public class PlayerCombat : CharacterCombat {
     }
 
     public override void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {
-        Debug.Log("PlayerCombat.OnKillConfirmed()");
+        //Debug.Log("PlayerCombat.OnKillConfirmed()");
         base.OnKillConfirmed(sourceCharacter, creditPercent);
     }
 
 
     public override void TryToDropCombat() {
-        Debug.Log("PlayerCombat.TryToDropCombat()");
+        //Debug.Log("PlayerCombat.TryToDropCombat()");
         base.TryToDropCombat();
     }
 
     protected override void DropCombat() {
-        Debug.Log("PlayerCombat.DropCombat()");
+        //Debug.Log("PlayerCombat.DropCombat()");
         if (!inCombat) {
             return;
         }

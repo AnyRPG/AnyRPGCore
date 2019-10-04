@@ -6,9 +6,9 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New Direct Ability", menuName = "Abilities/DirectAbility")]
 public class DirectAbility : InstantEffectAbility {
 
-    public override void Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+    public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
         //Debug.Log("DirectAbility.Cast(" + (target ? target.name : "null") + ")");
-        base.Cast(source, target, groundTarget);
+        return base.Cast(source, target, groundTarget);
     }
 
     public override bool CanUseOn(GameObject target, BaseCharacter source) {

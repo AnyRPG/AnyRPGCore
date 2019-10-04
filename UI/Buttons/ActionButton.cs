@@ -245,7 +245,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
                         coolDownIcon.fillClockwise = false;
                     }
                     //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
-                    float fillAmount = Mathf.Max(this.remainingCooldown, PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown) / (this.remainingCooldown > PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown ? (MyUseable as BaseAbility).abilityCoolDown : 1f);
+                    float fillAmount = Mathf.Max(this.remainingCooldown, PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown) / (this.remainingCooldown > PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown ? (MyUseable as BaseAbility).abilityCoolDown : PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyInitialGlobalCoolDown);
                     //Debug.Log("Setting fill amount to: " + fillAmount);
                     coolDownIcon.fillAmount = fillAmount;
                 } else {

@@ -401,11 +401,15 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
     public virtual void ReviveComplete() {
         Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
+        ReviveRaw();
+        OnReviveComplete();
+    }
+
+    public virtual void ReviveRaw() {
         isAlive = true;
         ClearInvalidStatusEffects();
         ResetHealth();
         ResetMana();
-        OnReviveComplete();
     }
 
     protected virtual void ClearStatusEffects() {

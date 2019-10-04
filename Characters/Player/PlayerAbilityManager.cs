@@ -145,8 +145,10 @@ public class PlayerAbilityManager : CharacterAbilityManager {
 
     public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
         //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
-        // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've got issues anyway...
+        // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
+        // the current longest animated attack is ground slam at around 4 seconds
         remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
+        initialGlobalCoolDown = remainingGlobalCoolDown;
         while (remainingGlobalCoolDown > 0f) {
             remainingGlobalCoolDown -= Time.deltaTime;
             //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);

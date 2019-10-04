@@ -40,7 +40,7 @@ public class FollowState : IState
                 // they are in the hitbox and we can attack them
                 aiController.ChangeState(new AttackState());
             } else {
-                //Debug.Log(aiController.gameObject.name + ": FollowTarget");
+                Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                 // if within agro distance but out of hitbox range, move toward target
                 aiController.FollowTarget(aiController.MyTarget);
             }

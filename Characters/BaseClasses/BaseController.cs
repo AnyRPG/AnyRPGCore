@@ -148,7 +148,7 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     }
 
     private Vector3 GetHitBoxCenter() {
-        //Debug.Log("BaseController.GetHitBoxCenter()");
+        Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter()");
         if (baseCharacter == null) {
             //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter is null!");
             return Vector3.zero;
@@ -183,8 +183,9 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
         int i = 0;
         //Check when there is a new collider coming into contact with the box
         while (i < hitColliders.Length) {
-            //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
+            //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "]");
             if (hitColliders[i].gameObject == newTarget) {
+                //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "] MATCH!!");
                 return true;
             }
             i++;

@@ -273,8 +273,7 @@ public class PlayerManager : MonoBehaviour {
     public void RespawnPlayer() {
         Debug.Log("PlayerManager.RespawnPlayer()");
         DespawnPlayerUnit();
-        MyCharacter.MyCharacterStats.ResetHealth();
-        MyCharacter.MyCharacterStats.ResetMana();
+        MyCharacter.MyCharacterStats.ReviveRaw();
         SpawnPlayerUnit();
     }
 

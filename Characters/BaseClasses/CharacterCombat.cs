@@ -51,6 +51,9 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
     protected Coroutine regenRoutine = null;
 
+    // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
+    protected BaseCharacter swingTarget = null;
+
     public AggroTable MyAggroTable {
         get {
             return aggroTable;
@@ -68,6 +71,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
     public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
     public AudioClip MyOverrideHitSoundEffect { get => overrideHitSoundEffect; set => overrideHitSoundEffect = value; }
+    public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
 
     private void Awake() {
         //Debug.Log(gameObject.name + ".CharacterCombat.Awake()");
@@ -163,7 +167,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         MyWaitingForAutoAttack = newValue;
     }
 
-    public virtual void OnTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+    public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
         //Debug.Log("OnTakeDamageHandler activated on " + gameObject.name);
         AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
         abilityAffectInput.healthAmount = damage;
@@ -194,15 +198,15 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
     public virtual void TryToDropCombat() {
         if (inCombat == false) {
-            Debug.Log(gameObject.name + ".TryToDropCombat(): incombat = false. returning");
+            //Debug.Log(gameObject.name + ".TryToDropCombat(): incombat = false. returning");
             return;
         }
         //Debug.Log(gameObject.name + " trying to drop combat.");
         if (aggroTable.MyTopAgroNode == null) {
-            Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode is null. Dropping combat.");
+            //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode is null. Dropping combat.");
             DropCombat();
         } else {
-            Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
+            //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
             // this next condition should prevent crashes as a result of level unloads
             if (MyBaseCharacter.MyCharacterUnit != null) {
                 foreach (AggroNode aggroNode in MyAggroTable.MyAggroNodes) {
@@ -226,7 +230,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     }
 
     protected virtual void DropCombat() {
-        Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
+        //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
         inCombat = false;
         SetWaitingForAutoAttack(false);
         if (baseCharacter != null && baseCharacter.MyCharacterAbilityManager != null) {
@@ -260,6 +264,10 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     /// return true if this is a new entry, false if not
     public virtual bool EnterCombat(BaseCharacter target) {
         //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + ")");
+        if (MyBaseCharacter.MyCharacterStats.IsAlive == false) {
+            //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + "): character is not alive, returning!");
+            return false;
+        }
         // try commenting this out to fix bug where things that have agrod but done no damage don't get death notifications
         //if (!inCombat) {
         //Debug.Log(gameObject.name + " Entering Combat with " + target.name);
@@ -315,6 +323,10 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     }
 
     protected virtual bool AutoAttackTargetIsValid(BaseCharacter characterTarget) {
+        // testing - ensure the current target is the target we swung at in case we switched target mid swing via tab/agro etc
+        if (characterTarget != swingTarget) {
+            return false;
+        }
         if (Faction.RelationWith(characterTarget, MyBaseCharacter as BaseCharacter) > -1) {
             return false;
         }
@@ -335,6 +347,9 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             //Debug.Log("You must have a target to attack");
             //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
         } else {
+            // testing - add this here to prevent characters from not being able to attack
+            swingTarget = characterTarget;
+
             // perform a faction/liveness check and disable auto-attack if it is not valid
             if (!AutoAttackTargetIsValid(characterTarget)) {
                 DeActivateAutoAttack();
@@ -383,6 +398,10 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
         if (MyBaseCharacter.MyCharacterController.MyTarget != null && targetCharacterUnit != null) {
 
+            // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
+            OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+
+            // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             BaseCharacter targetCharacter = targetCharacterUnit.MyBaseCharacter;
             if (targetCharacter != null && !AutoAttackTargetIsValid(targetCharacter)) {
@@ -391,12 +410,14 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             }
             //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() OpponentCombat is not null. About to deal damage");
             targetCharacterUnit.MyCharacter.MyCharacterCombat.TakeDamage(baseCharacter.MyCharacterStats.MyMeleeDamage, baseCharacter.MyCharacterUnit.transform.position, baseCharacter as BaseCharacter, CombatType.normal, CombatMagnitude.normal, "Attack");
-            OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+
             if (autoAttackActive == false) {
                 ActivateAutoAttack();
             }
+
+            // onHitAbility is only for weapons, not for special moves
+            // OnHitAbility will not fire if target is dead. This is ok because regular weapon onhit ability should be set to something that requires a target anyway
             if (onHitAbility != null) {
-                // onhitability is only for weapons, not for special moves
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is not null!");
                 baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitAbility);
             }
@@ -420,7 +441,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
         damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetDamageModifiers());
 
-        OnTakeDamage(damage, source, combatType, combatMagnitude, abilityName);
+        ProcessTakeDamage(damage, source, combatType, combatMagnitude, abilityName);
         //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
         baseCharacter.MyCharacterStats.ReduceHealth(damage);
     }
