@@ -460,11 +460,6 @@ public class PlayerController : BaseController {
                 }
             }
         } else {
-            /*
-            if (preferredTarget != null) {
-                SetTarget(preferredTarget);
-            }
-            */
             //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
             // we only want to clear the target if we are actually setting a new target
             if (characterUnitList[tabTargetIndex] != target) {

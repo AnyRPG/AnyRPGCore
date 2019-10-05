@@ -442,6 +442,10 @@ public class InventoryManager : MonoBehaviour {
     /// </summary>
     /// <param name="item"></param>
     public bool AddItem(Item item, bool addToBank = false) {
+        if (item.MyUniqueItem == true && GetItemCount(item.MyName) > 0) {
+            MessageFeedManager.MyInstance.WriteMessage(item.MyName + " is unique.  You can only carry one at a time.");
+            return false;
+        }
         if (item.MyStackSize > 0) {
             if (PlaceInStack(item, addToBank)) {
                 return true;

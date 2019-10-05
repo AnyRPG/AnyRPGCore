@@ -151,6 +151,7 @@ public class QuestLog : MonoBehaviour  {
         //Debug.Log("QuestLog.AbandonQuest(" + quest.name + ")");
         SystemQuestManager.MyInstance.GetResource(questName).OnAbandonQuest();
         RemoveQuest(questName);
+        SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
     }
 
     public void TurnInQuest(string questName) {

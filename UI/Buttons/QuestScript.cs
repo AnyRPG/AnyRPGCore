@@ -27,13 +27,14 @@ public class QuestScript : HighlightButton {
 
         RawSelect();
 
+        QuestLogUI.MyInstance.MySelectedQuestScript = this;
+
         QuestLogUI.MyInstance.ShowDescription(MyQuestName);
     }
 
     public void RawSelect() {
         // questtracker can show description directly so we need a way to just highlight the script
         base.Select();
-        QuestLogUI.MyInstance.MySelectedQuestScript = this;
     }
 
     public void IsComplete() {

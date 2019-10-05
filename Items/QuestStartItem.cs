@@ -20,12 +20,12 @@ public class QuestStartItem : Item, IUseable, IQuestGiver {
                 MessageFeedManager.MyInstance.WriteMessage("You are already on that quest");
             } else {
                 //Debug.Log("QuestStartItem.Use(): showing quests");
-                QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
                 //Debug.Log("QuestStartItem.Use(): opening questgiver window");
                 if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
                     // safety to prevent deletion
                     return;
                 }
+                QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
                 OpenQuestGiverWindow();
                 QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).MyQuests[0].MyQuest);
             }

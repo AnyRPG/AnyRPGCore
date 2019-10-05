@@ -69,6 +69,8 @@ public class QuestLogUI : WindowContentController {
     public void ShowQuestsCommon() {
 
         ClearQuests();
+        ClearDescription(string.Empty);
+        DeactivateButtons();
 
         QuestScript firstAvailableQuest = null;
 
@@ -85,6 +87,8 @@ public class QuestLogUI : WindowContentController {
 
         if (selectedQuestScript == null && firstAvailableQuest != null) {
             firstAvailableQuest.Select();
+        } else if (firstAvailableQuest == null) {
+
         }
 
         UpdateQuestCount();
@@ -107,13 +111,15 @@ public class QuestLogUI : WindowContentController {
 
         UpdateButtons(questName);
 
+        questDetailsArea.gameObject.SetActive(true);
         questDetailsArea.ShowDescription(quest);
     }
 
     public void ClearDescription(string newQuestName) {
-        Debug.Log("QuestLogUI.ClearDescription()");
+        Debug.Log("QuestLogUI.ClearDescription(" + newQuestName + ")");
 
         questDetailsArea.ClearDescription();
+        questDetailsArea.gameObject.SetActive(false);
 
         DeselectQuestScripts(newQuestName);
     }
@@ -123,13 +129,19 @@ public class QuestLogUI : WindowContentController {
         foreach (QuestScript questScript in questScripts) {
             if (MySelectedQuestScript == null) {
                 // we came from questtracker UI
-                if (newQuestName == string.Empty) {
-                    questScript.DeSelect();
-                } else if (newQuestName == questScript.MyQuestName) {
+                if (SystemResourceManager.MatchResource(newQuestName, questScript.MyQuestName)) {
                     questScript.RawSelect();
+                    MySelectedQuestScript = questScript;
+                } else {
+                    questScript.DeSelect();
                 }
-            } else if (questScript != MySelectedQuestScript) {
-                questScript.DeSelect();
+            } else {
+                if (SystemResourceManager.MatchResource(newQuestName, questScript.MyQuestName)) {
+                    questScript.RawSelect();
+                    MySelectedQuestScript = questScript;
+                } else {
+                    questScript.DeSelect();
+                }
             }
         }
 
@@ -137,13 +149,16 @@ public class QuestLogUI : WindowContentController {
     }
 
     private void UpdateButtons(string questName) {
-        abandonButton.GetComponent<Button>().enabled = true;
+        abandonButton.SetActive(true);
+        //abandonButton.GetComponent<Button>().enabled = true;
         //trackButton.GetComponent<Button>().enabled = true;
     }
 
     public void DeactivateButtons() {
-        abandonButton.GetComponent<Button>().enabled = false;
-        trackButton.GetComponent<Button>().enabled = false;
+
+        abandonButton.SetActive(false);
+        //abandonButton.GetComponent<Button>().enabled = false;
+        //trackButton.GetComponent<Button>().enabled = false;
     }
 
     public override void OnCloseWindow() {
@@ -159,8 +174,6 @@ public class QuestLogUI : WindowContentController {
 
         base.OnOpenWindow();
 
-        ClearDescription(string.Empty);
-
         OnOpenWindowHandler(this);
 
         ShowQuestsCommon();
@@ -173,5 +186,10 @@ public class QuestLogUI : WindowContentController {
         }
         questScripts.Clear();
         selectedQuestScript = null;
+    }
+
+    public void AbandonQuest() {
+        QuestLog.MyInstance.AbandonQuest(currentQuestName);
+        ShowQuestsCommon();
     }
 }

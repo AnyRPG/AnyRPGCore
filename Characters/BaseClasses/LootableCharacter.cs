@@ -25,6 +25,9 @@ public class LootableCharacter : InteractableOption {
     protected override void Awake() {
         base.Awake();
         characterUnit = GetComponent<CharacterUnit>();
+        if (lootTable == null) {
+            lootTable = GetComponent<LootTable>();
+        }
     }
 
     protected override void Start() {
@@ -128,7 +131,7 @@ public class LootableCharacter : InteractableOption {
         }
         
         // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
-        if (lootTable != null && GetCurrentOptionCount() > 0) {
+        if (lootTable != null && lootTable.MyLoot.Length > 0 && GetCurrentOptionCount() > 0) {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
             return true;
         }
@@ -241,7 +244,9 @@ public class LootableCharacter : InteractableOption {
     }
 
     public void ClearLootTable() {
-        lootTable.HandleRevive();
+        if (lootTable != null) {
+            lootTable.HandleRevive();
+        }
     }
 
     public override void HandlePrerequisiteUpdates() {

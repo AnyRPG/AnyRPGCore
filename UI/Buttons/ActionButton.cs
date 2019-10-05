@@ -184,6 +184,12 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         }
     }
 
+    private void DisableCoolDownIcon() {
+        coolDownIcon.sprite = null;
+        coolDownIcon.color = new Color32(0, 0, 0, 0);
+        coolDownIcon.enabled = false;
+    }
+
     /// <summary>
     /// UPdates the visual representation of the actionbutton
     /// </summary>
@@ -204,9 +210,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             UIManager.MyInstance.ClearStackCount(this);
             MyIcon.sprite = null;
             MyIcon.color = icon.color = new Color32(0, 0, 0, 0);
-            coolDownIcon.color = new Color32(0, 0, 0, 0);
-            coolDownIcon.sprite = null;
-            coolDownIcon.enabled = false;
+            DisableCoolDownIcon();
             return;
         }
         MyIcon.sprite = MyUseable.MyIcon;
@@ -222,6 +226,8 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             UIManager.MyInstance.UpdateStackSize(this, count, true);
             if (count == 0) {
                 EnableFullCoolDownIcon();
+            } else {
+                DisableCoolDownIcon();
             }
         } else if (MyUseable is BaseAbility) {
             UIManager.MyInstance.ClearStackCount(this);
