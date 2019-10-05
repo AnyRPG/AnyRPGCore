@@ -19,8 +19,8 @@ public class InstantEffectAbility : BaseAbility {
                 if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
                     if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, source) <= -1) {
                         if (targetCharacterUnit.MyBaseCharacter.MyCharacterCombat != null) {
-                            // enterCombat includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                            targetCharacterUnit.MyBaseCharacter.MyCharacterCombat.EnterCombat(source);
+                            // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                            targetCharacterUnit.MyBaseCharacter.MyCharacterController.Agro(source.MyCharacterUnit);
                         }
                     }
                 }

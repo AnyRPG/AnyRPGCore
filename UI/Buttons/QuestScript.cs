@@ -8,13 +8,50 @@ using UnityEngine.UI;
 /// </summary>
 public class QuestScript : HighlightButton {
 
-    private Quest quest;
+    private string questName;
 
     private bool markedComplete = false;
 
+    public string MyQuestName { get => questName; }
 
-    public Quest MyQuest { get => quest; }
+    public void SetQuestName(string questName) {
+        if (questName != null && questName != string.Empty) {
+            this.questName = questName;
+            MyText.text = questName;
+            IsComplete();
+        }
+    }
 
+    public override void Select() {
+        Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
+
+        RawSelect();
+
+        QuestLogUI.MyInstance.ShowDescription(MyQuestName);
+    }
+
+    public void RawSelect() {
+        // questtracker can show description directly so we need a way to just highlight the script
+        base.Select();
+        QuestLogUI.MyInstance.MySelectedQuestScript = this;
+    }
+
+    public void IsComplete() {
+        //Debug.Log("Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
+        Quest quest = SystemQuestManager.MyInstance.GetResource(questName);
+
+        if (quest.IsComplete && !markedComplete) {
+            markedComplete = true;
+            //Debug.Log("the quest is complete");
+            MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyName + " (Complete)";
+        } else if (!quest.IsComplete) {
+            markedComplete = false;
+            MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyName;
+        }
+        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, quest.MyExperienceLevel);
+    }
+
+    /*
     public void CommonSelect() {
         if (QuestLogUI.MyInstance.MySelectedQuestScript != null && QuestLogUI.MyInstance.MySelectedQuestScript != this) {
             QuestLogUI.MyInstance.MySelectedQuestScript.DeSelect();
@@ -22,33 +59,11 @@ public class QuestScript : HighlightButton {
         QuestLogUI.MyInstance.MySelectedQuestScript = this;
 
     }
-
+    */
+    /*
     public void RawSelect() {
         CommonSelect();
     }
+    */
 
-    public override void Select() {
-        base.Select();
-        CommonSelect();
-        QuestLogUI.MyInstance.ShowDescription(MyQuest);
-    }
-
-    public void SetQuest(Quest quest) {
-        this.quest = quest;
-        MyText.text = quest.MyName;
-        IsComplete();
-    }
-
-    public void IsComplete() {
-        //Debug.Log("Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
-        if (MyQuest.IsComplete && !markedComplete) {
-            markedComplete = true;
-            //Debug.Log("the quest is complete");
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyName + " (Complete)";
-        } else if (!MyQuest.IsComplete) {
-            markedComplete = false;
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyName;
-        }
-        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
-    }
 }

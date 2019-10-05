@@ -12,4 +12,5 @@ public interface IQuestGiver {
     bool Interact(CharacterUnit source);
     void HandleCompleteQuest();
     void HandleAcceptQuest();
+    bool EndsQuest(string questName);
 }

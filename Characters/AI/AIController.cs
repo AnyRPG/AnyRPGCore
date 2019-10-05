@@ -51,15 +51,29 @@ public class AIController : BaseController {
         baseCharacter = GetComponent<AICharacter>() as ICharacter;
         aiPatrol = GetComponent<AIPatrol>();
 
-        MyStartPosition = transform.position;
+        // just in case this character is spawning not directly on a navmesh (inaccurate editor placement etc) get the closest valid navmesh position
+        // if one cannot be found, just use the current position anyway
+        // this will hopefully prevent a character from trying to return to a spawn point that is out of reach, and never exiting return state because the spawn point is never near enough to get inside the hitbox
         //Debug.Log(gameObject.name + ".AIController.Awake(): MyStartPosition: " + MyStartPosition);
         MyAggroRange = initialAggroRange;
     }
 
     protected override void Start() {
         //Debug.Log(gameObject.name + ".AIController.Start()");
-        ChangeState(new IdleState());
+
+        // moved next 2 lines here from awake because we need some references first for them to work
+        Vector3 correctedPosition = Vector3.zero;
+        if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyCharacterUnit.MyCharacterMotor != null) {
+            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
+        } else {
+            Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");
+        }
+        MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
+
+        // testing this was after the idlestate but that doesn't make sense.  hopefully this doesn't break anything
         base.Start();
+
+        ChangeState(new IdleState());
 
         // detect if unit has spherecollider (non agro units don't need one)
         SphereCollider sphereCollider = baseCharacter.MyCharacterUnit.GetComponentInChildren<SphereCollider>();
@@ -119,7 +133,7 @@ public class AIController : BaseController {
         Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
 
         if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > maxDistanceFromMasterOnMove) {
-            SetDestination(masterRelativeDestination);
+            masterRelativeDestination = SetDestination(masterRelativeDestination);
         }
 
         MyLeashPosition = masterRelativeDestination;
@@ -203,49 +217,41 @@ public class AIController : BaseController {
         }
         //Debug.Log(gameObject.name + ": Setting target to: " + newTarget.name);
         if (!(currentState is DeathState)) {
-            if (MyTarget == null && !(currentState is EvadeState)) {
-                //Debug.Log("Setting target function and target was previously null");
-                float distance = Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, newTarget.transform.position);
-                /*MyAggroRange = initialAggroRange;
-                MyAggroRange += distance;
-                */
-                base.SetTarget(newTarget);
+            if (!(currentState is EvadeState)) {
+                if (MyTarget == null) {
+                    //Debug.Log("Setting target function and target was previously null");
+                    float distance = Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, newTarget.transform.position);
+                    /*MyAggroRange = initialAggroRange;
+                    MyAggroRange += distance;
+                    */
+                    base.SetTarget(newTarget);
+                }
+                //Debug.Log("my target is " + MyTarget.ToString());
+
+                // moved this whole block inside the evade check because it doesn't make sense to agro anything while you are evading
+                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                if (targetCharacterUnit != null) {
+                    Agro(targetCharacterUnit);
+                }
             }
-            //Debug.Log("my target is " + MyTarget.ToString());
-            Agro();
         }
     }
 
-    public void Agro() {
+    public override void Agro(CharacterUnit agroTarget) {
         //Debug.Log(gameObject.name + ".AIController.Agro(): target: " + target.name);
         if (!(currentState is DeathState)) {
             //CharacterUnit characterUnit = (CharacterUnit) target.GetComponent<ICharacterUnit>();
-            CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
-            if (characterUnit == null) {
-                //Debug.Log("no character unit on target");
-            } else if (characterUnit.MyCharacter == null) {
-                // nothing for now
-            } else if (characterUnit.MyCharacter.MyCharacterCombat == null) {
-                //Debug.Log("no character combat on target");
-            } else {
-                if (baseCharacter.MyCharacterCombat == null) {
-                    //Debug.Log("for some strange reason, combat is null????");
-                    // like inanimate units
-                } else {
-                    characterUnit.MyCharacter.MyCharacterCombat.EnterCombat(MyBaseCharacter as BaseCharacter);
-                    baseCharacter.MyCharacterCombat.EnterCombat(characterUnit.MyCharacter);
-                }
-                //Debug.Log("combat is " + combat.ToString());
-                //Debug.Log("mytarget is " + MyTarget.ToString());
-            }
+            base.Agro(agroTarget);
         }
     }
 
-    public void SetDestination(Vector3 destination) {
+    public Vector3 SetDestination(Vector3 destination) {
         //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
         if (!(currentState is DeathState)) {
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MoveToPoint(destination);
+            // I THINK WE MAY NEED TO SEND IN CORRECTED NAVMESH POSITION HERE
+            return MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MoveToPoint(destination);
         }
+        return Vector3.zero;
     }
 
     public void FollowTarget(GameObject target) {

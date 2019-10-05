@@ -10,7 +10,7 @@ public class ChanneledEffect : DirectEffect {
     public float effectDelay = 0f;
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        Debug.Log("ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
+        //Debug.Log("ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
         if (abilityEffectInput == null) {
             abilityEffectInput = new AbilityEffectOutput();
         }

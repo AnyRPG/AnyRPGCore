@@ -16,7 +16,7 @@ public class PatrolState : IState {
         this.aiController = aiController;
         if (!aiController.MyAiPatrol.PatrolComplete()) {
             currentDestination = aiController.MyAiPatrol.GetDestination(false);
-            this.aiController.SetDestination(currentDestination);
+            currentDestination = this.aiController.SetDestination(currentDestination);
             this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
         } else {
             aiController.ChangeState(new IdleState());
@@ -69,6 +69,6 @@ public class PatrolState : IState {
                 yield return null;
             }
         }
-        this.aiController.SetDestination(currentDestination);
+        currentDestination = this.aiController.SetDestination(currentDestination);
     }
 }

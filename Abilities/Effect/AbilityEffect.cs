@@ -154,7 +154,8 @@ public abstract class AbilityEffect : DescribableResource {
                 }
 
                 if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget) {
-                    Debug.Log(target.name + " is not alive and this ability effect requires a live target!");
+                    // disable for spam - dead units nearby an aoe will trigger this message
+                    //Debug.Log(target.name + " is not alive and this ability effect requires a live target!");
                     return false;
                 }
 

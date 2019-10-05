@@ -21,4 +21,5 @@ public interface ICharacterController {
     void UnStunCharacter();
     void LevitateCharacter();
     void UnLevitateCharacter();
+    void Agro(CharacterUnit agroTarget);
 }

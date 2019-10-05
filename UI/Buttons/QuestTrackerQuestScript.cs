@@ -23,7 +23,7 @@ public class QuestTrackerQuestScript : MonoBehaviour
     public void Select() {
         //Debug.Log("QuestTrackerQuestScript.Select()");
         PopupWindowManager.MyInstance.questLogWindow.OpenWindow();
-        QuestLogUI.MyInstance.ShowDescription(MyQuest);
+        QuestLogUI.MyInstance.ShowDescription(MyQuest.MyName);
     }
 
     public void DeSelect() {

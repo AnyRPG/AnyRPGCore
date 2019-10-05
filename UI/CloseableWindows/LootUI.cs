@@ -48,10 +48,10 @@ public class LootUI : WindowContentController, IPagedWindowContents {
             }
         }
         //Debug.Log("LootUI.CreatePages(): pages.count: " + pages.Count);
-        OnPageCountUpdateHandler();
-
 
         AddLoot();
+
+        OnPageCountUpdateHandler();
     }
 
     private void AddLoot() {
@@ -138,6 +138,7 @@ public class LootUI : WindowContentController, IPagedWindowContents {
         //Debug.Log("LootUI.OnOpenWindow()");
         base.OnOpenWindow();
         OnOpenWindowHandler(this);
+        OnPageCountUpdateHandler();
     }
 
     public int GetPageCount() {

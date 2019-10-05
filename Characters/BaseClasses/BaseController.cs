@@ -91,6 +91,32 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
         ClearTarget();
     }
 
+    public virtual void Agro(CharacterUnit agroTarget) {
+        // at this level, we are just pulling both parties into combat.
+        CharacterUnit targetCharacterUnit = agroTarget;
+        if (targetCharacterUnit == null) {
+            //Debug.Log("no character unit on target");
+        } else if (targetCharacterUnit.MyCharacter == null) {
+            // nothing for now
+        } else if (targetCharacterUnit.MyCharacter.MyCharacterCombat == null) {
+            //Debug.Log("no character combat on target");
+        } else {
+            if (baseCharacter.MyCharacterCombat == null) {
+                //Debug.Log("for some strange reason, combat is null????");
+                // like inanimate units
+            } else {
+                if (targetCharacterUnit.MyCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats != null && targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && baseCharacter.MyCharacterStats.IsAlive == true) {
+                    targetCharacterUnit.MyCharacter.MyCharacterCombat.EnterCombat(MyBaseCharacter as BaseCharacter);
+                    baseCharacter.MyCharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter);
+                } else {
+                    //Debug.Log(gameObject.name + ".Agro(): One of the units was dead or did not have an active characterStats");
+                }
+            }
+            //Debug.Log("combat is " + combat.ToString());
+            //Debug.Log("mytarget is " + MyTarget.ToString());
+        }
+    }
+
     public void FreezeCharacter() {
         //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
         frozen = true;
@@ -137,7 +163,6 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     public virtual void SetTarget(GameObject newTarget) {
         //Debug.Log(gameObject.name + ": BaseController: setting target: " + newTarget.name);
         target = newTarget;
-
     }
 
     public virtual void ClearTarget() {
@@ -148,7 +173,7 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     }
 
     private Vector3 GetHitBoxCenter() {
-        Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter()");
+        //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter()");
         if (baseCharacter == null) {
             //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter is null!");
             return Vector3.zero;

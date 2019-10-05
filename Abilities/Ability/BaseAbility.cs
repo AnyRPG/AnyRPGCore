@@ -240,7 +240,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
     public virtual void PerformAbilityEffects(BaseCharacter source, GameObject target, Vector3 groundTarget) {
-        Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
+        //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
         if (abilityEffects.Count == 0) {
             //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
             // this is fine for channeled abilities

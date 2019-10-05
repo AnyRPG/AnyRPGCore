@@ -370,52 +370,106 @@ public class PlayerController : BaseController {
     private void RegisterTab() {
         if (InputManager.MyInstance.KeyBindWasPressed("NEXTTARGET")) {
             //Debug.Log("Tab Target Registered");
-            ClearTarget();
-            GetNextTabTarget();
+            GameObject oldTarget = target;
+            // moving this inside getnexttabtarget
+            //ClearTarget();
+            GetNextTabTarget(oldTarget);
         }
     }
 
-    private void GetNextTabTarget() {
+    private void GetNextTabTarget(GameObject oldTarget) {
+        //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
         DateTime currentTime = DateTime.Now;
         TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
         lastTabTargetTime = DateTime.Now;
-        Collider[] hitColliders = Physics.OverlapSphere(baseCharacter.MyCharacterUnit.transform.position, tabTargetMaxDistance);
-        //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
+        int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+        //int validMask = LayerMask.NameToLayer("CharacterUnit");
+        Collider[] hitColliders = Physics.OverlapSphere(baseCharacter.MyCharacterUnit.transform.position, tabTargetMaxDistance, validMask);
         int i = 0;
         //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
-        GameObject preferredTarget = null;
-        GameObject closestTarget = null;
-        while (i < hitColliders.Length) {
+        int preferredTargetIndex = -1;
+        int closestTargetIndex = -1;
+
+        // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
+        List<GameObject> characterUnitList = new List<GameObject>();
+        foreach (Collider hitCollider in hitColliders) {
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
-            tabTargetIndex++;
-            if (tabTargetIndex >= hitColliders.Length) {
-                tabTargetIndex = 0;
-            }
-            GameObject _gameObject = hitColliders[tabTargetIndex].gameObject;
-            CharacterUnit targetCharacterUnit = _gameObject.GetComponent<CharacterUnit>();
+            GameObject collidedGameObject = hitCollider.gameObject;
+            CharacterUnit targetCharacterUnit = collidedGameObject.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.MyFactionName) <= -1) {
-                if (closestTarget == null) {
-                    closestTarget = _gameObject;
+
+                // check if the unit is actually in front of our character.
+                // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
+                Vector3 transformedPosition = baseCharacter.MyCharacterUnit.transform.InverseTransformPoint(collidedGameObject.transform.position);
+                if (transformedPosition.z > 0f) {
+                    characterUnitList.Add(collidedGameObject);
+
                 }
-                if (Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, _gameObject.transform.position) < Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, closestTarget.transform.position)) {
-                    closestTarget = _gameObject;
-                }
-                if (preferredTarget == null) {
-                    preferredTarget = _gameObject;
-                }
-                //return;
+            }
+        }
+
+        if (characterUnitList.Count == 0) {
+            // no valid characters in range
+            //Debug.Log("PlayerController.GetNextTabTarget(): no valid characters in range, returning");
+            return;
+        } else {
+            //Debug.Log("PlayerController.GetNextTabTarget(): valid character count: " + characterUnitList.Count);
+        }
+
+        // now that we have all valid attack targets, we need to process the list a bit before choosing a target
+        i = 0;
+        foreach (GameObject collidedGameObject in characterUnitList) {
+            //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
+            if (closestTargetIndex == -1) {
+                closestTargetIndex = i;
+            }
+            if (Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, collidedGameObject.transform.position) < Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
+                closestTargetIndex = i;
+            }
+            // this next variable shouldn't actually be needed.  i think it was a logic error with not tracking the target index properly
+            if (preferredTargetIndex == -1) {
+                preferredTargetIndex = i;
             }
             i++;
         }
 
+
+        tabTargetIndex++;
+        if (tabTargetIndex >= characterUnitList.Count) {
+            tabTargetIndex = 0;
+        }
+        //Debug.Log("PlayerController.GetNextTabTarget(): processing complete: closestTargetIndex: " + closestTargetIndex + "; target: " + (target == null ? "null" : target.name) + "; closestTargetName: " + characterUnitList[closestTargetIndex]);
+
         // reset to closest unit every 3 seconds if starting a new round of tabbing.
+        // otherwise, just keep going through the index
         if (timeSinceLastTab.TotalSeconds > 3f) {
-            if (closestTarget != null) {
-                SetTarget(closestTarget);
+            //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
+            if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != target) {
+                // prevent a tab from re-targetting the same unit just because it's closest to us
+                // we only want to clear the target if we are actually setting a new target
+                ClearTarget();
+                SetTarget(characterUnitList[closestTargetIndex]);
+                // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
+                tabTargetIndex = closestTargetIndex;
+                //} else if (preferredTarget != null) {
+            } else {
+                if (characterUnitList[tabTargetIndex] != target) {
+                    // we only want to clear the target if we are actually setting a new target
+                    ClearTarget();
+                    SetTarget(characterUnitList[tabTargetIndex]);
+                }
             }
         } else {
+            /*
             if (preferredTarget != null) {
                 SetTarget(preferredTarget);
+            }
+            */
+            //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
+            // we only want to clear the target if we are actually setting a new target
+            if (characterUnitList[tabTargetIndex] != target) {
+                ClearTarget();
+                SetTarget(characterUnitList[tabTargetIndex]);
             }
         }
     }

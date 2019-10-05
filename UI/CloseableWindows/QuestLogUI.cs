@@ -51,6 +51,8 @@ public class QuestLogUI : WindowContentController {
 
     private QuestScript selectedQuestScript;
 
+    private string currentQuestName = null;
+
     public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
     private void Start() {
@@ -64,102 +66,79 @@ public class QuestLogUI : WindowContentController {
         questCount.text = QuestLog.MyInstance.MyQuests.Count + " / " + maxCount;
     }
 
-    public void AcceptQuest(Quest quest) {
-        if (QuestLog.MyInstance.MyQuests.Count >= maxCount) {
-            // quest log is full. we can't accept the quest
-            return;
-        }
-        QuestLog.MyInstance.AcceptQuest(quest.MyName);
-    }
-
     public void ShowQuestsCommon() {
+
+        ClearQuests();
+
+        QuestScript firstAvailableQuest = null;
+
         foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
             GameObject go = Instantiate(questPrefab, questParent);
 
             QuestScript qs = go.GetComponent<QuestScript>();
-            qs.SetQuest(quest);
+            qs.SetQuestName(quest.MyName);
             questScripts.Add(qs);
-            if (MySelectedQuestScript == null) {
-                qs.Select();
+            if (firstAvailableQuest == null) {
+                firstAvailableQuest = qs;
             }
         }
+
+        if (selectedQuestScript == null && firstAvailableQuest != null) {
+            firstAvailableQuest.Select();
+        }
+
         UpdateQuestCount();
     }
 
-    public void UpdateSelected() {
-        if (selectedQuestScript != null && selectedQuestScript.MyQuest != null) {
-            ShowDescription(selectedQuestScript.MyQuest);
-        }
-    }
+    public void ShowDescription(string questName) {
+        Debug.Log("QuestLogUI.ShowDescription()");
 
-    public void ShowDescription(Quest quest) {
-        //Debug.Log("QuestLogUI.ShowDescription()");
+        ClearDescription(questName);
 
-        if (MySelectedQuestScript.MyQuest != quest) {
-            foreach (QuestScript questScript in questScripts) {
-                if (questScript.MyQuest == quest) {
-                    questScript.RawSelect();
-                }
-            }
-        }
-
-        ClearDescription();
-        if (quest == null) {
+        if (questName == null || questName == string.Empty) {
             return;
         }
+        currentQuestName = questName;
 
-        questDetailsArea.gameObject.SetActive(true);
+        Quest quest = SystemQuestManager.MyInstance.GetResource(questName);
+        if (quest == null) {
+            Debug.Log("QuestLogUI.ShowDescription(" + questName + "): failed to get quest from SystemQuestManager");
+        }
+
+        UpdateButtons(questName);
+
         questDetailsArea.ShowDescription(quest);
-
-        UpdateButtons(quest);
-
     }
 
-    public void ClearDescription() {
-        //Debug.Log("QuestLogUI.ClearDescription()");
+    public void ClearDescription(string newQuestName) {
+        Debug.Log("QuestLogUI.ClearDescription()");
 
-        questDetailsArea.gameObject.SetActive(false);
+        questDetailsArea.ClearDescription();
+
+        DeselectQuestScripts(newQuestName);
     }
 
-    public bool HasQuest(Quest quest) {
-        foreach (QuestScript qs in questScripts) {
-            if (qs.MyQuest == quest) {
-                return true;
+    public void DeselectQuestScripts(string newQuestName) {
+        Debug.Log("QuestLogUI.DeselectSkillScripts()");
+        foreach (QuestScript questScript in questScripts) {
+            if (MySelectedQuestScript == null) {
+                // we came from questtracker UI
+                if (newQuestName == string.Empty) {
+                    questScript.DeSelect();
+                } else if (newQuestName == questScript.MyQuestName) {
+                    questScript.RawSelect();
+                }
+            } else if (questScript != MySelectedQuestScript) {
+                questScript.DeSelect();
             }
         }
-        return false;
+
+        // since questlog can be 
     }
 
-    public void AbandonQuest() {
-        MySelectedQuestScript.MyQuest.OnAbandonQuest();
-        QuestLog.MyInstance.AbandonQuest(MySelectedQuestScript.MyQuest.MyName);
-    }
-
-    public void RemoveQuest(Quest _quest) {
-        //Debug.Log("QuestLogUI.RemoveQuest(" + _quest.MyTitle + ")");
-
-        QuestScript removeScript = null;
-        foreach (QuestScript _questScript in questScripts) {
-            if (_questScript.MyQuest == _quest) {
-                removeScript = _questScript;
-                break;
-            }
-        }
-        if (removeScript != null) {
-            questScripts.Remove(removeScript);
-            removeScript.MyQuest.RemoveQuest();
-            Destroy(removeScript.gameObject);
-            ClearDescription();
-            selectedQuestScript = null;
-            removeScript = null;
-        }
-        DeactivateButtons();
-        UpdateQuestCount();
-    }
-
-    private void UpdateButtons(Quest quest) {
+    private void UpdateButtons(string questName) {
         abandonButton.GetComponent<Button>().enabled = true;
-        trackButton.GetComponent<Button>().enabled = true;
+        //trackButton.GetComponent<Button>().enabled = true;
     }
 
     public void DeactivateButtons() {
@@ -172,17 +151,19 @@ public class QuestLogUI : WindowContentController {
         base.OnCloseWindow();
         ClearQuests();
         DeactivateButtons();
+        MySelectedQuestScript = null;
     }
 
     public override void OnOpenWindow() {
         //Debug.Log("QuestLogUI.OnOpenWindow()");
+
         base.OnOpenWindow();
-        ClearDescription();
+
+        ClearDescription(string.Empty);
+
         OnOpenWindowHandler(this);
+
         ShowQuestsCommon();
-        if (MySelectedQuestScript != null) {
-            ShowDescription(MySelectedQuestScript.MyQuest);
-        }
     }
 
     public void ClearQuests() {

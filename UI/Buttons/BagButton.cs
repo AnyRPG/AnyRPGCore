@@ -97,9 +97,9 @@ public class BagButton : MonoBehaviour, IPointerClickHandler, IDescribable, IPoi
 
 
     public void OnPointerClick(PointerEventData eventData) {
-        Debug.Log("BagButton.OnPointerClick()");
+        //Debug.Log("BagButton.OnPointerClick()");
         if (eventData.button == PointerEventData.InputButton.Left) {
-            Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
+            //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
             if (InventoryManager.MyInstance.FromSlot != null && HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is Bag) {
                 if (MyBagNode.MyBag != null) {
                     InventoryManager.MyInstance.SwapBags(MyBagNode.MyBag, HandScript.MyInstance.MyMoveable as Bag);
@@ -113,7 +113,7 @@ public class BagButton : MonoBehaviour, IPointerClickHandler, IDescribable, IPoi
 
                 }
             } else if (Input.GetKey(KeyCode.LeftShift)) {
-                Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
+                //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                 //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
                 HandScript.MyInstance.TakeMoveable(MyBagNode.MyBag);
             } else if (bagNode.MyBag != null) {

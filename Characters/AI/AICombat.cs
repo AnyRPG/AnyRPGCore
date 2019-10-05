@@ -52,4 +52,10 @@ public class AICombat : CharacterCombat
             // drop loot
         }
     }
+
+    public override bool EnterCombat(BaseCharacter target) {
+        //Debug.Log(gameObject.name + ".AICombat.EnterCombat()");
+        bool returnResult = base.EnterCombat(target);
+        return returnResult;
+    }
 }

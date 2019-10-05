@@ -248,4 +248,8 @@ public class LootableCharacter : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+
+    public override string GetSummary() {
+        return "Lootable";
+    }
 }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class AnimatedAbility : BaseAbility {
 
     public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
-        Debug.Log(MyName + ".AnimatedAbility.Cast()");
+        //Debug.Log(MyName + ".AnimatedAbility.Cast()");
         if (base.Cast(source, target, groundTarget)) {
             if (animationClip != null) {
                 //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
@@ -42,7 +42,7 @@ public class AnimatedAbility : BaseAbility {
     }
 
     public void HandleAbilityHit(BaseCharacter source, GameObject target) {
-        Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit(): setting waiting for animated ability to false");
+        //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
         PerformAbilityEffects(source, target, Vector3.zero);
     }
 

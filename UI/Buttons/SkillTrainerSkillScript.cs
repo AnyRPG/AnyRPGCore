@@ -18,7 +18,7 @@ public class SkillTrainerSkillScript : HighlightButton {
     }
 
     public override void Select() {
-        Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
+        //Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
 
         base.Select();
         SkillTrainerUI.MyInstance.MySelectedSkillTrainerSkillScript = this;

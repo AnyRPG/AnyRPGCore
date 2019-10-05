@@ -325,7 +325,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     // special melee attack
     public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
-        Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
         if (animator == null) {
             return;
         }

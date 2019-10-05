@@ -245,7 +245,7 @@ public class QuestGiverUI : WindowContentController {
             return;
         }
 
-        if (quest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(quest.MyName) == true) {
+        if (quest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(quest.MyName) == true && questGiver != null && questGiver.EndsQuest(questName)) {
             completeButton.gameObject.SetActive(true);
             completeButton.GetComponent<Button>().enabled = true;
             acceptButton.gameObject.SetActive(false);

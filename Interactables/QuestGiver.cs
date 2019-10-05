@@ -291,4 +291,16 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         MiniMapStatusUpdateHandler(this);
     }
 
+    public bool EndsQuest(string questName) {
+        foreach (QuestNode questNode in quests) {
+            if (SystemResourceManager.MatchResource(questNode.MyQuest.MyName, questName)) {
+                if (questNode.MyEndQuest == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 }

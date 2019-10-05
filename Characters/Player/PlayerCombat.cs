@@ -95,7 +95,7 @@ public class PlayerCombat : CharacterCombat {
     }
 
     public override bool EnterCombat(BaseCharacter target) {
-        Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyCharacterName != null ? target.MyCharacterName : "null") + ")");
+        //Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyCharacterName != null ? target.MyCharacterName : "null") + ")");
         if (baseCharacter.MyCharacterStats.IsAlive == false) {
             Debug.Log("Player is dead but was asked to enter combat!!!");
             return false;

@@ -152,7 +152,7 @@ public class SkillTrainerUI : WindowContentController {
         //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
         ClearDescription();
 
-        if (skillName == null && skillName == string.Empty) {
+        if (skillName == null || skillName == string.Empty) {
             return;
         }
         currentSkillName = skillName;

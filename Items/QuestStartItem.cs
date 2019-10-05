@@ -13,17 +13,22 @@ public class QuestStartItem : Item, IUseable, IQuestGiver {
 
     public override void Use() {
         //Debug.Log("QuestStartItem.Use()");
+        // base is currently empty, so doesn't matter if we call it without checking anything
         base.Use();
         if (MyQuests != null) {
-            //Debug.Log("QuestStartItem.Use(): showing quests");
-            QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
-            //Debug.Log("QuestStartItem.Use(): opening questgiver window");
-            if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
-                // safety to prevent deletion
-                return;
+            if (QuestLog.MyInstance.HasQuest(MyQuests[0].MyQuest.MyName)) {
+                MessageFeedManager.MyInstance.WriteMessage("You are already on that quest");
+            } else {
+                //Debug.Log("QuestStartItem.Use(): showing quests");
+                QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
+                //Debug.Log("QuestStartItem.Use(): opening questgiver window");
+                if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
+                    // safety to prevent deletion
+                    return;
+                }
+                OpenQuestGiverWindow();
+                QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).MyQuests[0].MyQuest);
             }
-            OpenQuestGiverWindow();
-            QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).MyQuests[0].MyQuest);
         }
     }
 
@@ -60,4 +65,16 @@ public class QuestStartItem : Item, IUseable, IQuestGiver {
         return base.GetSummary() + string.Format("\n<color=green>Use: This item starts a quest</color>");
     }
 
+    public bool EndsQuest(string questName) {
+        foreach (QuestNode questNode in quests) {
+            if (SystemResourceManager.MatchResource(questNode.MyQuest.MyName, questName)) {
+                if (questNode.MyEndQuest == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 }
