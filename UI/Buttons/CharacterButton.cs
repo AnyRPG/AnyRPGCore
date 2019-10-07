@@ -119,7 +119,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     }
 
     public void UpdateVisual(bool resetDisplay = true) {
-        Debug.Log("CharacterButton.UpdateVisual()");
+        //Debug.Log("CharacterButton.UpdateVisual()");
 
         GetLocalComponents();
 
@@ -170,7 +170,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     }
 
     public void ClearButton(bool resetDisplay = true) {
-        Debug.Log("CharacterButton.ClearButton()");
+        //Debug.Log("CharacterButton.ClearButton()");
         equippedEquipment = null;
         UpdateVisual(resetDisplay);
     }

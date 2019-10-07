@@ -17,8 +17,10 @@ public class AnimatedAbility : BaseAbility {
 
                 // now block further animations of other types from starting
                 source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
-
-                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                CharacterUnit targetCharacterUnit = null;
+                if (target != null) {
+                    targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                }
                 BaseCharacter targetBaseCharacter = null;
                 if (targetCharacterUnit != null) {
                     targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;

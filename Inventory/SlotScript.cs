@@ -152,7 +152,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     }
 
     public void SendItemToHandScript() {
-        Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
+        //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
         HandScript.MyInstance.TakeMoveable(MyItem as IMoveable);
         InventoryManager.MyInstance.FromSlot = this;
     }
@@ -192,11 +192,11 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         } else {
             // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
             if (HandScript.MyInstance.MyMoveable is Bag) {
-                Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
+                //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                 // the handscript had a bag in it, and therefore we are trying to unequip a bag
                 Bag bag = (Bag)HandScript.MyInstance.MyMoveable;
                 if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.MyEmptySlotCount - bag.MySlots > 0) {
-                    Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
+                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                     AddItem(bag);
                     InventoryManager.MyInstance.RemoveBag(bag);
                     HandScript.MyInstance.Drop();

@@ -30,7 +30,14 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     public GameObject MyTarget { get => target; }
     public ICharacter MyBaseCharacter { get => baseCharacter; }
-    public float MyMovementSpeed { get => (walking == false ? baseCharacter.MyCharacterStats.MyMovementSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed); }
+    public float MyMovementSpeed {
+        get {
+            if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.MyCharacterController != null) {
+                return MyMasterUnit.MyCharacterController.MyMovementSpeed;
+            }
+            return (walking == false ? baseCharacter.MyCharacterStats.MyMovementSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed);
+        }
+    }
     public bool MyUnderControl { get => underControl; set => underControl = value; }
     public BaseCharacter MyMasterUnit { get => masterUnit; set => masterUnit = value; }
     public bool MyFrozen { get => frozen; }

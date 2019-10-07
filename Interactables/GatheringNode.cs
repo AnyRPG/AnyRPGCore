@@ -62,7 +62,7 @@ public class GatheringNode : InteractableOption {
     }
 
     private IEnumerator StartSpawnCountdown() {
-        Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
+        //Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
         // TESTING - THIS SHOULD DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
         HandlePrerequisiteUpdates();
         currentTimer = spawnTimer;
@@ -161,5 +161,13 @@ public class GatheringNode : InteractableOption {
     public override void HandlePrerequisiteUpdates() {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
+    }
+
+    public override bool CanInteract(CharacterUnit source) {
+        bool returnValue = base.CanInteract(source);
+        if (returnValue == false) {
+            return false;
+        }
+        return (GetCurrentOptionCount() == 0 ? false : true);
     }
 }

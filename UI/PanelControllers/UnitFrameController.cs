@@ -81,6 +81,9 @@ public class UnitFrameController : DraggableWindow {
         if (!targetInitialized) {
             this.gameObject.SetActive(false);
         }
+        if (statusEffectPanelController != null) {
+            statusEffectPanelController.MyEffectLimit = 7;
+        }
     }
 
     public void InitializeController() {
@@ -285,7 +288,7 @@ public class UnitFrameController : DraggableWindow {
             healthSlider.GetComponent<LayoutElement>().preferredWidth = healthPercent * originalHealthSliderWidth;
         }
         if (healthText != null) {
-            healthText.text = displayedCurrentHealth.ToString() + " / " + displayedMaxHealth.ToString() + " (" + healthPercent * 100 + "%)";
+            healthText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentHealth, displayedMaxHealth, (healthPercent * 100).ToString("F0"));
         }
     }
 
@@ -310,7 +313,7 @@ public class UnitFrameController : DraggableWindow {
         }
 
         if (manaText != null) {
-            manaText.text = currentMana.ToString() + " / " + maxMana.ToString() + " (" + manaPercent * 100 + "%)";
+            manaText.text = string.Format("{0} / {1} ({2}%)", currentMana, maxMana, (manaPercent * 100).ToString("F0"));
         }
     }
 

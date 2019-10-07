@@ -436,7 +436,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
         // TESTING - REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
         if (currentCast != null) {
             //if (currentCast != null && isCasting == true) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
             StopCoroutine(currentCast);
             currentCast = null;
         } else {

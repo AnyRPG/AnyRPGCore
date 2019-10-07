@@ -18,7 +18,7 @@ public class CraftAbility : DirectAbility {
     }
 
     public void InitWindow(ICloseableWindowContents craftingUI) {
-        Debug.Log("CraftAbility.InitWindow()");
+        //Debug.Log("CraftAbility.InitWindow()");
         (craftingUI as CraftingUI).ShowRecipes(this);
     }
 

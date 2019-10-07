@@ -40,7 +40,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
     }
 
     public void CreatePages() {
-        Debug.Log("ReputationBookUI.CreatePages()");
+        //Debug.Log("ReputationBookUI.CreatePages()");
         pages.Clear();
         List<CurrencySaveData> page = new List<CurrencySaveData>();
         foreach (CurrencySaveData currencySaveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {

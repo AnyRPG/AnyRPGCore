@@ -44,7 +44,7 @@ public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
     }
 
     public void CreatePages() {
-        Debug.Log("SkillBookUI.CreatePages()");
+        //Debug.Log("SkillBookUI.CreatePages()");
         ClearButtons();
         pages.Clear();
         List<string> page = new List<string>();

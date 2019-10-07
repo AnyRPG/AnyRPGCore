@@ -23,8 +23,8 @@ public class CollectObjective : QuestObjective {
         }
         MyCurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
         quest.CheckCompletion(true, printMessages);
-        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
-            MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, MyCurrentAmount, MyAmount));
+        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && MyCurrentAmount != 0) {
+            MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
         }
         if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", MyCurrentAmount, MyType));

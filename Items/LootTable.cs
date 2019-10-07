@@ -41,7 +41,7 @@ public class LootTable : MonoBehaviour {
             if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) > 0) {
                 //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
             }
-            if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) == 0 && droppedItemsContains(item.MyItem.MyName) == false) )) {
+            if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) == 0 && EquipmentManager.MyInstance.HasEquipment(item.MyItem.MyName) == false) )) {
                 int roll = Random.Range(0, 100);
                 if (roll <= item.MyDropChance) {
                     droppedItems.Add(new LootDrop(SystemItemManager.MyInstance.GetNewResource(item.MyItem.MyName), this));

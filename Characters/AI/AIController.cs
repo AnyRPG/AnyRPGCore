@@ -84,7 +84,7 @@ public class AIController : BaseController {
     }
 
     public void ApplyControlEffects(BaseCharacter source) {
-        Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
+        //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
         if (!underControl) {
             underControl = true;
             masterUnit = source;
@@ -118,7 +118,7 @@ public class AIController : BaseController {
     }
 
     public void OnMasterMovement() {
-        Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
+        //Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
         SetMasterRelativeDestination();
     }
 
@@ -127,7 +127,7 @@ public class AIController : BaseController {
             // only do this stuff if we actually have a master
             return;
         }
-        Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
+        //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
         // stand to the right of master by one meter
         Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);

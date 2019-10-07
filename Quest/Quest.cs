@@ -321,19 +321,19 @@ public class Quest : DescribableResource {
         string objectives = string.Empty;
         List<string> objectiveList = new List<string>();
         foreach (CollectObjective obj in MyCollectObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (KillObjective obj in MyKillObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (TradeSkillObjective obj in MyTradeSkillObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (QuestQuestObjective obj in MyQuestQuestObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (UseInteractableObjective obj in MyUseInteractableObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (AbilityObjective obj in MyAbilityObjectives) {
             string beginText = string.Empty;
@@ -342,10 +342,10 @@ public class Quest : DescribableResource {
             } else {
                 beginText = "Learn ";
             }
-            objectiveList.Add(beginText + obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(beginText + obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         foreach (DialogObjective obj in MyDialogObjectives) {
-            objectiveList.Add(obj.MyType + ": " + obj.MyCurrentAmount + "/" + obj.MyAmount);
+            objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
         }
         objectives = string.Join("\n", objectiveList);
         if (objectives == string.Empty) {

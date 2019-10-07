@@ -420,7 +420,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     public virtual void ReviveComplete() {
-        Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
+        //Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
         ReviveRaw();
         OnReviveComplete();
     }

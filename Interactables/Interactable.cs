@@ -731,7 +731,10 @@ public class Interactable : MonoBehaviour, IDescribable {
         }
 
         foreach (Renderer renderer in meshRenderers) {
-            renderer.materials = originalMaterials[renderer];
+            if (renderer != null) {
+                // here to prevent infestor materials that are temporary from crashing the game
+                renderer.materials = originalMaterials[renderer];
+            }
         }
 
         originalMaterials.Clear();

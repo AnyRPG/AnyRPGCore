@@ -15,6 +15,8 @@ public class StatusEffectPanelController : DraggableWindow
 
     private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
+    public int MyEffectLimit { get => effectLimit; set => effectLimit = value; }
+
     public void SetTarget(CharacterUnit characterUnit) {
         //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
         this.targetCharacterUnit = characterUnit;
@@ -77,9 +79,10 @@ public class StatusEffectPanelController : DraggableWindow
         }
 
 
-        // just going to try this for now
+        // prevent status effect bars on unit frames from printing too many effects
         if (effectLimit > 0 && statusEffectNodeScripts.Count >= effectLimit) {
             //Debug.Log("StatusEffectPanelController.SpawnStatusNode() Too many nodes(" + statusEffectNodeScripts.Count + "), can't spawn");
+            return null;
         }
 
         // determine if a node with that status effect already exists

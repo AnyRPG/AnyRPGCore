@@ -61,7 +61,7 @@ public class Bag : Item, IUseable {
             }
             Remove();
         } else {
-            Debug.Log("Bag.Use(): we can not add the bag!!!");
+            //Debug.Log("Bag.Use(): we can not add the bag!!!");
         }
     }
 

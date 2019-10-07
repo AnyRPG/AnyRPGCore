@@ -19,8 +19,8 @@ public class KillObjective : QuestObjective {
         if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.MyCharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFactionName, MyType)) {
             MyCurrentAmount++;
             quest.CheckCompletion();
-            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, MyCurrentAmount, MyAmount));
+            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && MyCurrentAmount != 0) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
                 MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", MyCurrentAmount, MyType));

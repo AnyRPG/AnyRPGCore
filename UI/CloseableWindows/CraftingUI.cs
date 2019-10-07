@@ -100,7 +100,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void ShowRecipesCommon(CraftAbility craftAbility) {
-        Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
+        //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
         Clearrecipes();
         RecipeScript firstScript = null;
         foreach (Recipe recipe in craftAbility.GetRecipes()) {
@@ -133,7 +133,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void ShowRecipes(CraftAbility craftAbility) {
-        Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
+        //Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
         this.craftAbility = craftAbility;
         ShowRecipesCommon(this.craftAbility);
     }
@@ -229,7 +229,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public override void OnOpenWindow() {
-        Debug.Log("craftingUI.OnOpenWindow()");
+        //Debug.Log("craftingUI.OnOpenWindow()");
         base.OnOpenWindow();
 
         craftingQueue.Clear();
@@ -368,7 +368,7 @@ public class CraftingUI : WindowContentController {
     }
 
     public void CancelCrafting() {
-        Debug.Log("CraftingUI.CancelCrafting()");
+        //Debug.Log("CraftingUI.CancelCrafting()");
         craftingQueue.Clear();
         PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
     }

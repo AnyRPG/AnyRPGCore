@@ -211,9 +211,9 @@ public class EquipmentManager : MonoBehaviour {
     }
 
     public Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
-        Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
+        //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
         if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
-            Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
+            //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
             if (currentEquipmentPhysicalObjects.ContainsKey(equipmentSlot)) {
                 GameObject destroyObject = currentEquipmentPhysicalObjects[equipmentSlot];
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
@@ -236,7 +236,7 @@ public class EquipmentManager : MonoBehaviour {
                     InventoryManager.MyInstance.AddItem(oldItem);
                 }
             }
-            Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
+            //Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
             currentEquipment[equipmentSlot] = null;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 SystemEventManager.MyInstance.NotifyOnEquipmentChanged(null, oldItem);
@@ -290,4 +290,15 @@ public class EquipmentManager : MonoBehaviour {
         }
     }
     */
+
+    public bool HasEquipment(string equipmentName) {
+        foreach (Equipment equipment in currentEquipment.Values) {
+            if (equipment != null) {
+                if (SystemResourceManager.MatchResource(equipment.MyName, equipmentName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

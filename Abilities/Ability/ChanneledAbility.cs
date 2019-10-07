@@ -30,7 +30,7 @@ public class ChanneledAbility : InstantEffectAbility {
     }
 
     public override void StartCasting(BaseCharacter source) {
-        Debug.Log("ChanneledAbility.OnCastStart()");
+        //Debug.Log("ChanneledAbility.OnCastStart()");
         base.StartCasting(source);
         nextTickTime = 0;
         //nextTickTime = tickRate;

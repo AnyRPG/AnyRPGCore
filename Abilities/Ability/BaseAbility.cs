@@ -205,14 +205,16 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
             return true;
         }
 
+        CharacterUnit targetCharacterUnit = null;
         if (target != null) {
-            if (target.GetComponent<CharacterUnit>() != null) { 
-                if (target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget == true) {
+            targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit != null) { 
+                if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget == true) {
                     //Debug.Log("This ability requires a live target");
                     //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
                     return false;
                 }
-                if (target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
+                if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
                     //Debug.Log("This ability requires a dead target");
                     //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                     return false;
@@ -227,10 +229,10 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
             return false;
         }
 
-        if (target != null) {
+        if (target != null && targetCharacterUnit != null) {
             if (maxRange > 0 && Vector3.Distance(source.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
                 //Debug.Log(target.name + " is out of range");
-                CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range");
+                CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + MyName);
                 return false;
             }
         }
