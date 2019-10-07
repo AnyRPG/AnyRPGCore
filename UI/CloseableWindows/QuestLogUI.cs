@@ -95,7 +95,7 @@ public class QuestLogUI : WindowContentController {
     }
 
     public void ShowDescription(string questName) {
-        Debug.Log("QuestLogUI.ShowDescription()");
+        //Debug.Log("QuestLogUI.ShowDescription()");
 
         ClearDescription(questName);
 
@@ -116,7 +116,7 @@ public class QuestLogUI : WindowContentController {
     }
 
     public void ClearDescription(string newQuestName) {
-        Debug.Log("QuestLogUI.ClearDescription(" + newQuestName + ")");
+        //Debug.Log("QuestLogUI.ClearDescription(" + newQuestName + ")");
 
         questDetailsArea.ClearDescription();
         questDetailsArea.gameObject.SetActive(false);
@@ -125,7 +125,7 @@ public class QuestLogUI : WindowContentController {
     }
 
     public void DeselectQuestScripts(string newQuestName) {
-        Debug.Log("QuestLogUI.DeselectSkillScripts()");
+        //Debug.Log("QuestLogUI.DeselectQuestScripts()");
         foreach (QuestScript questScript in questScripts) {
             if (MySelectedQuestScript == null) {
                 // we came from questtracker UI

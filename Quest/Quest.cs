@@ -233,20 +233,23 @@ public class Quest : DescribableResource {
         SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
     }
 
-    public void CheckMarkComplete(bool notifyOnUpdate = true) {
+    public void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
         if (markedComplete == true) {
             return;
         }
         if (isAchievement) {
-
-            MessageFeedManager.MyInstance.WriteMessage(string.Format("Achievement: {0} Complete!", MyName));
+            if (printMessages == true) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Achievement: {0} Complete!", MyName));
+            }
             PlayerManager.MyInstance.PlayLevelUpEffects(0);
             
             // testing adding markedComplete and turnedIn to see if this makes achievements save and load properly
             markedComplete = true;
             turnedIn = true;
         } else {
-            MessageFeedManager.MyInstance.WriteMessage(string.Format("{0} Complete!", MyName));
+            if (printMessages == true) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0} Complete!", MyName));
+            }
         }
         markedComplete = true;
         if (notifyOnUpdate == true) {
@@ -351,31 +354,31 @@ public class Quest : DescribableResource {
         return objectives;
     }
 
-    public void AcceptQuest() {
+    public void AcceptQuest(bool printMessages = true) {
         //Debug.Log("Quest.AcceptQuest(" + MyName + ")");
 
         foreach (CollectObjective o in MyCollectObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (TradeSkillObjective o in MyTradeSkillObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (AbilityObjective o in MyAbilityObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (KillObjective o in MyKillObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (UseInteractableObjective o in MyUseInteractableObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (DialogObjective o in MyDialogObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
         foreach (QuestQuestObjective o in MyQuestQuestObjectives) {
-            o.OnAcceptQuest(this);
+            o.OnAcceptQuest(this, printMessages);
         }
-        if (isAchievement == false) {
+        if (isAchievement == false && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage("Quest Accepted: " + MyName);
         }
         if (!markedComplete) {
@@ -384,7 +387,7 @@ public class Quest : DescribableResource {
         }
     }
 
-    public void CheckCompletion(bool notifyOnUpdate = true) {
+    public void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
         //Debug.Log("QuestLog.CheckCompletion()");
         if (markedComplete) {
             // no need to waste cycles checking, we are already done
@@ -429,7 +432,7 @@ public class Quest : DescribableResource {
         }
 
         if (questComplete) {
-            CheckMarkComplete(notifyOnUpdate);
+            CheckMarkComplete(notifyOnUpdate, printMessages);
         } else {
             // since this method only gets called as a result of a quest objective status updating, we need to notify for that at minimum
             //Debug.Log("Quest.CheckCompletion(): about to notify for objective status updated");

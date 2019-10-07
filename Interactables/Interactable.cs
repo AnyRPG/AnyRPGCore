@@ -183,13 +183,15 @@ public class Interactable : MonoBehaviour, IDescribable {
             //Debug.Log("Interactable.Update(): emission: " + emission);
             foreach (Renderer renderer in meshRenderers) {
                 //Debug.Log("Interactable.Update(): renderer: " + renderer.name);
-                foreach (Material flashingMaterial in renderer.materials) {
-                    //Debug.Log("Interactable.Update(): flashingmaterial: " + flashingMaterial.name + "; color: " + (glowColor * emission) + "; enabled? " + flashingMaterial.IsKeywordEnabled("_EMISSION"));
-                    flashingMaterial.SetColor("_EmissionColor", glowColor * emission);
-                    flashingMaterial.SetColor("_Color", glowColor * emission);
+                if (renderer != null) {
+                    // added this condition because of infestor effect adding extra renderers as child objects under the character unit
+                    foreach (Material flashingMaterial in renderer.materials) {
+                        //Debug.Log("Interactable.Update(): flashingmaterial: " + flashingMaterial.name + "; color: " + (glowColor * emission) + "; enabled? " + flashingMaterial.IsKeywordEnabled("_EMISSION"));
+                        flashingMaterial.SetColor("_EmissionColor", glowColor * emission);
+                        flashingMaterial.SetColor("_Color", glowColor * emission);
+                    }
                 }
             }
-
         }
     }
 

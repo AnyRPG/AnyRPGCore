@@ -46,20 +46,20 @@ public class AbilityObjective : QuestObjective {
         }
     }
 
-    public override void UpdateCompletionCount() {
+    public override void UpdateCompletionCount(bool printMessages = true) {
 
-        base.UpdateCompletionCount();
+        base.UpdateCompletionCount(printMessages);
         bool completeBefore = IsComplete;
         if (completeBefore) {
             return;
         }
         if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyType)) {
             MyCurrentAmount++;
-            quest.CheckCompletion();
-            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement) {
+            quest.CheckCompletion(true, printMessages);
+            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
                 MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, MyCurrentAmount, MyAmount));
             }
-            if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+            if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
                 MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", MyCurrentAmount, MyType));
             }
         }
@@ -67,14 +67,14 @@ public class AbilityObjective : QuestObjective {
 
     public bool MyRequireUse { get => requireUse; set => requireUse = value; }
 
-    public override void OnAcceptQuest(Quest quest) {
+    public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
         //Debug.Log("AbilityObjective.OnAcceptQuest(): " + MyType);
-        base.OnAcceptQuest(quest);
+        base.OnAcceptQuest(quest, printMessages);
         if (requireUse == true) {
             SystemEventManager.MyInstance.OnAbilityUsed += UpdateCastCount;
         } else {
             SystemEventManager.MyInstance.OnAbilityListChanged += UpdateCompletionCount;
-            UpdateCompletionCount();
+            UpdateCompletionCount(printMessages);
         }
     }
 

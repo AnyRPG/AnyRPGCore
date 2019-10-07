@@ -201,6 +201,10 @@ public class SystemEventManager : MonoBehaviour {
 
     public void NotifyOnQuestStatusUpdated() {
         //Debug.Log("SystemEventManager.NotifyOnQuestStatusUpdated");
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            // TESTING - STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
+            return;
+        }
         OnQuestStatusUpdated();
         // having these two separate seems to be ok for now.  the items that react to the first event do not react to the second, nor do they send prerequisiteupdates so no double calls should happen
         OnPrerequisiteUpdated();

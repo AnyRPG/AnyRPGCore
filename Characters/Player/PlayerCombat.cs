@@ -37,9 +37,12 @@ public class PlayerCombat : CharacterCombat {
             SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
             SystemEventManager.MyInstance.OnEquipmentRefresh -= OnEquipmentChanged;
         }
-        if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null) {
-            KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler += OnEscapeKeyPressedHandler;
+
+        // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
+        if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
+            KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler -= OnEscapeKeyPressedHandler;
         }
+        
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
             baseCharacter.MyCharacterStats.OnHealthChanged -= AttemptRegen;
             baseCharacter.MyCharacterStats.OnManaChanged -= AttemptRegen;

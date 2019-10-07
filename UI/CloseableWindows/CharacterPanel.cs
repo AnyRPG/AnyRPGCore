@@ -39,14 +39,25 @@ public class CharacterPanel : WindowContentController {
     [SerializeField]
     private Color fullSlotColor;
 
+    protected bool startHasRun = false;
+    protected bool eventReferencesInitialized = false;
+
     public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
     public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
 
     public CharacterButton MySelectedButton { get; set; }
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
+    public override void Awake() {
+        base.Awake();
+
+    }
+
     private void Start() {
         //Debug.Log("CharacterPanel.Start()");
+        startHasRun = true;
+        CreateEventReferences();
+
         head.MyEmptyBackGroundColor = emptySlotColor;
         head.MyFullBackGroundColor = fullSlotColor;
         head.UpdateVisual();
@@ -73,7 +84,64 @@ public class CharacterPanel : WindowContentController {
         offhand.UpdateVisual();
     }
 
+    protected virtual void CreateEventReferences() {
+        if (eventReferencesInitialized || !startHasRun) {
+            return;
+        }
+        if (SystemEventManager.MyInstance != null) {
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
+        }
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+            HandlePlayerUnitSpawn();
+        }
+        eventReferencesInitialized = true;
+    }
+
+    protected virtual void CleanupEventReferences() {
+        //Debug.Log("PlayerCombat.CleanupEventReferences()");
+        if (SystemEventManager.MyInstance != null) {
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
+        }
+    }
+
+    public virtual void OnEnable() {
+        CreateEventReferences();
+    }
+
+    public virtual void OnDestroy() {
+        //Debug.Log("CharacterPanel.OnDestroy()");
+        CleanupEventReferences();
+    }
+
+    public void HandlePlayerUnitSpawn() {
+        //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged += UpdateStatsDescription;
+        }
+    }
+
+    public void HandlePlayerUnitDespawn() {
+        //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged -= UpdateStatsDescription;
+        }
+
+        // 
+        head.ClearButton(false);
+        shoulders.ClearButton(false);
+        chest.ClearButton(false);
+        hands.ClearButton(false);
+        legs.ClearButton(false);
+        feet.ClearButton(false);
+        mainhand.ClearButton(false);
+        offhand.ClearButton(false);
+
+    }
+
     public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
+        //Debug.Log("CharacterPanel.EquipEquipment(" + (newEquipment != null ? newEquipment.MyName : "null") + ", " + partialEquip + ")");
         switch (newEquipment.equipSlot) {
             case EquipmentSlot.Helm:
                 head.EquipEquipment(newEquipment, partialEquip);
@@ -112,11 +180,26 @@ public class CharacterPanel : WindowContentController {
     }
 
     public override void OnOpenWindow() {
+        //Debug.Log("CharacterPanel.OnOpenWindow()");
         base.OnOpenWindow();
         SetPreviewTarget();
         UpdateStatsDescription();
         if (PlayerManager.MyInstance.MyCharacter != null) {
             PopupWindowManager.MyInstance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.MyCharacterName);
+        }
+    }
+
+    public void ResetDisplay() {
+        //Debug.Log("CharacterPanel.ResetDisplay()");
+        if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.characterPanelWindow != null && PopupWindowManager.MyInstance.characterPanelWindow.IsOpen) {
+            // reset display
+            previewCameraController.ClearTarget();
+            CharacterCreatorManager.MyInstance.HandleCloseWindow();
+
+            // update display
+            SetPreviewTarget(false);
+            //EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
+            UpdateStatsDescription();
         }
     }
 
@@ -159,7 +242,7 @@ public class CharacterPanel : WindowContentController {
         statsDescription.text = updateString;
     }
 
-    private void SetPreviewTarget() {
+    private void SetPreviewTarget(bool updateCharacterButtons = true) {
         //Debug.Log("CharacterPanel.SetPreviewTarget()");
 
         //spawn correct preview unit
@@ -169,16 +252,31 @@ public class CharacterPanel : WindowContentController {
             //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
             if (MyPreviewCameraController != null) {
                 MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.MyPreviewUnit.transform);
-                MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
+                if (updateCharacterButtons) {
+                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
+                } else {
+                    MyPreviewCameraController.OnTargetReady += TargetReadyCallbackReset;
+                }
             } else {
                 Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
             }
         }
     }
 
+    public void TargetReadyCallbackReset() {
+        //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackReset()");
+        MyPreviewCameraController.OnTargetReady -= TargetReadyCallbackReset;
+        TargetReadyCallbackCommon(false);
+    }
+
     public void TargetReadyCallback() {
         //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+        TargetReadyCallbackCommon(true);
+    }
+
+    public void TargetReadyCallbackCommon(bool updateCharacterButton = true) {
+        //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
         // get reference to avatar
         DynamicCharacterAvatar umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
@@ -192,7 +290,7 @@ public class CharacterPanel : WindowContentController {
         // disabled for now.  recipe should be already in recipestring anyway
         //SaveManager.MyInstance.SaveUMASettings();
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit);
+        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, updateCharacterButton);
 
         // TESTING SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCRENE
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;
@@ -201,9 +299,7 @@ public class CharacterPanel : WindowContentController {
         }
 
         // new code for weapons
-
     }
-
 
 
     public void OpenReputationWindow() {

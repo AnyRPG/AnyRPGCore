@@ -63,7 +63,7 @@ public class CharacterCreatorManager : MonoBehaviour {
         }
 
         if (cloneSource == null) {
-            Debug.LogError("CharacterCreatorManager.HandleOpenWindow()");
+            //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
         }
 
         //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): spawning preview unit");

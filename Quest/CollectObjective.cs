@@ -15,22 +15,22 @@ public class CollectObjective : QuestObjective {
         }
     }
 
-    public override void UpdateCompletionCount() {
+    public override void UpdateCompletionCount(bool printMessages = true) {
 
         bool completeBefore = IsComplete;
         if (completeBefore) {
             return;
         }
         MyCurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
-        quest.CheckCompletion();
-        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement) {
+        quest.CheckCompletion(true, printMessages);
+        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, MyCurrentAmount, MyAmount));
         }
-        if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+        if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", MyCurrentAmount, MyType));
         }
         //Debug.Log("CollectObjective Updating item count to " + MyCurrentAmount.ToString() + " for type " + MyType);
-        base.UpdateCompletionCount();
+        base.UpdateCompletionCount(printMessages);
     }
 
     public void Complete() {
@@ -40,10 +40,10 @@ public class CollectObjective : QuestObjective {
         }
     }
 
-    public override void OnAcceptQuest(Quest quest) {
-        base.OnAcceptQuest(quest);
+    public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        base.OnAcceptQuest(quest, printMessages);
         SystemEventManager.MyInstance.OnItemCountChanged += UpdateItemCount;
-        UpdateCompletionCount();
+        UpdateCompletionCount(printMessages);
     }
 
     public override void OnAbandonQuest() {

@@ -79,23 +79,25 @@ public class EquipmentManager : MonoBehaviour {
         //Debug.Log("EquipmentManager.OnPlayerUnitDespawn()");
     }
 
-    public void EquipCharacter(GameObject playerUnitObject = null) {
-        //Debug.Log("EquipmentManager.EquipCharacter()");
+    // This method does not actually equip the character, just apply stats and models from already equipped equipment
+    public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
+        //Debug.Log("EquipmentManager.EquipCharacter(" + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         if (currentEquipment == null) {
             return;
         }
         foreach (Equipment equipment in currentEquipment.Values) {
             if (equipment != null) {
-                //Debug.Log("Equipment is not null: "+ equipment.MyName);
+                //Debug.Log("EquipmentManager.EquipCharacter(): Equipment is not null: " + equipment.MyName);
 
                 // armor and weapon models handling
                 HandleEquipmentModels(equipment, playerUnitObject);
 
-                // put the items in the character panel
-                if (CharacterPanel.MyInstance != null) {
-                    CharacterPanel.MyInstance.EquipEquipment(equipment, true);
+                if (updateCharacterButton) {
+                    // put the items in the character panel because we are equipping an actual character, not the character panel character
+                    if (CharacterPanel.MyInstance != null) {
+                        CharacterPanel.MyInstance.EquipEquipment(equipment, true);
+                    }
                 }
-
                 // new code to trigger only external items that are idempotent but lost on load (on hit abilities and animation profiles)
                 SystemEventManager.MyInstance.NotifyOnEquipmentRefresh(equipment);
             } else {
@@ -122,13 +124,13 @@ public class EquipmentManager : MonoBehaviour {
     }
 
     public void HandleEquipmentModels(Equipment newItem, GameObject playerUnitObject = null) {
-        //Debug.Log("EquipmentManager.HandleWeaponModels()");
+        //Debug.Log("EquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         //HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem, playerUnitObject);
     }
 
     public void HandleWeaponSlot(Equipment newItem, GameObject playerUnitObject = null) {
-        //Debug.Log("EquipmentManager.HandleWeaponSlot(): playerUnitObject == null? " + (playerUnitObject == null ? "true" : "false") );
+        //Debug.Log("EquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && playerUnitObject == null) {
             // nothing to do since there is no object to attach to right now.  It will be handled automatically when he spawns anyway
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): playerUnitObject is null and player unit is not spawned.  returning.");
@@ -166,7 +168,36 @@ public class EquipmentManager : MonoBehaviour {
             //Debug.Log("Instructed to Equip a null item!");
             return;
         }
-        Equipment oldItem = Unequip(newItem.equipSlot);
+        //Equipment oldItem = Unequip(newItem.equipSlot);
+        // TESTING, THIS STUFF NEEDS TO BE HANDLED THROUGH CHARACTER PANEL?
+        //CharacterPanel.MyInstance.
+        if (currentEquipment.ContainsKey(newItem.equipSlot) && currentEquipment[newItem.equipSlot] != null) {
+            currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
+            //Unequip(newItem.equipSlot);
+        }
+
+        // for now manually handle exclusive slots
+        if (newItem is Weapon) {
+            // deal with 2h weapons, and unequip offhand
+            if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
+                if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
+                    currentEquipment[EquipmentSlot.OffHand].MyCharacterButton.DequipEquipment();
+                    //Unequip(newItem.equipSlot);
+                    //Unequip(EquipmentSlot.OffHand);
+                }
+            }
+        }
+
+        // deal with offhands, and unequip any 2h mainhand
+        if (newItem.equipSlot == EquipmentSlot.OffHand) {
+            if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
+                if (currentEquipment[EquipmentSlot.MainHand] != null && currentEquipment[EquipmentSlot.MainHand].MyCharacterButton != null) {
+                    currentEquipment[EquipmentSlot.MainHand].MyCharacterButton.DequipEquipment();
+                    //Unequip(newItem.equipSlot);
+                    //Unequip(EquipmentSlot.MainHand);
+                }
+            }
+        }
 
         //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
         currentEquipment[newItem.equipSlot] = newItem;
@@ -174,13 +205,15 @@ public class EquipmentManager : MonoBehaviour {
         HandleWeaponSlot(newItem);
 
         // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
-        SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, oldItem);
+        // updated oldItem to null here because this call is already done in Unequip.
+        // having it here also was leading to duplicate stat removal when gear was changed.
+        SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, null);
     }
 
     public Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
-        //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
+        Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
         if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
-            //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
+            Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
             if (currentEquipmentPhysicalObjects.ContainsKey(equipmentSlot)) {
                 GameObject destroyObject = currentEquipmentPhysicalObjects[equipmentSlot];
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
@@ -203,7 +236,7 @@ public class EquipmentManager : MonoBehaviour {
                     InventoryManager.MyInstance.AddItem(oldItem);
                 }
             }
-            //Debug.Log("zeroing equipment slot");
+            Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
             currentEquipment[equipmentSlot] = null;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 SystemEventManager.MyInstance.NotifyOnEquipmentChanged(null, oldItem);

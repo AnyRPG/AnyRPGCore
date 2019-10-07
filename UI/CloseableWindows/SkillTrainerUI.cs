@@ -164,8 +164,9 @@ public class SkillTrainerUI : WindowContentController {
         UpdateButtons(skillName);
 
 
-        skillDescription.text = skill.GetDescription();
-        skillDescription.text += "\n\n<b>Abilities Learned:</b>\n\n";
+        skillDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", skill.MyName, skill.MyDescription);
+
+        skillDescription.text += "\n\n<size=20><b>Abilities Learned:</b></size>\n\n";
 
         // show abilities learned
         for (int i = 0; i < skill.MyAbilityList.Count; i++) {

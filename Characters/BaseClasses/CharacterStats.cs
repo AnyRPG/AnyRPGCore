@@ -14,6 +14,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     public event System.Action OnReviveBegin = delegate { };
     public event System.Action OnReviveComplete = delegate { };
     public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
+    public event System.Action OnStatChanged = delegate { };
 
     // starting level
     [SerializeField]
@@ -219,11 +220,26 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
         if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Intellect)) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING MANA CHANGED");
             ManaChangedNotificationHandler();
+            StatChangedNotificationHandler();
         }
         if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Stamina)) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
             HealthChangedNotificationHandler();
+            StatChangedNotificationHandler();
         }
+        if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Strength)) {
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
+            StatChangedNotificationHandler();
+        }
+        if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Agility)) {
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
+            StatChangedNotificationHandler();
+        }
+        if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.MovementSpeed)) {
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
+            StatChangedNotificationHandler();
+        }
+
         if (statusEffect.MyFactionModifiers.Count > 0) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING REPUTATION CHANGED");
             SystemEventManager.MyInstance.NotifyOnReputationChange();
@@ -361,6 +377,10 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     public void HealthChangedNotificationHandler() {
         currentHealth = Mathf.Clamp(currentHealth, 0, MyMaxHealth);
         OnHealthChanged(MyMaxHealth, currentHealth);
+    }
+
+    public void StatChangedNotificationHandler() {
+        OnStatChanged();
     }
 
     /// <summary>

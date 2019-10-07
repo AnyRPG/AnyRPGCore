@@ -42,7 +42,7 @@ public class Stat {
     }
 
     public void AddMultiplyModifier(float modifier) {
-        Debug.Log("Stat.AddMultiplyModifier(" + modifier + ")");
+        //Debug.Log("Stat.AddMultiplyModifier(" + modifier + ")");
         //if (modifier != 0) {
             multiplyModifiers.Add(modifier);
             OnModifierUpdate();

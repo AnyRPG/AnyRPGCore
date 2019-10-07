@@ -23,7 +23,7 @@ public class TradeSkillObjective : QuestObjective {
         UpdateCompletionCount();
     }
 
-    public override void UpdateCompletionCount() {
+    public override void UpdateCompletionCount(bool printMessages = true) {
         //Debug.Log("TradeSkillObjective.UpdateCompletionCount()");
         bool completeBefore = IsComplete;
         if (completeBefore) {
@@ -31,21 +31,21 @@ public class TradeSkillObjective : QuestObjective {
         }
         if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(MyType)) {
             MyCurrentAmount++;
-            quest.CheckCompletion();
+            quest.CheckCompletion(true, printMessages);
         }
-        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement) {
+        if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, MyCurrentAmount, MyAmount));
         }
-        if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+        if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", MyCurrentAmount, MyType));
         }
-        base.UpdateCompletionCount();
+        base.UpdateCompletionCount(printMessages);
     }
 
-    public override void OnAcceptQuest(Quest quest) {
-        base.OnAcceptQuest(quest);
+    public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        base.OnAcceptQuest(quest, printMessages);
         SystemEventManager.MyInstance.OnSkillListChanged += UpdateCompletionCount;
-        UpdateCompletionCount();
+        UpdateCompletionCount(printMessages);
     }
 
     public override void OnAbandonQuest() {

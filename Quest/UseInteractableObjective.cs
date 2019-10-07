@@ -56,9 +56,9 @@ public class UseInteractableObjective : QuestObjective {
     }
 
 
-    public override void OnAcceptQuest(Quest quest) {
+    public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
         //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
-        base.OnAcceptQuest(quest);
+        base.OnAcceptQuest(quest, printMessages);
 
         // don't forget to remove these later
         SystemEventManager.MyInstance.OnInteractionStarted += CheckInteractionStart;

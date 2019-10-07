@@ -44,16 +44,20 @@ public abstract class QuestObjective {
 
     public Quest MyQuest { get => quest; set => quest = value; }
 
-    public virtual void UpdateCompletionCount() {
+    public virtual void UpdateCompletionCount(bool printMessages = true) {
         //Debug.Log("QuestObjective.UpdateCompletionCount()");
     }
 
-    public virtual void OnAcceptQuest(Quest quest) {
+    public virtual void OnAcceptQuest(Quest quest, bool printMessages = true) {
         this.quest = quest;
     }
 
     public virtual void OnAbandonQuest() {
         // overwrite me
+    }
+
+    public virtual void HandleQuestStatusUpdated() {
+        UpdateCompletionCount();
     }
 }
 

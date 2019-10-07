@@ -23,7 +23,7 @@ public class QuestScript : HighlightButton {
     }
 
     public override void Select() {
-        Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
+        //Debug.Log(gameObject.name + ".QuestScript.Select()");
 
         RawSelect();
 

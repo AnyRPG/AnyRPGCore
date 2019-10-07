@@ -197,6 +197,10 @@ public class UIManager : MonoBehaviour {
 
     public void DeactivateInGameUI() {
         //Debug.Log("UIManager.DeactivateInGameUI()");
+        if (PopupWindowManager.MyInstance != null) {
+            PopupWindowManager.MyInstance.CloseAllWindows();
+        }
+
         if (inGameUI.activeSelf == true) {
             inGameUI.SetActive(false);
         }

@@ -82,26 +82,29 @@ public class PopupWindowManager : MonoBehaviour {
         }
 
         if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
-            abilityBookWindow.CloseWindow();
-            skillBookWindow.CloseWindow();
-            achievementListWindow.CloseWindow();
-            reputationBookWindow.CloseWindow();
-            currencyListWindow.CloseWindow();
-            characterPanelWindow.CloseWindow();
-            lootWindow.CloseWindow();
-            vendorWindow.CloseWindow();
-            chestWindow.CloseWindow();
-            bankWindow.CloseWindow();
-            questLogWindow.CloseWindow();
-            questGiverWindow.CloseWindow();
-            skillTrainerWindow.CloseWindow();
-            interactionWindow.CloseWindow();
-            craftingWindow.CloseWindow();
-            mainMapWindow.CloseWindow();
-            factionChangeWindow.CloseWindow();
-            dialogWindow.CloseWindow();
-            InventoryManager.MyInstance.Close();
-
+            CloseAllWindows();
         }
+    }
+
+    public void CloseAllWindows() {
+        abilityBookWindow.CloseWindow();
+        skillBookWindow.CloseWindow();
+        achievementListWindow.CloseWindow();
+        reputationBookWindow.CloseWindow();
+        currencyListWindow.CloseWindow();
+        characterPanelWindow.CloseWindow();
+        lootWindow.CloseWindow();
+        vendorWindow.CloseWindow();
+        chestWindow.CloseWindow();
+        bankWindow.CloseWindow();
+        questLogWindow.CloseWindow();
+        questGiverWindow.CloseWindow();
+        skillTrainerWindow.CloseWindow();
+        interactionWindow.CloseWindow();
+        craftingWindow.CloseWindow();
+        mainMapWindow.CloseWindow();
+        factionChangeWindow.CloseWindow();
+        dialogWindow.CloseWindow();
+        InventoryManager.MyInstance.Close();
     }
 }

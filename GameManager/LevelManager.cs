@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour {
         Vector3 returnValue = spawnRotationOverride;
 
         // reset to default so the next level loaded will not attempt to use this spawn location override
-        spawnLocationOverride = Vector3.zero;
+        spawnRotationOverride = Vector3.zero;
 
         // return original value
         return returnValue;

@@ -61,14 +61,31 @@ public class QuestTrackerUI : WindowContentController {
         }
         SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated += ShowQuests;
         SystemEventManager.MyInstance.OnQuestStatusUpdated += ShowQuests;
+        SystemEventManager.MyInstance.OnPlayerUnitSpawn += ShowQuests;
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+            ShowQuests();
+        }
 
         referencesInitialized = true;
     }
 
+    public void CleanupEventReferences() {
+        //Debug.Log("QuestTrackerUI.CleanupEventReferences()");
+        if (SystemEventManager.MyInstance != null) {
+            SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated -= ShowQuests;
+            SystemEventManager.MyInstance.OnQuestStatusUpdated -= ShowQuests;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= ShowQuests;
+        }
+        referencesInitialized = false;
+    }
 
 
     public void ShowQuestsCommon() {
         //Debug.Log("QuestTrackerUI.ShowQuestsCommon()");
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            // shouldn't be doing anything without a player spawned.
+            return;
+        }
         ClearQuests();
 
         foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
@@ -131,14 +148,6 @@ public class QuestTrackerUI : WindowContentController {
         // clear first because open window handler could show a description
         ShowQuests();
         OnOpenWindowHandler(this);
-    }
-
-    public void CleanupEventReferences() {
-        //Debug.Log("QuestTrackerUI.CleanupEventReferences()");
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated -= ShowQuests;
-            referencesInitialized = false;
-        }
     }
 
     public void OnDisable() {

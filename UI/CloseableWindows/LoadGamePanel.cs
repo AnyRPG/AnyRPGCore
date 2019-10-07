@@ -168,7 +168,7 @@ public class LoadGamePanel : WindowContentController {
         // disabled for now.  recipe should be already in recipestring anyway
         //SaveManager.MyInstance.SaveUMASettings();
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit);
+        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
 
         // TESTING SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCRENE
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

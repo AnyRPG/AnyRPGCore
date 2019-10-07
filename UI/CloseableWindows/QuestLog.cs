@@ -100,9 +100,9 @@ public class QuestLog : MonoBehaviour  {
         }
 
         // change to new subscription method in quest to avoid duplicated out of date code not tracking newer objective types
-        quest.AcceptQuest();
+        quest.AcceptQuest(false);
         // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
-        quest.CheckCompletion();
+        quest.CheckCompletion(true, false);
         string keyName = SystemResourceManager.prepareStringForMatch(quest.MyName);
         quests[keyName] = quest;
 

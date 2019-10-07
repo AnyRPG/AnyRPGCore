@@ -81,6 +81,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     }
 
     public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
+        //Debug.Log("CharacterButton.EquipEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ", " + partialEquip + ")");
         if (partialEquip) {
             SetEquipment(newEquipment);
             return;
@@ -117,8 +118,8 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         UpdateVisual();
     }
 
-    public void UpdateVisual() {
-        //Debug.Log("CharacterButton.UpdateVisual()");
+    public void UpdateVisual(bool resetDisplay = true) {
+        Debug.Log("CharacterButton.UpdateVisual()");
 
         GetLocalComponents();
 
@@ -139,22 +140,39 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             icon.sprite = null;
             icon.enabled = false;
         }
+
+        // TESTING - ANY EQUIPMENT CHANGE SHOULD UPDATE THE TEXT DISPLAY AND CHARACTER PREVIEW WINDOWS
+        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            // hopefully prevent unnecessary actions when player is not spawned
+            return;
+        }
+        if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
+            // hopefully prevent unnecessary actions when window is not open
+            return;
+        }
+        if (resetDisplay) {
+            CharacterPanel.MyInstance.ResetDisplay();
+        }
     }
 
     public void SetEquipment(Equipment newEquipment) {
+        //Debug.Log("CharacterButton.SetEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ")");
         this.equippedEquipment = newEquipment;
         this.equippedEquipment.MyCharacterButton = this;
         UpdateVisual();
     }
 
-
-
-public void DequipEquipment(int slotIndex = -1) {
+    public void DequipEquipment(int slotIndex = -1) {
         //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
         equippedEquipment.MyCharacterButton = null;
         EquipmentManager.MyInstance.Unequip(equipmentSlot, slotIndex);
+        ClearButton();
+    }
+
+    public void ClearButton(bool resetDisplay = true) {
+        Debug.Log("CharacterButton.ClearButton()");
         equippedEquipment = null;
-        UpdateVisual();
+        UpdateVisual(resetDisplay);
     }
 
 
