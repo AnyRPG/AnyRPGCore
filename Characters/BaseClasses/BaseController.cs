@@ -28,6 +28,9 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     protected bool eventReferencesInitialized = false;
     protected bool startHasRun = false;
 
+    protected Vector3 lastPosition = Vector3.zero;
+    protected float apparentVelocity;
+
     public GameObject MyTarget { get => target; }
     public ICharacter MyBaseCharacter { get => baseCharacter; }
     public float MyMovementSpeed {
@@ -49,6 +52,9 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
             return (MyFrozen || MyStunned || MyLevitated);
         }
     }
+
+    public Vector3 MyLastPosition { get => lastPosition; set => lastPosition = value; }
+    public float MyApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
 
     protected virtual void Awake() {
         // overwrite me
@@ -87,7 +93,17 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
     }
 
     protected virtual void Update() {
-        // overwrite me
+        UpdateApparentVelocity();
+
+    }
+
+    public virtual void UpdateApparentVelocity() {
+        // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
+        if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
+            apparentVelocity = Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, lastPosition) * (1 / Time.deltaTime);
+            lastPosition = MyBaseCharacter.MyCharacterUnit.transform.position;
+        }
+
     }
 
     protected virtual void FixedUpdate() {

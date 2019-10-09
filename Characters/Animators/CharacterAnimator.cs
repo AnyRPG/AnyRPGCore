@@ -147,7 +147,7 @@ public class CharacterAnimator : MonoBehaviour {
     public void ResetAnimationProfile() {
         //Debug.Log("CharacterAnimator.ResetAnimationProfile()");
         currentAttackAnimationProfile = defaultAttackAnimationProfile;
-        // testing reset should now actually change back to the original animations
+        // change back to the original animations
         SetAnimationClipOverrides();
     }
 
@@ -547,24 +547,29 @@ public class CharacterAnimator : MonoBehaviour {
         float usedBaseAnimationSpeed = 1;
         float multiplier = 1;
 
-        if (varValue.x < 0 && varValue.z > 0) {
-            // strafe forward left
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
-            multiplier = (absValue / usedBaseAnimationSpeed);
-        } else if (varValue.x > 0 && varValue.z > 0) {
-            // strafe forward right
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
-            multiplier = (absValue / usedBaseAnimationSpeed);
-        } else if (varValue.x == 0 && varValue.z > 0) {
+        if (absXValue < (absZValue / 2) && varValue.z > 0) {
+            // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
+            //} else if (varValue.x == 0 && varValue.z > 0) {
             // run forward
             //usedBaseAnimationSpeed = (absZValue <= 1 ? baseWalkAnimationSpeed : baseRunAnimationSpeed);
-            usedBaseAnimationSpeed = (absValue > baseRunAnimationSpeed ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+            //usedBaseAnimationSpeed = (absZValue > baseWalkAnimationSpeed ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+            // since jog forward animation is hardcoded to 2 or more in animator, switched condition below to match
+            usedBaseAnimationSpeed = (absZValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): run: " + baseRunAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; used: " + usedBaseAnimationSpeed);
             //multiplier = varValue.z;
             multiplier = (absValue / usedBaseAnimationSpeed);
-        } else if (varValue.x == 0 && varValue.z < 0) {
+        } else if (absXValue < (absZValue / 2) && varValue.z < 0) {
+            //} else if (varValue.x == 0 && varValue.z < 0) {
             // run back
             usedBaseAnimationSpeed = baseWalkBackAnimationSpeed;
+            multiplier = (absValue / usedBaseAnimationSpeed);
+        } else if (varValue.x > 0 && absZValue < (absXValue / 2)) {
+            // strafe right
+            usedBaseAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
+            multiplier = (absValue / usedBaseAnimationSpeed);
+        } else if (varValue.x < 0 && absZValue < (absXValue / 2)) {
+            // strafe left
+            usedBaseAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x > 0 && varValue.z < 0) {
             // strafe back right
@@ -574,16 +579,15 @@ public class CharacterAnimator : MonoBehaviour {
             // strafe back left
             usedBaseAnimationSpeed = baseWalkStrafeBackLeftAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
-        } else if (varValue.x > 0 && varValue.z == 0) {
-            // strafe right
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
+        } else if (varValue.x < 0 && varValue.z > 0) {
+            // strafe forward left
+            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
             multiplier = (absValue / usedBaseAnimationSpeed);
-        } else if (varValue.x < 0 && varValue.z == 0) {
-            // strafe left
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
+        } else if (varValue.x > 0 && varValue.z > 0) {
+            // strafe forward right
+            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
             multiplier = (absValue / usedBaseAnimationSpeed);
         }
-
         //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed);
 
         if (varValue.magnitude != 0) {

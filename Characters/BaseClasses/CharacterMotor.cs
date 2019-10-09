@@ -28,6 +28,11 @@ public class CharacterMotor : MonoBehaviour {
 
     private bool setMoveDestination = false;
 
+    // last frame number that a navmeshagent destination reset was performed
+    private int lastResetFrame = -1;
+    // last frame number that a navmeshagent setdestination command was performed
+    private int lastCommandFrame = -1;
+
     // properties
     public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
     public GameObject MyTarget { get => target; }
@@ -65,27 +70,20 @@ public class CharacterMotor : MonoBehaviour {
             */
             return;
         }
+        CheckSetMoveDestination();
+    }
 
-        // TESTING PUTTING THIS HERE TO AVOID LONGER PAUSE BETWEEN SET MOVE LOCATIONS IN FIXEDUPDATE
-        // THIS WAY THE TARGETTING AND FOLLOWING SHOULD BE QUICKER, BUT RECALCULATIONS STAY FIXED
-        if (setMoveDestination) {
+    protected virtual void CheckSetMoveDestination() {
+        if (setMoveDestination && characterUnit.MyAgent.pathPending == false && characterUnit.MyAgent.hasPath == false) {
             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
             moveToDestination = true;
-            // check if position is valid
-            // should no longer be necessary since the call that set destinationPosition used the navmesh sample
-            /*
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(destinationPosition, out hit, 10.0f, NavMesh.AllAreas)) {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " on NavMesh found closest point: " + hit.position + ")");
-                destinationPosition = hit.position;
-            } else {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " was not on NavMesh!");
-            }
-            */
-            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): calling: characterUnit.MyAgent.SetDestination(" + destinationPosition + ")");
+            //Debug.Log(gameObject.name + ": CharacterMotor.Update(): ISSUING SETDESTINATION: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
             characterUnit.MyAgent.SetDestination(destinationPosition);
+            //Debug.Log(gameObject.name + ": CharacterMotor.Update(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + characterUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
+            lastCommandFrame = Time.frameCount;
             setMoveDestination = false;
         }
+
     }
 
     protected virtual void FixedUpdate() {
@@ -108,26 +106,7 @@ public class CharacterMotor : MonoBehaviour {
             return;
         }
 
-        // TESTING MOVE THIS ABOVE THE TARGET NULL CHECK BECAUSE ALL MOVETOPOINT COMMANDS BELOW WOULD NOT ALLOW A FRAME TO RESET THE NAVMESHAGENT AND THIS BLOCK WOULD BE CALLED IN THE SAME FRAME
-        // set this here and let it actually take effect on the next fixedupdate.  This should have resulted in at least 1 fixedupdate for agent to let its path reset
-        if (setMoveDestination) {
-            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
-            moveToDestination = true;
-            // check if position is valid
-            // should no longer be necessary since the call that set destinationPosition used the navmesh sample
-            /*
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(destinationPosition, out hit, 10.0f, NavMesh.AllAreas)) {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " on NavMesh found closest point: " + hit.position + ")");
-                destinationPosition = hit.position;
-            } else {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " was not on NavMesh!");
-            }
-            */
-            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): calling: characterUnit.MyAgent.SetDestination(" + destinationPosition + ")");
-            characterUnit.MyAgent.SetDestination(destinationPosition);
-            setMoveDestination = false;
-        }
+        CheckSetMoveDestination();
 
 
         if (target != null) {
@@ -157,15 +136,19 @@ public class CharacterMotor : MonoBehaviour {
                     //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): More than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position));
 
                     // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
-                    //if (Vector3.Distance(destinationPosition, characterUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 1.5)) {
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 1.5)) {
-                        //if (Vector3.Distance(target.transform.position, destinationPosition) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox || Vector3.Distance(target.transform.position, characterUnit.MyAgent.destination) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox) {
+                    if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 1.5) && characterUnit.MyAgent.pathPending == false) {
                         // the target has moved more than 1 hitbox from our destination position, re-adjust heading
                         //Debug.Log(gameObject.name + ": FixedUpdate() destinationPosition: " + destinationPosition + " distance: " + Vector3.Distance(target.transform.position, destinationPosition) + ". Issuing MoveToPoint()");
-                        // updated this to use the corrected position.  Hopefully this prevents a mob from stopping chasing you when you are on a non navigable area less than 1 hitbox distance from a navigable area
-                        MoveToPoint(target.transform.position);
+                        if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
+                            // prevent anything from resetting movement twice in the same frame
+                            //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): ABOUT TO ISSUE MOVETOPOINT: current location: " + transform.position + "; NavMeshAgentDestination: " + characterUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
+
+                            MoveToPoint(target.transform.position);
+                        } else {
+                            Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): LONGDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
+                        }
                     } else {
-                        //Debug.Log(gameObject.name + ": FixedUpdate() NOT RECALCULATING! destinationPosition: " + destinationPosition + "; navmeshdestination: " + characterUnit.MyAgent.destination + "; distance: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination));
+                        //Debug.Log(gameObject.name + ": FixedUpdate() NOT RECALCULATING! targetPosition: " + target.transform.position + "; destinationPosition: " + destinationPosition + "; navMeshAgentDestination: " + characterUnit.MyAgent.destination + "; NavMesAgentDestinationToTargetDrift: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination) + "; destinationPositionToTargetDifference: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) + "; frame: " + Time.frameCount);
                         // we are more than 2 meters from the target, and they are less than 2 meters from their last position, destinations may not match but are close enough that there is no point in re-calculating
                     }
                 } else {
@@ -173,19 +156,15 @@ public class CharacterMotor : MonoBehaviour {
                     //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position) + ". Issuing MoveToPoint (maybe)");
 
                     //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + target.transform.position + "; destination: " + destinationPosition);
-                    // TESTING NEW CONDITIONS TO HOPEFULLY AVOID DEADZONE - since this code is only deadzone code, we don't care that any movement will result in recalculation, because this won't be run
-                    // once we pass the deadzone into the hitbox
-                    // testing some more, since we are going to automatically stop when inside the hitbox anyway, this next check needs to be zero to prevent deadzone because navmeshcorrected position may still be more than 1 hitbox distance away from target
-                    // IF ENEMY MOVEMENT STUTTER IS OBSERVED IN THE DEADZONE, TRY INCREASING THIS VALUE FROM 0F TO 0.5 X THE HITBOX...
-                    // FOR NOW IT SEEMS TO BE OK
-                    if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox / 2)) {
-                        //if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox) {
-                        //if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox || Vector3.Distance(target.transform.position, characterUnit.MyAgent.destination) > characterUnit.MyCharacter.MyCharacterStats.MyHitBox) {
-                        //if (target.transform.position != destinationPosition || destinationPosition != characterUnit.MyAgent.destination) {
-                        // testing, prevent resetting move position every frame if target is standing still
+                    if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox / 2) && characterUnit.MyAgent.pathPending == false) {
                         //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; characterUnit.MyAgent.destination: " + characterUnit.MyAgent.destination + "; pathpending: " + characterUnit.MyAgent.pathPending + " ISSUING MOVETOPOINT!");
-                        // updated this to use the corrected position.  Hopefully this prevents a mob from stopping chasing you when you are on a non navigable area less than 1 hitbox distance from a navigable area
-                        MoveToPoint(target.transform.position);
+                        if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
+                            // prevent anything from resetting movement twice in the same frame
+                            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): ABOUT TO ISSUE MOVETOPOINT: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
+                            MoveToPoint(target.transform.position);
+                        } else {
+                            Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): SHORTDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
+                        }
                     } else {
                         //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): DOING NOTHING location: " + transform.position + "; targetLocation: " + target.transform.position + "; destinationPosition: " + destinationPosition + "; characterUnit.MyAgent.destination: " + characterUnit.MyAgent.destination + "; pathpending: " + characterUnit.MyAgent.pathPending + "; destination distance vector: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) + "; actualdistancevector: " + Vector3.Distance(transform.position, target.transform.position));
                     }
@@ -262,7 +241,7 @@ public class CharacterMotor : MonoBehaviour {
 
     // move toward the position at a normal speed
     public Vector3 MoveToPoint(Vector3 point) {
-        //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position);
+        //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount);
         if (frozen) {
             return Vector3.zero;
         }
@@ -275,7 +254,7 @@ public class CharacterMotor : MonoBehaviour {
         // moving to a point only happens when we click on the ground.  Since we are not tracking a moving target, we can let the agent update the rotation
         characterUnit.MyAgent.updateRotation = true;
         //Debug.Log(gameObject.name + ".CharacterMotor.MoveToPoint(" + point + "): calling characterUnit.MyAgent.ResetPath()");
-        characterUnit.MyAgent.ResetPath();
+        ResetPath();
         destinationPosition = CorrectedNavmeshPosition(point);
         // set to false for test
         moveToDestination = false;
@@ -304,9 +283,10 @@ public class CharacterMotor : MonoBehaviour {
             return;
         }
         if (characterUnit.MyAgent.enabled) {
+            Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
 
             //agent.Move(moveDirection);
-            characterUnit.MyAgent.ResetPath();
+            ResetPath();
             characterUnit.MyAgent.updateRotation = false;
             characterUnit.MyAgent.velocity = moveDirection;
         } else {
@@ -347,7 +327,8 @@ public class CharacterMotor : MonoBehaviour {
         }
         if (characterUnit.MyAgent.enabled) {
             //Debug.Log("nav mesh agent is enabled");
-            characterUnit.MyAgent.ResetPath();
+            Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
+            ResetPath();
             characterUnit.MyAgent.updateRotation = true;
             characterUnit.MyAgent.velocity = rotateDirection;
         } else {
@@ -397,6 +378,7 @@ public class CharacterMotor : MonoBehaviour {
             return;
         }
         if (characterUnit.MyAgent.isActiveAndEnabled) {
+            //Debug.Log(gameObject.name + ".CharacterMotor.StopFollowingTarget()");
             characterUnit.MyAgent.stoppingDistance = 0.2f;
             characterUnit.MyAgent.updateRotation = true;
             target = null;
@@ -432,10 +414,12 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void ResetPath() {
-        //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath()");
+        //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath() in frame: " + Time.frameCount);
         if (characterUnit.MyAgent.enabled == true) {
             //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + characterUnit.MyAgent.hasPath + "; isOnNavMesh: " + characterUnit.MyAgent.isOnNavMesh + "; pathpending: " + characterUnit.MyAgent.pathPending);
             characterUnit.MyAgent.ResetPath();
+            lastResetFrame = Time.frameCount;
+            //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): AFTER RESETPATH: current location: " + transform.position + "; NavMeshAgentDestination: " + characterUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
             //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): after reset: navhaspath: " + characterUnit.MyAgent.hasPath + "; isOnNavMesh: " + characterUnit.MyAgent.isOnNavMesh + "; pathpending: " + characterUnit.MyAgent.pathPending);
         }
     }

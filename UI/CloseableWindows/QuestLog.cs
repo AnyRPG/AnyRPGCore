@@ -117,7 +117,7 @@ public class QuestLog : MonoBehaviour  {
             return;
         }
         Quest acceptedQuest = SystemQuestManager.MyInstance.GetResource(questName);
-        // TESTING NEW CODE TO AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
+        // AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
         if (acceptedQuest != null && (acceptedQuest.TurnedIn == false || acceptedQuest.MyRepeatableQuest == true)) {
             // add first, then use acceptquest because it needs to be in the log for the accepquest completion check to pass
             string keyName = SystemResourceManager.prepareStringForMatch(acceptedQuest.MyName);
@@ -126,17 +126,6 @@ public class QuestLog : MonoBehaviour  {
             //CheckCompletion();
         }
     }
-
-    /*
-     * TESTING : THIS SHOULD BE HANDLED AUTOMATICALLY IN THE ACCEPTQUEST METHOD ON THE QUEST ITSELF
-    public void CheckCompletion() {
-        //Debug.Log("QuestLog.CheckCompletion()");
-        bool tmp;
-        foreach (Quest qs in quests) {
-            tmp = qs.IsComplete;
-        }
-    }
-    */
 
     public bool HasQuest(string questName) {
         //Debug.Log("QuestLog.HasQuest(" + quest + ")");
@@ -156,7 +145,7 @@ public class QuestLog : MonoBehaviour  {
 
     public void TurnInQuest(string questName) {
         //Debug.Log("QuestLog.TurnInQuest()");
-        // TESTING, REMOVE FIRST SO WHEN TURNEDIN TRIGGERS STATUSUPDATED CALL, QUEST DOES NOT EXIST IN LOG SO SUBSCRIBERS GET CORRECT STATUS
+        // REMOVE FIRST SO WHEN TURNEDIN TRIGGERS STATUSUPDATED CALL, QUEST DOES NOT EXIST IN LOG SO SUBSCRIBERS GET CORRECT STATUS
         RemoveQuest(questName);
         SystemQuestManager.MyInstance.GetResource(questName).TurnedIn = true;
         SystemQuestManager.MyInstance.GetResource(questName).OnAbandonQuest();

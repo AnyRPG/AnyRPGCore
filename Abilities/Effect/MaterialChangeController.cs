@@ -21,33 +21,33 @@ public class MaterialChangeController : MonoBehaviour  {
         meshRenderers = GetComponentsInChildren<MeshRenderer>();
 
         if (meshRenderers == null || meshRenderers.Length == 0) {
-            Debug.Log("MaterialChangeController.Initialize(): Unable to find mesh renderer in target.");
+            //Debug.Log("MaterialChangeController.Initialize(): Unable to find mesh renderer in target.");
             meshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             if (meshRenderers == null || meshRenderers.Length == 0) {
-                Debug.Log("MaterialChangeController.Initialize(): Unable to find skinned mesh renderer in target.");
+                //Debug.Log("MaterialChangeController.Initialize(): Unable to find skinned mesh renderer in target.");
                 return;
             } else {
-                Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Skinned Mesh Renderers");
+                //Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Skinned Mesh Renderers");
             }
         } else {
-            Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Mesh Renderers");
+            //Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Mesh Renderers");
         }
 
         PerformMaterialChange();
     }
 
     public void PerformMaterialChange() {
-        Debug.Log("MaterialChangeController.PerformMaterialChange()");
+        //Debug.Log("MaterialChangeController.PerformMaterialChange()");
 
         if (meshRenderers == null) {
-            Debug.Log("MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
+            //Debug.Log("MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
             return;
         }
         foreach (Renderer renderer in meshRenderers) {
             originalMaterials.Add(renderer, renderer.materials);
-            Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
+            //Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
             temporaryMaterials = new Material[originalMaterials[renderer].Length];
-            Debug.Log("MaterialChangeController.PerformMaterialChange(): temporary materials length: " + temporaryMaterials.Length);
+            //Debug.Log("MaterialChangeController.PerformMaterialChange(): temporary materials length: " + temporaryMaterials.Length);
             for (int i = 0; i < originalMaterials[renderer].Length; i++) {
                 //temporaryMaterials[i] = originalMaterials[renderer][i];
                 temporaryMaterials[i] = temporaryMaterial;
@@ -61,7 +61,7 @@ public class MaterialChangeController : MonoBehaviour  {
 	public void RevertMaterialChange () {
 
 		if (meshRenderers == null) {
-            Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");
+            //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");
             return;
         }
 

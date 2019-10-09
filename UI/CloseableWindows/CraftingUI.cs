@@ -91,11 +91,11 @@ public class CraftingUI : WindowContentController {
     public void DeactivateButtons() {
         Button craftButtonComponent = craftButton.GetComponent<Button>();
         if (craftButtonComponent != null) {
-            craftButton.GetComponent<Button>().enabled = false;
+            craftButton.GetComponent<Button>().interactable = false;
         }
         Button craftAllButtonComponent = craftButton.GetComponent<Button>();
         if (craftAllButtonComponent != null) {
-            craftAllButton.GetComponent<Button>().enabled = false;
+            craftAllButton.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -336,21 +336,22 @@ public class CraftingUI : WindowContentController {
         }
 
         if (craftAmount == 0) {
-            craftButton.GetComponent<Button>().enabled = false;
-            craftAllButton.GetComponent<Button>().enabled = false;
-            lessButton.GetComponent<Button>().enabled = false;
+            craftButton.GetComponent<Button>().interactable = false;
+            craftAllButton.GetComponent<Button>().interactable = false;
+            lessButton.GetComponent<Button>().interactable = false;
+            moreButton.GetComponent<Button>().interactable = false;
             if (maxAmount > 0) {
-                moreButton.GetComponent<Button>().enabled = true;
+                moreButton.GetComponent<Button>().interactable = true;
             }
         } else {
-            lessButton.GetComponent<Button>().enabled = true;
+            lessButton.GetComponent<Button>().interactable = true;
             if (maxAmount > craftAmount) {
-                moreButton.GetComponent<Button>().enabled = true;
+                moreButton.GetComponent<Button>().interactable = true;
             } else {
-                moreButton.GetComponent<Button>().enabled = false;
+                moreButton.GetComponent<Button>().interactable = false;
             }
-            craftButton.GetComponent<Button>().enabled = true;
-            craftAllButton.GetComponent<Button>().enabled = true;
+            craftButton.GetComponent<Button>().interactable = true;
+            craftAllButton.GetComponent<Button>().interactable = true;
         }
         craftAmountText.text = craftAmount.ToString();
     }

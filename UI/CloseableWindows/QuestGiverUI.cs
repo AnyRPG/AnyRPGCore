@@ -148,7 +148,7 @@ public class QuestGiverUI : WindowContentController {
 
     public void RefreshQuestDisplay() {
         //Debug.Log("QuestGiverUI.RefreshQuestDisplay(): quest count: " + questGiver.MyQuests.Length.ToString());
-        // TESTING DO NOTHING FOR NOW, SINCE WE DON'T USE THIS PANEL AT ALL CURRENTLY
+        // DO NOTHING FOR NOW, SINCE WE DON'T USE THIS PANEL AT ALL CURRENTLY
         /*
         QuestGiverQuestScript firstAvailableQuest = null;
         QuestGiverQuestScript firstInProgressQuest = null;
@@ -278,14 +278,11 @@ public class QuestGiverUI : WindowContentController {
             return;
         }
         
-        // TESTING CODE
-        
         if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
             PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
             //ShowDescription(quest);
             return;
         }
-        
 
         if (MySelectedQuestGiverQuestScript == null || MySelectedQuestGiverQuestScript.MyQuest != quest) {
             foreach (QuestGiverQuestScript questScript in questScripts) {
@@ -352,8 +349,7 @@ public class QuestGiverUI : WindowContentController {
     public void AcceptQuest() {
         //Debug.Log("QuestGiverUI.AcceptQuest()");
         if (currentQuestName != null && currentQuestName != string.Empty) {
-            //if (MySelectedQuestGiverQuestScript != null && MySelectedQuestGiverQuestScript.MyQuest != null) {
-            // TESTING, DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
+            // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
 
             QuestLog.MyInstance.AcceptQuest(currentQuestName);
@@ -420,8 +416,8 @@ public class QuestGiverUI : WindowContentController {
         // item rewards first in case not enough space in inventory
         // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
         if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-            if (InventoryManager.MyInstance.MyEmptySlotCount < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
-                Debug.Log("Not enough room in inventory!");
+            if (InventoryManager.MyInstance.MyEmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                MessageFeedManager.MyInstance.WriteMessage("Not enough room in inventory!");
                 return;
             }
             foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
@@ -470,49 +466,21 @@ public class QuestGiverUI : WindowContentController {
 
         UpdateButtons(questToComplete.MyName);
 
-        // TESTING DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
+        // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
         PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
 
         QuestLog.MyInstance.TurnInQuest(questToComplete.MyName);
 
         // do this last
         // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
-        //foreach (QuestNode questNode in questGiver.MyQuests) {
-        //if (questNode.MyQuest == MySelectedQuestGiverQuestScript.MyQuest) {
-        //questNode.MyQuest.TurnedIn = true;
-        //}
-        //}
         if (questGiver != null) {
             // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
             questGiver.UpdateQuestStatus();
-            //if (MyQuestGiver != null) {
-                // notify a bag item so it can remove itself
-                MyQuestGiver.HandleCompleteQuest();
-            //}
-
+            MyQuestGiver.HandleCompleteQuest();
         }
         if (MySelectedQuestGiverQuestScript != null) {
             MySelectedQuestGiverQuestScript.DeSelect();
         }
-        //RefreshQuestDisplay();
-        //ShowQuests();
-        /*
-        if (showAllQuests == true) {
-            if (availableArea.transform.childCount == 0 && inProgressArea.transform.childCount == 0) {
-                Debug.Log("Nothing to show, closing window for smoother UI experience");
-                PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
-            }
-        } else {
-        */
-            //Debug.Log("QuestGiverUI.CompleteQuest(): ");
-            //PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
-            /*
-            if (Quest.GetAvailableQuests(questGiver.MyQuests).Count > 0) {
-                // TESTING: MAYBE QUESTGIVER INSTEAD OF BASE INTERACTABLE?
-                questGiver.Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
-            }
-            */
-        //}
 
     }
 
@@ -528,7 +496,7 @@ public class QuestGiverUI : WindowContentController {
 
     public void OnDisable() {
         //Debug.Log("QuestGiverUI.OnDisable()");
-        // TESTING, CLOSE THIS BEFORE LEVEL UNLOADS
+        // CLOSE THIS BEFORE LEVEL UNLOADS
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null) {
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
         }

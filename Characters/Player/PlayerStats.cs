@@ -8,7 +8,7 @@ public class PlayerStats : CharacterStats
         //Debug.Log(gameObject.name + ".PlayerStats.Awake()");
         base.Awake();
         baseCharacter = GetComponent<PlayerCharacter>() as ICharacter;
-        // TESTING DO THIS HERE SO WE CAN CATCH EQUIPMENT EVENTS
+        // DO THIS HERE SO WE CAN CATCH EQUIPMENT EVENTS
         CreateEventReferences();
     }
 

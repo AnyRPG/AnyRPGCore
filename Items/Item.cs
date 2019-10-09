@@ -35,7 +35,7 @@ public class Item : DescribableResource, IMoveable {
     [SerializeField]
     private int price;
 
-    public int MyStackSize { get => stackSize; set => stackSize = value; }
+    public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
     public SlotScript MySlot { get => slot; set => slot = value; }
     public Quality MyQuality { get => quality; }
     public int MyPrice { get => price; set => price = value; }

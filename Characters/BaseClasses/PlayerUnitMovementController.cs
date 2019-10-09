@@ -229,7 +229,7 @@ public class PlayerUnitMovementController : SuperStateMachine {
         //Apply friction to slow to a halt.
         //currentMoveVelocity = Vector3.MoveTowards(currentMoveVelocity, Vector3.zero, groundFriction * superCharacterController.deltaTime);
         // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
-        // TESTING NEW CODE TO DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
+        // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
         if (Mathf.Abs(characterUnit.MyRigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
             //if (transform.InverseTransformPoint(downHitInfo.point).magnitude < 0.01) {
             //Debug.Log("Idle_SuperUpdate(). feet are planted on the ground, not applying downforce");
@@ -486,7 +486,6 @@ public class PlayerUnitMovementController : SuperStateMachine {
         float usedAngle = 0f;
         if (normalizedInput.z > 0) {
             usedAngle = groundAngle;
-            // TESTING forwardcontactpoints
             if (!nearFrontObstacle && forwardContactPoints.Count == 0) {
                 // moving forward, use forward angle calculated to get over objects
                 // hopefully this still allows us the correct ground angle when going downhill with no obstacles in front

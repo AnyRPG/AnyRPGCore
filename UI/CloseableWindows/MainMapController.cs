@@ -102,7 +102,7 @@ public class MainMapController : WindowContentController {
         eventReferencesInitialized = false;
     }
 
-    // testing onDestroy so not accidentally removing these since the map is always disabled until the window is opened
+    // onDestroy instead of OnDisable so not accidentally removing these since the map is always disabled until the window is opened
     public void OnDestroy() {
         //Debug.Log("PlayerManager.OnDisable()");
         CleanupEventReferences();

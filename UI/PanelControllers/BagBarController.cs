@@ -111,7 +111,7 @@ public class BagBarController : MonoBehaviour {
     }
 
     public void OnEnable() {
-        // testing - here since it probably won't get done if the window is closed
+        // do this here since it probably won't get done if the window is closed - thanks Unity!!! :(
         SetBackGroundColor();
     }
 

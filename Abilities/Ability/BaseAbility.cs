@@ -169,7 +169,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     public void Use() {
         //Debug.Log("BaseAbility.Use()");
-        // testing - warp in canCast to prevent casting any ability without the proper weapon affinity
+        // prevent casting any ability without the proper weapon affinity
         if (CanCast()) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
         }
@@ -322,8 +322,9 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
         if (castingAnimationClip != null) {
             source.MyCharacterUnit.MyCharacterAnimator.HandleCastingAbility(castingAnimationClip, this);
         }
-        // TESTING GRAVITY FREEZE FOR CASTING
+        // GRAVITY FREEZE FOR CASTING
         // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
+        // NEXT LINE NO LONGER NEEDED SINCE WE NOW ACTUALLY CHECK THE REAL DISTANCE MOVED BY THE CHARACTER AND DON'T CANCEL CAST UNTIL DISTANCE IS > 0.1F
         //source.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
         if (abilityCastingPrefab != null) {
@@ -331,7 +332,6 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
                 Vector3 spawnLocation = new Vector3(source.MyCharacterUnit.transform.position.x + prefabOffset.x, source.MyCharacterUnit.transform.position.y + prefabOffset.y, source.MyCharacterUnit.transform.position.z + prefabOffset.z);
                 //Debug.Log("BaseAbility.OnCastStart(): Instantiating spell casting prefab at " + source.transform.position + "; spawnLocation is : " + spawnLocation);
                 //abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.Euler(source.MyCharacterUnit.transform.TransformDirection(prefabRotation)), source.transform);
-                //TESTING GET PROPER ROTATION ON CASTING PREFABS
                 abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
             }
         }

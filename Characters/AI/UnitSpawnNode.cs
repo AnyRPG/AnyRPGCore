@@ -235,7 +235,7 @@ public class UnitSpawnNode : MonoBehaviour {
         if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
             if (countDownRoutine == null) {
                 countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
-                // TESTING TO AVOID MULTIPLE SPAWNS DUE TO TRIGGER BY PREREQUISITES ON A NODE WITH A ZERO DELAY TIME -- MOVED INSIDE OUTER ROUTINE CHECK
+                // AVOID MULTIPLE SPAWNS DUE TO TRIGGER BY PREREQUISITES ON A NODE WITH A ZERO DELAY TIME -- MOVED INSIDE OUTER ROUTINE CHECK
                 if (delayRoutine == null) {
                     delayRoutine = StartCoroutine(StartSpawnDelayCountDown());
                 }

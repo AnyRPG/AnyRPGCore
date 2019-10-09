@@ -34,7 +34,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
 
     public bool IsFull {
         get {
-            if (IsEmpty || MyCount < MyItem.MyStackSize) {
+            if (IsEmpty || MyCount < MyItem.MyMaximumStackSize) {
                 return false;
             }
             return true;
@@ -195,7 +195,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                 //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                 // the handscript had a bag in it, and therefore we are trying to unequip a bag
                 Bag bag = (Bag)HandScript.MyInstance.MyMoveable;
-                if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.MyEmptySlotCount - bag.MySlots > 0) {
+                if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.MyEmptySlotCount() - bag.MySlots > 0) {
                     //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                     AddItem(bag);
                     InventoryManager.MyInstance.RemoveBag(bag);
@@ -290,7 +290,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
     }
 
     public bool StackItem(Item item) {
-        if (!IsEmpty && item.MyName == MyItem.MyName && MyItems.Count < MyItem.MyStackSize) {
+        if (!IsEmpty && item.MyName == MyItem.MyName && MyItems.Count < MyItem.MyMaximumStackSize) {
             MyItems.Add(item);
             UpdateSlot();
             item.MySlot = this;
@@ -328,7 +328,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         }
         if (SystemResourceManager.MatchResource(from.MyItem.MyName, MyItem.MyName) && !IsFull) {
             // how many free slots there are in the new stack
-            int free = MyItem.MyStackSize - MyCount;
+            int free = MyItem.MyMaximumStackSize - MyCount;
             if (free >= from.MyCount) {
                 for (int i = 0; i < free; i++) {
                     AddItem(from.MyItems[0]);

@@ -10,7 +10,8 @@ public interface ICharacterController {
     float MyMovementSpeed { get; }
     bool MyUnderControl { get; set; }
     BaseCharacter MyMasterUnit { get; set; }
-
+    Vector3 MyLastPosition { get; set; }
+    float MyApparentVelocity { get; set; }
 
     void ClearTarget();
     bool IsTargetInHitBox(GameObject newTarget);

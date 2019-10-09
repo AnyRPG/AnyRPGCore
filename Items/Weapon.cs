@@ -39,10 +39,11 @@ public class Weapon : Equipment {
         if (onHitAbility != null ) {
             abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitAbility.MyName));
         }
-        if (abilitiesList.Count != 0) {
-            return base.GetSummary() + "\n" + string.Join("", abilitiesList);
-        } else {
-            return base.GetSummary();
+        string abilitiesString = string.Empty;
+        if (abilitiesList.Count > 0) {
+            abilitiesString = "\n" + string.Join("\n", abilitiesList);
         }
+        return base.GetSummary() + abilitiesString;
     }
+
 }

@@ -141,7 +141,8 @@ public class LootableCharacter : InteractableOption {
     public List<GameObject> GetLootableTargets() {
         Vector3 aoeSpawnCenter = MyCharacterUnit.transform.position;
         Collider[] colliders = new Collider[0];
-        colliders = Physics.OverlapSphere(aoeSpawnCenter, 15f);
+        int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+        colliders = Physics.OverlapSphere(aoeSpawnCenter, 15f, validMask);
         //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
         List<GameObject> validTargets = new List<GameObject>();
         foreach (Collider collider in colliders) {

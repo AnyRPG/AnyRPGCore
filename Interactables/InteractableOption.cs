@@ -84,7 +84,6 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
 
     public virtual bool Interact(CharacterUnit source) {
         //Debug.Log(gameObject.name + ".InteractableOption.Interact()");
-        // TESTING, ALLOW BASE TO SEND OUT SUCCESSFUL INTERACTION NOTIFICATIONS - MAYBE JUST FORCE CHARACTER TO INTERACT INSTEAD OF DIRECTLY INTERACTING TO AVOID HAVING AN INTERACTABLE SET AND NOT NULL IN PLAYERCONTROLLER
         SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(this);
         return true;
     }
@@ -131,7 +130,6 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     }
 
     public virtual void OnDisable () {
-        // TESTING
         CleanupEventReferences();
     }
 

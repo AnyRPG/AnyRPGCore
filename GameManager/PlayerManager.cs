@@ -266,12 +266,12 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void HandlePlayerDeath () {
-        Debug.Log("PlayerManager.KillPlayer()");
+        //Debug.Log("PlayerManager.KillPlayer()");
         PlayDeathEffect();
     }
 
     public void RespawnPlayer() {
-        Debug.Log("PlayerManager.RespawnPlayer()");
+        //Debug.Log("PlayerManager.RespawnPlayer()");
         DespawnPlayerUnit();
         MyCharacter.MyCharacterStats.ReviveRaw();
         SpawnPlayerUnit();
@@ -297,7 +297,6 @@ public class PlayerManager : MonoBehaviour {
 
         // spawn the player unit
         //playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(Vector3.forward), playerUnitParent.transform);
-        // TESTING ROTATION FROM SAVE FILE
         Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
         //Debug.Log("PlayerManager.SpawnPlayerUnit(): spawning player unit at location: " + playerUnitParent.transform.position + " with rotation: " + spawnRotation);
         playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);

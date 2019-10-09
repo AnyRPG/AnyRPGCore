@@ -42,7 +42,7 @@ public class HandScript : MonoBehaviour {
             if (MyInstance.MyMoveable is Item) {
                 SystemWindowManager.MyInstance.confirmDestroyMenuWindow.OpenWindow();
             } else if (MyInstance.MyMoveable is BaseAbility) {
-                // TESTING CODE TO DROP ABILITY
+                // DROP ABILITY SAFELY
                 if (UIManager.MyInstance.MyActionBarManager.MyFromButton != null) {
                     UIManager.MyInstance.MyActionBarManager.MyFromButton.ClearUseable();
                 }
@@ -78,7 +78,6 @@ public class HandScript : MonoBehaviour {
 
     private void ClearMoveable() {
         //Debug.Log("HandScript.ClearMoveable()");
-        // TESTING WILL THIS BREAK ANYTHING?
         if (InventoryManager.MyInstance.FromSlot != null) {
             InventoryManager.MyInstance.FromSlot.PutItemBack();
         }

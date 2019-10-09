@@ -85,7 +85,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
             return;
         }
         foreach (IInteractable _interactable in interactable.MyInteractables) {
-            // TESTING, prioritize images - DICTIONARY DOESN'T CURRENT SUPPORT BOTH
+            // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
             if (_interactable.HasMiniMapIcon()) {
                 //else if (_interactable.HasMiniMapIcon()) {
                 // do both now!

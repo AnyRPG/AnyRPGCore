@@ -256,23 +256,23 @@ public abstract class AbilityEffect : DescribableResource {
             return;
         }
         if (target == null) {
-            Debug.Log("target is null.  returning");
+            //Debug.Log("target is null.  returning");
             return;
         }
 
         Renderer[] meshRenderer = target.GetComponentsInChildren<MeshRenderer>();
 
         if (meshRenderer == null || meshRenderer.Length == 0) {
-            Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find mesh renderer in target.");
+            //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find mesh renderer in target.");
             meshRenderer = target.GetComponentsInChildren<SkinnedMeshRenderer>();
             if (meshRenderer == null || meshRenderer.Length == 0) {
-                Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find skinned mesh renderer in target.");
+                //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find skinned mesh renderer in target.");
                 return;
             } else {
-                Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Skinned Mesh Renderers");
+                //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Skinned Mesh Renderers");
             }
         } else {
-            Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Mesh Renderers");
+            //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Mesh Renderers");
         }
 
 
@@ -280,6 +280,12 @@ public abstract class AbilityEffect : DescribableResource {
             MaterialChangeController materialChangeController = target.AddComponent<MaterialChangeController>();
             materialChangeController.Initialize(materialChangeDuration, effectMaterial);
         }
+    }
+
+    public AbilityEffectOutput ApplyInputMultiplier(AbilityEffectOutput abilityEffectInput) {
+        abilityEffectInput.healthAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
+        abilityEffectInput.manaAmount = (int)(abilityEffectInput.manaAmount * inputMultiplier);
+        return abilityEffectInput;
     }
 
 }

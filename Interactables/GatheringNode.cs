@@ -63,7 +63,7 @@ public class GatheringNode : InteractableOption {
 
     private IEnumerator StartSpawnCountdown() {
         //Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
-        // TESTING - THIS SHOULD DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
+        // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
         HandlePrerequisiteUpdates();
         currentTimer = spawnTimer;
         while (currentTimer > 0) {

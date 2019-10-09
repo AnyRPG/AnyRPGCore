@@ -21,9 +21,4 @@ public class QuestNode {
     public Quest MyQuest { get => questTemplate; set => questTemplate = value; }
     public GameObject MyGameObject { get => questObject; set => questObject = value; }
 
-    // TESTING
-    /*
-    public void Awake() {
-    }
-    */
 }

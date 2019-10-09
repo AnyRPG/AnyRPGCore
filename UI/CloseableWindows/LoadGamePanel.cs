@@ -170,7 +170,7 @@ public class LoadGamePanel : WindowContentController {
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
         EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
 
-        // TESTING SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCRENE
+        // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;
         foreach (Transform childTransform in CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponentsInChildren<Transform>(true)) {
             childTransform.gameObject.layer = 12;

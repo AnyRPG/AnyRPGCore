@@ -235,7 +235,11 @@ public class CharacterPanel : WindowContentController {
         updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth + "\n";
         updateString += "Mana: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxMana + "\n\n";
         updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyArmor + "\n";
-        updateString += "Damage: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage + "\n";
+        updateString += "Damage: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage;
+        if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) {
+            updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) + "</color> )";
+        }
+        updateString += "\n";
         updateString += "SpellPower: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MySpellPower + "\n\n";
         updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMovementSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed) + " (m/s)\n\n";
 
@@ -292,7 +296,7 @@ public class CharacterPanel : WindowContentController {
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
         EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, updateCharacterButton);
 
-        // TESTING SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCRENE
+        // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;
         foreach (Transform childTransform in CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponentsInChildren<Transform>(true)) {
             childTransform.gameObject.layer = 12;

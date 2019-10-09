@@ -90,6 +90,9 @@ public class Equipment : Item {
         if (armorModifier > 0) {
             abilitiesList.Add(string.Format(" +{0} Armor", armorModifier));
         }
+        if (damageModifier > 0) {
+            abilitiesList.Add(string.Format(" +{0} Damage", damageModifier));
+        }
         if (staminaModifier > 0) {
             abilitiesList.Add(string.Format(" +{0} Stamina", staminaModifier));
         }
@@ -102,6 +105,7 @@ public class Equipment : Item {
         if (agilityModifier > 0) {
             abilitiesList.Add(string.Format(" +{0} Agility", agilityModifier));
         }
+
         if (onEquipAbility != null) {
             abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyName));
         }

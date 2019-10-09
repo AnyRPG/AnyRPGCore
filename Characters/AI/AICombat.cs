@@ -23,15 +23,16 @@ public class AICombat : CharacterCombat
     }
     */
 
-    public override void TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+    public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
         //Debug.Log("AICombat.TakeDamage(" + damage + ", " + sourcePosition + ", " + source + ")");
         if (!((baseCharacter.MyCharacterController as AIController).MyCurrentState is EvadeState) && !((baseCharacter.MyCharacterController as AIController).MyCurrentState is DeathState)) {
             // order is important here.  we want to set target before taking damage because taking damage could kill us, and we don't want to re-trigger and agro on someone after we are dead
 
             // this should happen automatically inside the update loop of idle state
             //baseCharacter.MyCharacterController.SetTarget(source);
-            base.TakeDamage(damage, sourcePosition, source, combatType, combatMagnitude, abilityName);
+            return base.TakeDamage(damage, sourcePosition, source, combatType, combatMagnitude, abilityName);
         }
+        return false;
     }
     /*
     public override void TakeAbilityDamage(int damage, GameObject source) {

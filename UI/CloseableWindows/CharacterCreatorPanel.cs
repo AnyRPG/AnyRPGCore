@@ -122,7 +122,7 @@ public class CharacterCreatorPanel : WindowContentController {
         previewCameraController.ClearTarget();
         CharacterCreatorManager.MyInstance.HandleCloseWindow();
         OnCloseWindowHandler(this);
-        // testing, close interaction window too for smoother experience
+        // close interaction window too for smoother experience
         PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
     }
 

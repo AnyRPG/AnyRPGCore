@@ -272,12 +272,8 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
         }
         if (canCast == true) {
             //Debug.Log("Ground Targetting: cancast is true");
-            // TESTING ORDERING
             if (!ability.MyCanSimultaneousCast) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
-                // i think this should work
-                //isCasting = true;
-                //isCasting = true;
                 ability.StartCasting(baseCharacter as BaseCharacter);
             }
             float currentCastTime = 0f;
@@ -297,10 +293,9 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
         }
 
         //Debug.Log(gameObject + ".CharacterAbilityManager.PerformAbilityCast(). nulling tag: " + startTime);
+        // set currentCast to null because it isn't automatically null until the next frame and we are about to do stuff which requires it to be null immediately
         currentCast = null;
 
-        // I REALLY HOPE THIS DOESN'T BREAK SHIT.  BECAUSE UNITY IS RETARDED AND DOESN'T ACTUALLY STOP A COROUTINE WHEN YOU CALL STOP FUCKING COROUTINE, WE HAVE TO SET THAT SHIT TO NULL AND THEN COMPLETE THE ROUTINE
-        // OTHERWISE WE WILL ATTEMPT TO PERFORM A CAST AND IT WILL NOT BE STOPPED EVEN THOUGH WE TOLD IT TO STOP AND EVERYTHING ELSE AFTER THAT DEPENDS ON IT ACTUALLY BEING FUCKING STOPPED WILL FAIL.
         if (canCast) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
             if (!ability.MyCanSimultaneousCast) {
@@ -428,12 +423,15 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     /// </summary>
     public void OnManualMovement() {
         //Debug.Log("CharacterAbilityManager.OnmanualMovement(): Received On Manual Movement Handler");
-        StopCasting();
+        // adding new code to require some movement distance to prevent gravity while standing still from triggering this
+        if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
+            StopCasting();
+        }
     }
 
     public virtual void StopCasting() {
         //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting()");
-        // TESTING - REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
+        // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
         if (currentCast != null) {
             //if (currentCast != null && isCasting == true) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");

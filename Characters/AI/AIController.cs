@@ -51,10 +51,6 @@ public class AIController : BaseController {
         baseCharacter = GetComponent<AICharacter>() as ICharacter;
         aiPatrol = GetComponent<AIPatrol>();
 
-        // just in case this character is spawning not directly on a navmesh (inaccurate editor placement etc) get the closest valid navmesh position
-        // if one cannot be found, just use the current position anyway
-        // this will hopefully prevent a character from trying to return to a spawn point that is out of reach, and never exiting return state because the spawn point is never near enough to get inside the hitbox
-        //Debug.Log(gameObject.name + ".AIController.Awake(): MyStartPosition: " + MyStartPosition);
         MyAggroRange = initialAggroRange;
     }
 
@@ -70,7 +66,7 @@ public class AIController : BaseController {
         }
         MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
 
-        // testing this was after the idlestate but that doesn't make sense.  hopefully this doesn't break anything
+        // ensure base.Start is run before change to IdleState
         base.Start();
 
         ChangeState(new IdleState());
@@ -94,7 +90,7 @@ public class AIController : BaseController {
             masterUnit.MyCharacterCombat.OnDropCombat += OnMasterDropCombat;
             (masterUnit.MyCharacterController as PlayerController).OnManualMovement += OnMasterMovement;
 
-            // TESTING, DIDN'T CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE
+            // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
             MyBaseCharacter.MyCharacterCombat.MyAggroTable.ClearTable();
             SystemEventManager.MyInstance.NotifyOnReputationChange();
             SetMasterRelativeDestination();
@@ -176,8 +172,6 @@ public class AIController : BaseController {
         }
         AggroNode topNode;
         if (underControl) {
-            // TESTING FOR MASTER CONTROL
-            //return;
             topNode = masterUnit.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
         } else {
             topNode = baseCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;

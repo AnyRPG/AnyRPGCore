@@ -243,7 +243,6 @@ public class Quest : DescribableResource {
             }
             PlayerManager.MyInstance.PlayLevelUpEffects(0);
             
-            // testing adding markedComplete and turnedIn to see if this makes achievements save and load properly
             markedComplete = true;
             turnedIn = true;
         } else {

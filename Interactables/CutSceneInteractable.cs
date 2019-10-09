@@ -49,7 +49,7 @@ public class CutSceneInteractable : InteractableOption {
         // save character position and stuff here
         //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         LevelManager.MyInstance.LoadCutSceneWithDelay(CutSceneName);
-        // TESTING, CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
+        // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
         PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
         return true;

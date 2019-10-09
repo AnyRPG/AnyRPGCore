@@ -270,7 +270,7 @@ public class InteractionPanelUI : WindowContentController {
         //Debug.Log("InteractionPanelUI.OnCloseWindow()");
         //ClearButtons();
         base.OnCloseWindow();
-        // testing clear this so window doesn't pop open again when it's closed
+        // clear this so window doesn't pop open again when it's closed
         interactable = null;
     }
 

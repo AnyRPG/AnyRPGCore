@@ -119,7 +119,6 @@ public class SaveManager : MonoBehaviour {
 
     public AnyRPGSaveData InitializeResourceLists(AnyRPGSaveData anyRPGSaveData, bool overWrite) {
         //Debug.Log("SaveManager.InitializeResourceLists()");
-        // TESTING: COMMENTING IF STATEMENTS TO ENSURE WE DON'T JUST KEEP EXTENDING EXISTING LISTS IF WE SAVE A GAME IN PROGRESS MORE THAN ONCE
         if (anyRPGSaveData.questSaveData == null || overWrite) {
             anyRPGSaveData.questSaveData = new List<QuestSaveData>();
         }
@@ -728,7 +727,7 @@ public class SaveManager : MonoBehaviour {
         // moved to clearshareddata to have central clearing method
         //ClearSystemManagedCharacterData();
 
-        // TESTING MOVE HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
+        // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
         LoadSharedData(anyRPGSaveData);
 
         // complex data

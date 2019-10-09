@@ -153,8 +153,6 @@ public class EquipmentManager : MonoBehaviour {
             } else {
                 //Debug.Log("We could not find the target bone " + newItem.TargetBone + " when trying to Equip " + newItem.MyName);
             }
-            //(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator as PlayerAnimator).OnEquipmentChanged(null, newItem);
-            // testing was that above line why animations weren't set on zone load?
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && usedObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): Player Unit is spawned and the object we are using as the player unit, go ahead and animate attacks");
                 (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator as PlayerAnimator).OnEquipmentChanged(newItem, null);
@@ -168,12 +166,8 @@ public class EquipmentManager : MonoBehaviour {
             //Debug.Log("Instructed to Equip a null item!");
             return;
         }
-        //Equipment oldItem = Unequip(newItem.equipSlot);
-        // TESTING, THIS STUFF NEEDS TO BE HANDLED THROUGH CHARACTER PANEL?
-        //CharacterPanel.MyInstance.
         if (currentEquipment.ContainsKey(newItem.equipSlot) && currentEquipment[newItem.equipSlot] != null) {
             currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
-            //Unequip(newItem.equipSlot);
         }
 
         // for now manually handle exclusive slots
@@ -182,8 +176,6 @@ public class EquipmentManager : MonoBehaviour {
             if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
                 if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
                     currentEquipment[EquipmentSlot.OffHand].MyCharacterButton.DequipEquipment();
-                    //Unequip(newItem.equipSlot);
-                    //Unequip(EquipmentSlot.OffHand);
                 }
             }
         }
@@ -193,8 +185,6 @@ public class EquipmentManager : MonoBehaviour {
             if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
                 if (currentEquipment[EquipmentSlot.MainHand] != null && currentEquipment[EquipmentSlot.MainHand].MyCharacterButton != null) {
                     currentEquipment[EquipmentSlot.MainHand].MyCharacterButton.DequipEquipment();
-                    //Unequip(newItem.equipSlot);
-                    //Unequip(EquipmentSlot.MainHand);
                 }
             }
         }
@@ -220,7 +210,7 @@ public class EquipmentManager : MonoBehaviour {
                 Destroy(destroyObject);
             }
             Equipment oldItem = currentEquipment[equipmentSlot];
-            // TESTING SKIP THIS STUFF IF THE PLAYER UNIT IS NOT SPAWNED BECAUSE WE ARE UNEQUIPPING A PREVIEW UNIT
+            // SKIP THIS STUFF IF THE PLAYER UNIT IS NOT SPAWNED BECAUSE WE ARE UNEQUIPPING A PREVIEW UNIT
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 if (oldItem.UMARecipe != null && PlayerManager.MyInstance.MyAvatar != null) {
                     // Clear the item from the UMA slot on the UMA character

@@ -79,7 +79,6 @@ public class LengthEffect: AbilityEffect {
         }
         base.Cast(source, target, originalTarget, abilityEffectInput);
         if (abilityEffectPrefab != null && prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.Point || requiresTarget == false)) {
-            // FIX THIS.  ITS ADDING TOO MUCH TOGETHER - FIXED :) - BUT NOW GROUND TARGET IS BROKEN :(
             //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
             //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
             //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);

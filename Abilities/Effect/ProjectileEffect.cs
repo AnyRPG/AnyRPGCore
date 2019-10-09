@@ -9,10 +9,11 @@ public class ProjectileEffect : DirectEffect {
     public float projectileSpeed = 0;
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        //Debug.Log(abilityEffectName + ".ProjectileAttackEffect.Cast(" + source.name + ", " + target.name + ")");
+        //Debug.Log(MyName + ".ProjectileAttackEffect.Cast(" + source.name + ", " + target.name + ")");
         base.Cast(source, target, originalTarget, abilityEffectInput);
         ProjectileScript projectileScript = abilityEffectObject.GetComponent<ProjectileScript>();
         if (projectileScript != null) {
+            abilityEffectInput = ApplyInputMultiplier(abilityEffectInput);
             projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), abilityEffectInput);
             projectileScript.OnCollission += HandleCollission;
         }

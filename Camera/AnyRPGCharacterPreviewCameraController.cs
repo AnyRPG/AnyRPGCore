@@ -163,9 +163,6 @@ public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
         cameraPan = false;
         cameraZoom = false;
 
-        // TESTING MOVE TO BELOW SO ITS UPDATED BASED ON MIDDLE MOUSE PAN
-        //SetTargetPosition();
-
         // handleZoom
         if (!mouseOutsideWindow && InputManager.MyInstance.mouseScrolled) {
             //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
@@ -203,7 +200,7 @@ public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
             cameraPan = true;
         }
 
-        // TESTING MOVE TO BELOW SO ITS UPDATED BASED ON MIDDLE MOUSE PAN
+        // THIS MUST BE DOWN HERE SO ITS UPDATED BASED ON MIDDLE MOUSE PAN
         SetTargetPosition();
 
         // follow the player

@@ -295,8 +295,7 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         }
     }
 
-    // TESTING, USE CANINTERACT TO ALLOW ATTACK, BUT GETVALIDOPTIONCOUNT TO SUPPRESS WINDOW
-    // MORE TESTING, CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
+    // CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
     public override int GetValidOptionCount() {
         //Debug.Log(gameObject.name + ".CharacterUnit.GetValidOptionCount()");
         return (MyCharacter.MyCharacterStats.IsAlive == true ? 1 : 0);

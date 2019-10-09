@@ -89,12 +89,20 @@ public class LootUI : WindowContentController, IPagedWindowContents {
     public void TakeAllLoot() {
         //Debug.Log("LootUI.TakeAllLoot()");
 
-        while (pages.Count > 0) {
+        // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
+        while (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() > 0) {
             foreach (LootButton lootButton in lootButtons) {
                 if (lootButton.gameObject.activeSelf == true) {
                     lootButton.TakeLoot();
                 }
             }
+        }
+
+        if (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() == 0) {
+            if (InventoryManager.MyInstance.MyEmptySlotCount() == 0) {
+                Debug.Log("No space left in inventory");
+            }
+            MessageFeedManager.MyInstance.WriteMessage("Inventory is full!");
         }
     }
 

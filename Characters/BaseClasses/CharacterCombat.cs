@@ -323,7 +323,8 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     }
 
     protected virtual bool AutoAttackTargetIsValid(BaseCharacter characterTarget) {
-        // testing - ensure the current target is the target we swung at in case we switched target mid swing via tab/agro etc
+        // ensure the current target is the target we swung at in case we switched target mid swing via tab/agro etc
+        // this helps prevent spell hit effects from triggering on the wrong unit
         if (characterTarget != swingTarget) {
             return false;
         }
@@ -347,7 +348,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             //Debug.Log("You must have a target to attack");
             //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
         } else {
-            // testing - add this here to prevent characters from not being able to attack
+            // add this here to prevent characters from not being able to attack
             swingTarget = characterTarget;
 
             // perform a faction/liveness check and disable auto-attack if it is not valid
@@ -446,7 +447,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         baseCharacter.MyCharacterStats.ReduceHealth(damage);
     }
 
-    public virtual void TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+    public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
         //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
         if (baseCharacter.MyCharacterStats.IsAlive) {
             //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
@@ -463,10 +464,12 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             }
             if (canPerformAbility) {
                 TakeDamageCommon(damage, source, combatType, combatMagnitude, abilityName);
+                return true;
             }
         } else {
             //Debug.Log("Something is trying to damage our dead character!!!");
         }
+        return false;
     }
 
     public virtual void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {

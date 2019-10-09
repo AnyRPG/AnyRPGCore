@@ -49,26 +49,29 @@ public class AOEEffect : FixedLengthEffect {
         TargetAOEComplete(source, target, abilityAffectInput);
     }
 
-    private void TargetAOEHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+    private float TargetAOEHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
         //Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
         List<GameObject> validTargets = GetValidTargets(source, target, abilityEffectInput, hitAbilityEffectList);
         foreach (GameObject validTarget in validTargets) {
             PerformAOEHit(source, validTarget, 1f / validTargets.Count, abilityEffectInput);
         }
+        return validTargets.Count;
     }
 
-    private void TargetAOETick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+    private float TargetAOETick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
         List<GameObject> validTargets = GetValidTargets(source, target, abilityEffectInput, tickAbilityEffectList);
         foreach (GameObject validTarget in validTargets) {
             PerformAOETick(source, validTarget, 1f / validTargets.Count, abilityEffectInput);
         }
+        return validTargets.Count;
     }
 
-    private void TargetAOEComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+    private float TargetAOEComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
         List<GameObject> validTargets = GetValidTargets(source, target, abilityEffectInput, completeAbilityEffectList);
         foreach (GameObject validTarget in validTargets) {
             PerformAOEComplete(source, validTarget, 1f / validTargets.Count, abilityEffectInput);
         }
+        return validTargets.Count;
     }
 
     private List<GameObject> GetValidTargets(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
@@ -89,11 +92,14 @@ public class AOEEffect : FixedLengthEffect {
         }
         aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
         Collider[] colliders = new Collider[0];
+        int playerMask = 1 << LayerMask.NameToLayer("Player");
+        int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+        int validMask = (playerMask | characterMask);
         if (useRadius) {
-            colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeRadius);
+            colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeRadius, validMask);
         }
         if (useExtents) {
-            colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.MyCharacterUnit.transform.rotation);
+            colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.MyCharacterUnit.transform.rotation, validMask);
         }
         //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
         List<GameObject> validTargets = new List<GameObject>();

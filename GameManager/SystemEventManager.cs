@@ -202,7 +202,7 @@ public class SystemEventManager : MonoBehaviour {
     public void NotifyOnQuestStatusUpdated() {
         //Debug.Log("SystemEventManager.NotifyOnQuestStatusUpdated");
         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
-            // TESTING - STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
+            // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
             return;
         }
         OnQuestStatusUpdated();

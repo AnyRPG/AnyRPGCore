@@ -157,7 +157,7 @@ public class InputManager : MonoBehaviour {
         if (Input.GetMouseButtonDown(1)) {
             rightMouseButtonDown = true;
             rightMouseButtonDownPosition = Input.mousePosition;
-            // TESTING, IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
+            // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
             if (EventSystem.current.IsPointerOverGameObject() && (NamePlateCanvasController.MyInstance != null ? !NamePlateCanvasController.MyInstance.MouseOverNamePlate() : true)) {
                 rightMouseButtonClickedOverUI = true;
             }

@@ -112,7 +112,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
                     // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
                     ClearUseable();
                     SetUseable(HandScript.MyInstance.MyMoveable as IUseable);
-                    // TESTING - seems to work
+
                     HandScript.MyInstance.Drop();
                 }
             }
@@ -155,9 +155,6 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
         UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
 
         initialized = true;
-        // TESTING
-        //HandScript.MyInstance.Drop();
-
     }
 
     public void OnUseableUse(IAbility ability) {
@@ -276,18 +273,7 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
     }
 
     public void UpdateItemCount(Item item) {
-        // this code will be run for every actionbutton on the screen because we could have this item in more than one slot so we have to update all their counts
-        /*
-        if (item is IUseable && MyUseable != null) {
-            if (SystemResourceManager.MatchResource(MyUseable.MyName, item.MyName)) {
-                Debug.Log("we are updating an item count and were passed item: " + item.GetInstanceID().ToString());
-                int count = InventoryManager.MyInstance.GetUseableCount(item as IUseable);
-                MyUseable = InventoryManager.MyInstance.GetUseable(item as IUseable);
-                UIManager.MyInstance.UpdateStackSize(this, count, true);
-            }
-        }
-        */
-        // testing, that code above is basically duplicated in updatevisual but it does far more checking
+        
         if (item is IUseable) {
             UpdateVisual();
         }

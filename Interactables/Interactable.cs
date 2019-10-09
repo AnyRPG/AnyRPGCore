@@ -507,7 +507,6 @@ public class Interactable : MonoBehaviour, IDescribable {
         // added pivot so the tooltip doesn't bounce around
         UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MyMouseOverWindow.transform.position, this);
 
-        // testing, switch this to current interactables - valid means it will glow if its spawned, even if there is nothing to interact with
         if (GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
             //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No valid Interactables.  Not glowing.");
@@ -531,7 +530,7 @@ public class Interactable : MonoBehaviour, IDescribable {
 
     }
 
-    // TESTING: DISABLE UNITY ONMOUSEOVER CODE AND USE OUR OWN RAYCAST INSTEAD SINCE UNITY DOESN'T ALLOW SETTING CULLING MASK ON MOUSE :( ...
+    // DISABLE UNITY ONMOUSEOVER CODE AND USE OUR OWN RAYCAST INSTEAD SINCE UNITY DOESN'T ALLOW SETTING CULLING MASK ON MOUSE :( ...
     
         /*
     public void OnMouseEnter() {
@@ -600,15 +599,6 @@ public class Interactable : MonoBehaviour, IDescribable {
             }
         }
     }
-
-    /*
-    TESTING SINCE THIS GOES IN LEVELUNLOADHANDLER ANYWAY
-
-    public void OnDestroy() {
-        //Debug.Log(gameObject.name + ".Interactable.OnDestroy()");
-        CleanupEverything();
-    }
-    */
 
     public void ClearFromPlayerRangeTable() {
         //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");

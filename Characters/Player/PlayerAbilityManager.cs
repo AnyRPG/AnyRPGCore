@@ -118,7 +118,7 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     public override void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
         base.PerformAbility(ability, target, groundTarget);
-        // TESTING, DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
+        // DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
         if (ability.MyCanSimultaneousCast == false && ability.MyIgnoreGlobalCoolDown != true && ability.MyAbilityCastingTime == 0f) {
             InitiateGlobalCooldown(ability);
         } else {
@@ -131,7 +131,7 @@ public class PlayerAbilityManager : CharacterAbilityManager {
     public void InitiateGlobalCooldown(IAbility ability) {
         //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
         if (globalCoolDownCoroutine == null) {
-            // testing, set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
+            // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
             float animationTime = 0f;
             if (ability.MyAnimationClip != null) {
                 animationTime = ability.MyAnimationClip.length;

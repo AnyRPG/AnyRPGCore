@@ -93,7 +93,7 @@ public class DialogPanelController : WindowContentController {
                     PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
                 }
             }
-            // TESTING SETTING THIS LAST SO THE DIALOG WINDOW IS DETECTED AS CLOSED, AND OTHER WINDOWS DON'T GET BLOCKED FROM POPPING.
+            // SETTING THIS LAST SO THE DIALOG WINDOW IS DETECTED AS CLOSED, AND OTHER WINDOWS DON'T GET BLOCKED FROM POPPING.
             MyDialog.TurnedIn = true;
         } else {
             DisplayNodeText();
@@ -116,7 +116,7 @@ public class DialogPanelController : WindowContentController {
 
     public void AcceptQuest() {
         //Debug.Log("DialogPanelController.AcceptQuest()");
-        // TESTING CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
+        // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
         PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
 
         QuestLog.MyInstance.AcceptQuest(MyQuest.MyName);
@@ -162,13 +162,7 @@ public class DialogPanelController : WindowContentController {
     public override void OnCloseWindow() {
         base.OnCloseWindow();
         OnCloseWindowHandler(this);
-        // TESTING, allow window to close before taking actions, to prevent blocking other windows from opening since dialog blocks every other interactable
-        /*
-        dialogIndex = 0;
-        MyInteractable = null;
-        MyQuest = null;
-        MyDialog = null;
-        */
+
         viewQuestButton.SetActive(false);
         acceptQuestButton.SetActive(false);
         continueButton.SetActive(false);

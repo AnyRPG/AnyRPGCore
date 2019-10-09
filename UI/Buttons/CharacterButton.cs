@@ -141,13 +141,12 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             icon.enabled = false;
         }
 
-        // TESTING - ANY EQUIPMENT CHANGE SHOULD UPDATE THE TEXT DISPLAY AND CHARACTER PREVIEW WINDOWS
         if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
-            // hopefully prevent unnecessary actions when player is not spawned
+            // prevent unnecessary actions when player is not spawned
             return;
         }
         if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
-            // hopefully prevent unnecessary actions when window is not open
+            // prevent unnecessary actions when window is not open
             return;
         }
         if (resetDisplay) {

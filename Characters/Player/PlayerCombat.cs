@@ -122,15 +122,16 @@ public class PlayerCombat : CharacterCombat {
         return false;
     }
 
-    public override void TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+    public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
         //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
         // enter combat first because if we die from this hit, we don't want to enter combat when dead
         EnterCombat(source);
-        base.TakeDamage(damage, sourcePosition, source, combatType, combatMagnitude, abilityName);
-        if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null) {
+        // added damageTaken bool to prevent blood effects from showing if you ran out of range of the attack while it was in progress
+        bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatType, combatMagnitude, abilityName);
+        if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
             MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyTakeDamageAbility, MyBaseCharacter.MyCharacterUnit.gameObject);
         }
-
+        return damageTaken;
     }
 
     /// <summary>
@@ -203,7 +204,6 @@ public class PlayerCombat : CharacterCombat {
         //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
         if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget != null) {
             // TESTING, THIS WAS MESSING WITH ABILITIES THAT DONT' NEED A TARGET LIKE GROUND SLAM - OR NOT, ITS JUST FOR THE WHITE HIT...!!
-            //if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget) {
             //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
             MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.MyCharacterController.MyTarget);
         }

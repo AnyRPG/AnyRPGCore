@@ -54,7 +54,8 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
 
-    public int MyMeleeDamage { get => MyStrength / 2; }
+    public int MyBaseMeleeDamage { get => (MyStrength / 2); }
+    public int MyMeleeDamage { get => MyBaseMeleeDamage + meleeDamageModifiers.GetValue(); }
     public int MySpellPower { get => MyIntellect / 2; }
     public int MyArmor { get => armorModifiers.GetValue(); }
     public int MyBaseStamina { get => stamina; }

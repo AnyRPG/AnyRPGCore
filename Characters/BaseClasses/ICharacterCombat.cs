@@ -29,7 +29,7 @@ public interface ICharacterCombat {
     void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent);
     void ProcessTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
     void Start();
-    void TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
+    bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName);
     void TryToDropCombat();
     void ResetAttackCoolDown();
     void SetWaitingForAutoAttack(bool newValue);

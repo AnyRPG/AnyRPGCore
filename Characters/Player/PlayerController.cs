@@ -247,10 +247,8 @@ public class PlayerController : BaseController {
         if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
             if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
 
-                // should we getcomponents in parents instead?  that would mean if the mouse went outside the collider, it would still glow
                 Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
                 if (newInteractable == null) {
-                    // TESTING, THIS SHOULD HELP WITH MOUSEOVER BODIES LAYING ON THEIR SIDE THAT ARE LOOTABLE
                     newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
                 }
                 //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null") + "; new: " + (newInteractable != null ? newInteractable.MyName : "null"));
@@ -383,7 +381,6 @@ public class PlayerController : BaseController {
         TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
         lastTabTargetTime = DateTime.Now;
         int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-        //int validMask = LayerMask.NameToLayer("CharacterUnit");
         Collider[] hitColliders = Physics.OverlapSphere(baseCharacter.MyCharacterUnit.transform.position, tabTargetMaxDistance, validMask);
         int i = 0;
         //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
@@ -596,7 +593,6 @@ public class PlayerController : BaseController {
             return;
         }
         base.SetTarget(newTarget);
-        //Debug.Log("TESTING ICHARACTERUNIT FOR INANIMATE UNIT FRAMES");
         if (newTarget.GetComponent<INamePlateUnit>() != null) {
             //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
             UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget);
@@ -659,7 +655,7 @@ public class PlayerController : BaseController {
     }
 
     public void HandleDeath(CharacterStats characterStats) {
-        Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
+        //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
         Lock(true, true, false, 0.1f, 0f);
     }
 

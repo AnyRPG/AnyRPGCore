@@ -67,18 +67,6 @@ public class InventoryManager : MonoBehaviour {
     private int bagCount = 5;
     private int bankCount = 8;
 
-    public int MyEmptySlotCount {
-        get {
-            int count = 0;
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    count += bagNode.MyBagPanel.MyEmptySlotCount;
-                }
-            }
-            return count;
-        }
-    }
-
     public int MyTotalSlotCount {
         get {
             int count = 0;
@@ -90,7 +78,7 @@ public class InventoryManager : MonoBehaviour {
             return count;
         }
     }
-    public int MyFullSlotCount { get => MyTotalSlotCount - MyEmptySlotCount; }
+    public int MyFullSlotCount { get => MyTotalSlotCount - MyEmptySlotCount(); }
 
     public SlotScript FromSlot {
         get {
@@ -151,7 +139,6 @@ public class InventoryManager : MonoBehaviour {
         foreach (BagNode bagNode in bagNodes) {
             //Debug.Log("InventoryManager.ClearData(): got a bag node");
             //bagNode.MyBag = null;
-            // TESTING
             if (bagNode.MyIsBankNode == false) {
                 //Debug.Log("Got a bag node, removing!");
                 RemoveBag(bagNode.MyBag);
@@ -163,6 +150,17 @@ public class InventoryManager : MonoBehaviour {
         Close();
         //MyBagNodes.Clear();
     }
+
+    public int MyEmptySlotCount(bool bankSlot = false) {
+        int count = 0;
+        foreach (BagNode bagNode in bagNodes) {
+            if (bagNode.MyBag != null && bagNode.MyIsBankNode == bankSlot) {
+                count += bagNode.MyBagPanel.MyEmptySlotCount;
+            }
+        }
+        return count;
+    }
+
 
     public bool CanAddBag(bool addToBank = false) {
         int counter = 0;
@@ -200,7 +198,6 @@ public class InventoryManager : MonoBehaviour {
         int counter = 0;
         foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
             if (saveData.slotCount > 0) {
-                // TESTING NEW LOADING CODE TO GET REAL BACKPACK AND NOT HAVE TO WORRY ABOUT IMAGE ISSUES
                 Bag newBag = SystemItemManager.MyInstance.GetNewResource(saveData.MyName) as Bag;
                 if (newBag != null) {
                     AddBag(newBag, MyBagNodes[counter]);
@@ -392,7 +389,8 @@ public class InventoryManager : MonoBehaviour {
 
                 // destroy the bagpanel gameobject before setting its reference to null
                 bagNode.MyBagWindow.DestroyWindowContents();
-                // TESTING SO THAT EMPTY BAR GOES AWAY
+                
+                // MAKE EMPTY TITLE BAR GO AWAY
                 bagNode.MyBagWindow.CloseWindow();
 
 
@@ -446,11 +444,12 @@ public class InventoryManager : MonoBehaviour {
             MessageFeedManager.MyInstance.WriteMessage(item.MyName + " is unique.  You can only carry one at a time.");
             return false;
         }
-        if (item.MyStackSize > 0) {
+        if (item.MyMaximumStackSize > 0) {
             if (PlaceInStack(item, addToBank)) {
                 return true;
             }
         }
+        //Debug.Log("About to attempt placeInEmpty");
         return PlaceInEmpty(item, addToBank);
     }
 
@@ -487,6 +486,10 @@ public class InventoryManager : MonoBehaviour {
                 }
             }
         }
+        if (MyEmptySlotCount(addToBank) == 0) {
+            //Debug.Log("No empty slots");
+            MessageFeedManager.MyInstance.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
+        }
         return false;
     }
 
@@ -501,6 +504,12 @@ public class InventoryManager : MonoBehaviour {
                 }
             }
         }
+        // commented below because it may result in 2 full messages being displayed if the last item in the bag is a full stack of the same item type
+        /*
+        if (MyEmptySlotCount(addToBank) == 0) {
+            MessageFeedManager.MyInstance.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
+        }
+        */
         return false;
     }
 
