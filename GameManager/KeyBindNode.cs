@@ -69,7 +69,13 @@ public class KeyBindNode
         if (MyKeyCode.ToString() == "None") {
             return string.Empty;
         }
-        return (control ? "c" : "") + (shift ? "s" : "") + MyKeyCode.ToString().Replace("Alpha", "");
+        return (control ? "c" : "") + (shift ? "s" : "") + ReplaceSpecialCharacters(MyKeyCode.ToString());
+    }
+
+    public string ReplaceSpecialCharacters(string inputString) {
+        inputString = inputString.Replace("Alpha", "");
+        inputString = inputString.Replace("Period", ".");
+        return inputString;
     }
 
     public void SetSlotScript(KeyBindSlotScript keyBindSlotScript) {

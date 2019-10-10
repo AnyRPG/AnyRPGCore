@@ -60,6 +60,7 @@ public class KeyBindManager : MonoBehaviour {
         InitializeKey("MAINMAP", KeyCode.M, "Map", KeyBindType.System);
         InitializeKey("NEXTTARGET", KeyCode.Tab, "Next Target", KeyBindType.System);
         InitializeKey("UNEQUIPALL", KeyCode.N, "Unequip All", KeyBindType.System);
+        InitializeKey("HIDEUI", KeyCode.Period, "Hide UI", KeyBindType.System);
 
         InitializeKey("ACT1", KeyCode.Alpha1, "Action Button 1", KeyBindType.Action);
         InitializeKey("ACT2", KeyCode.Alpha2, "Action Button 2", KeyBindType.Action);

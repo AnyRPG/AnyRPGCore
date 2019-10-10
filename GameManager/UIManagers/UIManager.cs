@@ -195,6 +195,24 @@ public class UIManager : MonoBehaviour {
         CleanupEventReferences();
     }
 
+    void Update() {
+
+        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            // if there is no player, these windows shouldn't be open
+            return;
+        }
+        // don't hide windows while binding keys
+        if (KeyBindManager.MyInstance.MyBindName == string.Empty) {
+            if (InputManager.MyInstance.KeyBindWasPressed("HIDEUI")) {
+                if (playerUI.gameObject.activeSelf) {
+                    playerUI.SetActive(false);
+                } else {
+                    playerUI.SetActive(true);
+                }
+            }
+        }
+    }
+
     public void DeactivateInGameUI() {
         //Debug.Log("UIManager.DeactivateInGameUI()");
         if (PopupWindowManager.MyInstance != null) {
