@@ -259,27 +259,31 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         return true;
     }
 
-    public void Despawn(float despawnDelay = 0f) {
-        //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ")");
+    public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
+        Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
         //gameObject.SetActive(false);
         // TEST ADDING A MANDATORY DELAY
         if (despawnCoroutine == null) {
-            StartCoroutine(PerformDespawnDelay(despawnDelay));
+            StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
         }
         // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
         OnDespawn(gameObject);
     }
 
-    public IEnumerator PerformDespawnDelay(float despawnDelay) {
+    public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
         // add all possible delays together
-        float totalDelay = despawnDelay + this.despawnDelay + SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
+        float extraTime = 0f;
+        if (addSystemDefaultTime) {
+            extraTime = SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
+        }
+        float totalDelay = despawnDelay + this.despawnDelay + extraTime;
         while (totalDelay > 0f) {
             totalDelay -= Time.deltaTime;
             yield return null;
         }
 
-        if (baseCharacter.MyCharacterStats.IsAlive == false) {
-            // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened
+        if (baseCharacter.MyCharacterStats.IsAlive == false || forceDespawn == true) {
+            // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
             Destroy(gameObject);
         }
     }
