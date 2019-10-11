@@ -80,7 +80,7 @@ public class CraftingUI : WindowContentController {
 
     private string currentRecipeName = null;
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
 
@@ -220,22 +220,22 @@ public class CraftingUI : WindowContentController {
         recipeScripts.Clear();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("craftingUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         DeactivateButtons();
         //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
         MySelectedRecipeScript = null;
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("craftingUI.OnOpenWindow()");
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
 
         craftingQueue.Clear();
 
         ClearDescription();
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
         UpdateCraftAmountArea();
         PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.MyName);
 

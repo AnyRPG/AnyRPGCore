@@ -8,7 +8,7 @@ public class CraftAbility : DirectAbility {
 
     public override bool Cast(BaseCharacter source, GameObject target, Vector3 GroundTarget) {
         //Debug.Log("CraftAbility.Cast(" + source.name + ", " + target.name + ")");
-        PopupWindowManager.MyInstance.craftingWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
+        PopupWindowManager.MyInstance.craftingWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
         PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
 
         // ok to always do this since crafting abilities shouldn't really require weapon affinities?

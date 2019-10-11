@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SystemKeyConfirmPanelController : WindowContentController {
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     private void Start() {
         //Debug.Log("KeyConfirmPanelController.Start()");

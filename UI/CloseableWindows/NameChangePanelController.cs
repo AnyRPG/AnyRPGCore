@@ -8,7 +8,7 @@ public class NameChangePanelController : WindowContentController {
 
     public InputField textInput;
     public event System.Action OnConfirmAction = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
 
     public void CancelAction() {
@@ -25,14 +25,14 @@ public class NameChangePanelController : WindowContentController {
         }
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("NameChangePanelController.OnOpenWindow()");
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
         textInput.text = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
     }
 
-    public override void OnCloseWindow() {
-        base.OnCloseWindow();
-        OnCloseWindowHandler(this);
+    public override void RecieveClosedWindowNotification() {
+        base.RecieveClosedWindowNotification();
+        OnCloseWindow(this);
     }
 }

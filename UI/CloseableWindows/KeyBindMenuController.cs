@@ -17,7 +17,7 @@ public class KeyBindMenuController : WindowContentController {
     [SerializeField]
     private GameObject keyBindButtonPrefab;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     private void Start() {
         //Debug.Log("KeyBindMenuController.Start()");

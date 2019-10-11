@@ -50,7 +50,7 @@ public class InteractionPanelUI : WindowContentController {
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
@@ -266,15 +266,15 @@ public class InteractionPanelUI : WindowContentController {
         interactionPanelScripts.Clear();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("InteractionPanelUI.OnCloseWindow()");
         //ClearButtons();
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         // clear this so window doesn't pop open again when it's closed
         interactable = null;
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("InteractionPanelUI.OnOpenWindow()");
 
         // this has to be done first, because the next line after could close the window and set the interactable to null
@@ -283,6 +283,6 @@ public class InteractionPanelUI : WindowContentController {
         ShowInteractables();
 
         // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
     }
 }

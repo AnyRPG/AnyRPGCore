@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class DialogPanelController : WindowContentController {
 
     public event System.Action OnConfirmAction = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private Text characterNameText;
@@ -144,9 +144,9 @@ public class DialogPanelController : WindowContentController {
         }
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("DialogPanelController.OnOpenWindow()");
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
 
         // these go first or they will squish the text of the continue button out of place
         viewQuestButton.SetActive(false);
@@ -159,9 +159,9 @@ public class DialogPanelController : WindowContentController {
         DisplayNodeText();
     }
 
-    public override void OnCloseWindow() {
-        base.OnCloseWindow();
-        OnCloseWindowHandler(this);
+    public override void RecieveClosedWindowNotification() {
+        base.RecieveClosedWindowNotification();
+        OnCloseWindow(this);
 
         viewQuestButton.SetActive(false);
         acceptQuestButton.SetActive(false);

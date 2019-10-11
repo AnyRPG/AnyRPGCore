@@ -82,7 +82,7 @@ public class QuestGiverUI : WindowContentController {
 
     private string currentQuestName;
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     public QuestGiverQuestScript MySelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
     public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -339,9 +339,9 @@ public class QuestGiverUI : WindowContentController {
         //quests.Clear();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("QuestGiverUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         DeactivateButtons();
         MySelectedQuestGiverQuestScript = null;
     }
@@ -484,14 +484,14 @@ public class QuestGiverUI : WindowContentController {
 
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("QuestGiverUI.OnOpenWindow()");
         // clear first because open window handler could show a description
         ClearDescription();
         if (interactable != null) {
             PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.MyName + " (Quests)");
         }
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
     }
 
     public void OnDisable() {

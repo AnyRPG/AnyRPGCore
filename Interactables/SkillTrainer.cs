@@ -45,8 +45,8 @@ public class SkillTrainer : InteractableOption {
         if (!PopupWindowManager.MyInstance.skillTrainerWindow.IsOpen) {
             //Debug.Log(source + " interacting with " + gameObject.name);
             //vendorWindow.MyVendorUI.CreatePages(items);
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindowHandler += CleanupEventReferences;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventReferences;
             PopupWindowManager.MyInstance.skillTrainerWindow.OpenWindow();
             return true;
         }
@@ -69,8 +69,8 @@ public class SkillTrainer : InteractableOption {
         //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventReferences()");
         base.CleanupEventReferences();
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.skillTrainerWindow != null && PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents != null) {
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindowHandler -= CleanupEventReferences;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventReferences;
         }
     }
 

@@ -15,7 +15,7 @@ public class PagedWindow : CloseableWindow, IScrollHandler {
 
     protected override void Awake() {
         base.Awake();
-        (windowContents as IPagedWindowContents).OnPageCountUpdateHandler += UpdateNavigationArea;
+        (windowContents as IPagedWindowContents).OnPageCountUpdate += UpdateNavigationArea;
     }
 
     public override void OpenWindow() {
@@ -48,16 +48,22 @@ public class PagedWindow : CloseableWindow, IScrollHandler {
         UpdateNavigationArea();
     }
 
-    private void UpdateNavigationArea() {
+    /*
+    public void UpdateNavigationArea() {
+        UpdateNavigationArea(false);
+    }
+    */
+
+    private void UpdateNavigationArea(bool closeEmptyWindow = false) {
         //Debug.Log("PagedWindow.UpdateNavigationArea()");
-        if ((windowContents as IPagedWindowContents).GetPageCount() == 0) {
+        if ((windowContents as IPagedWindowContents).GetPageCount() == 0 && closeEmptyWindow == true) {
             CloseWindow();
         }
 
         previousBtn.GetComponent<Button>().interactable = (pageIndex > 0);
         nextBtn.GetComponent<Button>().interactable = ((windowContents as IPagedWindowContents).GetPageCount() > 1 && pageIndex < (windowContents as IPagedWindowContents).GetPageCount() - 1);
 
-        pageNumber.text = pageIndex + 1 + "/" + (windowContents as IPagedWindowContents).GetPageCount();
+        pageNumber.text = pageIndex + 1 + "/" + Mathf.Clamp((windowContents as IPagedWindowContents).GetPageCount(), 1, Mathf.Infinity);
     }
 
     public void OnScroll(PointerEventData eventData) {

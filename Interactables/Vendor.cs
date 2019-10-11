@@ -27,7 +27,7 @@ public class Vendor : InteractableOption {
         //Debug.Log(source + " attempting to interact with " + gameObject.name);
         if (!PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
             //Debug.Log(source + " interacting with " + gameObject.name);
-            PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
+            PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
             PopupWindowManager.MyInstance.vendorWindow.OpenWindow();
             return true;
         }
@@ -37,7 +37,7 @@ public class Vendor : InteractableOption {
     public override void StopInteract() {
         base.StopInteract();
         PopupWindowManager.MyInstance.vendorWindow.CloseWindow();
-        PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
+        PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
     }
 
     public override void HandlePrerequisiteUpdates() {

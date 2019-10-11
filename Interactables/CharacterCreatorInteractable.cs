@@ -57,7 +57,7 @@ public class CharacterCreatorInteractable : InteractableOption {
         base.CleanupEventReferences();
         if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.characterCreatorWindow != null && SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents != null) {
             (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction -= HandleConfirmAction;
-            (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindowHandler -= CleanupEventReferences;
+            (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow -= CleanupEventReferences;
         }
     }
 
@@ -66,7 +66,7 @@ public class CharacterCreatorInteractable : InteractableOption {
         base.Interact(source);
         SystemWindowManager.MyInstance.characterCreatorWindow.OpenWindow();
         (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction += HandleConfirmAction;
-        (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindowHandler += CleanupEventReferences;
+        (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow += CleanupEventReferences;
         return true;
     }
 

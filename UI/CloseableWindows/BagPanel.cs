@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BagPanel : WindowContentController {
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     [SerializeField]
     protected GameObject slotPrefab;
@@ -117,7 +117,7 @@ public class BagPanel : WindowContentController {
         slots.Clear();
     }
 
-    public override void OnOpenWindow() {
-        base.OnOpenWindow();
+    public override void ReceiveOpenWindowNotification() {
+        base.ReceiveOpenWindowNotification();
     }
 }

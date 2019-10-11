@@ -28,7 +28,7 @@ public class LoadGamePanel : WindowContentController {
     #endregion
 
     public event System.Action OnConfirmAction = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     private LoadGameButton selectedLoadGameButton;
 
@@ -55,17 +55,17 @@ public class LoadGamePanel : WindowContentController {
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
     public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("LoadGamePanel.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         umaAvatar = null;
         previewCameraController.ClearTarget();
         CharacterCreatorManager.MyInstance.HandleCloseWindow();
         //SaveManager.MyInstance.ClearSharedData();
-        OnCloseWindowHandler(this);
+        OnCloseWindow(this);
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("LoadGamePanel.OnOpenWindow()");
 
         panelLayoutElement.preferredWidth = Screen.width;

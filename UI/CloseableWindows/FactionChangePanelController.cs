@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class FactionChangePanelController : WindowContentController {
 
     public event System.Action OnConfirmAction = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private GameObject rewardIconPrefab;
@@ -77,14 +77,14 @@ public class FactionChangePanelController : WindowContentController {
         PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("FactionChangePanelController.OnOpenWindow()");
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("FactionChangePanelController.OnCloseWindow()");
-        base.OnCloseWindow();
-        OnCloseWindowHandler(this);
+        base.RecieveClosedWindowNotification();
+        OnCloseWindow(this);
     }
 }

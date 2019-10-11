@@ -42,8 +42,8 @@ public class CharacterPanel : WindowContentController {
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     public CharacterButton MySelectedButton { get; set; }
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
@@ -172,16 +172,16 @@ public class CharacterPanel : WindowContentController {
         }
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("CharacterPanel.OnCloseWindow()");
         previewCameraController.ClearTarget();
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         CharacterCreatorManager.MyInstance.HandleCloseWindow();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("CharacterPanel.OnOpenWindow()");
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
         SetPreviewTarget();
         UpdateStatsDescription();
         if (PlayerManager.MyInstance.MyCharacter != null) {

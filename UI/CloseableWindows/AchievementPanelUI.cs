@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private AchievementButton[] resourceButtons;
@@ -44,7 +44,7 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
 
     public void CreatePages() {
         //Debug.Log("AchievementPanelUI.CreatePages()");
-        pages.Clear();
+        ClearPages();
         List<Quest> page = new List<Quest>();
         int i = 0;
         foreach (Quest quest in SystemQuestManager.MyInstance.MyResourceList.Values) {
@@ -63,7 +63,7 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
             pages.Add(page);
         }
         AddResources();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
 
     }
 
@@ -100,13 +100,20 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
         AddResources();
     }
 
-    public void OnCloseWindow() {
+    public void RecieveClosedWindowNotification() {
         //Debug.Log("AchievementPanelUI.OnCloseWindow()");
     }
 
-    public void OnOpenWindow() {
+    public void ReceiveOpenWindowNotification() {
         //Debug.Log("AchievementPanelUI.OnOpenWindow()");
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
         CreatePages();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }

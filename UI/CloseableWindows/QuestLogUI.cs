@@ -27,7 +27,7 @@ public class QuestLogUI : WindowContentController {
     }
     #endregion
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     [SerializeField]
     private GameObject abandonButton, trackButton;
@@ -161,20 +161,20 @@ public class QuestLogUI : WindowContentController {
         //trackButton.GetComponent<Button>().enabled = false;
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("QuestLogUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         ClearQuests();
         DeactivateButtons();
         MySelectedQuestScript = null;
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("QuestLogUI.OnOpenWindow()");
 
-        base.OnOpenWindow();
+        base.ReceiveOpenWindowNotification();
 
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
 
         ShowQuestsCommon();
     }

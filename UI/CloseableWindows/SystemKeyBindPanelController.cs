@@ -30,7 +30,7 @@ public class SystemKeyBindPanelController : WindowContentController {
     public HighlightButton actionBarsButton;
     public HighlightButton systemButton;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     private void Start() {
         //Debug.Log("KeyBindMenuController.Start()");

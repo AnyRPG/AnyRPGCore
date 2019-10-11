@@ -118,7 +118,7 @@ public class CloseableWindow : MonoBehaviour {
         // THIS MUST BE HERE SO WINDOWS THAT NEED TO AUTO-CLOSE THEMSELVES ON OPEN IN THE OPEN WINDOW HANDLER DON'T END UP JUST RE-ENABLING THEMSELVES WITH THE ABOVE CODE AFTER THE CLOSE FUNCTION IS RUN
         if (windowContents != null) {
             //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): window contents was not null, calling openwindow");
-            windowContents.OnOpenWindow();
+            windowContents.ReceiveOpenWindowNotification();
         } else {
             //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow():  + windowContents is null!");
         }
@@ -138,7 +138,7 @@ public class CloseableWindow : MonoBehaviour {
         //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow(): alpha should be set to zero: doing callbacks");
         OnCloseWindowCallback();
         if (windowContents != null) {
-            windowContents.OnCloseWindow();
+            windowContents.RecieveClosedWindowNotification();
         }
         if (windowText != null && windowTitle != null && windowTitle != string.Empty) {
             windowText.text = windowTitle;

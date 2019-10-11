@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private FactionButton[] factionButtons;
@@ -41,7 +41,7 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
 
     public void CreatePages() {
         //Debug.Log("ReputationBookUI.CreatePages()");
-        pages.Clear();
+        ClearPages();
         List<FactionDisposition> page = new List<FactionDisposition>();
         for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.MyDispositionDictionary.Count; i++) {
             page.Add(PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.MyDispositionDictionary[i]);
@@ -54,7 +54,7 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
             pages.Add(page);
         }
         AddReputations();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
 
     }
 
@@ -89,11 +89,18 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
         AddReputations();
     }
 
-    public void OnCloseWindow() {
+    public void RecieveClosedWindowNotification() {
     }
 
-    public void OnOpenWindow() {
-        OnOpenWindowHandler(this);
+    public void ReceiveOpenWindowNotification() {
+        OnOpenWindow(this);
         CreatePages();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }

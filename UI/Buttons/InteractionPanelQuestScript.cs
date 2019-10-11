@@ -36,7 +36,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
     public void InitWindow(ICloseableWindowContents questGiverUI) {
         //Debug.Log(gameObject.name + ".QuestGiver.InitWindow()");
         (questGiverUI as QuestGiverUI).ShowQuests(questGiver);
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
         QuestGiverUI.MyInstance.ShowDescription(MyQuest);
 
     }
@@ -59,7 +59,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
             //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
             PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
             (PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents as QuestGiverUI).ShowQuests(questGiver);
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
+            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
             QuestGiverUI.MyInstance.ShowDescription(MyQuest);
 
         }

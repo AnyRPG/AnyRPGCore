@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class VendorUI : WindowContentController, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     [SerializeField]
     private VendorButton[] vendorButtons;
@@ -26,7 +26,7 @@ public class VendorUI : WindowContentController, IPagedWindowContents {
 
     public void CreatePages(VendorItem[] items) {
         //Debug.Log("VendorUI.CreatePages()");
-        pages.Clear();
+        ClearPages();
         List<VendorItem> page = new List<VendorItem>();
         for (int i = 0; i < items.Length; i++) {
             page.Add(items[i]);
@@ -36,7 +36,7 @@ public class VendorUI : WindowContentController, IPagedWindowContents {
             }
         }
         AddItems();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
     }
 
     public void AddItems() {
@@ -65,25 +65,27 @@ public class VendorUI : WindowContentController, IPagedWindowContents {
         AddItems();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("VendorUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         ClearButtons();
         ClearPages();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("VendorUI.OnOpenWindow()");
         ClearButtons();
         ClearPages();
-        base.OnOpenWindow();
-        OnOpenWindowHandler(this);
+        base.ReceiveOpenWindowNotification();
+        OnOpenWindow(this);
         LoadPage(0);
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
     }
 
     private void ClearPages() {
+        ClearButtons();
         pages.Clear();
         pageIndex = 0;
     }
+
 }

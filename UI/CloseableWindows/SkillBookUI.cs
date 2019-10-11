@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private SkillButton[] skillButtons;
@@ -45,8 +45,7 @@ public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
 
     public void CreatePages() {
         //Debug.Log("SkillBookUI.CreatePages()");
-        ClearButtons();
-        pages.Clear();
+        ClearPages();
         List<string> page = new List<string>();
         foreach (string skillName in PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.MySkillList.Keys) {
             page.Add(skillName);
@@ -59,12 +58,12 @@ public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
             pages.Add(page);
         }
         AddSkills();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
 
     }
 
     public void AddSkills() {
-        //Debug.Log("SkillBookUI.AddSkills()");
+        Debug.Log("SkillBookUI.AddSkills()");
         if (pages.Count > 0) {
             for (int i = 0; i < pageSize; i++) {
                 //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
@@ -83,22 +82,31 @@ public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
     }
 
     public void ClearButtons() {
+        Debug.Log("SkillBookUI.ClearButtons()");
         foreach (SkillButton btn in skillButtons) {
             btn.gameObject.SetActive(false);
         }
     }
 
     public void LoadPage(int pageIndex) {
+        Debug.Log("SkillBookUI.LoadPage(" + pageIndex + ")");
         ClearButtons();
         this.pageIndex = pageIndex;
         AddSkills();
     }
 
-    public void OnCloseWindow() {
+    public void RecieveClosedWindowNotification() {
     }
 
-    public void OnOpenWindow() {
-        OnOpenWindowHandler(this);
+    public void ReceiveOpenWindowNotification() {
+        OnOpenWindow(this);
         CreatePages();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }

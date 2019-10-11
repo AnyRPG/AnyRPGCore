@@ -61,7 +61,7 @@ public class SkillTrainerUI : WindowContentController {
 
     private string currentSkillName = null;
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
 
@@ -203,9 +203,9 @@ public class SkillTrainerUI : WindowContentController {
         skillScripts.Clear();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("SkillTrainerUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         DeactivateButtons();
         MySelectedSkillTrainerSkillScript = null;
     }
@@ -231,11 +231,11 @@ public class SkillTrainerUI : WindowContentController {
         }
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("SkillTrainerUI.OnOpenWindow()");
         // clear before open window handler, because it shows quests
         ClearDescription();
 
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
     }
 }

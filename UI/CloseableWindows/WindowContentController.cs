@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
 
-    public virtual event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public virtual event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public virtual event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private Image backGroundImage;
@@ -31,13 +31,13 @@ public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
         AudioManager.MyInstance.PlayUIClickSound();
     }
 
-    public virtual void OnCloseWindow() {
-        OnCloseWindowHandler(this);
+    public virtual void RecieveClosedWindowNotification() {
+        OnCloseWindow(this);
     }
 
-    public virtual void OnOpenWindow() {
+    public virtual void ReceiveOpenWindowNotification() {
         //Debug.Log("WindowContentController.OnOpenWindow()");
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
     }
 
     public void SetBackGroundColor(Color color) {

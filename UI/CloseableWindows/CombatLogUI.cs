@@ -88,7 +88,7 @@ public class CombatLogUI : WindowContentController {
 
     private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     private void Start() {
         //Debug.Log("QuestTrackerUI.Start()");
@@ -276,14 +276,14 @@ public class CombatLogUI : WindowContentController {
 
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("QuestTrackerUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("QuestTrackerUI.OnOpenWindow()");
         ShowChatLog();
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
     }
 }

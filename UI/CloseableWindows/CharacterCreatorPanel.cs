@@ -28,7 +28,7 @@ public class CharacterCreatorPanel : WindowContentController {
     #endregion
 
     public event System.Action OnConfirmAction = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private HighlightButton appearanceButton;
@@ -115,18 +115,18 @@ public class CharacterCreatorPanel : WindowContentController {
 
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         umaAvatar = null;
         previewCameraController.ClearTarget();
         CharacterCreatorManager.MyInstance.HandleCloseWindow();
-        OnCloseWindowHandler(this);
+        OnCloseWindow(this);
         // close interaction window too for smoother experience
         PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("CharacterCreatorPanel.OnOpenWindow()");
 
         SetPreviewTarget();

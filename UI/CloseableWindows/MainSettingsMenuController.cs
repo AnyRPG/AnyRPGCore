@@ -797,8 +797,8 @@ public class MainSettingsMenuController : WindowContentController {
         SystemWindowManager.MyInstance.settingsMenuWindow.CloseWindow();
     }
 
-    public override void OnOpenWindow() {
-        base.OnOpenWindow();
+    public override void ReceiveOpenWindowNotification() {
+        base.ReceiveOpenWindowNotification();
         UserInterfacePanel();
     }
 }

@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class BankPanel : BagPanel {
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     [SerializeField]
     protected BagBarController bagBarController;
 
     public BagBarController MyBagBarController { get => bagBarController; set => bagBarController = value; }
 
-    public override void OnOpenWindow() {
-        base.OnOpenWindow();
+    public override void ReceiveOpenWindowNotification() {
+        base.ReceiveOpenWindowNotification();
         InventoryManager.MyInstance.OpenBank();
     }
 
-    public override void OnCloseWindow() {
-        base.OnCloseWindow();
+    public override void RecieveClosedWindowNotification() {
+        base.RecieveClosedWindowNotification();
         InventoryManager.MyInstance.CloseBank();
     }
 

@@ -39,7 +39,7 @@ public class NameChangeInteractable : InteractableOption {
         base.CleanupEventReferences();
         if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.nameChangeWindow != null && SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents != null) {
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-            (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindowHandler -= CleanupEventReferences;
+            (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventReferences;
         }
         eventReferencesInitialized = false;
 
@@ -83,7 +83,7 @@ public class NameChangeInteractable : InteractableOption {
         }
         SystemWindowManager.MyInstance.nameChangeWindow.OpenWindow();
         (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
-        (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindowHandler += CleanupEventReferences;
+        (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventReferences;
         eventReferencesInitialized = true;
         return true;
     }

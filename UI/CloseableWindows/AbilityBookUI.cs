@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class AbilityBookUI : MonoBehaviour, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private AbilityButton[] abilityButtons;
@@ -45,7 +45,7 @@ public class AbilityBookUI : MonoBehaviour, IPagedWindowContents {
 
     public void CreatePages() {
         Debug.Log("AbilityBookUI.CreatePages()");
-        pages.Clear();
+        ClearPages();
         List<IAbility> page = new List<IAbility>();
         foreach (IAbility newAbility in PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
             page.Add(newAbility);
@@ -58,7 +58,7 @@ public class AbilityBookUI : MonoBehaviour, IPagedWindowContents {
             pages.Add(page);
         }
         AddAbilities();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
 
     }
 
@@ -94,11 +94,18 @@ public class AbilityBookUI : MonoBehaviour, IPagedWindowContents {
         AddAbilities();
     }
 
-    public void OnCloseWindow() {
+    public void RecieveClosedWindowNotification() {
     }
 
-    public void OnOpenWindow() {
-        OnOpenWindowHandler(this);
+    public void ReceiveOpenWindowNotification() {
+        OnOpenWindow(this);
         CreatePages();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }

@@ -30,9 +30,9 @@ public class LootUI : WindowContentController, IPagedWindowContents {
 
     private int pageIndex = 0;
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public override event Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     public void CreatePages(List<LootDrop> items) {
         //Debug.Log("LootUI.CreatePages()");
@@ -51,7 +51,7 @@ public class LootUI : WindowContentController, IPagedWindowContents {
 
         AddLoot();
 
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(true);
     }
 
     private void AddLoot() {
@@ -124,29 +124,22 @@ public class LootUI : WindowContentController, IPagedWindowContents {
                 pageIndex--;
             }
             AddLoot();
-            OnPageCountUpdateHandler();
+            OnPageCountUpdate(true);
         }
     }
 
-    private void ClearPages() {
-        //Debug.Log("LootUI.ClearPages(): clearing pages");
-        pageIndex = 0;
-        pages.Clear();
-        ClearButtons();
-    }
-
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("LootUI.OnCloseWindow(): clearing pages");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         ClearPages();
-        OnCloseWindowHandler(this);
+        OnCloseWindow(this);
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("LootUI.OnOpenWindow()");
-        base.OnOpenWindow();
-        OnOpenWindowHandler(this);
-        OnPageCountUpdateHandler();
+        base.ReceiveOpenWindowNotification();
+        OnOpenWindow(this);
+        OnPageCountUpdate(true);
     }
 
     public int GetPageCount() {
@@ -160,4 +153,11 @@ public class LootUI : WindowContentController, IPagedWindowContents {
         ClearButtons();
         AddLoot();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }

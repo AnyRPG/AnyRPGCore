@@ -99,7 +99,7 @@ public class GatheringNode : InteractableOption {
             return;
         }
         SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
-        LootUI.MyInstance.OnCloseWindowHandler += ClearTakeLootHandler;
+        LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
         eventReferencesInitialized = true;
     }
 
@@ -110,7 +110,7 @@ public class GatheringNode : InteractableOption {
         }
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
-            LootUI.MyInstance.OnCloseWindowHandler -= ClearTakeLootHandler;
+            LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
         }
         eventReferencesInitialized = false;
     }

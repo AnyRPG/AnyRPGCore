@@ -42,7 +42,7 @@ public class QuestTrackerUI : WindowContentController {
 
     private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
-    public override event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
+    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
     private void Start() {
         //Debug.Log("QuestTrackerUI.Start()");
@@ -137,17 +137,17 @@ public class QuestTrackerUI : WindowContentController {
         questScripts.Clear();
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("QuestTrackerUI.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         //CleanupEventReferences();
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("QuestTrackerUI.OnOpenWindow()");
         // clear first because open window handler could show a description
         ShowQuests();
-        OnOpenWindowHandler(this);
+        OnOpenWindow(this);
     }
 
     // moved below functionality to OnDestroy because these are static objects that exist for the entire game

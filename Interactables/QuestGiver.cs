@@ -63,8 +63,8 @@ public class QuestGiver : InteractableOption, IQuestGiver {
             namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
         }
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null && PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents != null) {
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindowHandler -= CloseWindowHandler;
+            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
         }
         eventReferencesInitialized = false;
     }
@@ -115,7 +115,7 @@ public class QuestGiver : InteractableOption, IQuestGiver {
     public void InitWindow(ICloseableWindowContents questGiverUI) {
         //Debug.Log(gameObject.name + ".QuestGiver.InitWindow()");
         (questGiverUI as QuestGiverUI).ShowQuests(this);
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
     }
 
     public override bool Interact(CharacterUnit source) {
@@ -139,8 +139,8 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
         if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
             //Debug.Log(source + " interacting with " + gameObject.name);
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindowHandler += CloseWindowHandler;
+            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
+            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow += CloseWindowHandler;
             QuestGiverUI.MyInstance.MyInteractable = this.interactable;
             PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
             return true;
@@ -149,8 +149,8 @@ public class QuestGiver : InteractableOption, IQuestGiver {
     }
 
     public void CloseWindowHandler(ICloseableWindowContents questGiverUI) {
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindowHandler -= CloseWindowHandler;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
     }
 
     public override void StopInteract() {
@@ -158,8 +158,8 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         base.StopInteract();
         //vendorUI.ClearPages();
         PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
-        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindowHandler -= CloseWindowHandler;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+        PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
     }
 
     public void UpdateQuestStatus() {

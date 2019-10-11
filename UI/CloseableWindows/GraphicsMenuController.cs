@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GraphicsMenuController : WindowContentController {
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     [SerializeField]
     private Dropdown resolutionDropDown;

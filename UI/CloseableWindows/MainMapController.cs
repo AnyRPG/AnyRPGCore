@@ -64,7 +64,7 @@ public class MainMapController : WindowContentController {
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindowHandler;
+    public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     public override void Awake() {
         //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
@@ -179,13 +179,13 @@ public class MainMapController : WindowContentController {
         this.gameObject.SetActive(true);
     }
 
-    public override void OnCloseWindow() {
+    public override void RecieveClosedWindowNotification() {
         //Debug.Log("MainMapController.OnCloseWindow()");
-        base.OnCloseWindow();
+        base.RecieveClosedWindowNotification();
         CameraManager.MyInstance.MyMainMapCamera.enabled = false;
     }
 
-    public override void OnOpenWindow() {
+    public override void ReceiveOpenWindowNotification() {
         //Debug.Log("MainMapController.OnOpenWindow()");
         // TESTING DID PUTTING THE EVENT CLEANUP IN ONDESTROY FIX THIS SO THE NEXT LINE ISN'T NEEDED?
         // re-adding this back here.  Not sure why, but possible the level objects aren't rendered by the time this gets called in onlevelload.  Trying on every open window

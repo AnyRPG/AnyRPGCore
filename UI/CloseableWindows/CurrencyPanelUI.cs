@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
 
-    public event System.Action OnPageCountUpdateHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindowHandler = delegate { };
-    public event System.Action<ICloseableWindowContents> OnCloseWindowHandler = delegate { };
+    public event System.Action<bool> OnPageCountUpdate = delegate { };
+    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+    public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
     private CurrencyButton[] currencyButtons;
@@ -41,7 +41,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
 
     public void CreatePages() {
         //Debug.Log("ReputationBookUI.CreatePages()");
-        pages.Clear();
+        ClearPages();
         List<CurrencySaveData> page = new List<CurrencySaveData>();
         foreach (CurrencySaveData currencySaveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
             page.Add(currencySaveData);
@@ -54,7 +54,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
             pages.Add(page);
         }
         AddCurrencies();
-        OnPageCountUpdateHandler();
+        OnPageCountUpdate(false);
 
     }
 
@@ -89,11 +89,18 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
         AddCurrencies();
     }
 
-    public void OnCloseWindow() {
+    public void RecieveClosedWindowNotification() {
     }
 
-    public void OnOpenWindow() {
-        OnOpenWindowHandler(this);
+    public void ReceiveOpenWindowNotification() {
+        OnOpenWindow(this);
         CreatePages();
     }
+
+    private void ClearPages() {
+        ClearButtons();
+        pages.Clear();
+        pageIndex = 0;
+    }
+
 }
