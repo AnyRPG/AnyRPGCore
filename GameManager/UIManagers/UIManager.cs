@@ -527,18 +527,18 @@ public class UIManager : MonoBehaviour {
     }
 
     public void UpdateMiniMap() {
-        Debug.Log("UIManager.UpdateMiniMap()");
+        //Debug.Log("UIManager.UpdateMiniMap()");
         if (PlayerPrefs.GetInt("UseMiniMap") == 0) {
-            Debug.Log("UIManager.UpdateMiniMap(): use minimap is false");
+            //Debug.Log("UIManager.UpdateMiniMap(): use minimap is false");
             if (miniMapController.gameObject.activeSelf) {
-                Debug.Log("UIManager.UpdateMiniMap(): use minimap is false and gameobject is active, setting active to false");
+                //Debug.Log("UIManager.UpdateMiniMap(): use minimap is false and gameobject is active, setting active to false");
                 miniMapController.gameObject.SetActive(false);
 //                miniMapController.ClearTarget();
             }
         } else if (PlayerPrefs.GetInt("UseMiniMap") == 1) {
-            Debug.Log("UIManager.UpdateMiniMap(): use minimap is true");
+            //Debug.Log("UIManager.UpdateMiniMap(): use minimap is true");
             if (!miniMapController.gameObject.activeSelf) {
-                Debug.Log("UIManager.UpdateMiniMap(): use minimap is true and gameobject is not active, setting active to true");
+                //Debug.Log("UIManager.UpdateMiniMap(): use minimap is true and gameobject is not active, setting active to true");
                 miniMapController.gameObject.SetActive(true);
             }
         }

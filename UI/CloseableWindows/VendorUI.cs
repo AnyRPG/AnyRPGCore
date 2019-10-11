@@ -69,16 +69,21 @@ public class VendorUI : WindowContentController, IPagedWindowContents {
         //Debug.Log("VendorUI.OnCloseWindow()");
         base.OnCloseWindow();
         ClearButtons();
-        pages.Clear();
+        ClearPages();
     }
 
     public override void OnOpenWindow() {
         //Debug.Log("VendorUI.OnOpenWindow()");
         ClearButtons();
-        pages.Clear();
+        ClearPages();
         base.OnOpenWindow();
         OnOpenWindowHandler(this);
         LoadPage(0);
         OnPageCountUpdateHandler();
+    }
+
+    private void ClearPages() {
+        pages.Clear();
+        pageIndex = 0;
     }
 }

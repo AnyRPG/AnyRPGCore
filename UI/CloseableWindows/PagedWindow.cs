@@ -54,8 +54,8 @@ public class PagedWindow : CloseableWindow, IScrollHandler {
             CloseWindow();
         }
 
-        previousBtn.GetComponent<Button>().enabled = (pageIndex > 0);
-        nextBtn.GetComponent<Button>().enabled = ((windowContents as IPagedWindowContents).GetPageCount() > 1 && pageIndex < (windowContents as IPagedWindowContents).GetPageCount() - 1);
+        previousBtn.GetComponent<Button>().interactable = (pageIndex > 0);
+        nextBtn.GetComponent<Button>().interactable = ((windowContents as IPagedWindowContents).GetPageCount() > 1 && pageIndex < (windowContents as IPagedWindowContents).GetPageCount() - 1);
 
         pageNumber.text = pageIndex + 1 + "/" + (windowContents as IPagedWindowContents).GetPageCount();
     }

@@ -589,13 +589,13 @@ public class MainSettingsMenuController : WindowContentController {
         Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton()");
         if (PlayerPrefs.GetInt("ShowPlayerName") == 0) {
             PlayerPrefs.SetInt("ShowPlayerName", 1);
-            Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
+            //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
             MessageFeedManager.MyInstance.WriteMessage("Show Player Name: on");
             showPlayerNameButton.Select();
         } else {
             MessageFeedManager.MyInstance.WriteMessage("Show Player Name: off");
             PlayerPrefs.SetInt("ShowPlayerName", 0);
-            Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
+            //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
             showPlayerNameButton.DeSelect();
         }
         // not really reputation, but it will trigger the right check
@@ -603,16 +603,16 @@ public class MainSettingsMenuController : WindowContentController {
     }
 
     public void ToggleShowPlayerFactionButton() {
-        Debug.Log("MainSettingsMenuController.ToggleShowPlayerFactionButton()");
+        //Debug.Log("MainSettingsMenuController.ToggleShowPlayerFactionButton()");
         if (PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
             PlayerPrefs.SetInt("ShowPlayerFaction", 1);
-            Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
+            //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
             MessageFeedManager.MyInstance.WriteMessage("Show Player Faction: on");
             showPlayerFactionButton.Select();
         } else {
             MessageFeedManager.MyInstance.WriteMessage("Show Player Faction: off");
             PlayerPrefs.SetInt("ShowPlayerFaction", 0);
-            Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
+            //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
             showPlayerFactionButton.DeSelect();
         }
         // not really reputation, but it will trigger the right check
@@ -620,7 +620,7 @@ public class MainSettingsMenuController : WindowContentController {
     }
 
     public void ToggleHideFullHealthBarButton() {
-        Debug.Log("MainSettingsMenuController.ToggleHideFullHealthBarButton()");
+        //Debug.Log("MainSettingsMenuController.ToggleHideFullHealthBarButton()");
         if (PlayerPrefs.GetInt("HideFullHealthBar") == 0) {
             PlayerPrefs.SetInt("HideFullHealthBar", 1);
             MessageFeedManager.MyInstance.WriteMessage("Hide Full Healthbar: on");
