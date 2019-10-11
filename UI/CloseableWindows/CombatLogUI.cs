@@ -65,7 +65,8 @@ public class CombatLogUI : WindowContentController {
     [SerializeField]
     private HighlightButton systemHighlightButton;
 
-    private string welcomeString = "Welcome to AnyRPG Alpha v0.3a";
+    private string welcomeString = "Welcome to";
+    private string completeWelcomeString = string.Empty;
 
     // a list to hold the messages
     //private List<string> combatMessageList = new List<string>();
@@ -92,8 +93,24 @@ public class CombatLogUI : WindowContentController {
     private void Start() {
         //Debug.Log("QuestTrackerUI.Start()");
         startHasRun = true;
-        CreateEventReferences();
+        SetWelcomeString();
         ClearLog();
+
+        // do this last because it will print the chat messages and we don't want them to just get auto-cleared again
+        CreateEventReferences();
+    }
+
+    private void SetWelcomeString() {
+        completeWelcomeString = welcomeString;
+        if (SystemConfigurationManager.MyInstance != null) {
+            if (SystemConfigurationManager.MyInstance.MyGameName != null && SystemConfigurationManager.MyInstance.MyGameName != string.Empty) {
+                completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.MyInstance.MyGameName);
+            }
+            if (SystemConfigurationManager.MyInstance.MyGameVersion != null && SystemConfigurationManager.MyInstance.MyGameVersion != string.Empty) {
+                completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.MyInstance.MyGameVersion);
+            }
+        }
+
     }
 
     public void ShowChatLog() {
@@ -178,6 +195,10 @@ public class CombatLogUI : WindowContentController {
         }
         SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;
         SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearLog;
+        SystemEventManager.MyInstance.OnPlayerConnectionSpawn += PrintWelcomeMessages;
+        if (PlayerManager.MyInstance.MyPlayerConnectionSpawned == true) {
+            PrintWelcomeMessages();
+        }
         eventReferencesInitialized = true;
     }
 
@@ -186,12 +207,24 @@ public class CombatLogUI : WindowContentController {
         if (!eventReferencesInitialized) {
             return;
         }
-        SystemEventManager.MyInstance.OnTakeDamage -= HandleTakeDamage;
-        SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearLog;
+        if (SystemEventManager.MyInstance != null) {
+            SystemEventManager.MyInstance.OnTakeDamage -= HandleTakeDamage;
+            SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearLog;
+            SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= PrintWelcomeMessages;
+        }
         eventReferencesInitialized = false;
     }
 
+    // although we usually use OnDisable, this is a static UI element, and should really keep it's references for the entire time the game is active
+    // moved to OnDestroy() instead because it was already disabled before the player connection despawned.
+    /*
     public void OnDisable() {
+        //Debug.Log("QuestTrackerUI.OnDisable()");
+        CleanupEventReferences();
+    }
+    */
+
+    public void OnDestroy() {
         //Debug.Log("QuestTrackerUI.OnDisable()");
         CleanupEventReferences();
     }
@@ -207,11 +240,40 @@ public class CombatLogUI : WindowContentController {
     }
     
     public void ClearLog() {
-        //Debug.Log("QuestTrackerUI.ClearQuests()");
+        Debug.Log("CombatLogUI.ClearLog()");
+        ClearCombatMessages();
+        ClearChatMessages();
+        ClearSystemMessages();
+    }
 
-        WriteChatMessage(welcomeString);
-        WriteCombatMessage(welcomeString);
-        WriteSystemMessage(welcomeString);
+    private void ClearCombatMessages() {
+        Debug.Log("CombatLogUI.ClearCombatMessages()");
+        foreach (GameObject go in combatMessageList) {
+            Destroy(go);
+        }
+    }
+
+    private void ClearChatMessages() {
+        Debug.Log("CombatLogUI.ClearChatMessages()");
+        foreach (GameObject go in chatMessageList) {
+            Destroy(go);
+        }
+    }
+
+    private void ClearSystemMessages() {
+        Debug.Log("CombatLogUI.ClearSystemMessages()");
+        foreach (GameObject go in systemMessageList) {
+            Destroy(go);
+        }
+    }
+
+    public void PrintWelcomeMessages() {
+        //Debug.Log("CombatLogUI.PrintWelcomeMessages()");
+
+        WriteChatMessage(completeWelcomeString);
+        WriteCombatMessage(completeWelcomeString);
+        WriteSystemMessage(completeWelcomeString);
+
     }
 
     public override void OnCloseWindow() {

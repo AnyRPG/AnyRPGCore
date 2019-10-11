@@ -94,7 +94,7 @@ public class AIPatrol : MonoBehaviour {
     }
 
     public bool PatrolComplete() {
-        Debug.Log("AIPatrol.PatrolComplete(): loopDestination: " + loopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + maxDestinations + "; destinationListCount: " + destinationList.Count);
+        //Debug.Log("AIPatrol.PatrolComplete(): loopDestination: " + loopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + maxDestinations + "; destinationListCount: " + destinationList.Count);
 
         if (randomDestinations && maxDestinations == 0) {
             //Debug.Log("AIPatrol.PatrolComplete() randomDestinations && maxDestinations == 0; return false");

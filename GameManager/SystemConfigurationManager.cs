@@ -21,7 +21,12 @@ public class SystemConfigurationManager : MonoBehaviour {
     }
     #endregion
 
-    // THESE SHOULD BE MOVED TO SOME TYPE OF GAMECONFIG MANAGER
+    [SerializeField]
+    private string gameName;
+
+    [SerializeField]
+    private string gameVersion;
+
     [SerializeField]
     private DirectAbility levelUpAbility;
 
@@ -156,6 +161,8 @@ public class SystemConfigurationManager : MonoBehaviour {
     public Sprite MyVendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
     public Sprite MyVendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
     public Sprite MyMultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
+    public string MyGameName { get => gameName; set => gameName = value; }
+    public string MyGameVersion { get => gameVersion; set => gameVersion = value; }
 
     private void Awake() {
         //Debug.Log("PlayerManager.Awake()");

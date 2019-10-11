@@ -28,7 +28,7 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public virtual void Awake() {
         // lazy instantiation
         if (moveableTransform == null) {
-            //Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
+            Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
             moveableTransform = transform;
         }
     }
@@ -44,7 +44,7 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     }
 
     public void OnDrag(PointerEventData eventData) {
-        //Debug.Log("FramedWindow.OnDrag()");
+        //Debug.Log("DraggableWindow.OnDrag()");
         if (neverDraggable) {
             return;
         }
@@ -55,7 +55,7 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     }
 
     public virtual void LockUI() {
-        //Debug.Log("DraggableWindow.LockUI()");
+        //Debug.Log(gameObject.name + ".DraggableWindow.LockUI()");
         if (!PlayerPrefs.HasKey("LockUI")) {
             return;
         }
