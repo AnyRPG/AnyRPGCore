@@ -41,7 +41,7 @@ public class PatrolState : IState {
         }
 
         if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyCharacterUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
-            Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
+            //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
             currentDestination = aiController.MyAiPatrol.GetDestination(true);
 
             // destination reached
@@ -52,7 +52,7 @@ public class PatrolState : IState {
                     aiController.ChangeState(new IdleState());
                 }
             } else {
-                Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached and patrol not complete yet!");
+                //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached and patrol not complete yet!");
                 coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
                 this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             }

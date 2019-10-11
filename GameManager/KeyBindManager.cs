@@ -147,7 +147,7 @@ public class KeyBindManager : MonoBehaviour {
     }
 
     public void BindKey(string key, KeyCode keyCode, bool control, bool shift) {
-        Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
+        //Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
 
         // since the key cannot control 2 actions, if it already exists, unbind it from that action
         UnbindKeyCode(keyBinds, keyCode, control, shift);
@@ -160,7 +160,7 @@ public class KeyBindManager : MonoBehaviour {
     }
 
     private void UnbindKeyCode(Dictionary<string, KeyBindNode> currentDictionary, KeyCode keyCode, bool control, bool shift) {
-        Debug.Log("KeyBindManager.UnbindKeyCode()");
+        //Debug.Log("KeyBindManager.UnbindKeyCode()");
         foreach (KeyBindNode keyBindNode in currentDictionary.Values) {
             if (keyBindNode.MyKeyCode == keyCode && keyBindNode.MyShift == shift && keyBindNode.MyControl == control) {
                 keyBindNode.MyKeyCode = KeyCode.None;
@@ -183,7 +183,7 @@ public class KeyBindManager : MonoBehaviour {
     */
 
     public void BeginKeyBind(string key) {
-        Debug.Log("KeyBindManager.BeginKeyBind(" + key + ")");
+        //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ")");
         this.bindName = key;
         SystemWindowManager.MyInstance.keyBindConfirmWindow.OpenWindow();
     }
@@ -193,7 +193,7 @@ public class KeyBindManager : MonoBehaviour {
         if (bindName != string.Empty) {
             //Debug.Log("KeyBindManager.OnGUI(): bindName: " + bindName);
             Event e = Event.current;
-            if (e.isKey) {
+            if (e.isKey && e.keyCode != KeyCode.LeftShift && e.keyCode != KeyCode.RightShift && e.keyCode != KeyCode.LeftControl && e.keyCode != KeyCode.RightControl) {
                 //Debug.Log("KeyBindManager.OnGUI(): the bind was a key");
                 BindKey(bindName, e.keyCode, e.control, e.shift);
             }

@@ -260,7 +260,7 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
     }
 
     public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-        Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
+        //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
         //gameObject.SetActive(false);
         // TEST ADDING A MANDATORY DELAY
         if (despawnCoroutine == null) {

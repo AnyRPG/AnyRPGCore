@@ -28,7 +28,7 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public virtual void Awake() {
         // lazy instantiation
         if (moveableTransform == null) {
-            Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
+            //Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
             moveableTransform = transform;
         }
     }

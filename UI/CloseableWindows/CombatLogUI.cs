@@ -240,28 +240,28 @@ public class CombatLogUI : WindowContentController {
     }
     
     public void ClearLog() {
-        Debug.Log("CombatLogUI.ClearLog()");
+        //Debug.Log("CombatLogUI.ClearLog()");
         ClearCombatMessages();
         ClearChatMessages();
         ClearSystemMessages();
     }
 
     private void ClearCombatMessages() {
-        Debug.Log("CombatLogUI.ClearCombatMessages()");
+        //Debug.Log("CombatLogUI.ClearCombatMessages()");
         foreach (GameObject go in combatMessageList) {
             Destroy(go);
         }
     }
 
     private void ClearChatMessages() {
-        Debug.Log("CombatLogUI.ClearChatMessages()");
+        //Debug.Log("CombatLogUI.ClearChatMessages()");
         foreach (GameObject go in chatMessageList) {
             Destroy(go);
         }
     }
 
     private void ClearSystemMessages() {
-        Debug.Log("CombatLogUI.ClearSystemMessages()");
+        //Debug.Log("CombatLogUI.ClearSystemMessages()");
         foreach (GameObject go in systemMessageList) {
             Destroy(go);
         }
