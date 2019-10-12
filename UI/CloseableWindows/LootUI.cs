@@ -90,11 +90,15 @@ public class LootUI : WindowContentController, IPagedWindowContents {
         //Debug.Log("LootUI.TakeAllLoot()");
 
         // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
-        while (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() > 0) {
+        int maximumLoopCount = droppedLoot.Count;
+        int currentLoopCount = 0;
+        while (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && lootButtons.Length > 0) {
             foreach (LootButton lootButton in lootButtons) {
+                Debug.Log("LootUI.TakeAllLoot(): droppedItems.Count: " + droppedLoot.Count);
                 if (lootButton.gameObject.activeSelf == true) {
                     lootButton.TakeLoot();
                 }
+                currentLoopCount++;
             }
         }
 
@@ -106,12 +110,23 @@ public class LootUI : WindowContentController, IPagedWindowContents {
         }
     }
 
+    private void RemoveFromDroppedItems(Item removeItem) {
+
+        foreach (LootDrop lootDrop in droppedLoot) {
+            if (lootDrop.MyItem == removeItem) {
+                droppedLoot.Remove(lootDrop);
+                return;
+            }
+        }
+    }
+
     public void TakeLoot(Item loot) {
         //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
         LootDrop lootDrop = pages[pageIndex].Find(x => x.MyItem.MyName == loot.MyName);
 
         pages[pageIndex].Remove(lootDrop);
+        RemoveFromDroppedItems(loot);
         lootDrop.Remove();
         SystemEventManager.MyInstance.NotifyOnTakeLoot();
 
