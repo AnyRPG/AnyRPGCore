@@ -149,11 +149,11 @@ public class PlayerCombat : CharacterCombat {
 
 
     public void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
+        onHitAbility = null;
         if (newItem != null) {
             //Debug.Log(gameObject.name + "Equipping " + newItem.name);
             if (newItem.equipSlot == EquipmentSlot.MainHand) {
                 //Debug.Log(newItem.name + " is a weapon.");
-                onHitAbility = null;
                 overrideHitSoundEffect = null;
                 defaultHitSoundEffect = null;
                 if (newItem is Weapon && (newItem as Weapon).OnHitAbility != null) {
