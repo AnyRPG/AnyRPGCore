@@ -321,7 +321,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     /// </summary>
     /// <param name="ability"></param>
     public void BeginAbility(IAbility ability) {
-        //Debug.Log("CharacterAbilitymanager.BeginAbility()");
+        Debug.Log("CharacterAbilitymanager.BeginAbility()");
         if (ability == null) {
             //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
             return;
@@ -337,7 +337,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     }
 
     private void BeginAbilityCommon(IAbility ability, GameObject target) {
-        //Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
+        Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
         IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
         string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
 
@@ -365,7 +365,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
         // perform ability dependent checks
         if (!usedAbility.CanUseOn(finalTarget, baseCharacter as BaseCharacter) == true) {
-            //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
+            Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
             return;
         }
 

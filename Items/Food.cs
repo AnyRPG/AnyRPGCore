@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Scroll", menuName = "Inventory/Items/Scroll", order = 1)]
-public class Scroll : CastableItem {
+[CreateAssetMenu(fileName = "New Food", menuName = "Inventory/Items/Food", order = 1)]
+public class Food : CastableItem {
 
     /*
     public override void Use() {
@@ -15,11 +15,11 @@ public class Scroll : CastableItem {
     */
 
     public override string GetSummary() {
-        string abilityName = "Ability Not Set In Inspector!";
+        string returnString = base.GetSummary();
         if (ability != null) {
-            abilityName = ability.MyName;
+            returnString += string.Format("\n<color=green>Use: {0}</color>", ability.MyDescription);
         }
-        return string.Format("{0}\n<color=green>Use: Cast {1}</color>", base.GetSummary(), abilityName);
+        return returnString;
     }
 
 

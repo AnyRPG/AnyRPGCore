@@ -243,7 +243,9 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
         if (statusEffect.MyFactionModifiers.Count > 0) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING REPUTATION CHANGED");
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.NotifyOnReputationChange();
+            }
         }
     }
 
