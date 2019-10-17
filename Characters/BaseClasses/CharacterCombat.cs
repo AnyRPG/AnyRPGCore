@@ -9,6 +9,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
     public virtual event System.Action<BaseCharacter, float> OnKillEvent = delegate { };
     public virtual event System.Action<BaseCharacter> OnAttack = delegate { };
     public virtual event System.Action OnDropCombat = delegate { };
+    public virtual event System.Action OnEnterCombat = delegate { };
     public virtual event System.Action<BaseCharacter, GameObject> OnHitEvent = delegate { };
 
     protected bool startHasRun = false;
@@ -276,6 +277,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
         // maybe do this in update?
         baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("InCombat", true);
         inCombat = true;
+        OnEnterCombat();
         if (aggroTable.AddToAggroTable(target.MyCharacterUnit, 0)) {
             return true;
         }

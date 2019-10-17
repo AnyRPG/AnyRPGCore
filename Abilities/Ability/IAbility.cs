@@ -22,6 +22,8 @@ public interface IAbility {
     float MyRemainingCoolDown { get; set; }
     AnimationClip MyAnimationClip { get; set; }
     AnimationClip MyCastingAnimationClip { get; set; }
+    string MyHoldableObjectName { get; set; }
+    AudioClip MyCastingAudioClip { get; set; }
 
 
     bool CanUseOn(GameObject target, BaseCharacter source);

@@ -15,6 +15,12 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     public List<AnyRPGWeaponAffinity> MyWeaponAffinity { get => weaponAffinity; set => weaponAffinity = value; }
 
+    [SerializeField]
+    protected string holdableObjectName;
+
+    [SerializeField]
+    protected AudioClip castingAudioClip;
+
     // on hit animation
     [SerializeField]
     protected AnimationClip animationClip = null;
@@ -124,6 +130,8 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     public bool MyCanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
     public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
     public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
+    public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
+    public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
 
     public override string GetSummary() {
         string requireString = string.Empty;

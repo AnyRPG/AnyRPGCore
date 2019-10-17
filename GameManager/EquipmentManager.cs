@@ -28,8 +28,12 @@ public class EquipmentManager : MonoBehaviour {
 
     private Transform targetBone;
 
+    // the holdable object spawned during an ability cast and removed when the cast is complete
+    private GameObject abilityObject;
+
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
+    protected bool subscribedToCombatEvents = false;
 
     public Dictionary<EquipmentSlot, Equipment> MyCurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
 
@@ -73,10 +77,37 @@ public class EquipmentManager : MonoBehaviour {
     public void OnPlayerUnitSpawn() {
         //Debug.Log("EquipmentManager.OnPlayerUnitSpawn()");
         EquipCharacter();
+        SubscribeToCombatEvents();
     }
 
     public void OnPlayerUnitDespawn() {
         //Debug.Log("EquipmentManager.OnPlayerUnitDespawn()");
+        UnSubscribeFromCombatEvents();
+    }
+
+    private void SubscribeToCombatEvents() {
+        //Debug.Log("PlayerManager.CreateEventReferences()");
+        if (subscribedToCombatEvents || !startHasRun) {
+            return;
+        }
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HoldWeapons;
+            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += SheathWeapons;
+
+        }
+        subscribedToCombatEvents = true;
+    }
+
+    private void UnSubscribeFromCombatEvents() {
+        //Debug.Log("PlayerManager.CleanupEventReferences()");
+        if (!subscribedToCombatEvents) {
+            return;
+        }
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HoldWeapons;
+            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= SheathWeapons;
+        }
+        subscribedToCombatEvents = false;
     }
 
     // This method does not actually equip the character, just apply stats and models from already equipped equipment
@@ -136,27 +167,128 @@ public class EquipmentManager : MonoBehaviour {
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): playerUnitObject is null and player unit is not spawned.  returning.");
             return;
         }
+        if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty) {
+            Debug.Log("EquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
+            return;
+        }
+        HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(newItem.MyHoldableObjectName);
+        if (holdableObject == null) {
+            Debug.Log("EquipmentManager.HandleWeaponSlot(): holdableObject is null");
+            return;
+        }
         GameObject usedObject = (playerUnitObject == null ? PlayerManager.MyInstance.MyPlayerUnitObject : playerUnitObject);
-        if (newItem.PhysicalPrefab != null) {
+        if (holdableObject.MyPhysicalPrefab != null) {
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
             // attach a mesh to a bone for weapons
-            targetBone = usedObject.transform.Find(newItem.TargetBone);
+            targetBone = usedObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
             if (targetBone != null) {
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                GameObject newEquipmentPrefab = Instantiate(newItem.PhysicalPrefab, targetBone, false);
+                GameObject newEquipmentPrefab = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned && usedObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
                     currentEquipmentPhysicalObjects[newItem.equipSlot] = newEquipmentPrefab;
                 }
-                newEquipmentPrefab.transform.localPosition = newItem.PhysicalPosition;
-                newEquipmentPrefab.transform.localEulerAngles = newItem.PhysicalRotation;
-                newEquipmentPrefab.transform.localScale = newItem.PhysicalScale;
+                newEquipmentPrefab.transform.localScale = holdableObject.MyPhysicalScale;
+                if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                    HoldObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
+                } else {
+                    SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
+                }
             } else {
-                //Debug.Log("We could not find the target bone " + newItem.TargetBone + " when trying to Equip " + newItem.MyName);
+                Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
             }
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && usedObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): Player Unit is spawned and the object we are using as the player unit, go ahead and animate attacks");
                 (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator as PlayerAnimator).OnEquipmentChanged(newItem, null);
             }
+        }
+    }
+
+    public void SpawnAbilityObject(string holdableObjectName) {
+        HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+        if (holdableObject == null) {
+            Debug.Log("EquipmentManager.SpawnAbilityObject(): holdableObject is null");
+            return;
+        }
+
+        if (holdableObject.MyPhysicalPrefab != null) {
+            targetBone = PlayerManager.MyInstance.MyPlayerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+            if (targetBone != null) {
+                //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
+                abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
+                HoldObject(abilityObject, holdableObject.MyName, PlayerManager.MyInstance.MyPlayerUnitObject);
+            } else {
+                Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone);
+            }
+
+        }
+    }
+
+    public void DespawnAbilityObject() {
+        if (abilityObject != null) {
+            Destroy(abilityObject);
+        }
+    }
+
+    public void SheathWeapons() {
+        if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
+            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+        }
+        if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
+            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+        }
+    }
+
+    public void HoldWeapons() {
+        if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
+            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+        }
+        if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
+            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+        }
+    }
+
+    public void SheathObject(GameObject go, string holdableObjectName, GameObject searchObject) {
+        if (searchObject == null) {
+            Debug.Log("EquipmentManager.SheathObject(): searchObject is null");
+            return;
+        }
+        if (holdableObjectName == null || holdableObjectName == string.Empty) {
+            Debug.Log("EquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            return;
+        }
+        HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+        if (holdableObject == null) {
+            Debug.Log("EquipmentManager.SheathObject(): holdableObject is null");
+            return;
+        }
+        targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
+        if (targetBone != null) {
+            Debug.Log("EquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
+            go.transform.parent = targetBone;
+            go.transform.localPosition = holdableObject.MySheathedPhysicalPosition;
+            go.transform.localEulerAngles = holdableObject.MySheathedPhysicalRotation;
+        } else {
+            Debug.Log("EquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
+        }
+
+    }
+
+    public void HoldObject(GameObject go, string holdableObjectName, GameObject searchObject) {
+        if (holdableObjectName == null || holdableObjectName == string.Empty) {
+            Debug.Log("EquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            return;
+        }
+        HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+        if (holdableObject == null) {
+            Debug.Log("EquipmentManager.SheathObject(): holdableObject is null");
+            return;
+        }
+        targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+        if (targetBone != null) {
+            go.transform.parent = targetBone;
+            go.transform.localPosition = holdableObject.MyPhysicalPosition;
+            go.transform.localEulerAngles = holdableObject.MyPhysicalRotation;
         }
     }
 

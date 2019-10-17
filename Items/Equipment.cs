@@ -44,6 +44,9 @@ public class Equipment : Item {
     [SerializeField]
     private string targetBone;
 
+    [SerializeField]
+    private string holdableObjectName;
+
     public int armorModifier;
     public int damageModifier;
 
@@ -73,6 +76,7 @@ public class Equipment : Item {
     public int MyAgilityModifier { get => agilityModifier; set => agilityModifier = value; }
     public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
     public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+    public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
 
     public override void Start() {
         base.Start();
