@@ -168,7 +168,7 @@ public class EquipmentManager : MonoBehaviour {
             return;
         }
         if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty) {
-            Debug.Log("EquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
+            //Debug.Log("EquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(newItem.MyHoldableObjectName);
@@ -188,7 +188,7 @@ public class EquipmentManager : MonoBehaviour {
                     currentEquipmentPhysicalObjects[newItem.equipSlot] = newEquipmentPrefab;
                 }
                 newEquipmentPrefab.transform.localScale = holdableObject.MyPhysicalScale;
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
                     HoldObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
                 } else {
                     SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
