@@ -195,12 +195,14 @@ public class CharacterMotor : MonoBehaviour {
             OnMovement();
             if (characterUnit.MyCharacterAnimator != null) {
                 characterUnit.MyCharacterAnimator.SetMoving(true);
-                characterUnit.MyCharacterAnimator.SetVelocityZ(characterUnit.MyAgent.velocity.magnitude);
+                //characterUnit.MyCharacterAnimator.SetVelocityZ(characterUnit.MyAgent.velocity.magnitude);
+                characterUnit.MyCharacterAnimator.SetVelocity(characterUnit.MyAgent.velocity);
             }
         } else {
             if (characterUnit.MyCharacterAnimator != null) {
                 characterUnit.MyCharacterAnimator.SetMoving(false);
-                characterUnit.MyCharacterAnimator.SetVelocityZ(0);
+                //characterUnit.MyCharacterAnimator.SetVelocityZ(0);
+                characterUnit.MyCharacterAnimator.SetVelocity(Vector3.zero);
             }
         }
 

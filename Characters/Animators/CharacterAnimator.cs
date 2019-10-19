@@ -24,6 +24,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     protected bool initialized = false;
 
+    // in combat animations
     private float baseWalkAnimationSpeed = 1f;
     private float baseRunAnimationSpeed = 3.4f;
     private float baseWalkStrafeRightAnimationSpeed = 1f;
@@ -37,6 +38,22 @@ public class CharacterAnimator : MonoBehaviour {
     private float baseWalkStrafeForwardLeftAnimationSpeed = 1f;
     private float baseJogStrafeForwardLeftAnimationSpeed = 2.67f;
     private float baseWalkBackAnimationSpeed = 1.6f;
+
+    // in combat animations
+    private float baseCombatWalkAnimationSpeed = 1f;
+    private float baseCombatRunAnimationSpeed = 3.4f;
+    private float baseCombatWalkStrafeRightAnimationSpeed = 1f;
+    private float baseCombatJogStrafeRightAnimationSpeed = 2.4f;
+    private float baseCombatWalkStrafeBackRightAnimationSpeed = 1f;
+    private float baseCombatWalkStrafeForwardRightAnimationSpeed = 1f;
+    private float baseCombatJogStrafeForwardRightAnimationSpeed = 2.67f;
+    private float baseCombatWalkStrafeLeftAnimationSpeed = 1f;
+    private float baseCombatJogStrafeLeftAnimationSpeed = 2.4f;
+    private float baseCombatWalkStrafeBackLeftAnimationSpeed = 1f;
+    private float baseCombatWalkStrafeForwardLeftAnimationSpeed = 1f;
+    private float baseCombatJogStrafeForwardLeftAnimationSpeed = 2.67f;
+    private float baseCombatWalkBackAnimationSpeed = 1.6f;
+
 
     private Coroutine attackCoroutine = null;
     private Coroutine resurrectionCoroutine = null;
@@ -164,7 +181,6 @@ public class CharacterAnimator : MonoBehaviour {
         if (currentAttackAnimationProfile.MyMoveForwardClip != null) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): WalkForward is not null.");
             overrideController["AnyRPGWalkForward"] = currentAttackAnimationProfile.MyMoveForwardClip;
-            overrideController["AnyRPGUnarmedStrafeForward"] = currentAttackAnimationProfile.MyMoveForwardClip;
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): MyMoveForwardClip." + currentAttackAnimationProfile.MyMoveForwardClip.averageSpeed);
             if (currentAttackAnimationProfile.MyMoveForwardClip.averageSpeed.z > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 1
@@ -172,38 +188,80 @@ public class CharacterAnimator : MonoBehaviour {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
             }
         }
+        if (currentAttackAnimationProfile.MyCombatMoveForwardClip != null) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): WalkForward is not null.");
+            overrideController["AnyRPGCombatUnarmedStrafeForward"] = currentAttackAnimationProfile.MyCombatMoveForwardClip;
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): MyMoveForwardClip." + currentAttackAnimationProfile.MyMoveForwardClip.averageSpeed);
+            if (currentAttackAnimationProfile.MyCombatMoveForwardClip.averageSpeed.z > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 1
+                baseCombatWalkAnimationSpeed = currentAttackAnimationProfile.MyCombatMoveForwardClip.averageSpeed.z;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
+            }
+        }
         if (currentAttackAnimationProfile.MyMoveForwardFastClip != null) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): JogForward is not null.");
             overrideController["AnyRPGJogForward"] = currentAttackAnimationProfile.MyMoveForwardFastClip;
-            overrideController["AnyRPGUnarmedRunForward"] = currentAttackAnimationProfile.MyMoveForwardFastClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyMoveForwardFastClip.averageSpeed.z) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseRunAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyMoveForwardFastClip.averageSpeed.z);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
             }
         }
-
-        if (currentAttackAnimationProfile.MyDeathClip != null) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): Death is not null.");
-            overrideController["AnyRPGUnarmedDeath1"] = currentAttackAnimationProfile.MyDeathClip;
+        if (currentAttackAnimationProfile.MyCombatMoveForwardFastClip != null) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): JogForward is not null.");
+            overrideController["AnyRPGCombatUnarmedRunForward"] = currentAttackAnimationProfile.MyCombatMoveForwardFastClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveForwardFastClip.averageSpeed.z) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatRunAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveForwardFastClip.averageSpeed.z);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
         }
+        if (currentAttackAnimationProfile.MyMoveBackClip != null) {
+            overrideController["AnyRPGWalkBackward"] = currentAttackAnimationProfile.MyMoveBackClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyMoveBackClip.averageSpeed.z) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseWalkBackAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyMoveBackClip.averageSpeed.z);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatMoveBackClip != null) {
+            overrideController["AnyRPGCombatUnarmedMoveBack"] = currentAttackAnimationProfile.MyCombatMoveBackClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveBackClip.averageSpeed.z) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkBackAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveBackClip.averageSpeed.z);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+
+
         if (currentAttackAnimationProfile.MyJumpClip != null) {
             overrideController["AnyRPGUnarmedJump"] = currentAttackAnimationProfile.MyJumpClip;
+        }
+        if (currentAttackAnimationProfile.MyCombatJumpClip != null) {
+            overrideController["AnyRPGCombatUnarmedJump"] = currentAttackAnimationProfile.MyCombatJumpClip;
         }
         if (currentAttackAnimationProfile.MyIdleClip != null) {
             overrideController["AnyRPGIdleNeutral"] = currentAttackAnimationProfile.MyIdleClip;
         }
         if (currentAttackAnimationProfile.MyCombatIdleClip != null) {
-            overrideController["AnyRPGUnarmedIdle"] = currentAttackAnimationProfile.MyCombatIdleClip;
+            overrideController["AnyRPGCombatUnarmedIdle"] = currentAttackAnimationProfile.MyCombatIdleClip;
         }
         if (currentAttackAnimationProfile.MyLandClip != null) {
             overrideController["AnyRPGUnarmedLand"] = currentAttackAnimationProfile.MyLandClip;
         }
+        if (currentAttackAnimationProfile.MyCombatLandClip != null) {
+            overrideController["AnyRPGCombatUnarmedLand"] = currentAttackAnimationProfile.MyCombatLandClip;
+        }
         if (currentAttackAnimationProfile.MyFallClip != null) {
             overrideController["AnyRPGUnarmedFall"] = currentAttackAnimationProfile.MyFallClip;
         }
+        if (currentAttackAnimationProfile.MyCombatFallClip != null) {
+            overrideController["AnyRPGCombatUnarmedFall"] = currentAttackAnimationProfile.MyCombatFallClip;
+        }
+
+        // out of combat strafing
         if (currentAttackAnimationProfile.MyStrafeLeftClip != null) {
-            overrideController["AnyRPGUnarmedStrafeLeft"] = currentAttackAnimationProfile.MyStrafeLeftClip;
+            overrideController["AnyRPGWalkStrafeLeft"] = currentAttackAnimationProfile.MyStrafeLeftClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeLeftClip.averageSpeed.x) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeLeftClip.averageSpeed.x);
@@ -211,7 +269,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyJogStrafeLeftClip != null) {
-            overrideController["AnyRPGUnarmedJogStrafeLeft"] = currentAttackAnimationProfile.MyJogStrafeLeftClip;
+            overrideController["AnyRPGJogStrafeLeft"] = currentAttackAnimationProfile.MyJogStrafeLeftClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeLeftClip.averageSpeed.x) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeLeftClip.averageSpeed.x);
@@ -219,7 +277,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyStrafeRightClip != null) {
-            overrideController["AnyRPGUnarmedStrafeRight"] = currentAttackAnimationProfile.MyStrafeRightClip;
+            overrideController["AnyRPGWalkStrafeRight"] = currentAttackAnimationProfile.MyStrafeRightClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeRightClip.averageSpeed.x) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeRightClip.averageSpeed.x);
@@ -227,7 +285,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyJogStrafeRightClip != null) {
-            overrideController["AnyRPGUnarmedJogStrafeRight"] = currentAttackAnimationProfile.MyJogStrafeRightClip;
+            overrideController["AnyRPGJogStrafeRight"] = currentAttackAnimationProfile.MyJogStrafeRightClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeRightClip.averageSpeed.x) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseJogStrafeRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeRightClip.averageSpeed.x);
@@ -235,7 +293,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyStrafeForwardRightClip != null) {
-            overrideController["AnyRPGUnarmedStrafeForwardRight"] = currentAttackAnimationProfile.MyStrafeForwardRightClip;
+            overrideController["AnyRPGWalkStrafeForwardRight"] = currentAttackAnimationProfile.MyStrafeForwardRightClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeForwardRightClip.averageSpeed.magnitude);
@@ -243,7 +301,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyJogStrafeForwardRightClip != null) {
-            overrideController["AnyRPGUnarmedStrafeForwardRight"] = currentAttackAnimationProfile.MyJogStrafeForwardRightClip;
+            overrideController["AnyRPGJogStrafeForwardRight"] = currentAttackAnimationProfile.MyJogStrafeForwardRightClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeForwardRightClip.averageSpeed.magnitude);
@@ -251,7 +309,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyStrafeForwardLeftClip != null) {
-            overrideController["AnyRPGUnarmedStrafeForwardLeft"] = currentAttackAnimationProfile.MyStrafeForwardLeftClip;
+            overrideController["AnyRPGWalkStrafeForwardLeft"] = currentAttackAnimationProfile.MyStrafeForwardLeftClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeForwardLeftClip.averageSpeed.magnitude);
@@ -259,7 +317,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyJogStrafeForwardLeftClip != null) {
-            overrideController["AnyRPGUnarmedJogStrafeForwardLeft"] = currentAttackAnimationProfile.MyJogStrafeForwardLeftClip;
+            overrideController["AnyRPGJogStrafeForwardLeft"] = currentAttackAnimationProfile.MyJogStrafeForwardLeftClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeForwardLeftClip.averageSpeed.magnitude);
@@ -267,7 +325,7 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyStrafeBackLeftClip != null) {
-            overrideController["AnyRPGUnarmedStrafeBackLeft"] = currentAttackAnimationProfile.MyStrafeBackLeftClip;
+            overrideController["AnyRPGWalkStrafeBackLeft"] = currentAttackAnimationProfile.MyStrafeBackLeftClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackLeftClip.averageSpeed.magnitude);
@@ -275,20 +333,101 @@ public class CharacterAnimator : MonoBehaviour {
             }
         }
         if (currentAttackAnimationProfile.MyStrafeBackRightClip != null) {
-            overrideController["AnyRPGUnarmedStrafeBackRight"] = currentAttackAnimationProfile.MyStrafeBackRightClip;
+            overrideController["AnyRPGWalkStrafeBackRight"] = currentAttackAnimationProfile.MyStrafeBackRightClip;
             if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
                 baseWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackRightClip.averageSpeed.magnitude);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
             }
         }
-        if (currentAttackAnimationProfile.MyMoveBackClip != null) {
-            overrideController["AnyRPGUnarmedMoveBack"] = currentAttackAnimationProfile.MyMoveBackClip;
-            if (Mathf.Abs(currentAttackAnimationProfile.MyMoveBackClip.averageSpeed.z) > 0.1) {
+
+
+        // combat strafing
+        if (currentAttackAnimationProfile.MyCombatStrafeLeftClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeLeft"] = currentAttackAnimationProfile.MyCombatStrafeLeftClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeLeftClip.averageSpeed.x) > 0.1) {
                 // our clip has forward motion.  override the default animation motion speed of 2
-                baseWalkBackAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyMoveBackClip.averageSpeed.z);
+                baseCombatWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeLeftClip.averageSpeed.x);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
             }
+        }
+        if (currentAttackAnimationProfile.MyCombatJogStrafeLeftClip != null) {
+            overrideController["AnyRPGCombatUnarmedJogStrafeLeft"] = currentAttackAnimationProfile.MyCombatJogStrafeLeftClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeLeftClip.averageSpeed.x) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeLeftClip.averageSpeed.x);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatStrafeRightClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeRight"] = currentAttackAnimationProfile.MyCombatStrafeRightClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeRightClip.averageSpeed.x) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeRightClip.averageSpeed.x);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatJogStrafeRightClip != null) {
+            overrideController["AnyRPGCombatUnarmedJogStrafeRight"] = currentAttackAnimationProfile.MyCombatJogStrafeRightClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeRightClip.averageSpeed.x) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatJogStrafeRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeRightClip.averageSpeed.x);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatStrafeForwardRightClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeForwardRight"] = currentAttackAnimationProfile.MyCombatStrafeForwardRightClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeForwardRightClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatJogStrafeForwardRightClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeForwardRight"] = currentAttackAnimationProfile.MyCombatJogStrafeForwardRightClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeForwardRightClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatStrafeForwardLeftClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeForwardLeft"] = currentAttackAnimationProfile.MyCombatStrafeForwardLeftClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeForwardLeftClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatJogStrafeForwardLeftClip != null) {
+            overrideController["AnyRPGCombatUnarmedJogStrafeForwardLeft"] = currentAttackAnimationProfile.MyCombatJogStrafeForwardLeftClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeForwardLeftClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatStrafeBackLeftClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeBackLeft"] = currentAttackAnimationProfile.MyCombatStrafeBackLeftClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackLeftClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+        if (currentAttackAnimationProfile.MyCombatStrafeBackRightClip != null) {
+            overrideController["AnyRPGCombatUnarmedStrafeBackRight"] = currentAttackAnimationProfile.MyCombatStrafeBackRightClip;
+            if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                // our clip has forward motion.  override the default animation motion speed of 2
+                baseCombatWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackRightClip.averageSpeed.magnitude);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+            }
+        }
+
+
+        if (currentAttackAnimationProfile.MyDeathClip != null) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): Death is not null.");
+            overrideController["AnyRPGUnarmedDeath1"] = currentAttackAnimationProfile.MyDeathClip;
         }
         if (currentAttackAnimationProfile.MyStunnedClip != null) {
             overrideController["AnyRPGUnarmedStunned"] = currentAttackAnimationProfile.MyStunnedClip;
@@ -547,6 +686,38 @@ public class CharacterAnimator : MonoBehaviour {
         float usedBaseAnimationSpeed = 1;
         float multiplier = 1;
 
+        float usedBaseMoveForwardAnimationSpeed;
+        float usedbaseWalkBackAnimationSpeed;
+        float usedBaseStrafeLeftAnimationSpeed;
+        float usedBaseStrafeRightAnimationSpeed;
+        float usedBaseWalkStrafeBackRightAnimationSpeed;
+        float usedBaseWalkStrafeBackLeftAnimationSpeed;
+        float usedBaseStrafeForwardLeftAnimationSpeed;
+        float usedBaseStrafeForwardRightAnimationSpeed;
+
+
+        if (characterUnit.MyCharacter.MyCharacterCombat != null && characterUnit.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+            // in combat
+            usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
+            usedbaseWalkBackAnimationSpeed = baseCombatWalkBackAnimationSpeed;
+            usedBaseStrafeLeftAnimationSpeed = (absValue > baseCombatJogStrafeLeftAnimationSpeed ? baseCombatJogStrafeLeftAnimationSpeed : baseCombatWalkStrafeLeftAnimationSpeed);
+            usedBaseStrafeRightAnimationSpeed = (absValue > baseCombatJogStrafeRightAnimationSpeed ? baseCombatJogStrafeRightAnimationSpeed : baseCombatWalkStrafeRightAnimationSpeed);
+            usedBaseWalkStrafeBackRightAnimationSpeed = baseCombatWalkStrafeBackRightAnimationSpeed;
+            usedBaseWalkStrafeBackLeftAnimationSpeed = baseCombatWalkStrafeBackLeftAnimationSpeed;
+            usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseCombatJogStrafeForwardLeftAnimationSpeed ? baseCombatJogStrafeForwardLeftAnimationSpeed : baseCombatWalkStrafeForwardLeftAnimationSpeed);
+            usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseCombatJogStrafeForwardRightAnimationSpeed ? baseCombatJogStrafeForwardRightAnimationSpeed : baseCombatWalkStrafeForwardRightAnimationSpeed);
+        } else {
+            // out of combat
+            usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+            usedbaseWalkBackAnimationSpeed = baseWalkBackAnimationSpeed;
+            usedBaseStrafeLeftAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
+            usedBaseStrafeRightAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
+            usedBaseWalkStrafeBackRightAnimationSpeed = baseWalkStrafeBackRightAnimationSpeed;
+            usedBaseWalkStrafeBackLeftAnimationSpeed = baseWalkStrafeBackLeftAnimationSpeed;
+            usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
+            usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
+        }
+
         if (absXValue < (absZValue / 2) && varValue.z > 0) {
             // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
             //} else if (varValue.x == 0 && varValue.z > 0) {
@@ -554,38 +725,38 @@ public class CharacterAnimator : MonoBehaviour {
             //usedBaseAnimationSpeed = (absZValue <= 1 ? baseWalkAnimationSpeed : baseRunAnimationSpeed);
             //usedBaseAnimationSpeed = (absZValue > baseWalkAnimationSpeed ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
             // since jog forward animation is hardcoded to 2 or more in animator, switched condition below to match
-            usedBaseAnimationSpeed = (absZValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+            usedBaseAnimationSpeed = usedBaseMoveForwardAnimationSpeed;
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): run: " + baseRunAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; used: " + usedBaseAnimationSpeed);
             //multiplier = varValue.z;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (absXValue < (absZValue / 2) && varValue.z < 0) {
             //} else if (varValue.x == 0 && varValue.z < 0) {
             // run back
-            usedBaseAnimationSpeed = baseWalkBackAnimationSpeed;
+            usedBaseAnimationSpeed = usedbaseWalkBackAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x > 0 && absZValue < (absXValue / 2)) {
             // strafe right
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
+            usedBaseAnimationSpeed = usedBaseStrafeLeftAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x < 0 && absZValue < (absXValue / 2)) {
             // strafe left
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
+            usedBaseAnimationSpeed = usedBaseStrafeRightAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x > 0 && varValue.z < 0) {
             // strafe back right
-            usedBaseAnimationSpeed = baseWalkStrafeBackRightAnimationSpeed;
+            usedBaseAnimationSpeed = usedBaseWalkStrafeBackRightAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x < 0 && varValue.z < 0) {
             // strafe back left
-            usedBaseAnimationSpeed = baseWalkStrafeBackLeftAnimationSpeed;
+            usedBaseAnimationSpeed = usedBaseWalkStrafeBackLeftAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x < 0 && varValue.z > 0) {
             // strafe forward left
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
+            usedBaseAnimationSpeed = usedBaseStrafeForwardLeftAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         } else if (varValue.x > 0 && varValue.z > 0) {
             // strafe forward right
-            usedBaseAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
+            usedBaseAnimationSpeed = usedBaseStrafeForwardRightAnimationSpeed;
             multiplier = (absValue / usedBaseAnimationSpeed);
         }
         //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed);
