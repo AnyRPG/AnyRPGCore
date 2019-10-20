@@ -85,6 +85,9 @@ public class CharacterCreatorManager : MonoBehaviour {
             previewUnit.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             previewUnit.GetComponent<Rigidbody>().useGravity = false;
         }
+
+        previewUnit.AddComponent<CharacterEquipmentManager>().CreateComponentReferences();
+
     }
 
     public void HandleCloseWindow() {

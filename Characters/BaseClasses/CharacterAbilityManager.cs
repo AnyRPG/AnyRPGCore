@@ -280,7 +280,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
             //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
             if (ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectName != null && ability.MyHoldableObjectName != string.Empty) {
-                EquipmentManager.MyInstance.SpawnAbilityObject(ability.MyHoldableObjectName);
+                baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectName);
             }
             if (ability.MyCastingAudioClip != null) {
                 AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
@@ -297,7 +297,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
                 yield return null;
             }
-            EquipmentManager.MyInstance.DespawnAbilityObject();
+            baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
 
         }
 
@@ -446,7 +446,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
             StopCoroutine(currentCast);
             currentCast = null;
-            EquipmentManager.MyInstance.DespawnAbilityObject();
+            baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
 
         } else {
             //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");

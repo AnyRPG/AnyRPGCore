@@ -52,6 +52,8 @@ public class LoadGamePanel : WindowContentController {
 
     private DynamicCharacterAvatar umaAvatar;
 
+    private AnyRPGSaveData anyRPGSaveData;
+
     public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
     public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
@@ -83,10 +85,12 @@ public class LoadGamePanel : WindowContentController {
         selectedLoadGameButton = loadGameButton;
 
         SaveManager.MyInstance.ClearSharedData();
-        SaveManager.MyInstance.LoadSharedData(loadGameButton.MySaveData);
+        SaveManager.MyInstance.SetPlayerManagerPrefab(loadGameButton.MySaveData);
 
         ClearPreviewTarget();
         SetPreviewTarget();
+
+        anyRPGSaveData = loadGameButton.MySaveData;
     }
 
     public void ClearPreviewTarget() {
@@ -132,9 +136,9 @@ public class LoadGamePanel : WindowContentController {
 
 
     public void SetPreviewTarget() {
-        //Debug.Log("CharacterPanel.SetPreviewTarget()");
+        Debug.Log("CharacterPanel.SetPreviewTarget()");
         if (umaAvatar != null) {
-            //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
+            Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
             return;
         }
         //spawn correct preview unit
@@ -153,8 +157,16 @@ public class LoadGamePanel : WindowContentController {
     }
 
     public void TargetReadyCallback() {
-        //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+        Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+
+        if (CharacterCreatorManager.MyInstance.MyPreviewUnit != null) {
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
+            if (characterEquipmentManager != null) {
+                //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
+                SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, characterEquipmentManager);
+            }
+        }
 
         // get reference to avatar
         umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
@@ -168,7 +180,12 @@ public class LoadGamePanel : WindowContentController {
         // disabled for now.  recipe should be already in recipestring anyway
         //SaveManager.MyInstance.SaveUMASettings();
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
+
+        // FIX ME
+        CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
+        if (previewUnitEquipmentManager != null) {
+            previewUnitEquipmentManager.EquipCharacter();
+        }
 
         // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

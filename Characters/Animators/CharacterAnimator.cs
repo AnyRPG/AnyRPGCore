@@ -850,4 +850,32 @@ public class CharacterAnimator : MonoBehaviour {
         return animator.GetCurrentAnimatorClipInfo(layerIndex);
     }
 
+    public void PerformEquipmentChange(Equipment newItem) {
+        PerformEquipmentChange(newItem, null);
+    }
+
+    public void PerformEquipmentChange(Equipment newItem, Equipment oldItem) {
+        //Debug.Log("PlayerAnimator.OnEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
+        // Animate grip for weapon when an item is added or removed from hand
+        if (newItem != null && newItem.equipSlot == EquipmentSlot.MainHand && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
+            //Debug.Log("we are animating the weapon");
+            //animator.SetLayerWeight(1, 1);
+            //if (weaponAnimationsDict.ContainsKey(newItem)) {
+            SetAnimationProfileOverride((newItem as Weapon).MyDefaultAttackAnimationProfile);
+        } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.MainHand) {
+            //animator.SetLayerWeight(1, 0);
+            //Debug.Log("resetting animation profile");
+            ResetAnimationProfile();
+        }
+
+        // Animate grip for weapon when a shield is added or removed from hand
+        if (newItem != null && newItem.equipSlot == EquipmentSlot.OffHand) {
+            //Debug.Log("we are animating the shield");
+            //animator.SetLayerWeight(2, 1);
+        } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.OffHand) {
+            //animator.SetLayerWeight(2, 0);
+        }
+    }
+
+
 }

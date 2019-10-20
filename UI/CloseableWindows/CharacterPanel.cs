@@ -196,8 +196,10 @@ public class CharacterPanel : WindowContentController {
             previewCameraController.ClearTarget();
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
 
+            // ADD CODE TO LOOP THROUGH BUTTONS AND RE-DISPLAY ANY ITEMS
+
             // update display
-            SetPreviewTarget(false);
+            SetPreviewTarget();
             //EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
             UpdateStatsDescription();
         }
@@ -246,7 +248,7 @@ public class CharacterPanel : WindowContentController {
         statsDescription.text = updateString;
     }
 
-    private void SetPreviewTarget(bool updateCharacterButtons = true) {
+    private void SetPreviewTarget() {
         //Debug.Log("CharacterPanel.SetPreviewTarget()");
 
         //spawn correct preview unit
@@ -256,30 +258,20 @@ public class CharacterPanel : WindowContentController {
             //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
             if (MyPreviewCameraController != null) {
                 MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.MyPreviewUnit.transform);
-                if (updateCharacterButtons) {
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                } else {
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallbackReset;
-                }
+                MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
             } else {
                 Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
             }
         }
     }
 
-    public void TargetReadyCallbackReset() {
-        //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackReset()");
-        MyPreviewCameraController.OnTargetReady -= TargetReadyCallbackReset;
-        TargetReadyCallbackCommon(false);
-    }
-
     public void TargetReadyCallback() {
         //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
-        TargetReadyCallbackCommon(true);
+        TargetReadyCallbackCommon();
     }
 
-    public void TargetReadyCallbackCommon(bool updateCharacterButton = true) {
+    public void TargetReadyCallbackCommon() {
         //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
         // get reference to avatar
@@ -294,7 +286,9 @@ public class CharacterPanel : WindowContentController {
         // disabled for now.  recipe should be already in recipestring anyway
         //SaveManager.MyInstance.SaveUMASettings();
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-        EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, updateCharacterButton);
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.EquipCharacter();
+        }
 
         // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

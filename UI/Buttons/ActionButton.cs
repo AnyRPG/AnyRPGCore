@@ -230,10 +230,12 @@ public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPo
             UIManager.MyInstance.ClearStackCount(this);
 
             if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyWeaponAffinity.Count > 0) {
-                if (!((MyUseable as BaseAbility).CanCast())) {
-                    //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
-                    EnableFullCoolDownIcon();
-                    return;
+                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
+                    if (!((MyUseable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
+                        //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
+                        EnableFullCoolDownIcon();
+                        return;
+                    }
                 }
             }
             if ((MyUseable as IAbility).MyRemainingCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || SystemAbilityManager.MyInstance.GetResource(MyUseable.MyName).MyRemainingCoolDown > 0f) {

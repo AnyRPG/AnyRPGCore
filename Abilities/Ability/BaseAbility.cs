@@ -146,7 +146,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
             List<string> requireStrings = new List<string>();
             foreach (AnyRPGWeaponAffinity _weaponAffinity in weaponAffinity) {
                 requireStrings.Add(_weaponAffinity.ToString());
-                if (EquipmentManager.MyInstance.HasAffinity(_weaponAffinity)) {
+                if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                     affinityMet = true;
                 }
             }
@@ -161,13 +161,13 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
         return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\n<color=#ffff00ff>{3}</color>{4}", abilityCastingTime, abilityCoolDown, abilityManaCost, description, addString);
     }
 
-    public bool CanCast() {
+    public bool CanCast(BaseCharacter sourceCharacter) {
         if (weaponAffinity.Count == 0) {
             // no restrictions, automatically true
             return true;
         } else {
             foreach (AnyRPGWeaponAffinity _weaponAffinity in weaponAffinity) {
-                if (EquipmentManager.MyInstance.HasAffinity(_weaponAffinity)) {
+                if (sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                     return true;
                 }
             }
@@ -178,7 +178,7 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
     public void Use() {
         //Debug.Log("BaseAbility.Use()");
         // prevent casting any ability without the proper weapon affinity
-        if (CanCast()) {
+        if (CanCast(PlayerManager.MyInstance.MyCharacter)) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
         }
     }
@@ -195,11 +195,12 @@ public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IA
 
     public virtual bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
         //Debug.Log(resourceName + ".BaseAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
-        if (!CanCast()) {
+        if (!CanCast(source)) {
             //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
             return false;
         }
 
+        // FIX ME
         SystemAbilityManager.MyInstance.StartCoroutine(BeginAbilityCoolDown());
         return true;
         // notify subscribers

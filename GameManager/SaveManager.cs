@@ -469,10 +469,12 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
         //Debug.Log("Savemanager.SaveEquipmentData()");
-        foreach (Equipment equipment in EquipmentManager.MyInstance.MyCurrentEquipment.Values) {
-            EquipmentSaveData saveData = new EquipmentSaveData();
-            saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
-            anyRPGSaveData.equipmentSaveData.Add(saveData);
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+            foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Values) {
+                EquipmentSaveData saveData = new EquipmentSaveData();
+                saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
+                anyRPGSaveData.equipmentSaveData.Add(saveData);
+            }
         }
     }
 
@@ -537,7 +539,7 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
-    public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData) {
+    public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData, CharacterEquipmentManager characterEquipmentManager) {
         //Debug.Log("Savemanager.LoadEquipmentData()");
         //int counter = 0;
         foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
@@ -545,7 +547,11 @@ public class SaveManager : MonoBehaviour {
             if (equipmentSaveData.MyName != string.Empty) {
                 //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment: using item: " + equipmentSaveData.MyName);
                 Equipment newItem = (SystemItemManager.MyInstance.GetNewResource(equipmentSaveData.MyName) as Equipment);
-                EquipmentManager.MyInstance.Equip(newItem);
+                if (characterEquipmentManager != null) {
+                    characterEquipmentManager.Equip(newItem);
+                } else {
+                    Debug.Log("Issue with equipment manager on player");
+                }
                 //newItem.Use();
             }
             //counter++;
@@ -668,7 +674,7 @@ public class SaveManager : MonoBehaviour {
     }
 
     // data needed by both the load window and in game play
-    public void LoadSharedData(AnyRPGSaveData anyRPGSaveData) {
+    public void SetPlayerManagerPrefab(AnyRPGSaveData anyRPGSaveData) {
         //Debug.Log("Savemanager.LoadSharedData()");
 
         // appearance
@@ -683,7 +689,6 @@ public class SaveManager : MonoBehaviour {
             ClearUMASettings();
             PlayerManager.MyInstance.SetDefaultPrefab();
         }
-        LoadEquipmentData(anyRPGSaveData);
 
     }
 
@@ -728,7 +733,8 @@ public class SaveManager : MonoBehaviour {
         //ClearSystemManagedCharacterData();
 
         // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
-        LoadSharedData(anyRPGSaveData);
+        SetPlayerManagerPrefab(anyRPGSaveData);
+        LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
 
         // complex data
         LoadEquippedBagData(anyRPGSaveData);
@@ -764,7 +770,9 @@ public class SaveManager : MonoBehaviour {
     public void ClearSystemManagedCharacterData() {
         //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
 
-        EquipmentManager.MyInstance.ClearEquipment();
+        // not needed anymore because no singleton?
+        //CharacterEquipmentManager.MyInstance.ClearEquipment();
+
         InventoryManager.MyInstance.ClearData();
         if (PopupWindowManager.MyInstance != null) {
             if (PopupWindowManager.MyInstance.bankWindow != null) {

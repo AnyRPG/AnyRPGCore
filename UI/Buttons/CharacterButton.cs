@@ -93,8 +93,10 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         newEquipment.Remove();
 
         if (newEquipment != equippedEquipment) {
-            EquipmentManager.MyInstance.Equip(newEquipment);
-            this.equippedEquipment = newEquipment;
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(newEquipment);
+                this.equippedEquipment = newEquipment;
+            }
         }
         this.equippedEquipment.MyCharacterButton = this;
         //HandScript.MyInstance.DeleteItem();
@@ -164,7 +166,9 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void DequipEquipment(int slotIndex = -1) {
         //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
         equippedEquipment.MyCharacterButton = null;
-        EquipmentManager.MyInstance.Unequip(equipmentSlot, slotIndex);
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+            PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
+        }
         ClearButton();
     }
 

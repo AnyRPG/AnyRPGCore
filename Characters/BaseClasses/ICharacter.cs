@@ -7,5 +7,7 @@
     string MyFactionName { get; set; }
     CharacterUnit MyCharacterUnit { get; set; }
     CharacterFactionManager MyCharacterFactionManager { get; }
+    CharacterEquipmentManager MyCharacterEquipmentManager { get; set; }
+
     void SetCharacterFaction(string newFaction);
 }

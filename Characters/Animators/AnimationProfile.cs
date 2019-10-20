@@ -67,7 +67,7 @@ public class AnimationProfile : ScriptableObject {
     [SerializeField]
     private AnimationClip combatMoveBackClip;
     [SerializeField]
-    private AnimationClip combatTturnLeftClip;
+    private AnimationClip combatTurnLeftClip;
     [SerializeField]
     private AnimationClip combatTurnRightClip;
     [SerializeField]
@@ -126,7 +126,7 @@ public class AnimationProfile : ScriptableObject {
     public AnimationClip MyJogStrafeRightClip { get => jogStrafeRightClip; set => jogStrafeRightClip = value; }
     public AnimationClip MyJogStrafeForwardLeftClip { get => jogStrafeForwardLeftClip; set => jogStrafeForwardLeftClip = value; }
     public AnimationClip MyJogStrafeForwardRightClip { get => jogStrafeForwardRightClip; set => jogStrafeForwardRightClip = value; }
-    public AnimationClip MyCombatTturnLeftClip { get => combatTturnLeftClip; set => combatTturnLeftClip = value; }
+    public AnimationClip MyCombatTurnLeftClip { get => combatTurnLeftClip; set => combatTurnLeftClip = value; }
     public AnimationClip MyCombatTurnRightClip { get => combatTurnRightClip; set => combatTurnRightClip = value; }
     public AnimationClip MyCombatStrafeLeftClip { get => combatStrafeLeftClip; set => combatStrafeLeftClip = value; }
     public AnimationClip MyCombatJogStrafeLeftClip { get => combatJogStrafeLeftClip; set => combatJogStrafeLeftClip = value; }

@@ -48,8 +48,10 @@ public class Equipment : Item {
     }
 
     public override void Use() {
-        base.Use();
-        EquipmentManager.MyInstance.Equip(this);
+        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+            base.Use();
+            PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
+        }
     }
 
     public override string GetSummary() {

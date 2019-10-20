@@ -27,6 +27,8 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
 
     protected CharacterFactionManager characterFactionManager = null;
 
+    protected CharacterEquipmentManager characterEquipmentManager = null;
+
     protected CharacterUnit characterUnit = null;
 
     public ICharacterStats MyCharacterStats { get => characterStats; }
@@ -51,6 +53,7 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
     }
     public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
     public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
+    public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
     protected virtual void Awake() {
         //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -60,6 +63,7 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
         }
         characterSkillManager = GetComponent<CharacterSkillManager>();
         characterFactionManager = GetComponent<CharacterFactionManager>();
+        characterEquipmentManager = GetComponent<CharacterEquipmentManager>();
     }
 
     protected virtual void Start() {

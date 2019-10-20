@@ -5,113 +5,117 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
-public class EquipmentManager : MonoBehaviour {
+public class CharacterEquipmentManager : MonoBehaviour {
 
-    #region Singleton
-    private static EquipmentManager instance;
+    // component references
+    protected BaseCharacter baseCharacter;
+    protected GameObject playerUnitObject = null;
+    protected DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
-    public static EquipmentManager MyInstance {
-        get {
-            if (instance == null) {
-                instance = FindObjectOfType<EquipmentManager>();
-            }
+    protected Dictionary<EquipmentSlot, Equipment> currentEquipment = new Dictionary<EquipmentSlot, Equipment>();
 
-            return instance;
-        }
-    }
+    protected Dictionary<EquipmentSlot, GameObject> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlot, GameObject>();
 
-    #endregion
-
-    private Dictionary<EquipmentSlot, Equipment> currentEquipment = new Dictionary<EquipmentSlot, Equipment>();
-
-    private Dictionary<EquipmentSlot, GameObject> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlot, GameObject>();
-
-    private Transform targetBone;
+    protected Transform targetBone;
 
     // the holdable object spawned during an ability cast and removed when the cast is complete
-    private GameObject abilityObject;
+    protected GameObject abilityObject;
 
     protected bool startHasRun = false;
     protected bool eventReferencesInitialized = false;
+    protected bool componentReferencesInitialized = false;
     protected bool subscribedToCombatEvents = false;
+
+    [SerializeField]
+    protected string equipmentProfileName;
 
     public Dictionary<EquipmentSlot, Equipment> MyCurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
 
+    protected virtual void Awake() {
+        baseCharacter = GetComponent<BaseCharacter>();
+    }
 
-    private void Start() {
+    protected virtual void Start() {
         int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         startHasRun = true;
         CreateEventReferences();
+        CreateComponentReferences();
+        LoadDefaultEquipment();
     }
 
-    private void CreateEventReferences() {
+    public virtual void CreateComponentReferences() {
+        if (componentReferencesInitialized) {
+            return;
+        }
+        // player character case
+        if (baseCharacter != null) {
+            if (baseCharacter.MyCharacterUnit != null) {
+                playerUnitObject = baseCharacter.MyCharacterUnit.gameObject;
+            }
+        }
+
+        // NPC case
+        if (playerUnitObject == null) {
+            playerUnitObject = gameObject;
+        }
+
+        // player character case
+        if (baseCharacter != null) {
+            if (baseCharacter.MyCharacterUnit != null) {
+                dynamicCharacterAvatar = baseCharacter.MyCharacterUnit.GetComponent<DynamicCharacterAvatar>();
+            }
+        }
+
+        // NPC case
+        if (dynamicCharacterAvatar == null) {
+            dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
+        }
+        componentReferencesInitialized = true;
+    }
+
+    public virtual void OnDisable() {
+        //Debug.Log("PlayerManager.OnDisable()");
+        CleanupEventReferences();
+    }
+
+    protected virtual void CreateEventReferences() {
         //Debug.Log("PlayerManager.CreateEventReferences()");
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn += OnPlayerUnitSpawn;
-        SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnPlayerUnitDespawn;
         eventReferencesInitialized = true;
     }
 
-    private void CleanupEventReferences() {
+    protected virtual void CleanupEventReferences() {
         //Debug.Log("PlayerManager.CleanupEventReferences()");
         if (!eventReferencesInitialized) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn -= OnPlayerUnitSpawn;
-        SystemEventManager.MyInstance.OnPlayerUnitDespawn -= OnPlayerUnitDespawn;
         eventReferencesInitialized = false;
     }
 
-    public void OnDisable() {
-        //Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+
+    public virtual void LoadDefaultEquipment() {
+        if (equipmentProfileName != null && equipmentProfileName != string.Empty && SystemEquipmentProfileManager.MyInstance != null) {
+            EquipmentProfile equipmentProfile = SystemEquipmentProfileManager.MyInstance.GetResource(equipmentProfileName);
+            if (equipmentProfile != null) {
+                foreach (string equipmentName in equipmentProfile.MyEquipmentNameList) {
+                    Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
+                    if (equipment != null) {
+                        Equip(equipment);
+                    }
+                }
+            }
+        }
     }
 
     public void ClearEquipment() {
         currentEquipment = new Dictionary<EquipmentSlot, Equipment>();
     }
 
-
-    public void OnPlayerUnitSpawn() {
-        //Debug.Log("EquipmentManager.OnPlayerUnitSpawn()");
-        EquipCharacter();
-        SubscribeToCombatEvents();
-    }
-
-    public void OnPlayerUnitDespawn() {
-        //Debug.Log("EquipmentManager.OnPlayerUnitDespawn()");
-        UnSubscribeFromCombatEvents();
-    }
-
-    private void SubscribeToCombatEvents() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
-        if (subscribedToCombatEvents || !startHasRun) {
-            return;
-        }
-        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HoldWeapons;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += SheathWeapons;
-
-        }
-        subscribedToCombatEvents = true;
-    }
-
-    private void UnSubscribeFromCombatEvents() {
-        //Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!subscribedToCombatEvents) {
-            return;
-        }
-        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HoldWeapons;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= SheathWeapons;
-        }
-        subscribedToCombatEvents = false;
-    }
-
     // This method does not actually equip the character, just apply stats and models from already equipped equipment
-    public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
+    public virtual void EquipCharacter() {
+        //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
         //Debug.Log("EquipmentManager.EquipCharacter(" + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         if (currentEquipment == null) {
             return;
@@ -121,16 +125,8 @@ public class EquipmentManager : MonoBehaviour {
                 //Debug.Log("EquipmentManager.EquipCharacter(): Equipment is not null: " + equipment.MyName);
 
                 // armor and weapon models handling
-                HandleEquipmentModels(equipment, playerUnitObject);
+                HandleEquipmentModels(equipment);
 
-                if (updateCharacterButton) {
-                    // put the items in the character panel because we are equipping an actual character, not the character panel character
-                    if (CharacterPanel.MyInstance != null) {
-                        CharacterPanel.MyInstance.EquipEquipment(equipment, true);
-                    }
-                }
-                // new code to trigger only external items that are idempotent but lost on load (on hit abilities and animation profiles)
-                SystemEventManager.MyInstance.NotifyOnEquipmentRefresh(equipment);
             } else {
                 //Debug.Log("Equipment is null");
             }
@@ -143,30 +139,34 @@ public class EquipmentManager : MonoBehaviour {
             //Debug.Log("newItem is null. returning");
             return;
         }
-        if (newItem.UMARecipe != null && PlayerManager.MyInstance.MyAvatar != null) {
+
+        if (newItem.UMARecipe != null && dynamicCharacterAvatar != null) {
             //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.MyName);
             // Put the item in the UMA slot on the UMA character
             //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
-            PlayerManager.MyInstance.MyAvatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
-            PlayerManager.MyInstance.MyAvatar.BuildCharacter();
+            dynamicCharacterAvatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
+            dynamicCharacterAvatar.BuildCharacter();
         } else {
             //Debug.Log("EquipmentManager.HandleItemUMARecipe() No UMA recipe to handle");
         }
     }
 
-    public void HandleEquipmentModels(Equipment newItem, GameObject playerUnitObject = null) {
+    public void HandleEquipmentModels(Equipment newItem) {
         //Debug.Log("EquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         //HandleItemUMARecipe(newItem);
-        HandleWeaponSlot(newItem, playerUnitObject);
+        HandleWeaponSlot(newItem);
     }
 
-    public void HandleWeaponSlot(Equipment newItem, GameObject playerUnitObject = null) {
+    public virtual void HandleWeaponSlot(Equipment newItem) {
         //Debug.Log("EquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
-        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && playerUnitObject == null) {
+        CreateComponentReferences();
+        /*
+        if (playerUnitObject == null) {
             // nothing to do since there is no object to attach to right now.  It will be handled automatically when he spawns anyway
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): playerUnitObject is null and player unit is not spawned.  returning.");
             return;
         }
+        */
         if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty) {
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
             return;
@@ -176,29 +176,34 @@ public class EquipmentManager : MonoBehaviour {
             Debug.Log("EquipmentManager.HandleWeaponSlot(): holdableObject is null");
             return;
         }
-        GameObject usedObject = (playerUnitObject == null ? PlayerManager.MyInstance.MyPlayerUnitObject : playerUnitObject);
         if (holdableObject.MyPhysicalPrefab != null) {
             //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
             // attach a mesh to a bone for weapons
-            targetBone = usedObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
+            targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
             if (targetBone != null) {
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
                 GameObject newEquipmentPrefab = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned && usedObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
-                    currentEquipmentPhysicalObjects[newItem.equipSlot] = newEquipmentPrefab;
-                }
+                currentEquipmentPhysicalObjects[newItem.equipSlot] = newEquipmentPrefab;
                 newEquipmentPrefab.transform.localScale = holdableObject.MyPhysicalScale;
-                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
-                    HoldObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
+                if (baseCharacter != null && baseCharacter.MyCharacterCombat != null && baseCharacter.MyCharacterCombat.GetInCombat() == true) {
+                    HoldObject(newEquipmentPrefab, newItem.MyHoldableObjectName, playerUnitObject);
                 } else {
-                    SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, usedObject);
+                    SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, playerUnitObject);
                 }
             } else {
                 Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && usedObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
+            CharacterAnimator characterAnimator = null;
+            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
+                characterAnimator = baseCharacter.MyCharacterUnit.MyCharacterAnimator;
+            }
+            if (characterAnimator == null) {
+                characterAnimator = GetComponent<CharacterAnimator>();
+            }
+            if (characterAnimator != null) {
+                characterAnimator.InitializeAnimator();
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): Player Unit is spawned and the object we are using as the player unit, go ahead and animate attacks");
-                (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator as PlayerAnimator).OnEquipmentChanged(newItem, null);
+                characterAnimator.PerformEquipmentChange(newItem, null);
             }
         }
     }
@@ -211,12 +216,12 @@ public class EquipmentManager : MonoBehaviour {
         }
 
         if (holdableObject.MyPhysicalPrefab != null) {
-            targetBone = PlayerManager.MyInstance.MyPlayerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+            targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
             if (targetBone != null) {
                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
                 abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
                 abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
-                HoldObject(abilityObject, holdableObject.MyName, PlayerManager.MyInstance.MyPlayerUnitObject);
+                HoldObject(abilityObject, holdableObject.MyName, playerUnitObject);
             } else {
                 Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone);
             }
@@ -232,19 +237,19 @@ public class EquipmentManager : MonoBehaviour {
 
     public void SheathWeapons() {
         if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
-            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, playerUnitObject);
         }
         if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
-            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+            SheathObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, playerUnitObject);
         }
     }
 
     public void HoldWeapons() {
         if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
-            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.MainHand], currentEquipment[EquipmentSlot.MainHand].MyHoldableObjectName, playerUnitObject);
         }
         if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
-            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, PlayerManager.MyInstance.MyPlayerUnitObject);
+            HoldObject(currentEquipmentPhysicalObjects[EquipmentSlot.OffHand], currentEquipment[EquipmentSlot.OffHand].MyHoldableObjectName, playerUnitObject);
         }
     }
 
@@ -292,14 +297,15 @@ public class EquipmentManager : MonoBehaviour {
         }
     }
 
-    public void Equip (Equipment newItem) {
+    public virtual void Equip (Equipment newItem) {
         //Debug.Log("EquipmentManager.Equip()");
         if (newItem == null) {
             //Debug.Log("Instructed to Equip a null item!");
             return;
         }
         if (currentEquipment.ContainsKey(newItem.equipSlot) && currentEquipment[newItem.equipSlot] != null) {
-            currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
+            //currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
+            Unequip(newItem.equipSlot);
         }
 
         // for now manually handle exclusive slots
@@ -325,14 +331,9 @@ public class EquipmentManager : MonoBehaviour {
         currentEquipment[newItem.equipSlot] = newItem;
         HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem);
-
-        // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
-        // updated oldItem to null here because this call is already done in Unequip.
-        // having it here also was leading to duplicate stat removal when gear was changed.
-        SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, null);
     }
 
-    public Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
+    public virtual Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
         if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
             //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
@@ -342,27 +343,17 @@ public class EquipmentManager : MonoBehaviour {
                 Destroy(destroyObject);
             }
             Equipment oldItem = currentEquipment[equipmentSlot];
-            // SKIP THIS STUFF IF THE PLAYER UNIT IS NOT SPAWNED BECAUSE WE ARE UNEQUIPPING A PREVIEW UNIT
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                if (oldItem.UMARecipe != null && PlayerManager.MyInstance.MyAvatar != null) {
-                    // Clear the item from the UMA slot on the UMA character
-                    //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
-                    //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
-                    PlayerManager.MyInstance.MyAvatar.ClearSlot(oldItem.UMARecipe.wardrobeSlot);
-                    PlayerManager.MyInstance.MyAvatar.BuildCharacter();
-                }
 
-                if (slotIndex != -1) {
-                    InventoryManager.MyInstance.AddItem(oldItem, slotIndex);
-                } else {
-                    InventoryManager.MyInstance.AddItem(oldItem);
-                }
+            if (oldItem.UMARecipe != null && dynamicCharacterAvatar != null) {
+                // Clear the item from the UMA slot on the UMA character
+                //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
+                //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
+                dynamicCharacterAvatar.ClearSlot(oldItem.UMARecipe.wardrobeSlot);
+                dynamicCharacterAvatar.BuildCharacter();
             }
+
             //Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
             currentEquipment[equipmentSlot] = null;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                SystemEventManager.MyInstance.NotifyOnEquipmentChanged(null, oldItem);
-            }
             return oldItem;
         }
         return null;
