@@ -8,12 +8,12 @@ using UMA.CharacterSystem;
 public class PlayerEquipmentManager : CharacterEquipmentManager {
 
     protected override void CreateEventReferences() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
+        Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventReferences()");
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn += OnPlayerUnitSpawn;
-        SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnPlayerUnitDespawn;
+        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+        SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
         base.CreateEventReferences();
     }
 
@@ -22,53 +22,59 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
         if (!eventReferencesInitialized) {
             return;
         }
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn -= OnPlayerUnitSpawn;
-        SystemEventManager.MyInstance.OnPlayerUnitDespawn -= OnPlayerUnitDespawn;
+        SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+        SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
         base.CleanupEventReferences();
     }
 
-    public void OnPlayerUnitSpawn() {
-        //Debug.Log("EquipmentManager.OnPlayerUnitSpawn()");
+    public void HandlePlayerUnitSpawn() {
+        Debug.Log("EquipmentManager.OnPlayerUnitSpawn()");
+        CreateComponentReferences();
         EquipCharacter();
         SubscribeToCombatEvents();
     }
 
-    public void OnPlayerUnitDespawn() {
+    public void HandlePlayerUnitDespawn() {
         //Debug.Log("EquipmentManager.OnPlayerUnitDespawn()");
         UnSubscribeFromCombatEvents();
     }
 
-    protected void SubscribeToCombatEvents() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
-        if (subscribedToCombatEvents || !startHasRun) {
+    public override void CreateComponentReferences() {
+        Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateComponentReferences()");
+        base.CreateComponentReferences();
+        /*
+        if (componentReferencesInitialized) {
             return;
         }
-        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HoldWeapons;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += SheathWeapons;
+        */
 
+        // player character case
+        if (baseCharacter != null) {
+            if (baseCharacter.MyCharacterUnit != null) {
+                playerUnitObject = baseCharacter.MyCharacterUnit.gameObject;
+            } else {
+                Debug.Log(gameObject.name + ".CharacterEquipmentManager.CreateComponentReferences(): baseCharacter.MyCharacterUnit == null!");
+            }
         }
-        subscribedToCombatEvents = true;
-    }
 
-    protected void UnSubscribeFromCombatEvents() {
-        //Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!subscribedToCombatEvents) {
-            return;
+        // player character case
+        if (baseCharacter != null) {
+            if (baseCharacter.MyCharacterUnit != null) {
+                dynamicCharacterAvatar = baseCharacter.MyCharacterUnit.GetComponent<DynamicCharacterAvatar>();
+            }
         }
-        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HoldWeapons;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= SheathWeapons;
-        }
-        subscribedToCombatEvents = false;
+
+        //componentReferencesInitialized = true;
     }
 
     public override void EquipCharacter() {
+        Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter()");
         //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
-        //Debug.Log("EquipmentManager.EquipCharacter(" + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         if (currentEquipment == null) {
+            Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): currentEquipment == null!");
             return;
         }
+        Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): about to call base method");
         base.EquipCharacter();
 
         // MOVE TO PLAYER MANAGER

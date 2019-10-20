@@ -6,6 +6,7 @@ public interface ICharacterCombat {
     // events
     event Action<BaseCharacter> OnAttack;
     event Action OnDropCombat;
+    event Action OnEnterCombat;
     event Action<BaseCharacter, float> OnKillEvent;
     event System.Action<BaseCharacter, GameObject> OnHitEvent;
 

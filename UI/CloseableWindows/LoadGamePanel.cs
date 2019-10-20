@@ -136,7 +136,7 @@ public class LoadGamePanel : WindowContentController {
 
 
     public void SetPreviewTarget() {
-        Debug.Log("CharacterPanel.SetPreviewTarget()");
+        //Debug.Log("CharacterPanel.SetPreviewTarget()");
         if (umaAvatar != null) {
             Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
             return;
@@ -157,13 +157,14 @@ public class LoadGamePanel : WindowContentController {
     }
 
     public void TargetReadyCallback() {
-        Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+        //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
         if (CharacterCreatorManager.MyInstance.MyPreviewUnit != null) {
             CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (characterEquipmentManager != null) {
                 //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
+                // results in equipment being sheathed
                 SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, characterEquipmentManager);
             }
         }
@@ -182,10 +183,13 @@ public class LoadGamePanel : WindowContentController {
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
 
         // FIX ME
+        /*
         CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
         if (previewUnitEquipmentManager != null) {
+            // results in equipment being sheathed
             previewUnitEquipmentManager.EquipCharacter();
         }
+        */
 
         // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

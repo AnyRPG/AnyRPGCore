@@ -5,7 +5,7 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
-public class CharacterEquipmentManager : MonoBehaviour {
+public abstract class CharacterEquipmentManager : MonoBehaviour {
 
     // component references
     protected BaseCharacter baseCharacter;
@@ -39,38 +39,18 @@ public class CharacterEquipmentManager : MonoBehaviour {
         int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         startHasRun = true;
         CreateEventReferences();
-        CreateComponentReferences();
         LoadDefaultEquipment();
     }
 
     public virtual void CreateComponentReferences() {
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.CreateComponentReferences()");
+        /*
         if (componentReferencesInitialized) {
             return;
         }
-        // player character case
-        if (baseCharacter != null) {
-            if (baseCharacter.MyCharacterUnit != null) {
-                playerUnitObject = baseCharacter.MyCharacterUnit.gameObject;
-            }
-        }
+        */
 
-        // NPC case
-        if (playerUnitObject == null) {
-            playerUnitObject = gameObject;
-        }
-
-        // player character case
-        if (baseCharacter != null) {
-            if (baseCharacter.MyCharacterUnit != null) {
-                dynamicCharacterAvatar = baseCharacter.MyCharacterUnit.GetComponent<DynamicCharacterAvatar>();
-            }
-        }
-
-        // NPC case
-        if (dynamicCharacterAvatar == null) {
-            dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
-        }
-        componentReferencesInitialized = true;
+        //componentReferencesInitialized = true;
     }
 
     public virtual void OnDisable() {
@@ -113,13 +93,15 @@ public class CharacterEquipmentManager : MonoBehaviour {
         currentEquipment = new Dictionary<EquipmentSlot, Equipment>();
     }
 
-    // This method does not actually equip the character, just apply stats and models from already equipped equipment
+    // This method does not actually equip the character, just apply stats??? or not ??? and models from already equipped equipment
     public virtual void EquipCharacter() {
+        Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
         //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
-        //Debug.Log("EquipmentManager.EquipCharacter(" + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
         if (currentEquipment == null) {
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
             return;
         }
+        Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment is not null");
         foreach (Equipment equipment in currentEquipment.Values) {
             if (equipment != null) {
                 //Debug.Log("EquipmentManager.EquipCharacter(): Equipment is not null: " + equipment.MyName);
@@ -128,7 +110,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
                 HandleEquipmentModels(equipment);
 
             } else {
-                //Debug.Log("Equipment is null");
+                Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): Equipment is null");
             }
         }
     }
@@ -152,28 +134,21 @@ public class CharacterEquipmentManager : MonoBehaviour {
     }
 
     public void HandleEquipmentModels(Equipment newItem) {
-        //Debug.Log("EquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
+        Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ")");
         //HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem);
     }
 
     public virtual void HandleWeaponSlot(Equipment newItem) {
-        //Debug.Log("EquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ", " + (playerUnitObject == null ? "null" : playerUnitObject.name) + ")");
-        CreateComponentReferences();
-        /*
-        if (playerUnitObject == null) {
-            // nothing to do since there is no object to attach to right now.  It will be handled automatically when he spawns anyway
-            //Debug.Log("EquipmentManager.HandleWeaponSlot(): playerUnitObject is null and player unit is not spawned.  returning.");
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ")");
+        if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty || playerUnitObject == null) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
             return;
         }
-        */
-        if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty) {
-            //Debug.Log("EquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
-            return;
-        }
+        //CreateComponentReferences();
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(newItem.MyHoldableObjectName);
         if (holdableObject == null) {
-            Debug.Log("EquipmentManager.HandleWeaponSlot(): holdableObject is null");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): holdableObject is null");
             return;
         }
         if (holdableObject.MyPhysicalPrefab != null) {
@@ -191,7 +166,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
                     SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, playerUnitObject);
                 }
             } else {
-                Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
+                Debug.Log(gameObject + ".CharacterEquipmentManager.HandleWeaponSlot(). We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
             }
             CharacterAnimator characterAnimator = null;
             if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
@@ -202,7 +177,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
             }
             if (characterAnimator != null) {
                 characterAnimator.InitializeAnimator();
-                //Debug.Log("EquipmentManager.HandleWeaponSlot(): Player Unit is spawned and the object we are using as the player unit, go ahead and animate attacks");
+                //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
                 characterAnimator.PerformEquipmentChange(newItem, null);
             }
         }
@@ -223,7 +198,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
                 abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
                 HoldObject(abilityObject, holdableObject.MyName, playerUnitObject);
             } else {
-                Debug.Log("We could not find the target bone " + holdableObject.MySheathedTargetBone);
+                Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
             }
 
         }
@@ -255,38 +230,38 @@ public class CharacterEquipmentManager : MonoBehaviour {
 
     public void SheathObject(GameObject go, string holdableObjectName, GameObject searchObject) {
         if (searchObject == null) {
-            Debug.Log("EquipmentManager.SheathObject(): searchObject is null");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): searchObject is null");
             return;
         }
         if (holdableObjectName == null || holdableObjectName == string.Empty) {
-            Debug.Log("EquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
         if (holdableObject == null) {
-            Debug.Log("EquipmentManager.SheathObject(): holdableObject is null");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): holdableObject is null");
             return;
         }
         targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
         if (targetBone != null) {
-            Debug.Log("EquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
             go.transform.parent = targetBone;
             go.transform.localPosition = holdableObject.MySheathedPhysicalPosition;
             go.transform.localEulerAngles = holdableObject.MySheathedPhysicalRotation;
         } else {
-            Debug.Log("EquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
         }
 
     }
 
     public void HoldObject(GameObject go, string holdableObjectName, GameObject searchObject) {
         if (holdableObjectName == null || holdableObjectName == string.Empty) {
-            Debug.Log("EquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
         if (holdableObject == null) {
-            Debug.Log("EquipmentManager.SheathObject(): holdableObject is null");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): holdableObject is null");
             return;
         }
         targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
@@ -313,6 +288,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
             // deal with 2h weapons, and unequip offhand
             if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
                 if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
+                    // FIX ME - DO IT DIRECTLY
                     currentEquipment[EquipmentSlot.OffHand].MyCharacterButton.DequipEquipment();
                 }
             }
@@ -322,6 +298,7 @@ public class CharacterEquipmentManager : MonoBehaviour {
         if (newItem.equipSlot == EquipmentSlot.OffHand) {
             if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
                 if (currentEquipment[EquipmentSlot.MainHand] != null && currentEquipment[EquipmentSlot.MainHand].MyCharacterButton != null) {
+                    // FIX ME - DO IT DIRECTLY
                     currentEquipment[EquipmentSlot.MainHand].MyCharacterButton.DequipEquipment();
                 }
             }
@@ -329,6 +306,8 @@ public class CharacterEquipmentManager : MonoBehaviour {
 
         //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
         currentEquipment[newItem.equipSlot] = newItem;
+
+        // both of these not needed if character unit not yet spawned?
         HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem);
     }
@@ -413,5 +392,30 @@ public class CharacterEquipmentManager : MonoBehaviour {
             }
         }
         return false;
+    }
+
+    protected void SubscribeToCombatEvents() {
+        //Debug.Log("PlayerManager.CreateEventReferences()");
+        if (subscribedToCombatEvents || !startHasRun) {
+            return;
+        }
+        if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
+            baseCharacter.MyCharacterCombat.OnEnterCombat += HoldWeapons;
+            baseCharacter.MyCharacterCombat.OnDropCombat += SheathWeapons;
+
+        }
+        subscribedToCombatEvents = true;
+    }
+
+    protected void UnSubscribeFromCombatEvents() {
+        //Debug.Log("PlayerManager.CleanupEventReferences()");
+        if (!subscribedToCombatEvents) {
+            return;
+        }
+        if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
+            baseCharacter.MyCharacterCombat.OnEnterCombat -= HoldWeapons;
+            baseCharacter.MyCharacterCombat.OnDropCombat -= SheathWeapons;
+        }
+        subscribedToCombatEvents = false;
     }
 }

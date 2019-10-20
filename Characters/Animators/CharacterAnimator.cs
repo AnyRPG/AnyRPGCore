@@ -157,12 +157,13 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public void SetAnimationProfileOverride(AnimationProfile animationProfile) {
+        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationProfileOverride()");
         currentAttackAnimationProfile = animationProfile;
         SetAnimationClipOverrides();
     }
 
     public void ResetAnimationProfile() {
-        //Debug.Log("CharacterAnimator.ResetAnimationProfile()");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.ResetAnimationProfile()");
         currentAttackAnimationProfile = defaultAttackAnimationProfile;
         // change back to the original animations
         SetAnimationClipOverrides();
@@ -178,6 +179,8 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     protected virtual void SetAnimationClipOverrides() {
+        Debug.Log(gameObject.name + ": CharacterAnimator.SetAnimationClipOverrides()");
+
         if (currentAttackAnimationProfile.MyMoveForwardClip != null) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): WalkForward is not null.");
             overrideController["AnyRPGWalkForward"] = currentAttackAnimationProfile.MyMoveForwardClip;
@@ -855,16 +858,16 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     public void PerformEquipmentChange(Equipment newItem, Equipment oldItem) {
-        //Debug.Log("PlayerAnimator.OnEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
+        //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
         // Animate grip for weapon when an item is added or removed from hand
         if (newItem != null && newItem.equipSlot == EquipmentSlot.MainHand && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
-            //Debug.Log("we are animating the weapon");
+            Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");
             //animator.SetLayerWeight(1, 1);
             //if (weaponAnimationsDict.ContainsKey(newItem)) {
             SetAnimationProfileOverride((newItem as Weapon).MyDefaultAttackAnimationProfile);
         } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.MainHand) {
             //animator.SetLayerWeight(1, 0);
-            //Debug.Log("resetting animation profile");
+            Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: resetting the animation profile");
             ResetAnimationProfile();
         }
 

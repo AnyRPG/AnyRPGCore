@@ -86,8 +86,15 @@ public class CharacterCreatorManager : MonoBehaviour {
             previewUnit.GetComponent<Rigidbody>().useGravity = false;
         }
 
-        previewUnit.AddComponent<CharacterEquipmentManager>().CreateComponentReferences();
-
+        AIEquipmentManager aIEquipmentManager = previewUnit.AddComponent<AIEquipmentManager>();
+        
+        /*
+        if (aIEquipmentManager != null) {
+            aIEquipmentManager.CreateComponentReferences();
+        } else {
+            Debug.Log(gameObject.name + ".CharacterCreatorManager.HandleOpenWindow(): Unable to add aIEquipmentManager to the previewUnit");
+        }
+        */
     }
 
     public void HandleCloseWindow() {
