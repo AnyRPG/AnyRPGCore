@@ -207,7 +207,8 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
                 // probably don't need to do this, since dequip should drop the equipment in the bag anyway
                 //AddItem(equipment);
 
-                CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
+                //CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
+                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip((HandScript.MyInstance.MyMoveable as Equipment).equipSlot, GetCurrentSlotIndex());
                 HandScript.MyInstance.Drop();
             }
         }
@@ -285,7 +286,8 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
         if (MyItem is IUseable) {
             (MyItem as IUseable).Use();
         } else if (MyItem is Equipment) {
-            CharacterPanel.MyInstance.EquipEquipment(MyItem as Equipment);
+            (MyItem as Equipment).Use();
+            //CharacterPanel.MyInstance.EquipEquipment(MyItem as Equipment);
         }
     }
 

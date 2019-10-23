@@ -69,7 +69,10 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             if (HandScript.MyInstance.MyMoveable is Equipment) {
                 Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
                 if (tmp.equipSlot == equipmentSlot) {
-                    EquipEquipment(tmp);
+                    tmp.Use();
+                    //EquipEquipment(tmp);
+                    HandScript.MyInstance.Drop();
+
                     UIManager.MyInstance.RefreshTooltip(tmp);
                 }
             } else if (HandScript.MyInstance.MyMoveable == null && equippedEquipment != null) {
@@ -80,6 +83,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
+    /*
     public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
         //Debug.Log("CharacterButton.EquipEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ", " + partialEquip + ")");
         if (partialEquip) {
@@ -119,11 +123,18 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
         UpdateVisual();
     }
+    */
 
     public void UpdateVisual(bool resetDisplay = true) {
-        //Debug.Log("CharacterButton.UpdateVisual()");
+        Debug.Log("CharacterButton.UpdateVisual()");
 
         GetLocalComponents();
+        Equipment tmpEquipment = equippedEquipment;
+        if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlot)) {
+            equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlot];
+        } else {
+            equippedEquipment = null;
+        }
 
         if (equippedEquipment != null) {
             if (fullBackGroundColor != null) {
@@ -151,18 +162,22 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             // prevent unnecessary actions when window is not open
             return;
         }
+        /*
         if (resetDisplay) {
             CharacterPanel.MyInstance.ResetDisplay();
         }
+        */
     }
 
+    /*
     public void SetEquipment(Equipment newEquipment) {
         //Debug.Log("CharacterButton.SetEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ")");
         this.equippedEquipment = newEquipment;
         this.equippedEquipment.MyCharacterButton = this;
         UpdateVisual();
     }
-
+    */
+    /*
     public void DequipEquipment(int slotIndex = -1) {
         //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
         equippedEquipment.MyCharacterButton = null;
@@ -177,6 +192,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         equippedEquipment = null;
         UpdateVisual(resetDisplay);
     }
+    */
 
 
     public void OnPointerEnter(PointerEventData eventData) {

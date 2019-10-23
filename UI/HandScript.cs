@@ -92,11 +92,16 @@ public class HandScript : MonoBehaviour {
             Item item = (Item)MyMoveable;
             if (item.MySlot != null) {
                 item.MySlot.Clear();
-            } else if (item.MyCharacterButton != null) {
-                // this allows us to delete items directly by dropping them from the character panel onto the screen.
-                // I may disallow this as I want items to only be deleted from the bag
-                // this actually just unequips it for now since our inventorymanager actually puts an item back in the bag when dequipped.
-                item.MyCharacterButton.DequipEquipment();
+            } else {
+                // first we want to get this items equipment slot
+                // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
+                // if it is, then we will unequip it, and then destroy it
+                if (item is Equipment) {
+                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey((item as Equipment).equipSlot) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[(item as Equipment).equipSlot] == (item as Equipment)) {
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip((item as Equipment).equipSlot);
+                        item.MySlot.Clear();
+                    }
+                }
             }
         }
         CombatLogUI.MyInstance.WriteSystemMessage("Destroyed " + MyMoveable.MyName);

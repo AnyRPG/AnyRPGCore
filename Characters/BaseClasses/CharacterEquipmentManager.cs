@@ -134,7 +134,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
     }
 
     public void HandleEquipmentModels(Equipment newItem) {
-        Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ")");
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ")");
         //HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem);
     }
@@ -255,25 +255,89 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
     }
 
     public void HoldObject(GameObject go, string holdableObjectName, GameObject searchObject) {
+        Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
         if (holdableObjectName == null || holdableObjectName == string.Empty) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
         if (holdableObject == null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): holdableObject is null");
+            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): holdableObject is null");
             return;
         }
         targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
         if (targetBone != null) {
+            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyPhysicalRotation);
             go.transform.parent = targetBone;
             go.transform.localPosition = holdableObject.MyPhysicalPosition;
+            //go.transform.Rotate(holdableObject.MyPhysicalRotation, Space.Self);
+            //Vector3 usedEulers = new Vector3(Clamp0360(holdableObject.MyPhysicalRotation.x), Clamp0360(holdableObject.MyPhysicalRotation.y), Clamp0360(holdableObject.MyPhysicalRotation.z));
+            //Vector3 usedEulers = new Vector3(UnwrapAngle(holdableObject.MyPhysicalRotation.x), UnwrapAngle(holdableObject.MyPhysicalRotation.y), UnwrapAngle(holdableObject.MyPhysicalRotation.z));
+            //Vector3 usedEulers = new Vector3(fixAngle(holdableObject.MyPhysicalRotation.x), fixAngle(holdableObject.MyPhysicalRotation.y), fixAngle(holdableObject.MyPhysicalRotation.z));
+            //go.transform.Rotate(usedEulers);
+
+            // pointed forward
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, Vector3.forward);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, Vector3.right);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, Vector3.up);
+
+            // pointed toward chest 
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
+
+            // pointed through chest
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
+
+            // jumps around everywhere
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, go.transform.forward);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, go.transform.right);
+            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, go.transform.up);
+
+            // facing toward chest
+            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
+            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
+            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
+
+            //go.transform.Rotate(holdableObject.MyPhysicalRotation);
+            //go.transform.Rotate(Quaternion.Euler(holdableObject.MyPhysicalRotation));
+            //go.transform.localRotation *= Quaternion.Euler(holdableObject.MyPhysicalRotation);
             go.transform.localEulerAngles = holdableObject.MyPhysicalRotation;
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; usedEulers: " + usedEulers);
         }
     }
 
+    private float fixAngle(float angle) {
+        if (angle >= 270) {
+            angle -= 360;
+        }
+        if (angle <= -270) {
+            angle += 360;
+        }
+        return angle;
+    }
+
+    private static float UnwrapAngle(float angle) {
+        if (angle >= 0)
+            return angle;
+
+        angle = -angle % 360;
+
+        return 360 - angle;
+    }
+
+    public static float Clamp0360(float eulerAngles) {
+        float result = eulerAngles - Mathf.CeilToInt(eulerAngles / 360f) * 360f;
+        if (result < 0) {
+            result += 360f;
+        }
+        return result;
+    }
+
     public virtual void Equip (Equipment newItem) {
-        //Debug.Log("EquipmentManager.Equip()");
+        Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip()");
         if (newItem == null) {
             //Debug.Log("Instructed to Equip a null item!");
             return;
@@ -289,7 +353,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
             if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
                 if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
                     // FIX ME - DO IT DIRECTLY
-                    currentEquipment[EquipmentSlot.OffHand].MyCharacterButton.DequipEquipment();
+                    Unequip(EquipmentSlot.OffHand);
                 }
             }
         }
@@ -297,15 +361,16 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
         // deal with offhands, and unequip any 2h mainhand
         if (newItem.equipSlot == EquipmentSlot.OffHand) {
             if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
-                if (currentEquipment[EquipmentSlot.MainHand] != null && currentEquipment[EquipmentSlot.MainHand].MyCharacterButton != null) {
+                if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
                     // FIX ME - DO IT DIRECTLY
-                    currentEquipment[EquipmentSlot.MainHand].MyCharacterButton.DequipEquipment();
+                    Unequip(EquipmentSlot.MainHand);
                 }
             }
         }
 
         //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
         currentEquipment[newItem.equipSlot] = newItem;
+        //newItem.MySlot.Clear();
 
         // both of these not needed if character unit not yet spawned?
         HandleItemUMARecipe(newItem);
@@ -313,12 +378,12 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
     }
 
     public virtual Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
-        //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
+        Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ")");
         if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
-            //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
+            Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
             if (currentEquipmentPhysicalObjects.ContainsKey(equipmentSlot)) {
                 GameObject destroyObject = currentEquipmentPhysicalObjects[equipmentSlot];
-                //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
+                Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
                 Destroy(destroyObject);
             }
             Equipment oldItem = currentEquipment[equipmentSlot];

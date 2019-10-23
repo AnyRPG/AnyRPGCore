@@ -28,7 +28,7 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
     }
 
     public void HandlePlayerUnitSpawn() {
-        Debug.Log("EquipmentManager.OnPlayerUnitSpawn()");
+        //Debug.Log(gameObject.name + ".EquipmentManager.OnPlayerUnitSpawn()");
         CreateComponentReferences();
         EquipCharacter();
         SubscribeToCombatEvents();
@@ -40,7 +40,7 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
     }
 
     public override void CreateComponentReferences() {
-        Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateComponentReferences()");
+        //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateComponentReferences()");
         base.CreateComponentReferences();
         /*
         if (componentReferencesInitialized) {
@@ -74,7 +74,6 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
             Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): currentEquipment == null!");
             return;
         }
-        Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): about to call base method");
         base.EquipCharacter();
 
         // MOVE TO PLAYER MANAGER

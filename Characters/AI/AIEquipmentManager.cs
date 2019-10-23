@@ -14,7 +14,7 @@ public class AIEquipmentManager : CharacterEquipmentManager {
     }
 
     public override void CreateComponentReferences() {
-        Debug.Log(gameObject.name + ".AIEquipmentManager.CreateComponentReferences()");
+        //Debug.Log(gameObject.name + ".AIEquipmentManager.CreateComponentReferences()");
         base.CreateComponentReferences();
         /*
         if (componentReferencesInitialized) {

@@ -128,7 +128,7 @@ public class CharacterPanel : WindowContentController {
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged -= UpdateStatsDescription;
         }
 
-        // 
+        /*
         head.ClearButton(false);
         shoulders.ClearButton(false);
         chest.ClearButton(false);
@@ -137,39 +137,19 @@ public class CharacterPanel : WindowContentController {
         feet.ClearButton(false);
         mainhand.ClearButton(false);
         offhand.ClearButton(false);
-
+        */
     }
 
-    public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
-        //Debug.Log("CharacterPanel.EquipEquipment(" + (newEquipment != null ? newEquipment.MyName : "null") + ", " + partialEquip + ")");
-        switch (newEquipment.equipSlot) {
-            case EquipmentSlot.Helm:
-                head.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.Chest:
-                chest.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.Legs:
-                legs.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.MainHand:
-                mainhand.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.OffHand:
-                offhand.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.Feet:
-                feet.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.Hands:
-                hands.EquipEquipment(newEquipment, partialEquip);
-                break;
-            case EquipmentSlot.Shoulders:
-                shoulders.EquipEquipment(newEquipment, partialEquip);
-                break;
-            default:
-                break;
-        }
+    public void UpdateCharacterButtons() {
+        Debug.Log("CharacterPanel.UpdateCharacterButtons");
+        head.UpdateVisual();
+        chest.UpdateVisual();
+        legs.UpdateVisual();
+        mainhand.UpdateVisual();
+        offhand.UpdateVisual();
+        feet.UpdateVisual();
+        hands.UpdateVisual();
+        shoulders.UpdateVisual();
     }
 
     public override void RecieveClosedWindowNotification() {
@@ -201,12 +181,16 @@ public class CharacterPanel : WindowContentController {
             // update display
             SetPreviewTarget();
             //EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
-            UpdateStatsDescription();
+            //UpdateStatsDescription();
         }
     }
 
     public void UpdateStatsDescription() {
-        //Debug.Log("CharacterPanel.UpdateStatsDescription");
+        Debug.Log("CharacterPanel.UpdateStatsDescription");
+
+        // update images on character buttons
+        UpdateCharacterButtons();
+
         if (statsDescription == null) {
             Debug.LogError("Must set statsdescription text in inspector!");
         }
@@ -249,7 +233,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     private void SetPreviewTarget() {
-        //Debug.Log("CharacterPanel.SetPreviewTarget()");
+        Debug.Log("CharacterPanel.SetPreviewTarget()");
 
         //spawn correct preview unit
         CharacterCreatorManager.MyInstance.HandleOpenWindow(false);
@@ -266,7 +250,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     public void TargetReadyCallback() {
-        //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+        Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
         TargetReadyCallbackCommon();
     }
@@ -286,9 +270,18 @@ public class CharacterPanel : WindowContentController {
         // disabled for now.  recipe should be already in recipestring anyway
         //SaveManager.MyInstance.SaveUMASettings();
         SaveManager.MyInstance.LoadUMASettings(umaAvatar);
+        CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
+        if (characterEquipmentManager != null) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterEquipmentManager.MyCurrentEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment;
+                characterEquipmentManager.EquipCharacter();
+            }
+        }
+        /*
         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
             PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.EquipCharacter();
         }
+        */
 
         // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
         CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

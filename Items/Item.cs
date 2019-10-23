@@ -27,7 +27,7 @@ public class Item : DescribableResource, IMoveable {
     /// </summary>
     private SlotScript slot;
 
-    public CharacterButton MyCharacterButton { get; set; }
+    //public CharacterButton MyCharacterButton { get; set; }
 
     [SerializeField]
     private Currency currency;

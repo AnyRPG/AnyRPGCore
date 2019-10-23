@@ -51,6 +51,7 @@ public class Equipment : Item {
         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
             base.Use();
             PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
+            Remove();
         }
     }
 
