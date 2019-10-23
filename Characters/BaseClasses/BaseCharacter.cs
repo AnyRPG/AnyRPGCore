@@ -67,7 +67,12 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
     }
 
     protected virtual void Start() {
-
+        if (characterStats != null) {
+            characterStats.CreateEventReferences();
+        }
+        if (characterEquipmentManager != null) {
+            characterEquipmentManager.LoadDefaultEquipment();
+        }
     }
 
     public virtual void Initialize(string characterName, int characterLevel = 1) {

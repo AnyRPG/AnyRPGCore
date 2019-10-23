@@ -55,4 +55,6 @@ public interface ICharacterStats {
     void Start();
     void UseMana(int usedMana);
     StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter source, CharacterUnit target, AbilityEffectOutput abilityEffectInput);
+    void CreateEventReferences();
+
 }

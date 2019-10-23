@@ -7,6 +7,8 @@ using UMA.CharacterSystem;
 
 public abstract class CharacterEquipmentManager : MonoBehaviour {
 
+    public System.Action<Equipment, Equipment> OnEquipmentChanged = delegate { };
+
     // component references
     protected BaseCharacter baseCharacter;
     protected GameObject playerUnitObject = null;
@@ -39,7 +41,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
         int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         startHasRun = true;
         CreateEventReferences();
-        LoadDefaultEquipment();
+        //LoadDefaultEquipment();
     }
 
     public virtual void CreateComponentReferences() {
@@ -375,6 +377,12 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
         // both of these not needed if character unit not yet spawned?
         HandleItemUMARecipe(newItem);
         HandleWeaponSlot(newItem);
+
+        // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
+        // updated oldItem to null here because this call is already done in Unequip.
+        // having it here also was leading to duplicate stat removal when gear was changed.
+        OnEquipmentChanged(newItem, null);
+
     }
 
     public virtual Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
@@ -398,6 +406,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
 
             //Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
             currentEquipment[equipmentSlot] = null;
+            OnEquipmentChanged(null, oldItem);
             return oldItem;
         }
         return null;

@@ -29,12 +29,12 @@ public class PlayerStats : CharacterStats
 
     public override void CreateEventReferences() {
         //Debug.Log(gameObject.name + ".PlayerStats.CreateEventReferences()");
-        base.CreateEventReferences();
         if (eventReferencesInitialized) {
             //if (eventReferencesInitialized || !startHasRun) {
             return;
         }
-        SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
+        base.CreateEventReferences();
+        //SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
         SystemEventManager.MyInstance.OnLevelChanged += LevelUpHandler;
         SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
         SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
@@ -42,10 +42,10 @@ public class PlayerStats : CharacterStats
     }
 
     public override void CleanupEventReferences() {
-        base.CleanupEventReferences();
         if (!eventReferencesInitialized) {
             return;
         }
+        base.CleanupEventReferences();
         if (PlayerManager.MyInstance != null) {
             if (PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat != null) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent -= OnKillEventHandler;
@@ -53,7 +53,7 @@ public class PlayerStats : CharacterStats
         }
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnLevelChanged -= LevelUpHandler;
-            SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
+            //SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
         }
@@ -71,31 +71,6 @@ public class PlayerStats : CharacterStats
         }
         //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
         GainXP((int)(LevelEquations.GetXPAmountForKill(MyLevel, sourceCharacter.MyCharacterStats.MyLevel) * creditPercent));
-    }
-
-    void OnEquipmentChanged (Equipment newItem, Equipment oldItem) {
-        //Debug.Log("PlayerStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
-
-        if (newItem != null) {
-            armorModifiers.AddModifier(newItem.armorModifier);
-            meleeDamageModifiers.AddModifier(newItem.damageModifier);
-            primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier);
-            primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier);
-            primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier);
-            primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier);
-        }
-
-        if (oldItem != null) {
-            armorModifiers.RemoveModifier(oldItem.armorModifier);
-            meleeDamageModifiers.RemoveModifier(oldItem.damageModifier);
-            primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier);
-            primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier);
-            primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier);
-            primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier);
-        }
-
-        ManaChangedNotificationHandler();
-        HealthChangedNotificationHandler();
     }
 
     public override void Die() {

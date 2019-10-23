@@ -59,7 +59,7 @@ public class SystemEventManager : MonoBehaviour {
 
     // equipment manager
     public System.Action<Equipment, Equipment> OnEquipmentChanged = delegate { };
-    public System.Action<Equipment> OnEquipmentRefresh = delegate { };
+    //public System.Action<Equipment> OnEquipmentRefresh = delegate { };
 
     // UI
     public System.Action OnPagedButtonsTransparencyUpdate = delegate { };
@@ -95,9 +95,11 @@ public class SystemEventManager : MonoBehaviour {
         OnEquipmentChanged(newEquipment, oldEquipment);
     }
 
+    /*
     public void NotifyOnEquipmentRefresh(Equipment newEquipment) {
         OnEquipmentRefresh(newEquipment);
     }
+    */
 
     public void NotifyOnTakeLoot() {
         OnTakeLoot();

@@ -89,6 +89,9 @@ public class CharacterAnimator : MonoBehaviour {
             characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
             characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
             characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
+            if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += PerformEquipmentChange;
+            }
         }
     }
 
@@ -97,6 +100,9 @@ public class CharacterAnimator : MonoBehaviour {
             characterUnit.MyCharacter.MyCharacterCombat.OnAttack -= HandleAttack;
             characterUnit.MyCharacter.MyCharacterStats.OnDie -= HandleDeath;
             characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
+            if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= PerformEquipmentChange;
+            }
         }
     }
 

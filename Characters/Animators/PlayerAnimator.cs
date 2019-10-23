@@ -17,17 +17,17 @@ public class PlayerAnimator : CharacterAnimator {
     public override void CreateEventReferences() {
         // called from base.start
         base.CreateEventReferences();
-        SystemEventManager.MyInstance.OnEquipmentChanged += PerformEquipmentChange;
-        SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
+        //SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
     }
 
     public override void CleanupEventReferences() {
         // called from base.onDisable
         base.CleanupEventReferences();
+        /*
         if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnEquipmentChanged -= PerformEquipmentChange;
             SystemEventManager.MyInstance.OnEquipmentRefresh -= PerformEquipmentChange;
         }
+        */
     }
 
     // for debugging

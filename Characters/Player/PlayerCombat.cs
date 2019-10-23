@@ -19,7 +19,7 @@ public class PlayerCombat : CharacterCombat {
         }
         base.CreateEventReferences();
         SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
-        SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
+        //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
             baseCharacter.MyCharacterStats.OnHealthChanged += AttemptRegen;
             baseCharacter.MyCharacterStats.OnManaChanged += AttemptRegen;
@@ -35,7 +35,7 @@ public class PlayerCombat : CharacterCombat {
         base.CleanupEventReferences();
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
-            SystemEventManager.MyInstance.OnEquipmentRefresh -= OnEquipmentChanged;
+            //SystemEventManager.MyInstance.OnEquipmentRefresh -= OnEquipmentChanged;
         }
 
         // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
