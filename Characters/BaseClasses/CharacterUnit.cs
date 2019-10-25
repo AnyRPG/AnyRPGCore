@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -315,5 +317,7 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+
+}
 
 }

@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -5,6 +6,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UMA;
 
+namespace AnyRPG {
 //DOS MODIFIED really we want this to 'look at' the target bone but move with the Global one
 //not sure how to do that though...
 //TODO if the user changes the size of the head to be really big we end up inside. We need this to calculate its minimum distance based on the size of thecapsule collider (assuming this is correct
@@ -256,3 +258,5 @@ public class MouseOrbitImproved2 : MonoBehaviour
             return Mathf.Clamp(angle, min, max);
         }
     }
+
+}

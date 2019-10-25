@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UMA.Examples;
 using UMA.CharacterSystem;
 using UMA.CharacterSystem.Examples;
 
+namespace AnyRPG {
 
 public class LoadGamePanel : WindowContentController {
 
@@ -259,5 +261,7 @@ public class LoadGamePanel : WindowContentController {
         }
     }
 
+
+}
 
 }

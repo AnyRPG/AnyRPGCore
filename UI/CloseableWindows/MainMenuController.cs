@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class MainMenuController : WindowContentController {
 
     public void PlayMenu() {
@@ -44,5 +46,7 @@ public class MainMenuController : WindowContentController {
         //Debug.Log("MainMenuController.ContinueGame()");
         SystemWindowManager.MyInstance.CloseAllWindows();
     }
+
+}
 
 }

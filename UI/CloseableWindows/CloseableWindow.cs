@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CloseableWindow : MonoBehaviour {
 
     public event System.Action OnOpenWindowCallback = delegate { };
@@ -169,5 +171,7 @@ public class CloseableWindow : MonoBehaviour {
     public void SetWindowTitle(string newTitle) {
         windowText.text = newTitle;
     }
+
+}
 
 }

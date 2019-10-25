@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using UMA.Examples;
 using UMA.CharacterSystem;
 using UMA.CharacterSystem.Examples;
 
+namespace AnyRPG {
 public class AnyRPGCharacterCreator : MonoBehaviour {
 
     public DynamicCharacterAvatar Avatar;
@@ -235,4 +237,6 @@ public class AnyRPGCharacterCreator : MonoBehaviour {
     public void ToggleAnimation() {
         // RuntimeAnimatorController rac = Avatar.gameObject.GetComponentInChildren<>
     }
+}
+
 }

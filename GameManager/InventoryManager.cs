@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class InventoryManager : MonoBehaviour {
 
     #region Singleton
@@ -672,5 +674,7 @@ public class InventoryManager : MonoBehaviour {
         return items;
     }
 
+
+}
 
 }

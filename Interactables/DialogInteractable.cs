@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class DialogInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -178,4 +180,6 @@ public class DialogInteractable : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

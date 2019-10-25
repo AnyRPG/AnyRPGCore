@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class AnyRPGCutsceneCameraController : MonoBehaviour {
 
     #region Singleton
@@ -47,5 +49,7 @@ public class AnyRPGCutsceneCameraController : MonoBehaviour {
         //UIManager.MyInstance.ActivateInGameUI();
         UIManager.MyInstance.MyCutSceneBarController.EndCutScene();
     }
+
+}
 
 }

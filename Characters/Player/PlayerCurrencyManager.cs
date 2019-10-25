@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayerCurrencyManager : MonoBehaviour {
 
     public event System.Action OnCurrencyChange = delegate { };
@@ -76,5 +78,7 @@ public class PlayerCurrencyManager : MonoBehaviour {
     }
 
 
+
+}
 
 }

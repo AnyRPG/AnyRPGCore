@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class PlayerEquipmentManager : CharacterEquipmentManager {
 
     protected override void CreateEventReferences() {
@@ -112,5 +114,7 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
         return returnValue;
     }
 
+
+}
 
 }

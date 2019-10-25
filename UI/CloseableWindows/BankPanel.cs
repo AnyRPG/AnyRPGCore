@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class BankPanel : BagPanel {
 
     public override event Action<ICloseableWindowContents> OnOpenWindow;
@@ -21,5 +23,7 @@ public class BankPanel : BagPanel {
         base.RecieveClosedWindowNotification();
         InventoryManager.MyInstance.CloseBank();
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "Bag", menuName = "Inventory/Items/Bag", order = 1)]
 public class Bag : Item, IUseable {
 
@@ -68,5 +70,7 @@ public class Bag : Item, IUseable {
     public override string GetSummary() {
         return base.GetSummary() + string.Format("\n<color=green>Use: Equip</color>");
     }
+
+}
 
 }

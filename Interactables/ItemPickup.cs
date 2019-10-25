@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class ItemPickup : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -84,4 +86,6 @@ public class ItemPickup : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

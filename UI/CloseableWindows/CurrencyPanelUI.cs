@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
 
     public event System.Action<bool> OnPageCountUpdate = delegate { };
@@ -103,4 +105,5 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
         pageIndex = 0;
     }
 
+}
 }

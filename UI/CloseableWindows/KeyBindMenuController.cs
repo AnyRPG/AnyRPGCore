@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class KeyBindMenuController : WindowContentController {
 
     [SerializeField]
@@ -40,5 +42,7 @@ public class KeyBindMenuController : WindowContentController {
             keyBindNode.SetSlotScript(keyBindSlotScript);
         }
     }
+
+}
 
 }

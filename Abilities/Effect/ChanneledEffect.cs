@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New ChanelledEffect", menuName = "Abilities/Effects/ChanneledEffect")]
 public class ChanneledEffect : DirectEffect {
 
@@ -27,4 +29,5 @@ public class ChanneledEffect : DirectEffect {
         }
     }
 
+}
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
 
     /// <summary>
@@ -216,5 +218,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
         return "Drag equipment here to equip it";
     }
+
+}
 
 }

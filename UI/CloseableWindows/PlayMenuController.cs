@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayMenuController : WindowContentController {
 
     public void NewGame() {
@@ -19,5 +21,7 @@ public class PlayMenuController : WindowContentController {
         //Debug.Log("PlayMenuController.LoadGame()");
         SystemWindowManager.MyInstance.loadGameWindow.OpenWindow();
     }
+
+}
 
 }

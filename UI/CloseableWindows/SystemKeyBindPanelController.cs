@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class SystemKeyBindPanelController : WindowContentController {
 
     [SerializeField]
@@ -96,5 +98,7 @@ public class SystemKeyBindPanelController : WindowContentController {
         systemButton.Select();
     }
 
+
+}
 
 }

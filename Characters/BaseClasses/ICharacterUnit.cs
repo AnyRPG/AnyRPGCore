@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
+namespace AnyRPG {
 public interface ICharacterUnit {
     NavMeshAgent MyAgent { get; set; }
     BaseCharacter MyCharacter { get; set; }
@@ -11,4 +13,5 @@ public interface ICharacterUnit {
 
     void InitializeNamePlate();
     string MyDisplayName { get; }
+}
 }

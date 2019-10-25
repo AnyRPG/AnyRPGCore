@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+namespace AnyRPG {
 public class AIPatrol : MonoBehaviour {
 
     [SerializeField]
@@ -158,5 +160,7 @@ public class AIPatrol : MonoBehaviour {
         }
         return returnValue;
     }
+
+}
 
 }

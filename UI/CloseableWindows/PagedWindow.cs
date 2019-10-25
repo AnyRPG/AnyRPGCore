@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class PagedWindow : CloseableWindow, IScrollHandler {
     [SerializeField]
     private Text pageNumber;
@@ -79,4 +81,6 @@ public class PagedWindow : CloseableWindow, IScrollHandler {
         }
 
     }
+}
+
 }

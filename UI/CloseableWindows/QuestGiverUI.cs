@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class QuestGiverUI : WindowContentController {
 
     #region Singleton
@@ -501,5 +503,7 @@ public class QuestGiverUI : WindowContentController {
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
         }
     }
+
+}
 
 }

@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 public interface ICharacterSkillManager {
     ICharacter MyBaseCharacter { get; set; }
     Dictionary<string, Skill> MySkillList { get; }
@@ -12,4 +14,5 @@ public interface ICharacterSkillManager {
     void LoadSkill(string skillName);
     void UnlearnSkill(string skillName);
     //List<string> GetSkillList();
+}
 }

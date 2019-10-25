@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField]
@@ -59,4 +61,6 @@ public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExit
     public void OnPointerExit(PointerEventData eventData) {
         UIManager.MyInstance.HideToolTip();
     }
+}
+
 }

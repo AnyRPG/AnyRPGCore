@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class TransparencyButton : MonoBehaviour {
 
     [SerializeField]
@@ -60,4 +62,6 @@ public class TransparencyButton : MonoBehaviour {
         //Debug.Log("TransparencyButton.GetComponentReferences(): got opacity: " + opacityLevel);
         backGroundImage.color = new Color32(0, 0, 0, (byte)opacityLevel);
     }
+}
+
 }

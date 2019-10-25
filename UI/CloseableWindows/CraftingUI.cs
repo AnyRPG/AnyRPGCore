@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CraftingUI : WindowContentController {
 
     #region Singleton
@@ -373,5 +375,7 @@ public class CraftingUI : WindowContentController {
         craftingQueue.Clear();
         PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
     }
+
+}
 
 }

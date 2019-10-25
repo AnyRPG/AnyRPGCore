@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+namespace AnyRPG {
 public class MainMapController : WindowContentController {
 
     #region Singleton
@@ -208,4 +210,6 @@ public class MainMapController : WindowContentController {
         //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredWidth: " + graphicLayoutElement.preferredWidth);
         //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredHeight: " + graphicLayoutElement.preferredHeight);
     }
+}
+
 }

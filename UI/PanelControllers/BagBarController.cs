@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class BagBarController : MonoBehaviour {
 
     [SerializeField]
@@ -118,5 +120,7 @@ public class BagBarController : MonoBehaviour {
     public void OnDestroy() {
         CleanupEventReferences();
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CharacterCreatorInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -105,4 +107,5 @@ public class CharacterCreatorInteractable : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
 }

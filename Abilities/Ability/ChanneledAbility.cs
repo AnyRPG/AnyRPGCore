@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "NewChanneledAbility", menuName = "Abilities/ChanneledAbility")]
 public class ChanneledAbility : InstantEffectAbility {
     // every x seconds, apply ability effects
@@ -56,5 +58,7 @@ public class ChanneledAbility : InstantEffectAbility {
         }
     }
 
+
+}
 
 }

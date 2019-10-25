@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class KeyBindNode
 {
     public event System.Action OnKeyPressedHandler = delegate { };
@@ -88,4 +90,6 @@ public class KeyBindNode
         this.shift = shift;
         this.MyKeyCode = keyCode;
     }
+}
+
 }

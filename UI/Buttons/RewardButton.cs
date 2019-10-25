@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class RewardButton : DescribableIcon, IClickable, IPointerClickHandler {
 
     public event System.Action<RewardButton> OnAttempSelect = delegate { };
@@ -62,5 +64,7 @@ public class RewardButton : DescribableIcon, IClickable, IPointerClickHandler {
         OnAttempSelect(this);
         UpdateVisual();
     }
+
+}
 
 }

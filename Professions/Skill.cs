@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Skill", menuName = "Skills/Skill")]
 public class Skill : DescribableResource {
 
@@ -24,4 +26,5 @@ public class Skill : DescribableResource {
         return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetSummary());
     }
 
+}
 }

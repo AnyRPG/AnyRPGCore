@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class DialogPanelController : WindowContentController {
 
     public event System.Action OnConfirmAction = delegate { };
@@ -168,5 +170,7 @@ public class DialogPanelController : WindowContentController {
         continueButton.SetActive(false);
     }
 
+
+}
 
 }

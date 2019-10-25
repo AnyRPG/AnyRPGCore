@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System;
 using UnityEngine;
 
+namespace AnyRPG {
 public interface ICharacterCombat {
 
     // events
@@ -34,4 +36,5 @@ public interface ICharacterCombat {
     void TryToDropCombat();
     void ResetAttackCoolDown();
     void SetWaitingForAutoAttack(bool newValue);
+}
 }

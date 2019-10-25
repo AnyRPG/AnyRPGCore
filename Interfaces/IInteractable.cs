@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public interface IInteractable : IDescribable {
 
     event System.Action<IInteractable> MiniMapStatusUpdateHandler;
@@ -23,4 +25,6 @@ public interface IInteractable : IDescribable {
     int GetValidOptionCount();
     int GetCurrentOptionCount();
     void HandlePrerequisiteUpdates();
+}
+
 }

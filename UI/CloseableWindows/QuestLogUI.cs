@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 //public delegate void OnCheckCompletion();
 
 /// <summary>
@@ -192,4 +194,6 @@ public class QuestLogUI : WindowContentController {
         QuestLog.MyInstance.AbandonQuest(currentQuestName);
         ShowQuestsCommon();
     }
+}
+
 }

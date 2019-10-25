@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [ExecuteInEditMode]
 public class ShowRealEulerAngles : MonoBehaviour {
 
@@ -21,4 +23,6 @@ public class ShowRealEulerAngles : MonoBehaviour {
         eulerAngZ = transform.localEulerAngles.z;
 
     }
+}
+
 }

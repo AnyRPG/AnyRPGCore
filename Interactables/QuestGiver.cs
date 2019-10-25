@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class QuestGiver : InteractableOption, IQuestGiver {
 
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -303,4 +305,6 @@ public class QuestGiver : InteractableOption, IQuestGiver {
         }
         return false;
     }
+}
+
 }

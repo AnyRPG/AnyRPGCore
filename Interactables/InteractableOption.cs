@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public abstract class InteractableOption : MonoBehaviour, IInteractable {
 
     public abstract event System.Action<IInteractable> MiniMapStatusUpdateHandler;
@@ -151,5 +153,7 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     public virtual void HandlePrerequisiteUpdates() {
         // overwrite me
     }
+
+}
 
 }

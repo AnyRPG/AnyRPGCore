@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class LootTable : MonoBehaviour {
 
     [SerializeField]
@@ -62,4 +64,6 @@ public class LootTable : MonoBehaviour {
     public void Reset() {
         rolled = false;
     }
+}
+
 }

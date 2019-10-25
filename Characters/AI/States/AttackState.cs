@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class AttackState : IState
 {
     private AIController aiController;
@@ -39,4 +41,6 @@ public class AttackState : IState
             aiController.ChangeState(new ReturnState());
         }
     }
+}
+
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class AICharacter : BaseCharacter {
 
     /// <summary>
@@ -38,5 +40,7 @@ public class AICharacter : BaseCharacter {
             //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character animator");
         }
     }
+
+}
 
 }

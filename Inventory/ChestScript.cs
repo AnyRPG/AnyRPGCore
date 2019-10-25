@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ChestScript : BagPanel
 {
     // Start is called before the first frame update
@@ -9,5 +11,7 @@ public class ChestScript : BagPanel
         base.Awake();
         AddSlots(48);
     }
+
+}
 
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class TradeSkillPrerequisite : IPrerequisite {
 
@@ -27,4 +29,6 @@ public class TradeSkillPrerequisite : IPrerequisite {
         }
         return false;
     }
+}
+
 }

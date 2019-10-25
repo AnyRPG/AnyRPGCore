@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class QuestNode {
 
@@ -20,5 +22,7 @@ public class QuestNode {
     public bool MyEndQuest { get => endQuest; set => endQuest = value; }
     public Quest MyQuest { get => questTemplate; set => questTemplate = value; }
     public GameObject MyGameObject { get => questObject; set => questObject = value; }
+
+}
 
 }

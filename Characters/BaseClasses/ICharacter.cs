@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿public interface ICharacter {
     ICharacterAbilityManager MyCharacterAbilityManager { get; }
     ICharacterCombat MyCharacterCombat { get; }

@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Faction", menuName = "Factions/Faction")]
 public class Faction : DescribableResource {
 
@@ -190,5 +192,7 @@ public class Faction : DescribableResource {
         // This ensures that if a character who is generally neutral or friendly with everyone sees someone whose default is to agro, they will see them as a threat
         //Debug.Log("Faction.relationWith(): factions are unaware of each other. returning lowest default disposition from both");
     }
+
+}
 
 }

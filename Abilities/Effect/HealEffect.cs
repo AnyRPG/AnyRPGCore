@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New HealEffect", menuName = "Abilities/Effects/HealEffect")]
 public class HealEffect : AmountEffect {
 
@@ -50,4 +52,5 @@ public class HealEffect : AmountEffect {
     }
 
 
+}
 }

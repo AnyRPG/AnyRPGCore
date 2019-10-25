@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class FactionNode : IDescribable {
 
@@ -20,4 +22,6 @@ public class FactionNode : IDescribable {
     public string GetSummary() {
         return faction.GetSummary();
     }
+}
+
 }

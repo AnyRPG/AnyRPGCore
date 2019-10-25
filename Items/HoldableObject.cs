@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UMA;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Holdable Object", menuName = "Holdable Object")]
 public class HoldableObject : DescribableResource {
 
@@ -60,4 +62,5 @@ public class HoldableObject : DescribableResource {
     public Vector3 MySheathedPhysicalScale { get => sheathedPhysicalScale; }
     public string MySheathedTargetBone { get => sheathedTargetBone; }
 
+}
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 static class LevelEquations
 {
 
@@ -112,4 +114,6 @@ static class LevelEquations
         }
         return 100;
     }
+}
+
 }

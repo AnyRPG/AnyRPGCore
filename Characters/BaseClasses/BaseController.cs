@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     public virtual event System.Action<GameObject> OnSetTarget = delegate { };
@@ -254,5 +256,7 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     public virtual void OnDestroy() {
     }
+
+}
 
 }

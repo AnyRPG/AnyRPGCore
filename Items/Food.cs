@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Food", menuName = "Inventory/Items/Food", order = 1)]
 public class Food : CastableItem {
 
@@ -22,5 +24,7 @@ public class Food : CastableItem {
         return returnString;
     }
 
+
+}
 
 }

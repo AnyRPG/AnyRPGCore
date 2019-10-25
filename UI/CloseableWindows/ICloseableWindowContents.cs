@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public interface ICloseableWindowContents {
     event System.Action<ICloseableWindowContents> OnOpenWindow;
     event System.Action<ICloseableWindowContents> OnCloseWindow;
@@ -9,4 +11,5 @@ public interface ICloseableWindowContents {
     void SetBackGroundColor(Color color);
 
     Image MyBackGroundImage { get; }
+}
 }

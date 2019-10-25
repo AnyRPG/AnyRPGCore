@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 // base class to hold amounts and spellpower calculations for heal and damage effects
 public abstract class AmountEffect : InstantEffect {
 
@@ -17,4 +19,5 @@ public abstract class AmountEffect : InstantEffect {
         float amountModifier = source.MyCharacterStats.MySpellPower;
         return (abilityBaseAmount == 0 ? abilityBaseAmount : (abilityBaseAmount + amountModifier));
     }
+}
 }

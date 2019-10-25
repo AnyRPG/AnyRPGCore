@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
 
     public virtual event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
@@ -49,4 +51,6 @@ public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
         }
     }
+}
+
 }

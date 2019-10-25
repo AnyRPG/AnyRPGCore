@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 // this is almost identical to questscript
 
 public class RecipeScript : HighlightButton {
@@ -32,5 +34,7 @@ public class RecipeScript : HighlightButton {
         //Debug.Log("RecipeScript.DeSelect()");
         base.DeSelect();
     }
+
+}
 
 }

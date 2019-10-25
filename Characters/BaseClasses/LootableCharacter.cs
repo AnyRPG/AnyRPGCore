@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 /// <summary>
 /// Currently enemy is a subclass of interactable to inherit right click and move toward functionality.
 /// This may be better implemented as an interface in the future.
@@ -258,4 +260,6 @@ public class LootableCharacter : InteractableOption {
     public override string GetSummary() {
         return "Lootable";
     }
+}
+
 }

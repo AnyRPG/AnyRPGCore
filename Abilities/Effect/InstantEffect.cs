@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New InstantEffect", menuName = "Abilities/Effects/InstantEffect")]
 public class InstantEffect : DirectEffect {
 
@@ -16,4 +18,5 @@ public class InstantEffect : DirectEffect {
         PerformAbilityHit(source, target, abilityEffectInput);
     }
 
+}
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class VendorButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
 
     [SerializeField]
@@ -102,5 +104,7 @@ public class VendorButton : TransparencyButton, IPointerEnterHandler, IPointerEx
             }
         }
     }
+
+}
 
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class AIStats : CharacterStats {
 
     protected override void Awake() {
@@ -31,5 +33,7 @@ public class AIStats : CharacterStats {
     public void ApplyControlEffects (BaseCharacter source) {
         (baseCharacter.MyCharacterController as AIController).ApplyControlEffects(source);
     }
+
+}
 
 }

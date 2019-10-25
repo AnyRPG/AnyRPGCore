@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class FactionChangeInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -100,4 +102,6 @@ public class FactionChangeInteractable : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

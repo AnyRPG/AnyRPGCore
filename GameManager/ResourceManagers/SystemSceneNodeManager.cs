@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 
 /// <summary>
 /// allow us to query scriptable objects for equivalence by storing a template ID on all instantiated objects
@@ -63,4 +65,6 @@ public class SystemSceneNodeManager : SystemResourceManager {
         SceneNode sceneNode = GetResource(sceneNodeSaveData.MyName);
         sceneNode.MyCutsceneViewed = sceneNodeSaveData.isCutSceneViewed;
     }
+}
+
 }

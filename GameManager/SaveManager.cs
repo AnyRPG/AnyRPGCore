@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class SaveManager : MonoBehaviour {
 
     #region Singleton
@@ -964,4 +966,6 @@ public class SaveManager : MonoBehaviour {
         File.Delete(Application.persistentDataPath + "/" + anyRPGSaveData.DataFileName);
         SystemEventManager.MyInstance.NotifyOnDeleteSaveData();
     }
+}
+
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+namespace AnyRPG {
 
 public class SystemResourceManager : MonoBehaviour {
 
@@ -96,5 +98,7 @@ public class SystemResourceManager : MonoBehaviour {
         }
         return false;
     }
+
+}
 
 }

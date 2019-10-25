@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class GatheringNode : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -170,4 +172,6 @@ public class GatheringNode : InteractableOption {
         }
         return (GetCurrentOptionCount() == 0 ? false : true);
     }
+}
+
 }

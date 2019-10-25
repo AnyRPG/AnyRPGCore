@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 
 public class MaterialChangeController : MonoBehaviour  {
 
@@ -71,4 +73,6 @@ public class MaterialChangeController : MonoBehaviour  {
 
         Destroy(this);
     }
+}
+
 }

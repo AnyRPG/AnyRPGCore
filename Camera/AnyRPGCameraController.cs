@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class AnyRPGCameraController : MonoBehaviour {
     // public variables
 
@@ -239,5 +241,7 @@ public class AnyRPGCameraController : MonoBehaviour {
         // set the initial camera offset vector which will be used as the basis for all future relative camera movement
         //Debug.Log("Camera offset is " + cameraOffsetVector);
     }
+
+}
 
 }

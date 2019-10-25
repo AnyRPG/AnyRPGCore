@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UMA.CharacterSystem;
@@ -5,6 +6,7 @@ using UMA;
 using UMA.CharacterSystem.Examples;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class ColorSelectionController : MonoBehaviour {
     public DynamicCharacterAvatar Avatar;
 
@@ -68,3 +70,5 @@ public class ColorSelectionController : MonoBehaviour {
     }
 }
 
+
+}

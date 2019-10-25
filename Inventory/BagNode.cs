@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class BagNode {
 
@@ -42,4 +44,6 @@ public class BagNode {
     public bool MyIsBankNode { get => isBankNode; set => isBankNode = value; }
     public BagButton MyBagButton { get => bagButton; set => bagButton = value; }
     public CloseableWindow MyBagWindow { get => bagWindow; set => bagWindow = value; }
+}
+
 }

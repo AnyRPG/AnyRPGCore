@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class CharacterAnimator : MonoBehaviour {
 
     public event System.Action OnReviveComplete = delegate { };
@@ -886,5 +888,7 @@ public class CharacterAnimator : MonoBehaviour {
         }
     }
 
+
+}
 
 }

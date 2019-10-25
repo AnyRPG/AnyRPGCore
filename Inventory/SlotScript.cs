@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
     /// <summary>
     /// A stack for all items on this slot
@@ -392,5 +394,7 @@ public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPoin
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
         }
     }
+
+}
 
 }

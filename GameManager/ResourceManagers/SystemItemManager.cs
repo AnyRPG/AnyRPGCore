@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class SystemItemManager : SystemResourceManager {
 
     #region Singleton
@@ -63,4 +65,6 @@ public class SystemItemManager : SystemResourceManager {
         }
         return returnList;
     }
+}
+
 }

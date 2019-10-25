@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class MainMenuManager : MonoBehaviour {
 
     [SerializeField]
@@ -41,5 +43,7 @@ public class MainMenuManager : MonoBehaviour {
             return;
         }
     }
+
+}
 
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class GatherLootTable : LootTable
 {
     private void Start() {
@@ -25,4 +27,6 @@ public class GatherLootTable : LootTable
 
         rolled = true;
     }
+}
+
 }

@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
+namespace AnyRPG {
 public class AIController : BaseController {
 
     [SerializeField]
@@ -303,5 +305,7 @@ public class AIController : BaseController {
     public override void OnDisable() {
         RemoveControlEffects();
     }
+
+}
 
 }

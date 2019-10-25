@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class KeyBindSlotScript : MonoBehaviour {
 
     // a unique string that represents the dictionary key for this keybind throughout the game
@@ -28,4 +30,6 @@ public class KeyBindSlotScript : MonoBehaviour {
         Debug.Log("KeyBindSlotScript.SetKeyBind()");
         KeyBindManager.MyInstance.BeginKeyBind(keyBindID);
     }
+}
+
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [RequireComponent(typeof(CharacterFactionManager))]
 public abstract class BaseCharacter : MonoBehaviour, ICharacter {
     [SerializeField]
@@ -94,5 +96,7 @@ public abstract class BaseCharacter : MonoBehaviour, ICharacter {
             factionName = newFaction;
         }
     }
+
+}
 
 }

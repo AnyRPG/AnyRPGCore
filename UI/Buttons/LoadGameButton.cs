@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class LoadGameButton : HighlightButton {
 
     [SerializeField]
@@ -81,5 +83,7 @@ public class LoadGameButton : HighlightButton {
         CommonSelect();
         base.Select();
     }
+
+}
 
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class PrerequisiteConditions {
 
@@ -70,4 +72,6 @@ public class PrerequisiteConditions {
         //Debug.Log("PrerequisiteConditions: reversematch: " + reverseMatch + "; returnvalue native: " + returnValue);
         return reverseMatch ? !returnValue : returnValue;
     }
+}
+
 }

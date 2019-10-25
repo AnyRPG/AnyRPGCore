@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 /// <summary>
 /// Maintains a list of all quests
 /// </summary>
@@ -170,4 +172,6 @@ public class QuestLog : MonoBehaviour  {
         }
         MyQuests.Clear();
     }
+}
+
 }

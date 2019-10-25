@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 // this is almost identical to questscript
 
 public class QuestGiverQuestScript : MonoBehaviour
@@ -70,5 +72,7 @@ public class QuestGiverQuestScript : MonoBehaviour
         MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
     }
 
+
+}
 
 }

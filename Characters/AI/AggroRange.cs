@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [RequireComponent(typeof(SphereCollider))]
 public class AggroRange : MonoBehaviour {
     
@@ -105,4 +107,6 @@ private void OnTriggerExit(Collider collider) {
 
 }
     */
+}
+
 }

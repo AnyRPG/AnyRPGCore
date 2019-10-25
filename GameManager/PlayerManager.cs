@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class PlayerManager : MonoBehaviour {
 
     #region Singleton
@@ -421,5 +423,7 @@ public class PlayerManager : MonoBehaviour {
         MyCharacter = null;
         playerConnectionSpawned = false;
     }
+
+}
 
 }

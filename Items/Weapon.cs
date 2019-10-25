@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Inventory/Equipment/Weapon", order = 3)]
 public class Weapon : Equipment {
 
@@ -45,5 +47,7 @@ public class Weapon : Equipment {
         }
         return base.GetSummary() + abilitiesString;
     }
+
+}
 
 }

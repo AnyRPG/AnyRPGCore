@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+namespace AnyRPG {
 
 [System.Serializable]
 public class KillObjective : QuestObjective {
@@ -44,4 +46,5 @@ public class KillObjective : QuestObjective {
         }
     }
 
+}
 }

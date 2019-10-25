@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
+namespace AnyRPG {
 public class LevelManager : MonoBehaviour {
 
     #region Singleton
@@ -336,5 +338,7 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
+
+}
 
 }

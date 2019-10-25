@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+namespace AnyRPG {
 public class MiniMapController : DraggableWindow {
 
     #region Singleton
@@ -169,5 +171,7 @@ public class MiniMapController : DraggableWindow {
         yield return null;
     }
 
+
+}
 
 }

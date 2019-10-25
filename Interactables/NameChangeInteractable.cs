@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class NameChangeInteractable : InteractableOption {
 
     public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -130,4 +132,6 @@ public class NameChangeInteractable : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

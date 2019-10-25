@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
     public event System.Action<IAbility, float> OnCastTimeChanged = delegate { };
     public event System.Action<BaseCharacter> OnCastStop = delegate { };
@@ -519,5 +521,7 @@ public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
 
         destroyAbilityEffectObjectCoroutine = null;
     }
+
+}
 
 }

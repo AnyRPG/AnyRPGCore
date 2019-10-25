@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 
 /// <summary>
 /// allow us to query scriptable objects for equivalence by storing a template ID on all instantiated objects
@@ -62,4 +64,6 @@ public class SystemDialogManager : SystemResourceManager {
         Dialog dialog = GetResource(dialogSaveData.MyName);
         dialog.TurnedIn = dialogSaveData.turnedIn;
     }
+}
+
 }

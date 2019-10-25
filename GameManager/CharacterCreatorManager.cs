@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System.Collections;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterCreatorManager : MonoBehaviour {
 
     #region Singleton
@@ -77,8 +79,8 @@ public class CharacterCreatorManager : MonoBehaviour {
         if (previewUnit.GetComponent<Interactable>() != null) {
             previewUnit.GetComponent<Interactable>().enabled = false;
         }
-        if (previewUnit.GetComponent<SuperCharacterController>() != null) {
-            previewUnit.GetComponent<SuperCharacterController>().enabled = false;
+        if (previewUnit.GetComponent<AnyRPGCharacterController>() != null) {
+            previewUnit.GetComponent<AnyRPGCharacterController>().enabled = false;
         }
         if (previewUnit.GetComponent<Rigidbody>() != null) {
             previewUnit.GetComponent<Rigidbody>().isKinematic = true;
@@ -118,4 +120,5 @@ public class CharacterCreatorManager : MonoBehaviour {
     }
 
 
+}
 }

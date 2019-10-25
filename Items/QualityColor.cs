@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 /// <summary>
 /// Enum for declaring the quality of the item
 /// </summary>
@@ -28,4 +30,6 @@ public static class QualityColor
             return colors;
         }
     }
+}
+
 }

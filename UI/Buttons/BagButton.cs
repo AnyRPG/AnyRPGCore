@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class BagButton : MonoBehaviour, IPointerClickHandler, IDescribable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
     private BagNode bagNode;
 
@@ -172,5 +174,7 @@ public class BagButton : MonoBehaviour, IPointerClickHandler, IDescribable, IPoi
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
         }
     }
+
+}
 
 }

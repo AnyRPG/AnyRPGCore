@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterFactionManager : MonoBehaviour {
 
     private BaseCharacter baseCharacter;
@@ -108,5 +110,7 @@ public class CharacterFactionManager : MonoBehaviour {
         return 0f;
     }
 
+
+}
 
 }

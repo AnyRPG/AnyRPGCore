@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 /// <summary>
 /// Manages the messages displayed on the screen for quest status updates
 /// </summary>
@@ -53,4 +55,6 @@ public class MessageFeedManager : MonoBehaviour {
     public void LockUI() {
         MessageFeedGameObject.GetComponent<DraggableWindow>().LockUI();
     }
+}
+
 }

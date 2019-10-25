@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayerAnimator : CharacterAnimator {
 
     protected override void Awake() {
@@ -48,4 +50,5 @@ public class PlayerAnimator : CharacterAnimator {
     }
     */
 
+}
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayerStats : CharacterStats
 {
     protected override void Awake() {
@@ -124,5 +126,7 @@ public class PlayerStats : CharacterStats
         // moving to GainLevel to avoid notifications on character load
         //SystemEventManager.MyInstance.NotifyOnLevelChanged(newLevel);
     }
+
+}
 
 }

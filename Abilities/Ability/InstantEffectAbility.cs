@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class InstantEffectAbility : BaseAbility {
 
     public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
@@ -47,5 +49,7 @@ public class InstantEffectAbility : BaseAbility {
     }
 
 
+
+}
 
 }

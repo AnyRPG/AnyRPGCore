@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class LootUI : WindowContentController, IPagedWindowContents {
 
     #region Singleton
@@ -174,5 +176,7 @@ public class LootUI : WindowContentController, IPagedWindowContents {
         pages.Clear();
         pageIndex = 0;
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New ProjectileEffect", menuName = "Abilities/Effects/ProjectileEffect")]
 public class ProjectileEffect : DirectEffect {
 
@@ -24,4 +26,5 @@ public class ProjectileEffect : DirectEffect {
         Destroy(_abilityEffectObject);
     }
 
+}
 }

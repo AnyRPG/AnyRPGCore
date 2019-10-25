@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public abstract class CharacterEquipmentManager : MonoBehaviour {
 
     public System.Action<Equipment, Equipment> OnEquipmentChanged = delegate { };
@@ -492,4 +494,6 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
         }
         subscribedToCombatEvents = false;
     }
+}
+
 }

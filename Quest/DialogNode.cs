@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class DialogNode {
 
@@ -14,4 +16,6 @@ public class DialogNode {
 
     public string MyDescription { get => description; set => description = value; }
     public string MyNextOption { get => nextOption; set => nextOption = value; }
+}
+
 }

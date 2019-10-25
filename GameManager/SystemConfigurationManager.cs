@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Audio;
@@ -5,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class SystemConfigurationManager : MonoBehaviour {
 
     #region Singleton
@@ -194,5 +196,7 @@ public class SystemConfigurationManager : MonoBehaviour {
         //Debug.Log("PlayerManager.OnDisable()");
         CleanupEventReferences();
     }
+
+}
 
 }

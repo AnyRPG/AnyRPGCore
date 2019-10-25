@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CombatLogUI : WindowContentController {
 
     #region Singleton
@@ -286,4 +288,6 @@ public class CombatLogUI : WindowContentController {
         ShowChatLog();
         OnOpenWindow(this);
     }
+}
+
 }

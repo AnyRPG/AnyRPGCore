@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class Interactable : MonoBehaviour, IDescribable {
 
     // the physical interactable to spawn
@@ -771,5 +773,7 @@ public class Interactable : MonoBehaviour, IDescribable {
     protected virtual void OnDestroy() {
         //Debug.Log(gameObject.name + ".Interactable.OnDestroy()");
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterStats : MonoBehaviour, ICharacterStats {
     //public static event Action<CharacterStats> OnCharacterStatsAdded = delegate { };
     //public static event Action<CharacterStats> OnCharacterStatsRemoved = delegate { };
@@ -537,4 +539,6 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
 
         statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
     }
+}
+
 }

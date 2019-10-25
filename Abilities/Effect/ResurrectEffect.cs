@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New ResurrectEffect", menuName = "Abilities/Effects/ResurrectEffect")]
 public class ResurrectEffect : InstantEffect {
 
@@ -64,4 +66,5 @@ public class ResurrectEffect : InstantEffect {
     */
 
 
+}
 }

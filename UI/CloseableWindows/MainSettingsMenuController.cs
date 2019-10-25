@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
+namespace AnyRPG {
 public class MainSettingsMenuController : WindowContentController {
 
     // toggle buttons
@@ -801,4 +803,5 @@ public class MainSettingsMenuController : WindowContentController {
         base.ReceiveOpenWindowNotification();
         UserInterfacePanel();
     }
+}
 }

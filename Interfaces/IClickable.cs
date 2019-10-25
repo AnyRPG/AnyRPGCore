@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public interface IClickable {
     Image MyIcon {
         get;
@@ -16,4 +18,6 @@ public interface IClickable {
     Text MyStackSizeText {
         get;
     }
+}
+
 }

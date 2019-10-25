@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class CraftingMaterial
 {
@@ -13,4 +15,6 @@ public class CraftingMaterial
 
     public Item MyItem { get => item; }
     public int MyCount { get => count; }
+}
+
 }

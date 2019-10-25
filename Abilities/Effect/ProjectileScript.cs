@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ProjectileScript : MonoBehaviour {
 
     public event System.Action<BaseCharacter, GameObject, GameObject, AbilityEffectOutput> OnCollission = delegate { };
@@ -61,4 +63,6 @@ public class ProjectileScript : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
         Debug.Log("ProjectileScript.OnCollissionEnter()");
     }
+}
+
 }

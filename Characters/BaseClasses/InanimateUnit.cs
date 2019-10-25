@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class InanimateUnit : InteractableOption, INamePlateUnit  {
 
     public event System.Action OnInitializeNamePlate = delegate { };
@@ -115,4 +117,6 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
         MiniMapStatusUpdateHandler(this);
         InitializeNamePlate();
     }
+}
+
 }

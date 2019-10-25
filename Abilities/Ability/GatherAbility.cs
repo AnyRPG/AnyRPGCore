@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Gather Ability", menuName = "Abilities/Effects/GatherAbility")]
 public class GatherAbility : DirectAbility {
 
@@ -37,5 +39,7 @@ public class GatherAbility : DirectAbility {
             return false;
         }
     }
+
+}
 
 }

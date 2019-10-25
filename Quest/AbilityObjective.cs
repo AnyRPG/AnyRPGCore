@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class AbilityObjective : QuestObjective {
 
@@ -88,3 +90,5 @@ public class AbilityObjective : QuestObjective {
 
 }
 
+
+}

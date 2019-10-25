@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class DescribableIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     /// <summary>
@@ -134,4 +136,6 @@ public class DescribableIcon : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public virtual void OnDisable() {
     }
+}
+
 }

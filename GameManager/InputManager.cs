@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 
 public class InputManager : MonoBehaviour {
 
@@ -186,4 +188,6 @@ public class InputManager : MonoBehaviour {
         }
 
     }
+}
+
 }

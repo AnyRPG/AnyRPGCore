@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 //[CreateAssetMenu(fileName = "New Scroll", menuName = "Inventory/Items/Scroll", order = 1)]
 public abstract class CastableItem : Item, IUseable {
 
@@ -28,5 +30,7 @@ public abstract class CastableItem : Item, IUseable {
         return string.Format("{0}\n<color=green>Use: Cast {1}</color>", base.GetSummary(), abilityName);
     }
     */
+
+}
 
 }

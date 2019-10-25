@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PopupWindowManager : MonoBehaviour {
 
     #region Singleton
@@ -107,4 +109,6 @@ public class PopupWindowManager : MonoBehaviour {
         dialogWindow.CloseWindow();
         InventoryManager.MyInstance.Close();
     }
+}
+
 }

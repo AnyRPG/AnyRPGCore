@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class HandScript : MonoBehaviour {
 
     #region Singleton
@@ -109,4 +111,6 @@ public class HandScript : MonoBehaviour {
         // done in drop... ?
         //InventoryManager.MyInstance.FromSlot = null;
     }
+}
+
 }

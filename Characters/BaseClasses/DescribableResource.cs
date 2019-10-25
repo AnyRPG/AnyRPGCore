@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Describable Resource", menuName = "Describable Resource")]
 public abstract class DescribableResource : ScriptableObject, IDescribable {
 
@@ -26,5 +28,7 @@ public abstract class DescribableResource : ScriptableObject, IDescribable {
     public virtual string GetSummary() {
         return string.Format("{0}", description);
     }
+
+}
 
 }

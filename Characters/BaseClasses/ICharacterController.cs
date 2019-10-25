@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using System;
 using UnityEngine;
 
+namespace AnyRPG {
 public interface ICharacterController {
     event System.Action<GameObject> OnSetTarget;
     event System.Action OnClearTarget;
@@ -23,4 +25,5 @@ public interface ICharacterController {
     void LevitateCharacter();
     void UnLevitateCharacter();
     void Agro(CharacterUnit agroTarget);
+}
 }

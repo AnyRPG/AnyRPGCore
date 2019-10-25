@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CurrencyButton : TransparencyButton {
 
     [SerializeField]
@@ -51,4 +53,6 @@ public class CurrencyButton : TransparencyButton {
         }
     }
     */
+}
+
 }

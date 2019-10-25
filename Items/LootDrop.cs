@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class LootDrop
 {
     public Item MyItem { get; set; }
@@ -17,4 +19,6 @@ public class LootDrop
         //Debug.Log("LootDrop.Remove()");
         MyLootTable.MyDroppedItems.Remove(this);
     }
+}
+
 }

@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterSkillManager : MonoBehaviour, ICharacterSkillManager {
 
     protected ICharacter baseCharacter;
@@ -100,5 +102,7 @@ public class CharacterSkillManager : MonoBehaviour, ICharacterSkillManager {
         }
     }
 
+
+}
 
 }

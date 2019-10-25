@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayerAbilityManager : CharacterAbilityManager {
 
     public System.Action<IAbility> OnPerformAbility = delegate { };
@@ -170,5 +172,7 @@ public class PlayerAbilityManager : CharacterAbilityManager {
         //Debug.Log(gameObject.name + ".PlayerAbilityManager.StopCasting()");
         base.StopCasting();
     }
+
+}
 
 }

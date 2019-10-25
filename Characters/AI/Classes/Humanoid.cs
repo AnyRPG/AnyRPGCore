@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class Humanoid : AICharacter {
 
     protected override void Start() {
@@ -11,5 +13,7 @@ public class Humanoid : AICharacter {
         }
     }
 
+
+}
 
 }

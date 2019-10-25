@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Direct Ability", menuName = "Abilities/DirectAbility")]
 public class DirectAbility : InstantEffectAbility {
 
@@ -28,5 +30,7 @@ public class DirectAbility : InstantEffectAbility {
         //Debug.Log("DirectAbility.OnCastTimeChanged()");
         base.OnCastTimeChanged(currentCastTime, source, target);
     }
+
+}
 
 }

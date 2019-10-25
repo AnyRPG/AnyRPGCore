@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class SystemEventManager : MonoBehaviour {
 
     #region Singleton
@@ -235,5 +237,7 @@ public class SystemEventManager : MonoBehaviour {
         OnAbilityCast(ability);
     }
     */
+
+}
 
 }

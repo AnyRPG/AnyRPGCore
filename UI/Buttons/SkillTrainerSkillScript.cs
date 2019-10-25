@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 // this is almost identical to questscript
 
 public class SkillTrainerSkillScript : HighlightButton {
@@ -31,5 +33,7 @@ public class SkillTrainerSkillScript : HighlightButton {
     public override void DeSelect() {
         base.DeSelect();
     }
+
+}
 
 }

@@ -1,5 +1,7 @@
+using AnyRPG;
 ﻿using UnityEngine;
 
+namespace AnyRPG {
 public class CharacterAnimationEventReceiver : MonoBehaviour
 {
     [SerializeField]
@@ -40,5 +42,7 @@ public class CharacterAnimationEventReceiver : MonoBehaviour
 
     public void Land() {
     }
+
+}
 
 }

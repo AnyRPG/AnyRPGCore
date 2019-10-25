@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 // responsible for detecting mouseover the nameplate canvas to allow override of overgameobject detection
 public class NamePlateCanvasController : MonoBehaviour {
 
@@ -69,4 +71,6 @@ public class NamePlateCanvasController : MonoBehaviour {
 
         return gotMiniMap;
     }
+}
+
 }

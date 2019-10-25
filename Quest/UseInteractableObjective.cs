@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+namespace AnyRPG {
 
 [System.Serializable]
 public class UseInteractableObjective : QuestObjective {
@@ -76,4 +78,5 @@ public class UseInteractableObjective : QuestObjective {
         SystemEventManager.MyInstance.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
     }
 
+}
 }

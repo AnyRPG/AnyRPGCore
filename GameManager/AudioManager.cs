@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
+namespace AnyRPG {
 public class AudioManager : MonoBehaviour {
 
     #region Singleton
@@ -183,5 +185,7 @@ public class AudioManager : MonoBehaviour {
     public void StopEffects() {
         effectsAudioSource.Stop();
     }
+
+}
 
 }

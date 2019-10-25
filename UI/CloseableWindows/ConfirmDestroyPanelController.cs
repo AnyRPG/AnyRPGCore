@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ConfirmDestroyPanelController : WindowContentController {
 
     public void CancelAction() {
@@ -15,5 +17,7 @@ public class ConfirmDestroyPanelController : WindowContentController {
         HandScript.MyInstance.DeleteItem(); ;
         SystemWindowManager.MyInstance.confirmDestroyMenuWindow.CloseWindow();
     }
+
+}
 
 }

@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+namespace AnyRPG {
 public class CameraManager : MonoBehaviour {
 
     #region Singleton
@@ -110,4 +112,6 @@ public class CameraManager : MonoBehaviour {
     public void HandlePlayerUnitDespawn() {
         mainCamera.GetComponent<AnyRPGCameraController>().ClearTarget();
     }
+}
+
 }

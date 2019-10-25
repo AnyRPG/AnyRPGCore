@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class PlayerController : BaseController {
     public event System.Action<int> AbilityButtonPressedHandler = delegate { };
     public event System.Action<bool> ToggleRunHandler = delegate { };
@@ -689,5 +691,7 @@ public class PlayerController : BaseController {
             ClearTarget();
         }
     }
+
+}
 
 }

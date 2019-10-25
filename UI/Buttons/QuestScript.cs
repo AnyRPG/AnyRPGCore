@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 /// <summary>
 /// Sits on a quest item in the quest log
 /// </summary>
@@ -66,5 +68,7 @@ public class QuestScript : HighlightButton {
         CommonSelect();
     }
     */
+
+}
 
 }

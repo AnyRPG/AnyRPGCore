@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class Loot
 {
@@ -36,5 +38,7 @@ public class Loot
             return true;
         }
     }
+
+}
 
 }

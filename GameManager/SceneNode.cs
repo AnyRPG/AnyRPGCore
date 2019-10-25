@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.Audio;
 using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New SceneNode", menuName = "SceneNodes/SceneNode")]
 [System.Serializable]
 public class SceneNode : DescribableResource {
@@ -41,4 +43,6 @@ public class SceneNode : DescribableResource {
     public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
     public bool MyCutsceneViewed { get => cutsceneViewed; set => cutsceneViewed = value; }
     public bool MyIsCutScene { get => isCutScene; set => isCutScene = value; }
+}
+
 }

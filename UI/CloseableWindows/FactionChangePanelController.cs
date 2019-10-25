@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class FactionChangePanelController : WindowContentController {
 
     public event System.Action OnConfirmAction = delegate { };
@@ -87,4 +89,6 @@ public class FactionChangePanelController : WindowContentController {
         base.RecieveClosedWindowNotification();
         OnCloseWindow(this);
     }
+}
+
 }

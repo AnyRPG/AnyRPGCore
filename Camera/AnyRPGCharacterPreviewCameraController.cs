@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 
 public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
     // public variables
@@ -314,4 +316,6 @@ public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
     public void OnDisable() {
         StopAllCoroutines();
     }
+}
+
 }

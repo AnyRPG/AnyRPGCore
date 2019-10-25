@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public interface INamePlateUnit {
 
     event System.Action OnInitializeNamePlate;
@@ -29,5 +31,7 @@ public interface INamePlateUnit {
     bool HasMiniMapIcon();
     bool SetMiniMapText(Text text);
     void SetMiniMapIcon(Image icon);
+
+}
 
 }

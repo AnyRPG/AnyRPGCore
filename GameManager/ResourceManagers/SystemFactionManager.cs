@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class SystemFactionManager : SystemResourceManager {
 
     #region Singleton
@@ -56,5 +58,7 @@ public class SystemFactionManager : SystemResourceManager {
         }
         return returnList;
     }
+
+}
 
 }

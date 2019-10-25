@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ActionBarManager : MonoBehaviour {
 
     [SerializeField]
@@ -141,5 +143,7 @@ public class ActionBarManager : MonoBehaviour {
     public void HandleEquipmentChange(Equipment newEquipment, Equipment oldEquipment) {
         UpdateVisuals();
     }
+
+}
 
 }

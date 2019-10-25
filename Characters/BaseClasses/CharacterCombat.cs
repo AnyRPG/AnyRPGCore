@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [RequireComponent(typeof(CharacterStats))]
 public class CharacterCombat : MonoBehaviour, ICharacterCombat {
 
@@ -529,5 +531,7 @@ public class CharacterCombat : MonoBehaviour, ICharacterCombat {
             regenRoutine = null;
         }
     }
+
+}
 
 }

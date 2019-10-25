@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class Bank : InteractableOption {
 
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -35,4 +37,6 @@ public class Bank : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

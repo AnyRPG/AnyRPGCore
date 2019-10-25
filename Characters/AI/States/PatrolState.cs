@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PatrolState : IState {
 
     private AIController aiController;
@@ -71,4 +73,6 @@ public class PatrolState : IState {
         }
         currentDestination = this.aiController.SetDestination(currentDestination);
     }
+}
+
 }

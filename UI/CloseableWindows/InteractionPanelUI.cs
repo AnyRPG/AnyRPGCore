@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class InteractionPanelUI : WindowContentController {
 
     #region Singleton
@@ -285,4 +287,6 @@ public class InteractionPanelUI : WindowContentController {
         // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
         base.ReceiveOpenWindowNotification();
     }
+}
+
 }

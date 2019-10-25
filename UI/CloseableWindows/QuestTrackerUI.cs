@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class QuestTrackerUI : WindowContentController {
 
     #region Singleton
@@ -162,5 +164,7 @@ public class QuestTrackerUI : WindowContentController {
         //Debug.Log("QuestTrackerUI.OnDestroy()");
         CleanupEventReferences();
     }
+
+}
 
 }

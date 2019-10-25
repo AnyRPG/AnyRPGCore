@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class DeathState : IState
 {
     private AIController aiController;
@@ -36,4 +38,6 @@ public class DeathState : IState
         }
         */
     }
+}
+
 }

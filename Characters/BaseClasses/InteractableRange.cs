@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [RequireComponent(typeof(SphereCollider))]
 public class InteractableRange : MonoBehaviour {
 
@@ -73,5 +75,7 @@ public class InteractableRange : MonoBehaviour {
     }
 
 
+
+}
 
 }

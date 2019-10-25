@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
+namespace AnyRPG {
 public class CharacterMotor : MonoBehaviour {
 
     public event System.Action OnMovement = delegate { };
@@ -425,4 +427,6 @@ public class CharacterMotor : MonoBehaviour {
             //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): after reset: navhaspath: " + characterUnit.MyAgent.hasPath + "; isOnNavMesh: " + characterUnit.MyAgent.isOnNavMesh + "; pathpending: " + characterUnit.MyAgent.pathPending);
         }
     }
+}
+
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class MiniMapIndicatorController : MonoBehaviour {
 
     [SerializeField]
@@ -172,5 +174,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
         }
     }
     */
+
+}
 
 }

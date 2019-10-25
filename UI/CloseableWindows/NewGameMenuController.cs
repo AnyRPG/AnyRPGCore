@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class NewGameMenuController : WindowContentController {
 
     public void CancelAction() {
@@ -16,5 +18,7 @@ public class NewGameMenuController : WindowContentController {
         SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
         SaveManager.MyInstance.TryNewGame();
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public interface ICharacterAbilityManager {
     ICharacter MyBaseCharacter { get; set; }
 
@@ -26,4 +28,5 @@ public interface ICharacterAbilityManager {
     void DeActivateTargettingMode();
     bool HasAbility(string abilityName);
     bool MyIsCasting { get; set; }
+}
 }

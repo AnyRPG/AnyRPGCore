@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+namespace AnyRPG {
 public class UIManager : MonoBehaviour {
 
     #region Singleton
@@ -726,4 +728,6 @@ public class UIManager : MonoBehaviour {
         }
 
     }
+}
+
 }

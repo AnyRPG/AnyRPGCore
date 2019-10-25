@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "ManaPotion", menuName = "Inventory/Items/ManaPotion", order = 1)]
 public class ManaPotion : CastableItem {
 
@@ -21,4 +23,6 @@ public class ManaPotion : CastableItem {
         }
         return returnString;
     }
+}
+
 }

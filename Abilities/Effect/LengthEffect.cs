@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New LengthEffect", menuName = "Abilities/Effects/LengthEffect")]
 public class LengthEffect: AbilityEffect {
 
@@ -141,4 +143,5 @@ public class LengthEffect: AbilityEffect {
     }
 
 
+}
 }

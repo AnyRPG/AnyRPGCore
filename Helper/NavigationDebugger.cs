@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+namespace AnyRPG {
 [RequireComponent(typeof(LineRenderer))]
 public class NavigationDebugger : MonoBehaviour {
 
@@ -25,4 +27,6 @@ public class NavigationDebugger : MonoBehaviour {
             linerenderer.enabled = false;
         }
     }
+}
+
 }

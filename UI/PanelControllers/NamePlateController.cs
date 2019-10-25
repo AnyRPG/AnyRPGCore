@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+namespace AnyRPG {
 public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
     [SerializeField]
@@ -394,4 +396,6 @@ public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointer
         PlayerManager.MyInstance.MyCharacter.MyCharacterController.SetTarget(characterStats.gameObject);
     }
     */
+}
+
 }

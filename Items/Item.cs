@@ -1,6 +1,8 @@
+using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
+namespace AnyRPG {
 /// <summary>
 /// Superclass for all items
 /// </summary>
@@ -80,4 +82,6 @@ public class Item : DescribableResource, IMoveable {
         return string.Format("{1}", MyDescription);
     }
     */
+}
+
 }

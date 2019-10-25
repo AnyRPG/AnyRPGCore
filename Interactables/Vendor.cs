@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class Vendor : InteractableOption {
 
     public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -44,4 +46,6 @@ public class Vendor : InteractableOption {
         base.HandlePrerequisiteUpdates();
         MiniMapStatusUpdateHandler(this);
     }
+}
+
 }

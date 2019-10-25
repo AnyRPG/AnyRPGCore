@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "QuestStartItem", menuName = "Inventory/Items/QuestStartItem", order = 1)]
 public class QuestStartItem : Item, IUseable, IQuestGiver {
 
@@ -77,4 +79,6 @@ public class QuestStartItem : Item, IUseable, IQuestGiver {
         }
         return false;
     }
+}
+
 }

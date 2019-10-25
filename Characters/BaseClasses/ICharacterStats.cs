@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 
+namespace AnyRPG {
 public interface ICharacterStats {
 
     event System.Action<StatusEffectNode> OnStatusEffectAdd;
@@ -57,4 +59,5 @@ public interface ICharacterStats {
     StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter source, CharacterUnit target, AbilityEffectOutput abilityEffectInput);
     void CreateEventReferences();
 
+}
 }

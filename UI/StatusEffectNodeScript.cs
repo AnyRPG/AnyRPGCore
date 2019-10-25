@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
 
     [SerializeField]
@@ -104,4 +106,6 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
         
     }
     */
+}
+
 }

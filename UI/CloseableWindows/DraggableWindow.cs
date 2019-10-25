@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler {
 
     [SerializeField]
@@ -109,4 +111,6 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         UIManager.MyInstance.MyDragInProgress = false;
     }
+}
+
 }

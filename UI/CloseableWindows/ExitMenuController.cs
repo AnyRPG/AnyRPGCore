@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ExitMenuController : WindowContentController {
 
     public void CancelExit() {
@@ -21,5 +23,7 @@ public class ExitMenuController : WindowContentController {
             Application.Quit();
         #endif
     }
+
+}
 
 }

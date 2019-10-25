@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class DialogPrerequisite : IPrerequisite {
 
@@ -18,4 +20,6 @@ public class DialogPrerequisite : IPrerequisite {
         }
         return false;
     }
+}
+
 }

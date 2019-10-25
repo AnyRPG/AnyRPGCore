@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 
 public class CharacterPanel : WindowContentController {
 
@@ -338,5 +340,7 @@ public class CharacterPanel : WindowContentController {
         //Debug.Log("CharacterPanel.OpenAchievementWindow()");
         PopupWindowManager.MyInstance.achievementListWindow.ToggleOpenClose();
     }
+
+}
 
 }

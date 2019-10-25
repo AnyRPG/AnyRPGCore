@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class PlayerMotor : CharacterMotor {
 
     protected override void Awake() {
@@ -23,4 +25,6 @@ public class PlayerMotor : CharacterMotor {
     public void OnDestroy() {
         //(characterUnit.MyCharacter.MyCharacterController as PlayerController).OnManualMovement -= StopFollowingTarget;
     }
+}
+
 }

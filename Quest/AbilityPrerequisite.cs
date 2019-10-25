@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public class AbilityPrerequisite : IPrerequisite {
 
@@ -30,4 +32,6 @@ public class AbilityPrerequisite : IPrerequisite {
         //Debug.Log("AbilityPrerequisite.IsMet; " + prerequisiteName + "returning FALSE");
         return false;
     }
+}
+
 }

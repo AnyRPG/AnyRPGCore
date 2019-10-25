@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public interface IAbility {
     bool MyAutoLearn { get; }
     Sprite MyIcon { get; }
@@ -36,4 +38,5 @@ public interface IAbility {
     void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target);
     void HandleCastStop(BaseCharacter source);
 
+}
 }

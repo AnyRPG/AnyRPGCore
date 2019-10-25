@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿
 public enum CombatType { normal, ability, gainHealth, gainXP, levelUp, gainMana, gainBuff, loseBuff }
 

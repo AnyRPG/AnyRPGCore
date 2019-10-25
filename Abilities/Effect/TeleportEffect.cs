@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New TeleportEffect", menuName = "Abilities/Effects/TeleportEffect")]
 public class TeleportEffect : InstantEffect {
 
@@ -24,5 +26,7 @@ public class TeleportEffect : InstantEffect {
             }
         }
     }
+
+}
 
 }

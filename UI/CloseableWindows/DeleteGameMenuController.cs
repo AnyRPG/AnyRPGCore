@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class DeleteGameMenuController : WindowContentController {
 
     public void CancelAction() {
@@ -14,5 +16,7 @@ public class DeleteGameMenuController : WindowContentController {
         //Debug.Log("NewGameMenuController.ConfirmAction()");
         LoadGamePanel.MyInstance.DeleteGame(true);
     }
+
+}
 
 }

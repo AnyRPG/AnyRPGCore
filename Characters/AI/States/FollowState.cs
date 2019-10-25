@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class FollowState : IState
 {
     private AIController aiController;
@@ -49,4 +51,6 @@ public class FollowState : IState
             aiController.ChangeState(new ReturnState());
         }
     }
+}
+
 }

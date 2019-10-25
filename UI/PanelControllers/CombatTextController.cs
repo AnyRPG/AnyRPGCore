@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CombatTextController : MonoBehaviour
 {
     [SerializeField]
@@ -165,4 +167,6 @@ public class CombatTextController : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+}
+
 }

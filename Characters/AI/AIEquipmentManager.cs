@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
 
+namespace AnyRPG {
 public class AIEquipmentManager : CharacterEquipmentManager {
 
     protected override void Start() {
@@ -39,5 +41,7 @@ public class AIEquipmentManager : CharacterEquipmentManager {
         base.OnDisable();
         UnSubscribeFromCombatEvents();
     }
+
+}
 
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UMA;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment")]
 public class Equipment : Item {
 
@@ -91,3 +93,4 @@ public class Equipment : Item {
 
 public enum EquipmentSlot { Helm, Chest, Legs, MainHand, OffHand, Feet, Hands, Shoulders }
 //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }
+}

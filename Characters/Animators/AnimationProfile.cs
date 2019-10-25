@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Animation Profile", menuName = "Animation/Profile")]
 public class AnimationProfile : ScriptableObject {
 
@@ -145,4 +147,6 @@ public class AnimationProfile : ScriptableObject {
     public AnimationClip MyCombatJumpClip { get => combatJumpClip; set => combatJumpClip = value; }
     public AnimationClip MyCombatFallClip { get => combatFallClip; set => combatFallClip = value; }
     public AnimationClip MyCombatLandClip { get => combatLandClip; set => combatLandClip = value; }
+}
+
 }

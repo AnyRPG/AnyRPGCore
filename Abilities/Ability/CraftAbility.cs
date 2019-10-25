@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New Craft Ability", menuName = "Abilities/Effects/CraftAbility")]
 public class CraftAbility : DirectAbility {
 
@@ -50,5 +52,7 @@ public class CraftAbility : DirectAbility {
         return source.MyCharacterUnit.gameObject;
     }
 
+
+}
 
 }

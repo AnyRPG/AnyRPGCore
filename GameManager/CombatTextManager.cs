@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class CombatTextManager : MonoBehaviour {
 
     #region Singleton
@@ -56,5 +58,7 @@ public class CombatTextManager : MonoBehaviour {
             _gameObject.transform.GetComponent<CombatTextController>().MyCombatType = CombatType.loseBuff;
         }
     }
+
+}
 
 }

@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class CastBarController : DraggableWindow {
 
     [SerializeField]
@@ -141,5 +143,7 @@ public class CastBarController : DraggableWindow {
         base.OnDisable();
         //Debug.Log(gameObject.name + ".CastBarController.OnDisable()");
     }
+
+}
 
 }

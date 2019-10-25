@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class UnitSpawnNode : MonoBehaviour {
 
     [SerializeField]
@@ -303,5 +305,7 @@ public class UnitSpawnNode : MonoBehaviour {
             Spawn();
         }
     }
+
+}
 
 }

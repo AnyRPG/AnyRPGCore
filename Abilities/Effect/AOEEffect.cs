@@ -1,8 +1,10 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 [CreateAssetMenu(fileName = "New AOEEffect", menuName = "Abilities/Effects/AOEEffect")]
 public class AOEEffect : FixedLengthEffect {
 
@@ -158,4 +160,5 @@ public class AOEEffect : FixedLengthEffect {
         PerformAbilityComplete(source, target, modifiedOutput);
     }
 
+}
 }

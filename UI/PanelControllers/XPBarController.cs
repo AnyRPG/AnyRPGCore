@@ -1,94 +1,98 @@
-﻿using System;
+using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class XPBarController : DraggableWindow {
+namespace AnyRPG {
+    public class XPBarController : DraggableWindow {
 
-    [SerializeField]
-    private Image xpSlider;
+        [SerializeField]
+        private Image xpSlider;
 
-    [SerializeField]
-    private GameObject xpBarBackGround;
+        [SerializeField]
+        private GameObject xpBarBackGround;
 
-    [SerializeField]
-    private Text xpText;
+        [SerializeField]
+        private Text xpText;
 
-    private float originalXPSliderWidth;
+        private float originalXPSliderWidth;
 
-    protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+        protected bool startHasRun = false;
+        protected bool eventReferencesInitialized = false;
 
-    private void Start() {
-        //Debug.Log("XPBarController.Start()");
-        startHasRun = true;
-        CreateEventReferences();
-    }
-
-    public void CreateEventReferences() {
-        //Debug.Log("XPBarController.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
-            return;
+        private void Start() {
+            //Debug.Log("XPBarController.Start()");
+            startHasRun = true;
+            CreateEventReferences();
         }
-        SystemEventManager.MyInstance.OnXPGained += UpdateXP;
-        SystemEventManager.MyInstance.OnLevelChanged += UpdateXPBar;
-        SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-            HandlePlayerUnitSpawn();
+
+        public void CreateEventReferences() {
+            //Debug.Log("XPBarController.CreateEventReferences()");
+            if (eventReferencesInitialized || !startHasRun) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnXPGained += UpdateXP;
+            SystemEventManager.MyInstance.OnLevelChanged += UpdateXPBar;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                HandlePlayerUnitSpawn();
+            }
+            eventReferencesInitialized = true;
         }
-        eventReferencesInitialized = true;
-    }
 
-    public void CleanupEventReferences() {
-        //Debug.Log("XPBarController.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
-            return;
+        public void CleanupEventReferences() {
+            //Debug.Log("XPBarController.CleanupEventReferences()");
+            if (!eventReferencesInitialized) {
+                return;
+            }
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnXPGained -= UpdateXP;
+                SystemEventManager.MyInstance.OnLevelChanged -= UpdateXPBar;
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            }
+            eventReferencesInitialized = false;
         }
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnXPGained -= UpdateXP;
-            SystemEventManager.MyInstance.OnLevelChanged -= UpdateXPBar;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+
+        private void OnDestroy() {
+            // this gameobject will be enabled and disabled multiple times during the game and doesn't need to reset its references every time
+            CleanupEventReferences();
         }
-        eventReferencesInitialized = false;
-    }
 
-    private void OnDestroy() {
-        // this gameobject will be enabled and disabled multiple times during the game and doesn't need to reset its references every time
-        CleanupEventReferences();
-    }
-
-    public void HandlePlayerUnitSpawn() {
-        //Debug.Log("XPBarController.HandlePlayerUnitSpawn()");
-        if (originalXPSliderWidth == 0f) {
-            originalXPSliderWidth = xpSlider.GetComponent<LayoutElement>().preferredWidth;
-            //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
-            //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
+        public void HandlePlayerUnitSpawn() {
+            //Debug.Log("XPBarController.HandlePlayerUnitSpawn()");
+            if (originalXPSliderWidth == 0f) {
+                originalXPSliderWidth = xpSlider.GetComponent<LayoutElement>().preferredWidth;
+                //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
+                //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
+            }
+            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
         }
-        UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
-    }
 
-    public void UpdateXP() {
-        //Debug.Log("XPBarController.UpdateXP()");
-        UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
-    }
-
-    public void UpdateXPBar(int _Level) {
-        if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-            return;
+        public void UpdateXP() {
+            //Debug.Log("XPBarController.UpdateXP()");
+            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
         }
-        //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-        int currentXP = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
-        int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
-        float xpPercent = (float)currentXP / (float)neededXP;
 
-        // code for an actual image, not currently used
-        //playerCastSlider.fillAmount = castPercent;
+        public void UpdateXPBar(int _Level) {
+            if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+                return;
+            }
+            //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
+            int currentXP = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
+            int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
+            float xpPercent = (float)currentXP / (float)neededXP;
 
-        // code for the default image
-        xpSlider.GetComponent<LayoutElement>().preferredWidth = xpPercent * originalXPSliderWidth;
+            // code for an actual image, not currently used
+            //playerCastSlider.fillAmount = castPercent;
 
-        xpText.text = currentXP + " / " + neededXP + " (" + ((int)(xpPercent*100)).ToString() + "%)";
+            // code for the default image
+            xpSlider.GetComponent<LayoutElement>().preferredWidth = xpPercent * originalXPSliderWidth;
+
+            xpText.text = currentXP + " / " + neededXP + " (" + ((int)(xpPercent * 100)).ToString() + "%)";
+
+        }
 
     }
 

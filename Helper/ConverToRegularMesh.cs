@@ -1,7 +1,9 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AnyRPG {
 public class ConverToRegularMesh : MonoBehaviour
 {
     [ContextMenu("Convert to regular mesh")]
@@ -16,4 +18,6 @@ public class ConverToRegularMesh : MonoBehaviour
         DestroyImmediate(skinnedMeshRenderer);
         DestroyImmediate(this);
     }
+}
+
 }

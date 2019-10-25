@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+namespace AnyRPG {
 //[System.Serializable]
 [CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog/Dialog")]
 public class Dialog : DescribableResource {
@@ -46,4 +48,5 @@ public class Dialog : DescribableResource {
     }
 
     public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
+}
 }

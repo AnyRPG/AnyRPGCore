@@ -1,3 +1,4 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 public class SoundMenuController : WindowContentController {
 
     [SerializeField]
@@ -42,5 +44,7 @@ public class SoundMenuController : WindowContentController {
     public void SetAmbientVolume(float volume) {
         //AudioManager.MyInstance.SetVolume(AudioManager.MyInstance.MyAmbientVolume, volume);
     }
+
+}
 
 }

@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+namespace AnyRPG {
 [System.Serializable]
 public abstract class QuestObjective {
     [SerializeField]
@@ -61,3 +63,5 @@ public abstract class QuestObjective {
     }
 }
 
+
+}

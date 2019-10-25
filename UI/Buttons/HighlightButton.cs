@@ -1,9 +1,11 @@
+using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+namespace AnyRPG {
 // this is almost identical to questscript
 
 public class HighlightButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
@@ -98,4 +100,6 @@ public class HighlightButton : MonoBehaviour, IPointerEnterHandler, IPointerClic
 
     public void OnPointerUp(PointerEventData eventData) {
     }
+}
+
 }
