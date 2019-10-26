@@ -64,7 +64,8 @@ namespace AnyRPG {
 
             SceneNode sceneNode = GetResource(sceneNodeSaveData.MyName);
             if (sceneNode == null) {
-                Debug.LogError("SystemSceneNodeManager.LoadSceneNode(): Scene " + sceneNodeSaveData.MyName + " could not be found.");
+                //Debug.LogError("SystemSceneNodeManager.LoadSceneNode(): Scene " + sceneNodeSaveData.MyName + " could not be found.");
+                return;
             }
             sceneNode.MyCutsceneViewed = sceneNodeSaveData.isCutSceneViewed;
         }

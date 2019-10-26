@@ -1,224 +1,225 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
+    public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
 
-    /// <summary>
-    /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
-    /// </summary>
-    [SerializeField]
-    private EquipmentSlot equipmentSlot;
+        /// <summary>
+        /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
+        /// </summary>
+        [SerializeField]
+        private EquipmentSlot equipmentSlot;
 
-    /// <summary>
-    /// A reference to the equipment that sits on this slot
-    /// </summary>
-    private Equipment equippedEquipment;
+        /// <summary>
+        /// A reference to the equipment that sits on this slot
+        /// </summary>
+        private Equipment equippedEquipment;
 
-    [SerializeField]
-    private Image icon;
+        [SerializeField]
+        private Image icon;
 
-    [SerializeField]
-    private Image backGroundImage;
+        [SerializeField]
+        private Image backGroundImage;
 
-    private Image emptySlotImage;
+        private Image emptySlotImage;
 
-    private Color emptyBackGroundColor;
+        private Color emptyBackGroundColor;
 
-    private Color fullBackGroundColor;
+        private Color fullBackGroundColor;
 
-    public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
-    public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
-    public string MyName {
-        get {
-            if (equippedEquipment != null) {
-                return equippedEquipment.MyName;
-            } else {
-                return "Empty Equipment Slot";
-            }
-        }
-    }
+        private bool LocalComponentsGotten = false;
 
-    public Sprite MyIcon { get => icon.sprite; set => icon.sprite = value; }
+        public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
+        public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
+        public Sprite MyIcon { get => icon.sprite; set => icon.sprite = value; }
+        public Image MyEmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
 
-    private bool LocalComponentsGotten = false;
-
-    private void Awake() {
-        GetLocalComponents();
-    }
-
-    private void Start() {
-        GetLocalComponents();
-    }
-
-    private void GetLocalComponents() {
-        if (LocalComponentsGotten == true) {
-            return;
-        }
-        if (emptySlotImage == null) {
-            emptySlotImage = GetComponent<Image>();
-        }
-
-        LocalComponentsGotten = true;
-    }
-
-    public void OnPointerClick(PointerEventData eventData) {
-        if (eventData.button == PointerEventData.InputButton.Left) {
-            if (HandScript.MyInstance.MyMoveable is Equipment) {
-                Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
-                if (tmp.equipSlot == equipmentSlot) {
-                    tmp.Use();
-                    //EquipEquipment(tmp);
-                    HandScript.MyInstance.Drop();
-
-                    UIManager.MyInstance.RefreshTooltip(tmp);
+        public string MyName {
+            get {
+                if (equippedEquipment != null) {
+                    return equippedEquipment.MyName;
+                } else {
+                    return "Empty Equipment Slot";
                 }
-            } else if (HandScript.MyInstance.MyMoveable == null && equippedEquipment != null) {
-                HandScript.MyInstance.TakeMoveable(equippedEquipment);
-                CharacterPanel.MyInstance.MySelectedButton = this;
-                icon.color = Color.gray;
             }
         }
-    }
 
-    /*
-    public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
-        //Debug.Log("CharacterButton.EquipEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ", " + partialEquip + ")");
-        if (partialEquip) {
-            SetEquipment(newEquipment);
-            return;
+        private void Awake() {
+            GetLocalComponents();
         }
 
-        SlotScript oldSlot = newEquipment.MySlot;
+        private void Start() {
+            GetLocalComponents();
+        }
 
-        //remove from the inventory
-        newEquipment.Remove();
+        private void GetLocalComponents() {
+            if (LocalComponentsGotten == true) {
+                return;
+            }
+            if (emptySlotImage == null) {
+                emptySlotImage = GetComponent<Image>();
+            }
 
-        if (newEquipment != equippedEquipment) {
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(newEquipment);
-                this.equippedEquipment = newEquipment;
+            LocalComponentsGotten = true;
+        }
+
+        public void OnPointerClick(PointerEventData eventData) {
+            if (eventData.button == PointerEventData.InputButton.Left) {
+                if (HandScript.MyInstance.MyMoveable is Equipment) {
+                    Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
+                    if (tmp.equipSlot == equipmentSlot) {
+                        tmp.Use();
+                        //EquipEquipment(tmp);
+                        HandScript.MyInstance.Drop();
+
+                        UIManager.MyInstance.RefreshTooltip(tmp);
+                    }
+                } else if (HandScript.MyInstance.MyMoveable == null && equippedEquipment != null) {
+                    HandScript.MyInstance.TakeMoveable(equippedEquipment);
+                    CharacterPanel.MyInstance.MySelectedButton = this;
+                    icon.color = Color.gray;
+                }
             }
         }
-        this.equippedEquipment.MyCharacterButton = this;
-        //HandScript.MyInstance.DeleteItem();
-        if (HandScript.MyInstance.MyMoveable == (newEquipment as IMoveable)) {
-            //Debug.Log("dropping moveable from handscript");
-            HandScript.MyInstance.Drop();
-        }
 
-        if (equippedEquipment != null) {
-            // not needed because the equipment manager currently handles the swapping
-            // however, this code is actually slightly better because it would directly swap slots if the bag is full
-            //newEquipment.MySlot.AddItem(equipment);
-            if (oldSlot.MyItem == null) {
-                UIManager.MyInstance.HideToolTip();
-            } else {
-                UIManager.MyInstance.RefreshTooltip(oldSlot.MyItem);
-            }
-        } else {
-            UIManager.MyInstance.HideToolTip();
-        }
-        UpdateVisual();
-    }
-    */
-
-    public void UpdateVisual(bool resetDisplay = true) {
-        //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
-
-        GetLocalComponents();
-        Equipment tmpEquipment = equippedEquipment;
-        if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlot)) {
-            equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlot];
-        } else {
-            equippedEquipment = null;
-        }
-
-        if (equippedEquipment != null) {
-            if (fullBackGroundColor != null) {
-                backGroundImage.color = fullBackGroundColor;
-            }
-            emptySlotImage.color = new Color32(0, 0, 0, 0);
-            icon.enabled = true;
-            icon.color = Color.white;
-            icon.sprite = equippedEquipment.MyIcon;
-        } else {
-            if (emptyBackGroundColor != null) {
-                backGroundImage.color = emptyBackGroundColor;
-            }
-            emptySlotImage.color = Color.white;
-            icon.color = new Color32(0, 0, 0, 0);
-            icon.sprite = null;
-            icon.enabled = false;
-        }
-
-        if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
-            // prevent unnecessary actions when player is not spawned
-            return;
-        }
-        if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
-            // prevent unnecessary actions when window is not open
-            return;
-        }
         /*
-        if (resetDisplay) {
-            CharacterPanel.MyInstance.ResetDisplay();
+        public void EquipEquipment(Equipment newEquipment, bool partialEquip = false) {
+            //Debug.Log("CharacterButton.EquipEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ", " + partialEquip + ")");
+            if (partialEquip) {
+                SetEquipment(newEquipment);
+                return;
+            }
+
+            SlotScript oldSlot = newEquipment.MySlot;
+
+            //remove from the inventory
+            newEquipment.Remove();
+
+            if (newEquipment != equippedEquipment) {
+                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(newEquipment);
+                    this.equippedEquipment = newEquipment;
+                }
+            }
+            this.equippedEquipment.MyCharacterButton = this;
+            //HandScript.MyInstance.DeleteItem();
+            if (HandScript.MyInstance.MyMoveable == (newEquipment as IMoveable)) {
+                //Debug.Log("dropping moveable from handscript");
+                HandScript.MyInstance.Drop();
+            }
+
+            if (equippedEquipment != null) {
+                // not needed because the equipment manager currently handles the swapping
+                // however, this code is actually slightly better because it would directly swap slots if the bag is full
+                //newEquipment.MySlot.AddItem(equipment);
+                if (oldSlot.MyItem == null) {
+                    UIManager.MyInstance.HideToolTip();
+                } else {
+                    UIManager.MyInstance.RefreshTooltip(oldSlot.MyItem);
+                }
+            } else {
+                UIManager.MyInstance.HideToolTip();
+            }
+            UpdateVisual();
         }
         */
-    }
 
-    /*
-    public void SetEquipment(Equipment newEquipment) {
-        //Debug.Log("CharacterButton.SetEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ")");
-        this.equippedEquipment = newEquipment;
-        this.equippedEquipment.MyCharacterButton = this;
-        UpdateVisual();
-    }
-    */
-    /*
-    public void DequipEquipment(int slotIndex = -1) {
-        //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
-        equippedEquipment.MyCharacterButton = null;
-        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
+        public void UpdateVisual(bool resetDisplay = true) {
+            //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
+
+            GetLocalComponents();
+            Equipment tmpEquipment = equippedEquipment;
+            if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlot)) {
+                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlot];
+            } else {
+                equippedEquipment = null;
+            }
+
+            if (equippedEquipment != null) {
+                if (fullBackGroundColor != null) {
+                    backGroundImage.color = fullBackGroundColor;
+                }
+                emptySlotImage.color = new Color32(0, 0, 0, 0);
+                icon.enabled = true;
+                icon.color = Color.white;
+                icon.sprite = equippedEquipment.MyIcon;
+            } else {
+                if (emptyBackGroundColor != null) {
+                    backGroundImage.color = emptyBackGroundColor;
+                }
+                emptySlotImage.color = Color.white;
+                icon.color = new Color32(0, 0, 0, 0);
+                icon.sprite = null;
+                icon.enabled = false;
+            }
+
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                // prevent unnecessary actions when player is not spawned
+                return;
+            }
+            if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
+                // prevent unnecessary actions when window is not open
+                return;
+            }
+            /*
+            if (resetDisplay) {
+                CharacterPanel.MyInstance.ResetDisplay();
+            }
+            */
         }
-        ClearButton();
-    }
 
-    public void ClearButton(bool resetDisplay = true) {
-        //Debug.Log("CharacterButton.ClearButton()");
-        equippedEquipment = null;
-        UpdateVisual(resetDisplay);
-    }
-    */
-
-
-    public void OnPointerEnter(PointerEventData eventData) {
-        UIManager.MyInstance.ShowToolTip(transform.position, this);
-    }
-
-    public void OnPointerExit(PointerEventData eventData) {
-        UIManager.MyInstance.HideToolTip();
-    }
-
-    public string GetDescription() {
-        if (equippedEquipment != null) {
-            return equippedEquipment.GetDescription();
+        /*
+        public void SetEquipment(Equipment newEquipment) {
+            //Debug.Log("CharacterButton.SetEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ")");
+            this.equippedEquipment = newEquipment;
+            this.equippedEquipment.MyCharacterButton = this;
+            UpdateVisual();
         }
-        return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlot.ToString(), GetSummary());
-    }
-
-    public string GetSummary() {
-        if (equippedEquipment != null) {
-            return equippedEquipment.GetSummary();
+        */
+        /*
+        public void DequipEquipment(int slotIndex = -1) {
+            //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
+            equippedEquipment.MyCharacterButton = null;
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
+            }
+            ClearButton();
         }
-        return "Drag equipment here to equip it";
-    }
 
-}
+        public void ClearButton(bool resetDisplay = true) {
+            //Debug.Log("CharacterButton.ClearButton()");
+            equippedEquipment = null;
+            UpdateVisual(resetDisplay);
+        }
+        */
+
+
+        public void OnPointerEnter(PointerEventData eventData) {
+            UIManager.MyInstance.ShowToolTip(transform.position, this);
+        }
+
+        public void OnPointerExit(PointerEventData eventData) {
+            UIManager.MyInstance.HideToolTip();
+        }
+
+        public string GetDescription() {
+            if (equippedEquipment != null) {
+                return equippedEquipment.GetDescription();
+            }
+            return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlot.ToString(), GetSummary());
+        }
+
+        public string GetSummary() {
+            if (equippedEquipment != null) {
+                return equippedEquipment.GetSummary();
+            }
+            return "Drag equipment here to equip it";
+        }
+
+    }
 
 }
