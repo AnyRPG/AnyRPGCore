@@ -87,7 +87,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     protected virtual void CreateEventReferences() {
-        Debug.Log("CharacterPanel.CreateEventReferences()");
+        //Debug.Log("CharacterPanel.CreateEventReferences()");
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }

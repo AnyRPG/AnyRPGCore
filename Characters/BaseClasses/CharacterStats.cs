@@ -104,12 +104,12 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     public virtual void CreateEventReferences() {
-        Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences()");
+        //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences()");
         if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-            Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): subscribing to onequipmentchanged event");
+            //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): subscribing to onequipmentchanged event");
             baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += OnEquipmentChanged;
         } else {
-            Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): could not subscribe to onequipmentchanged event");
+            //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): could not subscribe to onequipmentchanged event");
         }
     }
 
@@ -134,7 +134,7 @@ public class CharacterStats : MonoBehaviour, ICharacterStats {
     }
 
     void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
-        Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+        //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
 
         if (newItem != null) {
             armorModifiers.AddModifier(newItem.armorModifier);

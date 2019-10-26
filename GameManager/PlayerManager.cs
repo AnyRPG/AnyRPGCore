@@ -200,7 +200,7 @@ public class PlayerManager : MonoBehaviour {
             //Debug.Log("PlayerManager.SetDefaultPrefab(): setting default to non uma prefab");
             currentPlayerUnitPrefab = defaultNonUMAPlayerUnitPrefab;
         } else {
-            Debug.Log("PlayerManager.SetDefaultPrefab(): no player unit Non UMA prefab found!!");
+            //Debug.Log("PlayerManager.SetDefaultPrefab(): no player unit Non UMA prefab found!!");
         }
     }
 

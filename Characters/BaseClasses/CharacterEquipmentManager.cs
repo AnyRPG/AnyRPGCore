@@ -234,21 +234,21 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
 
     public void SheathObject(GameObject go, string holdableObjectName, GameObject searchObject) {
         if (searchObject == null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): searchObject is null");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): searchObject is null");
             return;
         }
         if (holdableObjectName == null || holdableObjectName == string.Empty) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
         if (holdableObject == null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): holdableObject is null");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): holdableObject is null");
             return;
         }
         targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
         if (targetBone != null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
             go.transform.parent = targetBone;
             go.transform.localPosition = holdableObject.MySheathedPhysicalPosition;
             go.transform.localEulerAngles = holdableObject.MySheathedPhysicalRotation;
@@ -261,55 +261,20 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
     public void HoldObject(GameObject go, string holdableObjectName, GameObject searchObject) {
         Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
         if (holdableObjectName == null || holdableObjectName == string.Empty) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
             return;
         }
         HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
         if (holdableObject == null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): holdableObject is null");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): holdableObject is null");
             return;
         }
         targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
         if (targetBone != null) {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyPhysicalRotation);
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyPhysicalRotation);
             go.transform.parent = targetBone;
             go.transform.localPosition = holdableObject.MyPhysicalPosition;
-            //go.transform.Rotate(holdableObject.MyPhysicalRotation, Space.Self);
-            //Vector3 usedEulers = new Vector3(Clamp0360(holdableObject.MyPhysicalRotation.x), Clamp0360(holdableObject.MyPhysicalRotation.y), Clamp0360(holdableObject.MyPhysicalRotation.z));
-            //Vector3 usedEulers = new Vector3(UnwrapAngle(holdableObject.MyPhysicalRotation.x), UnwrapAngle(holdableObject.MyPhysicalRotation.y), UnwrapAngle(holdableObject.MyPhysicalRotation.z));
-            //Vector3 usedEulers = new Vector3(fixAngle(holdableObject.MyPhysicalRotation.x), fixAngle(holdableObject.MyPhysicalRotation.y), fixAngle(holdableObject.MyPhysicalRotation.z));
-            //go.transform.Rotate(usedEulers);
-
-            // pointed forward
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, Vector3.forward);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, Vector3.right);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, Vector3.up);
-
-            // pointed toward chest 
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
-
-            // pointed through chest
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
-
-            // jumps around everywhere
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, go.transform.forward);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, go.transform.right);
-            //go.transform.localRotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, go.transform.up);
-
-            // facing toward chest
-            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.x, targetBone.transform.right);
-            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.y, targetBone.transform.up);
-            //go.transform.rotation *= Quaternion.AngleAxis(holdableObject.MyPhysicalRotation.z, targetBone.transform.forward);
-
-            //go.transform.Rotate(holdableObject.MyPhysicalRotation);
-            //go.transform.Rotate(Quaternion.Euler(holdableObject.MyPhysicalRotation));
-            //go.transform.localRotation *= Quaternion.Euler(holdableObject.MyPhysicalRotation);
             go.transform.localEulerAngles = holdableObject.MyPhysicalRotation;
-            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; usedEulers: " + usedEulers);
         }
     }
 
@@ -341,7 +306,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
     }
 
     public virtual void Equip (Equipment newItem) {
-        Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip()");
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ")");
         if (newItem == null) {
             //Debug.Log("Instructed to Equip a null item!");
             return;
