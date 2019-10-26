@@ -99,13 +99,13 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
 
     // This method does not actually equip the character, just apply stats??? or not ??? and models from already equipped equipment
     public virtual void EquipCharacter() {
-        Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
         //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
         if (currentEquipment == null) {
-            Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
             return;
         }
-        Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment is not null");
+        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment is not null");
         foreach (Equipment equipment in currentEquipment.Values) {
             if (equipment != null) {
                 //Debug.Log("EquipmentManager.EquipCharacter(): Equipment is not null: " + equipment.MyName);
@@ -114,7 +114,7 @@ public abstract class CharacterEquipmentManager : MonoBehaviour {
                 HandleEquipmentModels(equipment);
 
             } else {
-                Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): Equipment is null");
+                //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): Equipment is null");
             }
         }
     }

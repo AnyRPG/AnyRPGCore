@@ -275,26 +275,26 @@ public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
     private IEnumerator WaitForFollowTarget() {
         //Debug.Log("WaitForFollowTarget()");
         if (target == null) {
-            Debug.Log("WaitForFollowTarget(): target is null!!!!");
+            //Debug.Log("WaitForFollowTarget(): target is null!!!!");
         }
         Transform targetBone = target.transform;
         string initialTargetString = string.Empty;
         Vector3 unitTargetOffset = initialTargetOffset;
 
         if (target.GetComponent<CharacterUnit>() == null) {
-            Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>() is null!!!!");
+            //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>() is null!!!!");
         } else {
             //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>(): " + target.GetComponent<CharacterUnit>().MyDisplayName);
             initialTargetString = target.GetComponent<CharacterUnit>().MyUnitFrameTarget;
             if (target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget != string.Empty) {
-                targetBone = target.transform.Find(target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
+                targetBone = target.transform.FindChildByRecursive(target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
             }
             unitTargetOffset = target.GetComponent<CharacterUnit>().MyPlayerPreviewInitialOffset;
         }
         
         if (initialTargetString != string.Empty) {
             //Debug.Log("WaitForFollowTarget(): searching for unitFrameTarget: " + initialTargetString);
-            while (target.transform.Find(initialTargetString) == null) {
+            while (target.transform.FindChildByRecursive(initialTargetString) == null) {
                 //targetBone = target.transform.Find(initialTargetString);
                 //if (targetBone == null) {
                     yield return null;

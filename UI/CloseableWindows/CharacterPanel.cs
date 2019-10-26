@@ -119,18 +119,18 @@ public class CharacterPanel : WindowContentController {
     }
 
     public void HandlePlayerUnitSpawn() {
-        Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
+        //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
+            //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged += UpdateStatsDescription;
         } else {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
+            //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
         }
         if (SystemEventManager.MyInstance != null) {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
+            //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
             SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
         } else {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
+            //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
         }
 
     }
@@ -141,10 +141,9 @@ public class CharacterPanel : WindowContentController {
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged -= UpdateStatsDescription;
         }
         if (SystemEventManager.MyInstance != null) {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
             SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
         } else {
-            Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
+            //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
         }
 
 
@@ -161,7 +160,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     public void UpdateCharacterButtons() {
-        Debug.Log("CharacterPanel.UpdateCharacterButtons");
+        //Debug.Log("CharacterPanel.UpdateCharacterButtons");
         head.UpdateVisual();
         chest.UpdateVisual();
         legs.UpdateVisual();
@@ -261,7 +260,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     private void SetPreviewTarget() {
-        Debug.Log("CharacterPanel.SetPreviewTarget()");
+        //Debug.Log("CharacterPanel.SetPreviewTarget()");
 
         //spawn correct preview unit
         CharacterCreatorManager.MyInstance.HandleOpenWindow(false);
@@ -278,7 +277,7 @@ public class CharacterPanel : WindowContentController {
     }
 
     public void TargetReadyCallback() {
-        Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+        //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
         MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
         TargetReadyCallbackCommon();
     }

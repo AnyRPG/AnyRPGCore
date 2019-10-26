@@ -84,14 +84,14 @@ public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
     }
 
     public void ClearButtons() {
-        Debug.Log("SkillBookUI.ClearButtons()");
+        //Debug.Log("SkillBookUI.ClearButtons()");
         foreach (SkillButton btn in skillButtons) {
             btn.gameObject.SetActive(false);
         }
     }
 
     public void LoadPage(int pageIndex) {
-        Debug.Log("SkillBookUI.LoadPage(" + pageIndex + ")");
+        //Debug.Log("SkillBookUI.LoadPage(" + pageIndex + ")");
         ClearButtons();
         this.pageIndex = pageIndex;
         AddSkills();

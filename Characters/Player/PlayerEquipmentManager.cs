@@ -10,7 +10,7 @@ namespace AnyRPG {
 public class PlayerEquipmentManager : CharacterEquipmentManager {
 
     protected override void CreateEventReferences() {
-        Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventReferences()");
+        //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventReferences()");
         if (eventReferencesInitialized || !startHasRun) {
             return;
         }
@@ -70,10 +70,10 @@ public class PlayerEquipmentManager : CharacterEquipmentManager {
     }
 
     public override void EquipCharacter() {
-        Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter()");
+        //Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter()");
         //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
         if (currentEquipment == null) {
-            Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): currentEquipment == null!");
+            //Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): currentEquipment == null!");
             return;
         }
         base.EquipCharacter();

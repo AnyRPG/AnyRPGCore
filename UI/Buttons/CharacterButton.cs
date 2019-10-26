@@ -128,7 +128,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     */
 
     public void UpdateVisual(bool resetDisplay = true) {
-        Debug.Log("CharacterButton.UpdateVisual()");
+        //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
 
         GetLocalComponents();
         Equipment tmpEquipment = equippedEquipment;
@@ -209,7 +209,7 @@ public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (equippedEquipment != null) {
             return equippedEquipment.GetDescription();
         }
-        return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}", GetSummary());
+        return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlot.ToString(), GetSummary());
     }
 
     public string GetSummary() {
