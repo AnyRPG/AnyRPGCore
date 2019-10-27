@@ -1,381 +1,390 @@
 using AnyRPG;
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-public class CraftingUI : WindowContentController {
+    public class CraftingUI : WindowContentController {
 
-    #region Singleton
-    private static CraftingUI instance;
+        #region Singleton
+        private static CraftingUI instance;
 
-    public static CraftingUI MyInstance
-    {
-        get
-        {
-            if (instance == null) {
-                instance = FindObjectOfType<CraftingUI>();
-            }
-
-            return instance;
-        }
-    }
-
-    #endregion
-
-    // holds all the recipes
-    private CraftAbility craftAbility;
-
-    // the actual craft spell
-    [SerializeField]
-    private InstantEffectAbility craftAction;
-
-    [SerializeField]
-    private GameObject craftButton, craftAllButton, lessButton, moreButton, cancelButton;
-
-    [SerializeField]
-    private Text craftAmountText;
-
-    [SerializeField]
-    private GameObject recipePrefab;
-
-    [SerializeField]
-    private Transform recipeParent;
-
-    [SerializeField]
-    private GameObject availableArea;
-
-    [SerializeField]
-    private GameObject hiddenHeading;
-
-    [SerializeField]
-    private GameObject hiddenArea;
-
-    [SerializeField]
-    private GameObject recipeDetailsArea;
-
-    [SerializeField]
-    private Text recipeDescription;
-
-    [SerializeField]
-    private GameObject materialsHeading;
-
-
-    [SerializeField]
-    private DescribableCraftingOutputIcon outputIcon;
-
-    [SerializeField]
-    private DescribableCraftingInputIcon[] inputIcons;
-
-    // the number of items to craft
-    private int craftAmount = 1;
-
-    //private List<recipeNode> recipeNodes = new List<recipeNode>();
-
-    private List<RecipeScript> recipeScripts = new List<RecipeScript>();
-
-    private List<string> craftingQueue = new List<string>();
-
-    private RecipeScript selectedRecipeScript;
-
-    private string currentRecipeName = null;
-
-    public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
-    public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
-
-    private void Start() {
-        DeactivateButtons();
-    }
-
-    public void DeactivateButtons() {
-        Button craftButtonComponent = craftButton.GetComponent<Button>();
-        if (craftButtonComponent != null) {
-            craftButton.GetComponent<Button>().interactable = false;
-        }
-        Button craftAllButtonComponent = craftButton.GetComponent<Button>();
-        if (craftAllButtonComponent != null) {
-            craftAllButton.GetComponent<Button>().interactable = false;
-        }
-    }
-
-    public void ShowRecipesCommon(CraftAbility craftAbility) {
-        //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
-        Clearrecipes();
-        RecipeScript firstScript = null;
-        foreach (Recipe recipe in craftAbility.GetRecipes()) {
-            //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ") : adding recipe:" + recipe.MyOutput.itemName);
-            if (recipe.MyOutput != null) {
-                GameObject go = Instantiate(recipePrefab, recipeParent);
-                RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
-                if (firstScript == null) {
-                    firstScript = qs;
+        public static CraftingUI MyInstance {
+            get {
+                if (instance == null) {
+                    instance = FindObjectOfType<CraftingUI>();
                 }
-                qs.MyText.text = recipe.MyOutput.MyName;
-                qs.SetRecipeName(recipe.MyName);
-                recipeScripts.Add(qs);
-            } else {
-                //Debug.Log("Recipe Output is null!");
+
+                return instance;
             }
         }
 
-        //if (MySelectedRecipeScript != null) {
+        #endregion
+
+        // holds all the recipes
+        private CraftAbility craftAbility;
+
+        [SerializeField]
+        private GameObject craftButton, craftAllButton, lessButton, moreButton, cancelButton;
+
+        [SerializeField]
+        private Text craftAmountText;
+
+        [SerializeField]
+        private GameObject recipePrefab;
+
+        [SerializeField]
+        private Transform recipeParent;
+
+        [SerializeField]
+        private GameObject availableArea;
+
+        [SerializeField]
+        private GameObject hiddenHeading;
+
+        [SerializeField]
+        private GameObject hiddenArea;
+
+        [SerializeField]
+        private GameObject recipeDetailsArea;
+
+        [SerializeField]
+        private Text recipeDescription;
+
+        [SerializeField]
+        private GameObject materialsHeading;
+
+
+        [SerializeField]
+        private DescribableCraftingOutputIcon outputIcon;
+
+        [SerializeField]
+        private DescribableCraftingInputIcon[] inputIcons;
+
+        // the number of items to craft
+        private int craftAmount = 1;
+
+        //private List<recipeNode> recipeNodes = new List<recipeNode>();
+
+        private List<RecipeScript> recipeScripts = new List<RecipeScript>();
+
+        private List<string> craftingQueue = new List<string>();
+
+        private RecipeScript selectedRecipeScript;
+
+        private string currentRecipeName = null;
+
+        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
+
+        public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
+
+        private void Start() {
+            DeactivateButtons();
+        }
+
+        public void DeactivateButtons() {
+            Button craftButtonComponent = craftButton.GetComponent<Button>();
+            if (craftButtonComponent != null) {
+                craftButton.GetComponent<Button>().interactable = false;
+            }
+            Button craftAllButtonComponent = craftButton.GetComponent<Button>();
+            if (craftAllButtonComponent != null) {
+                craftAllButton.GetComponent<Button>().interactable = false;
+            }
+        }
+
+        // meant to be called externally from craftingNode
+        public void ViewRecipes(CraftAbility craftAbility) {
+            this.craftAbility = craftAbility;
+            PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
+            ShowRecipes(craftAbility);
+        }
+
+        public List<Recipe> GetRecipes() {
+            //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
+            List<Recipe> returnList = new List<Recipe>();
+            foreach (Recipe recipe in SystemRecipeManager.MyInstance.GetResourceList()) {
+                if (SystemResourceManager.MatchResource(recipe.MyCraftAbility.MyName, craftAbility.MyName)) {
+                    returnList.Add(recipe);
+                }
+            }
+            return returnList;
+        }
+
+        public void ShowRecipesCommon(CraftAbility craftAbility) {
+            //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
+            Clearrecipes();
+            RecipeScript firstScript = null;
+            foreach (Recipe recipe in GetRecipes()) {
+                //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ") : adding recipe:" + recipe.MyOutput.itemName);
+                if (recipe.MyOutput != null) {
+                    GameObject go = Instantiate(recipePrefab, recipeParent);
+                    RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
+                    if (firstScript == null) {
+                        firstScript = qs;
+                    }
+                    qs.MyText.text = recipe.MyOutput.MyName;
+                    qs.SetRecipeName(recipe.MyName);
+                    recipeScripts.Add(qs);
+                } else {
+                    //Debug.Log("Recipe Output is null!");
+                }
+            }
+
+            //if (MySelectedRecipeScript != null) {
             //MySelectedRecipeScript.Select();
-        //} else {
+            //} else {
             MySelectedRecipeScript = firstScript;
             firstScript.Select();
-        //}
-    }
+            //}
+        }
 
-    public void ShowRecipes() {
-        //Debug.Log("craftingUI.Showrecipes()");
-        ShowRecipesCommon(craftAbility);
-    }
+        public void ShowRecipes() {
+            //Debug.Log("craftingUI.Showrecipes()");
+            ShowRecipesCommon(craftAbility);
+        }
 
-    public void ShowRecipes(CraftAbility craftAbility) {
-        //Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
-        this.craftAbility = craftAbility;
-        ShowRecipesCommon(this.craftAbility);
-    }
+        public void ShowRecipes(CraftAbility craftAbility) {
+            //Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
+            this.craftAbility = craftAbility;
+            ShowRecipesCommon(this.craftAbility);
+        }
 
-    public void UpdateSelected() {
-        //Debug.Log("CraftingUI.UpdateSelected()");
-        if (selectedRecipeScript != null) {
+        public void UpdateSelected() {
+            //Debug.Log("CraftingUI.UpdateSelected()");
+            if (selectedRecipeScript != null) {
+                craftAmount = 1;
+                ShowDescription(selectedRecipeScript.MyRecipeName);
+            }
+        }
+
+        public void ShowDescription(string recipeName) {
+            //Debug.Log("CraftingUI.ShowDescription(" + recipeName + ")");
+            ClearDescription();
+
+            if (recipeName == null && recipeName == string.Empty) {
+                return;
+            }
+            currentRecipeName = recipeName;
+
+            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
+            if (recipe == null) {
+                //Debug.Log("SkillTrainerUI.ShowDescription(" + recipeName + "): failed to get skill from SystemSkillManager");
+            }
+
+            recipeDescription.text = string.Format("<b>{0}</b>", recipe.MyOutput.MyName, recipe.MyDescription);
+
+            outputIcon.SetDescribable(recipe.MyOutput, recipe.MyOutputCount);
+
+            if (recipe.MyCraftingMaterials.Length > 0) {
+                materialsHeading.gameObject.SetActive(true);
+            }
+
+            // show crafting materials
+            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+                inputIcons[i].MyMaterialSlot.SetActive(true);
+                inputIcons[i].SetDescribable(recipe.MyCraftingMaterials[i].MyItem, recipe.MyCraftingMaterials[i].MyCount);
+            }
+
+            UpdateCraftAmountArea();
+
+        }
+
+
+        private bool CanCraft(Recipe recipe) {
+            //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
+            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+                if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) < recipe.MyCraftingMaterials[i].MyCount) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void ClearDescription() {
+            //Debug.Log("CraftingUI.ClearDescription()");
             craftAmount = 1;
-            ShowDescription(selectedRecipeScript.MyRecipeName);
-        }
-    }
-
-    public void ShowDescription(string recipeName) {
-        //Debug.Log("CraftingUI.ShowDescription(" + recipeName + ")");
-        ClearDescription();
-
-        if (recipeName == null && recipeName == string.Empty) {
-            return;
-        }
-        currentRecipeName = recipeName;
-
-        Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
-        if (recipe == null) {
-            //Debug.Log("SkillTrainerUI.ShowDescription(" + recipeName + "): failed to get skill from SystemSkillManager");
+            //recipeDetailsArea.SetActive(false);
+            recipeDescription.text = string.Empty;
+            //materialsHeading.gameObject.SetActive(false);
+            ClearInputIcons();
+            DeselectRecipes();
         }
 
-        recipeDescription.text = string.Format("<b>{0}</b>", recipe.MyOutput.MyName, recipe.MyDescription);
-
-        outputIcon.SetDescribable(recipe.MyOutput, recipe.MyOutputCount);
-        
-        if (recipe.MyCraftingMaterials.Length > 0) {
-            materialsHeading.gameObject.SetActive(true);
-        }
-
-        // show crafting materials
-        for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
-            inputIcons[i].MyMaterialSlot.SetActive(true);
-            inputIcons[i].SetDescribable(recipe.MyCraftingMaterials[i].MyItem, recipe.MyCraftingMaterials[i].MyCount);
-        }
-
-        UpdateCraftAmountArea();
-
-    }
-
-
-    private bool CanCraft(Recipe recipe) {
-        //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
-        for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
-            if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) < recipe.MyCraftingMaterials[i].MyCount) {
-                return false;
+        public void DeselectRecipes() {
+            //Debug.Log("CraftingUI.DeselectRecipes()");
+            foreach (RecipeScript recipe in recipeScripts) {
+                if (recipe != MySelectedRecipeScript) {
+                    recipe.DeSelect();
+                }
             }
         }
-        return true;
-    }
 
-    public void ClearDescription() {
-        //Debug.Log("CraftingUI.ClearDescription()");
-        craftAmount = 1;
-        //recipeDetailsArea.SetActive(false);
-        recipeDescription.text = string.Empty;
-        //materialsHeading.gameObject.SetActive(false);
-        ClearInputIcons();
-        DeselectRecipes();
-    }
-
-    public void DeselectRecipes() {
-        //Debug.Log("CraftingUI.DeselectRecipes()");
-        foreach (RecipeScript recipe in recipeScripts) {
-            if (recipe != MySelectedRecipeScript) {
-                recipe.DeSelect();
-            }
-        }
-    }
-
-    public void Clearrecipes() {
-        //Debug.Log("CraftingUI.ClearRecipes()");
-        // clear the recipe list so any recipes left over from a previous time opening the window aren't shown
-        //Debug.Log("running clear recipes in recipegiverUI; recipegiver: " + tradeSkill.name);
-        foreach (RecipeScript recipeScript in recipeScripts) {
+        public void Clearrecipes() {
+            //Debug.Log("CraftingUI.ClearRecipes()");
+            // clear the recipe list so any recipes left over from a previous time opening the window aren't shown
+            //Debug.Log("running clear recipes in recipegiverUI; recipegiver: " + tradeSkill.name);
+            foreach (RecipeScript recipeScript in recipeScripts) {
                 //Debug.Log("The recipenode has a gameobject we need to clear");
                 recipeScript.gameObject.transform.SetParent(null);
                 Destroy(recipeScript.gameObject);
-        }
-        recipeScripts.Clear();
-    }
-
-    public override void RecieveClosedWindowNotification() {
-        //Debug.Log("craftingUI.OnCloseWindow()");
-        base.RecieveClosedWindowNotification();
-        DeactivateButtons();
-        //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
-        MySelectedRecipeScript = null;
-    }
-
-    public override void ReceiveOpenWindowNotification() {
-        //Debug.Log("craftingUI.OnOpenWindow()");
-        base.ReceiveOpenWindowNotification();
-
-        craftingQueue.Clear();
-
-        ClearDescription();
-        OnOpenWindow(this);
-        UpdateCraftAmountArea();
-        PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.MyName);
-
-    }
-
-    private void ClearInputIcons() {
-        foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
-            inputIcon.MyMaterialSlot.SetActive(false);
-        }
-    }
-
-    private int GetMaxCraftAmount(string recipeName) {
-        //Debug.Log("CraftingUI.GetMaxCraftAmount()");
-        Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
-
-        int maxAmount = -1;
-        for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
-            int possibleAmount = InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) / recipe.MyCraftingMaterials[i].MyCount;
-            if (maxAmount == -1) {
-                maxAmount = possibleAmount;
             }
-            if (possibleAmount < maxAmount) {
-                maxAmount = possibleAmount;
-            }
-        }
-        return maxAmount;
-    }
-
-    public void CraftAll() {
-        //Debug.Log("CraftingUI.CraftAll()");
-        if (MySelectedRecipeScript != null) {
-            craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
-            UpdateCraftAmountArea();
-            BeginCrafting();
-        } else {
-            //Debug.Log("MySelectedRecipeScript is null!");
-        }
-    }
-
-    public void BeginCrafting() {
-        //Debug.Log("CraftingUI.BeginCrafting()");
-        if (MySelectedRecipeScript != null) {
-            for (int i = 0; i < craftAmount; i++) {
-                craftingQueue.Add(MySelectedRecipeScript.MyRecipeName);
-            }
-            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAction);
-        } else {
-            //Debug.Log("MySelectedRecipeScript is null!");
-        }
-    }
-
-    public void CraftNextItem() {
-        //Debug.Log("CraftingUI.CraftNextItem()");
-        if (craftingQueue.Count == 0) {
-            return;
+            recipeScripts.Clear();
         }
 
-        Recipe recipe = SystemRecipeManager.MyInstance.GetResource(craftingQueue[0]);
-        // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
-        if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(recipe.MyOutput.MyName))) {
-            foreach (CraftingMaterial craftingMaterial in recipe.MyCraftingMaterials) {
-                //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
-                for (int i = 0; i < craftingMaterial.MyCount; i++) {
-                    //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                    InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.MyName, 1)[0]);
-                }
-            }
-            craftingQueue.RemoveAt(0);
-            //UpdateCraftAmountArea();
-            if (craftingQueue.Count > 0) {
-                if (craftAction == null) {
-                    //Debug.Log("CraftingUI.CraftNextItem(). CraftAction is null!");
-                }
-                // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+        public override void RecieveClosedWindowNotification() {
+            //Debug.Log("craftingUI.OnCloseWindow()");
+            base.RecieveClosedWindowNotification();
+            DeactivateButtons();
+            //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
+            MySelectedRecipeScript = null;
+        }
 
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAction as IAbility);
-            }
-        } else {
-            // empty the queue to prevent repeated loop trying to craft something you don't have materials for
+        public override void ReceiveOpenWindowNotification() {
+            //Debug.Log("craftingUI.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
+
             craftingQueue.Clear();
-        }
-    }
 
-    public void UpdateCraftAmountArea() {
-        //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
-        int maxAmount = 0;
-        if (MySelectedRecipeScript != null) {
-            maxAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
-            if (craftAmount == 0 && maxAmount > 0) {
-                craftAmount = 1;
+            ClearDescription();
+            OnOpenWindow(this);
+            UpdateCraftAmountArea();
+            PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.MyName);
+
+        }
+
+        private void ClearInputIcons() {
+            foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
+                inputIcon.MyMaterialSlot.SetActive(false);
             }
         }
 
-        //Debug.Log("CraftingUI.UpdateCraftAmountArea(): maxAmount: " + maxAmount);
-        if (craftAmount > maxAmount) {
-            craftAmount = maxAmount;
+        private int GetMaxCraftAmount(string recipeName) {
+            //Debug.Log("CraftingUI.GetMaxCraftAmount()");
+            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
+
+            int maxAmount = -1;
+            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+                int possibleAmount = InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) / recipe.MyCraftingMaterials[i].MyCount;
+                if (maxAmount == -1) {
+                    maxAmount = possibleAmount;
+                }
+                if (possibleAmount < maxAmount) {
+                    maxAmount = possibleAmount;
+                }
+            }
+            return maxAmount;
         }
 
-        if (craftAmount == 0) {
-            craftButton.GetComponent<Button>().interactable = false;
-            craftAllButton.GetComponent<Button>().interactable = false;
-            lessButton.GetComponent<Button>().interactable = false;
-            moreButton.GetComponent<Button>().interactable = false;
-            if (maxAmount > 0) {
-                moreButton.GetComponent<Button>().interactable = true;
-            }
-        } else {
-            lessButton.GetComponent<Button>().interactable = true;
-            if (maxAmount > craftAmount) {
-                moreButton.GetComponent<Button>().interactable = true;
+        public void CraftAll() {
+            //Debug.Log("CraftingUI.CraftAll()");
+            if (MySelectedRecipeScript != null) {
+                craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
+                UpdateCraftAmountArea();
+                BeginCrafting();
             } else {
-                moreButton.GetComponent<Button>().interactable = false;
+                //Debug.Log("MySelectedRecipeScript is null!");
             }
-            craftButton.GetComponent<Button>().interactable = true;
-            craftAllButton.GetComponent<Button>().interactable = true;
         }
-        craftAmountText.text = craftAmount.ToString();
-    }
 
-    public void IncreaseCraftAmount() {
-        craftAmount++;
-        UpdateCraftAmountArea();
-    }
+        public void BeginCrafting() {
+            //Debug.Log("CraftingUI.BeginCrafting()");
+            if (MySelectedRecipeScript != null) {
+                for (int i = 0; i < craftAmount; i++) {
+                    craftingQueue.Add(MySelectedRecipeScript.MyRecipeName);
+                }
+                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAbility);
+            } else {
+                //Debug.Log("MySelectedRecipeScript is null!");
+            }
+        }
 
-    public void DecreaseCraftAmount() {
-        if (craftAmount > 0) {
-            craftAmount--;
+        public void CraftNextItem() {
+            //Debug.Log("CraftingUI.CraftNextItem()");
+            if (craftingQueue.Count == 0) {
+                return;
+            }
+
+            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(craftingQueue[0]);
+            // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
+            if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(recipe.MyOutput.MyName))) {
+                foreach (CraftingMaterial craftingMaterial in recipe.MyCraftingMaterials) {
+                    //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
+                    for (int i = 0; i < craftingMaterial.MyCount; i++) {
+                        //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
+                        InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.MyName, 1)[0]);
+                    }
+                }
+                craftingQueue.RemoveAt(0);
+                //UpdateCraftAmountArea();
+                if (craftingQueue.Count > 0) {
+                    // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAbility);
+                }
+            } else {
+                // empty the queue to prevent repeated loop trying to craft something you don't have materials for
+                craftingQueue.Clear();
+            }
+        }
+
+        public void UpdateCraftAmountArea() {
+            //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
+            int maxAmount = 0;
+            if (MySelectedRecipeScript != null) {
+                maxAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
+                if (craftAmount == 0 && maxAmount > 0) {
+                    craftAmount = 1;
+                }
+            }
+
+            //Debug.Log("CraftingUI.UpdateCraftAmountArea(): maxAmount: " + maxAmount);
+            if (craftAmount > maxAmount) {
+                craftAmount = maxAmount;
+            }
+
+            if (craftAmount == 0) {
+                craftButton.GetComponent<Button>().interactable = false;
+                craftAllButton.GetComponent<Button>().interactable = false;
+                lessButton.GetComponent<Button>().interactable = false;
+                moreButton.GetComponent<Button>().interactable = false;
+                if (maxAmount > 0) {
+                    moreButton.GetComponent<Button>().interactable = true;
+                }
+            } else {
+                lessButton.GetComponent<Button>().interactable = true;
+                if (maxAmount > craftAmount) {
+                    moreButton.GetComponent<Button>().interactable = true;
+                } else {
+                    moreButton.GetComponent<Button>().interactable = false;
+                }
+                craftButton.GetComponent<Button>().interactable = true;
+                craftAllButton.GetComponent<Button>().interactable = true;
+            }
+            craftAmountText.text = craftAmount.ToString();
+        }
+
+        public void IncreaseCraftAmount() {
+            craftAmount++;
             UpdateCraftAmountArea();
         }
-    }
 
-    public void CancelCrafting() {
-        //Debug.Log("CraftingUI.CancelCrafting()");
-        craftingQueue.Clear();
-        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
-    }
+        public void DecreaseCraftAmount() {
+            if (craftAmount > 0) {
+                craftAmount--;
+                UpdateCraftAmountArea();
+            }
+        }
 
-}
+        public void CancelCrafting() {
+            //Debug.Log("CraftingUI.CancelCrafting()");
+            craftingQueue.Clear();
+            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+        }
+
+    }
 
 }
