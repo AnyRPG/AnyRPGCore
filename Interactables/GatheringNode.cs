@@ -23,14 +23,13 @@ namespace AnyRPG {
         }
         public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyName : base.MyInteractionPanelTitle); }
 
-
         /// <summary>
         /// The ability to cast in order to mine this node
         /// </summary>
         [SerializeField]
-        private BaseAbility ability;
+        private string abilityName;
 
-        private BaseAbility realAbility;
+        private GatherAbility realAbility;
 
         [SerializeField]
         private GatherLootTable lootTable;
@@ -40,12 +39,14 @@ namespace AnyRPG {
 
         private float currentTimer = 0f;
 
-        public BaseAbility MyAbility { get => realAbility; }
+        public GatherAbility MyAbility { get => realAbility; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
             base.Awake();
-            realAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
+            if (abilityName != null && abilityName != string.Empty) {
+                realAbility = SystemAbilityManager.MyInstance.GetResource(abilityName) as GatherAbility;
+            }
         }
 
         public override bool Interact(CharacterUnit source) {

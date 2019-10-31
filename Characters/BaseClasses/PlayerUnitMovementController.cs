@@ -330,8 +330,12 @@ namespace AnyRPG {
         public void SwitchCollisionOn() {
             if (characterUnit.MyCharacter != null) {
                 (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove = true;
-                anyRPGCharacterController.enabled = true;
-                characterUnit.MyCharacterAnimator.DisableRootMotion();
+                if (anyRPGCharacterController != null) {
+                    anyRPGCharacterController.enabled = true;
+                }
+                if (characterUnit.MyCharacterAnimator != null) {
+                    characterUnit.MyCharacterAnimator.DisableRootMotion();
+                }
             }
         }
 

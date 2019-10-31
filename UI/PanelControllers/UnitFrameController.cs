@@ -66,7 +66,6 @@ namespace AnyRPG {
 
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
-        private Coroutine coRoutine = null;
 
         public GameObject MyFollowGameObject { get => followGameObject; set => followGameObject = value; }
 
@@ -135,7 +134,7 @@ namespace AnyRPG {
             gameObject.SetActive(true);
             //Debug.Log(gameObject.name + ".UnitFrameController.TargetInitialization() after setactve isactive: " + isActiveAndEnabled);
             if (isActiveAndEnabled) {
-                coRoutine = StartCoroutine(WaitForFollowTarget());
+                GetFollowTarget();
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run StartCoroutien() on enable instead.");
             }
@@ -183,10 +182,6 @@ namespace AnyRPG {
 
         public void ClearTarget(bool closeWindowOnClear = true) {
             //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
-            if (coRoutine != null) {
-                StopCoroutine(coRoutine);
-                coRoutine = null;
-            }
             if (followGameObject != null) {
 
                 INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
@@ -244,21 +239,14 @@ namespace AnyRPG {
             }
         }
 
-        private IEnumerator WaitForFollowTarget() {
+        private void GetFollowTarget() {
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForFollowTarget()");
             Transform targetBone = followGameObject.transform;
             string unitFrameTarget = followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameTarget;
             //Debug.Log("Unit Frame: Searching for target: " + unitFrameTarget);
             if (unitFrameTarget != string.Empty) {
-                while (true) {
-                    if (followGameObject != null) {
-                        targetBone = followGameObject.transform.Find(unitFrameTarget);
-                    }
-                    if (targetBone == null) {
-                        yield return null;
-                    } else {
-                        break;
-                    }
+                if (followGameObject != null) {
+                    targetBone = followGameObject.transform.FindChildByRecursive(unitFrameTarget);
                 }
             }
             this.followTransform = targetBone;
