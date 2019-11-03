@@ -340,7 +340,9 @@ namespace AnyRPG {
 
             if (abilityCastingPrefab != null) {
                 if (abilityCastingPrefabRef == null) {
-                    Vector3 spawnLocation = new Vector3(source.MyCharacterUnit.transform.position.x + prefabOffset.x, source.MyCharacterUnit.transform.position.y + prefabOffset.y, source.MyCharacterUnit.transform.position.z + prefabOffset.z);
+                    //Vector3 relativePrefabOffset = source.MyCharacterUnit.transform.TransformPoint(prefabOffset);
+                    //Vector3 spawnLocation = new Vector3(source.MyCharacterUnit.transform.position.x + relativePrefabOffset.x, source.MyCharacterUnit.transform.position.y + relativePrefabOffset.y, source.MyCharacterUnit.transform.position.z + relativePrefabOffset.z);
+                    Vector3 spawnLocation = source.MyCharacterUnit.transform.TransformPoint(prefabOffset);
                     //Debug.Log("BaseAbility.OnCastStart(): Instantiating spell casting prefab at " + source.transform.position + "; spawnLocation is : " + spawnLocation);
                     //abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.Euler(source.MyCharacterUnit.transform.TransformDirection(prefabRotation)), source.transform);
                     abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
