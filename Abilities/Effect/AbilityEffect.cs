@@ -216,7 +216,11 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects(): effectOutput.healthAmount: " + effectOutput.healthAmount);
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
                 //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects() found: " + abilityEffect.abilityEffectName);
-                PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
+                    Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
+                } else {
+                    PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                }
             }
         }
 

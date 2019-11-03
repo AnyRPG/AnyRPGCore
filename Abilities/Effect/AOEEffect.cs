@@ -77,7 +77,7 @@ public class AOEEffect : FixedLengthEffect {
     }
 
     private List<GameObject> GetValidTargets(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
-        //Debug.Log(MyName + "AOEEffect.GetValidTargets()");
+        Debug.Log(MyName + ".AOEEffect.GetValidTargets()");
 
         Vector3 aoeSpawnCenter = Vector3.zero;
         if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
