@@ -32,6 +32,11 @@ namespace AnyRPG {
         [SerializeField]
         private string gameVersion;
 
+        [Header("UI")]
+
+        [SerializeField]
+        private Material defaultCastingLightProjector;
+
         [Header("SYSTEM BAR")]
 
         [SerializeField]
@@ -238,6 +243,7 @@ namespace AnyRPG {
         public Sprite MySystemBarMap { get => systemBarMap; set => systemBarMap = value; }
         public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
+        public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
