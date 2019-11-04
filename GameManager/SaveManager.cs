@@ -435,7 +435,7 @@ public class SaveManager : MonoBehaviour {
         //Debug.Log("Savemanager.SaveReputationData()");
         foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.MyDispositionDictionary) {
             ReputationSaveData saveData = new ReputationSaveData();
-            saveData.MyName = factionDisposition.faction.MyName;
+            saveData.MyName = factionDisposition.factionName;
             saveData.MyAmount = factionDisposition.disposition;
             anyRPGSaveData.reputationSaveData.Add(saveData);
         }
@@ -565,9 +565,9 @@ public class SaveManager : MonoBehaviour {
         //int counter = 0;
         foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
             FactionDisposition factionDisposition = new FactionDisposition();
-            factionDisposition.faction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
+            factionDisposition.factionName = reputationSaveData.MyName;
             factionDisposition.disposition = reputationSaveData.MyAmount;
-            PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation(factionDisposition.faction, (int)factionDisposition.disposition);
+            PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation(factionDisposition.factionName, (int)factionDisposition.disposition);
             //counter++;
         }
     }

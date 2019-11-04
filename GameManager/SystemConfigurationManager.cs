@@ -49,6 +49,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite systemBarMap;
 
+        [Header("CHARACTER CONFIGURATION")]
+
+        [SerializeField]
+        private AnimationProfile defaultAttackAnimationProfile;
+
+        [SerializeField]
+        private RuntimeAnimatorController defaultAnimatorController;
+
         [Header("CHARACTER PANEL")]
 
         [SerializeField]
@@ -228,6 +236,8 @@ namespace AnyRPG {
         public Sprite MySystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
         public Sprite MySystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
         public Sprite MySystemBarMap { get => systemBarMap; set => systemBarMap = value; }
+        public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
+        public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");

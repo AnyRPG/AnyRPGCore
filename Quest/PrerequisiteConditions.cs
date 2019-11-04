@@ -65,7 +65,7 @@ public class PrerequisiteConditions {
             }
         }
         foreach (FactionDisposition factionDisposition in factionDispositionPrerequisites) {
-            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.faction.MyName) < factionDisposition.disposition) {
+            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.factionName) < factionDisposition.disposition) {
                 returnValue = false;
             }
         }

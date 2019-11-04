@@ -445,7 +445,7 @@ namespace AnyRPG {
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                     if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).faction, (rewardButton.MyDescribable as FactionNode).reputationAmount);
+                        PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).factionName, (rewardButton.MyDescribable as FactionNode).reputationAmount);
                     }
                 }
             }

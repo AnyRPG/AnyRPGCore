@@ -69,7 +69,7 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
                 if (i < pages[pageIndex].Count) {
                     //Debug.Log("adding ability");
                     factionButtons[i].gameObject.SetActive(true);
-                    factionButtons[i].AddFaction(pages[pageIndex][i].faction.MyName);
+                    factionButtons[i].AddFaction(pages[pageIndex][i].factionName);
                 } else {
                     //Debug.Log("clearing ability");
                     factionButtons[i].ClearFaction();
