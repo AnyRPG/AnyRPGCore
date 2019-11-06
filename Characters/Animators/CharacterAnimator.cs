@@ -16,7 +16,6 @@ namespace AnyRPG {
         //public AnimationClip replaceableAttackAnim;
         protected AnimationProfile currentAttackAnimationProfile;
         const float locomotionAnimationSmoothTime = 0.1f;
-        const string replaceableAnimationName = "AnyRPGDefaultAttack";
 
         protected Animator animator;
 
@@ -474,10 +473,12 @@ namespace AnyRPG {
             int attackIndex = Random.Range(0, currentAttackAnimationProfile.MyProfileNodes.Length);
             //Debug.Log(gameObject.name + ".CharacterAnimator: OnAttack(): attack index set to: " + attackIndex);
 
-            // override the default attack animation
-            overrideController[replaceableAnimationName] = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip;
-            float animationLength = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip.length;
+            if (SystemConfigurationManager.MyInstance != null) {
+                // override the default attack animation
+                overrideController[SystemConfigurationManager.MyInstance.MyDefaultAttackAnimationName] = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip;
+            }
 
+            float animationLength = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip.length;
             // start a coroutine to unlock the auto-attack blocker boolean when the animation completes
             attackCoroutine = StartCoroutine(WaitForAnimation(null, animationLength, true, false, false));
 
@@ -492,8 +493,11 @@ namespace AnyRPG {
                 return;
             }
             characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
-            // override the default attack animation
-            overrideController[replaceableAnimationName] = animationClip;
+
+            if (SystemConfigurationManager.MyInstance != null) {
+                // override the default attack animation
+                overrideController[SystemConfigurationManager.MyInstance.MyDefaultAttackAnimationName] = animationClip;
+            }
             float animationLength = animationClip.length;
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
             currentAbility = baseAbility;
@@ -514,10 +518,12 @@ namespace AnyRPG {
                 return;
             }
 
-            // override the default attack animation
-            overrideController["AnyRPGMagicSlowCasting"] = animationClip;
-            float animationLength = animationClip.length;
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
+            if (SystemConfigurationManager.MyInstance != null ) {
+                // override the default attack animation
+                overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastAnimationName] = animationClip;
+                float animationLength = animationClip.length;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
+            }
 
             SetCasting(true);
             // this should not be necessary since we track the length of animation through the casting time
@@ -623,8 +629,10 @@ namespace AnyRPG {
         private void HandleRevive() {
             SetTrigger("ReviveTrigger");
             // add 1 to account for the transition
-            float animationLength = overrideController["AnyRPGResurrection2"].length + 2;
-            resurrectionCoroutine = StartCoroutine(WaitForResurrectionAnimation(animationLength));
+            if (SystemConfigurationManager.MyInstance != null) {
+                float animationLength = overrideController[SystemConfigurationManager.MyInstance.MyDefaultReviveAnimationName].length + 2;
+                resurrectionCoroutine = StartCoroutine(WaitForResurrectionAnimation(animationLength));
+            }
         }
 
         public void HandleLevitated() {

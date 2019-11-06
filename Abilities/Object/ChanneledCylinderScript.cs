@@ -12,19 +12,19 @@ namespace AnyRPG {
         // keep track if this has been set at least once
         private bool objectInitialized = false;
 
-        [Tooltip("The game object where the lightning will emit from. If null, StartPosition is used.")]
+        [Tooltip("The game object where the object will emit from. If null, StartPosition is used.")]
         [SerializeField]
         private GameObject startObject;
 
-        [Tooltip("The start position where the lightning will emit from. This is in world space if StartObject is null, otherwise this is offset from StartObject position.")]
+        [Tooltip("The start position where the object will emit from. This is in world space if StartObject is null, otherwise this is offset from StartObject position.")]
         [SerializeField]
         private Vector3 startPosition;
 
-        [Tooltip("The game object where the lightning will end at. If null, EndPosition is used.")]
+        [Tooltip("The game object where the object will end at. If null, EndPosition is used.")]
         [SerializeField]
         private GameObject endObject;
 
-        [Tooltip("The end position where the lightning will end at. This is in world space if EndObject is null, otherwise this is offset from EndObject position.")]
+        [Tooltip("The end position where the object will end at. This is in world space if EndObject is null, otherwise this is offset from EndObject position.")]
         [SerializeField]
         private Vector3 endPosition;
 

@@ -46,6 +46,17 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite defaultUIPanelFrame;
 
+        [Header("ANIMATION")]
+
+        [SerializeField]
+        private string defaultAttackAnimationName;
+
+        [SerializeField]
+        private string defaultCastAnimationName;
+
+        [SerializeField]
+        private string defaultReviveAnimationName;
+
         [Header("SYSTEM BAR")]
 
         [SerializeField]
@@ -255,6 +266,9 @@ namespace AnyRPG {
         public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
         public Color MyDefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color MyDefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
+        public string MyDefaultAttackAnimationName { get => defaultAttackAnimationName; set => defaultAttackAnimationName = value; }
+        public string MyDefaultCastAnimationName { get => defaultCastAnimationName; set => defaultCastAnimationName = value; }
+        public string MyDefaultReviveAnimationName { get => defaultReviveAnimationName; set => defaultReviveAnimationName = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
