@@ -39,12 +39,24 @@ namespace AnyRPG {
 
         public Text MyText { get => text; }
 
-        public void Start() {
+        public void Awake() {
+            //Debug.Log(gameObject.name + ".HightlightButton.Awake()");
+
             if (SystemConfigurationManager.MyInstance != null) {
                 if (highlightImage != null) {
-                    highlightImage.color = SystemConfigurationManager.MyInstance.MyDefaultUIColor;
+                    highlightColor = SystemConfigurationManager.MyInstance.MyDefaultUIColor;
+                }
+                if (highlightButton != null) {
+                    Image highlightButtonImage = highlightButton.GetComponent<Image>();
+                    if (highlightButtonImage != null) {
+                        highlightButtonImage.color = SystemConfigurationManager.MyInstance.MyDefaultUISolidColor;
+                    }
                 }
             }
+            DeSelect();
+        }
+
+        public void Start() {
         }
 
         public virtual void Select() {
@@ -74,6 +86,8 @@ namespace AnyRPG {
                 if (useHighlightColor) {
                     highlightImage.color = baseColor;
                 }
+            } else {
+                //Debug.Log(gameObject.name + ".HightlightButton.DeSelect(): highlight image is null");
             }
             if (highlightButton != null && useHighlightColorOnButton == true) {
                 ColorBlock colorBlock = highlightButton.colors;

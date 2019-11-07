@@ -49,7 +49,7 @@ public class LevelManager : MonoBehaviour {
 
     [Header("LOADING SCREEN")]
     public Slider loadBar;
-    public TMP_Text finishedLoadingText;
+    public Text finishedLoadingText;
 
     public bool MyNavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
     public string MyDefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }

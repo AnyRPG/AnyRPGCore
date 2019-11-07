@@ -37,8 +37,14 @@ namespace AnyRPG {
         [SerializeField]
         private Material defaultCastingLightProjector;
 
+        // default UI color for static elements that have no additional transparency applied to them
         [SerializeField]
         private Color defaultUIColor;
+
+        // defaultUIColor with full opacity for button frames
+        [SerializeField]
+        private Color defaultUISolidColor;
+
 
         [SerializeField]
         private Color defaultUIFillColor;
@@ -269,6 +275,7 @@ namespace AnyRPG {
         public string MyDefaultAttackAnimationName { get => defaultAttackAnimationName; set => defaultAttackAnimationName = value; }
         public string MyDefaultCastAnimationName { get => defaultCastAnimationName; set => defaultCastAnimationName = value; }
         public string MyDefaultReviveAnimationName { get => defaultReviveAnimationName; set => defaultReviveAnimationName = value; }
+        public Color MyDefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
