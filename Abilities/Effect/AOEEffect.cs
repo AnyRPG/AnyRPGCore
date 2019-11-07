@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New AOEEffect", menuName = "Abilities/Effects/AOEEffect")]
+[CreateAssetMenu(fileName = "New AOEEffect",menuName = "AnyRPG/Abilities/Effects/AOEEffect")]
 public class AOEEffect : FixedLengthEffect {
 
     [SerializeField]

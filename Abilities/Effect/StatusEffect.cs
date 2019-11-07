@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New StatusEffect", menuName = "Abilities/Effects/StatusEffect")]
+    [CreateAssetMenu(fileName = "New StatusEffect",menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect {
 
         // the number of seconds this will be active for without haste or slow

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "CurrencyItem", menuName = "Inventory/Items/CurrencyItem", order = 1)]
+[CreateAssetMenu(fileName = "CurrencyItem",menuName = "AnyRPG/Inventory/Items/CurrencyItem", order = 1)]
 public class CurrencyItem : Item, IUseable {
 
     [SerializeField]

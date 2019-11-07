@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New LengthEffect", menuName = "Abilities/Effects/LengthEffect")]
+[CreateAssetMenu(fileName = "New LengthEffect",menuName = "AnyRPG/Abilities/Effects/LengthEffect")]
 public class LengthEffect: AbilityEffect {
 
     [SerializeField]

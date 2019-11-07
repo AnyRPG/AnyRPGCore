@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Equipment Profile", menuName = "Equipment Profile")]
+[CreateAssetMenu(fileName = "New Equipment Profile",menuName = "AnyRPG/Equipment Profile")]
 [System.Serializable]
 public class EquipmentProfile : DescribableResource {
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Recipe", menuName = "Recipes/Recipe")]
+[CreateAssetMenu(fileName = "New Recipe",menuName = "AnyRPG/Recipes/Recipe")]
 public class Recipe : DescribableResource {
 
     [SerializeField]

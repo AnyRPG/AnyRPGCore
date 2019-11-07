@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "NewChanneledAbility", menuName = "Abilities/ChanneledAbility")]
+[CreateAssetMenu(fileName = "NewChanneledAbility",menuName = "AnyRPG/Abilities/ChanneledAbility")]
 public class ChanneledAbility : InstantEffectAbility {
     // every x seconds, apply ability effects
     [SerializeField]

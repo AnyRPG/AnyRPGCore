@@ -6,7 +6,7 @@ using UnityEngine;
 using UMA;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment")]
+[CreateAssetMenu(fileName = "New Equipment",menuName = "AnyRPG/Inventory/Equipment")]
 public class Equipment : Item {
 
     public EquipmentSlot equipSlot;

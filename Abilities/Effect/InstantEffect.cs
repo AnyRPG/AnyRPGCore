@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New InstantEffect", menuName = "Abilities/Effects/InstantEffect")]
+[CreateAssetMenu(fileName = "New InstantEffect",menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
 public class InstantEffect : DirectEffect {
 
     public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {

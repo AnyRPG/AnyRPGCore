@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "NewCurrency", menuName = "Currencies/Currency")]
+[CreateAssetMenu(fileName = "NewCurrency",menuName = "AnyRPG/Currencies/Currency")]
 public class Currency : DescribableResource {
 
     public override string GetSummary() {

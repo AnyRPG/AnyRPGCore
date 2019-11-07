@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New ChanneledEffect", menuName = "Abilities/Effects/ChanneledEffect")]
+    [CreateAssetMenu(fileName = "New ChanneledEffect",menuName = "AnyRPG/Abilities/Effects/ChanneledEffect")]
     public class ChanneledEffect : DirectEffect {
 
         // the amount of time to delay damage after spawning the prefab

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Animation Profile", menuName = "Animation/Profile")]
+[CreateAssetMenu(fileName = "New Animation Profile",menuName = "AnyRPG/Animation/Profile")]
 public class AnimationProfile : ScriptableObject {
 
     [SerializeField]

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-//[CreateAssetMenu(fileName = "New Ability", menuName = "Abilities/Effects/FixedLengthEffect")]
+//[CreateAssetMenu(fileName = "New Ability",menuName = "AnyRPG/Abilities/Effects/FixedLengthEffect")]
 // not using that for now as it will neither tick, nor complete.  that is done by directeffect/children or aoeEffect
 // MAKE ABSTRACT IN FUTURE?
 public class FixedLengthEffect: LengthEffect {

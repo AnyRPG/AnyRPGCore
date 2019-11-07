@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     // NOTE: DIRECTEFFECT WILL CAST TICK AND COMPLETE, BUT NEVER HIT.  HIT MUST BE CAST BY PROJECTILE, AOE, OR CHANNELED
-    [CreateAssetMenu(fileName = "New DirectEffect", menuName = "Abilities/Effects/DirectEffect")]
+    [CreateAssetMenu(fileName = "New DirectEffect",menuName = "AnyRPG/Abilities/Effects/DirectEffect")]
     public class DirectEffect : FixedLengthEffect {
 
         public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Food", menuName = "Inventory/Items/Food", order = 1)]
+[CreateAssetMenu(fileName = "New Food",menuName = "AnyRPG/Inventory/Items/Food", order = 1)]
 public class Food : CastableItem {
 
     /*

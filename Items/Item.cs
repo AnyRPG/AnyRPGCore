@@ -6,7 +6,7 @@ namespace AnyRPG {
 /// <summary>
 /// Superclass for all items
 /// </summary>
-[CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
+[CreateAssetMenu(fileName = "New Item",menuName = "AnyRPG/Inventory/Item")]
 public class Item : DescribableResource, IMoveable {
 
     public bool isDefaultItem = false;

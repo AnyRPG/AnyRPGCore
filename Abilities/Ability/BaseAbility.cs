@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "NewAbility", menuName = "Abilities/Ability")]
+    [CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
     public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility {
 
         //public event System.Action<IAbility> OnAbilityCast = delegate { };

@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Skill", menuName = "Skills/Skill")]
+[CreateAssetMenu(fileName = "New Skill",menuName = "AnyRPG/Skills/Skill")]
 public class Skill : DescribableResource {
 
     [SerializeField]

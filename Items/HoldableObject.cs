@@ -6,7 +6,7 @@ using UnityEngine;
 using UMA;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Holdable Object", menuName = "Holdable Object")]
+[CreateAssetMenu(fileName = "New Holdable Object",menuName = "AnyRPG/Holdable Object")]
 public class HoldableObject : DescribableResource {
 
     /// <summary>

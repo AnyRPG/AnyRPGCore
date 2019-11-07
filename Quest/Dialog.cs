@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
 //[System.Serializable]
-[CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog/Dialog")]
+[CreateAssetMenu(fileName = "New Dialog",menuName = "AnyRPG/Dialog/Dialog")]
 public class Dialog : DescribableResource {
 
     [SerializeField]

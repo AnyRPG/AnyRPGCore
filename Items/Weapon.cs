@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Weapon", menuName = "Inventory/Equipment/Weapon", order = 3)]
+[CreateAssetMenu(fileName = "New Weapon",menuName = "AnyRPG/Inventory/Equipment/Weapon", order = 3)]
 public class Weapon : Equipment {
 
     [SerializeField]

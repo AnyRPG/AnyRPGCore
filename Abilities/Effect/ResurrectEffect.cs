@@ -3,7 +3,7 @@ using AnyRPG;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New ResurrectEffect", menuName = "Abilities/Effects/ResurrectEffect")]
+[CreateAssetMenu(fileName = "New ResurrectEffect",menuName = "AnyRPG/Abilities/Effects/ResurrectEffect")]
 public class ResurrectEffect : InstantEffect {
 
     /// <summary>

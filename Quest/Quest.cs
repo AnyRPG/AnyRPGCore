@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     //[System.Serializable]
-    [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
+    [CreateAssetMenu(fileName = "New Quest",menuName = "AnyRPG/Quests/Quest")]
     public class Quest : DescribableResource {
 
         [SerializeField]

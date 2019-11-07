@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "NewAnimatedAbility", menuName = "Abilities/AnimatedAbility")]
+    [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
         public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {

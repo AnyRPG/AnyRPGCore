@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "ManaPotion", menuName = "Inventory/Items/ManaPotion", order = 1)]
+[CreateAssetMenu(fileName = "ManaPotion",menuName = "AnyRPG/Inventory/Items/ManaPotion", order = 1)]
 public class ManaPotion : CastableItem {
 
     public override void Use() {

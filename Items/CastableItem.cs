@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-//[CreateAssetMenu(fileName = "New Scroll", menuName = "Inventory/Items/Scroll", order = 1)]
+//[CreateAssetMenu(fileName = "New Scroll",menuName = "AnyRPG/Inventory/Items/Scroll", order = 1)]
 public abstract class CastableItem : Item, IUseable {
 
     [SerializeField]

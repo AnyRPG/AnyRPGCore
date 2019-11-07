@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Describable Resource", menuName = "Describable Resource")]
+[CreateAssetMenu(fileName = "New Describable Resource",menuName = "AnyRPG/Describable Resource")]
 public abstract class DescribableResource : ScriptableObject, IDescribable {
 
     [SerializeField]

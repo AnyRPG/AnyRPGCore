@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New AttackEffect", menuName = "Abilities/Effects/AttackEffect")]
+[CreateAssetMenu(fileName = "New AttackEffect",menuName = "AnyRPG/Abilities/Effects/AttackEffect")]
 public class AttackEffect : AmountEffect {
 
     /// <summary>

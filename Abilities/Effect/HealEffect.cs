@@ -3,7 +3,7 @@ using AnyRPG;
 using UnityEngine;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New HealEffect", menuName = "Abilities/Effects/HealEffect")]
+[CreateAssetMenu(fileName = "New HealEffect",menuName = "AnyRPG/Abilities/Effects/HealEffect")]
 public class HealEffect : AmountEffect {
 
     /// <summary>

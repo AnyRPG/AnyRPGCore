@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "Bag", menuName = "Inventory/Items/Bag", order = 1)]
+[CreateAssetMenu(fileName = "Bag",menuName = "AnyRPG/Inventory/Items/Bag", order = 1)]
 public class Bag : Item, IUseable {
 
     [SerializeField]

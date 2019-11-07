@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New TeleportEffect", menuName = "Abilities/Effects/TeleportEffect")]
+[CreateAssetMenu(fileName = "New TeleportEffect",menuName = "AnyRPG/Abilities/Effects/TeleportEffect")]
 public class TeleportEffect : InstantEffect {
 
     // The name of the scene to load

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New ProjectileEffect", menuName = "Abilities/Effects/ProjectileEffect")]
+[CreateAssetMenu(fileName = "New ProjectileEffect",menuName = "AnyRPG/Abilities/Effects/ProjectileEffect")]
 public class ProjectileEffect : DirectEffect {
 
     public float projectileSpeed = 0;

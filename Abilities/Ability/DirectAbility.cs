@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Direct Ability", menuName = "Abilities/DirectAbility")]
+[CreateAssetMenu(fileName = "New Direct Ability",menuName = "AnyRPG/Abilities/DirectAbility")]
 public class DirectAbility : InstantEffectAbility {
 
     public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {

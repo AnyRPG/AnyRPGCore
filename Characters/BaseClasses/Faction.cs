@@ -3,7 +3,7 @@ using AnyRPG;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Faction", menuName = "Factions/Faction")]
+[CreateAssetMenu(fileName = "New Faction",menuName = "AnyRPG/Factions/Faction")]
 public class Faction : DescribableResource {
 
     public float defaultDisposition = 0f;
