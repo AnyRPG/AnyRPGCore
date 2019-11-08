@@ -153,13 +153,6 @@ public class QuestTrackerUI : WindowContentController {
     }
 
     // moved below functionality to OnDestroy because these are static objects that exist for the entire game
-    /*
-    public void OnDisable() {
-        Debug.Log("QuestTrackerUI.OnDisable()");
-        CleanupEventReferences();
-    }
-    */
-
     public void OnDestroy() {
         //Debug.Log("QuestTrackerUI.OnDestroy()");
         CleanupEventReferences();

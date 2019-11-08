@@ -1,35 +1,35 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class AreaEffectScript : MonoBehaviour {
+    public class AreaEffectScript : MonoBehaviour {
 
-    [SerializeField]
-    private SphereCollider sphereCollider;
+        [SerializeField]
+        private SphereCollider sphereCollider;
 
-    private CharacterUnit source;
+        private CharacterUnit source;
 
-    private GameObject target;
+        private GameObject target;
 
-    private bool initialized = false;
+        private bool initialized = false;
 
-    private float radius = 0.5f;
+        private float radius = 0.5f;
 
-    /*
-    private void Update() {
+        /*
+        private void Update() {
+        }
+        */
+
+        public void Initialize(CharacterUnit source, GameObject target, float radius) {
+            //Debug.Log("ProjectileScript.Initialize(" + source.name + ", " + target.name + ", " + radius + ")");
+            this.source = source;
+            this.target = target;
+            sphereCollider.radius = radius;
+            initialized = true;
+        }
+
     }
-    */
-
-    public void Initialize(CharacterUnit source, GameObject target, float radius) {
-        Debug.Log("ProjectileScript.Initialize(" + source.name + ", " + target.name + ", " + radius + ")");
-        this.source = source;
-        this.target = target;
-        sphereCollider.radius = radius;
-        initialized = true;
-    }
-    
-}
 
 }

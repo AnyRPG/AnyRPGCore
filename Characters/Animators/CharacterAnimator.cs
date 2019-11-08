@@ -79,7 +79,7 @@ namespace AnyRPG {
                 characterUnit = GetComponentInParent<CharacterUnit>();
             }
             if (characterUnit == null) {
-                Debug.Log(gameObject.name + ".CharacterAnimator.Awake(): Unable to detect characterUnit!");
+                //Debug.Log(gameObject.name + ".CharacterAnimator.Awake(): Unable to detect characterUnit!");
             }
             if (SystemConfigurationManager.MyInstance != null) {
                 if (animatorController == null) {

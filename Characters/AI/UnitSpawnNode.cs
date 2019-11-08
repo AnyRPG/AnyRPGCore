@@ -163,7 +163,7 @@ namespace AnyRPG {
             float xSize = transform.localScale.x;
             float zSize = transform.localScale.z;
             float ySize = transform.localScale.y;
-            Debug.Log("UnitSpawnNode.GetSpawnLocation(). center: " + center + "; xsize: " + xSize + "; ySize: " + ySize + "; zsize: " + zSize);
+            //Debug.Log("UnitSpawnNode.GetSpawnLocation(). center: " + center + "; xsize: " + xSize + "; ySize: " + ySize + "; zsize: " + zSize);
             bool gotLocation = false;
             // circuit breaker to prevent infinite loop
             int counter = 0;
@@ -173,24 +173,20 @@ namespace AnyRPG {
             Vector3 spawnLocation = Vector3.zero;
             while (gotLocation == false) {
                 xLocation = UnityEngine.Random.Range(0, xSize) - (xSize / 2);
-                Debug.Log("xLocation: " + xLocation);
+                //Debug.Log("xLocation: " + xLocation);
                 zLocation = UnityEngine.Random.Range(0, zSize) - (zSize / 2);
-                Debug.Log("zLocation: " + zLocation);
+                //Debug.Log("zLocation: " + zLocation);
                 yLocation = center.y + (ySize / 2);
-                Debug.Log("yLocation: " + yLocation);
+                //Debug.Log("yLocation: " + yLocation);
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
-                Debug.Log("tempVector: " + tempVector);
-                //Vector3 attemptVector = transform.TransformPoint(tempVector);
                 Vector3 attemptVector = tempVector;
-                //attemptVector.y = yLocation;
-                Debug.Log("attemptVector: " + attemptVector);
                 RaycastHit hit;
                 if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
-                    Debug.Log("We hit " + hit.collider.name + " " + hit.point);
+                    //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
                 } else {
-                    Debug.Log("We did not hit anything walkable!");
+                    //Debug.Log("We did not hit anything walkable!");
                 }
                 counter++;
                 if (counter == 200) {
@@ -198,7 +194,7 @@ namespace AnyRPG {
                     break;
                 }
             }
-            Debug.Log("Returning: " + spawnLocation);
+            //Debug.Log("Returning: " + spawnLocation);
             //return transform.TransformPoint(spawnLocation);
             return spawnLocation;
         }

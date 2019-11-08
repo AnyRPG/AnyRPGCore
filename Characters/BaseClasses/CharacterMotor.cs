@@ -47,14 +47,9 @@ namespace AnyRPG {
 
         protected virtual void Start() {
             // meant to be overwritten
-            //Debug.Log(gameObject.name + ".CharacterMotor.Start(): navhaspath: " + characterUnit.MyAgent.hasPath + "; isOnNavMesh: " + characterUnit.MyAgent.isOnNavMesh + "; pathpending: " + characterUnit.MyAgent.pathPending);
         }
 
         protected virtual void Update() {
-            /*
-            Debug.Log(gameObject.name + ".CharacterMotor.Update(): resetting velocity to 0");
-            characterUnit.MyRigidBody.velocity = new Vector3(0, characterUnit.MyRigidBody.velocity.y + (- 9.81f * Time.deltaTime), 0);
-            */
             //Debug.Log(gameObject.name + ".CharacterMotor.Update(): navhaspath: " + characterUnit.MyAgent.hasPath + "; isOnNavMesh: " + characterUnit.MyAgent.isOnNavMesh + "; pathpending: " + characterUnit.MyAgent.pathPending);
             if (frozen) {
                 return;
@@ -124,12 +119,6 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Target is in hitbox.  Stop following target.");
                     StopFollowingTarget();
                 } else {
-                    // the below logic is causing enemies moving toward each other to constantly stutter as they calculate new paths.
-                    // it also causes the enemies to basically halt as long as the character is moving
-                    // i think some better logic would be:
-                    // 1. if i am more than 2 meters from target position, target position can be fuzzy to within 2 meter radius.
-                    // in other words, don't recalculate position until enemy has moved more than 2 meters
-                    // because they are already moving in each others direction, they will cancel movement when they get in the hitbox anyway
 
                     // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
                     // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
@@ -147,7 +136,7 @@ namespace AnyRPG {
 
                                 MoveToPoint(target.transform.position);
                             } else {
-                                Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): LONGDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
+                                //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): LONGDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
                             }
                         } else {
                             //Debug.Log(gameObject.name + ": FixedUpdate() NOT RECALCULATING! targetPosition: " + target.transform.position + "; destinationPosition: " + destinationPosition + "; navMeshAgentDestination: " + characterUnit.MyAgent.destination + "; NavMesAgentDestinationToTargetDrift: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), characterUnit.MyAgent.destination) + "; destinationPositionToTargetDifference: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) + "; frame: " + Time.frameCount);
@@ -165,7 +154,7 @@ namespace AnyRPG {
                                 //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): ABOUT TO ISSUE MOVETOPOINT: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + characterUnit.MyAgent.pathPending + "; pathstatus: " + characterUnit.MyAgent.pathStatus + "; hasPath: " + characterUnit.MyAgent.hasPath);
                                 MoveToPoint(target.transform.position);
                             } else {
-                                Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): SHORTDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
+                                //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): SHORTDISTANCE: WE WERE ABOUT TO ISSUE A MOVETOPOINT ON THE SAME FRAME AS A RESET OR COMMAND: frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; last command: " + lastCommandFrame);
                             }
                         } else {
                             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): DOING NOTHING location: " + transform.position + "; targetLocation: " + target.transform.position + "; destinationPosition: " + destinationPosition + "; characterUnit.MyAgent.destination: " + characterUnit.MyAgent.destination + "; pathpending: " + characterUnit.MyAgent.pathPending + "; destination distance vector: " + Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), destinationPosition) + "; actualdistancevector: " + Vector3.Distance(transform.position, target.transform.position));
@@ -215,7 +204,7 @@ namespace AnyRPG {
             NavMeshHit hit;
 
             // THIS NEEDS FIXING THANKS TO UNITY BUG OF NOT PROPERLY HANDLING SAMPLEPOSITION AND IGNORING XZ AND ONLY USING Y
-            // ONE POSSIBLE SOLUTION IS TO start with a RADIUS OF 0.5 AND CONTINUALLY EXPAND 0.5 AT A TIME UNTIL WE FIND A VALID POINT
+            // ONE POSSIBLE SOLUTION IS TO start with a RADIUS OF 0.5 AND CONTINUALLY EXPAND 0.5 AT A TIME UNTIL WE FIND A VALID POINT - DONE AND WORKING
             float sampleRadius = 0.5f;
             while (sampleRadius <= maxNavMeshSampleRadius) {
                 if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
@@ -288,7 +277,7 @@ namespace AnyRPG {
                 return;
             }
             if (characterUnit.MyAgent.enabled) {
-                Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
+                //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
 
                 //agent.Move(moveDirection);
                 ResetPath();
@@ -332,7 +321,7 @@ namespace AnyRPG {
             }
             if (characterUnit.MyAgent.enabled) {
                 //Debug.Log("nav mesh agent is enabled");
-                Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
+                //Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
                 ResetPath();
                 characterUnit.MyAgent.updateRotation = true;
                 characterUnit.MyAgent.velocity = rotateDirection;

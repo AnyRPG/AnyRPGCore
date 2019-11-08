@@ -31,13 +31,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AICharacter.Start()");
             base.Start();
             if (characterModelGameObject == null && characterModelPrefab != null) {
-                Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
+                //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
                 characterModelGameObject = Instantiate(characterModelPrefab, MyCharacterUnit.transform);
             }
             if (MyCharacterUnit.MyCharacterAnimator != null) {
                 MyCharacterUnit.MyCharacterAnimator.InitializeAnimator();
-            } else {
-                //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character animator");
             }
         }
 

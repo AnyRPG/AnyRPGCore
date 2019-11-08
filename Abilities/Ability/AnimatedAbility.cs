@@ -36,7 +36,7 @@ namespace AnyRPG {
                 }
                 return true;
             } else {
-                Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
+                //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
             }
             return false;
         }

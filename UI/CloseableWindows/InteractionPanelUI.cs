@@ -150,9 +150,6 @@ namespace AnyRPG {
                                 InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
                                 qs.MyQuest = quest;
                                 qs.MyQuestGiver = (_interactable as QuestGiver);
-                                if (qs == null) {
-                                    Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
-                                }
 
                                 displayText += quest.MyName;
 
@@ -241,7 +238,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractables() interactable: " + interactable.MyName);
                 ShowInteractablesCommon(interactable);
             } else {
-                Debug.Log("InteractionPanelUI.ShowInteractables() interactable IS NULL!!!");
+                //Debug.Log("InteractionPanelUI.ShowInteractables() interactable IS NULL!!!");
             }
         }
 

@@ -51,7 +51,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             if (lootTable == null) {
-                Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
+                //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
             if (lootTable.MyDroppedItems.Count > 0) {

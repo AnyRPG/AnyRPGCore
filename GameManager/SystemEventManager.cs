@@ -215,7 +215,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnAbilityListChanged(string abilityName) {
-            Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
+            //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
             OnAbilityListChanged(abilityName);
             OnPrerequisiteUpdated();
         }

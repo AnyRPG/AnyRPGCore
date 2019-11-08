@@ -64,7 +64,7 @@ namespace AnyRPG {
             if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyCharacterUnit.MyCharacterMotor != null) {
                 MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
             } else {
-                Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");
+                //Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");
             }
             MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
 
@@ -78,7 +78,6 @@ namespace AnyRPG {
             if (sphereCollider != null) {
                 sphereCollider.radius = initialAggroRange;
             }
-            //baseCharacter.MyCharacterCombat.OnKillEvent += 
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
@@ -97,7 +96,7 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.NotifyOnReputationChange();
                 SetMasterRelativeDestination();
             } else {
-                Debug.Log("Can only be under the control of one master at a time");
+                //Debug.Log("Can only be under the control of one master at a time");
             }
         }
 
@@ -161,7 +160,7 @@ namespace AnyRPG {
         public void UpdateTarget() {
             //Debug.Log(gameObject.name + ": UpdateTarget()");
             if (baseCharacter == null) {
-                Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter is null!!!");
+                //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter is null!!!");
                 return;
             }
             if (baseCharacter.MyCharacterCombat == null) {
@@ -169,7 +168,7 @@ namespace AnyRPG {
                 return;
             }
             if (baseCharacter.MyCharacterCombat.MyAggroTable == null) {
-                Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
+                //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
                 return;
             }
             AggroNode topNode;
@@ -208,9 +207,6 @@ namespace AnyRPG {
         }
 
         public override void SetTarget(GameObject newTarget) {
-            if (newTarget == null) {
-                Debug.Log(gameObject.name + ".AIController.SetTarget(): newTarget is null");
-            }
             //Debug.Log(gameObject.name + ": Setting target to: " + newTarget.name);
             if (!(currentState is DeathState)) {
                 if (!(currentState is EvadeState)) {

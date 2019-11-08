@@ -152,7 +152,7 @@ namespace AnyRPG {
             base.Update();
 
             if (allowedInput == false) {
-                Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController Update!");
+                //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController Update!");
                 return;
             }
 

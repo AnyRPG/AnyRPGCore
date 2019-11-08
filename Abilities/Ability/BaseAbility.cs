@@ -280,7 +280,7 @@ namespace AnyRPG {
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 
             if (sourceCharacter == null) {
-                Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
+                //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
             }
 
             // create target booleans

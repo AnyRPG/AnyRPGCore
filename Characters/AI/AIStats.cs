@@ -20,9 +20,6 @@ namespace AnyRPG {
 
         public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter source, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AISats.ApplyStatusEffect()");
-            if (statusEffect == null) {
-                Debug.Log("AIStats.ApplyStatusEffect(): statusEffect is null!");
-            }
             StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, source, target, abilityEffectInput);
             if (_statusEffectNode != null && _statusEffectNode.MyStatusEffect.MyControlTarget == true) {
                 ApplyControlEffects(source);

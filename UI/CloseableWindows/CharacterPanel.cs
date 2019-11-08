@@ -227,7 +227,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
-            Debug.Log("CharacterPanel.HandleEquipmentChange()");
+            //Debug.Log("CharacterPanel.HandleEquipmentChange()");
             if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.characterPanelWindow != null && PopupWindowManager.MyInstance.characterPanelWindow.IsOpen) {
                 ResetDisplay();
                 UpdateStatsDescription();
@@ -235,7 +235,7 @@ namespace AnyRPG {
         }
 
         public void UpdateStatsDescription() {
-            Debug.Log("CharacterPanel.UpdateStatsDescription");
+            //Debug.Log("CharacterPanel.UpdateStatsDescription");
 
             // update images on character buttons
             UpdateCharacterButtons();

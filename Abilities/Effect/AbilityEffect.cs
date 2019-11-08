@@ -113,7 +113,7 @@ namespace AnyRPG {
                         }
                     }
                 } else {
-                    Debug.Log("target did not have a characterUnit.  set target to null");
+                    //Debug.Log("target did not have a characterUnit.  set target to null");
                     target = null;
                 }
             }

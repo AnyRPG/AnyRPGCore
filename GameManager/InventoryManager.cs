@@ -172,11 +172,9 @@ namespace AnyRPG {
             int counter = 0;
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyIsBankNode == addToBank) {
-                    if (debugMode)
-                        Debug.Log("Checking BagNode for the presence of a bag: " + counter);
+                    //Debug.Log("Checking BagNode for the presence of a bag: " + counter);
                     if (bagNode.MyBag == null) {
-                        if (debugMode)
-                            Debug.Log("found empty bagnode at:" + counter);
+                        //Debug.Log("found empty bagnode at:" + counter);
                         return true;
                     }
                     counter++;
@@ -213,12 +211,8 @@ namespace AnyRPG {
                     if (newBag != null) {
                         AddBag(newBag, MyBagNodes[counter]);
                     } else {
-                        Debug.Log("InventoryManager.LoadEquippedBagData(): COULD NOT FIND BAG WITH NAME: " + saveData.MyName);
+                        //Debug.Log("InventoryManager.LoadEquippedBagData(): COULD NOT FIND BAG WITH NAME: " + saveData.MyName);
                     }
-                    //Bag bag = Instantiate(backpackPrefab);
-                    //bag.Initalize(saveData.slotCount, saveData.MyName, defaultBackPackImage);
-                    //Debug.Log("InventoryManager.LoadEquippedBagData(): counter: " + counter + "; MyBagNodes.Count: " + MyBagNodes.Count);
-                    //AddBag(bag, MyBagNodes[counter]);
                 } else {
                     //Debug.Log("InventoryManager.LoadEquippedBagData(): Bag At index: " + counter + " has no slots; MyBagNodes.Count: " + MyBagNodes.Count);
                 }
@@ -420,7 +414,7 @@ namespace AnyRPG {
                     return;
                 }
             }
-            Debug.Log("InventoryManager.RemoveBag(): Did not find matching bag in bagNodes");
+            //Debug.Log("InventoryManager.RemoveBag(): Did not find matching bag in bagNodes");
             //MyBagNode.MyBagButton = null;
 
         }

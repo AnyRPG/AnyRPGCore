@@ -88,13 +88,6 @@ namespace AnyRPG {
             castTargettingController.SetCircleColor(groundTargetColor);
         }
 
-        /*
-        void Update() {
-            Debug.Log("CastTargettingmanager);
-            icon.transform.position = Input.mousePosition+offset;
-
-        }
-        */
     }
 
 }

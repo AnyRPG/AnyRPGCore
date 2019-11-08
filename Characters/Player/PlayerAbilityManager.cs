@@ -17,7 +17,7 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
             base.Start();
         }
 
@@ -79,22 +79,14 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public void AbilityButtonPressedHandler(int abilityIndex) {
-            Debug.Log("Ability Button Pressed Handler received ability index " + abilityIndex.ToString());
-            //BeginAbility(abilityManager.abilityList[abilityIndex - 1]);
-            BeginAbility(abilityList[abilityIndex - 1]);
-        }
-        */
-
         public override bool LearnAbility(string abilityName) {
-            Debug.Log("PlayerAbilityManager.LearnAbility()");
+            //Debug.Log("PlayerAbilityManager.LearnAbility()");
             bool returnValue = base.LearnAbility(abilityName);
             if (returnValue) {
-                Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue is true");
+                //Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue is true");
                 SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
             } else {
-                Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue was false");
+                //Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
             return returnValue;
         }

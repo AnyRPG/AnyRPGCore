@@ -30,13 +30,6 @@ public class DeathState : IState
             aiController.ChangeState(new ReturnState());
         }
         return;
-        /*
-        float distance = Vector3.Distance(parent.MyStartPosition, parent.transform.position);
-        Debug.Log("Distance from spawn point: " + distance.ToString());
-        if (distance <= 1) {
-            parent.ChangeState(new IdleState());
-        }
-        */
     }
 }
 

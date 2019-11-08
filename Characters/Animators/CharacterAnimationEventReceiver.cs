@@ -1,48 +1,47 @@
 using AnyRPG;
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace AnyRPG {
-public class CharacterAnimationEventReceiver : MonoBehaviour
-{
-    [SerializeField]
-    private CharacterUnit characterUnit;
+    public class CharacterAnimationEventReceiver : MonoBehaviour {
+        [SerializeField]
+        private CharacterUnit characterUnit;
 
-    private void Awake() {
-        if (characterUnit == null) {
-            characterUnit = GetComponent<CharacterUnit>();
+        private void Awake() {
+            if (characterUnit == null) {
+                characterUnit = GetComponent<CharacterUnit>();
+            }
+            if (characterUnit == null) {
+                characterUnit = GetComponentInParent<CharacterUnit>();
+            }
+            if (characterUnit == null) {
+                //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.Awake(): could not find character unit!");
+            }
         }
-        if (characterUnit == null) {
-            characterUnit = GetComponentInParent<CharacterUnit>();
+
+        public void AttackHitEvent() {
+            //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null) {
+                characterUnit.MyCharacter.MyCharacterCombat.AttackHit_AnimationEvent();
+            }
         }
-        if (characterUnit == null) {
-            Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.Awake(): could not find character unit!");
+
+        public void Hit() {
+            //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.Hit()");
+            AttackHitEvent();
         }
-    }
 
-    public void AttackHitEvent() {
-        //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
-        if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null) {
-            characterUnit.MyCharacter.MyCharacterCombat.AttackHit_AnimationEvent();
+        public void Shoot() {
         }
-    }
 
-    public void Hit() {
-        //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.Hit()");
-        AttackHitEvent();
-    }
+        public void FootR() {
+        }
 
-    public void Shoot() {
-    }
+        public void FootL() {
+        }
 
-    public void FootR() {
-    }
+        public void Land() {
+        }
 
-    public void FootL() {
     }
-
-    public void Land() {
-    }
-
-}
 
 }

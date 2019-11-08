@@ -29,7 +29,7 @@ namespace AnyRPG {
             base.Start();
             boxCollider = GetComponent<Collider>();
             if (boxCollider == null) {
-                Debug.Log(gameObject.name + ".CharacterCreatorInteractable.Start(): collider is null");
+                //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.Start(): collider is null");
             }
             Spawn();
         }
@@ -45,7 +45,7 @@ namespace AnyRPG {
         }
 
         private void DestroySpawn() {
-            Debug.Log("Portal.DestroySpawn(): Destroying " + spawnPrefab.name);
+            //Debug.Log("Portal.DestroySpawn(): Destroying " + spawnPrefab.name);
             if (spawnReference != null) {
                 Destroy(spawnReference);
                 spawnReference = null;
@@ -89,7 +89,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(Text text) {
-            Debug.Log(gameObject.name + ".CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
+            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);

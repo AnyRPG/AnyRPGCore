@@ -86,7 +86,7 @@ namespace AnyRPG {
         }
 
         public void InitializeQuestGiver() {
-            Debug.Log(gameObject.name + ".QuestGiver.InitializeQuestGiver()");
+            //Debug.Log(gameObject.name + ".QuestGiver.InitializeQuestGiver()");
             if (questGiverInitialized == true) {
                 return;
             }
@@ -95,11 +95,11 @@ namespace AnyRPG {
             foreach (QuestNode questNode in quests) {
                 //Type questType = questNode.MyQuestTemplate.GetType();
                 if (questNode.MyQuest == null) {
-                    Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
+                    //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
                     return;
                 }
                 if (questNode.MyQuest.MyName == null) {
-                    Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
+                    //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
                     return;
                 } else {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
@@ -225,10 +225,10 @@ namespace AnyRPG {
                     }
                 } else {
                     if (questNode == null) {
-                        Debug.Log(gameObject.name + ": The quest node was null");
+                        //Debug.Log(gameObject.name + ": The quest node was null");
                     }
                     if (questNode.MyQuest == null) {
-                        Debug.Log(gameObject.name + ": The questNode.MyQuest was null");
+                        //Debug.Log(gameObject.name + ": The questNode.MyQuest was null");
                     }
                 }
             }
