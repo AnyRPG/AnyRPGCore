@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
+using System.Text.RegularExpressions;
 
 namespace AnyRPG {
     public class SaveManager : MonoBehaviour {
@@ -76,7 +77,7 @@ namespace AnyRPG {
             anyRPGSaveDataList.Clear();
             foreach (FileInfo fileInfo in GetSaveFileList()) {
                 //Debug.Log("GetSaveDataList(): fileInfo.Name: " + fileInfo.Name);
-                AnyRPGSaveData anyRPGSaveData = LoadSaveDataFromFile(Application.persistentDataPath + "/" + fileInfo.Name);
+                AnyRPGSaveData anyRPGSaveData = LoadSaveDataFromFile(Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + fileInfo.Name);
                 anyRPGSaveDataList.Add(anyRPGSaveData);
             }
             return anyRPGSaveDataList;
@@ -159,7 +160,7 @@ namespace AnyRPG {
 
         public List<FileInfo> GetSaveFileList() {
             List<FileInfo> returnList = new List<FileInfo>();
-            DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath);
+            DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath + "/" + makeSaveDirectoryName());
 
             foreach (FileInfo fileInfo in directoryInfo.GetFiles(saveFileName + "*.json")) {
                 returnList.Add(fileInfo);
@@ -319,7 +320,7 @@ namespace AnyRPG {
 
             string jsonString = JsonUtility.ToJson(anyRPGSaveData);
             //Debug.Log(jsonString);
-            string jsonSavePath = Application.persistentDataPath + "/" + anyRPGSaveData.DataFileName;
+            string jsonSavePath = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + anyRPGSaveData.DataFileName;
             File.WriteAllText(jsonSavePath, jsonString);
 
             PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
@@ -966,6 +967,23 @@ namespace AnyRPG {
             File.Delete(Application.persistentDataPath + "/" + anyRPGSaveData.DataFileName);
             SystemEventManager.MyInstance.NotifyOnDeleteSaveData();
         }
+
+        public static string makeSaveDirectoryName() {
+
+            string replaceString = string.Empty;
+            Regex regex = new Regex("[^a-zA-Z0-9]");
+            if (SystemConfigurationManager.MyInstance != null) {
+                replaceString = regex.Replace(SystemConfigurationManager.MyInstance.MyGameName, "");
+            }
+
+            if (replaceString != string.Empty) {
+                if (!Directory.Exists(Application.persistentDataPath + "/" + replaceString)) {
+                    Directory.CreateDirectory(Application.persistentDataPath + "/" + replaceString);
+                }
+            }
+            return replaceString;
+        }
+
     }
 
 }
