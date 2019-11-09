@@ -188,6 +188,10 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
             if (defaultBackpackItemName != null && defaultBackpackItemName != string.Empty) {
                 Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBackpackItemName) as Bag;
+                if (bag == null) {
+                    Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
+                    return;
+                }
                 if (equipDefaultBackPack) {
                     bag.Use();
                 } else {
@@ -199,6 +203,10 @@ namespace AnyRPG {
         public void CreateDefaultBankBag() {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
             Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBankBagItemName) as Bag;
+            if (bag == null) {
+                Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBANKBAG TO VALID NAME");
+                return;
+            }
             AddBag(bag, true);
         }
 
@@ -317,20 +325,25 @@ namespace AnyRPG {
         }
 
         private void PopulateBagNode(BagNode bagNode, Bag bag) {
-            //Debug.Log("InventoryManager.PopulateBagNode(BagNode, Bag)");
-            bagNode.MyBag = bag;
-            if (bagNode.MyIsBankNode) {
-                bagNode.MyBagWindow.InitalizeWindowContents(bankBagPrefab, bag.MyName);
-            } else {
-                bagNode.MyBagWindow.InitalizeWindowContents(bagPrefab, bag.MyName);
+            //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.MyName : "null" + ")");
+            if (bag != null) {
+                bagNode.MyBag = bag;
+                if (bagNode.MyIsBankNode) {
+                    if (bagNode.MyBagWindow != null) {
+                        bagNode.MyBagWindow.InitalizeWindowContents(bankBagPrefab, bag.MyName);
+                    } else {
+                        //Debug.Log("InventoryManager.PopulateBagNode(BagNode, Bag): bagwindow was null");
+                    }
+                } else {
+                    bagNode.MyBagWindow.InitalizeWindowContents(bagPrefab, bag.MyName);
+                }
+                bagNode.MyBagPanel = bagNode.MyBagWindow.MyCloseableWindowContents as BagPanel;
+                if (bagNode.MyBagPanel != null) {
+                    bagNode.MyBagPanel.AddSlots(bag.MySlots);
+                    bag.MyBagNode = bagNode;
+                    bag.MyBagPanel = bagNode.MyBagPanel;
+                }
             }
-            bagNode.MyBagPanel = bagNode.MyBagWindow.MyCloseableWindowContents as BagPanel;
-            if (bagNode.MyBagPanel == null) {
-                Debug.Log("bagNode.MyBagPanel is null");
-            }
-            bagNode.MyBagPanel.AddSlots(bag.MySlots);
-            bag.MyBagNode = bagNode;
-            bag.MyBagPanel = bagNode.MyBagPanel;
 
             //Debug.Log("InventoryManager.PopulateBagNode(): bagNode.MyBag: " + bagNode.MyBag.GetInstanceID() + "; bagNode.MyBag.MyBagPanel: " + bagNode.MyBag.MyBagPanel.GetInstanceID() + "; bag" + bag.GetInstanceID() + "; bag.MyBagPanel: " + bag.MyBagPanel.GetInstanceID());
 

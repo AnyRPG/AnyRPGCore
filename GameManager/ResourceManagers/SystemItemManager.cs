@@ -1,70 +1,75 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class SystemItemManager : SystemResourceManager {
+    public class SystemItemManager : SystemResourceManager {
 
-    #region Singleton
-    private static SystemItemManager instance;
+        #region Singleton
+        private static SystemItemManager instance;
 
-    public static SystemItemManager MyInstance {
-        get {
-            if (instance == null) {
-                instance = FindObjectOfType<SystemItemManager>();
+        public static SystemItemManager MyInstance {
+            get {
+                if (instance == null) {
+                    instance = FindObjectOfType<SystemItemManager>();
+                }
+
+                return instance;
             }
-
-            return instance;
         }
-    }
-    #endregion
+        #endregion
 
-    const string resourceClassName = "Item";
+        const string resourceClassName = "Item";
 
-    protected override void Awake() {
-        //Debug.Log(this.GetType().Name + ".Awake()");
-        base.Awake();
-    }
+        protected override void Awake() {
+            //Debug.Log(this.GetType().Name + ".Awake()");
+            base.Awake();
+        }
 
-    public override void LoadResourceList() {
+        public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
-        rawResourceList = Resources.LoadAll<Item>(resourceClassName);
-        base.LoadResourceList();
-    }
-
-    public Item GetResource(string resourceName) {
-        //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-        if (!RequestIsEmpty(resourceName)) {
-            string keyName = prepareStringForMatch(resourceName);
-            if (resourceList.ContainsKey(keyName)) {
-                return (resourceList[keyName] as Item);
+            masterList.Add(Resources.LoadAll<Item>(resourceClassName));
+            if (SystemConfigurationManager.MyInstance != null) {
+                foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.MyLoadResourcesFolders) {
+                    masterList.Add(Resources.LoadAll<Item>(loadResourcesFolder + "/" + resourceClassName));
+                }
             }
+            base.LoadResourceList();
         }
-        return null;
-    }
 
-
-    public Item GetNewResource(string resourceName) {
-        //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-        if (!RequestIsEmpty(resourceName)) {
-            string keyName = prepareStringForMatch(resourceName);
-            if (resourceList.ContainsKey(keyName)) {
-                return (ScriptableObject.Instantiate(resourceList[keyName]) as Item);
+        public Item GetResource(string resourceName) {
+            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
+            if (!RequestIsEmpty(resourceName)) {
+                string keyName = prepareStringForMatch(resourceName);
+                if (resourceList.ContainsKey(keyName)) {
+                    return (resourceList[keyName] as Item);
+                }
             }
+            return null;
         }
-        return null;
-    }
 
 
-    public List<Item> GetResourceList() {
-        List<Item> returnList = new List<Item>();
-
-        foreach (UnityEngine.Object listItem in resourceList.Values) {
-            returnList.Add(listItem as Item);
+        public Item GetNewResource(string resourceName) {
+            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
+            if (!RequestIsEmpty(resourceName)) {
+                string keyName = prepareStringForMatch(resourceName);
+                if (resourceList.ContainsKey(keyName)) {
+                    return (ScriptableObject.Instantiate(resourceList[keyName]) as Item);
+                }
+            }
+            return null;
         }
-        return returnList;
+
+
+        public List<Item> GetResourceList() {
+            List<Item> returnList = new List<Item>();
+
+            foreach (UnityEngine.Object listItem in resourceList.Values) {
+                returnList.Add(listItem as Item);
+            }
+            return returnList;
+        }
     }
-}
 
 }

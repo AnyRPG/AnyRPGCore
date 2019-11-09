@@ -1,4 +1,6 @@
 using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Audio;
@@ -31,6 +33,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private string gameVersion;
+
+        [SerializeField]
+        private List<string> loadResourcesFolders = new List<string>();
 
         [Header("UI")]
 
@@ -276,6 +281,7 @@ namespace AnyRPG {
         public string MyDefaultCastAnimationName { get => defaultCastAnimationName; set => defaultCastAnimationName = value; }
         public string MyDefaultReviveAnimationName { get => defaultReviveAnimationName; set => defaultReviveAnimationName = value; }
         public Color MyDefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
+        public List<string> MyLoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
