@@ -67,7 +67,9 @@ namespace AnyRPG {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
             Dialog dialog = GetResource(dialogSaveData.MyName);
-            dialog.TurnedIn = dialogSaveData.turnedIn;
+            if (dialog != null) {
+                dialog.TurnedIn = dialogSaveData.turnedIn;
+            }
         }
     }
 
