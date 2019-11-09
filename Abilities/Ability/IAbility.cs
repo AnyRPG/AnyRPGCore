@@ -21,7 +21,6 @@ public interface IAbility {
     bool MyCanCastOnEnemy { get; }
     bool MyCanCastOnSelf { get; }
     bool MyCanCastOnFriendly { get; }
-    float MyRemainingCoolDown { get; set; }
     AnimationClip MyAnimationClip { get; set; }
     AnimationClip MyCastingAnimationClip { get; set; }
     string MyHoldableObjectName { get; set; }

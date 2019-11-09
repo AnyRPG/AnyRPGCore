@@ -26,7 +26,7 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventReferences();
-            SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
+            SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += OnCharacterUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
@@ -41,7 +41,7 @@ namespace AnyRPG {
             }
             base.CleanupEventReferences();
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
+                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= OnCharacterUnitSpawn;
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= OnCharacterUnitDespawn;
             }
@@ -50,26 +50,6 @@ namespace AnyRPG {
         public override void OnDisable() {
             base.OnDisable();
             CleanupEventReferences();
-        }
-
-        public void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            // can safely be ignored if player is not spawned
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
-                return;
-            }
-            if (newItem != null) {
-                if (newItem.MyOnEquipAbility != null) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(newItem.MyOnEquipAbility);
-                }
-                foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility.MyName);
-                }
-            }
-            if (oldItem != null) {
-                foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.UnlearnAbility(baseAbility.MyName);
-                }
-            }
         }
 
         public void AbilityLearnedHandler(BaseAbility newAbility) {

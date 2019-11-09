@@ -114,15 +114,12 @@ namespace AnyRPG {
 
         protected Vector3 groundTarget = Vector3.zero;
 
-        protected float remainingCoolDown = 0f;
-
         public int MyRequiredLevel { get => requiredLevel; }
         public bool MyAutoLearn { get => autoLearn; }
         public bool MyAutoAddToBars { get => autoAddToBars; }
         public bool MyUseableWithoutLearning { get => useableWithoutLearning; }
         public int MyAbilityManaCost { get => abilityManaCost; set => abilityManaCost = value; }
         public float MyAbilityCastingTime { get => abilityCastingTime; set => abilityCastingTime = value; }
-        public float MyRemainingCoolDown { get => remainingCoolDown; set => remainingCoolDown = value; }
         public bool MyRequiresTarget { get => requiresTarget; set => requiresTarget = value; }
         public bool MyRequiresGroundTarget { get => requiresGroundTarget; set => requiresGroundTarget = value; }
         public Color MyGroundTargetColor { get => groundTargetColor; set => groundTargetColor = value; }
@@ -185,16 +182,6 @@ namespace AnyRPG {
             }
         }
 
-        public IEnumerator BeginAbilityCoolDown() {
-            //Debug.Log(resourceName + ".BaseAbility.BeginAbilityCoolDown(): setting to: " + abilityCoolDown);
-            remainingCoolDown = abilityCoolDown;
-            while (remainingCoolDown > 0f) {
-                remainingCoolDown -= Time.deltaTime;
-                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
-                yield return null;
-            }
-        }
-
         public virtual bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
             if (!CanCast(source)) {
@@ -202,8 +189,12 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (source != null && source.MyCharacterAbilityManager != null) {
+                source.MyCharacterAbilityManager.BeginAbilityCoolDown(this);
+            }
             // FIX ME
-            SystemAbilityManager.MyInstance.StartCoroutine(BeginAbilityCoolDown());
+            //SystemAbilityManager.MyInstance.StartCoroutine(BeginAbilityCoolDown());
+
             return true;
             // notify subscribers
             //OnAbilityCast(this);

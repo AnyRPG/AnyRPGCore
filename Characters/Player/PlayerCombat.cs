@@ -20,11 +20,14 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventReferences();
-            SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
+            //SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnHealthChanged += AttemptRegen;
                 baseCharacter.MyCharacterStats.OnManaChanged += AttemptRegen;
+            }
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
             eventReferencesInitialized = true;
         }
@@ -35,9 +38,14 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventReferences();
+            /*
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
+                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
                 //SystemEventManager.MyInstance.OnEquipmentRefresh -= OnEquipmentChanged;
+            }
+            */
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
 
             // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
@@ -145,23 +153,21 @@ namespace AnyRPG {
 
         }
 
-        public void OnEquipmentChanged(Equipment newItem) {
-            OnEquipmentChanged(newItem, null);
-        }
-
-
-        public void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            onHitAbility = null;
+        public override void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
+            // base hidden intentionally
+            //base.HandleEquipmentChanged(newItem, oldItem);
             if (newItem != null) {
                 //Debug.Log(gameObject.name + "Equipping " + newItem.name);
                 if (newItem.equipSlot == EquipmentSlot.MainHand) {
                     //Debug.Log(newItem.name + " is a weapon.");
                     overrideHitSoundEffect = null;
                     defaultHitSoundEffect = null;
+                    /*
                     if (newItem is Weapon && (newItem as Weapon).OnHitAbility != null) {
                         //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
                         onHitAbility = (newItem as Weapon).OnHitAbility;
                     }
+                    */
                     if (newItem is Weapon && (newItem as Weapon).MyDefaultHitSoundEffect != null) {
                         //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
                         overrideHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;

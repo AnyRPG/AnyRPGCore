@@ -16,6 +16,7 @@ namespace AnyRPG {
         protected Coroutine destroyAbilityEffectObjectCoroutine = null;
 
         protected Dictionary<string, IAbility> abilityList = new Dictionary<string, IAbility>();
+        protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
         protected bool isCasting = false;
 
@@ -49,6 +50,7 @@ namespace AnyRPG {
         public Dictionary<string, IAbility> MyAbilityList { get => abilityList; }
         public bool MyWaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool MyIsCasting { get => isCasting; set => isCasting = value; }
+        public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
 
         protected virtual void Awake() {
             //Debug.Log("CharacterAbilityManager.Awake()");
@@ -73,6 +75,9 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
             }
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
+            }
             eventReferencesInitialized = true;
         }
 
@@ -89,6 +94,9 @@ namespace AnyRPG {
             }
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie -= OnDieHandler;
+            }
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
             OnCharacterUnitDespawn();
             eventReferencesInitialized = false;
@@ -114,7 +122,67 @@ namespace AnyRPG {
                 StopCoroutine(destroyAbilityEffectObjectCoroutine);
                 destroyAbilityEffectObjectCoroutine = null;
             }
+            CleanupCoolDownRoutines();
         }
+
+        public void BeginAbilityCoolDown(BaseAbility baseAbility) {
+            float abilityCoolDown = baseAbility.abilityCoolDown;
+
+            Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyName));
+            AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
+            abilityCoolDownNode.MyAbilityName = baseAbility.MyName;
+            abilityCoolDownNode.MyCoroutine = coroutine;
+            abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+
+            if (!abilityCoolDownDictionary.ContainsKey(baseAbility.MyName)) {
+                abilityCoolDownDictionary[baseAbility.MyName] = abilityCoolDownNode;
+            }
+        }
+
+        public void CleanupCoolDownRoutines() {
+            foreach (AbilityCoolDownNode abilityCoolDownNode in abilityCoolDownDictionary.Values) {
+                if (abilityCoolDownNode.MyCoroutine != null) {
+                    StopCoroutine(abilityCoolDownNode.MyCoroutine);
+                }
+            }
+        }
+
+        public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
+            // can safely be ignored if player is not spawned
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                return;
+            }
+            if (newItem != null) {
+                if (newItem.MyOnEquipAbility != null) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(newItem.MyOnEquipAbility);
+                }
+                foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility.MyName);
+                }
+            }
+            if (oldItem != null) {
+                foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.UnlearnAbility(baseAbility.MyName);
+                }
+            }
+        }
+
+
+        public IEnumerator PerformAbilityCoolDown(string abilityName) {
+            //Debug.Log(resourceName + ".BaseAbility.BeginAbilityCoolDown(): setting to: " + abilityCoolDown);
+
+            yield return null;
+
+            while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
+                abilityCoolDownDictionary[abilityName].MyRemainingCoolDown -= Time.deltaTime;
+                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
+                yield return null;
+            }
+            if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
+                abilityCoolDownDictionary.Remove(abilityName);
+            }
+        }
+
 
         public virtual void OnDieHandler(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".OnDieHandler()");
@@ -359,7 +427,7 @@ namespace AnyRPG {
             }
 
             // check if the ability is on cooldown
-            if (usedAbility.MyRemainingCoolDown > 0f) {
+            if (abilityCoolDownDictionary.ContainsKey(usedAbility.MyName)) {
                 //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
                 return;
