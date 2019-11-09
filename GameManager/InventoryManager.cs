@@ -473,8 +473,10 @@ namespace AnyRPG {
 
         public bool AddItem(Item item, int slotIndex) {
             //Debug.Log("InventoryManager.AddItem(" + item.MyName + ", " + slotIndex + ")");
-
-            return GetSlots()[slotIndex].AddItem(item);
+            if (GetSlots().Count > slotIndex) {
+                return GetSlots()[slotIndex].AddItem(item);
+            }
+            return AddItem(item);
         }
 
         public void RemoveItem(Item item) {
