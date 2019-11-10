@@ -416,8 +416,12 @@ namespace AnyRPG {
         }
 
         private void BeginAbilityCommon(IAbility ability, GameObject target) {
-            //Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
+            if (usedAbility == null) {
+                Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
+                return;
+            }
             string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
 
             // check if the ability is learned yet

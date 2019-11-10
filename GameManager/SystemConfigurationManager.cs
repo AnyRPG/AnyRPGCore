@@ -291,6 +291,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.Start()");
             startHasRun = true;
             CreateEventReferences();
+            VerifySystemAbilities();
         }
 
         private void CreateEventReferences() {
@@ -312,6 +313,46 @@ namespace AnyRPG {
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventReferences();
+        }
+
+        // verify that system abilities are available through the factory
+        private void VerifySystemAbilities() {
+            BaseAbility testAbility = null;
+            if (levelUpAbility != null) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbility.MyName);
+                if (testAbility == null) {
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + levelUpAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    return;
+                }
+            }
+            if (deathAbility != null) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbility.MyName);
+                if (testAbility == null) {
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + deathAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    return;
+                }
+            }
+            if (lootSparkleAbility != null) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbility.MyName);
+                if (testAbility == null) {
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + lootSparkleAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    return;
+                }
+            }
+            if (doWhiteDamageAbility != null) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(doWhiteDamageAbility.MyName);
+                if (testAbility == null) {
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + doWhiteDamageAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    return;
+                }
+            }
+            if (takeDamageAbility != null) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(takeDamageAbility.MyName);
+                if (testAbility == null) {
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + takeDamageAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    return;
+                }
+            }
         }
 
     }
