@@ -51,6 +51,7 @@ namespace AnyRPG {
         public bool MyWaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool MyIsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
+        public Coroutine MyCurrentCast { get => currentCast; }
 
         protected virtual void Awake() {
             //Debug.Log("CharacterAbilityManager.Awake()");
@@ -145,41 +146,49 @@ namespace AnyRPG {
                     StopCoroutine(abilityCoolDownNode.MyCoroutine);
                 }
             }
+            abilityCoolDownDictionary.Clear();
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
             // can safely be ignored if player is not spawned
+            /*
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                 return;
             }
+            */
             if (newItem != null) {
                 if (newItem.MyOnEquipAbility != null) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(newItem.MyOnEquipAbility);
+                    BeginAbility(newItem.MyOnEquipAbility);
                 }
                 foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility.MyName);
+                    LearnAbility(baseAbility.MyName);
                 }
             }
             if (oldItem != null) {
                 foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.UnlearnAbility(baseAbility.MyName);
+                    UnlearnAbility(baseAbility.MyName);
                 }
             }
         }
 
 
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
-            //Debug.Log(resourceName + ".BaseAbility.BeginAbilityCoolDown(): setting to: " + abilityCoolDown);
+            Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
 
             yield return null;
 
+            Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
+
             while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
                 abilityCoolDownDictionary[abilityName].MyRemainingCoolDown -= Time.deltaTime;
-                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
                 yield return null;
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
+                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
                 abilityCoolDownDictionary.Remove(abilityName);
+            } else {
+                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
             }
         }
 
@@ -320,7 +329,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
             float startTime = Time.time;
-            //Debug.Log("CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
             if (ability.MyRequiresTarget == false || ability.MyCanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -349,7 +358,7 @@ namespace AnyRPG {
                 float currentCastTime = 0f;
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectName != null && ability.MyHoldableObjectName != string.Empty) {
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectName != null && ability.MyHoldableObjectName != string.Empty) {
                     baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectName);
                 }
                 if (ability.MyCastingAudioClip != null) {
@@ -367,7 +376,9 @@ namespace AnyRPG {
 
                     yield return null;
                 }
-                baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                    baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
+                }
 
             }
 
@@ -422,24 +433,7 @@ namespace AnyRPG {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
             }
-            string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
-
-            // check if the ability is learned yet
-            if (!usedAbility.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
-                //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + usedAbility.MyName + "): " + abilityList.Contains(usedAbility));
-                return;
-            }
-
-            // check if the ability is on cooldown
-            if (abilityCoolDownDictionary.ContainsKey(usedAbility.MyName)) {
-                //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
-                // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
-                return;
-            }
-
-            // check if we have enough mana
-            if (MyBaseCharacter.MyCharacterStats.currentMana < usedAbility.MyAbilityManaCost) {
-                //CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+            if (!CanCastAbility(ability)) {
                 return;
             }
 
@@ -470,6 +464,40 @@ namespace AnyRPG {
                     //Debug.Log("A cast was already in progress!");
                 }
             }
+        }
+
+        // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
+        public bool CanCastAbility(IAbility ability) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
+
+            string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
+
+            // check if the ability is learned yet
+            if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
+                Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
+                return false;
+            }
+
+            // check if the ability is on cooldown
+            if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || MyRemainingGlobalCoolDown > 0f) {
+                //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
+                // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
+                if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
+                    Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
+                }
+                return false;
+            }
+
+            // check if we have enough mana
+            if (MyBaseCharacter.MyCharacterStats.currentMana < ability.MyAbilityManaCost) {
+                //CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+                Debug.Log("not enough mana");
+                return false;
+            }
+
+            // default is true, nothing has stopped us so far
+            return true;
         }
 
         /// <summary>

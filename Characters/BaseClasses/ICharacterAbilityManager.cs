@@ -12,8 +12,10 @@ namespace AnyRPG {
         event Action<IAbility, float> OnCastTimeChanged;
 
         Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get; set; }
-
         Dictionary<string, IAbility> MyAbilityList { get; }
+
+        Coroutine MyCurrentCast { get; }
+
         bool MyWaitingForAnimatedAbility { get; set; }
         void BeginAbility(IAbility ability);
         void BeginAbility(IAbility ability, GameObject target);
@@ -30,5 +32,6 @@ namespace AnyRPG {
         bool HasAbility(string abilityName);
         bool MyIsCasting { get; set; }
         void BeginAbilityCoolDown(BaseAbility baseAbility);
+        bool CanCastAbility(IAbility ability);
     }
 }

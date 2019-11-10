@@ -60,6 +60,34 @@ namespace AnyRPG {
             bool returnResult = base.EnterCombat(target);
             return returnResult;
         }
+
+        public BaseAbility GetValidAttackAbility() {
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
+
+            List<BaseAbility> returnList = new List<BaseAbility>();
+
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+
+                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
+                    if (baseAbility.MyCanCastOnEnemy && MyBaseCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(MyBaseCharacter.MyCharacterController.MyTarget, MyBaseCharacter as BaseCharacter)) {
+                        Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+                        //if (baseAbility.MyCanCastOnEnemy) {
+                        returnList.Add(baseAbility);
+                    }
+                    //}
+                }
+            }
+            if (returnList.Count > 0) {
+                int randomIndex = Random.Range(0, returnList.Count);
+                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
+                return returnList[randomIndex];
+            }
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            return null;
+        }
+
     }
 
 }

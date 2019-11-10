@@ -24,6 +24,8 @@ namespace AnyRPG {
                     channeledObjectScript.MyStartPosition = source.MyCharacterUnit.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                     channeledObjectScript.MyEndObject = target.gameObject;
                     channeledObjectScript.MyEndPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
+                } else {
+                    Debug.Log(MyName + ".ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): CHECK INSPECTOR, CHANNELEDOBJECT NOT FOUND");
                 }
                 // delayed damage
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));

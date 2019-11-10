@@ -204,7 +204,7 @@ namespace AnyRPG {
             int spawnIndex = UnityEngine.Random.Range(0, spawnPrefabs.Count - 1);
             if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
                 //GetSpawnLocation();
-                //Debug.Log("UnitSpawnNode.Spawn(): Spawning " + spawnPrefabs[spawnIndex].name);
+                //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
                 //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
                 GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex]);
                 //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
