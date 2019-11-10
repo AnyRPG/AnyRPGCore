@@ -37,7 +37,7 @@ public class CombatTextController : MonoBehaviour
     private CombatType textType;
 
     private float randomXLimit = 100f;
-    private float randomYLimit = 50f;
+    private float randomYLimit = 100f;
     private float randomX;
     private float randomY;
 
@@ -94,7 +94,10 @@ public class CombatTextController : MonoBehaviour
                     //text.fontSize = text.fontSize * 2;
                     break;
                 case CombatType.ability:
-                    break;
+                        textColor = Color.magenta;
+                        preText += "-";
+                        text.fontSize = text.fontSize * 2;
+                        break;
                 default:
                     break;
             }
