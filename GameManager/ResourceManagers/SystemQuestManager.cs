@@ -38,33 +38,33 @@ namespace AnyRPG {
             base.Start();
         }
 
-        public override void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += AcceptAchievements;
             if (PlayerManager.MyInstance.MyPlayerConnectionSpawned == true) {
                 AcceptAchievements();
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            base.CleanupEventReferences();
+            base.CleanupEventSubscriptions();
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= AcceptAchievements;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void AcceptAchievements() {

@@ -64,7 +64,7 @@ namespace AnyRPG {
         private Vector3[] worldCorners = new Vector3[4];
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public override event Action<ICloseableWindowContents> OnOpenWindow;
 
@@ -78,36 +78,36 @@ namespace AnyRPG {
         protected void Start() {
             //Debug.Log(gameObject.name + ".MainMapController.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
         private void OnEnable() {
             //Debug.Log("MainMapController.OnEnable()");
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("MainMapController.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("MainMapController.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelLoad += InitializeMap;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelLoad -= InitializeMap;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         // onDestroy instead of OnDisable so not accidentally removing these since the map is always disabled until the window is opened
         public void OnDestroy() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void InitializeMap() {

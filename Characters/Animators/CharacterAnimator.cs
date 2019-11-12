@@ -93,11 +93,11 @@ namespace AnyRPG {
 
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
-            CreateEventReferences();
+            CreateEventSubscriptions();
             InitializeAnimator();
         }
 
-        public virtual void CreateEventReferences() {
+        public virtual void CreateEventSubscriptions() {
             if (characterUnit.MyCharacter != null) {
                 characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
@@ -108,7 +108,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void CleanupEventReferences() {
+        public virtual void CleanupEventSubscriptions() {
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 characterUnit.MyCharacter.MyCharacterCombat.OnAttack -= HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie -= HandleDeath;
@@ -120,7 +120,7 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             CleanupCoroutines();
         }
 
@@ -569,7 +569,7 @@ namespace AnyRPG {
         public void ClearAnimatedAttack(BaseAbility baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
             characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
-            (baseAbility as AnimatedAbility).CleanupEventReferences(characterUnit.MyCharacter);
+            (baseAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             SetAttacking(false);
             currentAbility = null;
         }
@@ -600,7 +600,7 @@ namespace AnyRPG {
         private void HandleDeath(CharacterStats characterStats) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
             if (currentAbility != null && currentAbility is AnimatedAbility) {
-                (currentAbility as AnimatedAbility).CleanupEventReferences(characterUnit.MyCharacter);
+                (currentAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             }
             // add these to prevent characters from dying floating or upright
             HandleUnLevitated();

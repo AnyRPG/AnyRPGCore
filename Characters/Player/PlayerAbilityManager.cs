@@ -21,25 +21,25 @@ namespace AnyRPG {
             base.Start();
         }
 
-        public override void CreateEventReferences() {
-            if (eventReferencesInitialized || !startHasRun) {
+        public override void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += OnCharacterUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventReferences() Player is already spawned");
+                //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
                 OnCharacterUnitSpawn();
             }
         }
 
-        public override void CleanupEventReferences() {
-            if (!eventReferencesInitialized) {
+        public override void CleanupEventSubscriptions() {
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            base.CleanupEventReferences();
+            base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= OnCharacterUnitSpawn;
@@ -49,7 +49,7 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void AbilityLearnedHandler(BaseAbility newAbility) {

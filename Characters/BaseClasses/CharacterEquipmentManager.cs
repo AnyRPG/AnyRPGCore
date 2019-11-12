@@ -26,7 +26,7 @@ namespace AnyRPG {
         protected GameObject abilityObject;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
         protected bool componentReferencesInitialized = false;
         protected bool subscribedToCombatEvents = false;
 
@@ -42,7 +42,7 @@ namespace AnyRPG {
         protected virtual void Start() {
             int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
             //LoadDefaultEquipment();
         }
 
@@ -59,30 +59,32 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
-        protected virtual void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        protected virtual void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        protected virtual void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        protected virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
 
         public virtual void LoadDefaultEquipment() {
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
             if (equipmentProfileName != null && equipmentProfileName != string.Empty && SystemEquipmentProfileManager.MyInstance != null) {
                 EquipmentProfile equipmentProfile = SystemEquipmentProfileManager.MyInstance.GetResource(equipmentProfileName);
                 if (equipmentProfile != null) {
+                    Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment() found equipment profile for: " + equipmentProfileName);
                     foreach (string equipmentName in equipmentProfile.MyEquipmentNameList) {
                         Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
                         if (equipment != null) {
@@ -278,35 +280,8 @@ namespace AnyRPG {
             }
         }
 
-        private float fixAngle(float angle) {
-            if (angle >= 270) {
-                angle -= 360;
-            }
-            if (angle <= -270) {
-                angle += 360;
-            }
-            return angle;
-        }
-
-        private static float UnwrapAngle(float angle) {
-            if (angle >= 0)
-                return angle;
-
-            angle = -angle % 360;
-
-            return 360 - angle;
-        }
-
-        public static float Clamp0360(float eulerAngles) {
-            float result = eulerAngles - Mathf.CeilToInt(eulerAngles / 360f) * 360f;
-            if (result < 0) {
-                result += 360f;
-            }
-            return result;
-        }
-
         public virtual void Equip(Equipment newItem) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ")");
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ")");
             if (newItem == null) {
                 //Debug.Log("Instructed to Equip a null item!");
                 return;
@@ -321,7 +296,6 @@ namespace AnyRPG {
                 // deal with 2h weapons, and unequip offhand
                 if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
                     if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
-                        // FIX ME - DO IT DIRECTLY
                         Unequip(EquipmentSlot.OffHand);
                     }
                 }
@@ -331,7 +305,6 @@ namespace AnyRPG {
             if (newItem.equipSlot == EquipmentSlot.OffHand) {
                 if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
                     if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
-                        // FIX ME - DO IT DIRECTLY
                         Unequip(EquipmentSlot.MainHand);
                     }
                 }
@@ -436,7 +409,7 @@ namespace AnyRPG {
         }
 
         protected void SubscribeToCombatEvents() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (subscribedToCombatEvents || !startHasRun) {
                 return;
             }
@@ -449,7 +422,7 @@ namespace AnyRPG {
         }
 
         protected void UnSubscribeFromCombatEvents() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             if (!subscribedToCombatEvents) {
                 return;
             }

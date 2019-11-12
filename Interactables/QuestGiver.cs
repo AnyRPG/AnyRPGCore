@@ -35,15 +35,15 @@ namespace AnyRPG {
 
             InitializeQuestGiver();
 
-            CreateEventReferences();
+            CreateEventSubscriptions();
 
             // this could run after the character spawn.  check it just in case
             UpdateQuestStatus();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log(gameObject.name + ".QuestGiver.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
@@ -53,11 +53,11 @@ namespace AnyRPG {
             }
 
             namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            //Debug.Log("QuestGiver.CleanupEventReferences()");
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
@@ -68,12 +68,12 @@ namespace AnyRPG {
                 PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
                 PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
             //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public override bool CanInteract(CharacterUnit source) {

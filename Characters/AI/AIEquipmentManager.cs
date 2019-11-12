@@ -1,5 +1,5 @@
 using AnyRPG;
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,41 +7,41 @@ using UMA;
 using UMA.CharacterSystem;
 
 namespace AnyRPG {
-public class AIEquipmentManager : CharacterEquipmentManager {
+    public class AIEquipmentManager : CharacterEquipmentManager {
 
-    protected override void Start() {
-        CreateComponentReferences();
-        base.Start();
-        SubscribeToCombatEvents();
-    }
-
-    public override void CreateComponentReferences() {
-        //Debug.Log(gameObject.name + ".AIEquipmentManager.CreateComponentReferences()");
-        base.CreateComponentReferences();
-        /*
-        if (componentReferencesInitialized) {
-            return;
-        }
-        */
-
-        // NPC case
-        if (playerUnitObject == null) {
-            playerUnitObject = gameObject;
+        protected override void Start() {
+            CreateComponentReferences();
+            base.Start();
+            SubscribeToCombatEvents();
         }
 
-        // NPC case
-        if (dynamicCharacterAvatar == null) {
-            dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
+        public override void CreateComponentReferences() {
+            //Debug.Log(gameObject.name + ".AIEquipmentManager.CreateComponentReferences()");
+            base.CreateComponentReferences();
+            /*
+            if (componentReferencesInitialized) {
+                return;
+            }
+            */
+
+            // NPC case
+            if (playerUnitObject == null) {
+                playerUnitObject = gameObject;
+            }
+
+            // NPC case
+            if (dynamicCharacterAvatar == null) {
+                dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
+            }
+
+            //componentReferencesInitialized = true;
         }
 
-        //componentReferencesInitialized = true;
-    }
+        public override void OnDisable() {
+            base.OnDisable();
+            UnSubscribeFromCombatEvents();
+        }
 
-    public override void OnDisable() {
-        base.OnDisable();
-        UnSubscribeFromCombatEvents();
     }
-
-}
 
 }

@@ -20,17 +20,17 @@ namespace AnyRPG {
         private float originalXPSliderWidth;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         private void Start() {
             //Debug.Log("XPBarController.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        public void CreateEventReferences() {
-            //Debug.Log("XPBarController.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public void CreateEventSubscriptions() {
+            //Debug.Log("XPBarController.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnXPGained += UpdateXP;
@@ -39,12 +39,12 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
                 HandlePlayerUnitSpawn();
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public void CleanupEventReferences() {
-            //Debug.Log("XPBarController.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        public void CleanupEventSubscriptions() {
+            //Debug.Log("XPBarController.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
@@ -52,12 +52,12 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateXPBar;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         private void OnDestroy() {
             // this gameobject will be enabled and disabled multiple times during the game and doesn't need to reset its references every time
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void HandlePlayerUnitSpawn() {

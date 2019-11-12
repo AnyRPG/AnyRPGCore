@@ -121,11 +121,11 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         //Debug.Log(gameObject.name + ": running Start()");
         base.Start();
         InitializeNamePlate();
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    public void CreateEventReferences() {
-        if (eventReferencesInitialized || !startHasRun) {
+    public void CreateEventSubscriptions() {
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
@@ -135,34 +135,34 @@ public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit 
         } else {
             //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
         }
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    public override void CleanupEventReferences() {
-        //Debug.Log("CharacterUnit.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    public override void CleanupEventSubscriptions() {
+        //Debug.Log("CharacterUnit.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
-        base.CleanupEventReferences();
+        base.CleanupEventSubscriptions();
 
         if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
             baseCharacter.MyCharacterStats.OnDie -= HandleDie;
             baseCharacter.MyCharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
             baseCharacter.MyCharacterStats.OnReviveComplete -= HandleReviveComplete;
         }
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     private void OnEnable() {
         //Debug.Log(gameObject.name + ".CharacterUnit.OnEnable()");
         InitializeNamePlate();
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
     public override void OnDisable() {
         //Debug.Log(gameObject.name + ".CharacterUnit.OnDisable()");
         base.OnDisable();
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
         if (NamePlateManager.MyInstance != null) {
             NamePlateManager.MyInstance.RemoveNamePlate(this as INamePlateUnit);
         }

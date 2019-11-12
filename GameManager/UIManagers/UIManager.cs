@@ -111,7 +111,7 @@ namespace AnyRPG {
         private bool dragInProgress = false;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public StatusEffectPanelController MyStatusEffectPanelController { get => statusEffectPanelController; }
         public UnitFrameController MyFocusUnitFrameController { get => focusUnitFrameController; }
@@ -150,7 +150,7 @@ namespace AnyRPG {
             miniMapController.ClearTarget();
             startHasRun = true;
             //Debug.Log("UIManager subscribing to characterspawn");
-            CreateEventReferences();
+            CreateEventSubscriptions();
 
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 HandlePlayerUnitSpawn();
@@ -169,21 +169,21 @@ namespace AnyRPG {
             }
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += HandlePlayerConnectionSpawn;
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
@@ -193,12 +193,12 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= HandlePlayerConnectionSpawn;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         void Update() {

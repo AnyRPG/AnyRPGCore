@@ -30,7 +30,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
     private bool setupComplete = false;
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
     private void Awake() {
         //Debug.Log("MiniMapIndicatorController.Awake()");
@@ -44,22 +44,22 @@ public class MiniMapIndicatorController : MonoBehaviour {
 
     private void Start() {
         //Debug.Log("MiniMapIndicatorController.Start()");
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
         //SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        //Debug.Log("MiniMapIndicatorController.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        //Debug.Log("MiniMapIndicatorController.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
@@ -69,12 +69,12 @@ public class MiniMapIndicatorController : MonoBehaviour {
                 _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
             }
         }
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public void OnDisable() {
         //Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public void SetupMiniMap() {

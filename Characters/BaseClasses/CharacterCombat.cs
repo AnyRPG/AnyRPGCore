@@ -15,7 +15,7 @@ namespace AnyRPG {
         public virtual event System.Action<BaseCharacter, GameObject> OnHitEvent = delegate { };
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         /// <summary>
         /// Attack speed is based on animation speed.  This is a limiter in case animations are too fast.
@@ -84,13 +84,13 @@ namespace AnyRPG {
 
         public virtual void Start() {
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
 
             //GetComponent<CharacterStats>().OnTakeDamage += OnTakeDamage;
         }
 
-        protected virtual void CreateEventReferences() {
-            if (eventReferencesInitialized || !startHasRun) {
+        protected virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
@@ -100,11 +100,11 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        protected virtual void CleanupEventReferences() {
-            //Debug.Log("PlayerCombat.CleanupEventReferences()");
+        protected virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie -= OnDieHandler;
             }
@@ -117,12 +117,12 @@ namespace AnyRPG {
         }
 
         public virtual void OnEnable() {
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterCombat.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             AttemptStopRegen();
         }
 

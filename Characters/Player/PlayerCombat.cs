@@ -14,12 +14,12 @@ namespace AnyRPG {
             // allow the player controller to send us events whenever the player moves or presses an ability button or the escape key
         }
 
-        protected override void CreateEventReferences() {
-            //Debug.Log("PlayerCombat.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        protected override void CreateEventSubscriptions() {
+            //Debug.Log("PlayerCombat.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
@@ -29,15 +29,15 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventReferences() {
-            //Debug.Log("PlayerCombat.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        protected override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            base.CleanupEventReferences();
+            base.CleanupEventSubscriptions();
             /*
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
@@ -57,7 +57,7 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnHealthChanged -= AttemptRegen;
                 baseCharacter.MyCharacterStats.OnManaChanged -= AttemptRegen;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnEnable() {

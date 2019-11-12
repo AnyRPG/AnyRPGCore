@@ -67,7 +67,7 @@ namespace AnyRPG {
         bool bagWindowPositionsSet = false;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         // the maximum number of bags the character can have equipped
         private int bagCount = 5;
@@ -113,30 +113,30 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("InventoryManager.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("InventoryManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("InventoryManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearData;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("InventoryManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("InventoryManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearData;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void ClearData() {

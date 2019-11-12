@@ -34,22 +34,22 @@ public class LootableCharacter : InteractableOption {
 
     protected override void Start() {
         base.Start();
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         characterUnit.MyCharacter.MyCharacterStats.BeforeDie += HandleDeath;
         characterUnit.MyCharacter.MyCharacterStats.OnReviveComplete += HandleRevive;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    public override void CleanupEventReferences() {
-        //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventReferences()");
-        base.CleanupEventReferences();
+    public override void CleanupEventSubscriptions() {
+        //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
+        base.CleanupEventSubscriptions();
         if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
             characterUnit.MyCharacter.MyCharacterStats.BeforeDie -= HandleDeath;
             characterUnit.MyCharacter.MyCharacterStats.OnReviveComplete -= HandleRevive;
@@ -62,7 +62,7 @@ public class LootableCharacter : InteractableOption {
     public override void OnDisable() {
         //Debug.Log(gameObject.name + ".LootableCharacter.OnDisable()");
         base.OnDisable();
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public void HandleDeath(CharacterStats characterStats) {

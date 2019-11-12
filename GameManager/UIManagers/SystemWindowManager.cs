@@ -21,7 +21,7 @@ public class SystemWindowManager : MonoBehaviour {
     #endregion
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
     public CloseableWindow mainMenuWindow;
     public CloseableWindow inGameMainMenuWindow;
@@ -46,32 +46,32 @@ public class SystemWindowManager : MonoBehaviour {
     private void Start() {
         //Debug.Log("PlayerManager.Start()");
         startHasRun = true;
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        ////Debug.Log("PlayerManager.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnPlayerConnectionSpawn += SetupDeathPopup;
         SystemEventManager.MyInstance.OnPlayerConnectionDespawn += RemoveDeathPopup;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        ////Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnPlayerConnectionSpawn += SetupDeathPopup;
         SystemEventManager.MyInstance.OnPlayerConnectionDespawn += RemoveDeathPopup;
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public void OnDisable() {
         ////Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
 

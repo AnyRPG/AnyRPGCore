@@ -27,14 +27,14 @@ namespace AnyRPG {
             base.Start();
         }
 
-        public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventReferences(ICloseableWindowContents)");
-            CleanupEventReferences();
+        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
+            CleanupEventSubscriptions();
         }
 
-        public override void CleanupEventReferences() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventReferences()");
-            base.CleanupEventReferences();
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions()");
+            base.CleanupEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {
@@ -42,7 +42,7 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -84,7 +84,7 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public override void HandlePrerequisiteUpdates() {

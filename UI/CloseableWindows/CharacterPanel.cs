@@ -40,7 +40,7 @@ namespace AnyRPG {
         private Color fullSlotColor;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -56,7 +56,7 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("CharacterPanel.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
 
             head.MyEmptyBackGroundColor = emptySlotColor;
             head.MyFullBackGroundColor = fullSlotColor;
@@ -108,9 +108,9 @@ namespace AnyRPG {
             offhand.UpdateVisual();
         }
 
-        protected virtual void CreateEventReferences() {
-            //Debug.Log("CharacterPanel.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        protected virtual void CreateEventSubscriptions() {
+            //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
@@ -120,11 +120,11 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
                 HandlePlayerUnitSpawn();
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        protected virtual void CleanupEventReferences() {
-            //Debug.Log("PlayerCombat.CleanupEventReferences()");
+        protected virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
@@ -132,12 +132,12 @@ namespace AnyRPG {
         }
 
         public virtual void OnEnable() {
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
         public virtual void OnDestroy() {
             //Debug.Log("CharacterPanel.OnDestroy()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void HandlePlayerUnitSpawn() {

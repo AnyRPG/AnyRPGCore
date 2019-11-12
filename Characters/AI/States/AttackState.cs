@@ -25,6 +25,7 @@ namespace AnyRPG {
             if (aiController.MyTarget != null) {
 
                 if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyCurrentCast != null) {
+                    Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null");
                     // nothing to do, cast in progress
                     return;
                 }
@@ -33,6 +34,7 @@ namespace AnyRPG {
 
                 BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
                 if (validAttackAbility != null) {
+                    Debug.Log(aiController.gameObject.name + ".AttackState.Update() Got Valid Attack Ability: " + validAttackAbility.MyName);
                     // perform ability attack
                     aiController.MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
                 } else {

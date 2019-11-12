@@ -33,13 +33,13 @@ namespace AnyRPG {
             //Debug.Log("DialogInteractable.Start()");
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
-            CreateEventReferences();
+            CreateEventSubscriptions();
             Spawn();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePrerequisiteUpdates;
@@ -49,28 +49,28 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".DialogInteractable.CreateEventSubscriptions(): player unit is not yet spawned");
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            base.CleanupEventReferences();
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePrerequisiteUpdates;
             }
             CleanupConfirm();
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
-        public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventReferences(ICloseableWindowContents)");
-            CleanupEventReferences();
+        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
+            CleanupEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {

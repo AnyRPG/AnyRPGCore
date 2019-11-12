@@ -58,7 +58,7 @@ namespace AnyRPG {
 
         private Coroutine delayRoutine = null;
 
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
         protected bool startHasRun = false;
 
         /*
@@ -94,32 +94,32 @@ namespace AnyRPG {
             if (!triggerBased) {
                 SpawnWithDelay();
             }
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("UnitSpawnNode.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("UnitSpawnNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("UnitSpawnNode.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             if (countDownRoutine != null) {
                 StopCoroutine(countDownRoutine);
                 countDownRoutine = null;

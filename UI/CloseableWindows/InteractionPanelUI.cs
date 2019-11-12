@@ -48,7 +48,7 @@ namespace AnyRPG {
         private List<GameObject> interactionPanelScripts = new List<GameObject>();
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
@@ -56,35 +56,35 @@ namespace AnyRPG {
 
         private void Start() {
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
         private void OnEnable() {
             //Debug.Log("InteractionPanelUI.OnEnable()");
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void CheckPrerequisites(Skill skill) {

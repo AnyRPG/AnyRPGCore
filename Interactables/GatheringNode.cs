@@ -88,39 +88,39 @@ namespace AnyRPG {
         void PickUp() {
             //Debug.Log("GatheringNode.Pickup()");
             LootUI.MyInstance.CreatePages(lootTable.GetLoot());
-            CreateEventReferences();
+            CreateEventSubscriptions();
             PopupWindowManager.MyInstance.lootWindow.OpenWindow();
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
-        public void CreateEventReferences() {
-            //Debug.Log("GatheringNode.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public void CreateEventSubscriptions() {
+            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
             LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            //Debug.Log("GatheringNode.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
                 LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             StopAllCoroutines();
         }
 

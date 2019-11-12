@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class AbilityCoolDownNode : MonoBehaviour {
+    public class AbilityCoolDownNode {
 
         private string abilityName = string.Empty;
         private Coroutine coroutine = null;

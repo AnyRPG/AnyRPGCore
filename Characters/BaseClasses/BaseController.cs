@@ -27,7 +27,7 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     protected BaseCharacter masterUnit;
 
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
     protected bool startHasRun = false;
 
     protected Vector3 lastPosition = Vector3.zero;
@@ -64,34 +64,34 @@ public abstract class BaseController : MonoBehaviour, ICharacterController {
 
     protected virtual void Start() {
         startHasRun = true;
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    public virtual void CreateEventReferences() {
-        //Debug.Log("UnitSpawnNode.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    public virtual void CreateEventSubscriptions() {
+        //Debug.Log("UnitSpawnNode.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    public virtual void CleanupEventReferences() {
-        //Debug.Log("UnitSpawnNode.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    public virtual void CleanupEventSubscriptions() {
+        //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public virtual void OnDisable() {
         //Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public virtual void OnEnable() {
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
     protected virtual void Update() {

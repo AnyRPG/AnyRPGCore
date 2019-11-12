@@ -31,7 +31,7 @@ namespace AnyRPG {
         private Color circleColor;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
 
@@ -39,30 +39,30 @@ namespace AnyRPG {
             //Debug.Log("CastTargettingmanager.Start()");
             ConfigureDefaultMaterial();
             DisableProjector();
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("MiniMapIndicatorController.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("MiniMapIndicatorController.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void ConfigureDefaultMaterial() {

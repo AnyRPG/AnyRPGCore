@@ -54,15 +54,15 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-            CleanupEventReferences();
+        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+            CleanupEventSubscriptions();
         }
 
-        public override void CleanupEventReferences() {
-            base.CleanupEventReferences();
+        public override void CleanupEventSubscriptions() {
+            base.CleanupEventSubscriptions();
             if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.characterCreatorWindow != null && SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents != null) {
                 (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow -= CleanupEventReferences;
+                (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -71,7 +71,7 @@ namespace AnyRPG {
             base.Interact(source);
             SystemWindowManager.MyInstance.characterCreatorWindow.OpenWindow();
             (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnConfirmAction += HandleConfirmAction;
-            (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow += CleanupEventReferences;
+            (SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents as CharacterCreatorPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
 

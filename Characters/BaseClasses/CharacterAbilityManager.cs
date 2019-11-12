@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         protected bool startHasRun = false;
 
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
         protected float initialGlobalCoolDown;
@@ -60,14 +60,15 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            //Debug.Log("CharacterAbilityManager.Start()");
+            Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
             startHasRun = true;
             UpdateAbilityList(baseCharacter.MyCharacterStats.MyLevel);
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        public virtual void CreateEventReferences() {
-            if (eventReferencesInitialized || !startHasRun) {
+        public virtual void CreateEventSubscriptions() {
+            Debug.Log("CharacterAbilityManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
@@ -78,12 +79,14 @@ namespace AnyRPG {
             }
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
+            } else {
+
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public virtual void CleanupEventReferences() {
-            if (!eventReferencesInitialized) {
+        public virtual void CleanupEventSubscriptions() {
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
@@ -100,11 +103,11 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
             OnCharacterUnitDespawn();
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public virtual void OnDisable() {
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             CleanupCoroutines();
         }
 
@@ -150,12 +153,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            // can safely be ignored if player is not spawned
-            /*
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
-                return;
-            }
-            */
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (newItem != null) {
                 if (newItem.MyOnEquipAbility != null) {
                     BeginAbility(newItem.MyOnEquipAbility);
@@ -296,7 +294,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LearnAbility(string abilityName) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
             string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
@@ -468,7 +466,7 @@ namespace AnyRPG {
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public bool CanCastAbility(IAbility ability) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
 
             string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
 

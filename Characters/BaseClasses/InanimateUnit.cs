@@ -62,9 +62,9 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
         InitializeNamePlate();
     }
 
-    public override void CleanupEventReferences() {
-        //Debug.Log(gameObject.name + ".InanimateUnit.CleanupEventReferences()");
-        base.CleanupEventReferences();
+    public override void CleanupEventSubscriptions() {
+        //Debug.Log(gameObject.name + ".InanimateUnit.CleanupEventSubscriptions()");
+        base.CleanupEventSubscriptions();
     }
 
     public void InitializeNamePlate() {
@@ -109,7 +109,7 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
     }
 
     public void OnDestroy() {
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public override void HandlePrerequisiteUpdates() {

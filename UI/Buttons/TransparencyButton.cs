@@ -12,7 +12,7 @@ public class TransparencyButton : MonoBehaviour {
     private Image backGroundImage;
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
 
     protected virtual void Start() {
@@ -20,30 +20,30 @@ public class TransparencyButton : MonoBehaviour {
         GetComponentReferences();
         SetBackGroundTransparency();
         startHasRun = true;
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        //Debug.Log("TransparencyButton.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        //Debug.Log("TransparencyButton.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnPagedButtonsTransparencyUpdate += SetBackGroundTransparency;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        //Debug.Log("TransparencyButton.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        //Debug.Log("TransparencyButton.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnPagedButtonsTransparencyUpdate -= SetBackGroundTransparency;
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public void OnDestroy() {
         //Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     protected virtual void GetComponentReferences() {

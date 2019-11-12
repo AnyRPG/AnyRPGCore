@@ -72,7 +72,7 @@ namespace AnyRPG {
         private bool componentsInitialized = false;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         private INamePlateUnit namePlateUnit = null;
 
@@ -108,12 +108,12 @@ namespace AnyRPG {
             InitializeComponents();
             //interactionTransform = transform;
             //InitializeMaterials();
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        public virtual void CreateEventReferences() {
-            //Debug.Log(gameObject.name + ".Interactable.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public virtual void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".Interactable.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
@@ -124,19 +124,19 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.Start(): Player Unit is not spawned. Added Handle Spawn listener");
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
@@ -147,7 +147,7 @@ namespace AnyRPG {
         public void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
             CleanupMiniMapIndicator();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             ClearFromPlayerRangeTable();
         }
 

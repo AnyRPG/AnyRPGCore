@@ -40,36 +40,36 @@ namespace AnyRPG {
         private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         void Start() {
             //Debug.Log("Savemanager.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
             GetSaveDataList();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnEquipmentChanged += SaveUMASettings;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnEquipmentChanged -= SaveUMASettings;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public List<AnyRPGSaveData> GetSaveDataList() {
@@ -724,7 +724,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
 
             // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
-            SystemQuestManager.MyInstance.CleanupEventReferences();
+            SystemQuestManager.MyInstance.CleanupEventSubscriptions();
 
             // spawn player connection so all the data can be loaded
             PlayerManager.MyInstance.SpawnPlayerConnection();
@@ -752,7 +752,7 @@ namespace AnyRPG {
             LoadCurrencyData(anyRPGSaveData);
 
             // now that we have loaded the quest data, we can re-enable references
-            SystemQuestManager.MyInstance.CreateEventReferences();
+            SystemQuestManager.MyInstance.CreateEventSubscriptions();
 
 
             // set health last after equipment loaded for modifiers

@@ -41,7 +41,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public void CleanupEventReferences(BaseCharacter source) {
+        public void CleanupEventSubscriptions(BaseCharacter source) {
             source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 

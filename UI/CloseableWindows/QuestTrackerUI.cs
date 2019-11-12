@@ -71,8 +71,8 @@ public class QuestTrackerUI : WindowContentController {
         referencesInitialized = true;
     }
 
-    public void CleanupEventReferences() {
-        //Debug.Log("QuestTrackerUI.CleanupEventReferences()");
+    public void CleanupEventSubscriptions() {
+        //Debug.Log("QuestTrackerUI.CleanupEventSubscriptions()");
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated -= ShowQuests;
             SystemEventManager.MyInstance.OnQuestStatusUpdated -= ShowQuests;
@@ -142,7 +142,7 @@ public class QuestTrackerUI : WindowContentController {
     public override void RecieveClosedWindowNotification() {
         //Debug.Log("QuestTrackerUI.OnCloseWindow()");
         base.RecieveClosedWindowNotification();
-        //CleanupEventReferences();
+        //CleanupEventSubscriptions();
     }
 
     public override void ReceiveOpenWindowNotification() {
@@ -155,7 +155,7 @@ public class QuestTrackerUI : WindowContentController {
     // moved below functionality to OnDestroy because these are static objects that exist for the entire game
     public void OnDestroy() {
         //Debug.Log("QuestTrackerUI.OnDestroy()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
 }

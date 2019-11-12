@@ -86,7 +86,7 @@ public class CombatLogUI : WindowContentController {
     private List<GameObject> chatMessageList = new List<GameObject>();
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
     private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
@@ -99,7 +99,7 @@ public class CombatLogUI : WindowContentController {
         ClearLog();
 
         // do this last because it will print the chat messages and we don't want them to just get auto-cleared again
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
     private void SetWelcomeString() {
@@ -187,12 +187,12 @@ public class CombatLogUI : WindowContentController {
 
     private void OnEnable() {
         //Debug.Log("QuestTrackerUI.OnEnable()");
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        ////Debug.Log("PlayerManager.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;
@@ -201,12 +201,12 @@ public class CombatLogUI : WindowContentController {
         if (PlayerManager.MyInstance.MyPlayerConnectionSpawned == true) {
             PrintWelcomeMessages();
         }
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        ////Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         if (SystemEventManager.MyInstance != null) {
@@ -214,7 +214,7 @@ public class CombatLogUI : WindowContentController {
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearLog;
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= PrintWelcomeMessages;
         }
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     // although we usually use OnDisable, this is a static UI element, and should really keep it's references for the entire time the game is active
@@ -222,13 +222,13 @@ public class CombatLogUI : WindowContentController {
     /*
     public void OnDisable() {
         //Debug.Log("QuestTrackerUI.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
     */
 
     public void OnDestroy() {
         //Debug.Log("QuestTrackerUI.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public void HandleTakeDamage(BaseCharacter source, CharacterUnit target, int damage, string abilityName) {

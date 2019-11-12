@@ -10,7 +10,7 @@ namespace AnyRPG {
             base.Awake();
             baseCharacter = GetComponent<PlayerCharacter>() as ICharacter;
             // DO THIS HERE SO WE CAN CATCH EQUIPMENT EVENTS
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
         public override void Start() {
@@ -28,25 +28,25 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent += OnKillEventHandler;
         }
 
-        public override void CreateEventReferences() {
-            //Debug.Log(gameObject.name + ".PlayerStats.CreateEventReferences()");
-            if (eventReferencesInitialized) {
-                //if (eventReferencesInitialized || !startHasRun) {
+        public override void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".PlayerStats.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                //if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
             SystemEventManager.MyInstance.OnLevelChanged += LevelUpHandler;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            if (!eventReferencesInitialized) {
+        public override void CleanupEventSubscriptions() {
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            base.CleanupEventReferences();
+            base.CleanupEventSubscriptions();
             if (PlayerManager.MyInstance != null) {
                 if (PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat != null) {
                     PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent -= OnKillEventHandler;
@@ -58,12 +58,12 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void OnKillEventHandler(BaseCharacter sourceCharacter, float creditPercent) {

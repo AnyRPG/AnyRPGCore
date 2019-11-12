@@ -84,7 +84,7 @@ namespace AnyRPG {
         private GameObject currentPlayerUnitPrefab = null;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public PlayerCharacter MyCharacter { get => character; set => character = value; }
         public GameObject MyPlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
@@ -115,12 +115,12 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload += DespawnPlayerUnit;
@@ -128,12 +128,12 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
             SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.MyInstance.OnPlayerDeath += HandlePlayerDeath;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
@@ -143,12 +143,12 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
                 SystemEventManager.MyInstance.OnPlayerDeath -= HandlePlayerDeath;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void ResetInitialLevel() {

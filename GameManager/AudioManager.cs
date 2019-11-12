@@ -167,11 +167,15 @@ namespace AnyRPG {
         }
 
         public void PlayUIHoverSound() {
-            PlayEffect(uiClickSound);
+            if (uiClickSound != null) {
+                PlayEffect(uiClickSound);
+            }
         }
 
         public void PlayUIClickSound() {
-            PlayEffect(uiClickSound);
+            if (uiClickSound != null) {
+                PlayEffect(uiClickSound);
+            }
         }
 
         public void StopAmbientSound() {

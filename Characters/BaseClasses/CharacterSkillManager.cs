@@ -26,19 +26,19 @@ public class CharacterSkillManager : MonoBehaviour, ICharacterSkillManager {
 
     protected virtual void Start() {
         //Debug.Log("CharacterAbilityManager.Start()");
-        CreateEventReferences();
+        CreateEventSubscriptions();
         UpdateSkillList(baseCharacter.MyCharacterStats.MyLevel);
     }
 
     public virtual void OnDisable() {
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
-    public void CreateEventReferences() {
+    public void CreateEventSubscriptions() {
         SystemEventManager.MyInstance.OnLevelChanged += UpdateSkillList;
     }
 
-    public void CleanupEventReferences() {
+    public void CleanupEventSubscriptions() {
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnLevelChanged -= UpdateSkillList;
         }

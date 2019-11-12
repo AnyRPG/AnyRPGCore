@@ -223,7 +223,7 @@ namespace AnyRPG {
         private float defaultDespawnTimer;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public DirectAbility MyLootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
         public Material MyTemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
@@ -290,29 +290,29 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
             VerifySystemAbilities();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         // verify that system abilities are available through the factory

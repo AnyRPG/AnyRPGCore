@@ -19,7 +19,7 @@ public class BagBarController : MonoBehaviour {
     private bool localComponentsGotten = false;
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
 
     public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
@@ -33,27 +33,27 @@ public class BagBarController : MonoBehaviour {
         //Debug.Log("BagBarController.Start()");
         SetBackGroundColor();
         startHasRun = true;
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        //Debug.Log("BagBarController.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        //Debug.Log("BagBarController.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnInventoryTransparencyUpdate += SetBackGroundColor;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        //Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnInventoryTransparencyUpdate -= SetBackGroundColor;
         }
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public void GetLocalComponents() {
@@ -118,7 +118,7 @@ public class BagBarController : MonoBehaviour {
     }
 
     public void OnDestroy() {
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
 }

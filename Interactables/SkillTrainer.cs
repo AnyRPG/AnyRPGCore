@@ -48,7 +48,7 @@ public class SkillTrainer : InteractableOption {
             //Debug.Log(source + " interacting with " + gameObject.name);
             //vendorWindow.MyVendorUI.CreatePages(items);
             PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventReferences;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventSubscriptions;
             PopupWindowManager.MyInstance.skillTrainerWindow.OpenWindow();
             return true;
         }
@@ -62,24 +62,24 @@ public class SkillTrainer : InteractableOption {
         PopupWindowManager.MyInstance.skillTrainerWindow.CloseWindow();
     }
 
-    public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-        //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventReferences(windowContents)");
-        CleanupEventReferences();
+    public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions(windowContents)");
+        CleanupEventSubscriptions();
     }
 
-    public override void CleanupEventReferences() {
-        //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventReferences()");
-        base.CleanupEventReferences();
+    public override void CleanupEventSubscriptions() {
+        //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
+        base.CleanupEventSubscriptions();
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.skillTrainerWindow != null && PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents != null) {
             PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventReferences;
+            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
         }
     }
 
     public override void OnDisable() {
         //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
         base.OnDisable();
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public override int GetValidOptionCount() {

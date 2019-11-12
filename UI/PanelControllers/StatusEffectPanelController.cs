@@ -27,7 +27,7 @@ public class StatusEffectPanelController : DraggableWindow
             foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.MyCharacterStats.MyStatusEffects.Values) {
                 SpawnStatusNode(statusEffectNode, characterUnit);
             }
-            CreateEventReferences(targetCharacterUnit.MyCharacter.MyCharacterStats as CharacterStats);
+            CreateEventSubscriptions(targetCharacterUnit.MyCharacter.MyCharacterStats as CharacterStats);
         }
     }
 
@@ -35,7 +35,7 @@ public class StatusEffectPanelController : DraggableWindow
         //Debug.Log("StatusEffectPanelController.ClearTarget()");
 
         // do this first or there will be no character to unsubscribe from
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
 
         targetCharacterUnit = null;
         foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
@@ -51,16 +51,16 @@ public class StatusEffectPanelController : DraggableWindow
         SpawnStatusNode(statusEffectNode, targetCharacterUnit);
     }
 
-    public void CreateEventReferences(CharacterStats characterStats) {
-        //Debug.Log("StatusEffectPanelController.CreateEventReferences()");
+    public void CreateEventSubscriptions(CharacterStats characterStats) {
+        //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions()");
         if (characterStats != null) {
-            //Debug.Log("StatusEffectPanelController.CreateEventReferences(): characterStats is not null.");
+            //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): characterStats is not null.");
             characterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
         }
     }
 
-    public void CleanupEventReferences() {
-        //Debug.Log("StatusEffectPanelController.CleanupEventReferences()");
+    public void CleanupEventSubscriptions() {
+        //Debug.Log("StatusEffectPanelController.CleanupEventSubscriptions()");
         if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.MyCharacterStats != null) {
             targetCharacterUnit.MyCharacter.MyCharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
         }
@@ -102,7 +102,7 @@ public class StatusEffectPanelController : DraggableWindow
 
     public override void OnDisable() {
         base.OnDisable();
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 }
 

@@ -29,7 +29,7 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     protected bool componentReferencesInitialized = false;
     protected bool startHasRun = false;
 
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
     public virtual string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
     public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -132,10 +132,10 @@ public abstract class InteractableOption : MonoBehaviour, IInteractable {
     }
 
     public virtual void OnDisable () {
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
-    public virtual void CleanupEventReferences() {
+    public virtual void CleanupEventSubscriptions() {
 
     }
 

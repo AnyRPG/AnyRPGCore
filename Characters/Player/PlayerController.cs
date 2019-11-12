@@ -66,12 +66,12 @@ namespace AnyRPG {
             ToggleRun();
         }
 
-        public override void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += HandleDeath;
                 baseCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
@@ -79,11 +79,11 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnLevelUnload += ClearInteractables;
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public override void CleanupEventReferences() {
-            base.CleanupEventReferences();
+        public override void CleanupEventSubscriptions() {
+            base.CleanupEventSubscriptions();
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie -= HandleDeath;
                 baseCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
@@ -96,7 +96,7 @@ namespace AnyRPG {
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void ClearInteractables() {
@@ -683,7 +683,7 @@ namespace AnyRPG {
         public override void OnDestroy() {
             //Debug.Log(gameObject.name + ".PlayerController.OnDestroy()");
             base.OnDestroy();
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void StopInteract() {

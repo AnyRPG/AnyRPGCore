@@ -39,7 +39,7 @@ namespace AnyRPG {
         private bool localComponentsInitialized = false;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public Image MyHealthSlider { get => healthSlider; }
         public GameObject MyHealthBar { get => healthBar; }
@@ -56,39 +56,39 @@ namespace AnyRPG {
             //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
             startHasRun = true;
 
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("NamePlateController.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventReferences;
+            SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventSubscriptions;
             SystemEventManager.MyInstance.OnReputationChange += SetFactionColor;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += SetFactionColor;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 SetFactionColor();
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= SetFactionColor;
             SystemEventManager.MyInstance.OnReputationChange -= SetFactionColor;
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventReferences;
+            SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventSubscriptions;
             SystemEventManager.MyInstance.OnPlayerNameChanged -= SetCharacterName;
 
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
 
@@ -346,7 +346,7 @@ namespace AnyRPG {
                 namePlateUnit.HealthBarNeedsUpdate -= OnHealthChanged;
                 namePlateUnit.MyNamePlate = null;
             }
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void OnClick(BaseEventData eventData) {

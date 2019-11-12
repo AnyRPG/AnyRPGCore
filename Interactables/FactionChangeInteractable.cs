@@ -28,19 +28,19 @@ public class FactionChangeInteractable : InteractableOption {
         base.Start();
     }
 
-    public void CleanupEventReferences(ICloseableWindowContents windowContents) {
-        //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventReferences(ICloseableWindowContents)");
-        CleanupEventReferences();
+    public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
+        CleanupEventSubscriptions();
     }
 
-    public override void CleanupEventReferences() {
-        //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventReferences()");
-        base.CleanupEventReferences();
+    public override void CleanupEventSubscriptions() {
+        //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
+        base.CleanupEventSubscriptions();
         if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.factionChangeWindow != null && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventReferences;
+            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
         }
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public override void HandleConfirmAction() {
@@ -48,18 +48,18 @@ public class FactionChangeInteractable : InteractableOption {
         base.HandleConfirmAction();
 
         // just to be safe
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public override bool Interact(CharacterUnit source) {
         //Debug.Log(gameObject.name + ".FactionChangeInteractable.Interact()");
-        if (eventReferencesInitialized == true) {
+        if (eventSubscriptionsInitialized == true) {
             return false;
         }
         (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).Setup(MyFactionName);
         (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-        (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventReferences;
-        eventReferencesInitialized = true;
+        (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+        eventSubscriptionsInitialized = true;
         return true;
     }
 
@@ -90,7 +90,7 @@ public class FactionChangeInteractable : InteractableOption {
 
     public override void OnDisable() {
         base.OnDisable();
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public override int GetCurrentOptionCount() {

@@ -9,24 +9,24 @@ using UMA.CharacterSystem;
 namespace AnyRPG {
     public class PlayerEquipmentManager : CharacterEquipmentManager {
 
-        protected override void CreateEventReferences() {
-            //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        protected override void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-            base.CreateEventReferences();
+            base.CreateEventSubscriptions();
         }
 
-        protected override void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        protected override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
-            base.CleanupEventReferences();
+            base.CleanupEventSubscriptions();
         }
 
         public void HandlePlayerUnitSpawn() {

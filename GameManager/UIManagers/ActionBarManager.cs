@@ -14,7 +14,7 @@ namespace AnyRPG {
         private ActionButton fromButton = null;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public ActionButton MyFromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> MyActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
@@ -27,36 +27,36 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.Start()");
             startHasRun = true;
             AssociateActionBarKeyBinds();
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        private void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearActionBars;
                 SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChange;
             }
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearActionBars;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChange;
             }
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public List<ActionButton> GetActionButtons() {

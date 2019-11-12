@@ -54,7 +54,7 @@ namespace AnyRPG {
         private int currentXP = 0;
 
         protected bool startHasRun = false;
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
 
         public int MyBaseMeleeDamage { get => (MyStrength / 2); }
         public int MyMeleeDamage { get => MyBaseMeleeDamage + meleeDamageModifiers.GetValue(); }
@@ -100,20 +100,20 @@ namespace AnyRPG {
                 SetLevel(level);
             }
             startHasRun = true;
-            //CreateEventReferences();
+            //CreateEventSubscriptions();
         }
 
-        public virtual void CreateEventReferences() {
-            //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences()");
+        public virtual void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions()");
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): subscribing to onequipmentchanged event");
+                //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions(): subscribing to onequipmentchanged event");
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += OnEquipmentChanged;
             } else {
-                //Debug.Log(gameObject.name + ".CharacterStats.CreateEventReferences(): could not subscribe to onequipmentchanged event");
+                //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions(): could not subscribe to onequipmentchanged event");
             }
         }
 
-        public virtual void CleanupEventReferences() {
+        public virtual void CleanupEventSubscriptions() {
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= OnEquipmentChanged;
             }
@@ -123,7 +123,7 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterStats.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
             //ClearStatusEffects();
         }
 

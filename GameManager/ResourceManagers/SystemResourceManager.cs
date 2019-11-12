@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         protected Dictionary<string, UnityEngine.Object> resourceList = new Dictionary<string, UnityEngine.Object>();
 
-        protected bool eventReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
         protected bool startHasRun = false;
 
         public Dictionary<string, UnityEngine.Object> MyResourceList { get => resourceList; set => resourceList = value; }
@@ -26,30 +26,30 @@ namespace AnyRPG {
         protected virtual void Start() {
             // reload all lists just to be safe
             startHasRun = true;
-            CreateEventReferences();
+            CreateEventSubscriptions();
         }
 
-        public virtual void CreateEventReferences() {
-            //Debug.Log("PlayerManager.CreateEventReferences()");
-            if (eventReferencesInitialized || !startHasRun) {
+        public virtual void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceList;
-            eventReferencesInitialized = true;
+            eventSubscriptionsInitialized = true;
         }
 
-        public virtual void CleanupEventReferences() {
-            //Debug.Log("PlayerManager.CleanupEventReferences()");
-            if (!eventReferencesInitialized) {
+        public virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceList;
-            eventReferencesInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public virtual void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventReferences();
+            CleanupEventSubscriptions();
         }
 
         public void ReloadResourceList() {

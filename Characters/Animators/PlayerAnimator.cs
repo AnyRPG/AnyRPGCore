@@ -16,15 +16,15 @@ public class PlayerAnimator : CharacterAnimator {
         base.Start();
     }
 
-    public override void CreateEventReferences() {
+    public override void CreateEventSubscriptions() {
         // called from base.start
-        base.CreateEventReferences();
+        base.CreateEventSubscriptions();
         //SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
     }
 
-    public override void CleanupEventReferences() {
+    public override void CleanupEventSubscriptions() {
         // called from base.onDisable
-        base.CleanupEventReferences();
+        base.CleanupEventSubscriptions();
         /*
         if (SystemEventManager.MyInstance != null) {
             SystemEventManager.MyInstance.OnEquipmentRefresh -= PerformEquipmentChange;

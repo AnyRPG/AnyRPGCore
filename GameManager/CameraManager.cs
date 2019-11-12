@@ -47,7 +47,7 @@ public class CameraManager : MonoBehaviour {
     private AnyRPGCameraController mainCameraController;
 
     protected bool startHasRun = false;
-    protected bool eventReferencesInitialized = false;
+    protected bool eventSubscriptionsInitialized = false;
 
     public Camera MyMainCamera { get => mainCamera; set => mainCamera = value; }
     public GameObject MyMainCameraGameObject { get => mainCameraGameObject; }
@@ -68,32 +68,32 @@ public class CameraManager : MonoBehaviour {
     private void Start() {
         //Debug.Log("CameraManager.Start()");
         startHasRun = true;
-        CreateEventReferences();
+        CreateEventSubscriptions();
     }
 
-    private void CreateEventReferences() {
-        //Debug.Log("PlayerManager.CreateEventReferences()");
-        if (eventReferencesInitialized || !startHasRun) {
+    private void CreateEventSubscriptions() {
+        //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+        if (eventSubscriptionsInitialized || !startHasRun) {
             return;
         }
         SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
         SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-        eventReferencesInitialized = true;
+        eventSubscriptionsInitialized = true;
     }
 
-    private void CleanupEventReferences() {
-        //Debug.Log("PlayerManager.CleanupEventReferences()");
-        if (!eventReferencesInitialized) {
+    private void CleanupEventSubscriptions() {
+        //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+        if (!eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
         SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
-        eventReferencesInitialized = false;
+        eventSubscriptionsInitialized = false;
     }
 
     public void OnDisable() {
         //Debug.Log("PlayerManager.OnDisable()");
-        CleanupEventReferences();
+        CleanupEventSubscriptions();
     }
 
     public void HandlePlayerUnitSpawn() {
