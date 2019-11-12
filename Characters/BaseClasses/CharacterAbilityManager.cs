@@ -63,12 +63,12 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
             startHasRun = true;
             UpdateAbilityList(baseCharacter.MyCharacterStats.MyLevel);
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
         }
 
         public virtual void CreateEventSubscriptions() {
             Debug.Log("CharacterAbilityManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
@@ -297,9 +297,19 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
             string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+            if (baseAbility == null) {
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
+            }
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
                 abilityList[keyName] = baseAbility;
                 return true;
+            } else {
+                if (HasAbility(abilityName)) {
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
+                }
+                if (!(baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
+                }
             }
             return false;
         }

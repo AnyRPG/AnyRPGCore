@@ -95,12 +95,15 @@ namespace AnyRPG {
 
         public virtual void Start() {
             //Debug.Log(gameObject.name + ".CharacterStats.Start()");
+            startHasRun = true;
+            //CreateEventSubscriptions();
+        }
+
+        public void OrchestratorSetLevel() {
             if (currentLevel == 0) {
                 // if it is not zero, we have probably been initialized some other way, and don't need to do this
                 SetLevel(level);
             }
-            startHasRun = true;
-            //CreateEventSubscriptions();
         }
 
         public virtual void CreateEventSubscriptions() {

@@ -66,12 +66,18 @@ namespace AnyRPG {
             characterSkillManager = GetComponent<CharacterSkillManager>();
             characterFactionManager = GetComponent<CharacterFactionManager>();
             characterEquipmentManager = GetComponent<CharacterEquipmentManager>();
+            characterAbilityManager = GetComponent<CharacterAbilityManager>();
+
         }
 
         protected virtual void Start() {
             Debug.Log(gameObject.name + ": BaseCharacter.Start()");
             if (characterStats != null) {
                 characterStats.CreateEventSubscriptions();
+                characterStats.OrchestratorSetLevel();
+            }
+            if (characterAbilityManager != null) {
+                characterAbilityManager.CreateEventSubscriptions();
             }
 
             if (characterEquipmentManager != null) {

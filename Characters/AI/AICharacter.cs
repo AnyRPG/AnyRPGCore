@@ -23,7 +23,6 @@ namespace AnyRPG {
             base.Awake();
             characterController = GetComponent<AIController>() as ICharacterController;
             characterStats = GetComponent<AIStats>() as ICharacterStats;
-            characterAbilityManager = GetComponent<AIAbilityManager>() as ICharacterAbilityManager;
             characterCombat = GetComponent<AICombat>() as ICharacterCombat;
         }
 

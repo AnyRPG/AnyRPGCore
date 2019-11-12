@@ -33,5 +33,6 @@ namespace AnyRPG {
         bool MyIsCasting { get; set; }
         void BeginAbilityCoolDown(BaseAbility baseAbility);
         bool CanCastAbility(IAbility ability);
+        void CreateEventSubscriptions();
     }
 }
