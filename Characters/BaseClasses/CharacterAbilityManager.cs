@@ -60,14 +60,14 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
+            //Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
             startHasRun = true;
             UpdateAbilityList(baseCharacter.MyCharacterStats.MyLevel);
             //CreateEventSubscriptions();
         }
 
         public virtual void CreateEventSubscriptions() {
-            Debug.Log("CharacterAbilityManager.CreateEventSubscriptions()");
+            //Debug.Log("CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }

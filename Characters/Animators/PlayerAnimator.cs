@@ -1,54 +1,54 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class PlayerAnimator : CharacterAnimator {
+    public class PlayerAnimator : CharacterAnimator {
 
-    protected override void Awake() {
-        //Debug.Log("PlayerAnimator.Awake()");
-        base.Awake();
-    }
+        protected override void Awake() {
+            //Debug.Log("PlayerAnimator.Awake()");
+            base.Awake();
+        }
 
-    protected override void Start() {
-        //Debug.Log("PlayerAnimator.Start()");
-        base.Start();
-    }
+        protected override void Start() {
+            //Debug.Log("PlayerAnimator.Start()");
+            base.Start();
+        }
 
-    public override void CreateEventSubscriptions() {
-        // called from base.start
-        base.CreateEventSubscriptions();
-        //SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
-    }
+        public override void CreateEventSubscriptions() {
+            // called from base.start
+            base.CreateEventSubscriptions();
+            //SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
+        }
 
-    public override void CleanupEventSubscriptions() {
-        // called from base.onDisable
-        base.CleanupEventSubscriptions();
+        public override void CleanupEventSubscriptions() {
+            // called from base.onDisable
+            base.CleanupEventSubscriptions();
+            /*
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnEquipmentRefresh -= PerformEquipmentChange;
+            }
+            */
+        }
+
+        // for debugging
         /*
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnEquipmentRefresh -= PerformEquipmentChange;
+        public override void InitializeAnimator() {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
+            base.InitializeAnimator();
+        }
+
+        public override void SetCasting(bool varValue) {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.SetCasting(" + varValue + ")");
+            base.SetCasting(varValue);
+        }
+
+        public override void ClearAnimationBlockers() {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.ClearAnimationBlockers()");
+            base.ClearAnimationBlockers();
         }
         */
-    }
 
-    // for debugging
-    /*
-    public override void InitializeAnimator() {
-        //Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
-        base.InitializeAnimator();
     }
-
-    public override void SetCasting(bool varValue) {
-        //Debug.Log(gameObject.name + ".PlayerAnimator.SetCasting(" + varValue + ")");
-        base.SetCasting(varValue);
-    }
-
-    public override void ClearAnimationBlockers() {
-        //Debug.Log(gameObject.name + ".PlayerAnimator.ClearAnimationBlockers()");
-        base.ClearAnimationBlockers();
-    }
-    */
-
-}
 }

@@ -29,19 +29,19 @@ namespace AnyRPG {
             }
 
             if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-                Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAnimatedAbility is true");
+                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAnimatedAbility is true");
                 // nothing to do, animated ability in progress
                 return;
             }
 
             if (aiController.MyBaseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true) {
-                Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAutoAttack == true");
+                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAutoAttack == true");
                 // nothing to do, auto-attack in progress
                 return;
             }
 
             if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true || aiController.MyBaseCharacter.MyCharacterAbilityManager.MyCurrentCast != null) {
-                Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null || MyIsCasting == true");
+                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null || MyIsCasting == true");
                 // nothing to do, cast in progress
                 return;
             }
@@ -52,7 +52,7 @@ namespace AnyRPG {
             // attempt to get a valid ability to use before trying auto-attack
             BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
             if (validAttackAbility != null) {
-                Debug.Log(aiController.gameObject.name + ".AttackState.Update() Got Valid Attack Ability: " + validAttackAbility.MyName);
+                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() Got Valid Attack Ability: " + validAttackAbility.MyName);
                 // perform ability attack
                 aiController.MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
                 return;

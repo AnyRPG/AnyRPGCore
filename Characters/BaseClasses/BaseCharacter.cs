@@ -58,7 +58,7 @@ namespace AnyRPG {
         public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
         protected virtual void Awake() {
-            Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
             CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
             if (_characterUnit != null) {
                 MyCharacterUnit = _characterUnit;
@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            Debug.Log(gameObject.name + ": BaseCharacter.Start()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.Start()");
             if (characterStats != null) {
                 characterStats.CreateEventSubscriptions();
                 characterStats.OrchestratorSetLevel();

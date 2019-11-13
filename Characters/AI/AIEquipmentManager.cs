@@ -9,22 +9,8 @@ using UMA.CharacterSystem;
 namespace AnyRPG {
     public class AIEquipmentManager : CharacterEquipmentManager {
 
-        protected override void Start() {
-            CreateComponentReferences();
-            base.Start();
-            SubscribeToCombatEvents();
-        }
-
-        public override void CreateComponentReferences() {
-            //Debug.Log(gameObject.name + ".AIEquipmentManager.CreateComponentReferences()");
-            base.CreateComponentReferences();
-            /*
-            if (componentReferencesInitialized) {
-                return;
-            }
-            */
-
-            // NPC case
+        protected override void Awake() {
+            base.Awake();
             if (playerUnitObject == null) {
                 playerUnitObject = gameObject;
             }
@@ -34,7 +20,11 @@ namespace AnyRPG {
                 dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
             }
 
-            //componentReferencesInitialized = true;
+        }
+
+        protected override void Start() {
+            base.Start();
+            SubscribeToCombatEvents();
         }
 
         public override void OnDisable() {
