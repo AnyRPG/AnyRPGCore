@@ -70,7 +70,7 @@ namespace AnyRPG {
         }
 
         public override void EquipCharacter() {
-            Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter()");
+            //Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter()");
             //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
             if (currentEquipment == null) {
                 //Debug.Log(gameObject.name + ".PlayerEquipmentManager.EquipCharacter(): currentEquipment == null!");

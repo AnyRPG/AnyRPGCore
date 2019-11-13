@@ -198,7 +198,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(GameObject target, BaseCharacter source) {
-            Debug.Log(MyName + ".BaseAbility.CanUseOn()");
+            Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
             if (requiresTarget == false) {
                 //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
                 return true;
@@ -231,7 +231,9 @@ namespace AnyRPG {
             if (target != null && targetCharacterUnit != null) {
                 if (maxRange > 0 && Vector3.Distance(source.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
                     Debug.Log(target.name + " is out of range");
-                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + MyName);
+                    if (CombatLogUI.MyInstance != null && source != null && PlayerManager.MyInstance.MyCharacter != null && source == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
+                        CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
+                    }
                     return false;
                 }
             }

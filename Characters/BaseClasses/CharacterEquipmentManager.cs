@@ -80,11 +80,11 @@ namespace AnyRPG {
 
 
         public virtual void LoadDefaultEquipment() {
-            Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
             if (equipmentProfileName != null && equipmentProfileName != string.Empty && SystemEquipmentProfileManager.MyInstance != null) {
                 EquipmentProfile equipmentProfile = SystemEquipmentProfileManager.MyInstance.GetResource(equipmentProfileName);
                 if (equipmentProfile != null) {
-                    Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment() found equipment profile for: " + equipmentProfileName);
+                    //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment() found equipment profile for: " + equipmentProfileName);
                     foreach (string equipmentName in equipmentProfile.MyEquipmentNameList) {
                         Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
                         if (equipment != null) {
@@ -99,9 +99,9 @@ namespace AnyRPG {
             currentEquipment = new Dictionary<EquipmentSlot, Equipment>();
         }
 
-        // This method does not actually equip the character, just apply stats??? or not ??? and models from already equipped equipment
+        // This method does not actually equip the character, just apply stats and models from already equipped equipment
         public virtual void EquipCharacter() {
-            Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
             //public void EquipCharacter(GameObject playerUnitObject = null, bool updateCharacterButton = true) {
             if (currentEquipment == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
@@ -146,7 +146,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleWeaponSlot(Equipment newItem) {
-            Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ")");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ")");
             if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty || playerUnitObject == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
                 return;
@@ -154,7 +154,7 @@ namespace AnyRPG {
             //CreateComponentReferences();
             HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(newItem.MyHoldableObjectName);
             if (holdableObject == null) {
-                Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): holdableObject is null");
+                //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): holdableObject is null");
                 return;
             }
             if (holdableObject.MyPhysicalPrefab != null) {
@@ -162,7 +162,7 @@ namespace AnyRPG {
                 // attach a mesh to a bone for weapons
                 targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
                 if (targetBone != null) {
-                    Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                    //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
                     GameObject newEquipmentPrefab = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
                     currentEquipmentPhysicalObjects[newItem.equipSlot] = newEquipmentPrefab;
                     newEquipmentPrefab.transform.localScale = holdableObject.MyPhysicalScale;
@@ -172,7 +172,7 @@ namespace AnyRPG {
                         SheathObject(newEquipmentPrefab, newItem.MyHoldableObjectName, playerUnitObject);
                     }
                 } else {
-                    Debug.Log(gameObject + ".CharacterEquipmentManager.HandleWeaponSlot(). We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
+                    //Debug.Log(gameObject + ".CharacterEquipmentManager.HandleWeaponSlot(). We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
                 }
                 CharacterAnimator characterAnimator = null;
                 if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
@@ -183,7 +183,7 @@ namespace AnyRPG {
                 }
                 if (characterAnimator != null) {
                     characterAnimator.InitializeAnimator();
-                    Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
+                    //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
                     characterAnimator.PerformEquipmentChange(newItem, null);
                 }
             }

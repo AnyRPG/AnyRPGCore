@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (newItem != null) {
                 if (newItem.MyOnEquipAbility != null) {
                     BeginAbility(newItem.MyOnEquipAbility);
@@ -294,21 +294,21 @@ namespace AnyRPG {
         }
 
         public virtual bool LearnAbility(string abilityName) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
             string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             if (baseAbility == null) {
-                Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
             }
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
                 abilityList[keyName] = baseAbility;
                 return true;
             } else {
                 if (HasAbility(abilityName)) {
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
                 }
                 if (!(baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
                 }
             }
             return false;
