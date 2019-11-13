@@ -171,22 +171,22 @@ namespace AnyRPG {
 
 
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
-            Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
+            //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
 
             yield return null;
 
-            Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
+            //Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
 
             while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
                 abilityCoolDownDictionary[abilityName].MyRemainingCoolDown -= Time.deltaTime;
-                Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
                 yield return null;
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
-                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
+                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
                 abilityCoolDownDictionary.Remove(abilityName);
             } else {
-                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
+                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
             }
         }
 
@@ -476,13 +476,13 @@ namespace AnyRPG {
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public bool CanCastAbility(IAbility ability) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
 
             string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
 
             // check if the ability is learned yet
             if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
-                Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
+                //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
                 return false;
             }
 
@@ -490,7 +490,7 @@ namespace AnyRPG {
             if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || MyRemainingGlobalCoolDown > 0f) {
                 //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
-                Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
                 if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
                 }
@@ -500,7 +500,7 @@ namespace AnyRPG {
             // check if we have enough mana
             if (MyBaseCharacter.MyCharacterStats.currentMana < ability.MyAbilityManaCost) {
                 //CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
-                Debug.Log("not enough mana");
+                //Debug.Log("not enough mana");
                 return false;
             }
 
