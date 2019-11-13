@@ -389,7 +389,16 @@ namespace AnyRPG {
             }
             Vector3 direction = (newTarget.transform.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
+            if (characterUnit.MyAgent.enabled) {
+                characterUnit.MyAgent.updateRotation = false;
+                //characterUnit.MyAgent.r
+            }
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, Time.deltaTime * 500);
+            transform.rotation = lookRotation;
+            if (characterUnit.MyAgent.enabled) {
+                characterUnit.MyAgent.updateRotation = true;
+                //characterUnit.MyAgent.r
+            }
         }
 
         public void StartNavAgent() {
