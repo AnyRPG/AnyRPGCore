@@ -9,7 +9,6 @@ namespace AnyRPG {
     public class PlayerController : BaseController {
         public event System.Action<int> AbilityButtonPressedHandler = delegate { };
         public event System.Action<bool> ToggleRunHandler = delegate { };
-        public event System.Action OnManualMovement = delegate { };
         public override event System.Action<GameObject> OnSetTarget = delegate { };
         public override event System.Action OnClearTarget = delegate { };
 
@@ -131,7 +130,7 @@ namespace AnyRPG {
             TurnInput = new Vector3(inputTurn, 0, 0);
 
             if (HasMoveInput()) {
-                OnManualMovement();
+                CommonMovementNotifier();
             }
         }
 

@@ -89,7 +89,7 @@ namespace AnyRPG {
                 masterUnit.MyCharacterController.OnClearTarget += ClearTarget;
                 masterUnit.MyCharacterCombat.OnAttack += OnMasterAttack;
                 masterUnit.MyCharacterCombat.OnDropCombat += OnMasterDropCombat;
-                (masterUnit.MyCharacterController as PlayerController).OnManualMovement += OnMasterMovement;
+                masterUnit.MyCharacterController.OnManualMovement += OnMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 MyBaseCharacter.MyCharacterCombat.MyAggroTable.ClearTable();
@@ -106,7 +106,7 @@ namespace AnyRPG {
                 masterUnit.MyCharacterController.OnClearTarget -= ClearTarget;
                 masterUnit.MyCharacterCombat.OnAttack -= OnMasterAttack;
                 masterUnit.MyCharacterCombat.OnDropCombat -= OnMasterDropCombat;
-                (masterUnit.MyCharacterController as PlayerController).OnManualMovement -= OnMasterMovement;
+                masterUnit.MyCharacterController.OnManualMovement -= OnMasterMovement;
             }
             masterUnit = null;
             underControl = false;
@@ -241,6 +241,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 // I THINK WE MAY NEED TO SEND IN CORRECTED NAVMESH POSITION HERE
+                CommonMovementNotifier();
                 return MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MoveToPoint(destination);
             }
             return Vector3.zero;
