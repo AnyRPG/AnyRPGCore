@@ -16,6 +16,9 @@ namespace AnyRPG {
         protected PrefabSpawnLocation prefabSpawnLocation;
 
         [SerializeField]
+        protected string prefabSourceBone;
+
+        [SerializeField]
         protected Vector3 prefabOffset = Vector3.zero;
 
         [SerializeField]
@@ -68,6 +71,13 @@ namespace AnyRPG {
                 //spawnLocation = source.GetComponent<Collider>().bounds.center;
                 spawnLocation = source.MyCharacterUnit.transform.position;
                 prefabParent = source.MyCharacterUnit.transform;
+                Transform usedPrefabSourceBone = null;
+                if (prefabSourceBone != null && prefabSourceBone != string.Empty) {
+                    usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabSourceBone);
+                }
+                if (usedPrefabSourceBone != null) {
+                    prefabParent = usedPrefabSourceBone;
+                }
             }
             if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
                 //spawnLocation = target.GetComponent<Collider>().bounds.center;
@@ -94,7 +104,13 @@ namespace AnyRPG {
                 //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.Euler(prefabRotation), prefabParent);
                 //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.LookRotation(prefabRotation), prefabParent);
                 // CORRECT WAY BELOW
+                //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                 abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), prefabParent);
+                /*
+                abilityEffectObject = Instantiate(abilityEffectPrefab, prefabParent, true);
+                abilityEffectObject.transform.position = finalSpawnLocation;
+                abilityEffectObject.transform.rotation = Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation);
+                */
                 BeginMonitoring(abilityEffectObject, source, target, abilityEffectInput);
             }
         }

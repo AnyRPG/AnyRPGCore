@@ -40,6 +40,9 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject aiUnitParent;
 
+        [SerializeField]
+        private GameObject effectPrefabParent;
+
         // the default non UMA player unit prefab
         [SerializeField]
         private GameObject defaultNonUMAPlayerUnitPrefab;
@@ -103,6 +106,7 @@ namespace AnyRPG {
         public bool MyDefaultIsNonUMAUnit { get => defaultIsNonUMAUnit; set => defaultIsNonUMAUnit = value; }
         public Faction MyDefaultFaction { get => defaultFaction; set => defaultFaction = value; }
         public GameObject MyAIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
+        public GameObject MyEffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
@@ -116,6 +120,9 @@ namespace AnyRPG {
             }
             if (aiUnitParent == null) {
                 Debug.LogError("PlayerManager.Awake(): the ai unit parent is null.  Please set it in the inspector");
+            }
+            if (effectPrefabParent == null) {
+                Debug.LogError("PlayerManager.Awake(): the effect prefab parent is null.  Please set it in the inspector");
             }
         }
 

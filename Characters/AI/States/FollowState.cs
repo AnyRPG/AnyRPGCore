@@ -40,7 +40,7 @@ namespace AnyRPG {
                 */
                 BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
                 if (validAttackAbility != null) {
-                    Debug.Log(aiController.gameObject.name + ": FollowState.Update(): Got valid attack ability: " + validAttackAbility.MyName);
+                    //Debug.Log(aiController.gameObject.name + ": FollowState.Update(): Got valid attack ability: " + validAttackAbility.MyName);
                     aiController.ChangeState(new AttackState());
                     return;
                 }

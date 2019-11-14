@@ -87,6 +87,15 @@ namespace AnyRPG {
         public override void UpdateAbilityList(int newLevel) {
             //Debug.Log(gameObject.name + ".PlayerAbilitymanager.UpdateAbilityList(). length: " + abilityList.Count);
             base.UpdateAbilityList(newLevel);
+            foreach (BaseAbility ability in SystemAbilityManager.MyInstance.GetResourceList()) {
+                if (ability.MyRequiredLevel <= newLevel && ability.MyAutoLearn == true) {
+                    if (!HasAbility(ability.MyName)) {
+                        LearnAbility(ability.MyName);
+                    } else {
+                        //Debug.Log(ability.MyName + " already known, no need to re-learn");
+                    }
+                }
+            }
             if (PlayerManager.MyInstance.MyCharacter.MyFactionName != null && PlayerManager.MyInstance.MyCharacter.MyFactionName != string.Empty) {
                 PlayerManager.MyInstance.MyCharacter.LearnFactionAbilities(PlayerManager.MyInstance.MyCharacter.MyFactionName);
             }

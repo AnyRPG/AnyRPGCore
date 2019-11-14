@@ -31,20 +31,38 @@ namespace AnyRPG {
         private Vector3 lastStartPosition = Vector3.zero;
         private Vector3 lastEndPosition = Vector3.zero;
 
-        public GameObject MyStartObject { get => startObject; set => startObject = value; }
+        public GameObject MyStartObject { get => startObject;
+            set {
+                startObject = value;
+                //Debug.Log("start Object : " + startObject.name);
+            }
+        }
         public Vector3 MyStartPosition { get => startPosition; set => startPosition = value; }
-        public GameObject MyEndObject { get => endObject; set => endObject = value; }
+        public GameObject MyEndObject { get => endObject;
+            set {
+                endObject = value;
+                //Debug.Log("end Object : " + endObject.name);
+            }
+        }
         public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
 
         private void Update() {
+            if (MyStartObject == null || MyEndObject == null) {
+                Destroy(gameObject);
+            }
+            UpdateTransform();
             if (objectInitialized == false || lastStartPosition != MyStartObject.transform.position || lastEndPosition != MyEndObject.transform.position) {
-                UpdateTransform();
+                //UpdateTransform();
             }
             lastStartPosition = MyStartObject.transform.position;
             lastEndPosition = MyEndObject.transform.position;
         }
 
         private void UpdateTransform() {
+            if (MyStartObject == null || MyEndObject == null) {
+                // can't do anything without objects to connect
+                Destroy(gameObject);
+            }
             Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);
             Vector3 absoluteEndPosition = MyEndObject.transform.TransformPoint(MyEndPosition);
             Vector3 directionVector = (absoluteStartPosition - absoluteEndPosition).normalized;

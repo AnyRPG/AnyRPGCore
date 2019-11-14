@@ -9,6 +9,7 @@ namespace AnyRPG {
         Idle = 0,
         Move = 1,
         Jump = 2,
+        Knockback = 3,
         Fall = 4,
         Roll = 8
     }
@@ -274,6 +275,42 @@ namespace AnyRPG {
             }
         }
 
+        void Knockback_EnterState() {
+            Debug.Log("Knockback_EnterState()");
+            //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
+            canJump = false;
+            characterUnit.MyCharacterAnimator.SetInteger("Jumping", 1);
+            characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
+        }
+
+        void Knockback_StateUpdate() {
+            Debug.Log("Knockback_StateUpdate()");
+            // new code to allow bouncing off walls instead of getting stuck flying into them
+            //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity));
+            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * characterUnit.MyRigidBody.velocity;
+            currentMoveVelocity = transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
+            currentMoveVelocity = fromtoMoveVelocity;
+            if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y < 0.1) {
+                if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
+                    // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
+                    currentState = AnyRPGCharacterState.Move;
+                    rpgCharacterState = AnyRPGCharacterState.Move;
+                    return;
+                }
+                currentState = AnyRPGCharacterState.Idle;
+                rpgCharacterState = AnyRPGCharacterState.Idle;
+                return;
+            }
+        }
+
+        public void KnockBack() {
+            Debug.Log("Knockback()");
+            currentState = AnyRPGCharacterState.Knockback;
+            rpgCharacterState = AnyRPGCharacterState.Knockback;
+        }
+
+
         void Jump_EnterState() {
             currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
@@ -290,7 +327,7 @@ namespace AnyRPG {
             currentMoveVelocity = fromtoMoveVelocity;
             if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y < 0.1) {
                 if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
-                    // new code to allow not freezing up when landing
+                    // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
                     rpgCharacterState = AnyRPGCharacterState.Move;
                     return;

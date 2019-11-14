@@ -57,15 +57,15 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(GameObject target, BaseCharacter source) {
-            Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
+            //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
             if (source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-                Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") FAILING.  ALREADY IN PROGRESS");
+                //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") FAILING.  ALREADY IN PROGRESS");
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && source == PlayerManager.MyInstance.MyCharacter && CombatLogUI.MyInstance != null) {
                     CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (MyName == null ? "null" : MyName) + ". Waiting for another ability to finish.");
                 }
                 return false;
             }
-            Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
+            //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
             return base.CanUseOn(target, source);
         }
 

@@ -83,7 +83,7 @@ namespace AnyRPG {
             if (characterEquipmentManager != null) {
                 characterEquipmentManager.LoadDefaultEquipment();
             } else {
-                Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
+                //Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
             }
         }
 

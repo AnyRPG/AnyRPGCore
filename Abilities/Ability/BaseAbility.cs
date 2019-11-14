@@ -163,7 +163,8 @@ namespace AnyRPG {
                 return true;
             } else {
                 foreach (AnyRPGWeaponAffinity _weaponAffinity in weaponAffinity) {
-                    if (sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
+
+                    if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null && sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         return true;
                     }
                 }
@@ -198,7 +199,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(GameObject target, BaseCharacter source) {
-            Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
+            //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
             if (requiresTarget == false) {
                 //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
                 return true;
@@ -230,7 +231,7 @@ namespace AnyRPG {
 
             if (target != null && targetCharacterUnit != null) {
                 if (maxRange > 0 && Vector3.Distance(source.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
-                    Debug.Log(target.name + " is out of range");
+                    //Debug.Log(target.name + " is out of range");
                     if (CombatLogUI.MyInstance != null && source != null && PlayerManager.MyInstance.MyCharacter != null && source == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
                         CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
                     }
@@ -258,7 +259,7 @@ namespace AnyRPG {
                 if (_abilityEffect != null) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
-                    Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);
+                    //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);
                     return;
                 }
             }

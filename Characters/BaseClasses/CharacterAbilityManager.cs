@@ -282,15 +282,6 @@ namespace AnyRPG {
 
         public virtual void UpdateAbilityList(int newLevel) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
-            foreach (BaseAbility ability in SystemAbilityManager.MyInstance.GetResourceList()) {
-                if (ability.MyRequiredLevel <= newLevel && ability.MyAutoLearn == true) {
-                    if (!HasAbility(ability.MyName)) {
-                        LearnAbility(ability.MyName);
-                    } else {
-                        //Debug.Log(ability.MyName + " already known, no need to re-learn");
-                    }
-                }
-            }
         }
 
         public virtual bool LearnAbility(string abilityName) {
@@ -492,7 +483,7 @@ namespace AnyRPG {
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
                 if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
-                    Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
+                    //Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
                 }
                 return false;
             }
