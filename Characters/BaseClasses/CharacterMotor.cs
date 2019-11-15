@@ -272,7 +272,7 @@ namespace AnyRPG {
         }
 
         public virtual void Move(Vector3 moveDirection, bool isKnockBack = false) {
-            Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
+            //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
             if (frozen) {
                 return;
             }

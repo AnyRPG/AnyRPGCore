@@ -71,7 +71,6 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
             baseCharacter.MyCharacterCombat.OnKillEvent += ReceiveKillDetails;
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
@@ -90,7 +89,6 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelChanged -= UpdateAbilityList;
                 SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
@@ -255,16 +253,17 @@ namespace AnyRPG {
             CastTargettingManager.MyInstance.DisableProjector();
         }
 
-        public void OnCharacterUnitSpawn() {
+        public void HandleCharacterUnitSpawn() {
             //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn()");
             PlayerUnitMovementController movementController = MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>();
             //CharacterMotor characterMotor = MyBaseCharacter.MyCharacterUnit.MyCharacterMotor;
             if (movementController != null) {
-                movementController.OnMovement += OnManualMovement;
+                //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
+                movementController.OnMovement += HandleManualMovement;
             }
             if (MyBaseCharacter.MyCharacterUnit.MyCharacterMotor != null) {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is not null");
-                MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.OnMovement += OnManualMovement;
+                MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.OnMovement += HandleManualMovement;
             } else {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is null!");
             }
@@ -275,7 +274,7 @@ namespace AnyRPG {
             if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
                 PlayerUnitMovementController movementController = MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>();
                 if (movementController != null) {
-                    movementController.OnMovement -= OnManualMovement;
+                    movementController.OnMovement -= HandleManualMovement;
                 }
             }
         }
@@ -531,11 +530,14 @@ namespace AnyRPG {
         /// <summary>
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
-        public void OnManualMovement() {
-            //Debug.Log("CharacterAbilityManager.OnmanualMovement(): Received On Manual Movement Handler");
+        public void HandleManualMovement() {
+            Debug.Log("CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
+                Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
                 StopCasting();
+            } else {
+                Debug.Log("CharacterAbilityManager.HandleManualMovement(): velocity too low, doing nothing");
             }
         }
 

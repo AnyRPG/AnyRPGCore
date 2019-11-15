@@ -82,6 +82,9 @@ namespace AnyRPG {
         private Vector3 airForwardDirection;
         private Quaternion airRotation;
 
+        // the frame in which the player last entered a jump state
+        private int lastJumpFrame;
+
         private List<ContactPoint> forwardContactPoints = new List<ContactPoint>();
         private List<ContactPoint> backwardContactPoints = new List<ContactPoint>();
         private List<ContactPoint> bottomContactPoints = new List<ContactPoint>();
@@ -219,7 +222,7 @@ namespace AnyRPG {
         }
 
         void Move_EnterState() {
-            //Debug.Log("Move_EnterState()");
+            Debug.Log("Move_EnterState()");
             EnterGroundStateCommon();
         }
 
@@ -279,7 +282,7 @@ namespace AnyRPG {
             Debug.Log("Knockback_EnterState()");
             //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetInteger("Jumping", 1);
+            characterUnit.MyCharacterAnimator.SetJumping(1);
             characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
         }
 
@@ -314,8 +317,9 @@ namespace AnyRPG {
         void Jump_EnterState() {
             currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetInteger("Jumping", 1);
+            characterUnit.MyCharacterAnimator.SetJumping(1);
             characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
+            lastJumpFrame = Time.frameCount;
         }
 
         void Jump_StateUpdate() {
@@ -325,9 +329,10 @@ namespace AnyRPG {
             currentMoveVelocity = transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
             Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y < 0.1) {
+            if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y <= 0f && Time.frameCount > lastJumpFrame + 2) {
                 if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
+                    Debug.Log("Jump_StateUpdate() : Entering movement state on frame: " + Time.frameCount + "; Jumped: " + lastJumpFrame);
                     currentState = AnyRPGCharacterState.Move;
                     rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
@@ -341,7 +346,7 @@ namespace AnyRPG {
         void Fall_EnterState() {
             //Debug.Log("Fall_EnterState()");
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetInteger("Jumping", 2);
+            characterUnit.MyCharacterAnimator.SetJumping(2);
             characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
         }
 

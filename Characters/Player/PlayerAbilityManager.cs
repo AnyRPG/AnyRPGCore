@@ -17,21 +17,23 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
+            Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
             base.Start();
         }
 
         public override void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();
+            SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
             SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += OnCharacterUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
-                OnCharacterUnitSpawn();
+                HandleCharacterUnitSpawn();
             }
         }
 
@@ -41,8 +43,9 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnLevelChanged -= UpdateAbilityList;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= OnCharacterUnitSpawn;
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= OnCharacterUnitDespawn;
             }
         }
