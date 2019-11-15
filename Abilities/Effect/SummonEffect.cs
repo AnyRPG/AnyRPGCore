@@ -19,6 +19,7 @@ namespace AnyRPG {
         */
 
         public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+            base.Cast(source, target, originalTarget, abilityEffectInput);
             Spawn(source);
         }
 

@@ -358,7 +358,7 @@ namespace AnyRPG {
 
         private void HandlePlayerUnitSpawn() {
             // inform any subscribers that we just spawned a player unit
-            Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
+            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
             playerUnitSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn();
 

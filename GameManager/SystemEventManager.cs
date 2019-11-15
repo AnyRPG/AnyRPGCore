@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnPlayerUnitSpawn() {
-            Debug.Log("SystemEventManager.NotifyOnPlayerUnitSpawn()");
+            //Debug.Log("SystemEventManager.NotifyOnPlayerUnitSpawn()");
             OnPlayerUnitSpawn();
         }
 

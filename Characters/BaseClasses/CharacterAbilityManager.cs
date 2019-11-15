@@ -531,13 +531,13 @@ namespace AnyRPG {
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
-            Debug.Log("CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
+            //Debug.Log("CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
-                Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
+                //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
                 StopCasting();
             } else {
-                Debug.Log("CharacterAbilityManager.HandleManualMovement(): velocity too low, doing nothing");
+                //Debug.Log("CharacterAbilityManager.HandleManualMovement(): velocity too low, doing nothing");
             }
         }
 

@@ -17,12 +17,12 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
             base.Start();
         }
 
         public override void CreateEventSubscriptions() {
-            Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }

@@ -31,6 +31,8 @@ namespace AnyRPG {
                 return;
             }
 
+            base.Cast(source, target, originalTarget, abilityEffectInput);
+
             Vector3 sourcePosition = source.MyCharacterUnit.transform.position;
             Vector3 targetPosition = target.transform.position;
             
@@ -46,7 +48,7 @@ namespace AnyRPG {
             // add velocity to the now correct flight direction
             finalDirection *= knockBackVelocity;
 
-            Debug.Log("KnockBackEffect.Cast(): originalDirection: " + originalDirection + "; rotationDirection: " + rotationDirection + "; finalDirection: " + finalDirection + "; knockbackAngle: " + knockBackAngle);
+            //Debug.Log("KnockBackEffect.Cast(): originalDirection: " + originalDirection + "; rotationDirection: " + rotationDirection + "; finalDirection: " + finalDirection + "; knockbackAngle: " + knockBackAngle);
             characterUnit.MyCharacterMotor.Move(finalDirection, true);
         }
 

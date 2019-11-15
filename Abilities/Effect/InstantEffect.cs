@@ -1,22 +1,22 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New InstantEffect",menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
-public class InstantEffect : DirectEffect {
+    [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
+    public class InstantEffect : DirectEffect {
 
-    public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-        //Debug.Log(MyName + ".InstantEffect.Cast()");
-        if (abilityEffectInput == null) {
-            abilityEffectInput = new AbilityEffectOutput();
+        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(MyName + ".InstantEffect.Cast()");
+            if (abilityEffectInput == null) {
+                abilityEffectInput = new AbilityEffectOutput();
+            }
+            base.Cast(source, target, originalTarget, abilityEffectInput);
+
+            PerformAbilityHit(source, target, abilityEffectInput);
         }
-        base.Cast(source, target, originalTarget, abilityEffectInput);
 
-        PerformAbilityHit(source, target, abilityEffectInput);
     }
-
-}
 }

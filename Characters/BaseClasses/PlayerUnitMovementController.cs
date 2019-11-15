@@ -222,7 +222,7 @@ namespace AnyRPG {
         }
 
         void Move_EnterState() {
-            Debug.Log("Move_EnterState()");
+            //Debug.Log("Move_EnterState()");
             EnterGroundStateCommon();
         }
 
@@ -279,7 +279,7 @@ namespace AnyRPG {
         }
 
         void Knockback_EnterState() {
-            Debug.Log("Knockback_EnterState()");
+            //Debug.Log("Knockback_EnterState()");
             //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
             characterUnit.MyCharacterAnimator.SetJumping(1);
@@ -287,7 +287,7 @@ namespace AnyRPG {
         }
 
         void Knockback_StateUpdate() {
-            Debug.Log("Knockback_StateUpdate()");
+            //Debug.Log("Knockback_StateUpdate()");
             // new code to allow bouncing off walls instead of getting stuck flying into them
             //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity));
             Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * characterUnit.MyRigidBody.velocity;
@@ -308,7 +308,7 @@ namespace AnyRPG {
         }
 
         public void KnockBack() {
-            Debug.Log("Knockback()");
+            //Debug.Log("Knockback()");
             currentState = AnyRPGCharacterState.Knockback;
             rpgCharacterState = AnyRPGCharacterState.Knockback;
         }

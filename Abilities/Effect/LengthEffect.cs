@@ -57,7 +57,7 @@ namespace AnyRPG {
         public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
 
         public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(MyName + ".LengthEffect.Cast(" + source.name + ")");
+            //Debug.Log(MyName + ".LengthEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             Vector3 spawnLocation = Vector3.zero;
             Transform prefabParent = null;
             if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
