@@ -244,24 +244,12 @@ namespace AnyRPG {
             bool foundValidName = false;
             if (currentSaveData.Equals(default(AnyRPGSaveData))) {
                 //Debug.Log("Savemanager.SaveGame(): Current save data is empty, creating new save file");
-                List<FileInfo> fileInfoList = GetSaveFileList();
-
-                List<string> fileNameList = new List<string>();
-                foreach (FileInfo fileInfo in fileInfoList) {
-                    fileNameList.Add(fileInfo.Name);
-                }
-                string finalSaveFileName = string.Empty;
-                for (int i = 0; i < Mathf.Max(fileInfoList.Count, maxSaveFiles); i++) {
-                    finalSaveFileName = saveFileName + i + ".json";
-                    if (!fileNameList.Contains(finalSaveFileName)) {
-                        foundValidName = true;
-                        break;
-                    }
+                string finalSaveFileName = GetNewSaveFileName();
+                if (finalSaveFileName != string.Empty) {
+                    foundValidName = true;
                 }
                 if (foundValidName) {
                     currentSaveData.DataFileName = finalSaveFileName;
-                } else {
-                    Debug.Log("Too Many save files, delete some");
                 }
             } else {
                 foundValidName = true;
@@ -271,6 +259,29 @@ namespace AnyRPG {
             } else {
                 Debug.Log("Too Many save files(" + maxSaveFiles + "), delete some");
             }
+        }
+
+        public string GetNewSaveFileName() {
+            bool foundValidName = false;
+            List<FileInfo> fileInfoList = GetSaveFileList();
+
+            List<string> fileNameList = new List<string>();
+            foreach (FileInfo fileInfo in fileInfoList) {
+                fileNameList.Add(fileInfo.Name);
+            }
+            string finalSaveFileName = string.Empty;
+            for (int i = 0; i < Mathf.Max(fileInfoList.Count, maxSaveFiles); i++) {
+                finalSaveFileName = saveFileName + i + ".json";
+                if (!fileNameList.Contains(finalSaveFileName)) {
+                    foundValidName = true;
+                    break;
+                }
+            }
+            if (foundValidName) {
+                return finalSaveFileName;
+            }
+
+            return string.Empty;
         }
 
 
@@ -316,14 +327,19 @@ namespace AnyRPG {
             if (anyRPGSaveData.DataCreatedOn == null || anyRPGSaveData.DataCreatedOn == string.Empty) {
                 anyRPGSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
             }
-            anyRPGSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
-
-            string jsonString = JsonUtility.ToJson(anyRPGSaveData);
-            //Debug.Log(jsonString);
-            string jsonSavePath = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + anyRPGSaveData.DataFileName;
-            File.WriteAllText(jsonSavePath, jsonString);
+            SaveDataFile(anyRPGSaveData);
 
             PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
+        }
+
+        public void SaveDataFile(AnyRPGSaveData dataToSave) {
+            dataToSave.DataSavedOn = DateTime.Now.ToLongDateString();
+
+            string jsonString = JsonUtility.ToJson(dataToSave);
+            //Debug.Log(jsonString);
+            string jsonSavePath = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + dataToSave.DataFileName;
+            File.WriteAllText(jsonSavePath, jsonString);
+
         }
 
         public void SaveQuestData(AnyRPGSaveData anyRPGSaveData) {
@@ -964,8 +980,23 @@ namespace AnyRPG {
         }
 
         public void DeleteGame(AnyRPGSaveData anyRPGSaveData) {
-            File.Delete(Application.persistentDataPath + "/" + anyRPGSaveData.DataFileName);
+            File.Delete(Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + anyRPGSaveData.DataFileName);
             SystemEventManager.MyInstance.NotifyOnDeleteSaveData();
+        }
+
+        public void CopyGame(AnyRPGSaveData anyRPGSaveData) {
+            string sourceFileName = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + anyRPGSaveData.DataFileName;
+            string newSaveFileName = GetNewSaveFileName();
+            if (newSaveFileName == string.Empty) {
+                // there was an issue, don't try to copy
+                return;
+            }
+
+            string destinationFileName = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + newSaveFileName;
+            File.Copy(sourceFileName, destinationFileName);
+            AnyRPGSaveData tmpSaveData = LoadSaveDataFromFile(destinationFileName);
+            tmpSaveData.DataFileName = newSaveFileName;
+            SaveDataFile(tmpSaveData);
         }
 
         public static string makeSaveDirectoryName() {

@@ -259,6 +259,19 @@ namespace AnyRPG {
             }
         }
 
+        public void CopyGame() {
+            SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+        }
+
+        public void CopyGame(bool confirmCopy = false) {
+            if (confirmCopy) {
+                SaveManager.MyInstance.CopyGame(MySelectedLoadGameButton.MySaveData);
+                SystemWindowManager.MyInstance.copyGameMenuWindow.CloseWindow();
+                ShowLoadButtonsCommon();
+            } else {
+                SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+            }
+        }
 
     }
 
