@@ -712,6 +712,7 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.reputationBookWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             PopupWindowManager.MyInstance.skillBookWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             PopupWindowManager.MyInstance.characterPanelWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             PopupWindowManager.MyInstance.craftingWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             PopupWindowManager.MyInstance.currencyListWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

@@ -48,6 +48,8 @@ namespace AnyRPG {
 
         private bool audioInitialized = false;
 
+        private bool musicPaused = false;
+
         public string MyMasterVolume { get => masterVolume; }
         public string MyMusicVolume { get => musicVolume; }
         public string MyEffectsVolume { get => effectsVolume; }
@@ -156,6 +158,10 @@ namespace AnyRPG {
 
         public void PlayMusic(AudioClip audioClip) {
             InitializeVolume();
+            if (musicAudioSource.clip == audioClip && musicPaused == true) {
+                UnPauseMusic();
+                return;
+            }
             musicAudioSource.clip = audioClip;
             musicAudioSource.loop = true;
             musicAudioSource.Play();
@@ -184,6 +190,22 @@ namespace AnyRPG {
 
         public void StopMusic() {
             musicAudioSource.Stop();
+            musicPaused = false;
+        }
+
+        public void PauseMusic() {
+            if (musicPaused == false) {
+                musicAudioSource.Pause();
+                musicPaused = true;
+            } else {
+                UnPauseMusic();
+            }
+        }
+
+        
+        private void UnPauseMusic() {
+            musicAudioSource.UnPause();
+            musicPaused = false;
         }
 
         public void StopEffects() {

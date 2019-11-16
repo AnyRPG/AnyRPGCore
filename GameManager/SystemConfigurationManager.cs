@@ -343,6 +343,12 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite skillTrainerNamePlateImage;
 
+        [SerializeField]
+        private Sprite musicPlayerInteractionPanelImage;
+
+        [SerializeField]
+        private Sprite musicPlayerNamePlateImage;
+
         // the default amount of time before a unit despawns after killed and looted
         [SerializeField]
         private float defaultDespawnTimer;
@@ -399,6 +405,8 @@ namespace AnyRPG {
         public Sprite MySystemBarMap { get => systemBarMap; set => systemBarMap = value; }
         public Sprite MyUnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
         public Sprite MyUnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
+        public Sprite MyMusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
+        public Sprite MyMusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
         public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
         public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }

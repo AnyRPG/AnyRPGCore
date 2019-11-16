@@ -180,14 +180,21 @@ namespace AnyRPG {
         }
 
         private void PlayLevelSounds() {
-            if (GetActiveSceneNode() != null) {
-                if (GetActiveSceneNode().MyAmbientAudioClip != null) {
-                    AudioManager.MyInstance.PlayAmbientSound(GetActiveSceneNode().MyAmbientAudioClip);
+            SceneNode activeSceneNode = GetActiveSceneNode();
+            if (activeSceneNode != null) {
+                if (activeSceneNode.MyAmbientMusicProfile != null && activeSceneNode.MyAmbientMusicProfile != string.Empty) {
+                    MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(activeSceneNode.MyAmbientMusicProfile);
+                    if (musicProfile != null && musicProfile.MyAudioClip != null) {
+                        AudioManager.MyInstance.PlayAmbientSound(musicProfile.MyAudioClip);
+                    }
                 } else {
                     AudioManager.MyInstance.StopAmbientSound();
                 }
-                if (GetActiveSceneNode().MyMusicAudioClip != null) {
-                    AudioManager.MyInstance.PlayMusic(GetActiveSceneNode().MyMusicAudioClip);
+                if (activeSceneNode.MyBackgroundMusicProfile != null && activeSceneNode.MyBackgroundMusicProfile != string.Empty) {
+                    MusicProfile backgroundMusicProfile = SystemMusicProfileManager.MyInstance.GetResource(activeSceneNode.MyBackgroundMusicProfile);
+                    if (backgroundMusicProfile != null && backgroundMusicProfile.MyAudioClip != null) {
+                        AudioManager.MyInstance.PlayMusic(backgroundMusicProfile.MyAudioClip);
+                    }
                 } else {
                     AudioManager.MyInstance.StopMusic();
                 }
