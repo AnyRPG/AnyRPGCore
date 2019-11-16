@@ -37,6 +37,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
+        [SerializeField]
+        private int maxLevel = 50;
+
         [Header("UI")]
 
         [SerializeField]
@@ -311,6 +314,12 @@ namespace AnyRPG {
         private Sprite characterCreatorNamePlateImage;
 
         [SerializeField]
+        private Sprite unitSpawnControllerInteractionPanelImage;
+
+        [SerializeField]
+        private Sprite unitSpawnControllerNamePlateImage;
+
+        [SerializeField]
         private Sprite factionChangeInteractionPanelImage;
 
         [SerializeField]
@@ -388,6 +397,8 @@ namespace AnyRPG {
         public Sprite MySystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
         public Sprite MySystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
         public Sprite MySystemBarMap { get => systemBarMap; set => systemBarMap = value; }
+        public Sprite MyUnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
+        public Sprite MyUnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
         public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
@@ -436,6 +447,7 @@ namespace AnyRPG {
         public string MyDefaultCombatStunnedClip { get => defaultCombatStunnedClip; set => defaultCombatStunnedClip = value; }
         public string MyDefaultDeathClip { get => defaultDeathClip; set => defaultDeathClip = value; }
         public string MyDefaultLevitatedClip { get => defaultLevitatedClip; set => defaultLevitatedClip = value; }
+        public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");

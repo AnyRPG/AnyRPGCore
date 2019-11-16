@@ -1,17 +1,18 @@
 using AnyRPG;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class CharacterCreatorManager : MonoBehaviour {
+    public class UnitPreviewManager : MonoBehaviour {
 
         #region Singleton
-        private static CharacterCreatorManager instance;
+        private static UnitPreviewManager instance;
 
-        public static CharacterCreatorManager MyInstance {
+        public static UnitPreviewManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<CharacterCreatorManager>();
+                    instance = FindObjectOfType<UnitPreviewManager>();
                 }
 
                 return instance;
@@ -38,31 +39,12 @@ namespace AnyRPG {
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;
             }
-            //PlayerManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            /*
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                HandlePlayerUnitSpawn();
-            }
-            */
         }
 
-        public void HandleOpenWindow(bool forceUMAUnit) {
+        public void HandleOpenWindow() {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
-            // determine which preview prefab is the correct one to clone
-            if (forceUMAUnit) {
-                // clone UMA prefab directly
-                PlayerManager.MyInstance.MyCurrentPlayerUnitPrefab = PlayerManager.MyInstance.MyDefaultUMAPlayerUnitPrefab;
-            }
-
-            // determine if the character is currently an UMA unit.  If it is not, then spawn the playermanager default UMA
-            if (PlayerManager.MyInstance.MyCurrentPlayerUnitPrefab == PlayerManager.MyInstance.MyDefaultUMAPlayerUnitPrefab) {
-                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): the current player unit prefab is the UMA prefab, cloning UMA prefab");
-                cloneSource = PlayerManager.MyInstance.MyDefaultUMAPlayerUnitPrefab;
-            } else {
-                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): the current player unit prefab is NOT the UMA prefab, cloning default prefab");
-                cloneSource = PlayerManager.MyInstance.MyDefaultNonUMAPlayerUnitPrefab;
-            }
+           cloneSource = UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile.MyUnitPrefab;
 
             if (cloneSource == null) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
@@ -70,7 +52,7 @@ namespace AnyRPG {
 
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): spawning preview unit");
             previewUnit = Instantiate(cloneSource, transform.position, Quaternion.identity, transform);
-            UIManager.MyInstance.SetLayerRecursive(previewUnit, 12);
+            UIManager.MyInstance.SetLayerRecursive(previewUnit, 16);
 
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
             if (previewUnit.GetComponent<PlayerUnitMovementController>() != null) {
@@ -81,6 +63,12 @@ namespace AnyRPG {
             }
             if (previewUnit.GetComponent<AnyRPGCharacterController>() != null) {
                 previewUnit.GetComponent<AnyRPGCharacterController>().enabled = false;
+            }
+            if (previewUnit.GetComponent<AIController>() != null) {
+                previewUnit.GetComponent<AIController>().enabled = false;
+            }
+            if (previewUnit.GetComponent<NavMeshAgent>() != null) {
+                previewUnit.GetComponent<NavMeshAgent>().enabled = false;
             }
             if (previewUnit.GetComponent<Rigidbody>() != null) {
                 previewUnit.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
@@ -99,20 +87,6 @@ namespace AnyRPG {
                 Destroy(previewUnit);
             }
         }
-
-        public IEnumerator WaitForCamera() {
-            //Debug.Log("CharacterCreatorManager.WaitForCamera();");
-
-            while (CharacterPanel.MyInstance.MyPreviewCameraController == null) {
-                yield return null;
-            }
-            //Debug.Log("WaitForCamera(): got camera");
-
-            CharacterPanel.MyInstance.MyPreviewCameraController.InitializeCamera(previewUnit.transform);
-            targetInitialized = true;
-
-        }
-
 
     }
 }

@@ -31,6 +31,8 @@ namespace AnyRPG {
         int MyStrength { get; }
         float MyWalkSpeed { get; }
         float MyMovementSpeed { get; }
+        int MyToughness { get; set; }
+
         Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get; }
 
 

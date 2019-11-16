@@ -31,6 +31,7 @@ namespace AnyRPG {
         //public CloseableWindow graphicsMenuWindow;
         public CloseableWindow playerOptionsMenuWindow;
         public CloseableWindow characterCreatorWindow;
+        public CloseableWindow unitSpawnWindow;
         public CloseableWindow playMenuWindow;
         public CloseableWindow settingsMenuWindow;
         public CloseableWindow exitMenuWindow;

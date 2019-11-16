@@ -40,6 +40,10 @@ namespace AnyRPG {
         [SerializeField]
         private int maxUnits;
 
+        // to allow for unit spawn control panels to use this node
+        [SerializeField]
+        private bool suppressAutoSpawn = false;
+
         // ignore spawn timers and use trigger instead
         [SerializeField]
         private bool triggerBased = false;
@@ -199,36 +203,60 @@ namespace AnyRPG {
             return spawnLocation;
         }
 
-        private void Spawn() {
+        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, int toughness) {
+            CommonSpawn(unitLevel, extraLevels, dynamicLevel, spawnPrefab, toughness);
+        }
+
+        public void Spawn() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): GetMaxUnits(): " + GetMaxUnits());
-            int spawnIndex = UnityEngine.Random.Range(0, spawnPrefabs.Count - 1);
-            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
-                //GetSpawnLocation();
-                //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
-                //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
-                GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex]);
-                //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
-                Vector3 newSpawnLocation = GetSpawnLocation();
-                //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
-                NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
-                AIController aIController = spawnReference.GetComponent<AIController>();
-                aIController.MyStartPosition = newSpawnLocation;
-                //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
-                //spawnReference.transform.position = newSpawnLocation;
-                navMeshAgent.Warp(newSpawnLocation);
-                //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
-                CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
-                if (_characterUnit != null) {
-                    _characterUnit.OnDespawn += HandleDespawn;
-                }
-                int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
-                _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
-                spawnReferences.Add(spawnReference);
+            if (spawnPrefabs.Count == 0) {
+                return;
             }
+            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
+                int spawnIndex = UnityEngine.Random.Range(0, spawnPrefabs.Count - 1);
+                CommonSpawn(unitLevel, extraLevels, dynamicLevel, spawnPrefabs[spawnIndex]);
+            }
+        }
+
+        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, int toughness = -1) {
+            //GetSpawnLocation();
+            //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
+            if (spawnPrefab == null) {
+                return;
+            }
+            //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
+            GameObject spawnReference = Instantiate(spawnPrefab);
+            //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
+            Vector3 newSpawnLocation = GetSpawnLocation();
+            //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
+            NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
+            AIController aIController = spawnReference.GetComponent<AIController>();
+            aIController.MyStartPosition = newSpawnLocation;
+            //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
+            //spawnReference.transform.position = newSpawnLocation;
+            navMeshAgent.Warp(newSpawnLocation);
+            //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
+            CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
+            if (_characterUnit != null) {
+                _characterUnit.OnDespawn += HandleDespawn;
+            }
+            if (toughness != -1) {
+                _characterUnit.MyCharacter.MyCharacterStats.MyToughness = toughness;
+            }
+            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
+            _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
+            spawnReferences.Add(spawnReference);
         }
 
         private void SpawnWithDelay() {
             //Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
+
+            if (suppressAutoSpawn) {
+                return;
+            }
+            if (spawnPrefabs.Count == 0) {
+                return;
+            }
             // this method is necessary to ensure that the main spawn count cycle is followed and the delay does not get directly added to the restart time
             if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
                 if (countDownRoutine == null) {
