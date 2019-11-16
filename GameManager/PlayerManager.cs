@@ -107,6 +107,7 @@ namespace AnyRPG {
         public Faction MyDefaultFaction { get => defaultFaction; set => defaultFaction = value; }
         public GameObject MyAIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject MyEffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
+        public GameObject MyPlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
@@ -324,11 +325,11 @@ namespace AnyRPG {
             if (LevelManager.MyInstance.MyNavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 playerUnitObject.GetComponent<NavMeshAgent>().enabled = true;
-                playerUnitObject.GetComponent<PlayerUnitMovementController>().useMeshNav = true;
+                (MyCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
                 playerUnitObject.GetComponent<NavMeshAgent>().enabled = false;
-                playerUnitObject.GetComponent<PlayerUnitMovementController>().useMeshNav = false;
+                (MyCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
             }
 
             if (currentPlayerUnitPrefab == defaultUMAPlayerUnitPrefab) {

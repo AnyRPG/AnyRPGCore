@@ -100,7 +100,7 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
-            OnCharacterUnitDespawn();
+            HandleCharacterUnitDespawn();
             eventSubscriptionsInitialized = false;
         }
 
@@ -253,14 +253,9 @@ namespace AnyRPG {
             CastTargettingManager.MyInstance.DisableProjector();
         }
 
-        public void HandleCharacterUnitSpawn() {
+        public virtual void HandleCharacterUnitSpawn() {
             //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn()");
-            PlayerUnitMovementController movementController = MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>();
-            //CharacterMotor characterMotor = MyBaseCharacter.MyCharacterUnit.MyCharacterMotor;
-            if (movementController != null) {
-                //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
-                movementController.OnMovement += HandleManualMovement;
-            }
+
             if (MyBaseCharacter.MyCharacterUnit.MyCharacterMotor != null) {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is not null");
                 MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.OnMovement += HandleManualMovement;
@@ -269,14 +264,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnCharacterUnitDespawn() {
+        public virtual void HandleCharacterUnitDespawn() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.OnCharacterUnitDespawn()");
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
-                PlayerUnitMovementController movementController = MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>();
-                if (movementController != null) {
-                    movementController.OnMovement -= HandleManualMovement;
-                }
-            }
         }
 
         public virtual void UpdateAbilityList(int newLevel) {

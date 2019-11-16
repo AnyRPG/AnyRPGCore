@@ -30,7 +30,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
             SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterUnitSpawn;
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn += OnCharacterUnitDespawn;
+            SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandleCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
                 HandleCharacterUnitSpawn();
@@ -46,7 +46,7 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateAbilityList;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= OnCharacterUnitDespawn;
+                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandleCharacterUnitDespawn;
             }
         }
 
@@ -158,6 +158,28 @@ namespace AnyRPG {
         public override void StopCasting() {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.StopCasting()");
             base.StopCasting();
+        }
+
+        public override void HandleCharacterUnitSpawn() {
+            PlayerUnitMovementController movementController = (MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController;
+            //CharacterMotor characterMotor = MyBaseCharacter.MyCharacterUnit.MyCharacterMotor;
+            if (movementController != null) {
+                //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
+                movementController.OnMovement += HandleManualMovement;
+            }
+            base.HandleCharacterUnitSpawn();
+
+        }
+
+        public override void HandleCharacterUnitDespawn() {
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
+
+                PlayerUnitMovementController movementController = (MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController;
+                if (movementController != null) {
+                    movementController.OnMovement -= HandleManualMovement;
+                }
+            }
+            base.HandleCharacterUnitDespawn();
         }
 
     }

@@ -96,14 +96,26 @@ namespace AnyRPG {
             anyRPGCharacterController = GetComponent<AnyRPGCharacterController>();
             characterUnit = GetComponent<CharacterUnit>();
 
+            /*
             //Set currentState to idle on startup.
             currentState = AnyRPGCharacterState.Idle;
             rpgCharacterState = AnyRPGCharacterState.Idle;
             airForwardDirection = transform.forward;
+            */
         }
 
         private void Start() {
+            //Set currentState to idle on startup.
+            currentState = AnyRPGCharacterState.Idle;
+            rpgCharacterState = AnyRPGCharacterState.Idle;
+            airForwardDirection = transform.forward;
+
             SwitchCollisionOn();
+        }
+
+        public void SetCharacterUnit(CharacterUnit characterUnit) {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.SetCharacterUnit()");
+            this.characterUnit = characterUnit;
         }
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
@@ -177,7 +189,9 @@ namespace AnyRPG {
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
             //Debug.Log("Idle_EnterState() Freezing all constraints");
-            characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            if (characterUnit != null && characterUnit.MyRigidBody != null) {
+                characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            }
 
             // reset velocity from any falling movement that was happening
             currentMoveVelocity = Vector3.zero;

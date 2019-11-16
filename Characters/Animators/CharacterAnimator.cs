@@ -736,7 +736,7 @@ namespace AnyRPG {
             float usedBaseStrafeForwardRightAnimationSpeed;
 
 
-            if (characterUnit.MyCharacter.MyCharacterCombat != null && characterUnit.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null && characterUnit.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
                 // in combat
                 usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
                 usedbaseWalkBackAnimationSpeed = baseCombatWalkBackAnimationSpeed;

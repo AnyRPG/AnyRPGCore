@@ -40,6 +40,7 @@ namespace AnyRPG {
         public GameObject MyTarget { get => target; }
         public bool MyFrozen { get => frozen; set => frozen = value; }
         public float MyNavMeshDistancePadding { get => navMeshDistancePadding; }
+        public ICharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
 
         protected virtual void Awake() {
             characterUnit = GetComponent<CharacterUnit>();
@@ -54,7 +55,7 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            if (characterUnit.MyAgent != null && characterUnit.MyAgent.isActiveAndEnabled) {
+            if (characterUnit != null && characterUnit.MyAgent != null && characterUnit.MyAgent.isActiveAndEnabled) {
                 characterUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
@@ -89,7 +90,7 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            if (characterUnit.MyAgent != null && characterUnit.MyAgent.isActiveAndEnabled) {
+            if (characterUnit != null && characterUnit.MyAgent != null && characterUnit.MyAgent.isActiveAndEnabled) {
                 characterUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
@@ -272,11 +273,11 @@ namespace AnyRPG {
         }
 
         public virtual void Move(Vector3 moveDirection, bool isKnockBack = false) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
+            Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
             if (frozen) {
                 return;
             }
-            if (characterUnit.MyAgent.enabled) {
+            if (characterUnit != null && characterUnit.MyAgent != null && characterUnit.MyAgent.enabled) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
 
                 //agent.Move(moveDirection);

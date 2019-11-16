@@ -496,7 +496,7 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>().useMeshNav) {
+                if ((MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
                     MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
@@ -524,7 +524,7 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (MyBaseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>().useMeshNav) {
+                if ((MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
                     MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
@@ -671,7 +671,7 @@ namespace AnyRPG {
             canMove = false;
             baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetMoving(false);
             baseCharacter.MyCharacterUnit.MyCharacterAnimator.EnableRootMotion();
-            baseCharacter.MyCharacterUnit.GetComponent<PlayerUnitMovementController>().currentMoveVelocity = new Vector3(0, 0, 0);
+            (baseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
         }
 
         public void UnlockMovement() {
