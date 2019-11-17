@@ -1,0 +1,113 @@
+using AnyRPG;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class AnimatedUnit : MonoBehaviour  {
+
+        /*
+        //[SerializeField]
+        protected BaseCharacter baseCharacter = null;
+
+    */
+        protected NavMeshAgent agent;
+
+        protected Rigidbody rigidBody;
+
+        protected CharacterMotor characterMotor;
+
+        protected CharacterAnimator characterAnimator;
+
+        protected bool componentReferencesInitialized = false;
+        protected bool startHasRun = false;
+
+        protected bool eventSubscriptionsInitialized = false;
+
+        /*
+        public BaseCharacter MyCharacter {
+            get => baseCharacter;
+            set {
+                baseCharacter = value;
+            }
+        }
+        */
+
+        public NavMeshAgent MyAgent { get => agent; set => agent = value; }
+        public Rigidbody MyRigidBody { get => rigidBody; set => rigidBody = value; }
+        public CharacterMotor MyCharacterMotor { get => characterMotor; set => characterMotor = value; }
+        public CharacterAnimator MyCharacterAnimator { get => characterAnimator; set => characterAnimator = value; }
+        //public BaseCharacter MyBaseCharacter { get => MyCharacter; }
+
+        protected virtual void Awake() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
+            GetComponentReferences();
+            CreateEventSubscriptions();
+            OrchestrateStartup();
+        }
+
+        protected virtual void Start() {
+            //Debug.Log(gameObject.name + ": running Start()");
+        }
+
+        public virtual void OrchestrateStartup() {
+            characterMotor.OrchestrateStartup();
+            if (characterAnimator != null) {
+                characterAnimator.OrchestratorStart();
+            }
+        }
+
+        public virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized || !startHasRun) {
+                return;
+            }
+            eventSubscriptionsInitialized = true;
+        }
+
+        public virtual void CleanupEventSubscriptions() {
+            //Debug.Log("CharacterUnit.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            eventSubscriptionsInitialized = false;
+        }
+
+        protected virtual void OnEnable() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.OnEnable()");
+            CreateEventSubscriptions();
+        }
+
+        protected virtual void OnDisable() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.OnDisable()");
+            CleanupEventSubscriptions();
+        }
+
+        public virtual void GetComponentReferences() {
+            Debug.Log(gameObject.name + ".AnimatedUnit.GetComponentReferences()");
+            if (componentReferencesInitialized) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
+                return;
+            }
+            agent = GetComponent<NavMeshAgent>();
+            rigidBody = GetComponent<Rigidbody>();
+            characterMotor = GetComponent<CharacterMotor>();
+            characterAnimator = GetComponent<CharacterAnimator>();
+            /*
+            if (baseCharacter == null) {
+                baseCharacter = GetComponent<BaseCharacter>();
+                if (baseCharacter == null) {
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null and is still null");
+                } else {
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
+                }
+            }
+            */
+        }
+
+
+    }
+
+}

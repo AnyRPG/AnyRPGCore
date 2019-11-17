@@ -24,14 +24,6 @@ namespace AnyRPG {
 
         private NamePlateController namePlate;
 
-        private NavMeshAgent agent;
-
-        protected Rigidbody rigidBody;
-
-        private CharacterMotor characterMotor;
-
-        private CharacterAnimator characterAnimator;
-
         /// <summary>
         /// a string that represents the location of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame
         /// </summary>
@@ -62,10 +54,6 @@ namespace AnyRPG {
 
         public string MyFactionName { get => MyCharacter.MyFactionName; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
-        public NavMeshAgent MyAgent { get => agent; set => agent = value; }
-        public Rigidbody MyRigidBody { get => rigidBody; set => rigidBody = value; }
-        public CharacterMotor MyCharacterMotor { get => characterMotor; set => characterMotor = value; }
-        public CharacterAnimator MyCharacterAnimator { get => characterAnimator; set => characterAnimator = value; }
         public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.MyCharacterName : interactionPanelTitle); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
@@ -122,9 +110,6 @@ namespace AnyRPG {
             base.Start();
             InitializeNamePlate();
             CreateEventSubscriptions();
-            if (characterAnimator != null) {
-                characterAnimator.OrchestratorStart();
-            }
         }
 
         public void CreateEventSubscriptions() {
@@ -181,10 +166,6 @@ namespace AnyRPG {
                 return;
             }
             base.GetComponentReferences();
-            agent = GetComponent<NavMeshAgent>();
-            rigidBody = GetComponent<Rigidbody>();
-            characterMotor = GetComponent<CharacterMotor>();
-            characterAnimator = GetComponent<CharacterAnimator>();
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();
                 if (baseCharacter == null) {

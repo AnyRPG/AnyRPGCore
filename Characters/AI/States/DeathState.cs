@@ -12,15 +12,15 @@ public class DeathState : IState
         //Debug.Log(enemyController.gameObject.name + " entered death state");
         this.aiController = aiController;
         //this.aiController.MyBaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
-        this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.StopNavAgent();
-        this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.enabled = false;
+        this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopNavAgent();
+        this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = false;
         this.aiController.DisableAggro();
         this.aiController.ClearTarget();
     }
 
     public void Exit() {
-        this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.StartNavAgent();
-        this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.enabled = true;
+        this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StartNavAgent();
+        this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = true;
         aiController.EnableAggro();
     }
 

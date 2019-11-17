@@ -22,6 +22,7 @@ namespace AnyRPG {
         //Components.
         private AnyRPGCharacterController anyRPGCharacterController;
         private CharacterUnit characterUnit;
+        private AnimatedUnit animatedUnit;
 
         public AnyRPGCharacterState rpgCharacterState;
 
@@ -92,25 +93,46 @@ namespace AnyRPG {
         // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
         private float collisionMinimumHeight = 0.05f;
 
-        void Awake() {
-            anyRPGCharacterController = GetComponent<AnyRPGCharacterController>();
-            characterUnit = GetComponent<CharacterUnit>();
-
-            /*
-            //Set currentState to idle on startup.
-            currentState = AnyRPGCharacterState.Idle;
-            rpgCharacterState = AnyRPGCharacterState.Idle;
-            airForwardDirection = transform.forward;
-            */
+        private void Awake() {
         }
 
         private void Start() {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Start()");
             //Set currentState to idle on startup.
-            currentState = AnyRPGCharacterState.Idle;
-            rpgCharacterState = AnyRPGCharacterState.Idle;
             airForwardDirection = transform.forward;
 
             SwitchCollisionOn();
+        }
+
+        public void OrchestrateStartup() {
+            GetComponentReferences();
+            ConfigureStateMachine();
+        }
+
+        public void ConfigureStateMachine() {
+            currentState = AnyRPGCharacterState.Idle;
+            rpgCharacterState = AnyRPGCharacterState.Idle;
+            if (anyRPGCharacterController != null) {
+                anyRPGCharacterController.OrchestrateStartup();
+            }
+        }
+
+        public void GetComponentReferences() {
+            anyRPGCharacterController = GetComponent<AnyRPGCharacterController>();
+            if (anyRPGCharacterController == null) {
+                Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
+            }
+            if (characterUnit == null) {
+                characterUnit = GetComponent<CharacterUnit>();
+                if (characterUnit == null) {
+                    Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get characterUnit");
+                }
+            }
+            animatedUnit = GetComponent<AnimatedUnit>();
+            if (animatedUnit == null) {
+                Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get animatedUnit");
+            }
+
         }
 
         public void SetCharacterUnit(CharacterUnit characterUnit) {
@@ -135,12 +157,12 @@ namespace AnyRPG {
             // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
             Vector3 relativeMovement = CharacterRelativeInput(currentMoveVelocity);
             if (relativeMovement.magnitude > 0.1 || (characterUnit.MyCharacter.MyCharacterController as PlayerController).inputJump) {
-                characterUnit.MyCharacterMotor.Move(relativeMovement);
+                animatedUnit.MyCharacterMotor.Move(relativeMovement);
             } else {
-                Vector3 localVelocity = transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
+                Vector3 localVelocity = transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
                 if (localVelocity.x != 0f || localVelocity.z != 0f || localVelocity.y != 0f) {
-                    //Debug.Log("Character is moving at velocity: " + characterUnit.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
-                    characterUnit.MyCharacterMotor.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
+                    //Debug.Log("Character is moving at velocity: " + animatedUnit.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
+                    animatedUnit.MyCharacterMotor.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
                 }
             }
 
@@ -150,20 +172,20 @@ namespace AnyRPG {
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput()) {
                     if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).inputStrafe == true) {
-                        characterUnit.MyCharacterAnimator.SetStrafing(true);
+                        animatedUnit.MyCharacterAnimator.SetStrafing(true);
                     } else {
-                        characterUnit.MyCharacterAnimator.SetStrafing(false);
+                        animatedUnit.MyCharacterAnimator.SetStrafing(false);
                     }
                     isMoving = true;
-                    characterUnit.MyCharacterAnimator.SetMoving(true);
-                    characterUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
+                    animatedUnit.MyCharacterAnimator.SetMoving(true);
+                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
                 } else {
                     isMoving = false;
-                    characterUnit.MyCharacterAnimator.SetMoving(false);
-                    characterUnit.MyCharacterAnimator.SetStrafing(false);
-                    characterUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
+                    animatedUnit.MyCharacterAnimator.SetMoving(false);
+                    animatedUnit.MyCharacterAnimator.SetStrafing(false);
+                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
                 }
-                characterUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
+                animatedUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
             }
 
             if (characterUnit.MyCharacter.MyCharacterStats.IsAlive && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
@@ -174,7 +196,7 @@ namespace AnyRPG {
                 }
 
                 if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).inputTurn != 0) {
-                    characterUnit.MyCharacterMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
+                    animatedUnit.MyCharacterMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
                 }
             }
 
@@ -182,15 +204,15 @@ namespace AnyRPG {
 
         void EnterGroundStateCommon() {
             canJump = true;
-            characterUnit.MyCharacterAnimator.SetJumping(0);
+            animatedUnit.MyCharacterAnimator.SetJumping(0);
             airForwardDirection = transform.forward;
         }
 
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
-            //Debug.Log("Idle_EnterState() Freezing all constraints");
-            if (characterUnit != null && characterUnit.MyRigidBody != null) {
-                characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
+            if (animatedUnit != null && animatedUnit.MyRigidBody != null) {
+                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
             }
 
             // reset velocity from any falling movement that was happening
@@ -200,6 +222,8 @@ namespace AnyRPG {
 
         //Run every frame we are in the idle state.
         void Idle_StateUpdate() {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
+
             if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).allowedInput && (characterUnit.MyCharacter.MyCharacterController as PlayerController).inputJump) {
                 currentState = AnyRPGCharacterState.Jump;
                 rpgCharacterState = AnyRPGCharacterState.Jump;
@@ -217,21 +241,21 @@ namespace AnyRPG {
             }
             // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
             // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
-            if (Mathf.Abs(characterUnit.MyRigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
+            if (Mathf.Abs(animatedUnit.MyRigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
                 currentMoveVelocity = new Vector3(0, 0, 0);
                 // disable gravity while this close to the ground so we don't slide down slight inclines
-                characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
             } else {
 
                 // allow the character to fall until they reach the ground
-                characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-                currentMoveVelocity = new Vector3(0, Mathf.Clamp(characterUnit.MyRigidBody.velocity.y, -53, 0), 0);
+                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+                currentMoveVelocity = new Vector3(0, Mathf.Clamp(animatedUnit.MyRigidBody.velocity.y, -53, 0), 0);
             }
         }
 
         void Idle_ExitState() {
             //Debug.Log("Idle_ExitState(). Freezing Rotation only");
-            characterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             //Run once when exit the idle state.
         }
 
@@ -259,7 +283,7 @@ namespace AnyRPG {
 
             // since we are in the move state, reset velocity to zero so we can pick up the new values
             // allow falling while moving by clamping existing y velocity
-            currentMoveVelocity = new Vector3(0, Mathf.Clamp(characterUnit.MyRigidBody.velocity.y, -53, 0), 0);
+            currentMoveVelocity = new Vector3(0, Mathf.Clamp(animatedUnit.MyRigidBody.velocity.y, -53, 0), 0);
 
             if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
 
@@ -296,19 +320,19 @@ namespace AnyRPG {
             //Debug.Log("Knockback_EnterState()");
             //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetJumping(1);
-            characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
+            animatedUnit.MyCharacterAnimator.SetJumping(1);
+            animatedUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
         }
 
         void Knockback_StateUpdate() {
             //Debug.Log("Knockback_StateUpdate()");
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * characterUnit.MyRigidBody.velocity;
-            currentMoveVelocity = transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
+            //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity));
+            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * animatedUnit.MyRigidBody.velocity;
+            currentMoveVelocity = transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y < 0.1) {
+            if (AcquiringGround() && animatedUnit.MyRigidBody.velocity.y < 0.1) {
                 if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
@@ -331,19 +355,19 @@ namespace AnyRPG {
         void Jump_EnterState() {
             currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetJumping(1);
-            characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
+            animatedUnit.MyCharacterAnimator.SetJumping(1);
+            animatedUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
             lastJumpFrame = Time.frameCount;
         }
 
         void Jump_StateUpdate() {
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * characterUnit.MyRigidBody.velocity;
-            currentMoveVelocity = transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
+            //currentMoveVelocity = CharacterRelativeInput(transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity));
+            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * animatedUnit.MyRigidBody.velocity;
+            currentMoveVelocity = transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && characterUnit.MyRigidBody.velocity.y <= 0f && Time.frameCount > lastJumpFrame + 2) {
+            if (AcquiringGround() && animatedUnit.MyRigidBody.velocity.y <= 0f && Time.frameCount > lastJumpFrame + 2) {
                 if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     Debug.Log("Jump_StateUpdate() : Entering movement state on frame: " + Time.frameCount + "; Jumped: " + lastJumpFrame);
@@ -360,14 +384,14 @@ namespace AnyRPG {
         void Fall_EnterState() {
             //Debug.Log("Fall_EnterState()");
             canJump = false;
-            characterUnit.MyCharacterAnimator.SetJumping(2);
-            characterUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
+            animatedUnit.MyCharacterAnimator.SetJumping(2);
+            animatedUnit.MyCharacterAnimator.SetTrigger("JumpTrigger");
         }
 
         void Fall_StateUpdate() {
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(characterUnit.MyRigidBody.velocity);
-            //currentMoveVelocity = transform.InverseTransformDirection(CharacterRelativeInput(characterUnit.MyRigidBody.velocity));
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, transform.forward) * transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
+            //currentMoveVelocity = transform.InverseTransformDirection(CharacterRelativeInput(animatedUnit.MyRigidBody.velocity));
             currentMoveVelocity = new Vector3(fromtoMoveVelocity.x, Mathf.Clamp(fromtoMoveVelocity.y, -53, 0), fromtoMoveVelocity.z);
             //currentMoveVelocity = new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z);
             if (AcquiringGround()) {
@@ -384,13 +408,16 @@ namespace AnyRPG {
         }
 
         public void SwitchCollisionOn() {
-            if (characterUnit.MyCharacter != null) {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
+            if (characterUnit != null && characterUnit.MyCharacter != null) {
                 (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove = true;
                 if (anyRPGCharacterController != null) {
                     anyRPGCharacterController.enabled = true;
                 }
-                if (characterUnit.MyCharacterAnimator != null) {
-                    characterUnit.MyCharacterAnimator.DisableRootMotion();
+            }
+            if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
+                if (animatedUnit.MyCharacterAnimator != null) {
+                    animatedUnit.MyCharacterAnimator.DisableRootMotion();
                 }
             }
         }
@@ -462,7 +489,7 @@ namespace AnyRPG {
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
                 if (transform.InverseTransformPoint(groundHitInfo.point) != Vector3.zero) {
-                    yValue = Mathf.Clamp(characterUnit.MyRigidBody.velocity.normalized.y, -1, 0);
+                    yValue = Mathf.Clamp(animatedUnit.MyRigidBody.velocity.normalized.y, -1, 0);
                     //Debug.Log("LocalMovement(): We are above the (flat) ground and there are no near collisions.  Applying extra ground force: " + yValue);
                 }
                 normalizedInput = new Vector3(normalizedInput.x, yValue, normalizedInput.z);
@@ -757,6 +784,20 @@ namespace AnyRPG {
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(transform.position, maintainingGroundExtents * 2);
+        }
+
+        public void OnEnable() {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnEnable()");
+            if (anyRPGCharacterController != null) {
+                anyRPGCharacterController.enabled = true;
+            }
+        }
+
+        public void OnDisable() {
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
+            if (anyRPGCharacterController != null) {
+                anyRPGCharacterController.enabled = false;
+            }
         }
 
     }

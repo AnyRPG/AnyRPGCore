@@ -327,7 +327,7 @@ namespace AnyRPG {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
             //Debug.Log("setting casting animation");
             if (castingAnimationClip != null) {
-                source.MyCharacterUnit.MyCharacterAnimator.HandleCastingAbility(castingAnimationClip, this);
+                source.MyAnimatedUnit.MyCharacterAnimator.HandleCastingAbility(castingAnimationClip, this);
             }
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?

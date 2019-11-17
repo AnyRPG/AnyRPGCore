@@ -343,7 +343,7 @@ namespace AnyRPG {
                 return;
             }
             if (InteractionSucceeded()) {
-                MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.StopFollowingTarget();
+                MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
             }
         }
 
@@ -496,9 +496,9 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if ((MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
+                if ((MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FollowTarget(target);
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -524,9 +524,9 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if ((MyBaseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
+                if ((MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FollowTarget(target);
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -669,14 +669,14 @@ namespace AnyRPG {
         //Keep character from moving.
         public void LockMovement() {
             canMove = false;
-            baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetMoving(false);
-            baseCharacter.MyCharacterUnit.MyCharacterAnimator.EnableRootMotion();
-            (baseCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetMoving(false);
+            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableRootMotion();
+            (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
         }
 
         public void UnlockMovement() {
             canMove = true;
-            baseCharacter.MyCharacterUnit.MyCharacterAnimator.DisableRootMotion();
+            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.DisableRootMotion();
         }
 
         public override void OnDestroy() {

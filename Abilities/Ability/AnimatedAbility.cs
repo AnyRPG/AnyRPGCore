@@ -15,7 +15,7 @@ namespace AnyRPG {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
                     // this type of ability is allowed to interrupt other types of animations, so clear them all
-                    source.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                    source.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
                     // now block further animations of other types from starting
                     source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
@@ -29,7 +29,7 @@ namespace AnyRPG {
                     }
 
                     // perform the actual animation
-                    source.MyCharacterUnit.MyCharacterAnimator.HandleAbility(animationClip, this, targetBaseCharacter);
+                    source.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClip, this, targetBaseCharacter);
 
                     // unblock 
                     source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;

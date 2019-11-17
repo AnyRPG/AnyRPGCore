@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class PlayerUnit : CharacterUnit {
-
+        /*
         PlayerUnitMovementController playerUnitMovementController;
 
         public PlayerUnitMovementController MyPlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
@@ -19,7 +19,7 @@ namespace AnyRPG {
             base.GetComponentReferences();
             playerUnitMovementController = GetComponent<PlayerUnitMovementController>();
         }
-
+        */
     }
 
 }

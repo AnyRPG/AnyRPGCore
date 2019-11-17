@@ -10,6 +10,12 @@ namespace AnyRPG {
     public class MountEffect : StatusEffect {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
+            Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
+            PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
+
+            // we could skip this and just let the player fall through gravity
+            PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = abilityEffectObject.transform.position;
+            DeActivateMountedState();
             base.CancelEffect(targetCharacter);
         }
 
@@ -37,46 +43,56 @@ namespace AnyRPG {
                     if (mountPoint != null) {
                         PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
                         PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                        PerformRedirects();
+                        ActivateMountedState();
                     }
                 }
             }
         }
 
-        public void PerformRedirects() {
+        public void DeActivateMountedState() {
+            Debug.Log("MountEffect.DeActivateMountedState()");
             if (abilityEffectObject != null) {
                 PlayerUnitMovementController playerUnitMovementController = abilityEffectObject.GetComponent<PlayerUnitMovementController>();
                 if (playerUnitMovementController != null) {
                     Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.enabled = false;
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+
+                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
                     Debug.Log("Setting Animator Values");
 
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("Riding", true);
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<AnimatedUnit>();
 
+                    (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
 
-                    playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
-                    Rigidbody mountRigidBody = abilityEffectObject.GetComponent<Rigidbody>();
-                    if (mountRigidBody != null) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyRigidBody = mountRigidBody;
-                    }
-                    CharacterMotor mountCharacterMotor = abilityEffectObject.GetComponent<CharacterMotor>();
-                    if (mountCharacterMotor != null) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterMotor = mountCharacterMotor;
-                        mountCharacterMotor.MyCharacterUnit = PlayerManager.MyInstance.MyCharacter.MyCharacterUnit;
-                    }
-                    CharacterAnimator mountCharacterAnimator = abilityEffectObject.GetComponent<CharacterAnimator>();
-                    if (mountCharacterAnimator != null) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyCharacterAnimator = mountCharacterAnimator;
-                    }
-
-                    //PlayerManager.MyInstance.MyCharacter.MyCharacterUnit
                 }
             }
         }
+
+        public void ActivateMountedState() {
+            if (abilityEffectObject != null) {
+                PlayerUnitMovementController playerUnitMovementController = abilityEffectObject.GetComponent<PlayerUnitMovementController>();
+                if (playerUnitMovementController != null) {
+
+                    Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
+
+                    (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+
+                    Debug.Log("MountEffect.ActivateMountedState()Setting Animator Values");
+
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", true);
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
+
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = abilityEffectObject.GetComponent<AnimatedUnit>();
+
+                    playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                }
+            }
+        }
+
+
 
     }
 }

@@ -10,7 +10,7 @@ namespace AnyRPG {
         public void Enter(AIController enemyController) {
             //Debug.Log("Entering Attack State");
             this.aiController = enemyController;
-            this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.StopFollowingTarget();
+            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
         }
 
         public void Exit() {
@@ -47,7 +47,7 @@ namespace AnyRPG {
             }
 
             // face target before attack to ensure they are in the hitbox
-            aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FaceTarget(aiController.MyTarget);
+            aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FaceTarget(aiController.MyTarget);
 
             // attempt to get a valid ability to use before trying auto-attack
             BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();

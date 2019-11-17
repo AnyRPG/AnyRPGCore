@@ -15,6 +15,9 @@ namespace AnyRPG {
         public event UpdateDelegate AfterSingleUpdate;
 
         void Awake() {
+        }
+
+        public void OrchestrateStartup() {
             gameObject.SendMessage("StateStart", SendMessageOptions.DontRequireReceiver);
         }
 

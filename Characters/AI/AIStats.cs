@@ -13,8 +13,8 @@ namespace AnyRPG {
 
         public override void Start() {
             base.Start();
-            if (baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyCharacterUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }
         }
 

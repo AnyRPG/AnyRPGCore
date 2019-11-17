@@ -147,43 +147,43 @@ namespace AnyRPG {
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
             frozen = true;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.MyAnimator.enabled = false;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = false;
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
         }
 
         public void UnFreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnFreezeCharacter(): ");
             frozen = false;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.MyAnimator.enabled = true;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.UnFreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = true;
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
         }
 
         public void StunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): ");
             stunned = true;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleStunned();
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleStunned();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
         }
 
         public void UnStunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnStunCharacter(): ");
             stunned = false;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleUnStunned();
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.UnFreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnStunned();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
         }
 
         public void LevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
             levitated = true;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleLevitated();
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.FreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleLevitated();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
         }
 
         public void UnLevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnLevitateCharacter(): ");
             levitated = false;
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.HandleUnLevitated();
-            MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.UnFreezeCharacter();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnLevitated();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
         }
 
 
@@ -196,7 +196,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
             target = null;
             // FIX ME (reenable possibly?)
-            baseCharacter.MyCharacterUnit.MyCharacterMotor.StopFollowingTarget();
+            baseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
         }
 
         private Vector3 GetHitBoxCenter() {

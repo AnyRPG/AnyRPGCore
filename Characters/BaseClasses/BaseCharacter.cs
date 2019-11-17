@@ -32,6 +32,7 @@ namespace AnyRPG {
         protected CharacterEquipmentManager characterEquipmentManager = null;
 
         protected CharacterUnit characterUnit = null;
+        protected AnimatedUnit animatedUnit = null;
 
         public ICharacterStats MyCharacterStats { get => characterStats; }
         public ICharacterCombat MyCharacterCombat { get => characterCombat; }
@@ -54,6 +55,7 @@ namespace AnyRPG {
             set => factionName = value;
         }
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public AnimatedUnit MyAnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
         public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
@@ -62,6 +64,10 @@ namespace AnyRPG {
             CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
             if (_characterUnit != null) {
                 MyCharacterUnit = _characterUnit;
+            }
+            AnimatedUnit _animatedUnit = GetComponent<AnimatedUnit>();
+            if (_animatedUnit != null) {
+                MyAnimatedUnit = _animatedUnit;
             }
             characterSkillManager = GetComponent<CharacterSkillManager>();
             characterFactionManager = GetComponent<CharacterFactionManager>();

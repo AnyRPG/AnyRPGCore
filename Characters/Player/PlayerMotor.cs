@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         public override void Move(Vector3 moveDirection, bool isKnockBack = false) {
             if (isKnockBack) {
-                PlayerUnitMovementController playerUnitMovementController = (characterUnit as PlayerUnit).MyPlayerUnitMovementController;
+                PlayerUnitMovementController playerUnitMovementController = (animatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
                 if (playerUnitMovementController != null) {
                     playerUnitMovementController.KnockBack();
                 }

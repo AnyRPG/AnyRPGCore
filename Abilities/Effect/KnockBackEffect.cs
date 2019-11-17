@@ -26,8 +26,8 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
-            if (characterUnit == null || characterUnit.MyCharacterMotor == null) {
+            AnimatedUnit animatedUnit = target.GetComponent<AnimatedUnit>();
+            if (animatedUnit == null || animatedUnit.MyCharacterMotor == null) {
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
             finalDirection *= knockBackVelocity;
 
             //Debug.Log("KnockBackEffect.Cast(): originalDirection: " + originalDirection + "; rotationDirection: " + rotationDirection + "; finalDirection: " + finalDirection + "; knockbackAngle: " + knockBackAngle);
-            characterUnit.MyCharacterMotor.Move(finalDirection, true);
+            animatedUnit.MyCharacterMotor.Move(finalDirection, true);
         }
 
 

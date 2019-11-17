@@ -12,7 +12,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ": Enter return state at position: " + aiController.transform.position);
             this.aiController = aiController;
             this.aiController.SetDestination(aiController.MyLeashPosition);
-            this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
         }
 
         public void Exit() {
@@ -32,9 +32,9 @@ namespace AnyRPG {
             if (distanceToLeashPosition <= 1) {
                 aiController.ChangeState(new IdleState());
             } else {
-                float agentDestinationDrift = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.MyCharacterUnit.MyAgent.destination);
-                if (agentDestinationDrift >= aiController.MyBaseCharacter.MyCharacterUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
-                    //Debug.Log("ReturnState.Update(). agent destination is: " + aiController.MyBaseCharacter.MyCharacterUnit.MyAgent.destination + "; resetting to: " + aiController.MyStartPosition);
+                float agentDestinationDrift = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.destination);
+                if (agentDestinationDrift >= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+                    //Debug.Log("ReturnState.Update(). agent destination is: " + aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.destination + "; resetting to: " + aiController.MyStartPosition);
                     this.aiController.SetDestination(aiController.MyLeashPosition);
                 }
             }

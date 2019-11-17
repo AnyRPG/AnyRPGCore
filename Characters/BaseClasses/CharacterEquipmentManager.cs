@@ -175,8 +175,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject + ".CharacterEquipmentManager.HandleWeaponSlot(). We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
                 }
                 CharacterAnimator characterAnimator = null;
-                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
-                    characterAnimator = baseCharacter.MyCharacterUnit.MyCharacterAnimator;
+                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    characterAnimator = baseCharacter.MyAnimatedUnit.MyCharacterAnimator;
                 }
                 if (characterAnimator == null) {
                     characterAnimator = GetComponent<CharacterAnimator>();

@@ -245,8 +245,8 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MyCharacterAbilityManager != null) {
                 baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("InCombat", false);
+            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", false);
             }
             DeActivateAutoAttack();
             //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
@@ -283,7 +283,7 @@ namespace AnyRPG {
             //}
             lastCombatEvent = Time.time;
             // maybe do this in update?
-            baseCharacter.MyCharacterUnit.MyCharacterAnimator.SetBool("InCombat", true);
+            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", true);
             inCombat = true;
             OnEnterCombat();
             if (aggroTable.AddToAggroTable(target.MyCharacterUnit, 0)) {
@@ -322,7 +322,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
                 return false;
             }
-            if (MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator != null && MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.WaitingForAnimation() == true) {
+            if (MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.WaitingForAnimation() == true) {
                 // all though there are no casts in progress, a current animation is still finishing, so we can't start a new auto-attack yet
                 // this can happen when an animation for a casted ability lasts longer than the actual cast time, for abilities that do their damage part way through the animation
                 //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
@@ -434,8 +434,8 @@ namespace AnyRPG {
                 }
                 return true;
             } else {
-                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator != null && baseCharacter.MyCharacterUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    if (baseCharacter.MyCharacterUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
+                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                    if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
                         return true;
                     }

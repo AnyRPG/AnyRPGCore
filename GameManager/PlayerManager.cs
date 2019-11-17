@@ -322,14 +322,24 @@ namespace AnyRPG {
             MyCharacter.MyCharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
             MyCharacter.MyCharacterUnit.MyCharacter = MyCharacter;
 
+            MyCharacter.MyAnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
+            
+            // should we also do characterUnit here instead of down in InitializeUMA?
+            // should we do the full orchestration here instead of just getting components?
+            MyCharacter.MyAnimatedUnit.GetComponentReferences();
+
             if (LevelManager.MyInstance.MyNavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 playerUnitObject.GetComponent<NavMeshAgent>().enabled = true;
-                (MyCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
+                if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
+                }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
                 playerUnitObject.GetComponent<NavMeshAgent>().enabled = false;
-                (MyCharacter.MyCharacterUnit as PlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
+                if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
+                }
             }
 
             if (currentPlayerUnitPrefab == defaultUMAPlayerUnitPrefab) {
@@ -383,7 +393,7 @@ namespace AnyRPG {
 
 
             // initialize the animator so our avatar initialization has an animator.
-            MyCharacter.MyCharacterUnit.MyCharacterAnimator.InitializeAnimator();
+            MyCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             avatar.Initialize();
             UMAData umaData = avatar.umaData;
             umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;

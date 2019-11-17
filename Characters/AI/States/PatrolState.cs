@@ -19,7 +19,7 @@ namespace AnyRPG {
             if (!aiController.MyAiPatrol.PatrolComplete()) {
                 currentDestination = aiController.MyAiPatrol.GetDestination(false);
                 currentDestination = this.aiController.SetDestination(currentDestination);
-                this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             } else {
                 aiController.ChangeState(new IdleState());
             }
@@ -42,7 +42,7 @@ namespace AnyRPG {
                 aiController.ChangeState(new FollowState());
             }
 
-            if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyCharacterUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+            if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
                 currentDestination = aiController.MyAiPatrol.GetDestination(true);
 
@@ -56,7 +56,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached and patrol not complete yet!");
                     coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
-                    this.aiController.MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                    this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
                 }
             }
         }

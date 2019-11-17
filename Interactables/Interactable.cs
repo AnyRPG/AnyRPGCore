@@ -260,10 +260,11 @@ namespace AnyRPG {
         public void Spawn() {
             //Debug.Log(gameObject.name + ".Interactable.Spawn()");
 
-            if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
+            if (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.Spawn(): No valid Interactables.  Not spawning.");
                 return;
             }
+
             if (spawnReference == null && spawnPrefab != null) {
                 //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + spawnPrefab.name);
                 spawnReference = Instantiate(spawnPrefab, gameObject.transform);

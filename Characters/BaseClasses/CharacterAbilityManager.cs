@@ -256,9 +256,9 @@ namespace AnyRPG {
         public virtual void HandleCharacterUnitSpawn() {
             //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn()");
 
-            if (MyBaseCharacter.MyCharacterUnit.MyCharacterMotor != null) {
+            if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is not null");
-                MyBaseCharacter.MyCharacterUnit.MyCharacterMotor.OnMovement += HandleManualMovement;
+                MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.OnMovement += HandleManualMovement;
             } else {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is null!");
             }
@@ -377,7 +377,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
                 if (!ability.MyCanSimultaneousCast) {
                     OnCastStop(MyBaseCharacter as BaseCharacter);
-                    MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.SetCasting(false);
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetCasting(false);
                 }
                 PerformAbility(ability, target, GetGroundTarget());
 
@@ -441,7 +441,7 @@ namespace AnyRPG {
                     //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
                     // we need to do this because we are allowed to stop an outstanding auto-attack to start this cast
-                    MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
                     // start the cast (or cast targetting projector)
                     currentCast = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
@@ -543,7 +543,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
             }
-            MyBaseCharacter.MyCharacterUnit.MyCharacterAnimator.ClearAnimationBlockers();
+            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
             OnCastStop(MyBaseCharacter as BaseCharacter);
         }
 

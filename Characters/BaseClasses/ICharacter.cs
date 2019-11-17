@@ -7,6 +7,7 @@ using AnyRPG;
     ICharacterStats MyCharacterStats { get; }
     string MyFactionName { get; set; }
     CharacterUnit MyCharacterUnit { get; set; }
+    AnimatedUnit MyAnimatedUnit { get; set; }
     CharacterFactionManager MyCharacterFactionManager { get; }
     CharacterEquipmentManager MyCharacterEquipmentManager { get; set; }
 
