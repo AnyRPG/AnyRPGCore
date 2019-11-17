@@ -18,6 +18,7 @@ namespace AnyRPG {
         }
 
         public void OrchestrateStartup() {
+            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OrchestrateStartup()");
             gameObject.SendMessage("StateStart", SendMessageOptions.DontRequireReceiver);
         }
 
@@ -28,11 +29,20 @@ namespace AnyRPG {
         }
 
         void SingleUpdate() {
+            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.SingleUpdate()");
 
             gameObject.SendMessage("StateUpdate", SendMessageOptions.DontRequireReceiver);
 
             if (AfterSingleUpdate != null)
                 AfterSingleUpdate();
+        }
+
+        private void OnDisable() {
+            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OnDisable()");
+        }
+
+        private void OnEnable() {
+            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OnEnable()");
         }
 
     }

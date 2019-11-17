@@ -19,11 +19,12 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            //Debug.Log(gameObject.name + ": running Start()");
+            //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.Start()");
             base.Start();
         }
 
         public override void OrchestrateStartup() {
+            //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStartup()");
             base.OrchestrateStartup();
             playerUnitMovementController.OrchestrateStartup();
         }

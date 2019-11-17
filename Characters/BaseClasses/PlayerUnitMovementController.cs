@@ -60,7 +60,8 @@ namespace AnyRPG {
         private float rayCastLength = 0.5f;
 
 
-        public LayerMask groundMask;
+        private LayerMask groundMask;
+
         // downward raycast height
         private float rayCastHeight = 0.75f;
         public bool debug = true;
@@ -94,10 +95,13 @@ namespace AnyRPG {
         private float collisionMinimumHeight = 0.05f;
 
         private void Awake() {
+            if (PlayerManager.MyInstance != null) {
+                groundMask = PlayerManager.MyInstance.MyDefaultGroundMask;
+            }
         }
 
         private void Start() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Start()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Start()");
             //Set currentState to idle on startup.
             airForwardDirection = transform.forward;
 
@@ -105,11 +109,13 @@ namespace AnyRPG {
         }
 
         public void OrchestrateStartup() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
             GetComponentReferences();
             ConfigureStateMachine();
         }
 
         public void ConfigureStateMachine() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
             rpgCharacterState = AnyRPGCharacterState.Idle;
             if (anyRPGCharacterController != null) {
@@ -120,28 +126,29 @@ namespace AnyRPG {
         public void GetComponentReferences() {
             anyRPGCharacterController = GetComponent<AnyRPGCharacterController>();
             if (anyRPGCharacterController == null) {
-                Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
             }
             if (characterUnit == null) {
                 characterUnit = GetComponent<CharacterUnit>();
                 if (characterUnit == null) {
-                    Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get characterUnit");
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get characterUnit");
                 }
             }
             animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit == null) {
-                Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get animatedUnit");
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get animatedUnit");
             }
 
         }
 
         public void SetCharacterUnit(CharacterUnit characterUnit) {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.SetCharacterUnit()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SetCharacterUnit()");
             this.characterUnit = characterUnit;
         }
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
         protected override void EarlyGlobalStateUpdate() {
+            //Debug.Log(gameObject.name + ".earlyGlobalStateUpdate()");
             CalculateForward();
             CalculateBackward();
             CalculateGroundAngle();
@@ -210,7 +217,7 @@ namespace AnyRPG {
 
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
             if (animatedUnit != null && animatedUnit.MyRigidBody != null) {
                 animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
             }
@@ -222,19 +229,22 @@ namespace AnyRPG {
 
         //Run every frame we are in the idle state.
         void Idle_StateUpdate() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
 
             if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).allowedInput && (characterUnit.MyCharacter.MyCharacterController as PlayerController).inputJump) {
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering jump state");
                 currentState = AnyRPGCharacterState.Jump;
                 rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
             }
             if (!MaintainingGround()) {
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering fall state");
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
                 return;
             }
             if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
                 currentState = AnyRPGCharacterState.Move;
                 rpgCharacterState = AnyRPGCharacterState.Move;
                 return;
@@ -254,7 +264,7 @@ namespace AnyRPG {
         }
 
         void Idle_ExitState() {
-            //Debug.Log("Idle_ExitState(). Freezing Rotation only");
+            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
             animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             //Run once when exit the idle state.
         }
@@ -673,9 +683,12 @@ namespace AnyRPG {
 
         private void CheckGround() {
             // downward cast for grounding
+            //Debug.Log("CheckGround()");
             if (Physics.Raycast(transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, rayCastHeight, groundMask)) {
+                //Debug.Log("CheckGround(): grounded is true");
                 tempGrounded = true;
             } else {
+                //Debug.Log("CheckGround(): grounded is false");
                 tempGrounded = false;
             }
 
@@ -787,14 +800,14 @@ namespace AnyRPG {
         }
 
         public void OnEnable() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnEnable()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnEnable()");
             if (anyRPGCharacterController != null) {
                 anyRPGCharacterController.enabled = true;
             }
         }
 
         public void OnDisable() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
             if (anyRPGCharacterController != null) {
                 anyRPGCharacterController.enabled = false;
             }

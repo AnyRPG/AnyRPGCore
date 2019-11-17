@@ -282,12 +282,13 @@ namespace AnyRPG {
         }
 
         public virtual void Move(Vector3 moveDirection, bool isKnockBack = false) {
-            Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
+            //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
             if (frozen) {
+                //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "): frozen and doing nothing!!!");
                 return;
             }
             if (characterUnit != null && animatedUnit.MyAgent != null && animatedUnit.MyAgent.enabled) {
-                //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "). current position: " + transform.position);
+                //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "): moving via navmeshagent");
 
                 //agent.Move(moveDirection);
                 ResetPath();
@@ -297,7 +298,7 @@ namespace AnyRPG {
                 //float currentYVelocity = moveDirection.y != 0 ? moveDirection.y : animatedUnit.MyRigidBody.velocity.y;
                 //Debug.Log("characterUnit.yVelocity is " + currentYVelocity);
                 //Vector3 newMoveDirection = new Vector3(moveDirection.x, currentYVelocity, moveDirection.z);
-                //Debug.Log(gameObject.name + ".CharacterMotor.Move() newMoveDirection: " + newMoveDirection + "; animatedUnit.MyRigidBody.constraints: " + animatedUnit.MyRigidBody.constraints);
+                //Debug.Log(gameObject.name + ".CharacterMotor.Move() newMoveDirection: " + moveDirection + "; animatedUnit.MyRigidBody.constraints: " + animatedUnit.MyRigidBody.constraints);
                 animatedUnit.MyRigidBody.velocity = moveDirection;
                 //animatedUnit.MyRigidBody.MovePosition(transform.position + moveDirection);
                 //animatedUnit.MyRigidBody.AddForce(moveDirection, ForceMode.VelocityChange);

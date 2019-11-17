@@ -29,6 +29,9 @@ namespace AnyRPG {
         private float maxMovementSpeed = 20f;
 
         [SerializeField]
+        private LayerMask defaultGroundMask;
+
+        [SerializeField]
         private GameObject playerConnectionParent;
 
         [SerializeField]
@@ -108,6 +111,7 @@ namespace AnyRPG {
         public GameObject MyAIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject MyEffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
         public GameObject MyPlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
+        public LayerMask MyDefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
