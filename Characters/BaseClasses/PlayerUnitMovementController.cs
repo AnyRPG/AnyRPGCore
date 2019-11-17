@@ -176,6 +176,11 @@ namespace AnyRPG {
             //If alive and is moving, set animator.
             if (!useMeshNav && characterUnit.MyCharacter.MyCharacterStats.IsAlive && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
 
+                CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
+                bool rotateModel = false;
+                if (tmpUnit == null) {
+                    rotateModel = true;
+                }
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput()) {
                     if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).inputStrafe == true) {
@@ -185,12 +190,12 @@ namespace AnyRPG {
                     }
                     isMoving = true;
                     animatedUnit.MyCharacterAnimator.SetMoving(true);
-                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
+                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
                 } else {
                     isMoving = false;
                     animatedUnit.MyCharacterAnimator.SetMoving(false);
                     animatedUnit.MyCharacterAnimator.SetStrafing(false);
-                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity);
+                    animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
                 }
                 animatedUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
             }
@@ -264,7 +269,7 @@ namespace AnyRPG {
         }
 
         void Idle_ExitState() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
             animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             //Run once when exit the idle state.
         }

@@ -33,9 +33,12 @@ namespace AnyRPG {
                 return;
             }
             string originalPrefabSourceBone = prefabSourceBone;
+            Vector3 originalPrefabOffset = prefabOffset;
+            prefabOffset = Vector3.zero;
             prefabSourceBone = string.Empty;
             base.Cast(source, target, originalTarget, abilityEffectInput);
             prefabSourceBone = originalPrefabSourceBone;
+            prefabOffset = originalPrefabOffset;
             if (abilityEffectObject != null) {
                 // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                 abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
@@ -44,7 +47,7 @@ namespace AnyRPG {
                     if (mountPoint != null) {
                         PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
                         //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.position;
+                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(prefabOffset);
                         ActivateMountedState();
                     }
                 }
@@ -68,6 +71,7 @@ namespace AnyRPG {
                     (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
 
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.transform);
 
                 }
             }
@@ -93,6 +97,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = abilityEffectObject.GetComponent<AnimatedUnit>();
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(abilityEffectObject.transform);
                 }
             }
         }
@@ -132,21 +137,21 @@ namespace AnyRPG {
         }
 
         public void ConfigureMountPhysics() {
-            Debug.Log("MountEffect.ConfigureMountPhysics()");
+            //Debug.Log("MountEffect.ConfigureMountPhysics()");
             Collider anyCollider = abilityEffectObject.GetComponent<Collider>();
             if (anyCollider != null) {
-                Debug.Log("MountEffect.ConfigureMountPhysics(): configuring trigger");
+                //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring trigger");
                 anyCollider.isTrigger = false;
             } else {
-                Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
+                //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
             }
             Rigidbody mountRigidBody = abilityEffectObject.GetComponent<Rigidbody>();
             if (mountRigidBody != null) {
-                Debug.Log("MountEffect.ConfigureMountPhysics(): configuring rigidbody");
+                //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring rigidbody");
                 mountRigidBody.isKinematic = false;
                 mountRigidBody.useGravity = true;
             } else {
-                Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
+                //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
             }
             NavMeshAgent navMeshAgent = abilityEffectObject.GetComponent<NavMeshAgent>();
             if (navMeshAgent != null) {

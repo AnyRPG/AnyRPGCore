@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".AnimatedPlayerUnit.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.GetComponentReferences()");
             if (componentReferencesInitialized) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
                 return;
