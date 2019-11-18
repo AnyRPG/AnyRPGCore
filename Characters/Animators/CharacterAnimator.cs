@@ -69,6 +69,8 @@ namespace AnyRPG {
         // a reference to any current ability we are casting
         private BaseAbility currentAbility = null;
 
+        protected bool componentReferencesInitialized = false;
+
         public bool applyRootMotion { get => (animator != null ? animator.applyRootMotion : false); }
         public Animator MyAnimator { get => animator; }
         public BaseAbility MyCurrentAbility { get => currentAbility; set => currentAbility = value; }
@@ -78,9 +80,26 @@ namespace AnyRPG {
         }
 
         protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.Awake()");
-            originalAnimatorController = animatorController;
+            Debug.Log(gameObject.name + ".CharacterAnimator.Awake()");
+            GetComponentReferences();
+        }
 
+        protected virtual void Start() {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
+        }
+
+        public void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
+            GetComponentReferences();
+            CreateEventSubscriptions();
+            InitializeAnimator();
+        }
+
+        public virtual void GetComponentReferences() {
+            if (componentReferencesInitialized == true) {
+                return;
+            }
+            originalAnimatorController = animatorController;
             if (characterUnit == null) {
                 characterUnit = GetComponent<CharacterUnit>();
             }
@@ -99,21 +118,13 @@ namespace AnyRPG {
                     defaultAttackAnimationProfile = SystemConfigurationManager.MyInstance.MyDefaultAttackAnimationProfile;
                 }
             }
-        }
+            componentReferencesInitialized = true;
 
-        protected virtual void Start() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
-        }
-
-        public void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
-            CreateEventSubscriptions();
-            InitializeAnimator();
         }
 
         public virtual void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
-            if (characterUnit.MyCharacter != null) {
+            if (characterUnit != null && characterUnit.MyCharacter != null) {
                 characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
@@ -175,11 +186,15 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
-                //Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
-                overrideController = new AnimatorOverrideController(animatorController);
+                Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
+                if (animatorController == null) {
+                    Debug.Log(gameObject.name + ".CharacterAnimator.InitializeAnimator() animatorController is null");
+                } else {
+                    overrideController = new AnimatorOverrideController(animatorController);
+                    SetOverrideController(overrideController);
+                }
             }
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
-            SetOverrideController(overrideController);
 
             SetAnimationProfileOverride(defaultAttackAnimationProfile);
 
@@ -187,6 +202,8 @@ namespace AnyRPG {
         }
 
         public void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
+            Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+
             animator.runtimeAnimatorController = animatorOverrideController;
 
             // set animator on UMA if one exists
