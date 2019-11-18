@@ -40,7 +40,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true || aiController.MyBaseCharacter.MyCharacterAbilityManager.MyCurrentCast != null) {
+            if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true || aiController.MyBaseCharacter.MyCharacterAbilityManager.MyCurrentCastCoroutine != null) {
                 //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null || MyIsCasting == true");
                 // nothing to do, cast in progress
                 return;

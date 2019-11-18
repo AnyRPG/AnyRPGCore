@@ -30,6 +30,12 @@ namespace AnyRPG {
             AttackHitEvent();
         }
 
+        public void AnimationHit() {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
+                characterUnit.MyCharacter.MyCharacterAbilityManager.AnimationHitAnimationEvent();
+            }
+        }
+
         public void Shoot() {
         }
 

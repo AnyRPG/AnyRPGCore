@@ -20,16 +20,20 @@ namespace AnyRPG {
         [SerializeField]
         protected string holdableObjectName;
 
-        [SerializeField]
-        protected AudioClip castingAudioClip;
 
         // on hit animation
         [SerializeField]
         protected AnimationClip animationClip = null;
 
+        [SerializeField]
+        protected AudioClip animationHitAudioClip;
+
         // on hit animation
         [SerializeField]
         protected AnimationClip castingAnimationClip = null;
+
+        [SerializeField]
+        protected AudioClip castingAudioClip;
 
         public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
         public AnimationClip MyCastingAnimationClip { get => castingAnimationClip; set => castingAnimationClip = value; }
@@ -143,6 +147,7 @@ namespace AnyRPG {
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
         public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
+        public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         protected ICharacter baseCharacter;
 
-        protected Coroutine currentCast = null;
+        protected Coroutine currentCastCoroutine = null;
+        protected BaseAbility currentCastAbility = null;
         protected Coroutine abilityHitDelayCoroutine = null;
         protected Coroutine destroyAbilityEffectObjectCoroutine = null;
 
@@ -51,7 +52,7 @@ namespace AnyRPG {
         public bool MyWaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool MyIsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
-        public Coroutine MyCurrentCast { get => currentCast; }
+        public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
 
         protected virtual void Awake() {
             //Debug.Log("CharacterAbilityManager.Awake()");
@@ -111,9 +112,9 @@ namespace AnyRPG {
 
         public virtual void CleanupCoroutines() {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
-            if (currentCast != null) {
-                StopCoroutine(currentCast);
-                currentCast = null;
+            if (currentCastCoroutine != null) {
+                StopCoroutine(currentCastCoroutine);
+                EndCastCleanup();
             }
             if (abilityHitDelayCoroutine != null) {
                 StopCoroutine(abilityHitDelayCoroutine);
@@ -185,10 +186,10 @@ namespace AnyRPG {
                 yield return null;
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
-                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
+                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
                 abilityCoolDownDictionary.Remove(abilityName);
             } else {
-                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
+                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
             }
         }
 
@@ -354,7 +355,9 @@ namespace AnyRPG {
                 }
                 if (ability.MyCastingAudioClip != null) {
                     //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
-                    baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(ability.MyCastingAudioClip);
+                    //baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(ability.MyCastingAudioClip);
+                    baseCharacter.MyCharacterUnit.MyAudioSource.clip = ability.MyCastingAudioClip;
+                    baseCharacter.MyCharacterUnit.MyAudioSource.Play();
                 }
                 while (currentCastTime < ability.MyAbilityCastingTime) {
                     currentCastTime += Time.deltaTime;
@@ -376,7 +379,7 @@ namespace AnyRPG {
 
             //Debug.Log(gameObject + ".CharacterAbilityManager.PerformAbilityCast(). nulling tag: " + startTime);
             // set currentCast to null because it isn't automatically null until the next frame and we are about to do stuff which requires it to be null immediately
-            currentCast = null;
+            EndCastCleanup();
 
             if (canCast) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
@@ -387,6 +390,12 @@ namespace AnyRPG {
                 PerformAbility(ability, target, GetGroundTarget());
 
             }
+        }
+
+        public void EndCastCleanup() {
+            currentCastCoroutine = null;
+            currentCastAbility = null;
+            baseCharacter.MyCharacterUnit.MyAudioSource.Stop();
         }
 
         public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
@@ -443,14 +452,15 @@ namespace AnyRPG {
                 // directly performing to avoid interference with other abilities being casted
                 PerformAbility(usedAbility, finalTarget, GetGroundTarget());
             } else {
-                if (currentCast == null) {
+                if (currentCastCoroutine == null) {
                     //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
                     // we need to do this because we are allowed to stop an outstanding auto-attack to start this cast
                     MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
                     // start the cast (or cast targetting projector)
-                    currentCast = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
+                    currentCastCoroutine = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
+                    currentCastAbility = usedAbility as BaseAbility;
                 } else {
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
@@ -476,9 +486,9 @@ namespace AnyRPG {
                 //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
-                if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
-                    Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
-                }
+                //if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
+                    //Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
+                //}
                 return false;
             }
 
@@ -539,11 +549,11 @@ namespace AnyRPG {
         public virtual void StopCasting() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting()");
             // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
-            if (currentCast != null) {
+            if (currentCastCoroutine != null) {
                 //if (currentCast != null && isCasting == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
-                StopCoroutine(currentCast);
-                currentCast = null;
+                StopCoroutine(currentCastCoroutine);
+                EndCastCleanup();
                 baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
 
             } else {
@@ -616,6 +626,16 @@ namespace AnyRPG {
             Destroy(abilityEffectObject, fixedLengthEffect.MyPrefabDestroyDelay);
 
             destroyAbilityEffectObjectCoroutine = null;
+        }
+
+        public void AnimationHitAnimationEvent() {
+            if (currentCastAbility != null) {
+                if (currentCastAbility.MyAnimationHitAudioClip != null) {
+                    //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
+                    baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(currentCastAbility.MyAnimationHitAudioClip);
+                }
+
+            }
         }
 
     }

@@ -14,7 +14,7 @@ namespace AnyRPG {
         Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get; set; }
         Dictionary<string, IAbility> MyAbilityList { get; }
 
-        Coroutine MyCurrentCast { get; }
+        Coroutine MyCurrentCastCoroutine { get; }
 
         bool MyWaitingForAnimatedAbility { get; set; }
         void BeginAbility(IAbility ability);
@@ -34,5 +34,6 @@ namespace AnyRPG {
         void BeginAbilityCoolDown(BaseAbility baseAbility);
         bool CanCastAbility(IAbility ability);
         void CreateEventSubscriptions();
+        void AnimationHitAnimationEvent();
     }
 }
