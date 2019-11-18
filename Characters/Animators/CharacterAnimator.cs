@@ -179,17 +179,21 @@ namespace AnyRPG {
                 overrideController = new AnimatorOverrideController(animatorController);
             }
             Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
-            animator.runtimeAnimatorController = overrideController;
-
-            // set animator on UMA if one exists
-            DynamicCharacterAvatar myAvatar = GetComponent<DynamicCharacterAvatar>();
-            if (myAvatar != null) {
-                myAvatar.raceAnimationControllers.defaultAnimationController = overrideController;
-            }
+            SetOverrideController(overrideController);
 
             SetAnimationProfileOverride(defaultAttackAnimationProfile);
 
             initialized = true;
+        }
+
+        public void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
+            animator.runtimeAnimatorController = animatorOverrideController;
+
+            // set animator on UMA if one exists
+            DynamicCharacterAvatar myAvatar = GetComponent<DynamicCharacterAvatar>();
+            if (myAvatar != null) {
+                myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
+            }
         }
 
         public void SetAnimationProfileOverride(AnimationProfile animationProfile) {
@@ -656,9 +660,9 @@ namespace AnyRPG {
                 }
             }
 
-            Debug.Log(gameObject.name + ": setting override controller to: " + tempOverrideController.name);
             overrideController = tempOverrideController;
-            animator.runtimeAnimatorController = tempOverrideController;
+            Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
+            SetOverrideController(overrideController);
 
         }
 
@@ -723,7 +727,13 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null ) {
                 // override the default attack animation
+                Debug.Log("animationClip: " + animationClip.name);
+                foreach (AnimationClip tmpAnimationClip in overrideController.animationClips) {
+                    Debug.Log("Found clip from overrideController: " + tmpAnimationClip.name);
+                }
+
                 overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip] = animationClip;
+                Debug.Log("current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
             }

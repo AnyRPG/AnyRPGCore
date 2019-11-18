@@ -35,7 +35,7 @@ namespace AnyRPG {
         private int agility;
 
         protected float walkSpeed = 1f;
-        protected float runSpeed = 3.5f;
+        protected float runSpeed = 7f;
 
         public int currentHealth { get; private set; }
         public int currentMana { get; private set; }
