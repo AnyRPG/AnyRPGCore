@@ -223,7 +223,8 @@ namespace AnyRPG {
                 } else if (overrideHitSoundEffect == null && defaultHitSoundEffect != null) {
                     // do nothing sound was suppressed for special attack sound
                 } else if (overrideHitSoundEffect != null) {
-                    AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
+                    baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(overrideHitSoundEffect);
+                    //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
 
                 // reset back to default if possible now that an attack has hit

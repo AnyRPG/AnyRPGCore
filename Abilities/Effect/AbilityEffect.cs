@@ -250,7 +250,11 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityHitEffects(source, target, abilityEffectInput);
             if (OnHitAudioClip != null) {
-                AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
+                AudioSource audioSource = target.GetComponent<AudioSource>();
+                if (audioSource != null) {
+                    audioSource.PlayOneShot(OnHitAudioClip);
+                }
+                //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
             }
             PerformMaterialChange(source, target);
         }

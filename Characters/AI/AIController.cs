@@ -61,7 +61,7 @@ namespace AnyRPG {
 
             // moved next 2 lines here from awake because we need some references first for them to work
             Vector3 correctedPosition = Vector3.zero;
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                 MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
             } else {
                 //Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");

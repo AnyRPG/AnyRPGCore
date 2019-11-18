@@ -119,14 +119,11 @@ namespace AnyRPG {
         public bool MyAutoAddToBars { get => autoAddToBars; }
         public bool MyUseableWithoutLearning { get => useableWithoutLearning; }
         public int MyAbilityManaCost { get => abilityManaCost; set => abilityManaCost = value; }
-        public float MyAbilityCastingTime {
+        public virtual float MyAbilityCastingTime {
             get {
                 if (useAnimationCastTime == false) {
                     return abilityCastingTime;
                 } else {
-                    if (animationClip != null) {
-                        return animationClip.length;
-                    }
                     if (castingAnimationClip != null) {
                         return castingAnimationClip.length;
                     }
@@ -172,7 +169,7 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireStrings));
             }
 
-            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\n<color=#ffff00ff>{3}</color>{4}", MyAbilityCastingTime, abilityCoolDown, abilityManaCost, description, addString);
+            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\n<color=#ffff00ff>{3}</color>{4}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, description, addString);
         }
 
         public bool CanCast(BaseCharacter sourceCharacter) {

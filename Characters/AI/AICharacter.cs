@@ -24,6 +24,10 @@ namespace AnyRPG {
             characterController = GetComponent<AIController>() as ICharacterController;
             characterStats = GetComponent<AIStats>() as ICharacterStats;
             characterCombat = GetComponent<AICombat>() as ICharacterCombat;
+            animatedUnit = GetComponent<AnimatedUnit>();
+            if (animatedUnit == null) {
+                animatedUnit = gameObject.AddComponent<AnimatedUnit>();
+            }
         }
 
         protected override void Start() {
@@ -33,8 +37,14 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
                 characterModelGameObject = Instantiate(characterModelPrefab, MyCharacterUnit.transform);
             }
-            if (MyAnimatedUnit.MyCharacterAnimator != null) {
+            if (MyAnimatedUnit != null && MyAnimatedUnit.MyCharacterAnimator != null) {
                 MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            } else {
+                if (MyAnimatedUnit == null) {
+                    Debug.Log(gameObject.name + ".AICharacter.Start(): myanimatedunit is null");
+                } else if (MyAnimatedUnit.MyCharacterAnimator == null) {
+                    Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
+                }
             }
         }
 

@@ -42,6 +42,8 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 playerPreviewInitialOffset;
 
+        protected AudioSource audioSource;
+
         private Coroutine despawnCoroutine;
 
         public BaseCharacter MyCharacter {
@@ -62,6 +64,7 @@ namespace AnyRPG {
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
         public BaseCharacter MyBaseCharacter { get => MyCharacter; }
+        public AudioSource MyAudioSource { get => audioSource; set => audioSource = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
@@ -174,6 +177,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
+            audioSource = GetComponent<AudioSource>();
+            // ADD SOME CODE IN THE FUTURE TO AUTO-CONFIGURE THIS AUDIO SOURCE IN CASE IT HAS NOT BEEN ADDED TO THE UNIT PREFAB
         }
 
         public void InitializeNamePlate() {

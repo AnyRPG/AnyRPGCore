@@ -8,6 +8,13 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
+        public override float MyAbilityCastingTime {
+            get {
+                return 0f;
+            }
+            set => abilityCastingTime = value;
+        }
+
         public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast()");
             if (base.Cast(source, target, groundTarget)) {

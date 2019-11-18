@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AnimatedPlayerUnit: AnimatedUnit  {
+    public class AnimatedPlayerUnit : AnimatedUnit  {
 
         private PlayerUnitMovementController playerUnitMovementController;
 

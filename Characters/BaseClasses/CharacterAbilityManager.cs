@@ -349,7 +349,8 @@ namespace AnyRPG {
                     baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectName);
                 }
                 if (ability.MyCastingAudioClip != null) {
-                    AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
+                    //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
+                    baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(ability.MyCastingAudioClip);
                 }
                 while (currentCastTime < ability.MyAbilityCastingTime) {
                     currentCastTime += Time.deltaTime;

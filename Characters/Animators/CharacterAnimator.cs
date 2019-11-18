@@ -172,13 +172,13 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             } else {
-                Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
+                //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
-                Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
+                //Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
                 overrideController = new AnimatorOverrideController(animatorController);
             }
-            Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
+            //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
             SetOverrideController(overrideController);
 
             SetAnimationProfileOverride(defaultAttackAnimationProfile);
@@ -197,13 +197,13 @@ namespace AnyRPG {
         }
 
         public void SetAnimationProfileOverride(AnimationProfile animationProfile) {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationProfileOverride(" + (animationProfile == null ? "null" : animationProfile.MyProfileName) + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationProfileOverride(" + (animationProfile == null ? "null" : animationProfile.MyProfileName) + ")");
             currentAttackAnimationProfile = animationProfile;
             SetAnimationClipOverrides();
         }
 
         public void ResetAnimationProfile() {
-            Debug.Log(gameObject.name + ".CharacterAnimator.ResetAnimationProfile()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.ResetAnimationProfile()");
             currentAttackAnimationProfile = defaultAttackAnimationProfile;
             // change back to the original animations
             SetAnimationClipOverrides();
@@ -219,7 +219,7 @@ namespace AnyRPG {
         }
 
         protected virtual void SetAnimationClipOverrides() {
-            Debug.Log(gameObject.name + ": CharacterAnimator.SetAnimationClipOverrides()");
+            //Debug.Log(gameObject.name + ": CharacterAnimator.SetAnimationClipOverrides()");
             if (SystemConfigurationManager.MyInstance == null) {
                 return;
             }
@@ -661,7 +661,7 @@ namespace AnyRPG {
             }
 
             overrideController = tempOverrideController;
-            Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
+            //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
             SetOverrideController(overrideController);
 
         }
@@ -729,11 +729,11 @@ namespace AnyRPG {
                 // override the default attack animation
                 Debug.Log("animationClip: " + animationClip.name);
                 foreach (AnimationClip tmpAnimationClip in overrideController.animationClips) {
-                    Debug.Log("Found clip from overrideController: " + tmpAnimationClip.name);
+                    //Debug.Log("Found clip from overrideController: " + tmpAnimationClip.name);
                 }
 
                 overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip] = animationClip;
-                Debug.Log("current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip].name);
+                //Debug.Log("current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
             }
