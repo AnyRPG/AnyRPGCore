@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         private int GetMaxCraftAmount(string recipeName) {
-            //Debug.Log("CraftingUI.GetMaxCraftAmount()");
+            Debug.Log("CraftingUI.GetMaxCraftAmount()");
             Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
 
             int maxAmount = -1;
@@ -279,7 +279,7 @@ namespace AnyRPG {
         }
 
         public void CraftAll() {
-            //Debug.Log("CraftingUI.CraftAll()");
+            Debug.Log("CraftingUI.CraftAll()");
             if (MySelectedRecipeScript != null) {
                 craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
                 UpdateCraftAmountArea();
@@ -304,12 +304,14 @@ namespace AnyRPG {
         public void CraftNextItem() {
             //Debug.Log("CraftingUI.CraftNextItem()");
             if (craftingQueue.Count == 0) {
+                //Debug.Log("CraftingUI.CraftNextItem(): no more items to craft");
                 return;
             }
 
             Recipe recipe = SystemRecipeManager.MyInstance.GetResource(craftingQueue[0]);
             // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
             if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(recipe.MyOutput.MyName))) {
+                //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
                 foreach (CraftingMaterial craftingMaterial in recipe.MyCraftingMaterials) {
                     //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                     for (int i = 0; i < craftingMaterial.MyCount; i++) {
@@ -320,6 +322,7 @@ namespace AnyRPG {
                 craftingQueue.RemoveAt(0);
                 //UpdateCraftAmountArea();
                 if (craftingQueue.Count > 0) {
+                    //Debug.Log("CraftingUI.CraftNextItem(): count: " + craftingQueue.Count);
                     // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
                     PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
 

@@ -423,7 +423,7 @@ namespace AnyRPG {
         }
 
         public void SwitchCollisionOn() {
-            Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove = true;
                 if (anyRPGCharacterController != null) {

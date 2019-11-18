@@ -129,16 +129,22 @@ namespace AnyRPG {
 
         public void BeginAbilityCoolDown(BaseAbility baseAbility) {
             float abilityCoolDown = baseAbility.abilityCoolDown;
-
-            Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyName));
+            if (abilityCoolDown == 0f) {
+                // no point making a cooldown if it is zero length
+                return;
+            }
             AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
             abilityCoolDownNode.MyAbilityName = baseAbility.MyName;
-            abilityCoolDownNode.MyCoroutine = coroutine;
             abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
 
             if (!abilityCoolDownDictionary.ContainsKey(baseAbility.MyName)) {
                 abilityCoolDownDictionary[baseAbility.MyName] = abilityCoolDownNode;
             }
+
+            // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
+            Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyName));
+            abilityCoolDownNode.MyCoroutine = coroutine;
+
         }
 
         public void CleanupCoolDownRoutines() {
@@ -171,8 +177,6 @@ namespace AnyRPG {
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
             //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
 
-            yield return null;
-
             //Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
 
             while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
@@ -181,10 +185,10 @@ namespace AnyRPG {
                 yield return null;
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
-                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
+                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
                 abilityCoolDownDictionary.Remove(abilityName);
             } else {
-                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
+                Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");
             }
         }
 
@@ -399,7 +403,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         public void BeginAbility(IAbility ability) {
-            //Debug.Log("CharacterAbilitymanager.BeginAbility()");
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.MyName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return;
@@ -415,13 +419,14 @@ namespace AnyRPG {
         }
 
         private void BeginAbilityCommon(IAbility ability, GameObject target) {
-            //Debug.Log("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
             }
             if (!CanCastAbility(ability)) {
+                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 
@@ -472,7 +477,7 @@ namespace AnyRPG {
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
                 if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
-                    //Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
+                    Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
                 }
                 return false;
             }

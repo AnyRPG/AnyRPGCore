@@ -205,8 +205,6 @@ namespace AnyRPG {
             if (source != null && source.MyCharacterAbilityManager != null) {
                 source.MyCharacterAbilityManager.BeginAbilityCoolDown(this);
             }
-            // FIX ME
-            //SystemAbilityManager.MyInstance.StartCoroutine(BeginAbilityCoolDown());
 
             return true;
             // notify subscribers

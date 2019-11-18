@@ -163,7 +163,7 @@ namespace AnyRPG {
         }
 
         public virtual void InitializeAnimator() {
-            Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator()");
+            //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator()");
             if (initialized) {
                 return;
             }
@@ -268,7 +268,7 @@ namespace AnyRPG {
                     if (Mathf.Abs(currentAttackAnimationProfile.MyMoveForwardFastClip.averageSpeed.z) > 0.1) {
                         // our clip has forward motion.  override the default animation motion speed of 2
                         baseRunAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyMoveForwardFastClip.averageSpeed.z);
-                        Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                     }
                 } else {
                     Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
@@ -727,7 +727,7 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null ) {
                 // override the default attack animation
-                Debug.Log("animationClip: " + animationClip.name);
+                //Debug.Log("animationClip: " + animationClip.name);
                 foreach (AnimationClip tmpAnimationClip in overrideController.animationClips) {
                     //Debug.Log("Found clip from overrideController: " + tmpAnimationClip.name);
                 }
