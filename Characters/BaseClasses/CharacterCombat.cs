@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [RequireComponent(typeof(CharacterStats))]
-    public class CharacterCombat : MonoBehaviour, ICharacterCombat {
+    public class CharacterCombat : MonoBehaviour {
 
         //events
         public virtual event System.Action<BaseCharacter, float> OnKillEvent = delegate { };
@@ -14,7 +14,6 @@ namespace AnyRPG {
         public virtual event System.Action OnEnterCombat = delegate { };
         public virtual event System.Action<BaseCharacter, GameObject> OnHitEvent = delegate { };
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace AnyRPG {
         protected float attackCooldown = 0f;
 
         // components
-        protected ICharacter baseCharacter;
+        protected BaseCharacter baseCharacter;
         //protected CharacterCombat opponentCombat;
 
         protected BaseAbility onHitAbility = null;
@@ -63,7 +62,7 @@ namespace AnyRPG {
             }
         }
 
-        public ICharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
         public bool MyWaitingForAutoAttack {
             get => waitingForAutoAttack;
             set {
@@ -76,27 +75,27 @@ namespace AnyRPG {
         public AudioClip MyOverrideHitSoundEffect { get => overrideHitSoundEffect; set => overrideHitSoundEffect = value; }
         public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
 
-        private void Awake() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.Awake()");
-            baseCharacter = GetComponent<BaseCharacter>();
+        public void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ".CharacterCombat.OrchestratorStart()");
+            GetComponentReferences();
             aggroTable = new AggroTable(baseCharacter as BaseCharacter);
+            CreateEventSubscriptions();
         }
 
-        public virtual void Start() {
-            startHasRun = true;
-            CreateEventSubscriptions();
-
-            //GetComponent<CharacterStats>().OnTakeDamage += OnTakeDamage;
+        public virtual void GetComponentReferences() {
+            //Debug.Log(gameObject.name + ".CharacterCombat.GetComponentReferences()");
+            baseCharacter = GetComponent<BaseCharacter>();
         }
 
         protected virtual void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                //Debug.Log(gameObject.name + ".CharacterCombat.CreateEventSubscriptions(): subscribing to onequipmentchanged");
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
@@ -117,12 +116,15 @@ namespace AnyRPG {
         }
 
         public virtual void OnEnable() {
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
+        }
+
+        public virtual void OnDestroy() {
+            CleanupEventSubscriptions();
         }
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterCombat.OnDisable()");
-            CleanupEventSubscriptions();
             AttemptStopRegen();
         }
 
@@ -172,7 +174,7 @@ namespace AnyRPG {
         }
 
         public void SetWaitingForAutoAttack(bool newValue) {
-            Debug.Log(gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
+            //Debug.Log(gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
             MyWaitingForAutoAttack = newValue;
         }
 
@@ -254,7 +256,7 @@ namespace AnyRPG {
         }
 
         public void ActivateAutoAttack() {
-            Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
+            //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
             autoAttackActive = true;
         }
 
@@ -294,39 +296,39 @@ namespace AnyRPG {
         }
 
         protected virtual bool CanPerformAutoAttack(BaseCharacter characterTarget) {
-            Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ")");
+            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ")");
             if (!AutoAttackTargetIsValid(characterTarget)) {
                 return false;
             }
             if (!baseCharacter.MyCharacterController.IsTargetInHitBox(characterTarget.MyCharacterUnit.gameObject)) {
                 // target is too far away, can't attack
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") target is too far away, can't attack");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") target is too far away, can't attack");
                 return false;
             }
             if (attackCooldown > 0f) {
                 // still waiting for attack cooldown, can't attack
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") still waiting for attack cooldown (" + attackCooldown + "), can't attack");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") still waiting for attack cooldown (" + attackCooldown + "), can't attack");
                 return false;
             }
             if (MyWaitingForAutoAttack == true) {
                 // there is an existing autoattack in progress, can't start a new auto-attack
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") autoattack in progress, can't start a new auto-attack");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") autoattack in progress, can't start a new auto-attack");
                 return false;
             }
             if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
                 // if we have an ability manager and there is an outstanding special attack in progress, can't auto-attack
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") special attack in progress, can't auto-attack");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") special attack in progress, can't auto-attack");
                 return false;
             }
             if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true) {
                 // there is a spell cast in progress, can't start a new auto-attack
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
                 return false;
             }
             if (MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.WaitingForAnimation() == true) {
                 // all though there are no casts in progress, a current animation is still finishing, so we can't start a new auto-attack yet
                 // this can happen when an animation for a casted ability lasts longer than the actual cast time, for abilities that do their damage part way through the animation
-                Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
+                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
                 return false;
             }
             // there are no blockers to an attack, we can start an auto-attack
@@ -354,7 +356,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="characterTarget"></param>
         public virtual void Attack(BaseCharacter characterTarget) {
-            Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ")");
+            //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
                 //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
@@ -364,18 +366,18 @@ namespace AnyRPG {
 
                 // perform a faction/liveness check and disable auto-attack if it is not valid
                 if (!AutoAttackTargetIsValid(characterTarget)) {
-                    Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack(): target is not valid");
+                    //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack(): target is not valid");
                     DeActivateAutoAttack();
                     return;
                 }
                 if (!inCombat) {
                     EnterCombat(characterTarget);
                 }
-                Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") about to activate autoattack");
+                //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") about to activate autoattack");
                 ActivateAutoAttack();
                 if (CanPerformAutoAttack(characterTarget)) {
                     // block further auto-attacks while this one is outstanding
-                    Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") canperformattack: setwaitingforautoattack");
+                    //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") canperformattack: setwaitingforautoattack");
                     SetWaitingForAutoAttack(true);
 
                     // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
@@ -426,6 +428,7 @@ namespace AnyRPG {
                 targetCharacterUnit.MyCharacter.MyCharacterCombat.TakeDamage(baseCharacter.MyCharacterStats.MyMeleeDamage, baseCharacter.MyCharacterUnit.transform.position, baseCharacter as BaseCharacter, CombatType.normal, CombatMagnitude.normal, "Attack");
 
                 if (autoAttackActive == false) {
+                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
                     ActivateAutoAttack();
                 }
 
@@ -433,7 +436,7 @@ namespace AnyRPG {
 
                 AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                    Debug.Log("Casting OnHit Ability On Take Damage");
+                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.MyStatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
                         statusEffectNode.MyStatusEffect.CastWeaponHit(MyBaseCharacter as BaseCharacter, targetCharacterUnit.gameObject, abilityAffectInput);
@@ -445,6 +448,8 @@ namespace AnyRPG {
                 if (onHitAbility != null) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is not null!");
                     baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitAbility);
+                } else {
+                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is null!!!");
                 }
                 return true;
             } else {
@@ -527,7 +532,7 @@ namespace AnyRPG {
         }
 
         public void AttemptRegen(int MaxAmount, int currentAmount) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(); startHasRun: " + startHasRun);
+            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
             if (currentAmount != MaxAmount && regenRoutine == null) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(" + MaxAmount + ", " + currentAmount + "); regenRoutine == null");
                 AttemptRegen();
@@ -536,8 +541,8 @@ namespace AnyRPG {
 
 
         public void AttemptRegen() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(); startHasRun: " + startHasRun);
-            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && startHasRun == true) {
+            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
+            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(): starting coroutine");
                 regenRoutine = StartCoroutine(outOfCombatRegen());
             }
@@ -553,27 +558,32 @@ namespace AnyRPG {
         }
 
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            onHitAbility = null;
+            //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
+            if (oldItem != null) {
+                if (oldItem.equipSlot == EquipmentSlot.MainHand) {
+                    onHitAbility = null;
+                }
+            }
             if (newItem != null) {
-                //Debug.Log(gameObject.name + "Equipping " + newItem.name);
                 if (newItem.equipSlot == EquipmentSlot.MainHand) {
-                    //Debug.Log(newItem.name + " is a weapon.");
+                    onHitAbility = null;
+                    //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
                     if (newItem is Weapon && (newItem as Weapon).OnHitAbility != null) {
-                        //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
+                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
                         onHitAbility = (newItem as Weapon).OnHitAbility;
                     }
-                    /*
+                    overrideHitSoundEffect = null;
+                    defaultHitSoundEffect = null;
                     if (newItem is Weapon && (newItem as Weapon).MyDefaultHitSoundEffect != null) {
                         //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
                         overrideHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
                         defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
                     }
-                    */
                 }
             }
-            //AttemptRegen();
+            AttemptRegen();
         }
 
 

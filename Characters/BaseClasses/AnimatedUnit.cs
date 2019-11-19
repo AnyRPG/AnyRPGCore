@@ -23,7 +23,6 @@ namespace AnyRPG {
         protected CharacterAnimator characterAnimator;
 
         protected bool componentReferencesInitialized = false;
-        protected bool startHasRun = false;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -49,10 +48,6 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void Start() {
-            //Debug.Log(gameObject.name + ": running Start()");
-        }
-
         public virtual void OrchestrateStartup() {
             GetComponentReferences();
             CreateEventSubscriptions();
@@ -63,7 +58,7 @@ namespace AnyRPG {
         }
 
         public virtual void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             eventSubscriptionsInitialized = true;

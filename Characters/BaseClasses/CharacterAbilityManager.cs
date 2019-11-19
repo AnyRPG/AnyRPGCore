@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterAbilityManager : MonoBehaviour, ICharacterAbilityManager {
+    public class CharacterAbilityManager : MonoBehaviour {
         public event System.Action<IAbility, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
 
-        protected ICharacter baseCharacter;
+        protected BaseCharacter baseCharacter;
 
         protected Coroutine currentCastCoroutine = null;
         protected BaseAbility currentCastAbility = null;
@@ -30,8 +30,6 @@ namespace AnyRPG {
 
         protected float remainingGlobalCoolDown = 0f;
 
-        protected bool startHasRun = false;
-
         protected bool eventSubscriptionsInitialized = false;
 
         // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
@@ -43,7 +41,7 @@ namespace AnyRPG {
 
         private bool waitingForAnimatedAbility = false;
 
-        public ICharacter MyBaseCharacter {
+        public BaseCharacter MyBaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
         }
@@ -54,21 +52,23 @@ namespace AnyRPG {
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
         public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
 
-        protected virtual void Awake() {
-            //Debug.Log("CharacterAbilityManager.Awake()");
-            baseCharacter = GetComponent<BaseCharacter>() as ICharacter;
-            //abilityList = SystemAbilityManager.MyInstance.GetResourceList();
-        }
-
         protected virtual void Start() {
             //Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
-            startHasRun = true;
             UpdateAbilityList(baseCharacter.MyCharacterStats.MyLevel);
             //CreateEventSubscriptions();
         }
 
+        public void OrchestratorStart() {
+            GetComponentReferences();
+            CreateEventSubscriptions();
+        }
+
+        public void GetComponentReferences() {
+            baseCharacter = GetComponent<BaseCharacter>();
+        }
+
         public virtual void CreateEventSubscriptions() {
-            //Debug.Log("CharacterAbilityManager.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + "CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -78,9 +78,10 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CreateEventSubscriptions(): subscribing to onequipmentchanged");
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             } else {
-
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CreateEventSubscriptions(): could not subscribe to ONEQUIPMENTCHANGED");
             }
             eventSubscriptionsInitialized = true;
         }
@@ -161,7 +162,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (newItem != null) {
                 if (newItem.MyOnEquipAbility != null) {
-                    BeginAbility(newItem.MyOnEquipAbility);
+                    if (baseCharacter.MyCharacterUnit != null) {
+                        BeginAbility(newItem.MyOnEquipAbility);
+                    }
                 }
                 foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
                     LearnAbility(baseAbility.MyName);
@@ -435,7 +438,7 @@ namespace AnyRPG {
                 return;
             }
             if (!CanCastAbility(ability)) {
-                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 
@@ -536,7 +539,7 @@ namespace AnyRPG {
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
@@ -559,7 +562,9 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
             }
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
+            }
             OnCastStop(MyBaseCharacter as BaseCharacter);
         }
 
@@ -591,7 +596,7 @@ namespace AnyRPG {
             //Debug.Log("FixedLengthEffect.DestroyAbilityEffectObject(" + timer + ")");
             float timeRemaining = timer;
 
-            ICharacterStats targetStats = null;
+            CharacterStats targetStats = null;
             if (target != null) {
                 targetStats = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats;
             }

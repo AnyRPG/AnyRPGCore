@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         protected override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;

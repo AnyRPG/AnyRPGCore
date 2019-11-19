@@ -10,17 +10,6 @@ namespace AnyRPG {
 
         private Coroutine globalCoolDownCoroutine = null;
 
-        protected override void Awake() {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.Awake()");
-            base.Awake();
-            baseCharacter = GetComponent<PlayerCharacter>() as ICharacter;
-        }
-
-        protected override void Start() {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.Start()");
-            base.Start();
-        }
-
         public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {

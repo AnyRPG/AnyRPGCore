@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterStats : MonoBehaviour, ICharacterStats {
+    public class CharacterStats : MonoBehaviour {
         //public static event Action<CharacterStats> OnCharacterStatsAdded = delegate { };
         //public static event Action<CharacterStats> OnCharacterStatsRemoved = delegate { };
 
@@ -48,12 +48,11 @@ namespace AnyRPG {
         protected Dictionary<StatBuffType, Stat> primaryStatModifiers = new Dictionary<StatBuffType, Stat>();
         //protected List<StatusEffect> statusEffects = new List<StatusEffect>();
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
-        protected ICharacter baseCharacter;
+        protected BaseCharacter baseCharacter;
 
         private bool isAlive = true;
         private int currentXP = 0;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public int MyBaseMeleeDamage { get => (MyStrength / 2); }
@@ -73,7 +72,7 @@ namespace AnyRPG {
         public int MyAgility { get => (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility)); }
         public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
-        public ICharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         public int MyLevel { get => currentLevel; }
         public int MyCurrentXP { get => currentXP; set => currentXP = value; }
@@ -93,17 +92,20 @@ namespace AnyRPG {
             primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += ManaChangedNotificationHandler;
         }
 
-        public virtual void Start() {
-            //Debug.Log(gameObject.name + ".CharacterStats.Start()");
-            startHasRun = true;
-            //CreateEventSubscriptions();
-        }
-
         public void OrchestratorSetLevel() {
             if (currentLevel == 0) {
                 // if it is not zero, we have probably been initialized some other way, and don't need to do this
                 SetLevel(level);
             }
+        }
+
+        public void OrchestratorStart() {
+            GetComponentReferences();
+            CreateEventSubscriptions();
+        }
+
+        public void GetComponentReferences() {
+            baseCharacter = GetComponent<BaseCharacter>();
         }
 
         public virtual void CreateEventSubscriptions() {

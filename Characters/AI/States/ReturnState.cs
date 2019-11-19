@@ -13,6 +13,19 @@ namespace AnyRPG {
             this.aiController = aiController;
             this.aiController.SetDestination(aiController.MyLeashPosition);
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+            if (this.aiController.MyCombatStrategy != null) {
+                //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): combat strategy was not null");
+                if (LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != string.Empty) {
+                    //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
+                    MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile);
+                    if (musicProfile != null && musicProfile.MyAudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.MyAudioClip) {
+                        //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
+
+                        AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
+                    }
+                }
+            }
+            
         }
 
         public void Exit() {

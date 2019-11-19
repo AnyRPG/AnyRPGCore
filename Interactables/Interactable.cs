@@ -71,7 +71,6 @@ namespace AnyRPG {
 
         private bool componentsInitialized = false;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         private INamePlateUnit namePlateUnit = null;
@@ -104,7 +103,6 @@ namespace AnyRPG {
 
         public virtual void Start() {
             //Debug.Log(gameObject.name + ".Interactable.Start()");
-            startHasRun = true;
             InitializeComponents();
             //interactionTransform = transform;
             //InitializeMaterials();
@@ -113,7 +111,7 @@ namespace AnyRPG {
 
         public virtual void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".Interactable.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
@@ -598,8 +596,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");
             // prevent bugs if a unit despawns before the player moves out of range of it
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterController != null) {
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyInteractables.Contains(this)) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyInteractables.Remove(this);
+                if ((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyInteractables.Contains(this)) {
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyInteractables.Remove(this);
                 }
             }
         }
@@ -609,7 +607,7 @@ namespace AnyRPG {
 
             string nameString = MyName;
             if (MyName == string.Empty) {
-                ICharacterUnit baseCharacter = GetComponent<ICharacterUnit>();
+                CharacterUnit baseCharacter = GetComponent<CharacterUnit>();
                 if (baseCharacter != null) {
                     //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
                     nameString = baseCharacter.MyDisplayName;

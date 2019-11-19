@@ -85,7 +85,6 @@ public class CombatLogUI : WindowContentController {
 
     private List<GameObject> chatMessageList = new List<GameObject>();
 
-    protected bool startHasRun = false;
     protected bool eventSubscriptionsInitialized = false;
 
     private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
@@ -94,7 +93,6 @@ public class CombatLogUI : WindowContentController {
 
     private void Start() {
         //Debug.Log("QuestTrackerUI.Start()");
-        startHasRun = true;
         SetWelcomeString();
         ClearLog();
 
@@ -192,7 +190,7 @@ public class CombatLogUI : WindowContentController {
 
     private void CreateEventSubscriptions() {
         ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
-        if (eventSubscriptionsInitialized || !startHasRun) {
+        if (eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;

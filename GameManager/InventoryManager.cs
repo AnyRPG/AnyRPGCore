@@ -66,7 +66,6 @@ namespace AnyRPG {
         // whether bag positions have been loaded
         bool bagWindowPositionsSet = false;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         // the maximum number of bags the character can have equipped
@@ -112,13 +111,12 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("InventoryManager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("InventoryManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearData;

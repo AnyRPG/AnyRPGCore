@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterUnit : InteractableOption, ICharacterUnit, INamePlateUnit {
+    public class CharacterUnit : InteractableOption, INamePlateUnit {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
@@ -101,15 +101,6 @@ namespace AnyRPG {
             HealthBarNeedsUpdate(currentHealth, maxHealth);
         }
 
-        protected override void Awake() {
-            Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
-            base.Awake();
-            // already handled in base.awake
-            //GetComponentReferences();
-
-            //OrchestrateStartup();
-        }
-
         protected override void Start() {
             //Debug.Log(gameObject.name + ": running Start()");
             base.Start();
@@ -125,17 +116,21 @@ namespace AnyRPG {
         }
 
         public void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): CREATE EVENT SUBSCRIPTIONS");
+
+            if (eventSubscriptionsInitialized) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): ALREADY SUBSCRIBED, EXIT");
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += HandleDie;
+                //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): subscribing to HEALTH BAR NEEDS UPDATE");
                 baseCharacter.MyCharacterStats.OnHealthChanged += HandleHealthBarNeedsUpdate;
                 baseCharacter.MyCharacterStats.OnReviveComplete += HandleReviveComplete;
+                eventSubscriptionsInitialized = true;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
             }
-            eventSubscriptionsInitialized = true;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -156,7 +151,7 @@ namespace AnyRPG {
         private void OnEnable() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OnEnable()");
             InitializeNamePlate();
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
         }
 
         public override void OnDisable() {
@@ -192,7 +187,7 @@ namespace AnyRPG {
 
         public void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
-            if (baseCharacter != null && startHasRun) {
+            if (baseCharacter != null) {
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this);
                 if (_namePlate != null) {
                     namePlate = _namePlate;

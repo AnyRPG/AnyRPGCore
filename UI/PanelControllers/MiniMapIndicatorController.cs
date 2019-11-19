@@ -29,7 +29,6 @@ public class MiniMapIndicatorController : MonoBehaviour {
 
     private bool setupComplete = false;
 
-    protected bool startHasRun = false;
     protected bool eventSubscriptionsInitialized = false;
 
     private void Awake() {
@@ -49,7 +48,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
 
     private void CreateEventSubscriptions() {
         //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-        if (eventSubscriptionsInitialized || !startHasRun) {
+        if (eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;

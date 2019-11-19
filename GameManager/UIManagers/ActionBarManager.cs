@@ -13,7 +13,6 @@ namespace AnyRPG {
 
         private ActionButton fromButton = null;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public ActionButton MyFromButton { get => fromButton; set => fromButton = value; }
@@ -25,14 +24,13 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("ActionBarManager.Start()");
-            startHasRun = true;
             AssociateActionBarKeyBinds();
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {

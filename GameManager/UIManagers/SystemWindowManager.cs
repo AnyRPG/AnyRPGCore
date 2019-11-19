@@ -20,7 +20,6 @@ namespace AnyRPG {
         }
         #endregion
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public CloseableWindow mainMenuWindow;
@@ -47,13 +46,12 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += SetupDeathPopup;

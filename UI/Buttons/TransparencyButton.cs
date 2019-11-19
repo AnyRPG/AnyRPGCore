@@ -11,7 +11,6 @@ public class TransparencyButton : MonoBehaviour {
     [SerializeField]
     private Image backGroundImage;
 
-    protected bool startHasRun = false;
     protected bool eventSubscriptionsInitialized = false;
 
 
@@ -19,13 +18,12 @@ public class TransparencyButton : MonoBehaviour {
         //Debug.Log("TransparencyButton.Start()");
         GetComponentReferences();
         SetBackGroundTransparency();
-        startHasRun = true;
         CreateEventSubscriptions();
     }
 
     private void CreateEventSubscriptions() {
         //Debug.Log("TransparencyButton.CreateEventSubscriptions()");
-        if (eventSubscriptionsInitialized || !startHasRun) {
+        if (eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnPagedButtonsTransparencyUpdate += SetBackGroundTransparency;

@@ -30,7 +30,6 @@ namespace AnyRPG {
 
         private Color circleColor;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
@@ -44,7 +43,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;

@@ -21,16 +21,27 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
-            characterController = GetComponent<AIController>() as ICharacterController;
-            characterStats = GetComponent<AIStats>() as ICharacterStats;
-            characterCombat = GetComponent<AICombat>() as ICharacterCombat;
+            OrchestratorStart();
+
+        }
+
+        public override void GetComponentReferences() {
+            base.GetComponentReferences();
+            characterController = GetComponent<AIController>();
+            characterStats = GetComponent<AIStats>();
+            characterCombat = GetComponent<AICombat>();
             animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit == null) {
                 animatedUnit = gameObject.AddComponent<AnimatedUnit>();
             }
+        }
+
+        public override void OrchestratorStart() {
+            base.OrchestratorStart();
             if (characterUnit != null) {
                 characterUnit.OrchestrateStartup();
             }
+
         }
 
         protected override void Start() {

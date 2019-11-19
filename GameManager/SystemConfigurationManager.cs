@@ -353,7 +353,6 @@ namespace AnyRPG {
         [SerializeField]
         private float defaultDespawnTimer;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public DirectAbility MyLootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
@@ -457,20 +456,15 @@ namespace AnyRPG {
         public string MyDefaultLevitatedClip { get => defaultLevitatedClip; set => defaultLevitatedClip = value; }
         public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
 
-        private void Awake() {
-            //Debug.Log("PlayerManager.Awake()");
-        }
-
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
             VerifySystemAbilities();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             eventSubscriptionsInitialized = true;

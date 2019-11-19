@@ -51,7 +51,7 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
-            baseCharacter = GetComponent<PlayerCharacter>() as ICharacter;
+            baseCharacter = GetComponent<PlayerCharacter>();
             // put this in player spawn
             allowedInput = true;
             lastTabTargetTime = DateTime.Now;
@@ -67,7 +67,7 @@ namespace AnyRPG {
 
         public override void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();

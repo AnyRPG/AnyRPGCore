@@ -63,7 +63,6 @@ namespace AnyRPG {
         private Coroutine delayRoutine = null;
 
         protected bool eventSubscriptionsInitialized = false;
-        protected bool startHasRun = false;
 
         /*
         private float currentTimer = 0f;
@@ -94,7 +93,6 @@ namespace AnyRPG {
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Start()");
             //boxCollider = GetComponent<BoxCollider>();
-            startHasRun = true;
             if (!triggerBased) {
                 SpawnWithDelay();
             }
@@ -103,7 +101,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log("UnitSpawnNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;

@@ -49,7 +49,6 @@ namespace AnyRPG {
 
         private AnyRPGCameraController mainCameraController;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public Camera MyMainCamera { get => mainCamera; set => mainCamera = value; }
@@ -71,13 +70,12 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("CameraManager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;

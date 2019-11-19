@@ -39,7 +39,6 @@ namespace AnyRPG {
         [SerializeField]
         private Color fullSlotColor;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
@@ -48,14 +47,8 @@ namespace AnyRPG {
         public CharacterButton MySelectedButton { get; set; }
         public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
-        public override void Awake() {
-            base.Awake();
-
-        }
-
         private void Start() {
             //Debug.Log("CharacterPanel.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
 
             head.MyEmptyBackGroundColor = emptySlotColor;
@@ -110,7 +103,7 @@ namespace AnyRPG {
 
         protected virtual void CreateEventSubscriptions() {
             //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {

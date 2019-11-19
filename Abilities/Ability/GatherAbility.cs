@@ -26,7 +26,7 @@ namespace AnyRPG {
                 return false;
             }
             // distance from center of character to whereever the raycast hit the object
-            float distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point, source.MyCharacterUnit.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
+            float distanceToTarget = Vector3.Distance((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyMouseOverhit.point, source.MyCharacterUnit.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
             //Debug.Log("PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point: " + PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point);
 
             if (distanceToTarget > (source.MyCharacterStats.MyHitBox * 2)) {

@@ -63,7 +63,6 @@ namespace AnyRPG {
         private Bounds sceneBounds;
         private Vector3[] worldCorners = new Vector3[4];
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public override event Action<ICloseableWindowContents> OnOpenWindow;
@@ -77,7 +76,6 @@ namespace AnyRPG {
 
         protected void Start() {
             //Debug.Log(gameObject.name + ".MainMapController.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
@@ -88,7 +86,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelLoad += InitializeMap;

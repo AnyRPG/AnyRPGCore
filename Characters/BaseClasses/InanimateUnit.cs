@@ -56,9 +56,8 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
         base.Awake();
     }
 
-    protected override void Start() {
+    protected void Start() {
         //Debug.Log(gameObject.name + ".InanimateUnit.Start()");
-        base.Start();
         InitializeNamePlate();
     }
 
@@ -70,7 +69,7 @@ public class InanimateUnit : InteractableOption, INamePlateUnit  {
     public void InitializeNamePlate() {
         //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
 
-        if (startHasRun && interactable.CanInteract()) {
+        if (interactable.CanInteract()) {
             //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): isStarted && interactable.CanInteract() == true");
             NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this);
             if (_namePlate != null) {

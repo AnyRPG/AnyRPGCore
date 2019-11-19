@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public abstract class BaseController : MonoBehaviour, ICharacterController {
+    public abstract class BaseController : MonoBehaviour {
 
         public virtual event System.Action<GameObject> OnSetTarget = delegate { };
         public virtual event System.Action OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
 
 
-        protected ICharacter baseCharacter;
+        protected BaseCharacter baseCharacter;
         protected GameObject target;
 
         protected bool walking = false;
@@ -30,13 +30,12 @@ namespace AnyRPG {
         protected BaseCharacter masterUnit;
 
         protected bool eventSubscriptionsInitialized = false;
-        protected bool startHasRun = false;
 
         protected Vector3 lastPosition = Vector3.zero;
         protected float apparentVelocity;
 
         public GameObject MyTarget { get => target; }
-        public ICharacter MyBaseCharacter { get => baseCharacter; }
+        public BaseCharacter MyBaseCharacter { get => baseCharacter; }
         public float MyMovementSpeed {
             get {
                 if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.MyCharacterController != null) {
@@ -65,13 +64,12 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         public virtual void CreateEventSubscriptions() {
             //Debug.Log("UnitSpawnNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
@@ -196,7 +194,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
             target = null;
             // FIX ME (reenable possibly?)
-            baseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+            }
         }
 
         private Vector3 GetHitBoxCenter() {

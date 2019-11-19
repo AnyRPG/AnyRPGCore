@@ -9,8 +9,7 @@ using UMA.CharacterSystem;
 namespace AnyRPG {
     public class AIEquipmentManager : CharacterEquipmentManager {
 
-        protected override void Awake() {
-            base.Awake();
+        protected void Awake() {
             if (playerUnitObject == null) {
                 playerUnitObject = gameObject;
             }

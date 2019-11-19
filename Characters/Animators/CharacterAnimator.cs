@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public AnimatorOverrideController overrideController;
 
-        protected ICharacterUnit characterUnit;
+        protected CharacterUnit characterUnit;
 
         protected bool initialized = false;
 
@@ -123,13 +123,14 @@ namespace AnyRPG {
         }
 
         public virtual void CreateEventSubscriptions() {
-            Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
-                Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to handleattack");
+                //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to handleattack");
                 characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
                 if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to onequipmentchanged");
                     characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += PerformEquipmentChange;
                 }
             }

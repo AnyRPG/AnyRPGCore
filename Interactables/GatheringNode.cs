@@ -98,7 +98,7 @@ namespace AnyRPG {
 
         public void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
@@ -127,7 +127,7 @@ namespace AnyRPG {
         public void CheckDropListSize() {
             //Debug.Log("GatheringNode.CheckDropListSize()");
             if (lootTable.MyDroppedItems.Count == 0) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterController.RemoveInteractable(gameObject.GetComponent<Interactable>());
+                (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
                 interactable.DestroySpawn();
                 lootTable.Reset();
                 StartCoroutine(StartSpawnCountdown());

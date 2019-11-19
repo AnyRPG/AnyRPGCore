@@ -47,7 +47,6 @@ namespace AnyRPG {
 
         private List<GameObject> interactionPanelScripts = new List<GameObject>();
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
@@ -55,7 +54,6 @@ namespace AnyRPG {
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
         private void Start() {
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
@@ -66,7 +64,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;

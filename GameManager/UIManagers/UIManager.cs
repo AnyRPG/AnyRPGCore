@@ -110,7 +110,6 @@ namespace AnyRPG {
         // is a window currently being dragged.  used to suppres camera turn and pan
         private bool dragInProgress = false;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public StatusEffectPanelController MyStatusEffectPanelController { get => statusEffectPanelController; }
@@ -148,7 +147,6 @@ namespace AnyRPG {
             playerUnitFrameController.ClearTarget();
             focusUnitFrameController.ClearTarget();
             miniMapController.ClearTarget();
-            startHasRun = true;
             //Debug.Log("UIManager subscribing to characterspawn");
             CreateEventSubscriptions();
 
@@ -171,7 +169,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;

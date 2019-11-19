@@ -54,7 +54,7 @@ public class ItemPickup : InteractableOption {
         bool wasPickedUp = InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(itemName));
 
         if (wasPickedUp) {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.RemoveInteractable(gameObject.GetComponent<Interactable>());
+                (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
 
             interactable.DestroySpawn();
             StartCoroutine(StartSpawnCountdown());

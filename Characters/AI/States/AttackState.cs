@@ -49,6 +49,18 @@ namespace AnyRPG {
             // face target before attack to ensure they are in the hitbox
             aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FaceTarget(aiController.MyTarget);
 
+            if (aiController.MyCombatStrategy != null) {
+                // attempt to get a valid ability to use before trying auto-attack
+                BaseAbility validCombatStrategyAbility = aiController.MyCombatStrategy.GetValidAbility(aiController.MyBaseCharacter as BaseCharacter);
+                if (validCombatStrategyAbility != null) {
+                    //Debug.Log(aiController.gameObject.name + ".AttackState.Update() Got Valid Attack Ability: " + validAttackAbility.MyName);
+                    // perform ability attack
+                    aiController.MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
+                    return;
+                }
+            }
+
+            /*
             // attempt to get a valid ability to use before trying auto-attack
             BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
             if (validAttackAbility != null) {
@@ -57,6 +69,7 @@ namespace AnyRPG {
                 aiController.MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
                 return;
             }
+            */
 
             // no valid ability found, try auto attack range check
             if (!aiController.IsTargetInHitBox(aiController.MyTarget)) {

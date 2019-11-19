@@ -15,7 +15,6 @@ namespace AnyRPG {
         protected Dictionary<string, UnityEngine.Object> resourceList = new Dictionary<string, UnityEngine.Object>();
 
         protected bool eventSubscriptionsInitialized = false;
-        protected bool startHasRun = false;
 
         public Dictionary<string, UnityEngine.Object> MyResourceList { get => resourceList; set => resourceList = value; }
 
@@ -25,13 +24,12 @@ namespace AnyRPG {
 
         protected virtual void Start() {
             // reload all lists just to be safe
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         public virtual void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceList;

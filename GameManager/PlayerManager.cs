@@ -92,7 +92,6 @@ namespace AnyRPG {
 
         private GameObject currentPlayerUnitPrefab = null;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public PlayerCharacter MyCharacter { get => character; set => character = value; }
@@ -133,13 +132,12 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnLevelUnload += DespawnPlayerUnit;
@@ -438,7 +436,9 @@ namespace AnyRPG {
             }
             playerConnectionObject = Instantiate(playerConnectionPrefab, playerConnectionParent.transform);
             MyCharacter = playerConnectionObject.GetComponent<PlayerCharacter>() as PlayerCharacter;
-            // try moving before initialize so initialize has a
+
+            MyCharacter.OrchestratorStart();
+
             MyCharacter.Initialize(defaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionSpawn();

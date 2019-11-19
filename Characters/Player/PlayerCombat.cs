@@ -6,17 +6,15 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerCombat : CharacterCombat {
 
-        public override void Start() {
+        protected void Start() {
             //Debug.Log("PlayerCombat.Start()");
-            base.Start();
             AttemptRegen();
-
-            // allow the player controller to send us events whenever the player moves or presses an ability button or the escape key
         }
 
         protected override void CreateEventSubscriptions() {
-            //Debug.Log("PlayerCombat.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            //Debug.Log(gameObject.name + ".PlayerCombat.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                //Debug.Log(gameObject.name + ".PlayerCombat.CreateEventSubscriptions(): already initialized");
                 return;
             }
             base.CreateEventSubscriptions();
@@ -25,9 +23,6 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnHealthChanged += AttemptRegen;
                 baseCharacter.MyCharacterStats.OnManaChanged += AttemptRegen;
-            }
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
             eventSubscriptionsInitialized = true;
         }
@@ -38,15 +33,6 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            /*
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
-                //SystemEventManager.MyInstance.OnEquipmentRefresh -= OnEquipmentChanged;
-            }
-            */
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
-            }
 
             // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
             if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
@@ -151,31 +137,6 @@ namespace AnyRPG {
             //Debug.Log("Received Escape Key Pressed Handler");
             baseCharacter.MyCharacterAbilityManager.StopCasting();
 
-        }
-
-        public override void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            // base hidden intentionally
-            //base.HandleEquipmentChanged(newItem, oldItem);
-            if (newItem != null) {
-                //Debug.Log(gameObject.name + "Equipping " + newItem.name);
-                if (newItem.equipSlot == EquipmentSlot.MainHand) {
-                    //Debug.Log(newItem.name + " is a weapon.");
-                    overrideHitSoundEffect = null;
-                    defaultHitSoundEffect = null;
-                    /*
-                    if (newItem is Weapon && (newItem as Weapon).OnHitAbility != null) {
-                        //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
-                        onHitAbility = (newItem as Weapon).OnHitAbility;
-                    }
-                    */
-                    if (newItem is Weapon && (newItem as Weapon).MyDefaultHitSoundEffect != null) {
-                        //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
-                        overrideHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
-                        defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
-                    }
-                }
-            }
-            AttemptRegen();
         }
 
         public override void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {

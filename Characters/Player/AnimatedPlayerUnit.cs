@@ -18,11 +18,6 @@ namespace AnyRPG {
             base.Awake();
         }
 
-        protected override void Start() {
-            //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.Start()");
-            base.Start();
-        }
-
         public override void OrchestrateStartup() {
             //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStartup()");
             base.OrchestrateStartup();
@@ -30,7 +25,7 @@ namespace AnyRPG {
         }
 
         public override void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();

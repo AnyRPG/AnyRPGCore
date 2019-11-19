@@ -32,14 +32,13 @@ public class LootableCharacter : InteractableOption {
         }
     }
 
-    protected override void Start() {
-        base.Start();
+    protected void Start() {
         CreateEventSubscriptions();
     }
 
     private void CreateEventSubscriptions() {
         //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-        if (eventSubscriptionsInitialized || !startHasRun) {
+        if (eventSubscriptionsInitialized) {
             return;
         }
         characterUnit.MyCharacter.MyCharacterStats.BeforeDie += HandleDeath;

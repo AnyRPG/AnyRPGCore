@@ -38,7 +38,6 @@ namespace AnyRPG {
 
         private bool localComponentsInitialized = false;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         public Image MyHealthSlider { get => healthSlider; }
@@ -48,20 +47,14 @@ namespace AnyRPG {
         public GameObject MyQuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
         public Image MyGenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
 
-        private void Awake() {
-            //Debug.Log(gameObject.name + ".NamePlateController.Awake()");
-        }
-
         private void Start() {
             //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
-            startHasRun = true;
-
             CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("NamePlateController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventSubscriptions;
@@ -222,7 +215,7 @@ namespace AnyRPG {
         }
 
         public void CheckForDisabledHealthBar() {
-            //Debug.Log("CheckForDisableHealthBar()");
+            //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (namePlateUnit.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
@@ -238,19 +231,20 @@ namespace AnyRPG {
         }
 
         public void DisableHealthBar() {
+            //Debug.Log(MyCharacterName.text + ".NamePlateController.DisableHealthBar()");
             if (healthBar.activeSelf) {
                 healthBar.SetActive(false);
             }
         }
 
         public void EnableHealthBar() {
+            //Debug.Log(MyCharacterName.text + ".NamePlateController.EnableHealthBar()");
             if (!healthBar.activeSelf) {
                 healthBar.SetActive(true);
             }
         }
 
         void OnHealthChanged(int maxHealth, int currentHealth) {
-
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
             if (MyHealthSlider == null) {
@@ -379,7 +373,7 @@ namespace AnyRPG {
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.MyDisplayName);
             if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterController.InterActWithTarget(namePlateUnit.MyInteractable, (namePlateUnit as MonoBehaviour).gameObject);
+                (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(namePlateUnit.MyInteractable, (namePlateUnit as MonoBehaviour).gameObject);
             }
         }
 

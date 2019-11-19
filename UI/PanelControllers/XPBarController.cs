@@ -19,18 +19,16 @@ namespace AnyRPG {
 
         private float originalXPSliderWidth;
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         private void Start() {
             //Debug.Log("XPBarController.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
         }
 
         public void CreateEventSubscriptions() {
             //Debug.Log("XPBarController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnXPGained += UpdateXP;

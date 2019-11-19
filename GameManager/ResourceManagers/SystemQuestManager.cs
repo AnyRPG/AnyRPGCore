@@ -28,19 +28,9 @@ namespace AnyRPG {
 
         const string resourceClassName = "Quest";
 
-        protected override void Awake() {
-            //Debug.Log(this.GetType().Name + ".Awake()");
-            base.Awake();
-        }
-
-        protected override void Start() {
-            //Debug.Log("SystemQuestManager.Start()");
-            base.Start();
-        }
-
         public override void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();

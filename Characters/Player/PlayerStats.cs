@@ -8,14 +8,10 @@ namespace AnyRPG {
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".PlayerStats.Awake()");
             base.Awake();
-            baseCharacter = GetComponent<PlayerCharacter>() as ICharacter;
-            // DO THIS HERE SO WE CAN CATCH EQUIPMENT EVENTS
-            CreateEventSubscriptions();
         }
 
-        public override void Start() {
+        public void Start() {
             //Debug.Log(gameObject.name + ".PlayerStats.Start()");
-            base.Start();
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log("PlayerStats.Start(): Player Unit is already spawned");
                 HandlePlayerUnitSpawn();
@@ -31,7 +27,6 @@ namespace AnyRPG {
         public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".PlayerStats.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
-                //if (eventSubscriptionsInitialized || !startHasRun) {
                 return;
             }
             base.CreateEventSubscriptions();

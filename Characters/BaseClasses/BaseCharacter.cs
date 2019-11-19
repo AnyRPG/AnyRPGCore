@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [RequireComponent(typeof(CharacterFactionManager))]
-    public abstract class BaseCharacter : MonoBehaviour, ICharacter {
+    public abstract class BaseCharacter : MonoBehaviour {
         [SerializeField]
         protected string characterName;
 
@@ -13,19 +13,19 @@ namespace AnyRPG {
         protected string factionName;
 
         [SerializeField]
-        protected ICharacterStats characterStats = null;
+        protected CharacterStats characterStats = null;
 
         [SerializeField]
-        protected ICharacterCombat characterCombat = null;
+        protected CharacterCombat characterCombat = null;
 
         [SerializeField]
-        protected ICharacterAbilityManager characterAbilityManager = null;
+        protected CharacterAbilityManager characterAbilityManager = null;
 
         [SerializeField]
-        protected ICharacterSkillManager characterSkillManager = null;
+        protected CharacterSkillManager characterSkillManager = null;
 
         [SerializeField]
-        protected ICharacterController characterController = null;
+        protected BaseController characterController = null;
 
         protected CharacterFactionManager characterFactionManager = null;
 
@@ -34,11 +34,17 @@ namespace AnyRPG {
         protected CharacterUnit characterUnit = null;
         protected AnimatedUnit animatedUnit = null;
 
-        public ICharacterStats MyCharacterStats { get => characterStats; }
-        public ICharacterCombat MyCharacterCombat { get => characterCombat; }
-        public ICharacterController MyCharacterController { get => characterController; }
-        public ICharacterAbilityManager MyCharacterAbilityManager { get => characterAbilityManager; }
-        public ICharacterSkillManager MyCharacterSkillManager { get => characterSkillManager; }
+        public CharacterStats MyCharacterStats { get => characterStats; }
+        public CharacterCombat MyCharacterCombat { get => characterCombat; }
+        public BaseController MyCharacterController { get => characterController; }
+        public CharacterAbilityManager MyCharacterAbilityManager { get => characterAbilityManager; }
+        public CharacterSkillManager MyCharacterSkillManager { get => characterSkillManager; }
+        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public AnimatedUnit MyAnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
+        public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
+        public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
+
+
         public string MyCharacterName { get => characterName; }
         public string MyName { get => MyCharacterName; }
         public string MyFactionName {
@@ -54,13 +60,19 @@ namespace AnyRPG {
             }
             set => factionName = value;
         }
-        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
-        public AnimatedUnit MyAnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
-        public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
-        public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
+        }
+
+        public virtual void GetComponentReferences() {
+
+            characterStats = GetComponent<CharacterStats>();
+            characterCombat = GetComponent<CharacterCombat>();
+            characterController = GetComponent<BaseController>();
+            characterAbilityManager = GetComponent<CharacterAbilityManager>();
+            characterSkillManager = GetComponent<CharacterSkillManager>();
+
             CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
             if (_characterUnit != null) {
                 MyCharacterUnit = _characterUnit;
@@ -69,28 +81,35 @@ namespace AnyRPG {
             if (_animatedUnit != null) {
                 MyAnimatedUnit = _animatedUnit;
             }
-            characterSkillManager = GetComponent<CharacterSkillManager>();
             characterFactionManager = GetComponent<CharacterFactionManager>();
             characterEquipmentManager = GetComponent<CharacterEquipmentManager>();
-            characterAbilityManager = GetComponent<CharacterAbilityManager>();
 
         }
 
-        protected virtual void Start() {
-            //Debug.Log(gameObject.name + ": BaseCharacter.Start()");
+        public virtual void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
+            GetComponentReferences();
             if (characterStats != null) {
-                characterStats.CreateEventSubscriptions();
+                characterStats.OrchestratorStart();
                 characterStats.OrchestratorSetLevel();
             }
+            if (characterCombat != null) {
+                characterCombat.OrchestratorStart();
+            }
             if (characterAbilityManager != null) {
-                characterAbilityManager.CreateEventSubscriptions();
+                characterAbilityManager.OrchestratorStart();
             }
 
             if (characterEquipmentManager != null) {
+                characterEquipmentManager.OrchestratorStart();
                 characterEquipmentManager.LoadDefaultEquipment();
             } else {
                 //Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
             }
+        }
+
+        protected virtual void Start() {
+            //Debug.Log(gameObject.name + ": BaseCharacter.Start()");
         }
 
         public virtual void Initialize(string characterName, int characterLevel = 1) {

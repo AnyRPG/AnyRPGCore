@@ -15,7 +15,7 @@ namespace AnyRPG {
         // when checking if destinationPosition matches NavMeshAgent destination, add a padding amount to account for destinations that are not precisely on the NavMesh
         protected float navMeshDistancePadding = 0.1f;
 
-        protected ICharacterUnit characterUnit;
+        protected CharacterUnit characterUnit;
         protected AnimatedUnit animatedUnit;
 
         // default value meant to be overwritten by a controller (AI/player)
@@ -41,7 +41,7 @@ namespace AnyRPG {
         public GameObject MyTarget { get => target; }
         public bool MyFrozen { get => frozen; set => frozen = value; }
         public float MyNavMeshDistancePadding { get => navMeshDistancePadding; }
-        public ICharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
 
         protected virtual void Awake() {
         }

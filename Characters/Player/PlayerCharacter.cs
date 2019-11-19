@@ -6,40 +6,14 @@ using UnityEngine;
 namespace AnyRPG {
 public class PlayerCharacter : BaseCharacter {
 
-    private PlayerFactionManager playerFactionManager;
     private PlayerCurrencyManager playerCurrencyManager;
 
-    new public PlayerController MyCharacterController { get => characterController as PlayerController; }
-    new public PlayerStats MyCharacterStats { get => characterStats as PlayerStats; }
-    new public PlayerAbilityManager MyCharacterAbilityManager { get => characterAbilityManager as PlayerAbilityManager; }
-    new public PlayerCombat MyCharacterCombat { get => characterCombat as PlayerCombat; }
-    public PlayerFactionManager MyPlayerFactionManager { get => playerFactionManager; set => playerFactionManager = value; }
     public PlayerCurrencyManager MyPlayerCurrencyManager { get => playerCurrencyManager; set => playerCurrencyManager = value; }
 
     protected override void Awake() {
         //Debug.Log(gameObject.name + ".PlayerCharcter.Awake()");
         base.Awake();
         
-        characterController = GetComponent<PlayerController>();
-        if (characterController == null) {
-            Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): characterController is null!");
-        }
-        characterStats = GetComponent<PlayerStats>();
-        if (characterStats == null) {
-            Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): characterStats is null!");
-        }
-        characterAbilityManager = GetComponent<PlayerAbilityManager>();
-        if (characterAbilityManager == null) {
-            Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): characterAbilityManager is null!");
-        }
-        characterCombat = GetComponent<PlayerCombat>();
-        if (characterCombat == null) {
-            Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): characterCombat is null!");
-        }
-        playerFactionManager = GetComponent<PlayerFactionManager>();
-        if (playerFactionManager == null) {
-            Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): playerFactionManager is null!");
-        }
         playerCurrencyManager = GetComponent<PlayerCurrencyManager>();
         if (playerCurrencyManager == null) {
             Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): playerCurrencyManager is null!");
@@ -53,7 +27,7 @@ public class PlayerCharacter : BaseCharacter {
 
         if (newFaction != null && newFaction != string.Empty) {
             factionName = newFaction;
-            playerFactionManager.SetReputation(newFaction);
+            characterFactionManager.SetReputation(newFaction);
         }
     }
 

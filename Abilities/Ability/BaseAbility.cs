@@ -297,8 +297,9 @@ namespace AnyRPG {
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 
-            if (sourceCharacter == null) {
+            if (sourceCharacter == null || sourceCharacter.MyCharacterUnit == null) {
                 //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
+                return null;
             }
 
             // create target booleans

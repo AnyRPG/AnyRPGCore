@@ -38,12 +38,22 @@ namespace AnyRPG {
                     return;
                 }
                 */
+                if (aiController.MyCombatStrategy != null) {
+                    // attempt to get a valid ability to use before trying auto-attack
+                    BaseAbility validCombatStrategyAbility = aiController.MyCombatStrategy.GetValidAbility(aiController.MyBaseCharacter as BaseCharacter);
+                    if (validCombatStrategyAbility != null) {
+                        aiController.ChangeState(new AttackState());
+                        return;
+                    }
+                }
+                /*
                 BaseAbility validAttackAbility = (aiController.MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
                 if (validAttackAbility != null) {
                     //Debug.Log(aiController.gameObject.name + ": FollowState.Update(): Got valid attack ability: " + validAttackAbility.MyName);
                     aiController.ChangeState(new AttackState());
                     return;
                 }
+                */
                 if (aiController.IsTargetInHitBox(aiController.MyTarget)) {
                     // they are in the hitbox and we can attack them
                     aiController.ChangeState(new AttackState());

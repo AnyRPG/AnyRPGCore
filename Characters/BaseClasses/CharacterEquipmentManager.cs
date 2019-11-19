@@ -25,7 +25,6 @@ namespace AnyRPG {
         // the holdable objects spawned during an ability cast and removed when the cast is complete
         protected List<GameObject> abilityObjects = new List<GameObject>();
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
         protected bool componentReferencesInitialized = false;
         protected bool subscribedToCombatEvents = false;
@@ -35,26 +34,17 @@ namespace AnyRPG {
 
         public Dictionary<EquipmentSlot, Equipment> MyCurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
 
-        protected virtual void Awake() {
-            baseCharacter = GetComponent<BaseCharacter>();
-        }
-
         protected virtual void Start() {
             int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
-            startHasRun = true;
+        }
+
+        public void OrchestratorStart() {
+            CreateComponentReferences();
             CreateEventSubscriptions();
-            //LoadDefaultEquipment();
         }
 
         public virtual void CreateComponentReferences() {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.CreateComponentReferences()");
-            /*
-            if (componentReferencesInitialized) {
-                return;
-            }
-            */
-
-            //componentReferencesInitialized = true;
+            baseCharacter = GetComponent<BaseCharacter>();
         }
 
         public virtual void OnDisable() {
@@ -64,7 +54,7 @@ namespace AnyRPG {
 
         protected virtual void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             eventSubscriptionsInitialized = true;
@@ -332,6 +322,7 @@ namespace AnyRPG {
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.
             // having it here also was leading to duplicate stat removal when gear was changed.
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip() FIRING ONEQUIPMENTCHANGED");
             OnEquipmentChanged(newItem, null);
 
         }
@@ -421,7 +412,7 @@ namespace AnyRPG {
 
         protected void SubscribeToCombatEvents() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (subscribedToCombatEvents || !startHasRun) {
+            if (subscribedToCombatEvents) {
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {

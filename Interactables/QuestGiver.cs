@@ -29,9 +29,8 @@ namespace AnyRPG {
             namePlateUnit = GetComponent<INamePlateUnit>();
         }
 
-        protected override void Start() {
+        protected void Start() {
             //Debug.Log(gameObject.name + ".QuestGiver.Start()");
-            base.Start();
 
             InitializeQuestGiver();
 
@@ -43,7 +42,7 @@ namespace AnyRPG {
 
         private void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;

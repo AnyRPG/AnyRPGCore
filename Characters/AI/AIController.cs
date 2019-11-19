@@ -27,6 +27,11 @@ namespace AnyRPG {
         [SerializeField]
         private AggroRange aggroRange;
 
+        [SerializeField]
+        private string combatStrategyName;
+
+        private CombatStrategy combatStrategy;
+
         private Vector3 startPosition;
 
         private float distanceToTarget;
@@ -45,15 +50,33 @@ namespace AnyRPG {
         public IState MyCurrentState { get => currentState; set => currentState = value; }
         public float MyLeashDistance { get => leashDistance; }
         public AIPatrol MyAiPatrol { get => aiPatrol; }
+        public CombatStrategy MyCombatStrategy { get => combatStrategy; set => combatStrategy = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".AIController.Awake()");
             base.Awake();
 
-            baseCharacter = GetComponent<AICharacter>() as ICharacter;
+            baseCharacter = GetComponent<AICharacter>();
             aiPatrol = GetComponent<AIPatrol>();
 
             MyAggroRange = initialAggroRange;
+
+            GetCombatStrategy();
+        }
+
+        private void GetCombatStrategy() {
+            string usedStrategyName = combatStrategyName;
+            if (usedStrategyName == null || usedStrategyName == string.Empty) {
+                if (baseCharacter != null && baseCharacter.MyCharacterName != null && baseCharacter.MyCharacterName != string.Empty) {
+                    usedStrategyName = baseCharacter.MyCharacterName;
+                }
+            }
+            if (usedStrategyName != null && usedStrategyName != string.Empty) {
+                combatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(usedStrategyName);
+                if (combatStrategy == null) {
+                    Debug.LogError("Unable to get combat strategy: " + usedStrategyName);
+                }
+            }
         }
 
         protected override void Start() {

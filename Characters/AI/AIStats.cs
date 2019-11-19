@@ -6,13 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class AIStats : CharacterStats {
 
-        protected override void Awake() {
-            base.Awake();
-            baseCharacter = GetComponent<AICharacter>() as ICharacter;
-        }
-
-        public override void Start() {
-            base.Start();
+        public override void CreateEventSubscriptions() {
             if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }

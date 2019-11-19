@@ -5,8 +5,9 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class AICombat : CharacterCombat {
-        public override void Start() {
-            base.Start();
+
+        protected override void CreateEventSubscriptions() {
+            base.CreateEventSubscriptions();
             baseCharacter.MyCharacterStats.OnDie += HandleDie;
         }
 

@@ -39,19 +39,17 @@ namespace AnyRPG {
         // data to turn into json for save
         private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
 
-        protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
 
         void Start() {
             //Debug.Log("Savemanager.Start()");
-            startHasRun = true;
             CreateEventSubscriptions();
             GetSaveDataList();
         }
 
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized || !startHasRun) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnEquipmentChanged += SaveUMASettings;
@@ -450,7 +448,7 @@ namespace AnyRPG {
 
         public void SaveReputationData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveReputationData()");
-            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.MyDispositionDictionary) {
+            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.MyDispositionDictionary) {
                 ReputationSaveData saveData = new ReputationSaveData();
                 saveData.MyName = factionDisposition.factionName;
                 saveData.MyAmount = factionDisposition.disposition;
@@ -584,7 +582,7 @@ namespace AnyRPG {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.factionName = reputationSaveData.MyName;
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.MyPlayerFactionManager.AddReputation(factionDisposition.factionName, (int)factionDisposition.disposition);
+                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.factionName, (int)factionDisposition.disposition);
                 //counter++;
             }
         }
@@ -601,7 +599,7 @@ namespace AnyRPG {
 
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).LoadAbility(abilitySaveData.MyName);
                 }
             }
 
@@ -753,6 +751,9 @@ namespace AnyRPG {
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             SetPlayerManagerPrefab(anyRPGSaveData);
+
+            // fix for random start order
+
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
 
             // complex data

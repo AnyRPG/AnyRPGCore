@@ -130,7 +130,7 @@ namespace AnyRPG {
             // clear reference to any existing useable on this button.
             if (MyUseable != null && MyUseable is BaseAbility) {
                 //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.OnPerformAbility -= OnUseableUse;
+                (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
             }
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
@@ -151,7 +151,7 @@ namespace AnyRPG {
                 //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
                 //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
                 //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.OnPerformAbility += OnUseableUse;
+                (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
             }
             UpdateVisual();
             UIManager.MyInstance.RefreshTooltip(useable as IDescribable);

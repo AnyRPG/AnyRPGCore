@@ -18,7 +18,6 @@ public class BagBarController : MonoBehaviour {
 
     private bool localComponentsGotten = false;
 
-    protected bool startHasRun = false;
     protected bool eventSubscriptionsInitialized = false;
 
 
@@ -26,19 +25,18 @@ public class BagBarController : MonoBehaviour {
 
     private void Awake() {
         //Debug.Log("BagBarController.Awake()");
-        GetLocalComponents();
+        GetComponentReferences();
     }
 
     private void Start() {
         //Debug.Log("BagBarController.Start()");
         SetBackGroundColor();
-        startHasRun = true;
         CreateEventSubscriptions();
     }
 
     private void CreateEventSubscriptions() {
         //Debug.Log("BagBarController.CreateEventSubscriptions()");
-        if (eventSubscriptionsInitialized || !startHasRun) {
+        if (eventSubscriptionsInitialized) {
             return;
         }
         SystemEventManager.MyInstance.OnInventoryTransparencyUpdate += SetBackGroundColor;
@@ -56,7 +54,7 @@ public class BagBarController : MonoBehaviour {
         eventSubscriptionsInitialized = false;
     }
 
-    public void GetLocalComponents() {
+    public void GetComponentReferences() {
         if (localComponentsGotten == true) {
             return;
         }

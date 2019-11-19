@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class CharacterSkillManager : MonoBehaviour, ICharacterSkillManager {
+public class CharacterSkillManager : MonoBehaviour {
 
-    protected ICharacter baseCharacter;
+    protected BaseCharacter baseCharacter;
 
     protected Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
-    public ICharacter MyBaseCharacter {
+    public BaseCharacter MyBaseCharacter {
         get => baseCharacter;
         set => baseCharacter = value;
     }
@@ -21,7 +21,7 @@ public class CharacterSkillManager : MonoBehaviour, ICharacterSkillManager {
 
     protected virtual void Awake() {
         //Debug.Log("CharacterAbilityManager.Awake()");
-        baseCharacter = GetComponent<BaseCharacter>() as ICharacter;
+        baseCharacter = GetComponent<BaseCharacter>();
     }
 
     protected virtual void Start() {
