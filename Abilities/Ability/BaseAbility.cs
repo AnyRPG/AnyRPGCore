@@ -20,6 +20,10 @@ namespace AnyRPG {
         [SerializeField]
         protected string holdableObjectName;
 
+        // now we have multiple objects
+        [SerializeField]
+        private List<string> holdableObjectNames = new List<string>();
+
 
         // on hit animation
         [SerializeField]
@@ -145,9 +149,9 @@ namespace AnyRPG {
         public bool MyCanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
-        public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
         public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
+        public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

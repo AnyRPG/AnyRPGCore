@@ -28,6 +28,9 @@ namespace AnyRPG {
             if (animatedUnit == null) {
                 animatedUnit = gameObject.AddComponent<AnimatedUnit>();
             }
+            if (characterUnit != null) {
+                characterUnit.OrchestrateStartup();
+            }
         }
 
         protected override void Start() {

@@ -80,7 +80,7 @@ namespace AnyRPG {
         }
 
         protected virtual void Awake() {
-            Debug.Log(gameObject.name + ".CharacterAnimator.Awake()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.Awake()");
             GetComponentReferences();
         }
 
@@ -123,8 +123,9 @@ namespace AnyRPG {
         }
 
         public virtual void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
+            Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
+                Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to handleattack");
                 characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
@@ -186,9 +187,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
-                Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
+                //Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
                 if (animatorController == null) {
-                    Debug.Log(gameObject.name + ".CharacterAnimator.InitializeAnimator() animatorController is null");
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.InitializeAnimator() animatorController is null");
                 } else {
                     overrideController = new AnimatorOverrideController(animatorController);
                     SetOverrideController(overrideController);
@@ -202,7 +203,7 @@ namespace AnyRPG {
         }
 
         public void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
 
             animator.runtimeAnimatorController = animatorOverrideController;
 

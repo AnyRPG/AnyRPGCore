@@ -168,6 +168,9 @@ namespace AnyRPG {
         }
 
         public void PlayEffect(AudioClip audioClip) {
+            if (audioClip == null) {
+                return;
+            }
             InitializeVolume();
             effectsAudioSource.PlayOneShot(audioClip);
         }

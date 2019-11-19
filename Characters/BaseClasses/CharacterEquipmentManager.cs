@@ -22,8 +22,8 @@ namespace AnyRPG {
 
         protected Transform targetBone;
 
-        // the holdable object spawned during an ability cast and removed when the cast is complete
-        protected GameObject abilityObject;
+        // the holdable objects spawned during an ability cast and removed when the cast is complete
+        protected List<GameObject> abilityObjects = new List<GameObject>();
 
         protected bool startHasRun = false;
         protected bool eventSubscriptionsInitialized = false;
@@ -189,31 +189,42 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnAbilityObject(string holdableObjectName) {
-            HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
-            if (holdableObject == null) {
-                //Debug.Log("EquipmentManager.SpawnAbilityObject(): holdableObject is null");
-                return;
-            }
+        public void SpawnAbilityObject(List<string> holdableObjectNames) {
+            foreach (string holdableObjectName in holdableObjectNames) {
+                HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+                if (holdableObject != null) {
 
-            if (holdableObject.MyPhysicalPrefab != null) {
-                targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
-                if (targetBone != null) {
-                    //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                    abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
-                    abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
-                    HoldObject(abilityObject, holdableObject.MyName, playerUnitObject);
-                } else {
-                    //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
+                    if (holdableObject.MyPhysicalPrefab != null) {
+                        targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+                        if (targetBone != null) {
+                            //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                            GameObject abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
+                            abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
+                            HoldObject(abilityObject, holdableObject.MyName, playerUnitObject);
+                            abilityObjects.Add(abilityObject);
+                        } else {
+                            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
+                        }
+
+                    }
+
                 }
 
             }
+
         }
 
-        public void DespawnAbilityObject() {
-            if (abilityObject != null) {
-                Destroy(abilityObject);
+        public void DespawnAbilityObjects() {
+            if (abilityObjects == null || abilityObjects.Count == 0) {
+                return;
             }
+
+            foreach (GameObject abilityObject in abilityObjects) {
+                if (abilityObject != null) {
+                    Destroy(abilityObject);
+                }
+            }
+            abilityObjects.Clear();
         }
 
         public void SheathWeapons() {

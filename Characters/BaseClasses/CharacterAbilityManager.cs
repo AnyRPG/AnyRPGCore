@@ -350,8 +350,8 @@ namespace AnyRPG {
                 float currentCastTime = 0f;
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectName != null && ability.MyHoldableObjectName != string.Empty) {
-                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectName);
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
+                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectNames);
                 }
                 if (ability.MyCastingAudioClip != null) {
                     //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
@@ -372,7 +372,7 @@ namespace AnyRPG {
                     yield return null;
                 }
                 if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                    baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
+                    baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
                 }
 
             }
@@ -536,7 +536,7 @@ namespace AnyRPG {
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
-            //Debug.Log("CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
@@ -554,7 +554,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
                 StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
-                baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObject();
+                baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
 
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");

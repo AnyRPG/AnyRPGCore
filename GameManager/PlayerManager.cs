@@ -325,12 +325,14 @@ namespace AnyRPG {
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
             MyCharacter.MyCharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
             MyCharacter.MyCharacterUnit.MyCharacter = MyCharacter;
+            MyCharacter.MyCharacterUnit.GetComponentReferences();
 
             MyCharacter.MyAnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
-            
+            MyCharacter.MyCharacterUnit.OrchestrateStartup();
+
             // should we also do characterUnit here instead of down in InitializeUMA?
             // should we do the full orchestration here instead of just getting components?
-            MyCharacter.MyAnimatedUnit.GetComponentReferences();
+            //MyCharacter.MyAnimatedUnit.GetComponentReferences();
 
             if (LevelManager.MyInstance.MyNavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
@@ -387,7 +389,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.InitializeUMA()");
 
             // ensure the character unit has its references before we try to access them
-            MyCharacter.MyCharacterUnit.GetComponentReferences();
+            //MyCharacter.MyCharacterUnit.GetComponentReferences();
 
             avatar = MyPlayerUnitObject.GetComponent<DynamicCharacterAvatar>();
             if (avatar == null) {

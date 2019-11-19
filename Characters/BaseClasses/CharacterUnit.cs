@@ -102,10 +102,12 @@ namespace AnyRPG {
         }
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
+            Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
             base.Awake();
             // already handled in base.awake
             //GetComponentReferences();
+
+            //OrchestrateStartup();
         }
 
         protected override void Start() {
@@ -113,6 +115,13 @@ namespace AnyRPG {
             base.Start();
             InitializeNamePlate();
             CreateEventSubscriptions();
+        }
+
+        public virtual void OrchestrateStartup() {
+            AnimatedUnit animatedUnit = GetComponent<AnimatedUnit>();
+            if (animatedUnit != null) {
+                animatedUnit.OrchestrateStartup();
+            }
         }
 
         public void CreateEventSubscriptions() {

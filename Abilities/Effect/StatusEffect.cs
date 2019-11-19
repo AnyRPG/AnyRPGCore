@@ -54,9 +54,11 @@ namespace AnyRPG {
         // list of status effect nodes to send updates to so multiple effects panels and bars can access this
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
-        // any abilities to cast every tick
         [SerializeField]
         protected List<AbilityEffect> reflectAbilityEffectList = new List<AbilityEffect>();
+
+        [SerializeField]
+        protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
 
         public int MyStatAmount { get => statAmount; }
         public List<StatBuffType> MyStatBuffTypes { get => statBuffTypes; set => statBuffTypes = value; }
@@ -70,6 +72,7 @@ namespace AnyRPG {
         public bool MyLevitate { get => levitate; set => levitate = value; }
         public float MyDuration { get => duration; set => duration = value; }
         public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
+        public List<AbilityEffect> MyWeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
@@ -217,6 +220,21 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastComplete()");
             base.CastComplete(source, target, abilityEffectInput);
             PerformAbilityComplete(source, target, abilityEffectInput);
+        }
+
+        public virtual void CastWeaponHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
+            PerformAbilityWeaponHit(source, target, abilityEffectInput);
+        }
+
+        public virtual void PerformAbilityWeaponHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
+        }
+
+
+        public virtual void PerformAbilityWeaponHitEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+            PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
         }
 
         public virtual void CastReflect(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {

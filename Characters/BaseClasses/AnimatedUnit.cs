@@ -44,9 +44,9 @@ namespace AnyRPG {
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
-            GetComponentReferences();
-            CreateEventSubscriptions();
-            OrchestrateStartup();
+            if (GetComponent<CharacterUnit>() != null) {
+                OrchestrateStartup();
+            }
         }
 
         protected virtual void Start() {
@@ -54,6 +54,8 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestrateStartup() {
+            GetComponentReferences();
+            CreateEventSubscriptions();
             characterMotor.OrchestrateStartup();
             if (characterAnimator != null) {
                 characterAnimator.OrchestratorStart();
