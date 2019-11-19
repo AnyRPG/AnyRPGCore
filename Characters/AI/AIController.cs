@@ -64,7 +64,7 @@ namespace AnyRPG {
             GetCombatStrategy();
         }
 
-        private void GetCombatStrategy() {
+        public void GetCombatStrategy() {
             string usedStrategyName = combatStrategyName;
             if (usedStrategyName == null || usedStrategyName == string.Empty) {
                 if (baseCharacter != null && baseCharacter.MyCharacterName != null && baseCharacter.MyCharacterName != string.Empty) {
@@ -73,9 +73,11 @@ namespace AnyRPG {
             }
             if (usedStrategyName != null && usedStrategyName != string.Empty) {
                 combatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(usedStrategyName);
+                /*
                 if (combatStrategy == null) {
                     Debug.LogError("Unable to get combat strategy: " + usedStrategyName);
                 }
+                */
             }
         }
 
@@ -326,6 +328,22 @@ namespace AnyRPG {
             RemoveControlEffects();
         }
 
+        public void ResetCombat() {
+            // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
+            if (MyCombatStrategy != null) {
+                //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): combat strategy was not null");
+                if (LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != string.Empty) {
+                    //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
+                    MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile);
+                    if (musicProfile != null && musicProfile.MyAudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.MyAudioClip) {
+                        //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
+
+                        AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
+                    }
+                }
+                GetCombatStrategy();
+            }
+        }
     }
 
 }

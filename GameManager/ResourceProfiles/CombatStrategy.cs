@@ -81,8 +81,7 @@ namespace AnyRPG {
             }
             return returnList;
         }
+
     }
-
-
 
 }

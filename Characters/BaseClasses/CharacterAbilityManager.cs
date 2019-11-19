@@ -438,7 +438,7 @@ namespace AnyRPG {
                 return;
             }
             if (!CanCastAbility(ability)) {
-                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 

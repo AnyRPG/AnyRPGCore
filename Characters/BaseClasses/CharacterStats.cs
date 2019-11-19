@@ -85,11 +85,6 @@ namespace AnyRPG {
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
-            foreach (StatBuffType statBuffType in Enum.GetValues(typeof(StatBuffType))) {
-                primaryStatModifiers.Add(statBuffType, new Stat());
-            }
-            primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HealthChangedNotificationHandler;
-            primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += ManaChangedNotificationHandler;
         }
 
         public void OrchestratorSetLevel() {
@@ -101,11 +96,20 @@ namespace AnyRPG {
 
         public void OrchestratorStart() {
             GetComponentReferences();
+            SetPrimaryStatModifiers();
             CreateEventSubscriptions();
         }
 
         public void GetComponentReferences() {
             baseCharacter = GetComponent<BaseCharacter>();
+        }
+
+        public void SetPrimaryStatModifiers() {
+            foreach (StatBuffType statBuffType in Enum.GetValues(typeof(StatBuffType))) {
+                primaryStatModifiers.Add(statBuffType, new Stat());
+            }
+            primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HealthChangedNotificationHandler;
+            primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += ManaChangedNotificationHandler;
         }
 
         public virtual void CreateEventSubscriptions() {
