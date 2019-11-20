@@ -21,7 +21,7 @@ namespace AnyRPG {
         bool MyCanCastOnEnemy { get; }
         bool MyCanCastOnSelf { get; }
         bool MyCanCastOnFriendly { get; }
-        AnimationClip MyAnimationClip { get; set; }
+        //AnimationClip MyAnimationClip { get; set; }
         AnimationClip MyCastingAnimationClip { get; set; }
         List<string> MyHoldableObjectNames { get; set; }
         AudioClip MyCastingAudioClip { get; set; }

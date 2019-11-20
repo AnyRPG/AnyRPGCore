@@ -117,7 +117,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to handleattack");
-                characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
+                //characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
                 if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
@@ -129,7 +129,7 @@ namespace AnyRPG {
 
         public virtual void CleanupEventSubscriptions() {
             if (characterUnit != null && characterUnit.MyCharacter != null) {
-                characterUnit.MyCharacter.MyCharacterCombat.OnAttack -= HandleAttack;
+                //characterUnit.MyCharacter.MyCharacterCombat.OnAttack -= HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie -= HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
                 if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
@@ -676,7 +676,7 @@ namespace AnyRPG {
 
         }
 
-
+        /*
         // regular melee auto-attack
         protected virtual void HandleAttack(BaseCharacter targetCharacterUnit) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAttack()");
@@ -702,6 +702,7 @@ namespace AnyRPG {
             // tell the animator to play the animation
             SetAttacking(true);
         }
+        */
 
         // special melee attack
         public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {

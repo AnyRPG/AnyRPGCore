@@ -28,9 +28,12 @@ namespace AnyRPG {
         [SerializeField]
         protected bool animatorCreatePrefabs;
 
-        // on hit animation
+        //[SerializeField]
+        //protected AnimationClip animationClip = null;
+
+        // will randomly rotate through these
         [SerializeField]
-        protected AnimationClip animationClip = null;
+        protected List<AnimationClip> animationClips = new List<AnimationClip>();
 
         [SerializeField]
         protected AudioClip animationHitAudioClip;
@@ -42,7 +45,7 @@ namespace AnyRPG {
         [SerializeField]
         protected AudioClip castingAudioClip;
 
-        public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
+        //public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
         public AnimationClip MyCastingAnimationClip { get => castingAnimationClip; set => castingAnimationClip = value; }
 
         [SerializeField]
@@ -156,6 +159,7 @@ namespace AnyRPG {
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
         public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
+        protected List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -220,10 +224,23 @@ namespace AnyRPG {
             }
 
             ProcessAbilityPrefabs(sourceCharacter);
+            ProcessGCDAuto(sourceCharacter);
 
             return true;
             // notify subscribers
             //OnAbilityCast(this);
+        }
+
+        public virtual void ProcessGCDAuto(BaseCharacter sourceCharacter) {
+            ProcessGCDManual(sourceCharacter);
+        }
+
+        public virtual void ProcessGCDManual(BaseCharacter sourceCharacter, float usedCoolDown = 0f) {
+            if (MyCanSimultaneousCast == false && MyIgnoreGlobalCoolDown != true && MyAbilityCastingTime == 0f) {
+                sourceCharacter.MyCharacterAbilityManager.InitiateGlobalCooldown(usedCoolDown);
+            } else {
+                //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
+            }
         }
 
         public virtual void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {

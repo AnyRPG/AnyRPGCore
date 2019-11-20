@@ -222,7 +222,8 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".CharacterUnit.Interact(" + source.name + ")");
             if (CanInteract(source)) {
-                source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
+                //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
+                (source.MyCharacter.MyCharacterCombat as PlayerCombat).Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
                 return true;
             }

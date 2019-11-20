@@ -71,18 +71,18 @@ namespace AnyRPG {
         }
 
         public void HandleAutoAttack() {
-            if (baseCharacter.MyCharacterController.MyTarget == null && autoAttackActive == true) {
+            if (baseCharacter.MyCharacterController.MyTarget == null && MyAutoAttackActive == true) {
                 //Debug.Log(gameObject.name + ": HandleAutoAttack(): target is null.  deactivate autoattack");
                 DeActivateAutoAttack();
                 return;
             }
 
-            if (autoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
+            if (MyAutoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
                 //Debug.Log("player controller is in combat and target is not null");
                 //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
                 BaseCharacter targetCharacter = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter;
-                if (targetCharacter != null && AutoAttackTargetIsValid(targetCharacter)) {
-                    //Debug.Log("the target is alive.  Attacking");
+                if (targetCharacter != null) {
+                    Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). the target is alive.  Attacking");
                     Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
                     return;
                 }
@@ -90,6 +90,28 @@ namespace AnyRPG {
                 // There is no reason for autoattack to remain active under these circumstances
                 //Debug.Log(gameObject.name + ": target is not attackable.  deactivate autoattack");
                 DeActivateAutoAttack();
+            }
+        }
+
+        /// <summary>
+        /// This is the entrypoint to a manual attack.
+        /// </summary>
+        /// <param name="characterTarget"></param>
+        public virtual void Attack(BaseCharacter characterTarget) {
+            Debug.Log(gameObject.name + ".PlayerCombat.Attack(" + characterTarget.name + ")");
+            if (characterTarget == null) {
+                //Debug.Log("You must have a target to attack");
+                //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
+            } else {
+                // add this here to prevent characters from not being able to attack
+                swingTarget = characterTarget;
+                
+                ActivateAutoAttack();
+
+                // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
+                baseCharacter.MyCharacterAbilityManager.AttemptAutoAttack();
+
+                lastCombatEvent = Time.time;
             }
         }
 

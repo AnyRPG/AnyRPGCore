@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class CharacterAbilityManager : MonoBehaviour {
+
+        public virtual event System.Action<BaseCharacter> OnAttack = delegate { };
         public event System.Action<IAbility, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
 
@@ -40,6 +42,8 @@ namespace AnyRPG {
         public float MyRemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
 
         private bool waitingForAnimatedAbility = false;
+
+        private Coroutine globalCoolDownCoroutine = null;
 
         public BaseCharacter MyBaseCharacter {
             get => baseCharacter;
@@ -127,6 +131,12 @@ namespace AnyRPG {
                 destroyAbilityEffectObjectCoroutine = null;
             }
             CleanupCoolDownRoutines();
+
+            if (globalCoolDownCoroutine != null) {
+                StopCoroutine(globalCoolDownCoroutine);
+                globalCoolDownCoroutine = null;
+            }
+
         }
 
         public void BeginAbilityCoolDown(BaseAbility baseAbility) {
@@ -324,7 +334,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
             float startTime = Time.time;
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
+            Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
             if (ability.MyRequiresTarget == false || ability.MyCanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -435,12 +445,21 @@ namespace AnyRPG {
             }
         }
 
+        public void AttemptAutoAttack() {
+            Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
+            foreach (BaseAbility baseAbility in MyAbilityList.Values) {
+                if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack) {
+                    BeginAbility(baseAbility);
+                }
+            }
+        }
+
         /// <summary>
         /// The entrypoint to Casting a spell.  handles all logic such as instant/timed cast, current cast in progress, enough mana, target being alive etc
         /// </summary>
         /// <param name="ability"></param>
         public void BeginAbility(IAbility ability) {
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.MyName) + ")");
+            Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.MyName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return;
@@ -456,14 +475,15 @@ namespace AnyRPG {
         }
 
         private void BeginAbilityCommon(IAbility ability, GameObject target) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
             }
+
             if (!CanCastAbility(ability)) {
-                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 
@@ -472,8 +492,18 @@ namespace AnyRPG {
 
             // perform ability dependent checks
             if (!usedAbility.CanUseOn(finalTarget, baseCharacter as BaseCharacter) == true) {
-                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
+                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
                 return;
+            }
+
+            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
+                if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, baseCharacter) <= -1) {
+                    if (targetCharacterUnit.MyBaseCharacter.MyCharacterCombat != null && ability.MyCanCastOnEnemy == true) {
+                        // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                        OnAttack(targetCharacterUnit.MyBaseCharacter);
+                    }
+                }
             }
 
             if (usedAbility.MyCanSimultaneousCast) {
@@ -667,6 +697,31 @@ namespace AnyRPG {
                 }
 
             }
+        }
+
+        public void InitiateGlobalCooldown(float coolDownToUse = 0f) {
+            //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
+            if (globalCoolDownCoroutine == null) {
+                // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
+                globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown(coolDownToUse));
+            } else {
+                Debug.Log("INVESTIGATE: GCD COROUTINE WAS NOT NULL");
+            }
+
+        }
+
+        public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
+            // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
+            // the current longest animated attack is ground slam at around 4 seconds
+            remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
+            initialGlobalCoolDown = remainingGlobalCoolDown;
+            while (remainingGlobalCoolDown > 0f) {
+                remainingGlobalCoolDown -= Time.deltaTime;
+                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
+                yield return null;
+            }
+            globalCoolDownCoroutine = null;
         }
 
     }

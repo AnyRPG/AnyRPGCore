@@ -118,9 +118,10 @@ namespace AnyRPG {
             if (!underControl) {
                 underControl = true;
                 masterUnit = source;
+                // done so pets of player unit wouldn't attempt to attack npcs questgivers etc
                 //masterUnit.MyCharacterController.OnSetTarget += SetTarget;
                 masterUnit.MyCharacterController.OnClearTarget += ClearTarget;
-                masterUnit.MyCharacterCombat.OnAttack += OnMasterAttack;
+                masterUnit.MyCharacterAbilityManager.OnAttack += OnMasterAttack;
                 masterUnit.MyCharacterCombat.OnDropCombat += OnMasterDropCombat;
                 masterUnit.MyCharacterController.OnManualMovement += OnMasterMovement;
 
@@ -137,7 +138,7 @@ namespace AnyRPG {
             if (underControl && masterUnit != null) {
                 //masterUnit.MyCharacterController.OnSetTarget -= SetTarget;
                 masterUnit.MyCharacterController.OnClearTarget -= ClearTarget;
-                masterUnit.MyCharacterCombat.OnAttack -= OnMasterAttack;
+                masterUnit.MyCharacterAbilityManager.OnAttack -= OnMasterAttack;
                 masterUnit.MyCharacterCombat.OnDropCombat -= OnMasterDropCombat;
                 masterUnit.MyCharacterController.OnManualMovement -= OnMasterMovement;
             }
@@ -170,7 +171,7 @@ namespace AnyRPG {
         }
 
         public void OnMasterAttack(BaseCharacter target) {
-            baseCharacter.MyCharacterCombat.Attack(target);
+            SetTarget(target.MyCharacterUnit.gameObject);
         }
 
         public void OnMasterDropCombat() {
@@ -287,6 +288,7 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void AttackCombatTarget() {
             //Debug.Log(gameObject.name + ".AIController.AttackCombatTarget()");
             if (!(currentState is DeathState)) {
@@ -295,6 +297,7 @@ namespace AnyRPG {
                 }
             }
         }
+        */
 
         public void ChangeState(IState newState) {
             //Debug.Log(gameObject.name + ": ChangeState(" + newState.ToString() + ")");

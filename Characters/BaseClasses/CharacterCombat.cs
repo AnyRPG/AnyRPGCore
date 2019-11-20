@@ -9,7 +9,6 @@ namespace AnyRPG {
 
         //events
         public virtual event System.Action<BaseCharacter, float> OnKillEvent = delegate { };
-        public virtual event System.Action<BaseCharacter> OnAttack = delegate { };
         public virtual event System.Action OnDropCombat = delegate { };
         public virtual event System.Action OnEnterCombat = delegate { };
         public virtual event System.Action<BaseCharacter, GameObject> OnHitEvent = delegate { };
@@ -22,7 +21,9 @@ namespace AnyRPG {
         public float attackSpeed = 1f;
 
         public bool autoAttack = true;
-        public bool autoAttackActive = false;
+
+        private bool autoAttackActive = false;
+
         public float combatCooldown = 10f;
         protected float lastCombatEvent;
 
@@ -74,6 +75,7 @@ namespace AnyRPG {
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
         public AudioClip MyOverrideHitSoundEffect { get => overrideHitSoundEffect; set => overrideHitSoundEffect = value; }
         public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
+        public bool MyAutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
 
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterCombat.OrchestratorStart()");
@@ -295,99 +297,6 @@ namespace AnyRPG {
             return false;
         }
 
-        protected virtual bool CanPerformAutoAttack(BaseCharacter characterTarget) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ")");
-            if (!AutoAttackTargetIsValid(characterTarget)) {
-                return false;
-            }
-            if (!baseCharacter.MyCharacterController.IsTargetInHitBox(characterTarget.MyCharacterUnit.gameObject)) {
-                // target is too far away, can't attack
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") target is too far away, can't attack");
-                return false;
-            }
-            if (attackCooldown > 0f) {
-                // still waiting for attack cooldown, can't attack
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") still waiting for attack cooldown (" + attackCooldown + "), can't attack");
-                return false;
-            }
-            if (MyWaitingForAutoAttack == true) {
-                // there is an existing autoattack in progress, can't start a new auto-attack
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") autoattack in progress, can't start a new auto-attack");
-                return false;
-            }
-            if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-                // if we have an ability manager and there is an outstanding special attack in progress, can't auto-attack
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") special attack in progress, can't auto-attack");
-                return false;
-            }
-            if (MyBaseCharacter.MyCharacterAbilityManager != null && MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true) {
-                // there is a spell cast in progress, can't start a new auto-attack
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") there is a spell cast in progress, can't start a new auto-attack");
-                return false;
-            }
-            if (MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.WaitingForAnimation() == true) {
-                // all though there are no casts in progress, a current animation is still finishing, so we can't start a new auto-attack yet
-                // this can happen when an animation for a casted ability lasts longer than the actual cast time, for abilities that do their damage part way through the animation
-                //Debug.Log(gameObject.name + ".CharacterCombat.CanPerformAutoAttack(" + characterTarget.MyCharacterName + ") WaitingForAnimation() == true");
-                return false;
-            }
-            // there are no blockers to an attack, we can start an auto-attack
-            return true;
-        }
-
-        protected virtual bool AutoAttackTargetIsValid(BaseCharacter characterTarget) {
-            // ensure the current target is the target we swung at in case we switched target mid swing via tab/agro etc
-            // this helps prevent spell hit effects from triggering on the wrong unit
-            if (characterTarget != swingTarget) {
-                return false;
-            }
-            if (Faction.RelationWith(characterTarget, MyBaseCharacter as BaseCharacter) > -1) {
-                return false;
-            }
-            if (!characterTarget.MyCharacterStats.IsAlive) {
-                return false;
-            }
-            return true;
-        }
-
-
-        /// <summary>
-        /// This is the entrypoint to a manual attack.
-        /// </summary>
-        /// <param name="characterTarget"></param>
-        public virtual void Attack(BaseCharacter characterTarget) {
-            //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ")");
-            if (characterTarget == null) {
-                //Debug.Log("You must have a target to attack");
-                //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
-            } else {
-                // add this here to prevent characters from not being able to attack
-                swingTarget = characterTarget;
-
-                // perform a faction/liveness check and disable auto-attack if it is not valid
-                if (!AutoAttackTargetIsValid(characterTarget)) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack(): target is not valid");
-                    DeActivateAutoAttack();
-                    return;
-                }
-                if (!inCombat) {
-                    EnterCombat(characterTarget);
-                }
-                //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") about to activate autoattack");
-                ActivateAutoAttack();
-                if (CanPerformAutoAttack(characterTarget)) {
-                    // block further auto-attacks while this one is outstanding
-                    //Debug.Log(gameObject.name + ": Attack(" + characterTarget.name + ") canperformattack: setwaitingforautoattack");
-                    SetWaitingForAutoAttack(true);
-
-                    // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                    OnAttack(characterTarget);
-
-                    lastCombatEvent = Time.time;
-                }
-            }
-        }
-
         /// <summary>
         /// receive the AttackHitEvent from the attack animation so damage can be triggered against the enemy
         /// </summary>
@@ -417,20 +326,6 @@ namespace AnyRPG {
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
 
-                // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
-                // check for friendly target in case it somehow turned friendly mid swing
-                BaseCharacter targetCharacter = targetCharacterUnit.MyBaseCharacter;
-                if (targetCharacter != null && !AutoAttackTargetIsValid(targetCharacter)) {
-                    DeActivateAutoAttack();
-                    return false;
-                }
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() OpponentCombat is not null. About to deal damage");
-                targetCharacterUnit.MyCharacter.MyCharacterCombat.TakeDamage(baseCharacter.MyCharacterStats.MyMeleeDamage, baseCharacter.MyCharacterUnit.transform.position, baseCharacter as BaseCharacter, CombatType.normal, CombatMagnitude.normal, "Attack");
-
-                if (autoAttackActive == false) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
-                    ActivateAutoAttack();
-                }
 
                 // onHitAbility is only for weapons, not for special moves
 
@@ -585,7 +480,6 @@ namespace AnyRPG {
             }
             AttemptRegen();
         }
-
 
     }
 

@@ -8,6 +8,9 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
+        // is this an auto attack ability
+        [SerializeField]
+        private bool isAutoAttack;
 
         public override float MyAbilityCastingTime {
             get {
@@ -16,10 +19,12 @@ namespace AnyRPG {
             set => abilityCastingTime = value;
         }
 
+        public bool MyIsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
+
         public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast()");
             if (base.Cast(source, target, groundTarget)) {
-                if (animationClip != null) {
+                if (animationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
                     // this type of ability is allowed to interrupt other types of animations, so clear them all
@@ -36,11 +41,17 @@ namespace AnyRPG {
                         targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;
                     }
 
-                    // perform the actual animation
-                    source.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClip, this, targetBaseCharacter);
+                    int attackIndex = UnityEngine.Random.Range(0, animationClips.Count);
+                    if (animationClips[attackIndex] != null) {
+                        // perform the actual animation
+                        source.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClips[attackIndex], this, targetBaseCharacter);
 
-                    // unblock 
-                    source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+                        // unblock 
+                        source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+
+                        ProcessGCDManual(source, animationClips[attackIndex].length);
+                    }
+
                 }
                 return true;
             } else {
@@ -62,6 +73,21 @@ namespace AnyRPG {
         public void HandleAbilityHit(BaseCharacter source, GameObject target) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
             PerformAbilityEffects(source, target, Vector3.zero);
+
+            // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
+            // check for friendly target in case it somehow turned friendly mid swing
+            if (target == null || !CanUseOn(target, source)) {
+                source.MyCharacterCombat.DeActivateAutoAttack();
+                return;
+            }
+
+            if (isAutoAttack) {
+                if (source.MyCharacterCombat.MyAutoAttackActive == false) {
+                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
+                    source.MyCharacterCombat.ActivateAutoAttack();
+                }
+            }
+
         }
 
         public override string GetSummary() {
@@ -82,6 +108,11 @@ namespace AnyRPG {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
             return base.CanUseOn(target, source);
         }
+
+        public override void ProcessGCDAuto(BaseCharacter sourceCharacter) {
+            //intentionally do nothing
+        }
+
 
     }
 

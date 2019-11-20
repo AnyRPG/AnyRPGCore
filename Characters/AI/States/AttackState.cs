@@ -61,7 +61,7 @@ namespace AnyRPG {
             }
 
             // target is in range, attack it
-            aiController.AttackCombatTarget();
+            //aiController.AttackCombatTarget();
 
         }
 

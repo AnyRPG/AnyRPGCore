@@ -8,8 +8,6 @@ namespace AnyRPG {
 
         public System.Action<IAbility> OnPerformAbility = delegate { };
 
-        private Coroutine globalCoolDownCoroutine = null;
-
         public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
@@ -97,51 +95,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
             base.PerformAbility(ability, target, groundTarget);
             // DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
-            if (ability.MyCanSimultaneousCast == false && ability.MyIgnoreGlobalCoolDown != true && ability.MyAbilityCastingTime == 0f) {
-                InitiateGlobalCooldown(ability);
-            } else {
-                //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
-            }
             OnPerformAbility(ability);
             SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
-        }
-
-        public void InitiateGlobalCooldown(IAbility ability) {
-            //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
-            if (globalCoolDownCoroutine == null) {
-                // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
-                float animationTime = 0f;
-                if (ability.MyAnimationClip != null) {
-                    animationTime = ability.MyAnimationClip.length;
-                }
-                globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown(animationTime));
-            } else {
-                Debug.Log("INVESTIGATE: GCD COROUTINE WAS NOT NULL");
-            }
-
-        }
-
-        public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
-            // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
-            // the current longest animated attack is ground slam at around 4 seconds
-            remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
-            initialGlobalCoolDown = remainingGlobalCoolDown;
-            while (remainingGlobalCoolDown > 0f) {
-                remainingGlobalCoolDown -= Time.deltaTime;
-                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
-                yield return null;
-            }
-            globalCoolDownCoroutine = null;
         }
 
         public override void CleanupCoroutines() {
             // called from base.ondisable
             base.CleanupCoroutines();
-            if (globalCoolDownCoroutine != null) {
-                StopCoroutine(globalCoolDownCoroutine);
-                globalCoolDownCoroutine = null;
-            }
         }
 
         public override void StopCasting() {
