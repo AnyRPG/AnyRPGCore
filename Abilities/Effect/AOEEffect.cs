@@ -32,13 +32,14 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             if (abilityEffectInput == null) {
                 abilityEffectInput = new AbilityEffectOutput();
             }
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
             TargetAOEHit(source, target, abilityEffectInput);
+            return returnObject;
         }
 
         public override void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityAffectInput) {

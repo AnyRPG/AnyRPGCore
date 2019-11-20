@@ -72,12 +72,23 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): no match disposition dictionary, checking status effect buffs");
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.MyStatusEffects != null) {
                 foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                    foreach (FactionDisposition factionDisposition in statusEffectNode.MyStatusEffect.MyFactionModifiers) {
-                        //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
-                        if (SystemResourceManager.MatchResource(factionDisposition.factionName, faction.MyName)) {
-                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
-                            return true;
+                    /*
+                    if (statusEffectNode.MyStatusEffect == null) {
+                        Debug.LogError("STATUS EFFECT IS NULL");
+                    }
+                    if (statusEffectNode.MyStatusEffect.MyFactionModifiers == null) {
+                        Debug.LogError("FACTION MODIFIERS IS NULL");
+                    }
+                    */
+                    if (statusEffectNode != null && statusEffectNode.MyStatusEffect != null && statusEffectNode.MyStatusEffect.MyFactionModifiers != null) {
+                        foreach (FactionDisposition factionDisposition in statusEffectNode.MyStatusEffect.MyFactionModifiers) {
+                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
+                            if (SystemResourceManager.MatchResource(factionDisposition.factionName, faction.MyName)) {
+                                //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
+                                return true;
+                            }
                         }
+
                     }
                 }
             }

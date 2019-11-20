@@ -27,16 +27,16 @@ namespace AnyRPG {
         }
         */
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
-                return;
+                return null;
             }
             string originalPrefabSourceBone = prefabSourceBone;
             Vector3 originalPrefabOffset = prefabOffset;
             prefabOffset = Vector3.zero;
             prefabSourceBone = string.Empty;
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
             prefabSourceBone = originalPrefabSourceBone;
             prefabOffset = originalPrefabOffset;
             if (abilityEffectObject != null) {
@@ -52,6 +52,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            return returnObject;
         }
 
         public void DeActivateMountedState() {

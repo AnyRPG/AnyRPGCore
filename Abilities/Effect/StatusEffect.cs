@@ -155,22 +155,24 @@ namespace AnyRPG {
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
-                return;
+                return null;
             }
+            GameObject returnObject = null;
             StatusEffectNode _statusEffectNode = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetResource(MyName) as StatusEffect, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
-                base.Cast(source, target, originalTarget, abilityEffectInput);
+                returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
                 if (abilityEffectObject != null) {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                     _statusEffectNode.MyStatusEffect.abilityEffectObject = abilityEffectObject;
                 }
                 PerformAbilityHit(source, target, abilityEffectInput);
             }
+            return returnObject;
         }
 
         public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {

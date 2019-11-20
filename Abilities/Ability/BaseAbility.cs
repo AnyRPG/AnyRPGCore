@@ -24,6 +24,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> holdableObjectNames = new List<string>();
 
+        // holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start
+        [SerializeField]
+        protected bool animatorCreatePrefabs;
 
         // on hit animation
         [SerializeField]
@@ -152,6 +155,7 @@ namespace AnyRPG {
         public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
         public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
+        public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -204,20 +208,29 @@ namespace AnyRPG {
             }
         }
 
-        public virtual bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        public virtual bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
-            if (!CanCast(source)) {
+            if (!CanCast(sourceCharacter)) {
                 //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
                 return false;
             }
 
-            if (source != null && source.MyCharacterAbilityManager != null) {
-                source.MyCharacterAbilityManager.BeginAbilityCoolDown(this);
+            if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
+                sourceCharacter.MyCharacterAbilityManager.BeginAbilityCoolDown(this);
             }
+
+            ProcessAbilityPrefabs(sourceCharacter);
 
             return true;
             // notify subscribers
             //OnAbilityCast(this);
+        }
+
+        public virtual void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
+            //Debug.Log(MyName + ".BaseAbilitiy.ProcessAbilityPrefabs()");
+            if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null) {
+                sourceCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            }
         }
 
         public virtual bool CanUseOn(GameObject target, BaseCharacter source) {

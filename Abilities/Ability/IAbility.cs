@@ -25,6 +25,7 @@ namespace AnyRPG {
         AnimationClip MyCastingAnimationClip { get; set; }
         List<string> MyHoldableObjectNames { get; set; }
         AudioClip MyCastingAudioClip { get; set; }
+        bool MyAnimatorCreatePrefabs { get; set; }
 
 
         bool CanUseOn(GameObject target, BaseCharacter source);

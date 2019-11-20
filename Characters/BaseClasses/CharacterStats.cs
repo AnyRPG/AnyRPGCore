@@ -522,7 +522,11 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() milliseconds: " + milliseconds);
             TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
-            statusEffect.MyNextTickTime = System.DateTime.Now + tickRateTimeSpan;
+            if (statusEffect.MyCastZeroTick) {
+                statusEffect.MyNextTickTime = System.DateTime.Now;
+            } else {
+                statusEffect.MyNextTickTime = System.DateTime.Now + tickRateTimeSpan;
+            }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
             while (statusEffect.GetRemainingDuration() >= 0 && target != null) {

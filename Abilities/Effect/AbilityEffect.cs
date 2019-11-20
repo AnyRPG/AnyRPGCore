@@ -192,14 +192,14 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public virtual GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             /*
             if (abilityEffectInput != null) {
                 this.abilityEffectInput = abilityEffectInput;
             }
             */
-
+            return null;
         }
 
         public virtual CharacterUnit ReturnTarget(CharacterUnit source, CharacterUnit target) {
@@ -211,34 +211,41 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        protected void PerformAbilityEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
+        protected List<GameObject> PerformAbilityEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects(): effectOutput.healthAmount: " + effectOutput.healthAmount);
+            List<GameObject> returnList = new List<GameObject>();
+
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
-                //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects() found: " + abilityEffect.abilityEffectName);
+                //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + abilityEffect.MyName);
                 if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
                     Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
-                    PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                    GameObject tmpObject = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                    if (tmpObject != null) {
+                        //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
+                        returnList.Add(tmpObject);
+                    }
                 }
             }
+            return returnList;
         }
 
-        protected void PerformAbilityEffect(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
+        protected GameObject PerformAbilityEffect(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
             //Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
-
+            GameObject returnObject = null;
             // give the ability a chance to auto-selfcast if the original target was null
             GameObject finalTarget = abilityEffect.ReturnTarget(source, target);
             //Debug.Log("FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
             if (abilityEffect.CanUseOn(finalTarget, source)) {
-                //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. casting ability effect: " + abilityEffect);
+                //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
-                _abilityEffect.Cast(source, finalTarget, target, effectOutput);
+                returnObject = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
             } else {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
             }
-
+            return returnObject;
         }
 
         public virtual void PerformAbilityHitEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {

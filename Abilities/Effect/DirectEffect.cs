@@ -10,9 +10,9 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New DirectEffect",menuName = "AnyRPG/Abilities/Effects/DirectEffect")]
     public class DirectEffect : FixedLengthEffect {
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".DirectEffect.Cast()");
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
         public override void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {

@@ -8,6 +8,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
+
         public override float MyAbilityCastingTime {
             get {
                 return 0f;
@@ -46,6 +47,12 @@ namespace AnyRPG {
                 //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
             }
             return false;
+        }
+
+        public override void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
+            //Debug.Log(MyName + ".AnimatedAbility.ProcessAbilityPrefabs()");
+            //base.ProcessAbilityPrefabs(sourceCharacter);
+            // do nothing intentionally, we will clean these up at the end of the ability
         }
 
         public void CleanupEventSubscriptions(BaseCharacter source) {

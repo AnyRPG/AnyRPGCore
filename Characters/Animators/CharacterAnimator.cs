@@ -79,15 +79,6 @@ namespace AnyRPG {
             set => animatorController = value;
         }
 
-        protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.Awake()");
-            GetComponentReferences();
-        }
-
-        protected virtual void Start() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.Start()");
-        }
-
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
             GetComponentReferences();
@@ -804,6 +795,9 @@ namespace AnyRPG {
             (baseAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             SetAttacking(false);
             currentAbility = null;
+            if (characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            }
         }
 
         public void ClearCasting() {

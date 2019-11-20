@@ -167,15 +167,16 @@ namespace AnyRPG {
                 CharacterAnimator characterAnimator = null;
                 if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                     characterAnimator = baseCharacter.MyAnimatedUnit.MyCharacterAnimator;
+                    if (characterAnimator != null) {
+                        //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
+                        characterAnimator.PerformEquipmentChange(newItem, null);
+                    }
                 }
+                /*
                 if (characterAnimator == null) {
                     characterAnimator = GetComponent<CharacterAnimator>();
                 }
-                if (characterAnimator != null) {
-                    characterAnimator.InitializeAnimator();
-                    //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
-                    characterAnimator.PerformEquipmentChange(newItem, null);
-                }
+                */
             }
         }
 

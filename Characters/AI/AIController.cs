@@ -67,12 +67,20 @@ namespace AnyRPG {
         public void GetCombatStrategy() {
             string usedStrategyName = combatStrategyName;
             if (usedStrategyName == null || usedStrategyName == string.Empty) {
+                //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured");
                 if (baseCharacter != null && baseCharacter.MyCharacterName != null && baseCharacter.MyCharacterName != string.Empty) {
+                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured: using characterName: " + baseCharacter.MyCharacterName);
                     usedStrategyName = baseCharacter.MyCharacterName;
                 }
             }
             if (usedStrategyName != null && usedStrategyName != string.Empty) {
+                //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured: using usedStrategyName: " + usedStrategyName);
                 combatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(usedStrategyName);
+                if (combatStrategy == null) {
+                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): " + usedStrategyName + " was null");
+                } else {
+                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): " + usedStrategyName + " GOT COMBAT STRATEGY");
+                }
                 /*
                 if (combatStrategy == null) {
                     Debug.LogError("Unable to get combat strategy: " + usedStrategyName);
@@ -329,20 +337,46 @@ namespace AnyRPG {
         }
 
         public void ResetCombat() {
-            // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
-            if (MyCombatStrategy != null) {
-                //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): combat strategy was not null");
-                if (LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != string.Empty) {
-                    //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                    MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile);
-                    if (musicProfile != null && musicProfile.MyAudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.MyAudioClip) {
-                        //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
 
-                        AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
+            // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
+
+            if (MyCombatStrategy != null) {
+                if (MyCombatStrategy.HasMusic() == true) {
+                    //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): combat strategy was not null");
+                    if (LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != string.Empty) {
+                        //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
+                        MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile);
+                        if (musicProfile != null && musicProfile.MyAudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.MyAudioClip) {
+                            //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
+
+                            AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
+                        }
                     }
                 }
                 GetCombatStrategy();
             }
+        }
+
+        public bool CanGetValidAttack(bool beginAttack = false) {
+
+            if (MyCombatStrategy != null) {
+                // attempt to get a valid ability from combat strategy before defaulting to random attacks
+                BaseAbility validCombatStrategyAbility = MyCombatStrategy.GetValidAbility(MyBaseCharacter as BaseCharacter);
+                if (validCombatStrategyAbility != null) {
+                    MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
+                    return true;
+                }
+            } else {
+                // get random attack if no strategy exists
+                BaseAbility validAttackAbility = (MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
+                if (validAttackAbility != null) {
+                    //Debug.Log(aiController.gameObject.name + ": FollowState.Update(): Got valid attack ability: " + validAttackAbility.MyName);
+                    MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

@@ -6,16 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerAnimator : CharacterAnimator {
 
-        protected override void Awake() {
-            //Debug.Log("PlayerAnimator.Awake()");
-            base.Awake();
-        }
-
-        protected override void Start() {
-            //Debug.Log("PlayerAnimator.Start()");
-            base.Start();
-        }
-
         public override void CreateEventSubscriptions() {
             // called from base.start
             base.CreateEventSubscriptions();

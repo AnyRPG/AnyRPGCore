@@ -82,6 +82,14 @@ namespace AnyRPG {
             return returnList;
         }
 
+        public bool HasMusic() {
+            foreach (CombatStrategyNode phaseNode in phaseNodes) {
+                if (phaseNode.MyPhaseMusicProfileName != null && phaseNode.MyPhaseMusicProfileName != string.Empty) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
 }

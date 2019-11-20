@@ -10,9 +10,9 @@ namespace AnyRPG {
 
         public float projectileSpeed = 0;
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".ProjectileAttackEffect.Cast(" + source.name + ", " + target.name + ")");
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (abilityEffectObject != null) {
                 abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
                 ProjectileScript projectileScript = abilityEffectObject.GetComponent<ProjectileScript>();
@@ -22,6 +22,7 @@ namespace AnyRPG {
                     projectileScript.OnCollission += HandleCollission;
                 }
             }
+            return returnObject;
         }
 
         public void HandleCollission(BaseCharacter source, GameObject target, GameObject _abilityEffectObject, AbilityEffectOutput abilityEffectInput) {

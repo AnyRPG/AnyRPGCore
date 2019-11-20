@@ -8,14 +8,15 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
     public class InstantEffect : DirectEffect {
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".InstantEffect.Cast()");
             if (abilityEffectInput == null) {
                 abilityEffectInput = new AbilityEffectOutput();
             }
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
 
             PerformAbilityHit(source, target, abilityEffectInput);
+            return returnObject;
         }
 
     }

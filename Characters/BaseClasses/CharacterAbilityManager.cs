@@ -353,8 +353,12 @@ namespace AnyRPG {
                 float currentCastTime = 0f;
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
-                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectNames);
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyHoldableObjectNames.Count != 0) {
+                    //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
+                    if (!ability.MyAnimatorCreatePrefabs) {
+                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectNames);
+                    }
                 }
                 if (ability.MyCastingAudioClip != null) {
                     //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
@@ -374,9 +378,11 @@ namespace AnyRPG {
 
                     yield return null;
                 }
+                /*
                 if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                     baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
                 }
+                */
 
             }
 
@@ -393,6 +399,25 @@ namespace AnyRPG {
                 PerformAbility(ability, target, GetGroundTarget());
 
             }
+        }
+
+        public void SpawnAbilityObjects() {
+            BaseAbility usedBaseAbility = null;
+            if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                usedBaseAbility = MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+            }
+            if (usedBaseAbility == null) {
+                usedBaseAbility = currentCastAbility;
+            }
+
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && usedBaseAbility.MyHoldableObjectNames.Count != 0) {
+                //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
+                if (usedBaseAbility.MyAnimatorCreatePrefabs) {
+                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(usedBaseAbility.MyHoldableObjectNames);
+                }
+            }
+
         }
 
         public void EndCastCleanup() {
@@ -523,6 +548,7 @@ namespace AnyRPG {
             if (MyBaseCharacter.MyCharacterStats.currentMana < ability.MyAbilityManaCost) {
                 CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
                 //Debug.Log("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+                // GET RID OF CASTING PREFABS HERE
                 return;
             }
 

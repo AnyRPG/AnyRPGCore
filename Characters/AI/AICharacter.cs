@@ -37,10 +37,11 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
-            base.OrchestratorStart();
             if (characterUnit != null) {
                 characterUnit.OrchestrateStartup();
             }
+
+            base.OrchestratorStart();
 
         }
 

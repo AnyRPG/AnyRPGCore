@@ -37,6 +37,10 @@ namespace AnyRPG {
         [SerializeField]
         protected float tickRate;
 
+        // do we cast an immediate tick at zero seconds
+        [SerializeField]
+        protected bool castZeroTick;
+
         // any abilities to cast every tick
         [SerializeField]
         protected List<AbilityEffect> tickAbilityEffectList = new List<AbilityEffect>();
@@ -55,8 +59,9 @@ namespace AnyRPG {
         public float MyPrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
         public PrefabSpawnLocation MyPrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
+        public bool MyCastZeroTick { get => castZeroTick; set => castZeroTick = value; }
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".LengthEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             Vector3 spawnLocation = Vector3.zero;
             Transform prefabParent = null;
@@ -113,6 +118,7 @@ namespace AnyRPG {
                 */
                 BeginMonitoring(abilityEffectObject, source, target, abilityEffectInput);
             }
+            return abilityEffectObject;
         }
 
         public void CreateAbilityObject() {

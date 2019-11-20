@@ -9,7 +9,8 @@ using UMA.CharacterSystem;
 namespace AnyRPG {
     public class AIEquipmentManager : CharacterEquipmentManager {
 
-        protected void Awake() {
+        public override void CreateComponentReferences() {
+            base.CreateComponentReferences();
             if (playerUnitObject == null) {
                 playerUnitObject = gameObject;
             }
@@ -18,7 +19,6 @@ namespace AnyRPG {
             if (dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
             }
-
         }
 
         protected override void Start() {

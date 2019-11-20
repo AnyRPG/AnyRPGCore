@@ -18,13 +18,15 @@ namespace AnyRPG {
         private Vector3 spawnLocation = Vector3.zero;
         */
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(MyName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
-            Spawn(source);
+            GameObject returnObject = Spawn(source);
+            return returnObject;
         }
 
-        private void Spawn(BaseCharacter source) {
-            //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): GetMaxUnits(): " + GetMaxUnits());
+        private GameObject Spawn(BaseCharacter source) {
+            //Debug.Log(MyName + ".SummonEffect.Spawn()");
             GameObject spawnReference = Instantiate(summonObject, PlayerManager.MyInstance.MyAIUnitParent.transform, true);
             //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
             //Vector3 newSpawnLocation = GetSpawnLocation();
@@ -48,6 +50,8 @@ namespace AnyRPG {
             _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
             (_characterUnit.MyCharacter.MyCharacterStats as AIStats).ApplyControlEffects(source);
             //spawnReferences.Add(spawnReference);
+
+            return spawnReference;
         }
 
     }

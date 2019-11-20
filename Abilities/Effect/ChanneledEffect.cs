@@ -11,16 +11,16 @@ namespace AnyRPG {
         // the amount of time to delay damage after spawning the prefab
         public float effectDelay = 0f;
 
-        public override void Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
-                return;
+                return null;
             }
             if (abilityEffectInput == null) {
                 abilityEffectInput = new AbilityEffectOutput();
             }
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (abilityEffectObject != null) {
                 abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
                 IChanneledObject channeledObjectScript = abilityEffectObject.GetComponent<IChanneledObject>();
@@ -46,6 +46,7 @@ namespace AnyRPG {
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
                 source.MyCharacterAbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectInput, this);
             }
+            return returnObject;
         }
 
         public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {

@@ -36,6 +36,18 @@ namespace AnyRPG {
             }
         }
 
+        public void AnimationPrefabCreate() {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
+                characterUnit.MyCharacter.MyCharacterAbilityManager.SpawnAbilityObjects();
+            }
+        }
+
+        public void AnimationPrefabDestroy() {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            }
+        }
+
         public void Shoot() {
         }
 
