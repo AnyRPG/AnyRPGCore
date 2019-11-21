@@ -206,6 +206,7 @@ namespace AnyRPG {
         }
 
         public void DespawnAbilityObjects() {
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.DespawnAbilityObjects()");
             if (abilityObjects == null || abilityObjects.Count == 0) {
                 return;
             }
@@ -296,7 +297,7 @@ namespace AnyRPG {
             // for now manually handle exclusive slots
             if (newItem is Weapon) {
                 // deal with 2h weapons, and unequip offhand
-                if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H) {
+                if ((newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H || (newItem as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Bow) {
                     if (currentEquipment.ContainsKey(EquipmentSlot.OffHand) && currentEquipment[EquipmentSlot.OffHand] != null) {
                         Unequip(EquipmentSlot.OffHand);
                     }
@@ -305,7 +306,7 @@ namespace AnyRPG {
 
             // deal with offhands, and unequip any 2h mainhand
             if (newItem.equipSlot == EquipmentSlot.OffHand) {
-                if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H)) {
+                if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null && ((currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Staff || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Sword2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Mace2H || (currentEquipment[EquipmentSlot.MainHand] as Weapon).MyWeaponAffinity == AnyRPGWeaponAffinity.Bow)) {
                     if (currentEquipment.ContainsKey(EquipmentSlot.MainHand) && currentEquipment[EquipmentSlot.MainHand] != null) {
                         Unequip(EquipmentSlot.MainHand);
                     }

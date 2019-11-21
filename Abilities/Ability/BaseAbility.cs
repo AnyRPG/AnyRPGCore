@@ -28,9 +28,6 @@ namespace AnyRPG {
         [SerializeField]
         protected bool animatorCreatePrefabs;
 
-        //[SerializeField]
-        //protected AnimationClip animationClip = null;
-
         // will randomly rotate through these
         [SerializeField]
         protected List<AnimationClip> animationClips = new List<AnimationClip>();
@@ -116,7 +113,11 @@ namespace AnyRPG {
         // if no target is given, automatically cast on the caster
         public bool autoSelfCast = false;
 
-        public int maxRange = 0;
+        [SerializeField]
+        protected bool useMeleeRange;
+
+        [SerializeField]
+        protected int maxRange;
 
         [SerializeField]
         protected bool autoLearn = false;
@@ -160,6 +161,8 @@ namespace AnyRPG {
         public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         protected List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
+        public int MyMaxRange { get => maxRange; set => maxRange = value; }
+        public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -245,22 +248,46 @@ namespace AnyRPG {
 
         public virtual void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbilitiy.ProcessAbilityPrefabs()");
+            if (MyHoldableObjectNames.Count == 0) {
+                return;
+            }
             if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null) {
                 sourceCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
             }
         }
 
-        public virtual bool CanUseOn(GameObject target, BaseCharacter source) {
+        public virtual bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
+
+            // create target booleans
+            bool targetIsFriendly = false;
+            bool targetIsEnemy = false;
+            bool targetIsSelf = false;
+            CharacterUnit targetCharacterUnit = null;
+
             if (requiresTarget == false) {
                 //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
                 return true;
             }
 
-            CharacterUnit targetCharacterUnit = null;
+            // deal with targetting
+            if (target == null && autoSelfCast != true) {
+                //Debug.Log(resourceName + " requires a target!");
+                CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a target!");
+                return false;
+            }
+
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
                 if (targetCharacterUnit != null) {
+                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
+                        targetIsEnemy = true;
+                    }
+                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
+                        targetIsFriendly = true;
+                    }
+
+                    // liveness checks
                     if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget == true) {
                         //Debug.Log("This ability requires a live target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
@@ -271,23 +298,36 @@ namespace AnyRPG {
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
+
                 }
             }
+            if (target == sourceCharacter.MyCharacterUnit.gameObject) {
+                targetIsSelf = true;
+            }
 
-            // deal with targetting
-            if (target == null && autoSelfCast != true) {
-                //Debug.Log(resourceName + " requires a target!");
-                CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a target!");
+            // correct match conditions.  if any of these are met, the target is already valid
+            if (!(canCastOnFriendly && targetIsFriendly || canCastOnEnemy && targetIsEnemy || canCastOnSelf && targetIsSelf)) {
                 return false;
             }
 
+            
+            // range checks
             if (target != null && targetCharacterUnit != null) {
-                if (maxRange > 0 && Vector3.Distance(source.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
-                    //Debug.Log(target.name + " is out of range");
-                    if (CombatLogUI.MyInstance != null && source != null && PlayerManager.MyInstance.MyCharacter != null && source == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
-                        CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
+                if (canCastOnFriendly && targetIsFriendly || canCastOnEnemy && targetIsEnemy) {
+                    // if none of those is true, then we are casting on ourselves, so don't need to do range check
+                    if (MyUseMeleeRange) {
+                        if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
+                            return false;
+                        }
+                    } else {
+                        if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
+                            //Debug.Log(target.name + " is out of range");
+                            if (CombatLogUI.MyInstance != null && sourceCharacter != null && PlayerManager.MyInstance.MyCharacter != null && sourceCharacter == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
+                                CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
+                            }
+                            return false;
+                        }
                     }
-                    return false;
                 }
             }
 
@@ -332,48 +372,18 @@ namespace AnyRPG {
                 return null;
             }
 
-            // create target booleans
-            bool targetIsFriendly = false;
-            bool targetIsEnemy = false;
-            bool targetIsSelf = false;
-            if (target != null) {
-                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
-                if (targetCharacterUnit != null) {
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
-                        targetIsEnemy = true;
-                    }
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
-                        targetIsFriendly = true;
-                    }
-                }
-            }
-            if (target == sourceCharacter.MyCharacterUnit.gameObject) {
-                targetIsSelf = true;
-            }
-
-            // correct match conditions.  if any of these are met, the target is already valid
-            if (canCastOnFriendly && targetIsFriendly) {
-                return target;
-            }
-            if (canCastOnEnemy && targetIsEnemy) {
-                return target;
-            }
-
-            // we don't have valid friendly or enemy target.  see if we need to auto-target self or not
-            if (canCastOnSelf) {
-                if (targetIsSelf) {
-                    return target;
-                }
-                // self is a valid targe, but target was not self.  check for auto-self cast
-                if (autoSelfCast) {
+            // perform ability dependent checks
+            if (!CanUseOn(target, sourceCharacter) == true) {
+                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
+                if (canCastOnSelf && autoSelfCast) {
                     target = sourceCharacter.MyCharacterUnit.gameObject;
                     return target;
+                } else {
+                    return null;
                 }
+            } else {
+                return target;
             }
-
-            // if we reached here, the target was not redirected to self, so we have to return the original target
-            // and since it wasn't friendly or an enemy or self, it is likely a trade/crafting node
-            return target;
         }
 
         public virtual void StartCasting(BaseCharacter source) {

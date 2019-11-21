@@ -180,7 +180,7 @@ namespace AnyRPG {
             MyWaitingForAutoAttack = newValue;
         }
 
-        public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+        public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log("OnTakeDamageHandler activated on " + gameObject.name);
             AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
             abilityAffectInput.healthAmount = damage;
@@ -195,8 +195,14 @@ namespace AnyRPG {
             if (target != null && PlayerManager.MyInstance && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
                 if (target == PlayerManager.MyInstance.MyCharacter || (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter)) {
                     // spawn text over enemies damaged by the player and over the player itself
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, damage, combatType, combatMagnitude);
-                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.MyCharacterUnit, damage, abilityName);
+                    CombatTextType combatTextType = CombatTextType.normal;
+                    if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {
+                        combatTextType = CombatTextType.normal;
+                    } else if ((abilityEffect as AttackEffect).MyDamageType == DamageType.ability) {
+                        combatTextType = CombatTextType.ability;
+                    }
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, damage, combatTextType, combatMagnitude);
+                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.MyCharacterUnit, damage, abilityEffect.MyName);
                 }
                 lastCombatEvent = Time.time;
                 if (target.MyCharacterStats.IsAlive) {
@@ -263,6 +269,7 @@ namespace AnyRPG {
         }
 
         public void DeActivateAutoAttack() {
+            //Debug.Log(gameObject.name + ".CharacterCombat.DeActivateAutoAttack()");
             autoAttackActive = false;
         }
 
@@ -362,32 +369,37 @@ namespace AnyRPG {
             attackCooldown = attackSpeed;
         }
 
-        private void TakeDamageCommon(int damage, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+        private void TakeDamageCommon(int damage, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
 
             damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetDamageModifiers());
 
-            ProcessTakeDamage(damage, source, combatType, combatMagnitude, abilityName);
+            ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
             baseCharacter.MyCharacterStats.ReduceHealth(damage);
         }
 
-        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.MyCharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
                 // replace with hitbox check
                 bool canPerformAbility = true;
-                if (combatType == CombatType.normal) {
-                    if (!source.MyCharacterController.IsTargetInHitBox(baseCharacter.MyCharacterUnit.gameObject)) {
-                        canPerformAbility = false;
-                    }
+                if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {
                     damage -= baseCharacter.MyCharacterStats.MyArmor;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
-
                 }
+                if (abilityEffect.MyUseMeleeRange) {
+                    if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(baseCharacter.MyCharacterUnit.gameObject)) {
+                        canPerformAbility = false;
+                    }
+                }
+
+                // CHARACTER WILL HAVE RANGED ABILITIES HIT WHEN RUNNING AWAY OUT OF RANGE AS LONG AS IT WAS IN RANGE WHEN ABILITY WAS CAST
+                // MAY WANT TO CHANGE THIS IF DODGE MECHANICS ARE A IMPORTANT PART OF GAMEPLAY
+
                 if (canPerformAbility) {
-                    TakeDamageCommon(damage, source, combatType, combatMagnitude, abilityName);
+                    TakeDamageCommon(damage, sourceCharacter, combatMagnitude, abilityEffect);
                     return true;
                 }
             } else {

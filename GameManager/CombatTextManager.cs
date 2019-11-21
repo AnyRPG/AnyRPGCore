@@ -29,7 +29,7 @@ public class CombatTextManager : MonoBehaviour {
 
     public Canvas MyCombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
-    public void SpawnCombatText(GameObject target, int damage, CombatType combatType, CombatMagnitude combatMagnitude) {
+    public void SpawnCombatText(GameObject target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude) {
         if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
             return;
         }
@@ -53,9 +53,9 @@ public class CombatTextManager : MonoBehaviour {
         _gameObject.transform.GetComponent<CombatTextController>().MyImage.sprite = statusEffect.MyIcon;
         _gameObject.transform.GetComponent<CombatTextController>().MyDisplayText = statusEffect.MyName;
         if (gainEffect) {
-            _gameObject.transform.GetComponent<CombatTextController>().MyCombatType = CombatType.gainBuff;
+            _gameObject.transform.GetComponent<CombatTextController>().MyCombatType = CombatTextType.gainBuff;
         } else {
-            _gameObject.transform.GetComponent<CombatTextController>().MyCombatType = CombatType.loseBuff;
+            _gameObject.transform.GetComponent<CombatTextController>().MyCombatType = CombatTextType.loseBuff;
         }
     }
 

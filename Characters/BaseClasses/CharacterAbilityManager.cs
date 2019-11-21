@@ -334,7 +334,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
             float startTime = Time.time;
-            Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
             if (ability.MyRequiresTarget == false || ability.MyCanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -446,7 +446,7 @@ namespace AnyRPG {
         }
 
         public void AttemptAutoAttack() {
-            Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
             foreach (BaseAbility baseAbility in MyAbilityList.Values) {
                 if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack) {
                     BeginAbility(baseAbility);
@@ -459,7 +459,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         public void BeginAbility(IAbility ability) {
-            Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.MyName) + ")");
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.MyName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return;
@@ -475,7 +475,7 @@ namespace AnyRPG {
         }
 
         private void BeginAbilityCommon(IAbility ability, GameObject target) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
@@ -483,27 +483,34 @@ namespace AnyRPG {
             }
 
             if (!CanCastAbility(ability)) {
-                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 
-            // get final target before beginning casting
-            GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter as BaseCharacter, target);
-
-            // perform ability dependent checks
-            if (!usedAbility.CanUseOn(finalTarget, baseCharacter as BaseCharacter) == true) {
-                Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
-                return;
+            CharacterUnit targetCharacterUnit = null;
+            if (target != null) {
+                targetCharacterUnit = target.GetComponent<CharacterUnit>();
             }
-
-            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
                 if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, baseCharacter) <= -1) {
                     if (targetCharacterUnit.MyBaseCharacter.MyCharacterCombat != null && ability.MyCanCastOnEnemy == true) {
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                        if (baseCharacter.MyCharacterCombat.GetInCombat() == false) {
+                            baseCharacter.MyCharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter);
+                        }
+                        baseCharacter.MyCharacterCombat.ActivateAutoAttack();
                         OnAttack(targetCharacterUnit.MyBaseCharacter);
                     }
                 }
+            }
+
+            NotifyAttemptPerformAbility(ability);
+
+            // get final target before beginning casting
+            GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter as BaseCharacter, target);
+
+            if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
+                return;
             }
 
             if (usedAbility.MyCanSimultaneousCast) {
@@ -527,6 +534,10 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void NotifyAttemptPerformAbility(IAbility ability) {
+            //OnPerformAbility(ability);
+        }
+
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public bool CanCastAbility(IAbility ability) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
@@ -540,7 +551,7 @@ namespace AnyRPG {
             }
 
             // check if the ability is on cooldown
-            if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || MyRemainingGlobalCoolDown > 0f) {
+            if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
                 //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
                 // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
@@ -705,7 +716,7 @@ namespace AnyRPG {
                 // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
                 globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown(coolDownToUse));
             } else {
-                Debug.Log("INVESTIGATE: GCD COROUTINE WAS NOT NULL");
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.InitiateGlobalCooldown(): INVESTIGATE: GCD COROUTINE WAS NOT NULL");
             }
 
         }

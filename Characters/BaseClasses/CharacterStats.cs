@@ -328,7 +328,7 @@ namespace AnyRPG {
                 currentXP = overflowXP;
             }
 
-            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, xp, CombatType.gainXP, CombatMagnitude.normal);
+            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal);
 
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }
@@ -377,7 +377,7 @@ namespace AnyRPG {
             SetMana(mana);
             if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, mana, CombatType.gainMana, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, mana, CombatTextType.gainMana, CombatMagnitude.normal);
             }
         }
 
@@ -414,7 +414,7 @@ namespace AnyRPG {
 
             if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, health, CombatType.gainHealth, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, health, CombatTextType.gainHealth, CombatMagnitude.normal);
             }
         }
 

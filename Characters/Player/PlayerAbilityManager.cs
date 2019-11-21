@@ -7,6 +7,7 @@ namespace AnyRPG {
     public class PlayerAbilityManager : CharacterAbilityManager {
 
         public System.Action<IAbility> OnPerformAbility = delegate { };
+        public System.Action<IAbility> OnAttemptPerformAbility = delegate { };
 
         public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions()");
@@ -98,6 +99,11 @@ namespace AnyRPG {
             OnPerformAbility(ability);
             SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
         }
+
+        public override void NotifyAttemptPerformAbility(IAbility ability) {
+            OnAttemptPerformAbility(ability);
+        }
+
 
         public override void CleanupCoroutines() {
             // called from base.ondisable

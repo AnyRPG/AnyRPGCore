@@ -31,6 +31,10 @@ namespace AnyRPG {
 
         private bool initialized = false;
 
+        private Coroutine autoAttackCoRoutine = null;
+
+        private Coroutine abilityCoRoutine = null;
+
         /// <summary>
         /// A reference to the actual button that this button uses
         /// </summary>
@@ -40,6 +44,8 @@ namespace AnyRPG {
         public int MyCount { get => count; }
         public Text MyStackSizeText { get => stackSizeText; }
         public Text MyKeyBindText { get => keyBindText; }
+        public Coroutine MyAutoAttackCoRoutine { get => autoAttackCoRoutine; set => autoAttackCoRoutine = value; }
+        public Coroutine MyAbilityCoRoutine { get => abilityCoRoutine; set => abilityCoRoutine = value; }
 
         [SerializeField]
         protected Image backGroundImage;
@@ -130,7 +136,11 @@ namespace AnyRPG {
             // clear reference to any existing useable on this button.
             if (MyUseable != null && MyUseable is BaseAbility) {
                 //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
-                (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
+                if (MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility -= OnAttemptUseableUse;
+                } else {
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
+                }
             }
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
@@ -151,7 +161,11 @@ namespace AnyRPG {
                 //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
                 //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
                 //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
-                (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
+                if (MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility += OnAttemptUseableUse;
+                } else {
+                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
+                }
             }
             UpdateVisual();
             UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
@@ -159,12 +173,59 @@ namespace AnyRPG {
             initialized = true;
         }
 
-        public void OnUseableUse(IAbility ability) {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+        public void OnAttemptUseableUse(IAbility ability) {
+            Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
             if (MyUseable is IAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(MyUseable as IAbility));
+                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
+                    if (autoAttackCoRoutine == null) {
+                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
+                    }
+                } else {
+                    Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
+                    if (abilityCoRoutine == null) {
+                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(MyUseable as IAbility));
+                    }
+                }
             }
+        }
+
+
+        public void OnUseableUse(IAbility ability) {
+            Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            if (MyUseable is IAbility) {
+                // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
+                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
+                    if (autoAttackCoRoutine == null) {
+                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
+                    }
+                } else {
+                    Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
+                    if (abilityCoRoutine == null) {
+                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(MyUseable as IAbility));
+                    }
+                }
+            }
+        }
+
+        public IEnumerator MonitorAutoAttack(IAbility ability) {
+            Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
+            //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
+            yield return null;
+
+            while (MyUseable != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
+                UpdateVisual();
+                yield return new WaitForSeconds(0.5f);
+            }
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + "): Done Monitoring");
+            if (MyUseable != null) {
+                // could switch buttons while an ability is on cooldown
+                UpdateVisual();
+            }
+            autoAttackCoRoutine = null;
         }
 
         public IEnumerator MonitorAbility(IAbility ability) {
@@ -185,6 +246,7 @@ namespace AnyRPG {
                 // could switch buttons while an ability is on cooldown
                 UpdateVisual();
             }
+            abilityCoRoutine = null;
         }
 
         private void DisableCoolDownIcon() {
@@ -216,6 +278,8 @@ namespace AnyRPG {
                 DisableCoolDownIcon();
                 return;
             }
+
+
             MyIcon.sprite = MyUseable.MyIcon;
             MyIcon.color = Color.white;
 
@@ -244,6 +308,43 @@ namespace AnyRPG {
                         }
                     }
                 }
+
+                // auto-attack buttons are special and display the current weapon of the character
+                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
+                        if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
+                            MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
+                            Debug.Log("ActionButton.UpdateVisual(): setting icon");
+
+                            if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                                coolDownIcon.enabled = true;
+                                /*
+                                if (coolDownIcon.sprite != MyIcon.sprite) {
+                                    Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match MyIcon");
+                                    coolDownIcon.sprite = MyIcon.sprite;
+                                }
+                                */
+                                if (coolDownIcon.color == new Color32(255, 0, 0, 155)) {
+                                    coolDownIcon.color = new Color32(255, 146, 146, 155);
+                                } else {
+                                    coolDownIcon.color = new Color32(255, 0, 0, 155);
+                                }
+
+                                coolDownIcon.fillMethod = Image.FillMethod.Radial360;
+                                coolDownIcon.fillAmount = 1f;
+                            } else {
+                                Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
+                                coolDownIcon.sprite = null;
+                                coolDownIcon.enabled = false;
+                            }
+                        } 
+
+                        // don't need to continue on and do radial fill on auto-attack icons
+                        return;
+                    }
+                }
+
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(MyUseable.MyName)) {
                     //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
                     coolDownIcon.enabled = true;
@@ -263,7 +364,9 @@ namespace AnyRPG {
                     coolDownIcon.sprite = null;
                     coolDownIcon.enabled = false;
                 }
+
             }
+
         }
 
         public void EnableFullCoolDownIcon() {

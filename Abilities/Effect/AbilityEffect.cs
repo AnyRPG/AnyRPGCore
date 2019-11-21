@@ -34,6 +34,11 @@ namespace AnyRPG {
         [SerializeField]
         protected bool autoSelfCast;
 
+        // require target in hitbox
+        [SerializeField]
+        protected bool useMeleeRange;
+
+        // ignored if useMeleeRange is checked
         [SerializeField]
         protected int maxRange;
 
@@ -73,6 +78,7 @@ namespace AnyRPG {
         public bool MyCanCastOnFriendly { get => canCastOnFriendly; set => canCastOnFriendly = value; }
         public bool MyCanCastOnEnemy { get => canCastOnEnemy; set => canCastOnEnemy = value; }
         public bool MyCanCastOnSelf { get => canCastOnSelf; set => canCastOnSelf = value; }
+        public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
 
         public virtual void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
@@ -143,10 +149,17 @@ namespace AnyRPG {
                     return false;
                 }
 
-                if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range");
-                    return false;
+                if (MyUseMeleeRange) {
+                    if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
+                        return false;
+                    }
+                } else {
+                    if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
+                        CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range");
+                        return false;
+                    }
                 }
+
 
                 if (requiresLiveTarget || requireDeadTarget) {
 

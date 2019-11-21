@@ -21,17 +21,22 @@ namespace AnyRPG {
 
         public bool MyIsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
 
-        public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast()");
-            if (base.Cast(source, target, groundTarget)) {
+            if (base.Cast(sourceCharacter, target, groundTarget)) {
                 if (animationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
                     // this type of ability is allowed to interrupt other types of animations, so clear them all
-                    source.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                    sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
                     // now block further animations of other types from starting
-                    source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
+                    if (!isAutoAttack) {
+                        sourceCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
+                    } else {
+                        sourceCharacter.MyCharacterCombat.SetWaitingForAutoAttack(true);
+                    }
+
                     CharacterUnit targetCharacterUnit = null;
                     if (target != null) {
                         targetCharacterUnit = target.GetComponent<CharacterUnit>();
@@ -44,12 +49,14 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, animationClips.Count);
                     if (animationClips[attackIndex] != null) {
                         // perform the actual animation
-                        source.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClips[attackIndex], this, targetBaseCharacter);
+                        sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClips[attackIndex], this, targetBaseCharacter);
 
                         // unblock 
-                        source.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
-
-                        ProcessGCDManual(source, animationClips[attackIndex].length);
+                        sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+                        if (!isAutoAttack) {
+                            Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
+                            ProcessGCDManual(sourceCharacter, animationClips[attackIndex].length);
+                        }
                     }
 
                 }
@@ -76,17 +83,17 @@ namespace AnyRPG {
 
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
-            if (target == null || !CanUseOn(target, source)) {
+            if (target == null || !base.CanUseOn(target, source)) {
                 source.MyCharacterCombat.DeActivateAutoAttack();
                 return;
             }
 
-            if (isAutoAttack) {
+            //if (isAutoAttack) {
                 if (source.MyCharacterCombat.MyAutoAttackActive == false) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
                     source.MyCharacterCombat.ActivateAutoAttack();
                 }
-            }
+            //}
 
         }
 
@@ -110,6 +117,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessGCDAuto(BaseCharacter sourceCharacter) {
+            //Debug.Log(MyName + "AnimatedAbility.ProcessGCDAuto()");
             //intentionally do nothing
         }
 

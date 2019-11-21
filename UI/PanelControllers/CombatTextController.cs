@@ -34,7 +34,7 @@ public class CombatTextController : MonoBehaviour
     private float fadeRate;
     private Color textColor;
     private CombatMagnitude combatMagnitude;
-    private CombatType textType;
+    private CombatTextType textType;
 
     private float randomXLimit = 100f;
     private float randomYLimit = 100f;
@@ -48,7 +48,7 @@ public class CombatTextController : MonoBehaviour
     public string MyDisplayText { get => displayText; set => displayText = value; }
     public GameObject MyMainTarget { get => mainTarget; set => mainTarget = value; }
     public CombatMagnitude MyCombatMagnitude { get => combatMagnitude; set => combatMagnitude = value; }
-    public CombatType MyCombatType { get => textType; set => textType = value; }
+    public CombatTextType MyCombatType { get => textType; set => textType = value; }
     public Image MyImage { get => image; set => image = value; }
 
     void Start() {
@@ -70,30 +70,30 @@ public class CombatTextController : MonoBehaviour
         if (mainTarget == PlayerManager.MyInstance.MyPlayerUnitObject) {
             directionMultiplier = -1;
             switch (textType) {
-                case CombatType.normal:
+                case CombatTextType.normal:
                     textColor = Color.red;
                     int parseResult;
                     if (int.TryParse(displayText, out parseResult)) {
                         preText += parseResult > 0 ? "-" : "";
                     }
                     break;
-                case CombatType.gainXP:
+                case CombatTextType.gainXP:
                     textColor = Color.yellow;
                     preText += "+";
                     postText += " XP";
                     text.fontSize = text.fontSize * 2;
                     break;
-                case CombatType.gainBuff:
+                case CombatTextType.gainBuff:
                     textColor = Color.cyan;
                     preText += "+";
                     //text.fontSize = text.fontSize * 2;
                     break;
-                case CombatType.loseBuff:
+                case CombatTextType.loseBuff:
                     textColor = Color.cyan;
                     preText += "+";
                     //text.fontSize = text.fontSize * 2;
                     break;
-                case CombatType.ability:
+                case CombatTextType.ability:
                         textColor = Color.magenta;
                         preText += "-";
                         text.fontSize = text.fontSize * 2;
@@ -103,10 +103,10 @@ public class CombatTextController : MonoBehaviour
             }
         } else {
             switch (textType) {
-                case CombatType.normal:
+                case CombatTextType.normal:
                     textColor = Color.white;
                     break;
-                case CombatType.ability:
+                case CombatTextType.ability:
                     textColor = Color.yellow;
                     text.fontSize = text.fontSize * 2;
                     break;
@@ -116,12 +116,12 @@ public class CombatTextController : MonoBehaviour
         }
         // defaults
         switch (textType) {
-            case CombatType.gainHealth:
+            case CombatTextType.gainHealth:
                 textColor = Color.green;
                 preText += "+";
                 text.fontSize = text.fontSize * 2;
                 break;
-            case CombatType.gainMana:
+            case CombatTextType.gainMana:
                 textColor = Color.blue;
                 preText += "+";
                 text.fontSize = text.fontSize * 2;

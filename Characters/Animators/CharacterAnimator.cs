@@ -720,7 +720,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
             currentAbility = baseAbility;
             // wait for the animation to play before allowing the character to attack again
-            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, false, true, false));
+            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, (baseAbility as AnimatedAbility).MyIsAutoAttack, !(baseAbility as AnimatedAbility).MyIsAutoAttack, false));
 
             // SUPPRESS DEFAULT SOUND EFFECT FOR ANIMATED ABILITIES, WHICH ARE NOW RESPONSIBLE FOR THEIR OWN SOUND EFFECTS
             characterUnit.MyCharacter.MyCharacterCombat.MyOverrideHitSoundEffect = null;

@@ -71,20 +71,28 @@ namespace AnyRPG {
         }
 
         public void HandleAutoAttack() {
+            //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack()");
             if (baseCharacter.MyCharacterController.MyTarget == null && MyAutoAttackActive == true) {
-                //Debug.Log(gameObject.name + ": HandleAutoAttack(): target is null.  deactivate autoattack");
+                //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(): target is null.  deactivate autoattack");
                 DeActivateAutoAttack();
                 return;
             }
+            if (baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || baseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.MyCharacterAbilityManager.MyIsCasting) {
+                // can't auto-attack during auto-attack, animated attack, or cast
+                return;
+            }
+            
 
             if (MyAutoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
                 //Debug.Log("player controller is in combat and target is not null");
                 //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
                 BaseCharacter targetCharacter = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter;
                 if (targetCharacter != null) {
-                    Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). the target is alive.  Attacking");
+                    //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
                     Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
                     return;
+                } else {
+                    //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is null. deactivating auto attack");
                 }
                 // autoattack is active, but we were unable to attack the target because they were dead, or not a lootable character, or didn't have an interactable.
                 // There is no reason for autoattack to remain active under these circumstances
@@ -98,20 +106,16 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="characterTarget"></param>
         public virtual void Attack(BaseCharacter characterTarget) {
-            Debug.Log(gameObject.name + ".PlayerCombat.Attack(" + characterTarget.name + ")");
+            //Debug.Log(gameObject.name + ".PlayerCombat.Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
                 //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
             } else {
                 // add this here to prevent characters from not being able to attack
                 swingTarget = characterTarget;
-                
-                ActivateAutoAttack();
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
                 baseCharacter.MyCharacterAbilityManager.AttemptAutoAttack();
-
-                lastCombatEvent = Time.time;
             }
         }
 
@@ -140,12 +144,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatType combatType, CombatMagnitude combatMagnitude, string abilityName) {
+        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
             // added damageTaken bool to prevent blood effects from showing if you ran out of range of the attack while it was in progress
-            bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatType, combatMagnitude, abilityName);
+            bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect);
             if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
                 MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyTakeDamageAbility, MyBaseCharacter.MyCharacterUnit.gameObject);
             }
