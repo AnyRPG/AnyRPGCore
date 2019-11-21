@@ -40,6 +40,9 @@ namespace AnyRPG {
         [SerializeField]
         private int maxLevel = 50;
 
+        [SerializeField]
+        private float statBudgetPerLevel = 10f;
+
         [Header("UI")]
 
         [SerializeField]
@@ -455,6 +458,7 @@ namespace AnyRPG {
         public string MyDefaultDeathClip { get => defaultDeathClip; set => defaultDeathClip = value; }
         public string MyDefaultLevitatedClip { get => defaultLevitatedClip; set => defaultLevitatedClip = value; }
         public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
+        public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

@@ -146,8 +146,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
 
             if (newItem != null) {
-                armorModifiers.AddModifier(newItem.armorModifier);
-                meleeDamageModifiers.AddModifier(newItem.damageModifier);
+                armorModifiers.AddModifier(newItem.MyArmorModifier);
+                meleeDamageModifiers.AddModifier(newItem.MyDamageModifier);
                 primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier);
                 primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier);
                 primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier);
@@ -155,8 +155,8 @@ namespace AnyRPG {
             }
 
             if (oldItem != null) {
-                armorModifiers.RemoveModifier(oldItem.armorModifier);
-                meleeDamageModifiers.RemoveModifier(oldItem.damageModifier);
+                armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
+                meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
                 primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier);
                 primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier);
                 primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier);
@@ -343,10 +343,10 @@ namespace AnyRPG {
             // arbitrary toughness cap of 5 for now.  add this as system configuration option later maybe
             int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
             currentLevel = newLevel;
-            stamina = currentLevel * 10 * usedToughNess;
-            intellect = currentLevel * 10 * usedToughNess;
-            strength = currentLevel * 10 * usedToughNess;
-            agility = currentLevel * 10 * usedToughNess;
+            stamina = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
+            intellect = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
+            strength = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
+            agility = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
             ResetHealth();
             ResetMana();
         }

@@ -1,18 +1,17 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-/// <summary>
-/// Enum for declaring the quality of the item
-/// </summary>
-public enum Quality { Poor, Common, Uncommon, Rare, Epic, Legendary, Artifact, Heirloom }
+    /// <summary>
+    /// Enum for declaring the quality of the item
+    /// </summary>
+    public enum Quality { Poor, Common, Uncommon, Rare, Epic, Legendary, Artifact, Heirloom }
 
-public static class QualityColor
-{
-    private static Dictionary<Quality, string> colors = new Dictionary<Quality, string>()
-    {
+    public static class QualityColor {
+        private static Dictionary<Quality, string> colors = new Dictionary<Quality, string>()
+        {
         {Quality.Poor,  "#"+ColorUtility.ToHtmlStringRGB(Color.gray)},
         {Quality.Common,  "#"+ColorUtility.ToHtmlStringRGB(Color.white)},
         {Quality.Uncommon,  "#"+ColorUtility.ToHtmlStringRGB(Color.green)},
@@ -23,13 +22,19 @@ public static class QualityColor
         {Quality.Heirloom,  "#"+ColorUtility.ToHtmlStringRGB(Color.cyan)},
     };
 
-    public static Dictionary<Quality, string> MyColors
-    {
-        get
-        {
-            return colors;
+        public static Dictionary<Quality, string> MyColors {
+            get {
+                return colors;
+            }
+        }
+
+        public static string GetQualityColorString(Item item) {
+            ItemQuality itemQuality = item.GetItemQuality();
+            if (itemQuality != null) {
+                return "#" + ColorUtility.ToHtmlStringRGB(itemQuality.MyQualityColor);
+            }
+            return "#" + ColorUtility.ToHtmlStringRGB(Color.white);
         }
     }
-}
 
 }
