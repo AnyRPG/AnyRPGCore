@@ -16,6 +16,12 @@ namespace AnyRPG {
         [SerializeField]
         private Dropdown dropdown;
 
+        [SerializeField]
+        private GameObject currencyAmountPrefab;
+
+        [SerializeField]
+        private GameObject currencyAmountParent;
+
         private List<List<VendorItem>> pages = new List<List<VendorItem>>();
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
@@ -24,9 +30,44 @@ namespace AnyRPG {
 
         private int dropDownIndex;
 
+        protected bool eventSubscriptionsInitialized = false;
+
+        VendorCollection buyBackCollection;
+
+
+        private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+
         public override void Awake() {
             base.Awake();
             //vendorUI.CreatePages(items);
+            CreateEventSubscriptions();
+            //InitializeBuyBackList();
+            buyBackCollection = new VendorCollection();
+        }
+
+        private void CreateEventSubscriptions() {
+            Debug.Log("VendorUI.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnCurrencyChange += UpdateCurrencyAmount;
+            eventSubscriptionsInitialized = true;
+        }
+
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnCurrencyChange -= UpdateCurrencyAmount;
+            }
+            eventSubscriptionsInitialized = false;
+        }
+
+        public void OnDestroy() {
+            //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
+            CleanupEventSubscriptions();
         }
 
         public int GetPageCount() {
@@ -93,8 +134,8 @@ namespace AnyRPG {
         }
 
         public void PopulateDropDownList(List<VendorCollection> vendorCollections) {
+            UpdateCurrencyAmount();
             dropDownIndex = 1;
-            VendorCollection buyBackCollection = new VendorCollection();
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);
             this.vendorCollections.Add(buyBackCollection);
             this.vendorCollections.AddRange(vendorCollections);
@@ -129,6 +170,72 @@ namespace AnyRPG {
             OnPageCountUpdate(false);
         }
 
+        public void UpdateCurrencyAmount() {
 
+            // get list of currencies
+            List<Currency> currencyList = new List<Currency>(SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates.Count + 1);
+            currencyList.Add(SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyBaseCurrency);
+            if (SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates.Count > 0) {
+                foreach (CurrencyGroupRate currencyGroupRate in SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates) {
+                    currencyList.Add(currencyGroupRate.MyCurrency);
+                }
+            }
+
+            // despawn old ones
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                Destroy(currencyAmountController.gameObject);
+            }
+            currencyAmountControllers.Clear();
+
+            // spawn new ones
+            foreach (Currency currency in currencyList) {
+                GameObject go = Instantiate(currencyAmountPrefab, currencyAmountParent.transform);
+                go.transform.SetAsFirstSibling();
+                CurrencyAmountController currencyAmountController = go.GetComponent<CurrencyAmountController>();
+                currencyAmountControllers.Add(currencyAmountController);
+                if (currencyAmountController.MyCurrencyIcon != null) {
+                    currencyAmountController.MyCurrencyIcon.SetDescribable(currency);
+                }
+                if (currencyAmountController.MyAmountText != null) {
+                    currencyAmountController.MyAmountText.text = PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.GetCurrencyAmount(currency).ToString();
+                }
+            }
+        }
+
+        public void AddToBuyBackCollection(Item newItem) {
+            VendorItem newVendorItem = new VendorItem();
+            newVendorItem.MyQuantity = 1;
+            newVendorItem.MyItem = newItem;
+            buyBackCollection.MyVendorItems.Add(newVendorItem);
+        }
+
+        
+
+        public bool SellItem(Item item) {
+            if (item.MyPrice <= 0) {
+                return false;
+            }
+            int sellAmount = item.MyPrice;
+            Currency currency = item.MyCurrency;
+            CurrencyGroup currencyGroup = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.FindCurrencyGroup(currency);
+            if (currencyGroup != null) {
+                int convertedSellAmount = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetConvertedValue(currency, sellAmount);
+                currency = currencyGroup.MyBaseCurrency;
+                sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+            } else {
+                sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+            }
+
+            (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.AddCurrency(currency, sellAmount);
+            AddToBuyBackCollection(item);
+            //InventoryManager.MyInstance.RemoveItem(item);
+            item.MySlot.RemoveItem(item);
+            if (dropDownIndex == 0) {
+                CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
+                LoadPage(pageIndex);
+                OnPageCountUpdate(false);
+            }
+            return true;
+        }
     }
 }

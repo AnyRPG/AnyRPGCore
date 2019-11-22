@@ -101,7 +101,13 @@ namespace AnyRPG {
         private Text toolTipText;
 
         [SerializeField]
+        private GameObject toolTipPricebar;
+
+        [SerializeField]
         private RectTransform tooltipRect;
+
+        [SerializeField]
+        private GameObject currencyAmountPrefab;
 
         // objects in the mouseover window
         private Text mouseOverText;
@@ -135,6 +141,8 @@ namespace AnyRPG {
         public bool MyDragInProgress { get => dragInProgress; set => dragInProgress = value; }
         public GameObject MyCutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
         public GameObject MyInventoryCanvas { get => inventoryCanvas; set => inventoryCanvas = value; }
+        public GameObject MyToolTipPricebar { get => toolTipPricebar; set => toolTipPricebar = value; }
+        public GameObject MyPricePrefab { get => currencyAmountPrefab; set => currencyAmountPrefab = value; }
 
         public void PerformSetupActivities() {
             //Debug.Log("UIManager.PerformSetupActivities()");
@@ -400,7 +408,41 @@ namespace AnyRPG {
             tooltipRect.pivot = pivot;
             toolTip.SetActive(true);
             toolTip.transform.position = position;
+            ShowToolTipCommon(description);
+            //toolTipText.text = description.GetDescription();
+        }
+
+        public void ShowToolTipCommon(IDescribable description) {
+            // clear out old price
+            foreach (Transform child in MyToolTipPricebar.transform) {
+                Destroy(child.gameObject);
+            }
+
+            // show new price
             toolTipText.text = description.GetDescription();
+            if (description is Item) {
+                GameObject go = Instantiate(currencyAmountPrefab, MyToolTipPricebar.transform);
+                CurrencyAmountController currencyAmountController = go.GetComponent<CurrencyAmountController>();
+                if (currencyAmountController != null) {
+                    int sellAmount = (description as Item).MyPrice;
+                    if (sellAmount == 0) {
+                        // don't print a s sell price on things that cannot be sold
+                        return;
+                    }
+                    Currency currency = (description as Item).MyCurrency;
+                    CurrencyGroup currencyGroup = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.FindCurrencyGroup(currency);
+                    if (currencyGroup != null) {
+                        int convertedSellAmount = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetConvertedValue(currency, sellAmount);
+                        currency = currencyGroup.MyBaseCurrency;
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    } else {
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    }
+
+                    currencyAmountController.MyCurrencyIcon.SetDescribable(currency);
+                    currencyAmountController.MyAmountText.text = "Vendor Price: " + sellAmount;
+                }
+            }
         }
 
         /// <summary>
@@ -413,7 +455,8 @@ namespace AnyRPG {
         public void RefreshTooltip(IDescribable description) {
             //Debug.Log("UIManager.RefreshTooltip()");
             if (description != null && toolTipText != null && toolTipText.text != null) {
-                toolTipText.text = description.GetDescription();
+                ShowToolTipCommon(description);
+                //toolTipText.text = description.GetDescription();
             } else {
                 HideToolTip();
             }

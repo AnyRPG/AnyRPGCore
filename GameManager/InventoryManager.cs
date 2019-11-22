@@ -478,7 +478,7 @@ namespace AnyRPG {
         }
 
         public void RemoveItem(Item item) {
-            //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + ")");
+            Debug.Log("InventoryManager.RemoveItem(" + item.MyName + ")");
             foreach (BagNode bagNode in bagNodes) {
                 //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode");
                 if (bagNode.MyBag != null) {

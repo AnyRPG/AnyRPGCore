@@ -43,6 +43,9 @@ namespace AnyRPG {
         [SerializeField]
         private float statBudgetPerLevel = 10f;
 
+        [SerializeField]
+        private float vendorPriceMultiplier = 0.25f;
+
         [Header("UI")]
 
         [SerializeField]
@@ -62,6 +65,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private Sprite defaultUIPanelFrame;
+
+        [SerializeField]
+        private CurrencyGroup defaultCurrencyGroup;
 
         [Header("ANIMATION")]
 
@@ -459,6 +465,8 @@ namespace AnyRPG {
         public string MyDefaultLevitatedClip { get => defaultLevitatedClip; set => defaultLevitatedClip = value; }
         public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
         public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
+        public CurrencyGroup MyDefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
+        public float MyVendorPriceMultiplier { get => vendorPriceMultiplier; set => vendorPriceMultiplier = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -524,6 +532,10 @@ namespace AnyRPG {
                     Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + takeDamageAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
                 }
+            }
+            if (defaultCurrencyGroup == null) {
+                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT CURRENCY GROUP SET.  CHECK INSPECTOR");
+                return;
             }
         }
 

@@ -67,12 +67,19 @@ namespace AnyRPG {
         public System.Action OnPagedButtonsTransparencyUpdate = delegate { };
         public System.Action OnInventoryTransparencyUpdate = delegate { };
 
+        // currency manager
+        public System.Action OnCurrencyChange = delegate { };
+
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
         }
 
         private void Start() {
             //Debug.Log("SystemGameManager.Start()");
+        }
+
+        public void NotifyOnCurrencyChange() {
+            OnCurrencyChange();
         }
 
         public void NotifyOnPlayerDeath() {

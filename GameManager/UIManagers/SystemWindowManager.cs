@@ -39,6 +39,7 @@ namespace AnyRPG {
         public CloseableWindow loadGameWindow;
         public CloseableWindow confirmDestroyMenuWindow;
         public CloseableWindow confirmCancelCutsceneMenuWindow;
+        public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
         public CloseableWindow exitToMainMenuWindow;
         public CloseableWindow newGameMenuWindow;
@@ -88,6 +89,7 @@ namespace AnyRPG {
                 deleteGameMenuWindow.CloseWindow();
                 copyGameMenuWindow.CloseWindow();
                 confirmDestroyMenuWindow.CloseWindow();
+                confirmSellItemMenuWindow.CloseWindow();
             }
 
             if (InputManager.MyInstance.KeyBindWasPressed("MAINMENU")) {
@@ -110,6 +112,7 @@ namespace AnyRPG {
             deleteGameMenuWindow.CloseWindow();
             copyGameMenuWindow.CloseWindow();
             confirmDestroyMenuWindow.CloseWindow();
+            confirmSellItemMenuWindow.CloseWindow();
         }
 
         public void PlayerDeathHandler(CharacterStats characterStats) {

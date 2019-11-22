@@ -22,6 +22,9 @@ public class VendorItem
         {
             return item;
         }
+            set {
+                item = value;
+            }
     }
 
     public int MyQuantity

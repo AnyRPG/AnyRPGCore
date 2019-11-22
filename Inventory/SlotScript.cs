@@ -1,400 +1,414 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
-    /// <summary>
-    /// A stack for all items on this slot
-    /// </summary>
-    private List<Item> items = new List<Item>();
+    public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
+        /// <summary>
+        /// A stack for all items on this slot
+        /// </summary>
+        private List<Item> items = new List<Item>();
 
-    [SerializeField]
-    private Image icon;
+        [SerializeField]
+        private Image icon;
 
-    [SerializeField]
-    private Image backGroundImage;
+        [SerializeField]
+        private Image backGroundImage;
 
-    [SerializeField]
-    private Text stackSizeText;
+        [SerializeField]
+        private Text stackSizeText;
 
-    private bool localComponentsGotten = false;
+        private bool localComponentsGotten = false;
 
-    /// <summary>
-    /// A referecne to the bag that this slot belongs to
-    /// </summary>
-    public BagPanel MyBag { get; set; }
+        /// <summary>
+        /// A referecne to the bag that this slot belongs to
+        /// </summary>
+        public BagPanel MyBag { get; set; }
 
-    public bool IsEmpty {
-        get {
-            return MyItems.Count == 0;
-        }
-    }
-
-    public bool IsFull {
-        get {
-            if (IsEmpty || MyCount < MyItem.MyMaximumStackSize) {
-                return false;
+        public bool IsEmpty {
+            get {
+                return MyItems.Count == 0;
             }
-            return true;
         }
-    }
 
-    public Item MyItem {
-        get {
-            if (!IsEmpty) {
-                return MyItems[0];
-            }
-            return null;
-        }
-    }
-
-    public Image MyIcon { get => icon; set => icon = value; }
-    public int MyCount { get => MyItems.Count; }
-    public Text MyStackSizeText { get => stackSizeText; }
-    public List<Item> MyItems {
-        get {
-            return items;
-        }
-        set {
-            items = value;
-            UpdateSlot();
-        }
-    }
-
-    private void Awake() {
-        //Debug.Log("SlotScript.Awake()");
-        //MyItems.OnPop += new UpdateStackEvent(UpdateSlot);
-        //MyItems.OnPush += new UpdateStackEvent(UpdateSlot);
-        //MyItems.OnClear += new UpdateStackEvent(UpdateSlot);
-        //if (backGroundImage == null) {
-        //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
-        //backGroundImage = GetComponent<Image>();
-        //}
-        GetLocalComponents();
-    }
-
-    public void GetLocalComponents() {
-        if (localComponentsGotten == true) {
-            return;
-        }
-        if (backGroundImage == null) {
-            //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
-            backGroundImage = GetComponent<Image>();
-        }
-        localComponentsGotten = true;
-    }
-
-    private void SetSlotOnItems() {
-        //Debug.Log("SlotScript.SetSlotOnItems(): MyItem is null");
-        foreach (Item tmpItem in MyItems) {
-            //Debug.Log("SlotScript.SetSlotOnItems(): going through MyItems");
-            tmpItem.MySlot = this;
-        }
-    }
-
-    public bool AddItem(Item item) {
-        //Debug.Log("Slot " + GetInstanceID().ToString() + " with count " + MyItems.Count.ToString() + " adding item " + item.GetInstanceID().ToString());
-        MyItems.Add(item);
-        UpdateSlot();
-        //Debug.Log("Slot " + GetInstanceID().ToString() + " now has count " + MyItems.Count.ToString());
-        return true;
-    }
-
-    public bool AddItems(List<Item> newItems) {
-        if (IsEmpty || SystemResourceManager.MatchResource(newItems[0].MyName, MyItem.MyName)) {
-            int count = newItems.Count;
-
-            for (int i = 0; i < count; i++) {
-                if (IsFull) {
+        public bool IsFull {
+            get {
+                if (IsEmpty || MyCount < MyItem.MyMaximumStackSize) {
                     return false;
                 }
-                AddItem(newItems[i]);
-                //newItems[0].Remove();
+                return true;
             }
+        }
+
+        public Item MyItem {
+            get {
+                if (!IsEmpty) {
+                    return MyItems[0];
+                }
+                return null;
+            }
+        }
+
+        public Image MyIcon { get => icon; set => icon = value; }
+        public int MyCount { get => MyItems.Count; }
+        public Text MyStackSizeText { get => stackSizeText; }
+        public List<Item> MyItems {
+            get {
+                return items;
+            }
+            set {
+                items = value;
+                UpdateSlot();
+            }
+        }
+
+        private void Awake() {
+            //Debug.Log("SlotScript.Awake()");
+            //MyItems.OnPop += new UpdateStackEvent(UpdateSlot);
+            //MyItems.OnPush += new UpdateStackEvent(UpdateSlot);
+            //MyItems.OnClear += new UpdateStackEvent(UpdateSlot);
+            //if (backGroundImage == null) {
+            //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
+            //backGroundImage = GetComponent<Image>();
+            //}
+            GetLocalComponents();
+        }
+
+        public void GetLocalComponents() {
+            if (localComponentsGotten == true) {
+                return;
+            }
+            if (backGroundImage == null) {
+                //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
+                backGroundImage = GetComponent<Image>();
+            }
+            localComponentsGotten = true;
+        }
+
+        private void SetSlotOnItems() {
+            //Debug.Log("SlotScript.SetSlotOnItems(): MyItem is null");
+            foreach (Item tmpItem in MyItems) {
+                //Debug.Log("SlotScript.SetSlotOnItems(): going through MyItems");
+                tmpItem.MySlot = this;
+            }
+        }
+
+        public bool AddItem(Item item) {
+            //Debug.Log("Slot " + GetInstanceID().ToString() + " with count " + MyItems.Count.ToString() + " adding item " + item.GetInstanceID().ToString());
+            MyItems.Add(item);
+            UpdateSlot();
+            //Debug.Log("Slot " + GetInstanceID().ToString() + " now has count " + MyItems.Count.ToString());
             return true;
         }
-        return false;
-    }
 
-    public void RemoveItem(Item item) {
-        //Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
-        if (!IsEmpty) {
-            //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
-            MyItems.Remove(item);
-            UpdateSlot();
-            InventoryManager.MyInstance.OnItemCountChanged(item);
-        }
-    }
+        public bool AddItems(List<Item> newItems) {
+            if (IsEmpty || SystemResourceManager.MatchResource(newItems[0].MyName, MyItem.MyName)) {
+                int count = newItems.Count;
 
-    public void OnPointerClick(PointerEventData eventData) {
-
-        // Detect a left click on a slot in a bag
-        if (eventData.button == PointerEventData.InputButton.Left) {
-            HandleLeftClick();
-        }
-        if (eventData.button == PointerEventData.InputButton.Right) {
-            HandleRightClick();
-        }
-    }
-
-    private void DropItemFromInventorySlot() {
-        //Debug.Log("Dropping an item from an inventory slot");
-        if (PutItemBack() || MergeItems(InventoryManager.MyInstance.FromSlot) || SwapItems(InventoryManager.MyInstance.FromSlot) || AddItems(InventoryManager.MyInstance.FromSlot.MyItems)) {
-            HandScript.MyInstance.Drop();
-            InventoryManager.MyInstance.FromSlot = null;
-        }
-    }
-
-    private void DropItemFromNonInventorySlot() {
-        // item comes from somewhere else, like bag bar or character panel
-    }
-
-    public void SendItemToHandScript() {
-        //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
-        HandScript.MyInstance.TakeMoveable(MyItem as IMoveable);
-        InventoryManager.MyInstance.FromSlot = this;
-    }
-
-    public void HandleLeftClick() {
-        // we have something to move and it came from the inventory, therefore we are trying to drop something from this slot or another slot onto this slot
-        if (InventoryManager.MyInstance.FromSlot != null) {
-            DropItemFromInventorySlot();
-            return;
+                for (int i = 0; i < count; i++) {
+                    if (IsFull) {
+                        return false;
+                    }
+                    AddItem(newItems[i]);
+                    //newItems[0].Remove();
+                }
+                return true;
+            }
+            return false;
         }
 
+        public void RemoveItem(Item item) {
+            Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
+            if (!IsEmpty) {
+                //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
+                MyItems.Remove(item);
+                UpdateSlot();
+                InventoryManager.MyInstance.OnItemCountChanged(item);
+            }
+        }
 
-        if (!IsEmpty) {
-            // This slot has something in it, and the hand script is empty, so we are trying to pick it up
-            if (HandScript.MyInstance.MyMoveable == null) {
-                SendItemToHandScript();
+        public void OnPointerClick(PointerEventData eventData) {
+
+            // Detect a left click on a slot in a bag
+            if (eventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick();
+            }
+            if (eventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick();
+            }
+        }
+
+        private void DropItemFromInventorySlot() {
+            //Debug.Log("Dropping an item from an inventory slot");
+            if (PutItemBack() || MergeItems(InventoryManager.MyInstance.FromSlot) || SwapItems(InventoryManager.MyInstance.FromSlot) || AddItems(InventoryManager.MyInstance.FromSlot.MyItems)) {
+                HandScript.MyInstance.Drop();
+                InventoryManager.MyInstance.FromSlot = null;
+            }
+        }
+
+        private void DropItemFromNonInventorySlot() {
+            // item comes from somewhere else, like bag bar or character panel
+        }
+
+        public void SendItemToHandScript() {
+            //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
+            HandScript.MyInstance.TakeMoveable(MyItem as IMoveable);
+            InventoryManager.MyInstance.FromSlot = this;
+        }
+
+        public void HandleLeftClick() {
+            // we have something to move and it came from the inventory, therefore we are trying to drop something from this slot or another slot onto this slot
+            if (InventoryManager.MyInstance.FromSlot != null) {
+                DropItemFromInventorySlot();
                 return;
             }
 
-            // the slot has something in it, and the handscript is not empty, so we are trying to swap with something
-            if (HandScript.MyInstance.MyMoveable is Bag) {
-                // the handscript has a bag in it
-                if (MyItem is Bag) {
-                    // This slot also has a bag in it, so swap the 2 bags
-                    InventoryManager.MyInstance.SwapBags(HandScript.MyInstance.MyMoveable as Bag, MyItem as Bag);
+
+            if (!IsEmpty) {
+                // This slot has something in it, and the hand script is empty, so we are trying to pick it up
+                if (HandScript.MyInstance.MyMoveable == null) {
+                    SendItemToHandScript();
+                    return;
                 }
-            } else if (HandScript.MyInstance.MyMoveable is Equipment) {
-                // the handscript has equipment in it
-                if (MyItem is Equipment && (MyItem as Equipment).equipSlot == (HandScript.MyInstance.MyMoveable as Equipment).equipSlot) {
-                    // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
-                    UseItem();
-                    //UIManager.MyInstance.RefreshTooltip();
-                    HandScript.MyInstance.Drop();
-                }
-            }
 
-        } else {
-            // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
-            if (HandScript.MyInstance.MyMoveable is Bag) {
-                //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
-                // the handscript had a bag in it, and therefore we are trying to unequip a bag
-                Bag bag = (Bag)HandScript.MyInstance.MyMoveable;
-                if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.MyEmptySlotCount() - bag.MySlots > 0) {
-                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
-                    AddItem(bag);
-                    InventoryManager.MyInstance.RemoveBag(bag);
-                    HandScript.MyInstance.Drop();
-                }
-            } else if (HandScript.MyInstance.MyMoveable is Equipment) {
-                // the handscript had equipment in it, and therefore we are trying to unequip some equipment
-                Equipment equipment = (Equipment)HandScript.MyInstance.MyMoveable;
-                // probably don't need to do this, since dequip should drop the equipment in the bag anyway
-                //AddItem(equipment);
-
-                //CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
-                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip((HandScript.MyInstance.MyMoveable as Equipment).equipSlot, GetCurrentSlotIndex());
-                HandScript.MyInstance.Drop();
-            }
-        }
-    }
-
-    public int GetCurrentSlotIndex() {
-        List<SlotScript> inventorySlots = InventoryManager.MyInstance.GetSlots();
-        for (int i = 0; i < inventorySlots.Count; i++) {
-            if (inventorySlots[i] == this) {
-                return i;
-            }
-        }
-
-        // didn't find anything, this will send whatever needs this to the default slot
-        return -1;
-    }
-
-    public void HandleRightClick() {
-        // ignore right clicks when something is in the handscript
-        if (HandScript.MyInstance.MyMoveable != null) {
-            return;
-        }
-
-        // DO SWAPITEMS CALL HERE - OR NOT BECAUSE THAT REQUIRES GETTING A SLOT FIRST
-
-        // send items back and forth between inventory and bank if they are both open
-        if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == false) {
-            List<Item> moveList = new List<Item>();
-            if (MyBag is BankPanel) {
-                //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a bank");
-                foreach (Item item in MyItems) {
-                    moveList.Add(item);
-                }
-                foreach (Item item in moveList) {
-                    if (InventoryManager.MyInstance.AddItem(item)) {
-                        RemoveItem(item);
+                // the slot has something in it, and the handscript is not empty, so we are trying to swap with something
+                if (HandScript.MyInstance.MyMoveable is Bag) {
+                    // the handscript has a bag in it
+                    if (MyItem is Bag) {
+                        // This slot also has a bag in it, so swap the 2 bags
+                        InventoryManager.MyInstance.SwapBags(HandScript.MyInstance.MyMoveable as Bag, MyItem as Bag);
+                    }
+                } else if (HandScript.MyInstance.MyMoveable is Equipment) {
+                    // the handscript has equipment in it
+                    if (MyItem is Equipment && (MyItem as Equipment).equipSlot == (HandScript.MyInstance.MyMoveable as Equipment).equipSlot) {
+                        // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
+                        UseItem();
+                        //UIManager.MyInstance.RefreshTooltip();
+                        HandScript.MyInstance.Drop();
                     }
                 }
-            } else if (MyBag is BagPanel) {
-                /*
-                if (InventoryManager.MyInstance.AddItem(MyItem, true)) {
-                    Clear();
-                }
-                */
-                foreach (Item item in MyItems) {
-                    moveList.Add(item);
-                }
-                foreach (Item item in moveList) {
-                    if (InventoryManager.MyInstance.AddItem(item, true)) {
-                        RemoveItem(item);
-                    }
-                }
+
             } else {
-                //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
+                // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
+                if (HandScript.MyInstance.MyMoveable is Bag) {
+                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
+                    // the handscript had a bag in it, and therefore we are trying to unequip a bag
+                    Bag bag = (Bag)HandScript.MyInstance.MyMoveable;
+                    if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.MyEmptySlotCount() - bag.MySlots > 0) {
+                        //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
+                        AddItem(bag);
+                        InventoryManager.MyInstance.RemoveBag(bag);
+                        HandScript.MyInstance.Drop();
+                    }
+                } else if (HandScript.MyInstance.MyMoveable is Equipment) {
+                    // the handscript had equipment in it, and therefore we are trying to unequip some equipment
+                    Equipment equipment = (Equipment)HandScript.MyInstance.MyMoveable;
+                    // probably don't need to do this, since dequip should drop the equipment in the bag anyway
+                    //AddItem(equipment);
+
+                    //CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip((HandScript.MyInstance.MyMoveable as Equipment).equipSlot, GetCurrentSlotIndex());
+                    HandScript.MyInstance.Drop();
+                }
             }
         }
 
-        // if we got to here, nothing left to do but use the item
-        UseItem();
-    }
+        public int GetCurrentSlotIndex() {
+            List<SlotScript> inventorySlots = InventoryManager.MyInstance.GetSlots();
+            for (int i = 0; i < inventorySlots.Count; i++) {
+                if (inventorySlots[i] == this) {
+                    return i;
+                }
+            }
 
-    public void Clear() {
-        if (MyItems.Count > 0) {
-            Item tmpItem = MyItems[0];
-            MyItems.Clear();
-            InventoryManager.MyInstance.OnItemCountChanged(tmpItem);
-            UpdateSlot();
+            // didn't find anything, this will send whatever needs this to the default slot
+            return -1;
         }
-    }
 
-    /// <summary>
-    /// Uses the item if it is useable
-    /// </summary>
-    public void UseItem() {
-        if (MyItem is IUseable) {
-            (MyItem as IUseable).Use();
-        } else if (MyItem is Equipment) {
-            (MyItem as Equipment).Use();
-            //CharacterPanel.MyInstance.EquipEquipment(MyItem as Equipment);
+        public void HandleRightClick() {
+            // ignore right clicks when something is in the handscript
+            if (HandScript.MyInstance.MyMoveable != null) {
+                return;
+            }
+
+            // DO SWAPITEMS CALL HERE - OR NOT BECAUSE THAT REQUIRES GETTING A SLOT FIRST
+
+            // send items back and forth between inventory and bank if they are both open
+            if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == false) {
+                List<Item> moveList = new List<Item>();
+                if (MyBag is BankPanel) {
+                    //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a bank");
+                    foreach (Item item in MyItems) {
+                        moveList.Add(item);
+                    }
+                    foreach (Item item in moveList) {
+                        if (InventoryManager.MyInstance.AddItem(item)) {
+                            RemoveItem(item);
+                        }
+                    }
+                } else if (MyBag is BagPanel) {
+                    /*
+                    if (InventoryManager.MyInstance.AddItem(MyItem, true)) {
+                        Clear();
+                    }
+                    */
+                    foreach (Item item in MyItems) {
+                        moveList.Add(item);
+                    }
+                    foreach (Item item in moveList) {
+                        if (InventoryManager.MyInstance.AddItem(item, true)) {
+                            RemoveItem(item);
+                        }
+                    }
+                } else {
+                    //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
+                }
+            } else if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == true && PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
+                // SELL THE ITEM
+                if (MyItem != null) {
+                    if (MyItem.GetItemQuality() != null && MyItem.GetItemQuality().MyRequireSellConfirmation) {
+                        SystemWindowManager.MyInstance.confirmSellItemMenuWindow.OpenWindow();
+                        (SystemWindowManager.MyInstance.confirmSellItemMenuWindow.MyCloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
+                        return;
+                    }
+                    if ((PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents as VendorUI).SellItem(MyItem)) {
+                        return;
+                    }
+                    
+                }
+            }
+
+            // WHY ARE WE DOING THAT IF WE DIDN'T RETURN EARLIER AFTER PUTTING THINGS IN THE BANK?
+            // if we got to here, nothing left to do but use the item
+            UseItem();
         }
-    }
 
-    public bool StackItem(Item item) {
-        if (!IsEmpty && item.MyName == MyItem.MyName && MyItems.Count < MyItem.MyMaximumStackSize) {
-            MyItems.Add(item);
-            UpdateSlot();
-            item.MySlot = this;
-            return true;
+        public void Clear() {
+            if (MyItems.Count > 0) {
+                Item tmpItem = MyItems[0];
+                MyItems.Clear();
+                InventoryManager.MyInstance.OnItemCountChanged(tmpItem);
+                UpdateSlot();
+            }
         }
-        return false;
-    }
 
-    public bool PutItemBack() {
-        //Debug.Log("attempting to put an item back in a slot");
-        if (InventoryManager.MyInstance.FromSlot == this) {
-            //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
-            UpdateSlot();
-            return true;
-        } else {
-            //Debug.Log("The item did not come from this slot.");
+        /// <summary>
+        /// Uses the item if it is useable
+        /// </summary>
+        public void UseItem() {
+            if (MyItem is IUseable) {
+                (MyItem as IUseable).Use();
+            } else if (MyItem is Equipment) {
+                (MyItem as Equipment).Use();
+                //CharacterPanel.MyInstance.EquipEquipment(MyItem as Equipment);
+            }
         }
-        return false;
-    }
-    private bool SwapItems(SlotScript from) {
-        //Debug.Log("SlotScript " + this.GetInstanceID().ToString() + " receiving items to swap from slotscript " + from.GetInstanceID().ToString());
-        // use a temporary list to swap references to the stacks
-        List<Item> tmpFrom = new List<Item>(from.MyItems);
-        from.MyItems = MyItems;
-        MyItems = tmpFrom;
 
-        return true;
-    }
-
-    private bool MergeItems(SlotScript from) {
-        //Debug.Log("attempting to merge items");
-        if (IsEmpty) {
-            //Debug.Log("This slot is empty, there is nothing to merge.");
+        public bool StackItem(Item item) {
+            if (!IsEmpty && item.MyName == MyItem.MyName && MyItems.Count < MyItem.MyMaximumStackSize) {
+                MyItems.Add(item);
+                UpdateSlot();
+                item.MySlot = this;
+                return true;
+            }
             return false;
         }
-        if (SystemResourceManager.MatchResource(from.MyItem.MyName, MyItem.MyName) && !IsFull) {
-            // how many free slots there are in the new stack
-            int free = MyItem.MyMaximumStackSize - MyCount;
-            if (free >= from.MyCount) {
-                for (int i = 0; i < free; i++) {
-                    AddItem(from.MyItems[0]);
-                    from.RemoveItem(from.MyItems[0]);
-                }
+
+        public bool PutItemBack() {
+            //Debug.Log("attempting to put an item back in a slot");
+            if (InventoryManager.MyInstance.FromSlot == this) {
+                //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
+                UpdateSlot();
                 return true;
             } else {
-                //Debug.Log("There is not enough space in this slot to merge items.");
+                //Debug.Log("The item did not come from this slot.");
             }
-
+            return false;
         }
-        return false;
-    }
+        private bool SwapItems(SlotScript from) {
+            //Debug.Log("SlotScript " + this.GetInstanceID().ToString() + " receiving items to swap from slotscript " + from.GetInstanceID().ToString());
+            // use a temporary list to swap references to the stacks
+            List<Item> tmpFrom = new List<Item>(from.MyItems);
+            from.MyItems = MyItems;
+            MyItems = tmpFrom;
 
-    /// <summary>
-    /// Updates the Stack Size count graphic
-    /// </summary>
-    private void UpdateSlot() {
-        //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString());
-        if (MyItem == null) {
-            icon.sprite = null;
-            icon.color = new Color32(0, 0, 0, 0);
-            //Debug.Log("SlotScript.UpdateSlot(): MyItem is null: setting color to: " + ColorUtility.ToHtmlStringRGBA(icon.color));
-        } else {
-            SetSlotOnItems();
-            icon.sprite = MyItem.MyIcon;
-            icon.color = Color.white;
+            return true;
         }
-        UIManager.MyInstance.UpdateStackSize(this, MyCount);
-        SetBackGroundColor();
-    }
 
-    public void OnPointerEnter(PointerEventData eventData) {
-        // show tooltip
-        if (!IsEmpty) {
-            UIManager.MyInstance.ShowToolTip(transform.position, MyItem);
+        private bool MergeItems(SlotScript from) {
+            //Debug.Log("attempting to merge items");
+            if (IsEmpty) {
+                //Debug.Log("This slot is empty, there is nothing to merge.");
+                return false;
+            }
+            if (SystemResourceManager.MatchResource(from.MyItem.MyName, MyItem.MyName) && !IsFull) {
+                // how many free slots there are in the new stack
+                int free = MyItem.MyMaximumStackSize - MyCount;
+                if (free >= from.MyCount) {
+                    for (int i = 0; i < free; i++) {
+                        AddItem(from.MyItems[0]);
+                        from.RemoveItem(from.MyItems[0]);
+                    }
+                    return true;
+                } else {
+                    //Debug.Log("There is not enough space in this slot to merge items.");
+                }
+
+            }
+            return false;
         }
-    }
 
-    public void OnPointerExit(PointerEventData eventData) {
-        // hide tooltip
-        UIManager.MyInstance.HideToolTip();
-    }
-
-    public void SetBackGroundColor() {
-        GetLocalComponents();
-        Color finalColor;
-        if (MyItem == null) {
-            int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
-        } else {
-            finalColor = new Color32(0, 0, 0, 255);
+        /// <summary>
+        /// Updates the Stack Size count graphic
+        /// </summary>
+        private void UpdateSlot() {
+            //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString());
+            if (MyItem == null) {
+                icon.sprite = null;
+                icon.color = new Color32(0, 0, 0, 0);
+                //Debug.Log("SlotScript.UpdateSlot(): MyItem is null: setting color to: " + ColorUtility.ToHtmlStringRGBA(icon.color));
+            } else {
+                SetSlotOnItems();
+                icon.sprite = MyItem.MyIcon;
+                icon.color = Color.white;
+            }
+            UIManager.MyInstance.UpdateStackSize(this, MyCount);
+            SetBackGroundColor();
         }
-        //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
-        if (backGroundImage != null) {
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
-            backGroundImage.color = finalColor;
-        } else {
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
-        }
-    }
 
-}
+        public void OnPointerEnter(PointerEventData eventData) {
+            // show tooltip
+            if (!IsEmpty) {
+                UIManager.MyInstance.ShowToolTip(transform.position, MyItem);
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData) {
+            // hide tooltip
+            UIManager.MyInstance.HideToolTip();
+        }
+
+        public void SetBackGroundColor() {
+            GetLocalComponents();
+            Color finalColor;
+            if (MyItem == null) {
+                int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
+                finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
+            } else {
+                finalColor = new Color32(0, 0, 0, 255);
+            }
+            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
+            if (backGroundImage != null) {
+                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                backGroundImage.color = finalColor;
+            } else {
+                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+            }
+        }
+
+    }
 
 }
