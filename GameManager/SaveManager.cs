@@ -92,6 +92,10 @@ namespace AnyRPG {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
                 anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyDefaultFaction.MyName;
             }
+            if (anyRPGSaveData.characterClass == null) {
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
+                anyRPGSaveData.characterClass = string.Empty;
+            }
             if (anyRPGSaveData.PlayerUMARecipe == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
                 anyRPGSaveData.PlayerUMARecipe = string.Empty;
@@ -290,6 +294,7 @@ namespace AnyRPG {
             anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
             anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFactionName;
+            anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClassName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
             anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana;
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
@@ -745,6 +750,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(anyRPGSaveData.playerFaction);
+            PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
 
             // moved to clearshareddata to have central clearing method
             //ClearSystemManagedCharacterData();

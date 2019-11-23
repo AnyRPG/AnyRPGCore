@@ -343,10 +343,27 @@ namespace AnyRPG {
             // arbitrary toughness cap of 5 for now.  add this as system configuration option later maybe
             int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
             currentLevel = newLevel;
-            stamina = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
-            intellect = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
-            strength = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
-            agility = (int)(currentLevel * SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * usedToughNess);
+
+            int extraStaminaPerLevel = 0;
+            int extraStrengthPerLevel = 0;
+            int extraAgilityPerLevel = 0;
+            int extraIntellectPerLevel = 0;
+
+            if (baseCharacter.MyCharacterClassName != null && baseCharacter.MyCharacterClassName != string.Empty) {
+                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(baseCharacter.MyCharacterClassName);
+                if (characterClass != null) {
+                    extraStaminaPerLevel = characterClass.MyStaminaPerLevel;
+                    extraStrengthPerLevel = characterClass.MyStrengthPerLevel;
+                    extraAgilityPerLevel = characterClass.MyAgilityPerLevel;
+                    extraIntellectPerLevel = characterClass.MyIntellectPerLevel;
+                }
+            }
+
+            stamina = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + extraStaminaPerLevel) * usedToughNess);
+            intellect = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyIntellectStatBudgetPerLevel + extraIntellectPerLevel) * usedToughNess);
+            strength = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStrengthStatBudgetPerLevel + extraStrengthPerLevel) * usedToughNess);
+            agility = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyAgilityStatBudgetPerLevel + extraAgilityPerLevel) * usedToughNess);
+
             ResetHealth();
             ResetMana();
         }

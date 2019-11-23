@@ -40,6 +40,7 @@ namespace AnyRPG {
         public CloseableWindow mainMapWindow;
         public CloseableWindow dialogWindow;
         public CloseableWindow factionChangeWindow;
+        public CloseableWindow classChangeWindow;
 
         void Start() {
             InventoryManager.MyInstance.Close();
@@ -108,6 +109,7 @@ namespace AnyRPG {
             craftingWindow.CloseWindow();
             mainMapWindow.CloseWindow();
             factionChangeWindow.CloseWindow();
+            classChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
             InventoryManager.MyInstance.Close();
         }

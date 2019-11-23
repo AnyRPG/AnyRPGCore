@@ -54,7 +54,7 @@ namespace AnyRPG {
                         // unblock 
                         sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (!isAutoAttack) {
-                            Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
+                            //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
                             ProcessGCDManual(sourceCharacter, animationClips[attackIndex].length);
                         }
                     }

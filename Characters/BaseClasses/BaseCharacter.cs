@@ -13,6 +13,9 @@ namespace AnyRPG {
         protected string factionName;
 
         [SerializeField]
+        protected string characterClassName;
+
+        [SerializeField]
         protected CharacterStats characterStats = null;
 
         [SerializeField]
@@ -44,7 +47,6 @@ namespace AnyRPG {
         public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
-
         public string MyCharacterName { get => characterName; }
         public string MyName { get => MyCharacterName; }
         public string MyFactionName {
@@ -60,6 +62,8 @@ namespace AnyRPG {
             }
             set => factionName = value;
         }
+        public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
+
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -129,6 +133,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
             if (newFaction != null && newFaction != string.Empty) {
                 factionName = newFaction;
+            }
+        }
+
+        public virtual void SetCharacterClass(string newCharacterClass) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
+            if (newCharacterClass != null && newCharacterClass != string.Empty) {
+                characterClassName = newCharacterClass;
+                characterStats.SetLevel(characterStats.MyLevel);
             }
         }
 

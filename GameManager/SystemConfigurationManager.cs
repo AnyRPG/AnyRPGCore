@@ -41,7 +41,19 @@ namespace AnyRPG {
         private int maxLevel = 50;
 
         [SerializeField]
-        private float statBudgetPerLevel = 10f;
+        private float statBudgetPerLevel = 0f;
+
+        [SerializeField]
+        private float staminaStatBudgetPerLevel = 10f;
+
+        [SerializeField]
+        private float agilityStatBudgetPerLevel = 5f;
+
+        [SerializeField]
+        private float strengthStatBudgetPerLevel = 5f;
+
+        [SerializeField]
+        private float intellectStatBudgetPerLevel = 5f;
 
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
@@ -335,6 +347,12 @@ namespace AnyRPG {
         private Sprite factionChangeNamePlateImage;
 
         [SerializeField]
+        private Sprite classChangeInteractionPanelImage;
+
+        [SerializeField]
+        private Sprite classChangeNamePlateImage;
+
+        [SerializeField]
         private Sprite vendorInteractionPanelImage;
 
         [SerializeField]
@@ -381,6 +399,8 @@ namespace AnyRPG {
         public Sprite MyCharacterCreatorNamePlateImage { get => characterCreatorNamePlateImage; set => characterCreatorNamePlateImage = value; }
         public Sprite MyFactionChangeInteractionPanelImage { get => factionChangeInteractionPanelImage; set => factionChangeInteractionPanelImage = value; }
         public Sprite MyFactionChangeNamePlateImage { get => factionChangeNamePlateImage; set => factionChangeNamePlateImage = value; }
+        public Sprite MyClassChangeInteractionPanelImage { get => classChangeInteractionPanelImage; set => classChangeInteractionPanelImage = value; }
+        public Sprite MyClassChangeNamePlateImage { get => classChangeNamePlateImage; set => classChangeNamePlateImage = value; }
         public Sprite MyPortalInteractionPanelImage { get => portalInteractionPanelImage; set => portalInteractionPanelImage = value; }
         public Sprite MyPortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
         public Sprite MySkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
@@ -467,6 +487,10 @@ namespace AnyRPG {
         public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
         public CurrencyGroup MyDefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
         public float MyVendorPriceMultiplier { get => vendorPriceMultiplier; set => vendorPriceMultiplier = value; }
+        public float MyStaminaStatBudgetPerLevel { get => staminaStatBudgetPerLevel; set => staminaStatBudgetPerLevel = value; }
+        public float MyAgilityStatBudgetPerLevel { get => agilityStatBudgetPerLevel; set => agilityStatBudgetPerLevel = value; }
+        public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
+        public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

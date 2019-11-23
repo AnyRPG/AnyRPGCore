@@ -1,0 +1,44 @@
+using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
+
+namespace AnyRPG {
+    [CreateAssetMenu(fileName = "New Character Class", menuName = "AnyRPG/CharacterClass")]
+    [System.Serializable]
+    public class CharacterClass : DescribableResource {
+
+        [SerializeField]
+        private List<AnyRPGWeaponAffinity> weaponAffinityList = new List<AnyRPGWeaponAffinity>();
+
+        [SerializeField]
+        private List<string> abilityList = new List<string>();
+
+        [SerializeField]
+        private List<string> armorClassList = new List<string>();
+
+        [SerializeField]
+        private int staminaPerLevel;
+
+        [SerializeField]
+        private int intellectPerLevel;
+
+        [SerializeField]
+        private int strengthPerLevel;
+
+        [SerializeField]
+        private int agilityPerLevel;
+
+        public List<AnyRPGWeaponAffinity> MyWeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
+        public List<string> MyAbilityList { get => abilityList; set => abilityList = value; }
+        public List<string> MyArmorClassList { get => armorClassList; set => armorClassList = value; }
+        public int MyStaminaPerLevel { get => staminaPerLevel; set => staminaPerLevel = value; }
+        public int MyIntellectPerLevel { get => intellectPerLevel; set => intellectPerLevel = value; }
+        public int MyStrengthPerLevel { get => strengthPerLevel; set => strengthPerLevel = value; }
+        public int MyAgilityPerLevel { get => agilityPerLevel; set => agilityPerLevel = value; }
+    }
+
+}

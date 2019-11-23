@@ -191,6 +191,14 @@ namespace AnyRPG {
             }
         }
 
+        public void SetPlayerCharacterClass(string characterClassName) {
+            //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
+            if (characterClassName != null && characterClassName != string.Empty) {
+                MyCharacter.ChangeCharacterClass(characterClassName);
+            }
+            SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+        }
+
         public void SetPlayerFaction(string factionName) {
             //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
             if (factionName != null && factionName != string.Empty) {
