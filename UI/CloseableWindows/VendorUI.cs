@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            Debug.Log("VendorUI.CreateEventSubscriptions()");
+            //Debug.Log("VendorUI.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -92,7 +92,7 @@ namespace AnyRPG {
             if (pages.Count > 0) {
                 for (int i = 0; i < pages[pageIndex].Count; i++) {
                     if (pages[pageIndex][i] != null) {
-                        vendorButtons[i].AddItem(pages[pageIndex][i]);
+                        vendorButtons[i].AddItem(pages[pageIndex][i], (dropDownIndex == 0 ? true : false));
                     }
                 }
             }
@@ -122,7 +122,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("VendorUI.OnOpenWindow()");
+            Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
             ClearButtons();
             ClearPages();
             base.ReceiveOpenWindowNotification();
@@ -137,7 +137,7 @@ namespace AnyRPG {
             }
             Dictionary<Currency, int> playerBaseCurrency = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
-                Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
+                //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
                 currencyBarController.UpdateCurrencyAmount(keyValuePair.Key, keyValuePair.Value);
             }
@@ -193,18 +193,9 @@ namespace AnyRPG {
             if (item.MyPrice <= 0) {
                 return false;
             }
-            int sellAmount = item.MyPrice;
-            Currency currency = item.MyCurrency;
-            CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);
-            if (currencyGroup != null) {
-                int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
-                currency = currencyGroup.MyBaseCurrency;
-                sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
-            } else {
-                sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
-            }
+            KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
 
-            (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.AddCurrency(currency, sellAmount);
+            (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
             //InventoryManager.MyInstance.RemoveItem(item);
             item.MySlot.RemoveItem(item);

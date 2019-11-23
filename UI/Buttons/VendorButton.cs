@@ -27,12 +27,17 @@ namespace AnyRPG {
         private Text quantity;
 
         [SerializeField]
-        private DescribableIcon currencyIcon;
+        private CurrencyBarController currencyBarController;
 
         private VendorItem vendorItem;
 
-        public void AddItem(VendorItem vendorItem) {
+        private bool buyBackButton;
+
+        public bool MyBuyBackButton { get => buyBackButton; set => buyBackButton = value; }
+
+        public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {
             this.vendorItem = vendorItem;
+            this.buyBackButton = buyBackButton;
 
             if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited) {
                 icon.sprite = vendorItem.MyItem.MyIcon;
@@ -51,14 +56,20 @@ namespace AnyRPG {
                 }
                 descriptionText.text = vendorItem.MyItem.MyDescription;
                 if (vendorItem.MyItem.MyPrice > 0 && vendorItem.MyItem.MyCurrency != null && vendorItem.MyItem.MyCurrency.MyName != null && vendorItem.MyItem.MyCurrency.MyName != string.Empty) {
-                    price.text = "Price: " + vendorItem.MyItem.MyPrice.ToString() + " " + vendorItem.MyItem.MyCurrency.MyName;
-                    if (currencyIcon != null) {
-                        currencyIcon.SetDescribable(vendorItem.MyItem.MyCurrency as IDescribable);
+                    price.gameObject.SetActive(false);
+                    //price.text = "Price:";
+                    if (currencyBarController != null) {
+                        if (buyBackButton == false) {
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice);
+                        } else {
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value, "Buy Back Price: ");
+                        }
                     }
                 } else {
+                    price.gameObject.SetActive(true);
                     price.text = "Price: FREE";
-                    if (currencyIcon != null) {
-                        currencyIcon.SetDescribable(null);
+                    if (currencyBarController != null) {
+                        currencyBarController.ClearCurrencyAmounts();
                     }
 
                 }
@@ -94,8 +105,15 @@ namespace AnyRPG {
             if (vendorItem.MyItem.MyPrice == 0 || vendorItem.MyItem.MyCurrency == null) {
                 priceString = "FREE";
             } else {
-                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.SpendCurrency(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice);
-                priceString = vendorItem.MyItem.MyPrice + " " + vendorItem.MyItem.MyCurrency.MyName;
+                KeyValuePair<Currency, int> usedSellPrice = new KeyValuePair<Currency, int>();
+                if (buyBackButton == false) {
+                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice);
+                    priceString = vendorItem.MyItem.MyPrice + " " + vendorItem.MyItem.MyCurrency.MyName;
+                } else {
+                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
+                    priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
+                }
+                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
             MessageFeedManager.MyInstance.WriteMessage("Purchased " + vendorItem.MyItem.MyName + " for " + priceString);
 

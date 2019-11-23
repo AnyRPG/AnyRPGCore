@@ -41,9 +41,12 @@ namespace AnyRPG {
 
         // finds a currency group that the currency belongs to, or returns null if it does not belong to a group
         public static CurrencyGroup FindCurrencyGroup(Currency currency) {
-            foreach (CurrencyGroup currencyGroup in SystemCurrencyGroupManager.MyInstance.MyResourceList.Values) {
-                if (currencyGroup.HasCurrency(currency)) {
-                    return currencyGroup;
+            //Debug.Log("CurrencyConverter.FindCurrencyGroup(" + (currency == null ? "null" : currency.MyName) + ")");
+            if (currency != null) {
+                foreach (CurrencyGroup currencyGroup in SystemCurrencyGroupManager.MyInstance.MyResourceList.Values) {
+                    if (currencyGroup.HasCurrency(currency)) {
+                        return currencyGroup;
+                    }
                 }
             }
             return null;
@@ -70,7 +73,7 @@ namespace AnyRPG {
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
 
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
-            if (currencyGroup == null || currencyGroup.MyBaseCurrency == currency) {
+            if (currencyGroup == null) {
                 returnDictionary.Add(currency, currencyAmount);
                 // base currency was the same as input currency or input currency was not part of group, return it directly
                 return returnDictionary;
@@ -88,16 +91,26 @@ namespace AnyRPG {
                 sortList.Add(currencyGroupRate.MyBaseMultiple, currencyGroupRate.MyCurrency);
             }
             foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
-                if (currencyGroupRate.Key < baseCurrencyAmount) {
+                int exchangedAmount = 0;
+                if (currencyGroupRate.Key <= baseCurrencyAmount) {
                     // we can add this currency
-                    int exchangedAmount = (int)Mathf.Floor((float)baseCurrencyAmount / (float)currencyGroupRate.Key);
-                    returnDictionary.Add(currencyGroupRate.Value, exchangedAmount);
+                    exchangedAmount = (int)Mathf.Floor((float)baseCurrencyAmount / (float)currencyGroupRate.Key);
                     baseCurrencyAmount -= (exchangedAmount * currencyGroupRate.Key);
                 }
+                returnDictionary.Add(currencyGroupRate.Value, exchangedAmount);
             }
             returnDictionary.Add(currencyGroup.MyBaseCurrency, baseCurrencyAmount);
 
             return returnDictionary;
+        }
+
+        public static string GetCombinedPriceSring(Currency currency, int currencyAmount) {
+            string returnValue = string.Empty;
+            Dictionary<Currency, int> tmpDict = RedistributeCurrency(currency, currencyAmount);
+            foreach (KeyValuePair<Currency, int> dictEntry in tmpDict) {
+                returnValue += dictEntry.Value.ToString() + " " + dictEntry.Key.MyName + " ";
+            }
+            return returnValue;
         }
 
     }

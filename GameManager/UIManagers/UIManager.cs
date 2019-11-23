@@ -106,9 +106,6 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform tooltipRect;
 
-        [SerializeField]
-        private GameObject currencyAmountPrefab;
-
         // objects in the mouseover window
         private Text mouseOverText;
         private GameObject mouseOverTarget;
@@ -142,7 +139,6 @@ namespace AnyRPG {
         public GameObject MyCutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
         public GameObject MyInventoryCanvas { get => inventoryCanvas; set => inventoryCanvas = value; }
         public CurrencyBarController MyToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
-        public GameObject MyPricePrefab { get => currencyAmountPrefab; set => currencyAmountPrefab = value; }
 
         public void PerformSetupActivities() {
             //Debug.Log("UIManager.PerformSetupActivities()");
@@ -383,8 +379,16 @@ namespace AnyRPG {
             //clickable.MyIcon.color = Color.white;
         }
 
-        public void ShowToolTip(Vector3 position, IDescribable description) {
-            //Debug.Log("UIManager.ShowToolTip(): " + Input.mousePosition);
+        public void ShowToolTip(Vector3 position, IDescribable describable) {
+            ShowToolTip(position, describable, string.Empty);
+        }
+
+            public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
+            //Debug.Log("UIManager.ShowToolTip(): Input.MousePosition: " + Input.mousePosition + "; description: " + (describable == null ? "null" : describable.MyName));
+            if (describable == null) {
+                HideToolTip();
+                return;
+            }
             int pivotX;
             int pivotY;
             if (Input.mousePosition.x < (Screen.width / 2)) {
@@ -397,51 +401,67 @@ namespace AnyRPG {
             } else {
                 pivotY = 1;
             }
-            ShowToolTip(new Vector2(pivotX, pivotY), position, description);
+            ShowToolTip(new Vector2(pivotX, pivotY), position, describable, showSellPrice);
         }
-
-        /// <summary>
-        /// Show the tooltip
-        /// </summary>
-        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable description) {
-            //Debug.Log("UIManager.ShowToolTip()");
+        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
+            ShowToolTip(pivot, position, describable, string.Empty);
+        }
+            /// <summary>
+            /// Show the tooltip
+            /// </summary>
+            public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
+            //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.MyName) + ")");
+            if (describable == null) {
+                HideToolTip();
+                return;
+            }
             tooltipRect.pivot = pivot;
             toolTip.SetActive(true);
             toolTip.transform.position = position;
-            ShowToolTipCommon(description);
+            ShowToolTipCommon(describable, showSellPrice);
             //toolTipText.text = description.GetDescription();
         }
 
-        public void ShowToolTipCommon(IDescribable description) {
-            // clear out old price
+        public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
+            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + ")");
+            if (describable == null) {
+                HideToolTip();
+                return;
+            }
 
             // show new price
-            toolTipText.text = description.GetDescription();
-            if (description is Item) {
-                if (MyToolTipCurrencyBarController != null) {
-                    int sellAmount = (description as Item).MyPrice;
-                    if (sellAmount == 0) {
+            toolTipText.text = describable.GetDescription();
+            if (MyToolTipCurrencyBarController != null) {
+                MyToolTipCurrencyBarController.ClearCurrencyAmounts();
+                if (describable is Item && showSellPrice != string.Empty) {
+                    //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + "): describable is item");
+                    KeyValuePair<Currency, int> sellAmount = (describable as Item).MySellPrice;
+                    if (sellAmount.Value == 0 || sellAmount.Key == null) {
+                        //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + ")");
                         // don't print a s sell price on things that cannot be sold
                         return;
                     }
-                    Currency currency = (description as Item).MyCurrency;
-                    MyToolTipCurrencyBarController.UpdateCurrencyAmount(currency, sellAmount);
+                    MyToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
                     //currencyAmountController.MyAmountText.text = "Vendor Price: " + sellAmount;
                 }
             }
+
         }
 
         /// <summary>
         /// Hide the tooltip
         /// </summary>
         public void HideToolTip() {
+            //Debug.Log("UIManager.HideToolTip()");
             toolTip.SetActive(false);
         }
-
-        public void RefreshTooltip(IDescribable description) {
-            //Debug.Log("UIManager.RefreshTooltip()");
-            if (description != null && toolTipText != null && toolTipText.text != null) {
-                ShowToolTipCommon(description);
+        public void RefreshTooltip(IDescribable describable) {
+            RefreshTooltip(describable, string.Empty);
+        }
+            public void RefreshTooltip(IDescribable describable, string showSellPrice) {
+            //Debug.Log("UIManager.RefreshTooltip(" + describable.MyName + ")");
+            if (describable != null && toolTipText != null && toolTipText.text != null) {
+                ShowToolTipCommon(describable, showSellPrice);
                 //toolTipText.text = description.GetDescription();
             } else {
                 HideToolTip();

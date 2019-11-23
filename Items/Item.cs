@@ -1,4 +1,5 @@
 using AnyRPG;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -80,6 +81,25 @@ namespace AnyRPG {
             set => itemLevel = value;
         }
 
+        public KeyValuePair<Currency, int> MySellPrice {
+            get {
+                //Debug.Log(MyName + ".Item.MySellPrice()");
+                int sellAmount = MyPrice;
+                Currency currency = MyCurrency;
+                if (currency != null) {
+                    CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);
+                    if (currencyGroup != null) {
+                        int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
+                        currency = currencyGroup.MyBaseCurrency;
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    } else {
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    }
+                }
+                return new KeyValuePair<Currency, int>(currency, sellAmount);
+            }
+        }
+
         public virtual void Awake() {
         }
 
@@ -115,6 +135,7 @@ namespace AnyRPG {
         }
 
         public override string GetDescription() {
+            //Debug.Log(MyName + ".Item.GetDescription()");
             return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), MyName, GetSummary());
             //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }

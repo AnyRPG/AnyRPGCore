@@ -168,7 +168,8 @@ namespace AnyRPG {
                 }
             }
             UpdateVisual();
-            UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
+            UIManager.MyInstance.ShowToolTip(transform.position, useable as IDescribable);
+            //UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
 
             initialized = true;
         }

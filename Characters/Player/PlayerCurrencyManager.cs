@@ -139,11 +139,11 @@ namespace AnyRPG {
         }
 
         public Dictionary<Currency, int> GetRedistributedCurrency() {
-            Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
+            //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
             CurrencyGroup currencyGroup = SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup;
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {
-                Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency(): default currency group returned: " + currencyGroup.MyName);
+                //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency(): default currency group returned: " + currencyGroup.MyName);
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount

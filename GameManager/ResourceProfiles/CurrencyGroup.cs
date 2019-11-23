@@ -22,6 +22,13 @@ namespace AnyRPG {
         public List<CurrencyGroupRate> MyCurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
 
         public bool HasCurrency(Currency currency) {
+            //Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.MyName) + ")");
+            if (currency == null) {
+                return false;
+            }
+            if (baseCurrency == null) {
+                Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.MyName) + "): basecurrency is null");
+            }
             if (SystemResourceManager.MatchResource(baseCurrency.MyName, currency.MyName)) {
                 return true;
             }

@@ -13,9 +13,13 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject currencyAmountParent;
 
+        [SerializeField]
+        private Text priceText;
+
         protected bool eventSubscriptionsInitialized = false;
 
-        private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+        [SerializeField]
+        protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public void Awake() {
             CreateEventSubscriptions();
@@ -42,28 +46,51 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public void ClearCurrencyAmounts() {
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                currencyAmountController.gameObject.SetActive(false);
+            }
+            //currencyAmountControllers.Clear();
+            priceText.gameObject.SetActive(false);
+        }
+
         public void UpdateCurrencyAmount(Currency currency, int currencyAmount) {
+            string priceString = string.Empty;
+            UpdateCurrencyAmount(currency, currencyAmount, priceString);
+        }
+
+        public void UpdateCurrencyAmount(Currency currency, int currencyAmount, string priceString) {
+            //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.MyName + ", " + currencyAmount + ")");
 
             Dictionary<Currency, int> currencyList = CurrencyConverter.RedistributeCurrency(currency, currencyAmount);
 
-            // despawn old ones
-            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
-                Destroy(currencyAmountController.gameObject);
-            }
-            currencyAmountControllers.Clear();
-
+            ClearCurrencyAmounts();
             // spawn new ones
+
+            if (priceText != null) {
+                if (priceString != string.Empty) {
+                    priceText.gameObject.SetActive(true);
+                    priceText.text = priceString;
+                }
+            }
+            int counter = 0;
             foreach (KeyValuePair<Currency, int> currencyPair in currencyList) {
-                GameObject go = Instantiate(currencyAmountPrefab, currencyAmountParent.transform);
-                go.transform.SetAsFirstSibling();
-                CurrencyAmountController currencyAmountController = go.GetComponent<CurrencyAmountController>();
-                currencyAmountControllers.Add(currencyAmountController);
-                if (currencyAmountController.MyCurrencyIcon != null) {
-                    currencyAmountController.MyCurrencyIcon.SetDescribable(currencyPair.Key);
+                //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.MyName + ", " + currencyAmount + "): currencyPair.Key: " + currencyPair.Key + "; currencyPair.Value: " + currencyPair.Value);
+                //GameObject go = Instantiate(currencyAmountPrefab, currencyAmountParent.transform);
+                //go.transform.SetAsFirstSibling();
+                //CurrencyAmountController currencyAmountController = go.GetComponent<CurrencyAmountController>();
+                //currencyAmountControllers.Add(currencyAmountController);
+                if (currencyAmountControllers.Count > counter) {
+                    CurrencyAmountController currencyAmountController = currencyAmountControllers[counter];
+                    currencyAmountController.gameObject.SetActive(true);
+                    if (currencyAmountController.MyCurrencyIcon != null) {
+                        currencyAmountController.MyCurrencyIcon.SetDescribable(currencyPair.Key);
+                    }
+                    if (currencyAmountController.MyAmountText != null) {
+                        currencyAmountController.MyAmountText.text = currencyPair.Value.ToString();
+                    }
                 }
-                if (currencyAmountController.MyAmountText != null) {
-                    currencyAmountController.MyAmountText.text = currencyPair.Value.ToString();
-                }
+                counter += 1;
             }
         }
 

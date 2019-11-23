@@ -6,20 +6,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SlotScript : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
+    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable {
         /// <summary>
         /// A stack for all items on this slot
         /// </summary>
         private List<Item> items = new List<Item>();
 
         [SerializeField]
-        private Image icon;
-
-        [SerializeField]
         private Image backGroundImage;
-
-        [SerializeField]
-        private Text stackSizeText;
 
         private bool localComponentsGotten = false;
 
@@ -52,9 +46,7 @@ namespace AnyRPG {
             }
         }
 
-        public Image MyIcon { get => icon; set => icon = value; }
-        public int MyCount { get => MyItems.Count; }
-        public Text MyStackSizeText { get => stackSizeText; }
+        public override int MyCount { get => MyItems.Count; }
         public List<Item> MyItems {
             get {
                 return items;
@@ -65,15 +57,9 @@ namespace AnyRPG {
             }
         }
 
-        private void Awake() {
+        protected override void Awake() {
             //Debug.Log("SlotScript.Awake()");
-            //MyItems.OnPop += new UpdateStackEvent(UpdateSlot);
-            //MyItems.OnPush += new UpdateStackEvent(UpdateSlot);
-            //MyItems.OnClear += new UpdateStackEvent(UpdateSlot);
-            //if (backGroundImage == null) {
-            //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
-            //backGroundImage = GetComponent<Image>();
-            //}
+            base.Awake();
             GetLocalComponents();
         }
 
@@ -121,7 +107,7 @@ namespace AnyRPG {
         }
 
         public void RemoveItem(Item item) {
-            Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
+            //Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
             if (!IsEmpty) {
                 //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
                 MyItems.Remove(item);
@@ -365,30 +351,13 @@ namespace AnyRPG {
         /// Updates the Stack Size count graphic
         /// </summary>
         private void UpdateSlot() {
-            //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString());
-            if (MyItem == null) {
-                icon.sprite = null;
-                icon.color = new Color32(0, 0, 0, 0);
-                //Debug.Log("SlotScript.UpdateSlot(): MyItem is null: setting color to: " + ColorUtility.ToHtmlStringRGBA(icon.color));
-            } else {
+            //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString() + "; MyItem: " + (MyItem != null ? MyItem.MyName : "null"));
+            if (MyItem != null) {
                 SetSlotOnItems();
-                icon.sprite = MyItem.MyIcon;
-                icon.color = Color.white;
             }
+            SetDescribable(MyItem);
             UIManager.MyInstance.UpdateStackSize(this, MyCount);
             SetBackGroundColor();
-        }
-
-        public void OnPointerEnter(PointerEventData eventData) {
-            // show tooltip
-            if (!IsEmpty) {
-                UIManager.MyInstance.ShowToolTip(transform.position, MyItem);
-            }
-        }
-
-        public void OnPointerExit(PointerEventData eventData) {
-            // hide tooltip
-            UIManager.MyInstance.HideToolTip();
         }
 
         public void SetBackGroundColor() {
@@ -408,6 +377,11 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
             }
         }
+
+        public override void ShowToolTip(IDescribable describable) {
+            UIManager.MyInstance.ShowToolTip(transform.position, describable, "Sell Price: ");
+        }
+
 
     }
 
