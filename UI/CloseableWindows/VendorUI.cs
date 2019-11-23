@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +18,7 @@ namespace AnyRPG {
         private Dropdown dropdown;
 
         [SerializeField]
-        private GameObject currencyAmountPrefab;
-
-        [SerializeField]
-        private GameObject currencyAmountParent;
+        private CurrencyBarController currencyBarController;
 
         private List<List<VendorItem>> pages = new List<List<VendorItem>>();
 
@@ -133,6 +131,18 @@ namespace AnyRPG {
             OnPageCountUpdate(false);
         }
 
+        public void UpdateCurrencyAmount() {
+            if (PopupWindowManager.MyInstance.vendorWindow.IsOpen == false) {
+                return;
+            }
+            Dictionary<Currency, int> playerBaseCurrency = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetRedistributedCurrency();
+            if (playerBaseCurrency != null) {
+                Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
+                KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
+                currencyBarController.UpdateCurrencyAmount(keyValuePair.Key, keyValuePair.Value);
+            }
+        }
+
         public void PopulateDropDownList(List<VendorCollection> vendorCollections) {
             UpdateCurrencyAmount();
             dropDownIndex = 1;
@@ -170,45 +180,13 @@ namespace AnyRPG {
             OnPageCountUpdate(false);
         }
 
-        public void UpdateCurrencyAmount() {
-
-            // get list of currencies
-            List<Currency> currencyList = new List<Currency>(SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates.Count + 1);
-            currencyList.Add(SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyBaseCurrency);
-            if (SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates.Count > 0) {
-                foreach (CurrencyGroupRate currencyGroupRate in SystemConfigurationManager.MyInstance.MyDefaultCurrencyGroup.MyCurrencyGroupRates) {
-                    currencyList.Add(currencyGroupRate.MyCurrency);
-                }
-            }
-
-            // despawn old ones
-            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
-                Destroy(currencyAmountController.gameObject);
-            }
-            currencyAmountControllers.Clear();
-
-            // spawn new ones
-            foreach (Currency currency in currencyList) {
-                GameObject go = Instantiate(currencyAmountPrefab, currencyAmountParent.transform);
-                go.transform.SetAsFirstSibling();
-                CurrencyAmountController currencyAmountController = go.GetComponent<CurrencyAmountController>();
-                currencyAmountControllers.Add(currencyAmountController);
-                if (currencyAmountController.MyCurrencyIcon != null) {
-                    currencyAmountController.MyCurrencyIcon.SetDescribable(currency);
-                }
-                if (currencyAmountController.MyAmountText != null) {
-                    currencyAmountController.MyAmountText.text = PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.GetCurrencyAmount(currency).ToString();
-                }
-            }
-        }
-
+        
         public void AddToBuyBackCollection(Item newItem) {
             VendorItem newVendorItem = new VendorItem();
             newVendorItem.MyQuantity = 1;
             newVendorItem.MyItem = newItem;
             buyBackCollection.MyVendorItems.Add(newVendorItem);
         }
-
         
 
         public bool SellItem(Item item) {
@@ -217,9 +195,9 @@ namespace AnyRPG {
             }
             int sellAmount = item.MyPrice;
             Currency currency = item.MyCurrency;
-            CurrencyGroup currencyGroup = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.FindCurrencyGroup(currency);
+            CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
-                int convertedSellAmount = (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetConvertedValue(currency, sellAmount);
+                int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
                 currency = currencyGroup.MyBaseCurrency;
                 sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
             } else {

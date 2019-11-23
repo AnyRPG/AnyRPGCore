@@ -311,11 +311,11 @@ namespace AnyRPG {
 
                 // auto-attack buttons are special and display the current weapon of the character
                 if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
-                    Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                    //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
                         if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
                             MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
-                            Debug.Log("ActionButton.UpdateVisual(): setting icon");
+                            //Debug.Log("ActionButton.UpdateVisual(): setting icon");
 
                             if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
                                 coolDownIcon.enabled = true;
@@ -334,7 +334,7 @@ namespace AnyRPG {
                                 coolDownIcon.fillMethod = Image.FillMethod.Radial360;
                                 coolDownIcon.fillAmount = 1f;
                             } else {
-                                Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
+                                //Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
                                 coolDownIcon.sprite = null;
                                 coolDownIcon.enabled = false;
                             }
