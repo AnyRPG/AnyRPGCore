@@ -47,6 +47,9 @@ namespace AnyRPG {
         [SerializeField]
         private int price;
 
+        [SerializeField]
+        private List<string> characterClassRequirementList = new List<string>();
+
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
         public Quality MyQuality { get => quality; }
@@ -100,6 +103,8 @@ namespace AnyRPG {
             }
         }
 
+        public List<string> MyCharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
+
         public virtual void Awake() {
         }
 
@@ -140,12 +145,21 @@ namespace AnyRPG {
             //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
-        /*
+        
         public override string GetSummary() {
             //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
-            return string.Format("{1}", MyDescription);
+            string abilitiesString = string.Empty;
+            if (characterClassRequirementList.Count > 0) {
+                string colorString = "red";
+                if (characterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                    colorString = "white";
+                }
+                abilitiesString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
+            }
+
+            return string.Format("{0}", abilitiesString);
         }
-        */
+        
     }
 
 }

@@ -6,6 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerCharacter : BaseCharacter {
 
+        public event System.Action OnClassChange = delegate { };
+
         private PlayerCurrencyManager playerCurrencyManager;
 
         public PlayerCurrencyManager MyPlayerCurrencyManager { get => playerCurrencyManager; set => playerCurrencyManager = value; }
@@ -51,6 +53,7 @@ namespace AnyRPG {
                 LearnClassAbilities(newCharacterClass);
                 SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
             }
+            OnClassChange();
         }
 
 

@@ -148,19 +148,19 @@ namespace AnyRPG {
             if (newItem != null) {
                 armorModifiers.AddModifier(newItem.MyArmorModifier);
                 meleeDamageModifiers.AddModifier(newItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier);
-                primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier);
-                primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier);
-                primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier);
+                primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier(MyLevel, baseCharacter));
             }
 
             if (oldItem != null) {
                 armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
                 meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier);
-                primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier);
-                primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier);
-                primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier);
+                primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier(MyLevel, baseCharacter));
             }
 
             ManaChangedNotificationHandler();
@@ -344,25 +344,10 @@ namespace AnyRPG {
             int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
             currentLevel = newLevel;
 
-            int extraStaminaPerLevel = 0;
-            int extraStrengthPerLevel = 0;
-            int extraAgilityPerLevel = 0;
-            int extraIntellectPerLevel = 0;
-
-            if (baseCharacter.MyCharacterClassName != null && baseCharacter.MyCharacterClassName != string.Empty) {
-                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(baseCharacter.MyCharacterClassName);
-                if (characterClass != null) {
-                    extraStaminaPerLevel = characterClass.MyStaminaPerLevel;
-                    extraStrengthPerLevel = characterClass.MyStrengthPerLevel;
-                    extraAgilityPerLevel = characterClass.MyAgilityPerLevel;
-                    extraIntellectPerLevel = characterClass.MyIntellectPerLevel;
-                }
-            }
-
-            stamina = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + extraStaminaPerLevel) * usedToughNess);
-            intellect = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyIntellectStatBudgetPerLevel + extraIntellectPerLevel) * usedToughNess);
-            strength = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStrengthStatBudgetPerLevel + extraStrengthPerLevel) * usedToughNess);
-            agility = (int)(currentLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyAgilityStatBudgetPerLevel + extraAgilityPerLevel) * usedToughNess);
+            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
+            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
+            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
+            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
 
             ResetHealth();
             ResetMana();

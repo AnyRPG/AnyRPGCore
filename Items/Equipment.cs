@@ -7,7 +7,7 @@ using UMA;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Equipment", menuName = "AnyRPG/Inventory/Equipment")]
-    public class Equipment : Item {
+    public abstract class Equipment : Item {
 
         public EquipmentSlot equipSlot;
         //public UMASlot UMASlotAffinity;
@@ -112,8 +112,7 @@ namespace AnyRPG {
             set => armorModifier = value;
         }
 
-        public virtual int MyIntellectModifier {
-            get {
+        public virtual int MyIntellectModifier(int currentLevel, BaseCharacter baseCharacter) {
                 if (!useIntellectModifier) {
                     return 0;
                 }
@@ -121,15 +120,12 @@ namespace AnyRPG {
                     return intellectModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f) ) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length) ),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length) ),
                     0f,
                     Mathf.Infinity
                     ));
-            }
-            set => intellectModifier = value;
         }
-        public virtual int MyStaminaModifier {
-            get {
+        public virtual int MyStaminaModifier(int currentLevel, BaseCharacter baseCharacter) {
                 if (!useStaminaModifier) {
                     return 0;
                 }
@@ -137,15 +133,12 @@ namespace AnyRPG {
                     return staminaModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
                     0f,
                     Mathf.Infinity
                     ));
-            }
-            set => staminaModifier = value;
         }
-        public virtual int MyStrengthModifier {
-            get {
+        public virtual int MyStrengthModifier(int currentLevel, BaseCharacter baseCharacter) {
                 if (!useStrengthModifier) {
                     return 0;
                 }
@@ -153,15 +146,12 @@ namespace AnyRPG {
                     return strengthModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
                     0f,
                     Mathf.Infinity
                     ));
-            }
-            set => strengthModifier = value;
         }
-        public virtual int MyAgilityModifier {
-            get {
+        public virtual int MyAgilityModifier(int currentLevel, BaseCharacter baseCharacter) {
                 if (!useAgilityModifier) {
                     return 0;
                 }
@@ -169,12 +159,10 @@ namespace AnyRPG {
                     return agilityModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
                     0f,
                     Mathf.Infinity
                     ));
-            }
-            set => agilityModifier = value;
         }
         public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
@@ -199,9 +187,20 @@ namespace AnyRPG {
         public override void Use() {
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
                 base.Use();
-                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
-                Remove();
+                if (CanEquip(PlayerManager.MyInstance.MyCharacter)) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
+                    Remove();
+                } else {
+                }
             }
+        }
+
+        public virtual bool CanEquip(BaseCharacter baseCharacter) {
+            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0 && !MyCharacterClassRequirementList.Contains(baseCharacter.MyCharacterClassName)) {
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyName);
+                return false;
+            }
+            return true;
         }
 
         public override string GetSummary() {
@@ -210,6 +209,7 @@ namespace AnyRPG {
 
             abilitiesList.Add(string.Format(" Item Level: {0}", MyItemLevel));
 
+            // stats
             if (useArmorModifier) {
                 abilitiesList.Add(string.Format(" +{0} Armor", MyArmorModifier));
             }
@@ -217,17 +217,22 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format(" +{0} Damage", MyDamageModifier));
             }
             if (useStaminaModifier) {
-                abilitiesList.Add(string.Format(" +{0} Stamina", MyStaminaModifier));
+                abilitiesList.Add(string.Format(" +{0} Stamina", MyStaminaModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useStrengthModifier) {
-                abilitiesList.Add(string.Format(" +{0} Strength", MyStrengthModifier));
+                abilitiesList.Add(string.Format(" +{0} Strength", MyStrengthModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useIntellectModifier) {
-                abilitiesList.Add(string.Format(" +{0} Intellect", MyIntellectModifier));
+                abilitiesList.Add(string.Format(" +{0} Intellect", MyIntellectModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useAgilityModifier) {
-                abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier));
+                abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
             }
+
+            // restrictions
+
+
+            // abilities
 
             if (onEquipAbility != null) {
                 abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyName));
@@ -238,6 +243,7 @@ namespace AnyRPG {
 
             return base.GetSummary() + "\n" + string.Join("\n", abilitiesList);
         }
+
     }
 
     public enum EquipmentSlot { Helm, Chest, Legs, MainHand, OffHand, Feet, Hands, Shoulders }

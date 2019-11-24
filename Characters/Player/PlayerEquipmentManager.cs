@@ -14,6 +14,9 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            if (baseCharacter != null) {
+                (baseCharacter as PlayerCharacter).OnClassChange += HandleClassChange;
+            }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             base.CreateEventSubscriptions();
@@ -24,9 +27,24 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            if (baseCharacter != null) {
+                (baseCharacter as PlayerCharacter).OnClassChange -= HandleClassChange;
+            }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             base.CleanupEventSubscriptions();
+        }
+
+        public void HandleClassChange() {
+            List<Equipment> equipmentToRemove = new List<Equipment>();
+            foreach (Equipment equipment in currentEquipment.Values) {
+                if (equipment != null && equipment.CanEquip(baseCharacter) == false) {
+                    equipmentToRemove.Add(equipment);
+                }
+            }
+            foreach (Equipment equipment in equipmentToRemove) {
+                Unequip(equipment.equipSlot);
+            }
         }
 
         public void HandlePlayerUnitSpawn() {
