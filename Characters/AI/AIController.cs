@@ -127,7 +127,7 @@ namespace AnyRPG {
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 MyBaseCharacter.MyCharacterCombat.MyAggroTable.ClearTable();
-                SystemEventManager.MyInstance.NotifyOnReputationChange();
+                baseCharacter.MyCharacterFactionManager.NotifyOnReputationChange();
                 SetMasterRelativeDestination();
             } else {
                 //Debug.Log("Can only be under the control of one master at a time");

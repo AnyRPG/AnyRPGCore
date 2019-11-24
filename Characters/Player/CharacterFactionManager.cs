@@ -6,6 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterFactionManager : MonoBehaviour {
 
+        public event System.Action OnReputationChange = delegate { };
+
         private BaseCharacter baseCharacter;
 
         //public Dictionary<Faction, float> dispositionDictionary = new Dictionary<Faction, float>();
@@ -19,8 +21,13 @@ namespace AnyRPG {
         protected void Start() {
         }
 
+        public virtual void NotifyOnReputationChange() {
+            OnReputationChange();
+        }
+
+
         // ignores if exiting, otherwise sets to amount.  This allows leaving and re-joining factions without losing reputation with them
-        public void SetReputation(string newFactionName) {
+        public virtual void SetReputation(string newFactionName) {
             //Debug.Log(gameObject.name + ".PlayerFactionManager.SetReputation(" + newFaction + ")");
             foreach (FactionDisposition factionDisposition in MyDispositionDictionary) {
                 if (factionDisposition.factionName == newFactionName) {
@@ -31,11 +38,11 @@ namespace AnyRPG {
             _factionDisposition.factionName = newFactionName;
             _factionDisposition.disposition = Faction.RelationWith(baseCharacter, newFactionName);
             MyDispositionDictionary.Add(_factionDisposition);
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            OnReputationChange();
         }
 
         // adds to existing amount or sets to amount if not existing
-        public void AddReputation(string factionName, int reputationAmount) {
+        public virtual void AddReputation(string factionName, int reputationAmount) {
             //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + ")");
             //bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in MyDispositionDictionary) {
@@ -50,7 +57,7 @@ namespace AnyRPG {
             _factionDisposition.factionName = factionName;
             _factionDisposition.disposition = Faction.RelationWith(baseCharacter, factionName) + (float)reputationAmount;
             MyDispositionDictionary.Add(_factionDisposition);
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            OnReputationChange();
         }
 
         public bool HasReputationModifier(Faction faction) {

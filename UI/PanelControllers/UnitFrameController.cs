@@ -185,11 +185,11 @@ namespace AnyRPG {
             if (followGameObject != null) {
 
                 INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
-                if (namePlateUnit.HasHealth()) {
-                    followGameObject.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.OnHealthChanged -= OnHealthChanged;
-                    followGameObject.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.OnManaChanged -= OnManaChanged;
-                    SystemEventManager.MyInstance.OnLevelChanged -= OnLevelChanged;
-                    SystemEventManager.MyInstance.OnReputationChange -= OnReputationChange;
+                if (namePlateUnit is CharacterUnit) {
+                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnHealthChanged -= OnHealthChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnManaChanged -= OnManaChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnLevelChanged -= OnLevelChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterFactionManager.OnReputationChange -= OnReputationChange;
                 }
             }
             followGameObject = null;
@@ -229,8 +229,8 @@ namespace AnyRPG {
                 // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
                 baseCharacter.MyCharacterStats.OnHealthChanged += OnHealthChanged;
                 baseCharacter.MyCharacterStats.OnManaChanged += OnManaChanged;
-                SystemEventManager.MyInstance.OnLevelChanged += OnLevelChanged;
-                SystemEventManager.MyInstance.OnReputationChange += OnReputationChange;
+                baseCharacter.MyCharacterStats.OnLevelChanged += OnLevelChanged;
+                baseCharacter.MyCharacterFactionManager.OnReputationChange += OnReputationChange;
             } else {
                 // manually set everything to 1 if this is an inanimate unit
                 OnHealthChanged(1, 1);

@@ -17,6 +17,7 @@ namespace AnyRPG {
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action OnStatChanged = delegate { };
+        public event System.Action<int> OnLevelChanged = delegate { };
 
         // starting level
         [SerializeField]
@@ -336,6 +337,7 @@ namespace AnyRPG {
         public virtual void GainLevel() {
             // make gain level sound and graphic
             SetLevel(currentLevel + 1);
+            OnLevelChanged(currentLevel);
         }
 
         public virtual void SetLevel(int newLevel) {
