@@ -16,7 +16,7 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".HealEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + abilityEffectName);
             int healthFinalAmount = 0;
             if (healthBaseAmount > 0) {
-                healthFinalAmount = (int)CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>());
+                healthFinalAmount = (int)CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>()).Key;
             }
             healthFinalAmount += (int)(abilityEffectInput.healthAmount * inputMultiplier);
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
@@ -26,7 +26,7 @@ namespace AnyRPG {
             }
             int manaFinalAmount = 0;
             if (manaBaseAmount > 0) {
-                manaFinalAmount = (int)CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>());
+                manaFinalAmount = (int)CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>()).Key;
             }
             manaFinalAmount += (int)(abilityEffectInput.manaAmount * inputMultiplier);
             abilityEffectOutput.manaAmount = manaFinalAmount;

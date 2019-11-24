@@ -166,6 +166,20 @@ namespace AnyRPG {
             return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + (float)extraAgilityPerLevel;
         }
 
+        public static float GetCritChanceForCharacter(BaseCharacter sourceCharacter) {
+            float critChanceModifier = 0f;
+            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(sourceCharacter.MyCharacterClassName);
+            if (characterClass != null) {
+                foreach (PowerEnhancerNode powerEnhancerNode in characterClass.MyPowerEnhancerStats) {
+
+                    critChanceModifier += powerEnhancerNode.MyStaminaToCritPerLevel * (sourceCharacter.MyCharacterStats.MyStamina / sourceCharacter.MyCharacterStats.MyLevel);
+                    critChanceModifier += powerEnhancerNode.MyIntellectToCritPerLevel * (sourceCharacter.MyCharacterStats.MyIntellect / sourceCharacter.MyCharacterStats.MyLevel);
+                    critChanceModifier += powerEnhancerNode.MyStrengthToCritPerLevel * (sourceCharacter.MyCharacterStats.MyStrength / sourceCharacter.MyCharacterStats.MyLevel);
+                    critChanceModifier += powerEnhancerNode.MyAgilityToCritPerLevel * (sourceCharacter.MyCharacterStats.MyAgility / sourceCharacter.MyCharacterStats.MyLevel);
+                }
+            }
+            return critChanceModifier;
+        }
 
     }
 

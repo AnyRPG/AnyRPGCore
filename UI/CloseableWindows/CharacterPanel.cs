@@ -260,6 +260,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyAgility != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility) {
                 updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyAgility - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility) + "</color> )";
             }
+
             updateString += "\n\n";
             updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth + "\n";
             updateString += "Mana: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxMana + "\n\n";
@@ -269,7 +270,9 @@ namespace AnyRPG {
                 updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) + "</color> )";
             }
             updateString += "\n";
-            updateString += "SpellPower: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MySpellPower + "\n\n";
+            updateString += "SpellPower: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MySpellPower;
+            updateString += "\n";
+            updateString += "Critical Hit Chance: " + LevelEquations.GetCritChanceForCharacter(PlayerManager.MyInstance.MyCharacter) + "%\n\n";
             updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMovementSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed) + " (m/s)\n\n";
 
             statsDescription.text = updateString;

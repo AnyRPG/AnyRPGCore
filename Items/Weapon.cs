@@ -19,6 +19,10 @@ namespace AnyRPG {
         [SerializeField]
         private AnyRPGWeaponAffinity weaponAffinity;
 
+        // the skill required to use this weapon
+        [SerializeField]
+        private string weaponSkill;
+
         [SerializeField]
         private AudioClip defaultHitSoundEffect;
 
@@ -50,6 +54,8 @@ namespace AnyRPG {
             }
             set => base.MyArmorModifier = value;
         }
+
+        public string MyWeaponSkill { get => weaponSkill; set => weaponSkill = value; }
 
         public override int MyIntellectModifier(int currentLevel, BaseCharacter baseCharacter) {
                 if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {

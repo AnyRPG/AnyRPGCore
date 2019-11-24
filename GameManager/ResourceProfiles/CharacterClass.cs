@@ -15,10 +15,16 @@ namespace AnyRPG {
         private List<AnyRPGWeaponAffinity> weaponAffinityList = new List<AnyRPGWeaponAffinity>();
 
         [SerializeField]
+        private List<string> weaponSkillList = new List<string>();
+
+        [SerializeField]
         private List<string> abilityList = new List<string>();
 
         [SerializeField]
         private List<string> armorClassList = new List<string>();
+
+        [SerializeField]
+        private List<PowerEnhancerNode> powerEnhancerStats = new List<PowerEnhancerNode>();
 
         [SerializeField]
         private int staminaPerLevel;
@@ -39,6 +45,8 @@ namespace AnyRPG {
         public int MyIntellectPerLevel { get => intellectPerLevel; set => intellectPerLevel = value; }
         public int MyStrengthPerLevel { get => strengthPerLevel; set => strengthPerLevel = value; }
         public int MyAgilityPerLevel { get => agilityPerLevel; set => agilityPerLevel = value; }
+        public List<string> MyWeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
+        public List<PowerEnhancerNode> MyPowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
     }
 
 }

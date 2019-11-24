@@ -8,11 +8,6 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New AttackEffect", menuName = "AnyRPG/Abilities/Effects/AttackEffect")]
     public class AttackEffect : AmountEffect {
 
-        [SerializeField]
-        protected DamageType damageType;
-
-        public DamageType MyDamageType { get => damageType; set => damageType = value; }
-
         /// <summary>
         /// Does the actual work of hitting the target with an ability
         /// </summary>
@@ -28,12 +23,14 @@ namespace AnyRPG {
                 // something died or despawned mid cast
                 return;
             }
-            int abilityFinalAmount = (int)CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>()) + (int)(abilityEffectInput.healthAmount * inputMultiplier);
+            KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>());
+            int extraAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
+            int abilityFinalAmount = (int)abilityKeyValuePair.Key;
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
             abilityEffectOutput.healthAmount = abilityFinalAmount;
             if (abilityFinalAmount > 0) {
                 // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(abilityFinalAmount, source.MyCharacterUnit.transform.position, source, CombatMagnitude.normal, this);
+                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(abilityFinalAmount, source.MyCharacterUnit.transform.position, source, abilityKeyValuePair.Value, this);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
             base.PerformAbilityHit(source, target, abilityEffectOutput);
