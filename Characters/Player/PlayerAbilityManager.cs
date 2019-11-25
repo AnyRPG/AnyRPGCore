@@ -51,13 +51,13 @@ namespace AnyRPG {
         }
 
         public override bool LearnAbility(string abilityName) {
-            //Debug.Log("PlayerAbilityManager.LearnAbility()");
+            Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
             bool returnValue = base.LearnAbility(abilityName);
             if (returnValue) {
-                //Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue is true");
+                Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue is true");
                 SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
             } else {
-                //Debug.Log("PlayerAbilityManager.LearnAbility() returnvalue was false");
+                Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
             return returnValue;
         }
@@ -70,6 +70,10 @@ namespace AnyRPG {
                 string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
                 if (!abilityList.ContainsKey(keyName)) {
                     //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
+                    if (ability is AnimatedAbility && (ability as AnimatedAbility).MyIsAutoAttack == true) {
+                        UnlearnAbility(SystemConfigurationManager.MyInstance.MyDefaultAutoAttackAbility);
+                    }
+
                     abilityList[keyName] = ability;
                 }
             }

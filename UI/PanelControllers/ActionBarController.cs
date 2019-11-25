@@ -50,15 +50,15 @@ public class ActionBarController : MonoBehaviour {
 
 
     public bool AddNewAbility(string newAbility) {
-        //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility.MyName + ")");
+        Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
         BaseAbility ability = SystemAbilityManager.MyInstance.GetResource(newAbility);
         for (int i = 0; i < actionButtons.Count; i++) {
             if (actionButtons[i].MyUseable == null) {
-                //Debug.Log("Adding ability: " + newAbility.MyName + " to empty action button " + i);
+                Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
                 actionButtons[i].SetUseable(ability);
                 return true;
             } else if (actionButtons[i].MyUseable == (ability as IUseable)) {
-                //Debug.Log("Ability exists on bars already!");
+                Debug.Log("Ability exists on bars already!");
                 return true;
             }
         }

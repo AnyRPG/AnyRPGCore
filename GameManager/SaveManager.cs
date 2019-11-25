@@ -766,12 +766,17 @@ namespace AnyRPG {
             LoadEquippedBagData(anyRPGSaveData);
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
+
+
             LoadSkillData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);
             LoadQuestData(anyRPGSaveData);
             LoadDialogData(anyRPGSaveData);
             LoadSceneNodeData(anyRPGSaveData);
+
             LoadActionBarData(anyRPGSaveData);
+
+
             LoadCurrencyData(anyRPGSaveData);
 
             // now that we have loaded the quest data, we can re-enable references

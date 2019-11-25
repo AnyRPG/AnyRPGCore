@@ -445,6 +445,8 @@ namespace AnyRPG {
             playerConnectionObject = Instantiate(playerConnectionPrefab, playerConnectionParent.transform);
             MyCharacter = playerConnectionObject.GetComponent<PlayerCharacter>() as PlayerCharacter;
 
+            SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
+
             MyCharacter.OrchestratorStart();
 
             MyCharacter.Initialize(defaultPlayerName, initialLevel);

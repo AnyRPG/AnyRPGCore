@@ -37,23 +37,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
-        [SerializeField]
-        private int maxLevel = 50;
-
-        [SerializeField]
-        private float statBudgetPerLevel = 0f;
-
-        [SerializeField]
-        private float staminaStatBudgetPerLevel = 10f;
-
-        [SerializeField]
-        private float agilityStatBudgetPerLevel = 5f;
-
-        [SerializeField]
-        private float strengthStatBudgetPerLevel = 5f;
-
-        [SerializeField]
-        private float intellectStatBudgetPerLevel = 5f;
 
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
@@ -232,6 +215,27 @@ namespace AnyRPG {
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
+
+        [SerializeField]
+        private string defaultAutoAttackAbility;
+
+        [SerializeField]
+        private int maxLevel = 50;
+
+        [SerializeField]
+        private float statBudgetPerLevel = 0f;
+
+        [SerializeField]
+        private float staminaStatBudgetPerLevel = 10f;
+
+        [SerializeField]
+        private float agilityStatBudgetPerLevel = 5f;
+
+        [SerializeField]
+        private float strengthStatBudgetPerLevel = 5f;
+
+        [SerializeField]
+        private float intellectStatBudgetPerLevel = 5f;
 
         [Header("CHARACTER PANEL")]
 
@@ -491,6 +495,7 @@ namespace AnyRPG {
         public float MyAgilityStatBudgetPerLevel { get => agilityStatBudgetPerLevel; set => agilityStatBudgetPerLevel = value; }
         public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
         public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
+        public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

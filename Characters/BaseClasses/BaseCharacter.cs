@@ -6,6 +6,9 @@ using UnityEngine;
 namespace AnyRPG {
     [RequireComponent(typeof(CharacterFactionManager))]
     public abstract class BaseCharacter : MonoBehaviour {
+
+        public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+
         [SerializeField]
         protected string characterName;
 
@@ -136,11 +139,15 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void SetCharacterClass(string newCharacterClass) {
+        public virtual void SetCharacterClass(string newCharacterClassName) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
-            if (newCharacterClass != null && newCharacterClass != string.Empty) {
-                characterClassName = newCharacterClass;
+            if (newCharacterClassName != null && newCharacterClassName != string.Empty) {
+                string oldCharacterClassName = characterClassName;
+                characterClassName = newCharacterClassName;
                 characterStats.SetLevel(characterStats.MyLevel);
+                CharacterClass oldCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(oldCharacterClassName);
+                CharacterClass newCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(newCharacterClassName);
+                OnClassChange(newCharacterClass, oldCharacterClass);
             }
         }
 

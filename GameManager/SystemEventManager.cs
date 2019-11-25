@@ -45,6 +45,7 @@ namespace AnyRPG {
 
         // Player Manager
         public event System.Action OnPlayerConnectionSpawn = delegate { };
+        public event System.Action OnBeforePlayerConnectionSpawn = delegate { };
         public event System.Action OnPlayerUnitSpawn = delegate { };
         public event System.Action OnPlayerConnectionDespawn = delegate { };
         public event System.Action OnPlayerUnitDespawn = delegate { };
@@ -128,6 +129,10 @@ namespace AnyRPG {
 
         public void NotifyOnPlayerConnectionSpawn() {
             OnPlayerConnectionSpawn();
+        }
+
+        public void NotifyBeforePlayerConnectionSpawn() {
+            OnBeforePlayerConnectionSpawn();
         }
 
         public void NotifyOnPlayerUnitSpawn() {
@@ -222,7 +227,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnAbilityListChanged(string abilityName) {
-            //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
+            Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
             OnAbilityListChanged(abilityName);
             OnPrerequisiteUpdated();
         }
