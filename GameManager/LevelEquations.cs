@@ -195,6 +195,7 @@ namespace AnyRPG {
                     critChanceModifier += powerEnhancerNode.MyAgilityToCritPerLevel * (sourceCharacter.MyCharacterStats.MyAgility / sourceCharacter.MyCharacterStats.MyLevel);
                 }
             }
+            critChanceModifier += sourceCharacter.MyCharacterStats.GetCriticalStrikeModifiers();
             return critChanceModifier;
         }
 

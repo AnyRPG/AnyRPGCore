@@ -217,6 +217,19 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public virtual float GetCriticalStrikeModifiers() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            float returnValue = 0f;
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
+                if (statusEffectNode.MyStatusEffect.MyExtraCriticalStrikePercent != 1) {
+                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
+                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyExtraCriticalStrikePercent;
+                }
+            }
+            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
+            return returnValue;
+        }
 
         public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyAbilityEffectName + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
