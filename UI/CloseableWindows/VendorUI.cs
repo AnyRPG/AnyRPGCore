@@ -40,7 +40,8 @@ namespace AnyRPG {
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
             //InitializeBuyBackList();
-            buyBackCollection = new VendorCollection();
+            //buyBackCollection = new VendorCollection();
+            buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
         }
 
         private void CreateEventSubscriptions() {

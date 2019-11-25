@@ -21,6 +21,9 @@ namespace AnyRPG {
         private List<string> abilityList = new List<string>();
 
         [SerializeField]
+        private List<string> traitList = new List<string>();
+
+        [SerializeField]
         private List<string> armorClassList = new List<string>();
 
         [SerializeField]
@@ -47,6 +50,7 @@ namespace AnyRPG {
         public int MyAgilityPerLevel { get => agilityPerLevel; set => agilityPerLevel = value; }
         public List<string> MyWeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
         public List<PowerEnhancerNode> MyPowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
+        public List<string> MyTraitList { get => traitList; set => traitList = value; }
     }
 
 }

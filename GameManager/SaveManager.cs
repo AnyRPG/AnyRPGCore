@@ -157,6 +157,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.sceneNodeSaveData == null || overWrite) {
                 anyRPGSaveData.sceneNodeSaveData = new List<SceneNodeSaveData>();
             }
+            if (anyRPGSaveData.statusEffectSaveData == null || overWrite) {
+                anyRPGSaveData.statusEffectSaveData = new List<StatusEffectSaveData>();
+            }
             return anyRPGSaveData;
         }
 
@@ -321,6 +324,7 @@ namespace AnyRPG {
             SaveEquipmentData(anyRPGSaveData);
             SaveCurrencyData(anyRPGSaveData);
             SaveSceneNodeData(anyRPGSaveData);
+            SaveStatusEffectData(anyRPGSaveData);
 
             SaveWindowPositions();
 
@@ -430,6 +434,19 @@ namespace AnyRPG {
             }
         }
 
+        public void SaveStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveSceneNodeData()");
+
+            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.MyClassTrait == false && statusEffectNode.MyStatusEffect.MySourceCharacter == PlayerManager.MyInstance.MyCharacter) {
+                    StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
+                    statusEffectSaveData.MyName = statusEffectNode.MyStatusEffect.MyName;
+                    statusEffectSaveData.remainingSeconds = (int)statusEffectNode.MyStatusEffect.GetRemainingDuration();
+                    anyRPGSaveData.statusEffectSaveData.Add(statusEffectSaveData);
+                }
+            }
+        }
+
         public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveActionBarData()");
             foreach (ActionButton actionButton in UIManager.MyInstance.MyActionBarManager.GetActionButtons()) {
@@ -526,6 +543,12 @@ namespace AnyRPG {
         public void LoadSceneNodeData(AnyRPGSaveData anyRPGSaveData) {
             foreach (SceneNodeSaveData sceneNodeSaveData in anyRPGSaveData.sceneNodeSaveData) {
                 SystemSceneNodeManager.MyInstance.LoadSceneNode(sceneNodeSaveData);
+            }
+        }
+
+        public void LoadStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
+            foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
+                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
@@ -778,6 +801,11 @@ namespace AnyRPG {
 
 
             LoadCurrencyData(anyRPGSaveData);
+
+            LoadStatusEffectData(anyRPGSaveData);
+
+            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
+            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplyClassTraits(characterClass);
 
             // now that we have loaded the quest data, we can re-enable references
             SystemQuestManager.MyInstance.CreateEventSubscriptions();

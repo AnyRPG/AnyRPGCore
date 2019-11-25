@@ -205,7 +205,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter source, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyAbilityEffectName + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
             if (IsAlive == false && statusEffect.MyRequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
@@ -218,11 +218,12 @@ namespace AnyRPG {
             if (statusEffect == null) {
                 //Debug.Log("CharacterStats.ApplyAbilityEffect() abilityEffect is null");
             }
-            if (source == null) {
+            if (sourceCharacter == null) {
                 //Debug.Log("CharacterStats.ApplyAbilityEffect() source is null");
             }
             if (target == null) {
                 //Debug.Log("CharacterStats.ApplyAbilityEffect() target is null");
+                // this is fine in characterTraits
             }
             //Debug.Log("CharacterStats.ApplyStatusEffect(" + statusEffect.ToString() + ", " + source.name + ", " + target.name + ")");
             //Debug.Log("statuseffects count: " + statusEffects.Count);
@@ -243,14 +244,22 @@ namespace AnyRPG {
                 }
                 return null;
             } else {
-                // maybe resource id to see if it's an original uninstantiated one?
+                BaseCharacter targetCharacter = null;
+                if (statusEffect.MyClassTrait == true || abilityEffectInput.savedEffect == true) {
+                    targetCharacter = sourceCharacter;
+                } else {
+                    CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
+                    if (_characterUnit != null) {
+                        targetCharacter = _characterUnit.MyCharacter;
+                    }
+                }
 
                 // add to effect list since it was not in there
                 StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyName) as StatusEffect;
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
                 statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.MyName), newStatusEffectNode);
-                _statusEffect.Initialize(source, target.GetComponent<CharacterUnit>().MyCharacter, abilityEffectInput);
-                Coroutine newCoroutine = StartCoroutine(Tick(source, abilityEffectInput, target.GetComponent<CharacterUnit>().MyCharacter, _statusEffect));
+                _statusEffect.Initialize(sourceCharacter, targetCharacter, abilityEffectInput);
+                Coroutine newCoroutine = StartCoroutine(Tick(sourceCharacter, abilityEffectInput, targetCharacter, _statusEffect));
                 newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
                 HandleAddNotifications(newStatusEffectNode);
                 return newStatusEffectNode;
@@ -461,7 +470,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.Die()");
             if (isAlive) {
                 isAlive = false;
-                ClearStatusEffects();
+                ClearStatusEffects(false);
                 BeforeDie(this);
                 OnDie(this);
             }
@@ -485,16 +494,19 @@ namespace AnyRPG {
             ResetMana();
         }
 
-        protected virtual void ClearStatusEffects() {
+        protected virtual void ClearStatusEffects(bool clearAll = true) {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                statusEffectNodes.Add(statusEffectNode);
+                if (clearAll == true || statusEffectNode.MyStatusEffect.MyClassTrait == false) {
+                    statusEffectNodes.Add(statusEffectNode);
+                }
             }
             foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
                 statusEffectNode.CancelStatusEffect();
+                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.MyStatusEffect.MyName));
             }
-            statusEffects.Clear();
+            //statusEffects.Clear();
         }
 
         protected virtual void ClearInvalidStatusEffects() {
@@ -518,7 +530,11 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".StatusEffect.Tick() start");
             BaseCharacter characterSource = source;
             statusEffect.ApplyControlEffects(target);
-            statusEffect.SetRemainingDuration(statusEffect.MyDuration);
+            if (abilityEffectInput.overrideDuration != 0) {
+                statusEffect.SetRemainingDuration(abilityEffectInput.overrideDuration);
+            } else {
+                statusEffect.SetRemainingDuration(statusEffect.MyDuration);
+            }
             //Debug.Log("duration: " + duration);
             //nextTickTime = remainingDuration - tickRate;
             //DateTime nextTickTime2 = System.DateTime.Now + tickRate;
@@ -533,7 +549,7 @@ namespace AnyRPG {
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
-            while (statusEffect.GetRemainingDuration() >= 0 && target != null) {
+            while ((statusEffect.MyLimitedDuration == false || statusEffect.MyClassTrait == true || statusEffect.GetRemainingDuration() >= 0) && target != null) {
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
                 statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);
 

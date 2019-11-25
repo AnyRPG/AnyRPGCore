@@ -65,7 +65,7 @@ namespace AnyRPG {
         public void OrchestratorStart() {
             GetComponentReferences();
             CreateEventSubscriptions();
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.OrchestratorStart()");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.OrchestratorStart()");
             /*
             if (AutoAttackKnown() == false) {
                 Debug.Log(gameObject.name + ".CharacterAbilityManager.OrchestratorStart(): auto attack not known, learning auto attack");
@@ -205,8 +205,48 @@ namespace AnyRPG {
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            RemoveClassTraits(oldCharacterClass);
             UnLearnClassAbilities(oldCharacterClass);
             LearnClassAbilities(newCharacterClass);
+            ApplyClassTraits(newCharacterClass);
+        }
+
+        public void ApplyClassTraits(CharacterClass newCharacterClass) {
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
+            if (newCharacterClass != null && newCharacterClass.MyTraitList != null && newCharacterClass.MyTraitList.Count > 0) {
+                foreach (string classTrait in newCharacterClass.MyTraitList) {
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
+                    ApplyStatusEffect(classTrait);
+                }
+            }
+        }
+
+        public void ApplyStatusEffect(string statusEffectname, int overrideDuration = 0) {
+            if (baseCharacter.MyCharacterStats != null) {
+                AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
+                abilityEffectOutput.overrideDuration = overrideDuration;
+                // rememeber this method is meant for saved status effects
+                abilityEffectOutput.savedEffect = true;
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(statusEffectname);
+                if (_abilityEffect != null) {
+                    _abilityEffect.Cast(baseCharacter, null, null, abilityEffectOutput);
+                }
+            }
+
+        }
+
+        public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
+            ApplyStatusEffect(statusEffectSaveData.MyName, statusEffectSaveData.remainingSeconds);
+        }
+
+        public void RemoveClassTraits(CharacterClass oldCharacterClass) {
+            if (oldCharacterClass !=null && oldCharacterClass.MyTraitList != null && oldCharacterClass.MyTraitList.Count > 0) {
+                foreach (string classTrait in oldCharacterClass.MyTraitList) {
+                    if (baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait))) {
+                        baseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait)].CancelStatusEffect();
+                    }
+                }
+            }
         }
 
         public void LearnClassAbilities(CharacterClass characterClass) {

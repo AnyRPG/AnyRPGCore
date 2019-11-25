@@ -9,6 +9,18 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New StatusEffect",menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect {
 
+        // automatically cast on the character, active at all times, and do not appear on the status bar
+        [SerializeField]
+        protected bool classTrait;
+
+        // the required level to automatically cast this if it is a trait
+        [SerializeField]
+        private int requiredLevel = 1;
+
+        // by default all status effects are infinite duration
+        [SerializeField]
+        protected bool limitedDuration;
+
         // the number of seconds this will be active for without haste or slow
         [SerializeField]
         protected float duration;
@@ -73,6 +85,9 @@ namespace AnyRPG {
         public float MyDuration { get => duration; set => duration = value; }
         public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
         public List<AbilityEffect> MyWeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
+        public bool MyClassTrait { get => classTrait; set => classTrait = value; }
+        public bool MyLimitedDuration { get => limitedDuration; set => limitedDuration = value; }
+        public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
@@ -108,20 +123,23 @@ namespace AnyRPG {
                     if (currentStacks > 1) {
                         stackText = currentStacks.ToString();
                     }
-                    float printedDuration = (int)remainingDuration;
-                    if (printedDuration < 60 && printedDuration >= 0) {
-                        // less than 1 minute
-                        statusText = ((int)printedDuration).ToString() + "s";
-                    } else if (printedDuration < 3600) {
-                        //less than 1 hour
-                        statusText = ((int)(printedDuration / 60)).ToString() + "m";
-                    } else if (printedDuration > 3600f) {
-                        //greater than 1 hour
-                        statusText = ((int)(printedDuration / 3600)).ToString() + "h";
+                    if (limitedDuration == true && classTrait == false) {
+                        //Debug.Log(GetInstanceID() + MyName + ".StatusEffect.UpdateStatusNode(): limted");
+                        float printedDuration = (int)remainingDuration;
+                        if (printedDuration < 60 && printedDuration >= 0) {
+                            // less than 1 minute
+                            statusText = ((int)printedDuration).ToString() + "s";
+                        } else if (printedDuration < 3600) {
+                            //less than 1 hour
+                            statusText = ((int)(printedDuration / 60)).ToString() + "m";
+                        } else if (printedDuration > 3600f) {
+                            //greater than 1 hour
+                            statusText = ((int)(printedDuration / 3600)).ToString() + "h";
+                        }
                     }
 
                     // set updated values
-                    if (statusEffectNodeScript.MyUseTimerText == true) {
+                    if (statusEffectNodeScript.MyUseTimerText == true && statusText != string.Empty) {
                         if (statusEffectNodeScript.MyTimer != null) {
                             if (statusEffectNodeScript.MyTimer.isActiveAndEnabled == false) {
                                 statusEffectNodeScript.MyTimer.gameObject.SetActive(true);
@@ -130,7 +148,7 @@ namespace AnyRPG {
                         }
                     } else {
                         if (statusEffectNodeScript.MyTimer != null) {
-                            statusEffectNodeScript.MyTimer.gameObject.SetActive(false); ;
+                            statusEffectNodeScript.MyTimer.gameObject.SetActive(false);
                         }
                     }
                     if (statusEffectNodeScript.MyUseStackText == true) {
@@ -155,13 +173,29 @@ namespace AnyRPG {
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
+        public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
+            if (classTrait == true && sourceCharacter.MyCharacterStats.MyLevel >= requiredLevel) {
+                return true;
+            }
+            return base.CanUseOn(target, sourceCharacter);
+        }
+
+
         public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
-            if (!CanUseOn(target, source)) {
+            if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
             }
             GameObject returnObject = null;
-            StatusEffectNode _statusEffectNode = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetResource(MyName) as StatusEffect, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+            CharacterStats targetCharacterStats = null;
+            CharacterUnit targetCharacterUnit = null;
+            if (classTrait || abilityEffectInput.savedEffect) {
+                targetCharacterStats = source.MyCharacterStats;
+            } else {
+                targetCharacterStats = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats;
+                targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            }
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetResource(MyName) as StatusEffect, source, targetCharacterUnit, abilityEffectInput);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
@@ -292,33 +326,36 @@ namespace AnyRPG {
             }
             */
             descriptionFinal = string.Join("\n", effectStrings);
-            string durationLabel = "Duration: ";
+            string durationLabel = string.Empty;
+            string statusText = string.Empty;
             float printedDuration;
 
-            if (remainingDuration != 0f) {
-                durationLabel = "Remaining Duration: ";
-                printedDuration = (int)remainingDuration;
-            } else {
-                printedDuration = (int)duration;
-            }
-            string statusText = string.Empty;
-            if (printedDuration < 60 && printedDuration >= 0) {
-                // less than 1 minute
-                statusText = ((int)printedDuration).ToString() + " second";
-                if ((int)printedDuration != 1) {
-                    statusText += "s";
+            if (limitedDuration == true && classTrait == false) {
+                if (remainingDuration != 0f) {
+                    durationLabel = "Remaining Duration: ";
+                    printedDuration = (int)remainingDuration;
+                } else {
+                    durationLabel = "Duration: ";
+                    printedDuration = (int)duration;
                 }
-            } else if (printedDuration < 3600) {
-                //less than 1 hour
-                statusText = ((int)(printedDuration / 60)).ToString() + " minute";
-                if (((int)printedDuration / 60) != 1) {
-                    statusText += "s";
-                }
-            } else if (printedDuration > 3600f) {
-                //greater than 1 hour
-                statusText = ((int)(printedDuration / 3600)).ToString() + " hour";
-                if (((int)printedDuration / 3600) != 1) {
-                    statusText += "s";
+                if (printedDuration < 60 && printedDuration >= 0) {
+                    // less than 1 minute
+                    statusText = ((int)printedDuration).ToString() + " second";
+                    if ((int)printedDuration != 1) {
+                        statusText += "s";
+                    }
+                } else if (printedDuration < 3600) {
+                    //less than 1 hour
+                    statusText = ((int)(printedDuration / 60)).ToString() + " minute";
+                    if (((int)printedDuration / 60) != 1) {
+                        statusText += "s";
+                    }
+                } else if (printedDuration > 3600f) {
+                    //greater than 1 hour
+                    statusText = ((int)(printedDuration / 3600)).ToString() + " hour";
+                    if (((int)printedDuration / 3600) != 1) {
+                        statusText += "s";
+                    }
                 }
             }
             return base.GetSummary() + string.Format("\n{0}\n{1}{2}", descriptionFinal, durationLabel, statusText);

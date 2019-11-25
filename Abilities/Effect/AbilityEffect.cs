@@ -58,7 +58,7 @@ namespace AnyRPG {
         protected List<AbilityEffect> hitAbilityEffectList = new List<AbilityEffect>();
 
         // the character that cast the spell
-        protected BaseCharacter source;
+        protected BaseCharacter sourceCharacter;
 
         // pass this onto the next effect
         //protected AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
@@ -79,10 +79,11 @@ namespace AnyRPG {
         public bool MyCanCastOnEnemy { get => canCastOnEnemy; set => canCastOnEnemy = value; }
         public bool MyCanCastOnSelf { get => canCastOnSelf; set => canCastOnSelf = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
+        public BaseCharacter MySourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
 
         public virtual void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
-            this.source = source;
+            this.sourceCharacter = source;
             //this.target = target;
             /*
             if (abilityEffectPrefab != null) {

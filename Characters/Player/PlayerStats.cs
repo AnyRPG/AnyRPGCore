@@ -86,9 +86,15 @@ namespace AnyRPG {
                 //Debug.Log("Playerstats.ApplyStatusEffect(): statusEffect is null!");
             }
             StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, source, target, abilityEffectInput);
-            if (_statusEffectNode != null) {
-                UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(_statusEffectNode, target);
-                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, statusEffect, true);
+            if (statusEffect.MyClassTrait == false) {
+                if (_statusEffectNode != null) {
+                    UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(_statusEffectNode, target);
+                    if (abilityEffectInput.savedEffect == false) {
+                        if (target != null) {
+                            CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, statusEffect, true);
+                        }
+                    }
+                }
             }
             return _statusEffectNode;
         }

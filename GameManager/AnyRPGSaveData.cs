@@ -38,6 +38,7 @@ namespace AnyRPG {
         public List<CurrencySaveData> currencySaveData;
         public List<DialogSaveData> dialogSaveData;
         public List<SceneNodeSaveData> sceneNodeSaveData;
+        public List<StatusEffectSaveData> statusEffectSaveData;
     }
 
     [Serializable]
@@ -53,6 +54,13 @@ namespace AnyRPG {
         public List<QuestObjectiveSaveData> collectObjectives;
         public List<QuestObjectiveSaveData> tradeSkillObjectives;
         public List<QuestObjectiveSaveData> abilityObjectives;
+    }
+
+    [Serializable]
+    public struct StatusEffectSaveData {
+
+        public string MyName;
+        public int remainingSeconds;
     }
 
     [Serializable]

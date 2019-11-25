@@ -23,7 +23,15 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject abilityIconsArea;
 
+        [SerializeField]
+        private GameObject traitsArea;
+
+        [SerializeField]
+        private GameObject traitIconsArea;
+
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
+
+        private List<RewardButton> traitRewardIcons = new List<RewardButton>();
 
         private string characterClassName;
 
@@ -33,7 +41,35 @@ namespace AnyRPG {
             characterClassButton.AddCharacterClass(characterClassName);
             PopupWindowManager.MyInstance.classChangeWindow.SetWindowTitle(characterClassName);
             ShowAbilityRewards();
+            ShowTraitRewards();
             PopupWindowManager.MyInstance.classChangeWindow.OpenWindow();
+        }
+
+        public void ShowTraitRewards() {
+            //Debug.Log("ClassChangePanelController.ShowTraitRewards()");
+
+            ClearTraitRewardIcons();
+            // show trait rewards
+            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+            if (characterClass.MyTraitList.Count > 0) {
+                traitsArea.gameObject.SetActive(true);
+            } else {
+                traitsArea.gameObject.SetActive(false);
+            }
+            for (int i = 0; i < characterClass.MyTraitList.Count; i++) {
+                if (characterClass.MyTraitList[i] != null && characterClass.MyTraitList[i] != string.Empty) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]);
+                    if (abilityEffect != null) {
+                        RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
+                        rewardIcon.SetDescribable(abilityEffect);
+                        traitRewardIcons.Add(rewardIcon);
+                        if ((SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]) as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                            rewardIcon.MyStackSizeText.text = "Level\n" + (SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]) as StatusEffect).MyRequiredLevel;
+                            rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        }
+                    }
+                }
+            }
         }
 
         public void ShowAbilityRewards() {
@@ -61,6 +97,15 @@ namespace AnyRPG {
                     }
                 }
             }
+        }
+
+        private void ClearTraitRewardIcons() {
+            //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
+
+            foreach (RewardButton rewardIcon in traitRewardIcons) {
+                Destroy(rewardIcon.gameObject);
+            }
+            traitRewardIcons.Clear();
         }
 
         private void ClearRewardIcons() {
