@@ -56,9 +56,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public int MyBaseMeleeDamage { get => (MyStrength / 2); }
-        public int MyMeleeDamage { get => MyBaseMeleeDamage + meleeDamageModifiers.GetValue(); }
-        public int MySpellPower { get => MyIntellect / 2; }
+        public int MyPhysicalDamage { get => meleeDamageModifiers.GetValue(); }
         public int MyArmor { get => armorModifiers.GetValue(); }
         public int MyBaseStamina { get => stamina; }
         //public int MyStamina { get => (int)((stamina + primaryStatModifiers[StatBuffType.Stamina].GetValue()) * primaryStatModifiers [StatBuffType.Stamina].GetMultiplyValue()); }
@@ -181,7 +179,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public virtual float GetDamageModifiers() {
+        public virtual float GetIncomingDamageModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {

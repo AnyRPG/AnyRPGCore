@@ -20,19 +20,19 @@ namespace AnyRPG {
         private string holdableObjectName;
 
         [SerializeField]
-        private bool useArmorModifier;
+        protected bool useArmorModifier;
 
         [SerializeField]
-        private bool useManualArmor;
+        protected bool useManualArmor;
 
         [SerializeField]
         private int armorModifier;
 
         [SerializeField]
-        private bool useDamageModifier;
+        protected bool useDamageModifier;
 
         [SerializeField]
-        private bool useManualDamage;
+        protected bool useManualDamage;
 
         [SerializeField]
         private int damageModifier;
@@ -41,7 +41,7 @@ namespace AnyRPG {
         private bool useIntellectModifier;
 
         [SerializeField]
-        private bool useManualIntellect;
+        protected bool useManualIntellect;
 
         [SerializeField]
         private int intellectModifier;
@@ -50,7 +50,7 @@ namespace AnyRPG {
         private bool useStaminaModifier;
 
         [SerializeField]
-        private bool useManualStamina;
+        protected bool useManualStamina;
 
         [SerializeField]
         private int staminaModifier;
@@ -59,7 +59,7 @@ namespace AnyRPG {
         private bool useStrengthModifier;
 
         [SerializeField]
-        private bool useManualStrength;
+        protected bool useManualStrength;
 
         [SerializeField]
         private int strengthModifier;
@@ -68,7 +68,7 @@ namespace AnyRPG {
         private bool useAgilityModifier;
 
         [SerializeField]
-        private bool useManualAgility;
+        protected bool useManualAgility;
 
         [SerializeField]
         private int agilityModifier;
@@ -228,9 +228,6 @@ namespace AnyRPG {
             if (useAgilityModifier) {
                 abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
             }
-
-            // restrictions
-
 
             // abilities
 

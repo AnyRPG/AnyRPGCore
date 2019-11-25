@@ -68,6 +68,14 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
+        public float GetWeaponDamage() {
+            float returnValue = 0f;
+            if (MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
+                returnValue = (MyCurrentEquipment[EquipmentSlot.MainHand] as Weapon).MyDamagePerSecond();
+            }
+            return returnValue;
+        }
+
 
         public virtual void LoadDefaultEquipment() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");

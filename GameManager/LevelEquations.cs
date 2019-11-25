@@ -114,6 +114,22 @@ namespace AnyRPG {
             return 100;
         }
 
+        /*
+        public static float GetDamagePerSecondForLevel(int level) {
+            int damagePerSecondPerLevel = 0;
+
+            if (characterClassName != null && characterClassName != string.Empty) {
+                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                if (characterClass != null) {
+                    extraStaminaPerLevel = characterClass.MyStaminaPerLevel;
+                }
+            }
+
+
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + (float)extraStaminaPerLevel;
+        }
+        */
+
         public static float GetStaminaForLevel(int level, string characterClassName) {
             int extraStaminaPerLevel = 0;
 
@@ -137,11 +153,12 @@ namespace AnyRPG {
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + (float)extraIntellectPerLevel;
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyIntellectStatBudgetPerLevel + (float)extraIntellectPerLevel;
 
         }
 
         public static float GetStrengthForLevel(int level, string characterClassName) {
+            Debug.Log("LevelEquations.GetStrengthForLevel(" + level + ", " + (characterClassName == null ? "null" : characterClassName) + ")");
             int extraStrengthPerLevel = 0;
             if (characterClassName != null && characterClassName != string.Empty) {
                 CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
@@ -150,7 +167,7 @@ namespace AnyRPG {
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + (float)extraStrengthPerLevel;
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStrengthStatBudgetPerLevel + (float)extraStrengthPerLevel;
 
         }
 
@@ -163,7 +180,7 @@ namespace AnyRPG {
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyStaminaStatBudgetPerLevel + (float)extraAgilityPerLevel;
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + SystemConfigurationManager.MyInstance.MyAgilityStatBudgetPerLevel + (float)extraAgilityPerLevel;
         }
 
         public static float GetCritChanceForCharacter(BaseCharacter sourceCharacter) {
@@ -180,6 +197,53 @@ namespace AnyRPG {
             }
             return critChanceModifier;
         }
+
+        public static float GetSpellPowerForCharacter(BaseCharacter sourceCharacter) {
+            float amountModifier = 0f;
+            if (sourceCharacter.MyCharacterClassName != null && sourceCharacter.MyCharacterClassName != string.Empty) {
+                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(sourceCharacter.MyCharacterClassName);
+                if (characterClass != null) {
+                    foreach (PowerEnhancerNode powerEnhancerNode in characterClass.MyPowerEnhancerStats) {
+
+                        // base damage modifer
+                        if (powerEnhancerNode.MyPowerToSpellDamage == true) {
+                            float totalDamageModifier = 0f;
+                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.MyCharacterStats.MyStamina;
+                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.MyCharacterStats.MyStrength;
+                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.MyCharacterStats.MyIntellect;
+                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.MyCharacterStats.MyAgility;
+                            amountModifier += totalDamageModifier;
+                        }
+                    }
+                }
+            }
+            return amountModifier;
+        }
+
+        public static float GetPhysicalPowerForCharacter(BaseCharacter sourceCharacter) {
+
+            float amountModifier = 0f;
+            if (sourceCharacter.MyCharacterClassName != null && sourceCharacter.MyCharacterClassName != string.Empty) {
+                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(sourceCharacter.MyCharacterClassName);
+                if (characterClass != null) {
+                    foreach (PowerEnhancerNode powerEnhancerNode in characterClass.MyPowerEnhancerStats) {
+
+                        // base damage modifer
+                        if (powerEnhancerNode.MyPowerToPhysicalDamage == true) {
+                            float totalDamageModifier = 0f;
+                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.MyCharacterStats.MyStamina;
+                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.MyCharacterStats.MyStrength;
+                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.MyCharacterStats.MyIntellect;
+                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.MyCharacterStats.MyAgility;
+                            amountModifier += totalDamageModifier;
+                        }
+                    }
+                }
+            }
+            return amountModifier;
+        }
+
+
 
     }
 

@@ -773,7 +773,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(anyRPGSaveData.playerFaction);
-            PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
+            //PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
 
             // moved to clearshareddata to have central clearing method
             //ClearSystemManagedCharacterData();

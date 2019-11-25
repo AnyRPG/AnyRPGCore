@@ -32,6 +32,8 @@ namespace AnyRPG {
 
         protected bool initialized = false;
 
+        private float lastAnimationLength;
+
         // in combat animations
         private float baseWalkAnimationSpeed = 1f;
         private float baseRunAnimationSpeed = 3.4f;
@@ -78,6 +80,7 @@ namespace AnyRPG {
             get => animatorController;
             set => animatorController = value;
         }
+        public float MyLastAnimationLength { get => lastAnimationLength; set => lastAnimationLength = value; }
 
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
@@ -717,6 +720,10 @@ namespace AnyRPG {
                 overrideController[SystemConfigurationManager.MyInstance.MyDefaultAttackClip] = animationClip;
             }
             float animationLength = animationClip.length;
+
+            // save animation length for weapon damage normalization
+            lastAnimationLength = animationLength;
+
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
             currentAbility = baseAbility;
             // wait for the animation to play before allowing the character to attack again

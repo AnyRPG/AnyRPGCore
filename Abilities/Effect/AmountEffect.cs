@@ -21,45 +21,43 @@ namespace AnyRPG {
         public DamageType MyDamageType { get => damageType; set => damageType = value; }
 
 
-        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(int abilityBaseAmount, BaseCharacter source, CharacterUnit target) {
-            float amountModifer = 0f;
+        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(int abilityBaseAmount, BaseCharacter sourceCharacter, CharacterUnit target) {
+            float amountModifier = 0f;
             //float spellPowerModifier = 0f;
             //float physicalDamageModifier = 0f;
             float critChanceModifier = 0f;
             float critDamageModifier = 1f;
-            if (source.MyCharacterClassName != null && source.MyCharacterClassName != string.Empty) {
-                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(source.MyCharacterClassName);
+            if (sourceCharacter.MyCharacterClassName != null && sourceCharacter.MyCharacterClassName != string.Empty) {
+                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(sourceCharacter.MyCharacterClassName);
                 if (characterClass != null) {
-                    foreach (PowerEnhancerNode powerEnhancerNode in characterClass.MyPowerEnhancerStats) {
 
-                        // base damage modifer
-                        float totalDamageModifier = 0f;
-                        totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * source.MyCharacterStats.MyStamina;
-                        totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * source.MyCharacterStats.MyStrength;
-                        totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * source.MyCharacterStats.MyIntellect;
-                        totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * source.MyCharacterStats.MyAgility;
-                        if (powerEnhancerNode.MyPowerToPhysicalDamage == true && damageType == DamageType.physical) {
-                            amountModifer += totalDamageModifier;
-                        }
-                        if (powerEnhancerNode.MyPowerToSpellDamage == true && damageType == DamageType.physical) {
-                            amountModifer += totalDamageModifier;
-                        }
-
-                        // critical hit modifer
-                        // porbably supposed to be 0.2, not 0.5 -- or not - test it
-                        critChanceModifier += powerEnhancerNode.MyStaminaToCritPerLevel * (source.MyCharacterStats.MyStamina / source.MyCharacterStats.MyLevel);
-                        critChanceModifier += powerEnhancerNode.MyIntellectToCritPerLevel * (source.MyCharacterStats.MyIntellect / source.MyCharacterStats.MyLevel);
-                        critChanceModifier += powerEnhancerNode.MyStrengthToCritPerLevel * (source.MyCharacterStats.MyStrength / source.MyCharacterStats.MyLevel);
-                        critChanceModifier += powerEnhancerNode.MyAgilityToCritPerLevel * (source.MyCharacterStats.MyAgility / source.MyCharacterStats.MyLevel);
+                    // stats
+                    if (damageType == DamageType.physical) {
+                        amountModifier = LevelEquations.GetPhysicalPowerForCharacter(sourceCharacter);
+                    } else if (damageType == DamageType.ability) {
+                        amountModifier = LevelEquations.GetSpellPowerForCharacter(sourceCharacter);
                     }
+
+                    // critical hit modifer
+                    critChanceModifier = LevelEquations.GetCritChanceForCharacter(sourceCharacter);
+
                     int randomInt = Random.Range(0, 100);
                     if (randomInt <= critChanceModifier) {
                         critDamageModifier = 2f;
                     }
                 }
             }
+            if (damageType == DamageType.physical) {
+                // + damage modifiers
+                amountModifier += sourceCharacter.MyCharacterStats.MyPhysicalDamage;
 
-            float amountModifier = source.MyCharacterStats.MySpellPower;
+                // weapon damage
+                if (sourceCharacter.MyCharacterEquipmentManager != null) {
+                    amountModifier += sourceCharacter.MyCharacterEquipmentManager.GetWeaponDamage();
+                }
+                amountModifier *= sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.MyLastAnimationLength;
+            }
+
             return new KeyValuePair<float, CombatMagnitude>((abilityBaseAmount == 0 ? abilityBaseAmount : (abilityBaseAmount + amountModifier) * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
     }

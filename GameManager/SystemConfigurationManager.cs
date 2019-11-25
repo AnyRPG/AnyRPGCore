@@ -223,6 +223,9 @@ namespace AnyRPG {
         private int maxLevel = 50;
 
         [SerializeField]
+        private float weaponDPSBudgetPerLevel = 2.5f;
+
+        [SerializeField]
         private float statBudgetPerLevel = 0f;
 
         [SerializeField]
@@ -496,6 +499,7 @@ namespace AnyRPG {
         public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
         public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
         public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

@@ -371,7 +371,7 @@ namespace AnyRPG {
 
         private void TakeDamageCommon(int damage, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
 
-            damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetDamageModifiers());
+            damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetIncomingDamageModifiers());
 
             ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
