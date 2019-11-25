@@ -212,10 +212,10 @@ namespace AnyRPG {
         }
 
         public void ApplyClassTraits(CharacterClass newCharacterClass) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
             if (newCharacterClass != null && newCharacterClass.MyTraitList != null && newCharacterClass.MyTraitList.Count > 0) {
                 foreach (string classTrait in newCharacterClass.MyTraitList) {
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
                     ApplyStatusEffect(classTrait);
                 }
             }
@@ -378,21 +378,21 @@ namespace AnyRPG {
         }
 
         public virtual bool LearnAbility(string abilityName) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
             string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             if (baseAbility == null) {
-                Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
             }
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
                 abilityList[keyName] = baseAbility;
                 return true;
             } else {
                 if (HasAbility(abilityName)) {
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
                 }
                 if (!(baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
                 }
             }
             return false;

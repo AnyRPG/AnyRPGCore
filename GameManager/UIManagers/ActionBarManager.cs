@@ -89,7 +89,7 @@ namespace AnyRPG {
         }
 
         public bool AddNewAbility(string newAbility) {
-            Debug.Log("ActionBarManager.AddNewAbility()");
+            //Debug.Log("ActionBarManager.AddNewAbility()");
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 if (actionBarController.AddNewAbility(newAbility)) {

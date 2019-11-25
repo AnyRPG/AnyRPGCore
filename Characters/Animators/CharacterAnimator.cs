@@ -726,8 +726,17 @@ namespace AnyRPG {
 
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
             currentAbility = baseAbility;
+
+
+            float speedNormalizedAnimationLength = 1f;
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
+                speedNormalizedAnimationLength = characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers() * animationLength;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
+            }
+            animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers());
+
             // wait for the animation to play before allowing the character to attack again
-            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, (baseAbility as AnimatedAbility).MyIsAutoAttack, !(baseAbility as AnimatedAbility).MyIsAutoAttack, false));
+            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).MyIsAutoAttack, !(baseAbility as AnimatedAbility).MyIsAutoAttack, false));
 
             // SUPPRESS DEFAULT SOUND EFFECT FOR ANIMATED ABILITIES, WHICH ARE NOW RESPONSIBLE FOR THEIR OWN SOUND EFFECTS
             characterUnit.MyCharacter.MyCharacterCombat.MyOverrideHitSoundEffect = null;
@@ -774,12 +783,14 @@ namespace AnyRPG {
             float remainingTime = animationLength;
             //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
             while (remainingTime > 0f && (characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting)) {
-                //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): inside loop: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
+                Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): remainingTime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
+                //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 remainingTime -= Time.deltaTime;
                 yield return null;
             }
-            //Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
+            Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
             attackCoroutine = null;
+            animator.SetFloat("AnimationSpeed", 1);
             if (clearAutoAttack) {
                 ClearAutoAttack();
             }
@@ -825,10 +836,12 @@ namespace AnyRPG {
             }
             ClearCasting();
             if (attackCoroutine != null) {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility(): STOPPING OUTSTANDING CAST OR REGULAR ATTACK FOR CAST");
+                Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility(): STOPPING OUTSTANDING CAST OR REGULAR ATTACK FOR CAST");
                 StopCoroutine(attackCoroutine);
                 attackCoroutine = null;
             }
+            //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
+            animator.SetFloat("AnimationSpeed", 1);
         }
 
         private void HandleDeath(CharacterStats characterStats) {
@@ -839,6 +852,7 @@ namespace AnyRPG {
             // add these to prevent characters from dying floating or upright
             HandleUnLevitated();
             HandleUnStunned();
+            animator.SetFloat("AnimationSpeed", 1);
 
             SetAttacking(false);
             SetCasting(false);
@@ -909,8 +923,18 @@ namespace AnyRPG {
             }
             animator.SetBool("Attacking", varValue);
             if (varValue == true) {
+                float animationSpeed = 1f;
+                if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
+                    animationSpeed = 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers();
+                }
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to: " + animationSpeed);
+                //animator.SetFloat("AnimationSpeed", animationSpeed);
                 SetTrigger("AttackTrigger");
                 characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
+            } else {
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to 1 after attack");
+
+                //animator.SetFloat("AnimationSpeed", 1f);
             }
         }
 
@@ -1045,6 +1069,7 @@ namespace AnyRPG {
                 //animationSpeed = (1 / baseWalkAnimationSpeed);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
             }
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
 
             animator.SetFloat("AnimationSpeed", animationSpeed);
         }
@@ -1066,6 +1091,7 @@ namespace AnyRPG {
                 //animationSpeed = (1 / baseWalkAnimationSpeed);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
             }
+            Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
 
             animator.SetFloat("AnimationSpeed", animationSpeed);
             if (absValue != 0) {

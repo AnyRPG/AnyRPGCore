@@ -51,13 +51,13 @@ namespace AnyRPG {
         }
 
         public override bool LearnAbility(string abilityName) {
-            Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
+            //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
             bool returnValue = base.LearnAbility(abilityName);
             if (returnValue) {
-                Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue is true");
+                //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue is true");
                 SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
             } else {
-                Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
+                //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
             return returnValue;
         }

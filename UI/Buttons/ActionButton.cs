@@ -303,7 +303,7 @@ namespace AnyRPG {
                 //TESTING MOVING TO BEFORE BASEABILTY AND WEAPONAFFINITY CHECKS
                 // auto-attack buttons are special and display the current weapon of the character
                 if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
-                    Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                    //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
                         if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
                             MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;

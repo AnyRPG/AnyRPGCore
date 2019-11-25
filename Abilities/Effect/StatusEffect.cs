@@ -43,6 +43,9 @@ namespace AnyRPG {
         protected float incomingDamageMultiplier = 1f;
 
         [SerializeField]
+        protected float speedMultiplier = 1f;
+
+        [SerializeField]
         protected List<StatBuffType> statBuffTypes = new List<StatBuffType>();
 
         [SerializeField]
@@ -88,6 +91,7 @@ namespace AnyRPG {
         public bool MyClassTrait { get => classTrait; set => classTrait = value; }
         public bool MyLimitedDuration { get => limitedDuration; set => limitedDuration = value; }
         public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
+        public float MySpeedMultiplier { get => speedMultiplier; set => speedMultiplier = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);

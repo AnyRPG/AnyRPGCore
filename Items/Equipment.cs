@@ -25,8 +25,12 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useManualArmor;
 
+        // should the manual value be per level instead of a total
         [SerializeField]
-        private int armorModifier;
+        protected bool manualValueIsScale;
+
+        [SerializeField]
+        protected float armorModifier;
 
         [SerializeField]
         protected bool useDamageModifier;
@@ -95,19 +99,23 @@ namespace AnyRPG {
             }
             set => damageModifier = value;
         }
-        public virtual int MyArmorModifier {
+        public virtual float MyArmorModifier {
             get {
                 if (!useArmorModifier) {
                     return 0;
                 }
                 if (useManualArmor) {
+                    if (manualValueIsScale) {
+                        return (int)Mathf.Ceil(Mathf.Clamp(
+                            (float)MyItemLevel * (armorModifier * GetItemQualityNumber()),
+                            0f,
+                            Mathf.Infinity
+                            ));
+
+                    }
                     return armorModifier;
                 }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
-                    0f,
-                    Mathf.Infinity
-                    ));
+                return 0;
             }
             set => armorModifier = value;
         }
@@ -171,6 +179,7 @@ namespace AnyRPG {
         public bool MyUseManualStamina { get => useManualStamina; set => useManualStamina = value; }
         public bool MyUseManualStrength { get => useManualStrength; set => useManualStrength = value; }
         public bool MyUseManualAgility { get => useManualAgility; set => useManualAgility = value; }
+        protected bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
 
         public override void Start() {
             base.Start();

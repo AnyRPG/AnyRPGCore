@@ -8,6 +8,9 @@ namespace AnyRPG {
     public class Weapon : Equipment {
 
         [SerializeField]
+        protected bool useDamagePerSecond = true;
+
+        [SerializeField]
         protected bool useManualDamagePerSecond;
 
         [SerializeField]
@@ -53,6 +56,7 @@ namespace AnyRPG {
             }
             set => base.MyDamageModifier = value;
         }
+        /*
         public override int MyArmorModifier {
             get {
                 if (!useManualArmor) {
@@ -64,11 +68,16 @@ namespace AnyRPG {
             }
             set => base.MyArmorModifier = value;
         }
+        */
 
         public string MyWeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool MyUseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
+        protected bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
 
         public float MyDamagePerSecond () {
+            if (!MyUseDamagePerSecond) {
+                return 0f;
+            }
             if (useManualDamagePerSecond) {
                 return damagePerSecond;
             }
@@ -123,7 +132,9 @@ namespace AnyRPG {
 
             List<string> abilitiesList = new List<string>();
 
-            abilitiesList.Add(string.Format("Damage Per Second: {0}", MyDamagePerSecond()));
+            if (useDamagePerSecond) {
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", MyDamagePerSecond()));
+            }
             if (onHitAbility != null) {
                 abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitAbility.MyName));
             }

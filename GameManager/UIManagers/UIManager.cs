@@ -293,7 +293,7 @@ namespace AnyRPG {
         }
 
         public void HandleBeforePlayerConnectionSpawn() {
-            Debug.Log("UIManager.HandleBeforePlayerConnectionSpawn()");
+            //Debug.Log("UIManager.HandleBeforePlayerConnectionSpawn()");
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
             SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
@@ -337,18 +337,18 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChanged(string newAbility) {
-            Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility) + ")");
+            //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {
                 if (SystemAbilityManager.MyInstance.GetResource(newAbility).MyAutoAddToBars == true) {
                     if (!actionBarManager.AddNewAbility(newAbility)) {
-                        Debug.Log("UIManager.HandleAbilityListChanged(): All Ability Bars were full.  unable to add " + newAbility);
+                        //Debug.Log("UIManager.HandleAbilityListChanged(): All Ability Bars were full.  unable to add " + newAbility);
                     }
                 } else {
-                    Debug.Log("UIManager.HandleAbilityListChanged(): " + newAbility + ".autoaddtobars = false");
+                    //Debug.Log("UIManager.HandleAbilityListChanged(): " + newAbility + ".autoaddtobars = false");
                 }
             } else {
-                Debug.Log("UIManager.HandleAbilityListChanged(): " + newAbility + ". actionbarmanager is null");
+                //Debug.Log("UIManager.HandleAbilityListChanged(): " + newAbility + ". actionbarmanager is null");
             }
         }
 

@@ -7,12 +7,12 @@ namespace AnyRPG {
     public class SystemArmorClassManager : SystemResourceManager {
 
         #region Singleton
-        private static ArmorClass instance;
+        private static SystemArmorClassManager instance;
 
-        public static ArmorClass MyInstance {
+        public static SystemArmorClassManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<ArmorClass>();
+                    instance = FindObjectOfType<SystemArmorClassManager>();
                 }
 
                 return instance;

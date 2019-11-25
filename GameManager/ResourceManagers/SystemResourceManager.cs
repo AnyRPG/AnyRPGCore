@@ -104,7 +104,7 @@ namespace AnyRPG {
 
         public static bool RequestIsEmpty(string resourceName) {
             if (resourceName == null || resourceName == string.Empty) {
-                Debug.Log("SystemResourceManager.RequestIsEmpty(" + resourceName + "): EMPTY RESOURCE REQUESTED.  FIX THIS! DO NOT COMMENT THIS LINE");
+                //Debug.Log("SystemResourceManager.RequestIsEmpty(" + resourceName + "): EMPTY RESOURCE REQUESTED.  FIX THIS! DO NOT COMMENT THIS LINE");
                 return true;
             }
             return false;

@@ -158,7 +158,7 @@ namespace AnyRPG {
         }
 
         public static float GetStrengthForLevel(int level, string characterClassName) {
-            Debug.Log("LevelEquations.GetStrengthForLevel(" + level + ", " + (characterClassName == null ? "null" : characterClassName) + ")");
+            //Debug.Log("LevelEquations.GetStrengthForLevel(" + level + ", " + (characterClassName == null ? "null" : characterClassName) + ")");
             int extraStrengthPerLevel = 0;
             if (characterClassName != null && characterClassName != string.Empty) {
                 CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
@@ -243,6 +243,16 @@ namespace AnyRPG {
             return amountModifier;
         }
 
+        public static float GetArmorForClass(string armorClassName) {
+            float returnValue = 0f;
+            if (armorClassName != null && armorClassName != string.Empty) {
+                ArmorClass armorClass = SystemArmorClassManager.MyInstance.GetResource(armorClassName);
+                if (armorClass != null) {
+                    return armorClass.MyArmorPerLevel;
+                }
+            }
+            return returnValue;
+        }
 
 
     }

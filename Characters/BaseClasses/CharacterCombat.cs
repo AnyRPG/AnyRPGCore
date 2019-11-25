@@ -386,7 +386,7 @@ namespace AnyRPG {
                 // replace with hitbox check
                 bool canPerformAbility = true;
                 if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {
-                    damage -= baseCharacter.MyCharacterStats.MyArmor;
+                    damage -= (int)baseCharacter.MyCharacterStats.MyArmor;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.MyUseMeleeRange) {

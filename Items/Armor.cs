@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,20 @@ namespace AnyRPG {
         private string armorClassName;
 
         public string MyArmorClassName { get => armorClassName; set => armorClassName = value; }
+
+        public override float MyArmorModifier {
+            get {
+                float returnValue = base.MyArmorModifier;
+                if (useArmorModifier && !useManualArmor) {
+                    return (int)Mathf.Ceil(Mathf.Clamp(
+                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClassName) * GetItemQualityNumber()) * (1f / ((float)(Enum.GetNames(typeof(EquipmentSlot)).Length - 2))),
+                        0f,
+                        Mathf.Infinity
+                        ));
+                }
+                return returnValue;
+            }
+        }
 
         public override string GetSummary() {
 

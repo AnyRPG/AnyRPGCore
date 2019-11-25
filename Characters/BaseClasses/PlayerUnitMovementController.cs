@@ -191,12 +191,12 @@ namespace AnyRPG {
                     isMoving = true;
                     animatedUnit.MyCharacterAnimator.SetMoving(true);
                     animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
-                } else {
+                }/* else {
                     isMoving = false;
                     animatedUnit.MyCharacterAnimator.SetMoving(false);
                     animatedUnit.MyCharacterAnimator.SetStrafing(false);
                     animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
-                }
+                }*/
                 animatedUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
             }
 
@@ -230,6 +230,18 @@ namespace AnyRPG {
             // reset velocity from any falling movement that was happening
             currentMoveVelocity = Vector3.zero;
             EnterGroundStateCommon();
+
+            CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
+            bool rotateModel = false;
+            if (tmpUnit == null) {
+                rotateModel = true;
+            }
+
+            isMoving = false;
+            animatedUnit.MyCharacterAnimator.SetMoving(false);
+            animatedUnit.MyCharacterAnimator.SetStrafing(false);
+            animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
+
         }
 
         //Run every frame we are in the idle state.
