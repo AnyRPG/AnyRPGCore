@@ -71,13 +71,14 @@ namespace AnyRPG {
                 if (!abilityList.ContainsKey(keyName)) {
                     //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
                     if (ability is AnimatedAbility && (ability as AnimatedAbility).MyIsAutoAttack == true) {
-                        UnlearnAbility(SystemConfigurationManager.MyInstance.MyDefaultAutoAttackAbility);
+                        UnLearnDefaultAutoAttackAbility();
                     }
 
                     abilityList[keyName] = ability;
                 }
             }
         }
+
 
         public override void UpdateAbilityList(int newLevel) {
             //Debug.Log(gameObject.name + ".PlayerAbilitymanager.UpdateAbilityList(). length: " + abilityList.Count);

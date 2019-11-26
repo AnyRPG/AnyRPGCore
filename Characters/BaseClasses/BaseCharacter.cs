@@ -33,6 +33,13 @@ namespace AnyRPG {
         [SerializeField]
         protected BaseController characterController = null;
 
+        // unit profile name
+        [SerializeField]
+        protected string unitProfileName;
+
+        // reference to actual unit profile
+        protected UnitProfile unitProfile = null;
+
         protected CharacterFactionManager characterFactionManager = null;
 
         protected CharacterEquipmentManager characterEquipmentManager = null;
@@ -66,7 +73,8 @@ namespace AnyRPG {
             set => factionName = value;
         }
         public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
-
+        public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
+        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -93,8 +101,22 @@ namespace AnyRPG {
 
         }
 
+        public virtual void SetUnitProfile(string unitProfileName) {
+            unitProfile = null;
+            this.unitProfileName = unitProfileName;
+            GetUnitProfile();
+        }
+
+        public virtual void GetUnitProfile() {
+            if (unitProfileName != null && unitProfileName != string.Empty && unitProfile == null) {
+                unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+            }
+        }
+
         public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
+            GetUnitProfile();
+
             GetComponentReferences();
             if (characterStats != null) {
                 characterStats.OrchestratorStart();
@@ -113,6 +135,10 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
             }
+            if (characterAbilityManager != null) {
+                characterAbilityManager.LearnDefaultAutoAttackAbility();
+            }
+
         }
 
         protected virtual void Start() {

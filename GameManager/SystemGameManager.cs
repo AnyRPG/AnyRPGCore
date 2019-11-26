@@ -35,6 +35,8 @@ namespace AnyRPG {
             // next, load scriptable object resources
             LoadResources();
 
+            PlayerManager.MyInstance.OrchestratorStart();
+
             // then launch level manager to start loading the game
             LevelManager.MyInstance.PerformSetupActivities();
 

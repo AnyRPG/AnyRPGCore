@@ -194,13 +194,27 @@ namespace AnyRPG {
                 }
                 foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack == true) {
-                        UnlearnAbility(SystemConfigurationManager.MyInstance.MyDefaultAutoAttackAbility);
+                        UnLearnDefaultAutoAttackAbility();
                     }
                     LearnAbility(baseAbility.MyName);
                 }
             }
-            if (AutoAttackKnown() == false) {
-                LearnAbility(SystemConfigurationManager.MyInstance.MyDefaultAutoAttackAbility);
+            LearnDefaultAutoAttackAbility();
+        }
+
+        public virtual void UnLearnDefaultAutoAttackAbility() {
+            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
+                UnlearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
+            }
+        }
+
+        public virtual void LearnDefaultAutoAttackAbility() {
+            if (AutoAttackKnown() == true) {
+                // can't learn two auto-attacks at the same time
+                return;
+            }
+            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
+                LearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
             }
         }
 
@@ -383,6 +397,8 @@ namespace AnyRPG {
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             if (baseAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
+                // can't learn a nonexistent ability
+                return false;
             }
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
                 abilityList[keyName] = baseAbility;

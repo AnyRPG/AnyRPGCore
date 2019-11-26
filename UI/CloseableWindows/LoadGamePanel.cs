@@ -88,7 +88,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.SetPlayerManagerPrefab(loadGameButton.MySaveData);
 
             ClearPreviewTarget();
-            SetPreviewTarget();
+            SetPreviewTarget(loadGameButton.MySaveData.unitProfileName);
 
             anyRPGSaveData = loadGameButton.MySaveData;
         }
@@ -135,14 +135,19 @@ namespace AnyRPG {
         }
 
 
-        public void SetPreviewTarget() {
+        public void SetPreviewTarget(string unitProfileName) {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             if (umaAvatar != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
+            UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+            if (unitProfile == null) {
+                Debug.Log("CharacterPanel.SetPreviewTarget(): unit profile was null, setting to character creator default");
+                unitProfile = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile;
+            }
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(false);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(unitProfile);
 
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");

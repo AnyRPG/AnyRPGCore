@@ -48,15 +48,10 @@ namespace AnyRPG {
 
         // the default non UMA player unit prefab
         [SerializeField]
-        private GameObject defaultNonUMAPlayerUnitPrefab;
+        private string defaultPlayerUnitProfileName;
 
-        // the default UMA player unit prefab
         [SerializeField]
-        private GameObject defaultUMAPlayerUnitPrefab;
-
-        // should the non UMA unit, or the UMA unit be used as the default player unit
-        [SerializeField]
-        private bool defaultIsNonUMAUnit = true;
+        private string defaultCharacterCreatorUnitProfileName;
 
         [SerializeField]
         private string defaultPlayerName = "Player";
@@ -71,6 +66,12 @@ namespace AnyRPG {
 
         [SerializeField]
         private bool autoSpawnPlayerOnLevelLoad = false;
+
+        // reference to the default profile
+        private UnitProfile defaultPlayerUnitProfile;
+
+        // reference to the default profile
+        private UnitProfile defaultCharacterCreatorUnitProfile;
 
         /// <summary>
         /// The invisible gameobject that stores all the player scripts. A reference to an instantiated playerPrefab
@@ -90,8 +91,6 @@ namespace AnyRPG {
 
         private DynamicCharacterAvatar avatar = null;
 
-        private GameObject currentPlayerUnitPrefab = null;
-
         protected bool eventSubscriptionsInitialized = false;
 
         public PlayerCharacter MyCharacter { get => character; set => character = value; }
@@ -102,25 +101,30 @@ namespace AnyRPG {
         public bool MyPlayerConnectionSpawned { get => playerConnectionSpawned; }
         public DynamicCharacterAvatar MyAvatar { get => avatar; set => avatar = value; }
         public int MyInitialLevel { get => initialLevel; set => initialLevel = value; }
-        public GameObject MyCurrentPlayerUnitPrefab { get => currentPlayerUnitPrefab; set => currentPlayerUnitPrefab = value; }
-        public GameObject MyDefaultNonUMAPlayerUnitPrefab { get => defaultNonUMAPlayerUnitPrefab; set => defaultNonUMAPlayerUnitPrefab = value; }
-        public GameObject MyDefaultUMAPlayerUnitPrefab { get => defaultUMAPlayerUnitPrefab; set => defaultUMAPlayerUnitPrefab = value; }
-        public bool MyDefaultIsNonUMAUnit { get => defaultIsNonUMAUnit; set => defaultIsNonUMAUnit = value; }
         public Faction MyDefaultFaction { get => defaultFaction; set => defaultFaction = value; }
         public GameObject MyAIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject MyEffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
         public GameObject MyPlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
         public LayerMask MyDefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
+        public string MyDefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
+        public UnitProfile MyDefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
+        public string MyDefaultCharacterCreatorUnitProfileName { get => defaultCharacterCreatorUnitProfileName; set => defaultCharacterCreatorUnitProfileName = value; }
+        public UnitProfile MyDefaultCharacterCreatorUnitProfile { get => defaultCharacterCreatorUnitProfile; set => defaultCharacterCreatorUnitProfile = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
+            /*
             if (defaultIsNonUMAUnit == true) {
                 currentPlayerUnitPrefab = defaultNonUMAPlayerUnitPrefab;
             } else {
                 currentPlayerUnitPrefab = defaultUMAPlayerUnitPrefab;
             }
-            if (currentPlayerUnitPrefab == null) {
-                Debug.LogError("PlayerManager.Awake(): the default player unit prefab is null.  Please set it in the inspector");
+            */
+        }
+
+        public void PerformRequiredPropertyChecks() {
+            if (defaultPlayerUnitProfileName == null || defaultPlayerUnitProfileName == string.Empty) {
+                Debug.LogError("PlayerManager.Awake(): the default player unit profile name is null.  Please set it in the inspector");
             }
             if (aiUnitParent == null) {
                 Debug.LogError("PlayerManager.Awake(): the ai unit parent is null.  Please set it in the inspector");
@@ -130,9 +134,20 @@ namespace AnyRPG {
             }
         }
 
+        public void OrchestratorStart() {
+            PerformRequiredPropertyChecks();
+            GetUnitProfileReferences();
+            CreateEventSubscriptions();
+        }
+
+        public void GetUnitProfileReferences() {
+            defaultPlayerUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultPlayerUnitProfileName);
+            defaultCharacterCreatorUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
+        }
+
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
@@ -210,23 +225,27 @@ namespace AnyRPG {
         public void SetUMAPrefab() {
             // if an UMA prefab exists, set it as the current default for spawning
             //Debug.Log("Playermanager.SetUMAPrefab()");
+            /*
             if (defaultUMAPlayerUnitPrefab != null) {
                 //Debug.Log("Playermanager.SetUMAPrefab(): UMA prefab set successfully");
                 currentPlayerUnitPrefab = defaultUMAPlayerUnitPrefab;
             } else {
                 //Debug.Log("Playermanager.SetUMAPrefab(): no player unit UMA prefab found!!");
             }
+            */
         }
 
         public void SetDefaultPrefab() {
             //Debug.Log("PlayerManager.SetDefaultPrefab()");
             // if an UMA prefab exists, set it as the current default for spawning
+            /*
             if (defaultNonUMAPlayerUnitPrefab != null) {
                 //Debug.Log("PlayerManager.SetDefaultPrefab(): setting default to non uma prefab");
                 currentPlayerUnitPrefab = defaultNonUMAPlayerUnitPrefab;
             } else {
                 //Debug.Log("PlayerManager.SetDefaultPrefab(): no player unit Non UMA prefab found!!");
             }
+            */
         }
 
         public void OnLevelLoad() {
@@ -321,12 +340,15 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): playerConnectionObject is null, instantiating connection!");
                 SpawnPlayerConnection();
             }
+            if (MyCharacter.MyUnitProfile == null) {
+                MyCharacter.SetUnitProfile(defaultPlayerUnitProfileName);
+            }
 
             // spawn the player unit
             //playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(Vector3.forward), playerUnitParent.transform);
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
             //Debug.Log("PlayerManager.SpawnPlayerUnit(): spawning player unit at location: " + playerUnitParent.transform.position + " with rotation: " + spawnRotation);
-            playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);
+            playerUnitObject = Instantiate(MyCharacter.MyUnitProfile.MyUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);
 
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
             MyCharacter.MyCharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
@@ -354,7 +376,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (currentPlayerUnitPrefab == defaultUMAPlayerUnitPrefab) {
+            if (MyCharacter.MyUnitProfile.MyIsUMAUnit == true) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 InitializeUMA();
             } else {

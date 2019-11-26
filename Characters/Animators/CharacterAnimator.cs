@@ -841,7 +841,9 @@ namespace AnyRPG {
                 attackCoroutine = null;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
-            animator.SetFloat("AnimationSpeed", 1);
+            if (animator != null) {
+                animator.SetFloat("AnimationSpeed", 1);
+            }
         }
 
         private void HandleDeath(CharacterStats characterStats) {

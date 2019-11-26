@@ -35,6 +35,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.SetCharacterFaction(" + newFaction + ")");
 
             base.SetCharacterClass(newCharacterClass);
+            if (newCharacterClass == null || newCharacterClass == string.Empty) {
+                // don't print messages for no reason
+                return;
+            }
             MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass);
         }
 

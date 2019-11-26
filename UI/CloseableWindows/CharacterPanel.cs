@@ -286,8 +286,9 @@ namespace AnyRPG {
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
 
+
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(false);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyCharacter.MyUnitProfile);
 
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");

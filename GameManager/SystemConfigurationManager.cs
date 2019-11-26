@@ -217,9 +217,6 @@ namespace AnyRPG {
         private RuntimeAnimatorController defaultAnimatorController;
 
         [SerializeField]
-        private string defaultAutoAttackAbility;
-
-        [SerializeField]
         private int maxLevel = 50;
 
         [SerializeField]
@@ -498,7 +495,6 @@ namespace AnyRPG {
         public float MyAgilityStatBudgetPerLevel { get => agilityStatBudgetPerLevel; set => agilityStatBudgetPerLevel = value; }
         public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
         public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
-        public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
 
         private void Start() {

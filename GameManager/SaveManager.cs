@@ -96,6 +96,10 @@ namespace AnyRPG {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
                 anyRPGSaveData.characterClass = string.Empty;
             }
+            if (anyRPGSaveData.unitProfileName == null) {
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
+                anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName;
+            }
             if (anyRPGSaveData.PlayerUMARecipe == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
                 anyRPGSaveData.PlayerUMARecipe = string.Empty;
@@ -227,7 +231,7 @@ namespace AnyRPG {
 
         public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar) {
             //Debug.Log("Savemanager.LoadUMASettings(string, DynamicCharacterAvatar)");
-            if (_recipeString == string.Empty) {
+            if (_recipeString == null || _recipeString == string.Empty || _dynamicCharacterAvatar == null) {
                 //Debug.Log("Savemanager.LoadUMASettings(): _recipeString is empty. exiting!");
                 return;
             }
@@ -298,6 +302,7 @@ namespace AnyRPG {
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
             anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFactionName;
             anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClassName;
+            anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
             anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana;
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
@@ -728,11 +733,11 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was not empty or null, loading UMA settings");
                 SaveUMASettings(loadedRecipeString);
                 // we have UMA data so should load the UMA unit instead of the default
-                PlayerManager.MyInstance.SetUMAPrefab();
+                //PlayerManager.MyInstance.SetUMAPrefab();
             } else {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was empty or null, setting player prefab to default");
                 ClearUMASettings();
-                PlayerManager.MyInstance.SetDefaultPrefab();
+                //PlayerManager.MyInstance.SetDefaultPrefab();
             }
 
         }
@@ -772,9 +777,11 @@ namespace AnyRPG {
             PlayerManager.MyInstance.SpawnPlayerConnection();
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
+
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(anyRPGSaveData.playerFaction);
             //PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
+            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
             // moved to clearshareddata to have central clearing method
             //ClearSystemManagedCharacterData();

@@ -165,7 +165,7 @@ namespace AnyRPG {
                 return;
             }
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(true);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile);
 
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
@@ -650,8 +650,13 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyAvatar == null) {
                 Vector3 currentPlayerLocation = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
                 PlayerManager.MyInstance.DespawnPlayerUnit();
-                PlayerManager.MyInstance.SetUMAPrefab();
+                //PlayerManager.MyInstance.SetUMAPrefab();
+                PlayerManager.MyInstance.MyCharacter.SetUnitProfile(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName);
                 PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
+                if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager != null) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnDefaultAutoAttackAbility();
+                }
+
             }
             SaveManager.MyInstance.LoadUMASettings();
             //ClosePanel();

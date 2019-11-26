@@ -15,6 +15,7 @@ namespace AnyRPG {
         public string playerName;
         public string playerFaction;
         public string characterClass;
+        public string unitProfileName;
         public float PlayerLocationX;
         public float PlayerLocationY;
         public float PlayerLocationZ;

@@ -46,9 +46,10 @@ namespace AnyRPG {
             */
         }
 
-        public void HandleOpenWindow(bool forceUMAUnit) {
+        public void HandleOpenWindow(UnitProfile unitProfile) {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
+            /*
             // determine which preview prefab is the correct one to clone
             if (forceUMAUnit) {
                 // clone UMA prefab directly
@@ -63,6 +64,8 @@ namespace AnyRPG {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): the current player unit prefab is NOT the UMA prefab, cloning default prefab");
                 cloneSource = PlayerManager.MyInstance.MyDefaultNonUMAPlayerUnitPrefab;
             }
+            */
+            cloneSource = unitProfile.MyUnitPrefab;
 
             if (cloneSource == null) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");

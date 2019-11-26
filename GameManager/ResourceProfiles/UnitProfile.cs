@@ -17,8 +17,16 @@ namespace AnyRPG {
         [SerializeField]
         private int defaultToughness = 1;
 
+        [SerializeField]
+        private string defaultAutoAttackAbility;
+
+        [SerializeField]
+        private bool isUMAUnit;
+
         public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public int MyDefaultToughness { get => defaultToughness; set => defaultToughness = value; }
+        public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
     }
 
 }
