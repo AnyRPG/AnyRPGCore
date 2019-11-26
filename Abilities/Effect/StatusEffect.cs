@@ -43,6 +43,9 @@ namespace AnyRPG {
         protected float incomingDamageMultiplier = 1f;
 
         [SerializeField]
+        protected float outgoingDamageMultiplier = 1f;
+
+        [SerializeField]
         protected float speedMultiplier = 1f;
 
         [SerializeField]
@@ -96,6 +99,7 @@ namespace AnyRPG {
         public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
         public float MySpeedMultiplier { get => speedMultiplier; set => speedMultiplier = value; }
         public float MyExtraCriticalStrikePercent { get => extracriticalStrikePercent; set => extracriticalStrikePercent = value; }
+        public float MyOutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);

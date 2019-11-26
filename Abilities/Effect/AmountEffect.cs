@@ -48,13 +48,17 @@ namespace AnyRPG {
                 }
             }
             if (damageType == DamageType.physical) {
-                // + damage modifiers
+                // additive damage modifiers
                 amountModifier += sourceCharacter.MyCharacterStats.MyPhysicalDamage;
 
                 // weapon damage
                 if (sourceCharacter.MyCharacterEquipmentManager != null) {
                     amountModifier += sourceCharacter.MyCharacterEquipmentManager.GetWeaponDamage();
                 }
+
+                // multiplicative damage modifiers
+                amountModifier *= sourceCharacter.MyCharacterStats.GetOutGoingDamageModifiers();
+
                 amountModifier *= sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.MyLastAnimationLength;
             }
 

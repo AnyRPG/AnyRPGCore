@@ -8,6 +8,10 @@ namespace AnyRPG {
 
         private BaseCharacter baseCharacter;
 
+        private bool threatLocked = false;
+
+        private AggroNode lockedNode = null;
+
         private List<AggroNode> aggroNodes = new List<AggroNode>();
 
         public List<AggroNode> MyAggroNodes { get => aggroNodes; set => aggroNodes = value; }
@@ -28,14 +32,21 @@ namespace AnyRPG {
                 foreach (AggroNode node in removeNodes) {
                     //Debug.Log("Clearning null node from aggro list");
                     aggroNodes.Remove(node);
+                    if (threatLocked && node == lockedNode) {
+                        UnLockAgro();
+                    }
                 }
                 if (aggroNodes.Count == 0) {
                     return null;
                 }
                 AggroNode topNode = aggroNodes[0];
-                foreach (AggroNode node in aggroNodes) {
-                    if (node.aggroValue > topNode.aggroValue) {
-                        topNode = node;
+                if (threatLocked) {
+                    topNode = lockedNode;
+                } else {
+                    foreach (AggroNode node in aggroNodes) {
+                        if (node.aggroValue > topNode.aggroValue) {
+                            topNode = node;
+                        }
                     }
                 }
                 return topNode;
@@ -49,6 +60,19 @@ namespace AnyRPG {
             this.baseCharacter = baseCharacter;
         }
 
+        public void LockAgro() {
+            Debug.Log("AggroTable.LockAgro(" + baseCharacter.gameObject.name + ")");
+            lockedNode = MyTopAgroNode;
+
+            // ordering matters here, have to set the locked node first
+            threatLocked = true;
+        }
+
+        public void UnLockAgro() {
+            threatLocked = false;
+            lockedNode = null;
+        }
+
 
         /// <summary>
         /// Add an object to the aggro table or update its agro amount if it is already in the aggro table
@@ -59,7 +83,7 @@ namespace AnyRPG {
         /// <param name="aggroAmount"></param>
         /// return true if new entry to the table
         public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
-            //Debug.Log("AggroTable.AddToAggroTable(): target: " + target.name + "; amount: " + aggroAmount);
+            //Debug.Log(baseCharacter.gameObject.name + ".AggroTable.AddToAggroTable(): target: " + targetCharacterUnit.name + "; amount: " + aggroAmount);
 
             if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
                 return false;
@@ -74,13 +98,13 @@ namespace AnyRPG {
                     if (aggroNode.aggroTarget == targetCharacterUnit) {
                         aggroNode.aggroValue += aggroAmount;
                         isAlreadyInAggroTable = true;
-                        //Debug.Log(gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
+                        //Debug.Log(baseCharacter.gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + targetCharacterUnit.name + "; total: " + aggroNode.aggroValue.ToString());
                     }
                 }
             }
 
             if (!isAlreadyInAggroTable) {
-                //Debug.Log(gameObject.name + " adding new entry " + target.name + " to aggro table");
+                //Debug.Log(baseCharacter.gameObject.name + " adding new entry " + targetCharacterUnit.name + " to aggro table with amount: " + aggroAmount);
                 AggroNode aggroNode = new AggroNode();
                 aggroNode.aggroTarget = targetCharacterUnit;
                 aggroNode.aggroValue = aggroAmount;
