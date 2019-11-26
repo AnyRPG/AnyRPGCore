@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public void LockAgro() {
-            Debug.Log("AggroTable.LockAgro(" + baseCharacter.gameObject.name + ")");
+            //Debug.Log("AggroTable.LockAgro(" + baseCharacter.gameObject.name + ")");
             lockedNode = MyTopAgroNode;
 
             // ordering matters here, have to set the locked node first

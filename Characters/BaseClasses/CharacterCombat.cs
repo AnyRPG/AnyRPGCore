@@ -331,11 +331,21 @@ namespace AnyRPG {
             if (MyBaseCharacter.MyCharacterController.MyTarget != null && targetCharacterUnit != null) {
 
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
-                OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+                //OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
 
+                bool attackLanded = true;
+                if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                    BaseAbility animatorCurrentAbility = MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+                    if (animatorCurrentAbility is AnimatedAbility) {
+                        attackLanded = (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility as AnimatedAbility).HandleAbilityHit(MyBaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+                    }
+
+                }
 
                 // onHitAbility is only for weapons, not for special moves
-
+                if (!attackLanded) {
+                    return false;
+                }
                 AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
@@ -361,6 +371,22 @@ namespace AnyRPG {
                         return true;
                     }
                 }
+            }
+            return false;
+        }
+
+        public virtual void ReceiveCombatMiss(GameObject targetObject) {
+            //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
+            if (targetObject == PlayerManager.MyInstance.MyPlayerUnitObject || baseCharacter.MyCharacterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+                CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal);
+            }
+        }
+
+        public bool DidAttackMiss() {
+            int randomNumber = UnityEngine.Random.Range(0, 100);
+            if (randomNumber >= 100 * baseCharacter.MyCharacterStats.GetAccuracyModifiers()) {
+                // we missed
+                return true;
             }
             return false;
         }

@@ -52,7 +52,7 @@ namespace AnyRPG {
                         sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClips[attackIndex], this, targetBaseCharacter);
 
                         // unblock 
-                        sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
+                        //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (!isAutoAttack) {
                             //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
                             ProcessGCDManual(sourceCharacter, animationClips[attackIndex].length);
@@ -74,18 +74,21 @@ namespace AnyRPG {
         }
 
         public void CleanupEventSubscriptions(BaseCharacter source) {
-            source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
+            //source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 
-        public void HandleAbilityHit(BaseCharacter source, GameObject target) {
+        public bool HandleAbilityHit(BaseCharacter source, GameObject target) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
-            PerformAbilityEffects(source, target, Vector3.zero);
+            bool returnResult = PerformAbilityEffects(source, target, Vector3.zero);
+            if (!returnResult) {
+                return false;
+            }
 
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || !base.CanUseOn(target, source)) {
                 source.MyCharacterCombat.DeActivateAutoAttack();
-                return;
+                return false;
             }
 
             //if (isAutoAttack) {
@@ -94,6 +97,7 @@ namespace AnyRPG {
                     source.MyCharacterCombat.ActivateAutoAttack();
                 }
             //}
+            return true;
 
         }
 

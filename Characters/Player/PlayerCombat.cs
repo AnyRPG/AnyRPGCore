@@ -70,6 +70,11 @@ namespace AnyRPG {
             HandleAutoAttack();
         }
 
+        public override void ReceiveCombatMiss(GameObject targetObject) {
+            Debug.Log(gameObject.name + ".PlayerCombat.ReceiveCombatMiss()");
+            base.ReceiveCombatMiss(targetObject);
+        }
+
         public void HandleAutoAttack() {
             //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack()");
             if (baseCharacter.MyCharacterController.MyTarget == null && MyAutoAttackActive == true) {

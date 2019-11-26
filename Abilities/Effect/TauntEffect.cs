@@ -29,22 +29,28 @@ namespace AnyRPG {
         */
 
         public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-            Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
+            //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
-                Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CANNOT USE RETURNING");
+                //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CANNOT USE RETURNING");
                 return null;
             }
             GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
             // make ourselves the top threat in his threat table
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null) {
-                if (targetCharacterUnit.MyCharacter.MyCharacterCombat != null) {
-                    Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
+                if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.MyCharacterCombat != null && targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable != null) {
+                    //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
                     AggroNode AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
-                    targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.AddToAggroTable(source.MyCharacterUnit, (int)(AgroNode.aggroValue + extraThreat));
-                    AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
-                    Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
-                    targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.LockAgro();
+                    float usedAgroValue = 0f;
+                    if (AgroNode != null) {
+                        usedAgroValue = AgroNode.aggroValue;
+                    }
+                    if (source != null && source.MyCharacterUnit != null) {
+                        targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.AddToAggroTable(source.MyCharacterUnit, (int)(usedAgroValue + extraThreat));
+                        AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
+                        //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
+                        targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.LockAgro();
+                    }
                 }
 
             }

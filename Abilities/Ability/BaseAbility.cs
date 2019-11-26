@@ -335,12 +335,20 @@ namespace AnyRPG {
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
-        public virtual void PerformAbilityEffects(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        public virtual bool PerformAbilityEffects(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
             if (abilityEffects.Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
                 // this is fine for channeled abilities
             }
+
+            // perform hit / miss check only if baseability requires target and return false if miss
+            if (requiresTarget) {
+                if (source.MyCharacterCombat.DidAttackMiss() == true) {
+                    return false;
+                }
+            }
+
             foreach (AbilityEffect abilityEffect in abilityEffects) {
                 if (abilityEffect == null) {
                     Debug.Log("Forgot to set ability affect in inspector?");
@@ -352,9 +360,10 @@ namespace AnyRPG {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
                     //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);
-                    return;
+                    //return;
                 }
             }
+            return true;
         }
 
         /// <summary>

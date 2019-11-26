@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         public void OnClick() {
-            Debug.Log("ActionButton.OnClick()");
+            //Debug.Log("ActionButton.OnClick()");
             // this may seem like duplicate with the next method, but right now it is used to simulate click events when keypresses happen
             if (HandScript.MyInstance.MyMoveable != null || Input.GetKey(KeyCode.LeftShift)) {
                 // if we have something in the handscript we are trying to drop an item, not use one

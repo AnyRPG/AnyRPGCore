@@ -23,6 +23,11 @@ namespace AnyRPG {
                 // something died or despawned mid cast
                 return;
             }
+            if (source.MyCharacterCombat.DidAttackMiss() == true) {
+                source.MyCharacterCombat.ReceiveCombatMiss(target);
+                return;
+            }
+
             KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>());
             int extraAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
             int abilityFinalAmount = (int)abilityKeyValuePair.Key;
