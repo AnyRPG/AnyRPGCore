@@ -234,7 +234,7 @@ namespace AnyRPG {
                 return;
             }
             if (MyTarget != topNode.aggroTarget.gameObject) {
-                Debug.Log(gameObject.name + ".AIController.UpdateTarget(): " + topNode.aggroTarget.gameObject.name + "[" + topNode.aggroValue + "] stole agro from " + MyTarget);
+                //Debug.Log(gameObject.name + ".AIController.UpdateTarget(): " + topNode.aggroTarget.gameObject.name + "[" + topNode.aggroValue + "] stole agro from " + MyTarget);
                 ClearTarget();
                 SetTarget(topNode.aggroTarget.gameObject);
             }

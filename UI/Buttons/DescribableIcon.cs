@@ -77,7 +77,7 @@ namespace AnyRPG {
             //Debug.Log("Rect Contains Mouse: " + RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition));
             //Debug.Log("New MouseInRect: " + MouseInRect(MyIcon.rectTransform));
 
-            if (MouseInRect(MyIcon.rectTransform)) {
+            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
                 //UIManager.MyInstance.RefreshTooltip(describable as IDescribable);
                 UIManager.MyInstance.ShowToolTip(transform.position, describable as IDescribable);
@@ -85,14 +85,7 @@ namespace AnyRPG {
 
         }
 
-        public virtual bool MouseInRect(RectTransform rectTransform) {
-            Vector2 localMousePosition = rectTransform.InverseTransformPoint(Input.mousePosition);
-            //Debug.Log(gameObject.name + ".MouseInRect(): local Mouse Position: " + localMousePosition + "; rectTransform.rect: " + rectTransform.rect);
-            if (rectTransform.rect.Contains(localMousePosition)) {
-                return true;
-            }
-            return false;
-        }
+        
 
         public static Rect RectTransformToScreenSpace(RectTransform transform) {
             Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);

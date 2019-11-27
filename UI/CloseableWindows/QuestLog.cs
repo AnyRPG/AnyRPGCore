@@ -130,7 +130,7 @@ public class QuestLog : MonoBehaviour  {
     }
 
     public bool HasQuest(string questName) {
-        //Debug.Log("QuestLog.HasQuest(" + quest + ")");
+        //Debug.Log("QuestLog.HasQuest(" + questName + ")");
         string keyName = SystemResourceManager.prepareStringForMatch(questName);
         if (quests.ContainsKey(keyName)) {
             return true;

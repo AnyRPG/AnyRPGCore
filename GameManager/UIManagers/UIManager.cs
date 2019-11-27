@@ -383,7 +383,7 @@ namespace AnyRPG {
             ShowToolTip(position, describable, string.Empty);
         }
 
-            public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
+        public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
             //Debug.Log("UIManager.ShowToolTip(): Input.MousePosition: " + Input.mousePosition + "; description: " + (describable == null ? "null" : describable.MyName));
             if (describable == null) {
                 HideToolTip();
@@ -406,10 +406,10 @@ namespace AnyRPG {
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
             ShowToolTip(pivot, position, describable, string.Empty);
         }
-            /// <summary>
-            /// Show the tooltip
-            /// </summary>
-            public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
+        /// <summary>
+        /// Show the tooltip
+        /// </summary>
+        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
             //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.MyName) + ")");
             if (describable == null) {
                 HideToolTip();
@@ -458,7 +458,7 @@ namespace AnyRPG {
         public void RefreshTooltip(IDescribable describable) {
             RefreshTooltip(describable, string.Empty);
         }
-            public void RefreshTooltip(IDescribable describable, string showSellPrice) {
+        public void RefreshTooltip(IDescribable describable, string showSellPrice) {
             //Debug.Log("UIManager.RefreshTooltip(" + describable.MyName + ")");
             if (describable != null && toolTipText != null && toolTipText.text != null) {
                 ShowToolTipCommon(describable, showSellPrice);
@@ -793,6 +793,15 @@ namespace AnyRPG {
                 childTransform.gameObject.layer = newLayer;
             }
 
+        }
+
+        public static bool MouseInRect(RectTransform rectTransform) {
+            Vector2 localMousePosition = rectTransform.InverseTransformPoint(Input.mousePosition);
+            //Debug.Log(gameObject.name + ".MouseInRect(): local Mouse Position: " + localMousePosition + "; rectTransform.rect: " + rectTransform.rect);
+            if (rectTransform.rect.Contains(localMousePosition)) {
+                return true;
+            }
+            return false;
         }
     }
 

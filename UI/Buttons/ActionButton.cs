@@ -168,7 +168,14 @@ namespace AnyRPG {
                 }
             }
             UpdateVisual();
-            UIManager.MyInstance.ShowToolTip(transform.position, useable as IDescribable);
+
+            // there was the assumption that these were only being called when a player clicked to add an ability
+            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+                //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
+                //UIManager.MyInstance.RefreshTooltip(describable as IDescribable);
+                UIManager.MyInstance.ShowToolTip(transform.position, useable as IDescribable);
+            }
+
             //UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
 
             initialized = true;

@@ -56,9 +56,9 @@ namespace AnyRPG {
                 MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             } else {
                 if (MyAnimatedUnit == null) {
-                    Debug.Log(gameObject.name + ".AICharacter.Start(): myanimatedunit is null");
+                    //Debug.Log(gameObject.name + ".AICharacter.Start(): myanimatedunit is null");
                 } else if (MyAnimatedUnit.MyCharacterAnimator == null) {
-                    Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
+                    //Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
                 }
             }
         }
