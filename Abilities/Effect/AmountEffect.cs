@@ -59,7 +59,7 @@ namespace AnyRPG {
                 // multiplicative damage modifiers
                 amountModifier *= sourceCharacter.MyCharacterStats.GetOutGoingDamageModifiers();
 
-                amountModifier *= sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.MyLastAnimationLength;
+                amountModifier *= Mathf.Clamp(sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.MyLastAnimationLength, 1, Mathf.Infinity);
             }
 
             return new KeyValuePair<float, CombatMagnitude>((abilityBaseAmount == 0 ? abilityBaseAmount : (abilityBaseAmount + amountModifier) * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));

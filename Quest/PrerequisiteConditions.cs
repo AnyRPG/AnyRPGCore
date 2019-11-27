@@ -178,9 +178,12 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == factionDispositionPrerequisites.Count & requireAny == false && falseCount == 0) {
+            if (tempCount > 0 && tempCount == factionDispositionPrerequisites.Count & requireAny == false) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking faction : setting return value true");
                 returnValue = true;
+            }
+            if (falseCount > 0) {
+                returnValue = false;
             }
             if (prerequisiteCount == 0) {
                 return true;

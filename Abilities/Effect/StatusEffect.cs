@@ -52,7 +52,7 @@ namespace AnyRPG {
         protected float accuracyMultiplier = 1f;
 
         [SerializeField]
-        protected float extracriticalStrikePercent;
+        protected float extraCriticalStrikePercent;
 
         [SerializeField]
         protected List<StatBuffType> statBuffTypes = new List<StatBuffType>();
@@ -101,7 +101,7 @@ namespace AnyRPG {
         public bool MyLimitedDuration { get => limitedDuration; set => limitedDuration = value; }
         public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
         public float MySpeedMultiplier { get => speedMultiplier; set => speedMultiplier = value; }
-        public float MyExtraCriticalStrikePercent { get => extracriticalStrikePercent; set => extracriticalStrikePercent = value; }
+        public float MyExtraCriticalStrikePercent { get => extraCriticalStrikePercent; set => extraCriticalStrikePercent = value; }
         public float MyOutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
         public float MyAccuracyMultiplier { get => accuracyMultiplier; set => accuracyMultiplier = value; }
 
