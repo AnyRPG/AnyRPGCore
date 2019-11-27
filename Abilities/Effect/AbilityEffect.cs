@@ -69,6 +69,10 @@ namespace AnyRPG {
         // amount to multiply inputs by when adding their amount to this effect
         public float inputMultiplier = 0f;
 
+        [SerializeField]
+        protected float threatMultiplier = 1f;
+
+
         public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool MyRequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
@@ -80,6 +84,7 @@ namespace AnyRPG {
         public bool MyCanCastOnSelf { get => canCastOnSelf; set => canCastOnSelf = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public BaseCharacter MySourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
+        public float MyThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
 
         public virtual void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");

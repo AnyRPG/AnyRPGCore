@@ -51,6 +51,7 @@ namespace AnyRPG {
         [SerializeField]
         protected float accuracyMultiplier = 1f;
 
+
         [SerializeField]
         protected float extraCriticalStrikePercent;
 

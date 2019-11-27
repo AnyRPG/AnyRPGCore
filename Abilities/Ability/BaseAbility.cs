@@ -345,6 +345,8 @@ namespace AnyRPG {
             // perform hit / miss check only if baseability requires target and return false if miss
             if (requiresTarget) {
                 if (source.MyCharacterCombat.DidAttackMiss() == true) {
+                    //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
+                    source.MyCharacterCombat.ReceiveCombatMiss(target);
                     return false;
                 }
             }

@@ -24,6 +24,7 @@ namespace AnyRPG {
                 return;
             }
             if (source.MyCharacterCombat.DidAttackMiss() == true) {
+                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 source.MyCharacterCombat.ReceiveCombatMiss(target);
                 return;
             }

@@ -192,7 +192,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (target != null && PlayerManager.MyInstance && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
+            if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
                 if (target == PlayerManager.MyInstance.MyCharacter || (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter)) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
@@ -206,7 +206,9 @@ namespace AnyRPG {
                 }
                 lastCombatEvent = Time.time;
                 if (target.MyCharacterStats.IsAlive) {
-                    aggroTable.AddToAggroTable(target.MyCharacterUnit, damage);
+                    float totalThreat = damage;
+                    totalThreat *= abilityEffect.MyThreatMultiplier * target.MyCharacterStats.GetThreatModifiers();
+                    aggroTable.AddToAggroTable(target.MyCharacterUnit, (int)totalThreat);
                     EnterCombat(target);
                 } else {
                     //Debug.Log(gameObject.name + ".CharacterCombat.OnTakeDamage(): Received damage from dead character.  Ignoring aggro mechanics.");

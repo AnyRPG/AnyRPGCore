@@ -231,6 +231,20 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public virtual float GetThreatModifiers() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            float returnValue = 1f;
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
+                if (statusEffectNode.MyStatusEffect.MyThreatMultiplier != 1) {
+                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
+                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyThreatMultiplier;
+                }
+            }
+            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
+            return returnValue;
+        }
+
         public virtual float GetOutGoingDamageModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
