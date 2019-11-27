@@ -219,7 +219,7 @@ namespace AnyRPG {
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, int toughness = -1) {
             //GetSpawnLocation();
             //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
-            if (spawnPrefab == null) {
+            if (spawnPrefab == null || PlayerManager.MyInstance.MyCharacter == null) {
                 return;
             }
             //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);

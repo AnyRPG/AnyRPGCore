@@ -132,6 +132,9 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(abilityIconsArea.GetComponent<RectTransform>());
+            LayoutRebuilder.ForceRebuildLayoutImmediate(traitIconsArea.GetComponent<RectTransform>());
+
         }
 
         public override void RecieveClosedWindowNotification() {

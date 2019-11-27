@@ -46,6 +46,7 @@ namespace AnyRPG {
             bool returnValue = false;
             int prerequisiteCount = 0;
             int tempCount = 0;
+            int falseCount = 0;
 
             foreach (LevelPrerequisite levelPrerequisite in levelPrerequisites) {
                 prerequisiteCount++;
@@ -55,7 +56,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -74,7 +75,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -94,7 +95,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -113,7 +114,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -132,7 +133,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -152,7 +153,7 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
@@ -171,13 +172,13 @@ namespace AnyRPG {
                     break;
                 }
                 if (!checkResult && requireAny == false) {
-                    returnValue = false;
+                    falseCount++;
                     break;
                 } else if (checkResult && requireAny == false) {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == factionDispositionPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == factionDispositionPrerequisites.Count & requireAny == false && falseCount == 0) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking faction : setting return value true");
                 returnValue = true;
             }

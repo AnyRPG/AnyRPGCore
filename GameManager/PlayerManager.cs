@@ -207,7 +207,7 @@ namespace AnyRPG {
         }
 
         public void SetPlayerCharacterClass(string characterClassName) {
-            //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
+            Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
             if (characterClassName != null && characterClassName != string.Empty) {
                 MyCharacter.ChangeCharacterClass(characterClassName);
             }
