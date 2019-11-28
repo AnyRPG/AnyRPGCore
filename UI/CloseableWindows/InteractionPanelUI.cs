@@ -105,10 +105,10 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.CheckPrerequisites(): window is not active. exiting");
                 return;
             }
-            ShowInteractables();
+            ShowInteractables(true);
         }
 
-        public void ShowInteractablesCommon(Interactable interactable) {
+        public void ShowInteractablesCommon(Interactable interactable, bool suppressAutoInteract = false) {
             //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ")");
             ClearButtons();
 
@@ -214,7 +214,7 @@ namespace AnyRPG {
             }
 
             // priority open - any other current interactable third, but only if there is one
-            if (currentInteractables.Count > 1) {
+            if (currentInteractables.Count > 1 || suppressAutoInteract == true) {
                 return;
             }
             foreach (GameObject interactionPanelScript in interactionPanelScripts) {
@@ -230,11 +230,11 @@ namespace AnyRPG {
 
         }
 
-        public void ShowInteractables() {
+        public void ShowInteractables(bool suppressAutoInteract = false) {
             //Debug.Log("InteractionPanelUI.ShowInteractables()");
             if (interactable != null) {
                 //Debug.Log("InteractionPanelUI.ShowInteractables() interactable: " + interactable.MyName);
-                ShowInteractablesCommon(interactable);
+                ShowInteractablesCommon(interactable, suppressAutoInteract);
             } else {
                 //Debug.Log("InteractionPanelUI.ShowInteractables() interactable IS NULL!!!");
             }

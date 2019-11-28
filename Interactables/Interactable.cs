@@ -19,6 +19,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject spawnPrefab;
 
+        [SerializeField]
         private GameObject spawnReference;
 
         public bool glowOnMouseOver = true;
@@ -271,11 +272,19 @@ namespace AnyRPG {
             }
 
             // maybe some kind of check of inanimate units since these generally aren't on other units?
+            EnableInteraction();
+            //interactable.InitializeMaterials();
+            //MiniMapStatusUpdateHandler(this);
+        }
+
+        public void EnableInteraction() {
             if (boxCollider != null) {
                 boxCollider.enabled = true;
             }
-            //interactable.InitializeMaterials();
-            //MiniMapStatusUpdateHandler(this);
+        }
+
+        public void DisableInteraction() {
+            boxCollider.enabled = false;
         }
 
         public void DestroySpawn() {
@@ -285,7 +294,7 @@ namespace AnyRPG {
                 spawnReference = null;
             }
             originalMaterials.Clear();
-            boxCollider.enabled = false;
+            DisableInteraction();
             //MiniMapStatusUpdateHandler(this);
         }
 

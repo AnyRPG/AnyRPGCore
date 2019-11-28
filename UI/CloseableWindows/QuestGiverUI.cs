@@ -269,14 +269,17 @@ namespace AnyRPG {
 
             currentQuestName = quest.MyName;
 
-            if (quest.MyHasOpeningDialog == true && SystemDialogManager.MyInstance.GetResource(quest.MyName).TurnedIn == false) {
-                //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(quest, interactable);
-                //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
-                if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
-                    PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+            if (quest.MyHasOpeningDialog == true) {
+                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(quest.MyName);
+                if (tmpDialog != null && tmpDialog.TurnedIn == false) {
+                    //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
+                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
+                    if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
+                        PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+                    }
+                    return;
                 }
-                return;
             }
 
             if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
