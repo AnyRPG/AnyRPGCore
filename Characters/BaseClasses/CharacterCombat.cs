@@ -495,12 +495,12 @@ namespace AnyRPG {
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
             if (oldItem != null) {
-                if (oldItem.equipSlot == EquipmentSlot.MainHand) {
+                if (oldItem is Weapon && (oldItem as Weapon).MyUseDamagePerSecond == true && (oldItem as Weapon).OnHitAbility != null) {
                     onHitAbility = null;
                 }
             }
             if (newItem != null) {
-                if (newItem.equipSlot == EquipmentSlot.MainHand) {
+                if (newItem is Weapon && (newItem as Weapon).MyUseDamagePerSecond == true) {
                     onHitAbility = null;
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;

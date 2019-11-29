@@ -19,7 +19,7 @@ namespace AnyRPG {
                 float returnValue = base.MyArmorModifier;
                 if (useArmorModifier && !useManualArmor) {
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClassName) * GetItemQualityNumber()) * (1f / ((float)(Enum.GetNames(typeof(EquipmentSlot)).Length - 2))),
+                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClassName) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
                         0f,
                         Mathf.Infinity
                         ));

@@ -12,7 +12,9 @@ namespace AnyRPG {
         /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
         /// </summary>
         [SerializeField]
-        private EquipmentSlot equipmentSlot;
+        private string equipmentSlotProfileName;
+
+        private EquipmentSlotProfile equipmentSlotProfile = null;
 
         /// <summary>
         /// A reference to the equipment that sits on this slot
@@ -48,6 +50,9 @@ namespace AnyRPG {
             }
         }
 
+        public string MyEquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
+        public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
+
         private void Awake() {
             GetLocalComponents();
         }
@@ -63,7 +68,14 @@ namespace AnyRPG {
             if (emptySlotImage == null) {
                 emptySlotImage = GetComponent<Image>();
             }
-
+            //Debug.Log("CharacterButton.GetLocalComponents()");
+            if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
+                //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofileName is not empty");
+                equipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(equipmentSlotProfileName);
+                if (equipmentSlotProfile == null) {
+                    //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofile is NULL!!!");
+                }
+            }
             LocalComponentsGotten = true;
         }
 
@@ -71,8 +83,17 @@ namespace AnyRPG {
             if (eventData.button == PointerEventData.InputButton.Left) {
                 if (HandScript.MyInstance.MyMoveable is Equipment) {
                     Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
-                    if (tmp.equipSlot == equipmentSlot) {
-                        tmp.Use();
+                    if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.MyEquipmentSlotType)) {
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        //if (tmp.equipSlot == equipmentSlot) {
+
+                        //tmp.Use();
+
+                        // equip to this slot
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
+                        // call remove
+                        tmp.Remove();
+
                         //EquipEquipment(tmp);
                         HandScript.MyInstance.Drop();
 
@@ -129,13 +150,20 @@ namespace AnyRPG {
         */
 
         public void UpdateVisual(bool resetDisplay = true) {
-            //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
+            Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
 
             GetLocalComponents();
             Equipment tmpEquipment = equippedEquipment;
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlot)) {
-                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlot];
+            if (equipmentSlotProfile != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+                Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
+                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlotProfile];
             } else {
+                if (equipmentSlotProfile == null) {
+                    Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was null");
+                }
+                if (!PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+                    Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): player had no equipment in this slot");
+                }
                 equippedEquipment = null;
             }
 
@@ -210,7 +238,7 @@ namespace AnyRPG {
             if (equippedEquipment != null) {
                 return equippedEquipment.GetDescription();
             }
-            return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlot.ToString(), GetSummary());
+            return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlotProfile.MyName, GetSummary());
         }
 
         public string GetSummary() {

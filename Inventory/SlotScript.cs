@@ -169,9 +169,13 @@ namespace AnyRPG {
                     }
                 } else if (HandScript.MyInstance.MyMoveable is Equipment) {
                     // the handscript has equipment in it
-                    if (MyItem is Equipment && (MyItem as Equipment).equipSlot == (HandScript.MyInstance.MyMoveable as Equipment).equipSlot) {
+                    if (MyItem is Equipment && (MyItem as Equipment).MyEquipmentSlotType == (HandScript.MyInstance.MyMoveable as Equipment).MyEquipmentSlotType) {
                         // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
-                        UseItem();
+                        EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(MyItem as Equipment, equipmentSlotProfile);
+                        MyItem.Remove();
+                       //UseItem();
                         //UIManager.MyInstance.RefreshTooltip();
                         HandScript.MyInstance.Drop();
                     }
@@ -196,7 +200,8 @@ namespace AnyRPG {
                     //AddItem(equipment);
 
                     //CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip((HandScript.MyInstance.MyMoveable as Equipment).equipSlot, GetCurrentSlotIndex());
+                    EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile, GetCurrentSlotIndex());
                     HandScript.MyInstance.Drop();
                 }
             }

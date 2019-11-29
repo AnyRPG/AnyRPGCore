@@ -23,9 +23,13 @@ namespace AnyRPG {
             }
         }
         #endregion
-
+        /*
         [SerializeField]
         private CharacterButton head, shoulders, chest, hands, legs, feet, mainhand, offhand;
+        */
+
+        [SerializeField]
+        private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
         [SerializeField]
         private Text statsDescription;
@@ -48,9 +52,27 @@ namespace AnyRPG {
         public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         private void Start() {
-            //Debug.Log("CharacterPanel.Start()");
+            Debug.Log("CharacterPanel.Start()");
             CreateEventSubscriptions();
 
+            foreach (CharacterButton characterButton in characterButtons) {
+                characterButton.MyEmptyBackGroundColor = emptySlotColor;
+                characterButton.MyFullBackGroundColor = fullSlotColor;
+                Debug.Log("CharacterPanel.Start(): checking icon");
+                if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.MyIcon != null) {
+                    Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
+                    characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.MyIcon;
+                } else {
+                    if (characterButton.MyEquipmentSlotProfile == null) {
+                        Debug.Log("CharacterPanel.Start(): equipmentslotprofile is null");
+                    }
+                    if (characterButton.MyEquipmentSlotProfile.MyIcon == null) {
+                        Debug.Log("CharacterPanel.Start(): equipmentslotprofile.myicon is null");
+                    }
+                }
+                characterButton.UpdateVisual();
+            }
+            /*
             head.MyEmptyBackGroundColor = emptySlotColor;
             head.MyFullBackGroundColor = fullSlotColor;
             if (SystemConfigurationManager.MyInstance.MyCharacterPanelHead != null) {
@@ -99,6 +121,7 @@ namespace AnyRPG {
                 offhand.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelOffHand;
             }
             offhand.UpdateVisual();
+            */
         }
 
         protected virtual void CreateEventSubscriptions() {
@@ -160,30 +183,15 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
-
-
-            /*
-            head.ClearButton(false);
-            shoulders.ClearButton(false);
-            chest.ClearButton(false);
-            hands.ClearButton(false);
-            legs.ClearButton(false);
-            feet.ClearButton(false);
-            mainhand.ClearButton(false);
-            offhand.ClearButton(false);
-            */
         }
 
         public void UpdateCharacterButtons() {
             //Debug.Log("CharacterPanel.UpdateCharacterButtons");
-            head.UpdateVisual();
-            chest.UpdateVisual();
-            legs.UpdateVisual();
-            mainhand.UpdateVisual();
-            offhand.UpdateVisual();
-            feet.UpdateVisual();
-            hands.UpdateVisual();
-            shoulders.UpdateVisual();
+            foreach (CharacterButton characterButton in characterButtons) {
+                if (characterButton != null) {
+                    characterButton.UpdateVisual();
+                }
+            }
         }
 
         public override void RecieveClosedWindowNotification() {

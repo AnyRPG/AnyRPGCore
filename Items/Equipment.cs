@@ -9,7 +9,9 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Equipment", menuName = "AnyRPG/Inventory/Equipment")]
     public abstract class Equipment : Item {
 
-        public EquipmentSlot equipSlot;
+        [SerializeField]
+        protected string equipmentSlotType;
+        
         //public UMASlot UMASlotAffinity;
         public UMA.UMATextRecipe UMARecipe = null;
 
@@ -92,7 +94,7 @@ namespace AnyRPG {
                     return damageModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
                     0f,
                     Mathf.Infinity
                     ));
@@ -128,7 +130,7 @@ namespace AnyRPG {
                     return intellectModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length) ),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count) ),
                     0f,
                     Mathf.Infinity
                     ));
@@ -141,7 +143,7 @@ namespace AnyRPG {
                     return staminaModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
                     0f,
                     Mathf.Infinity
                     ));
@@ -154,7 +156,7 @@ namespace AnyRPG {
                     return strengthModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
                     0f,
                     Mathf.Infinity
                     ));
@@ -167,7 +169,7 @@ namespace AnyRPG {
                     return agilityModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(Enum.GetNames(typeof(EquipmentSlot)).Length)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
                     0f,
                     Mathf.Infinity
                     ));
@@ -179,7 +181,8 @@ namespace AnyRPG {
         public bool MyUseManualStamina { get => useManualStamina; set => useManualStamina = value; }
         public bool MyUseManualStrength { get => useManualStrength; set => useManualStrength = value; }
         public bool MyUseManualAgility { get => useManualAgility; set => useManualAgility = value; }
-        protected bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public string MyEquipmentSlotType { get => equipmentSlotType; set => equipmentSlotType = value; }
 
         public override void Start() {
             base.Start();
@@ -252,6 +255,5 @@ namespace AnyRPG {
 
     }
 
-    public enum EquipmentSlot { Helm, Chest, Legs, MainHand, OffHand, Feet, Hands, Shoulders }
     //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }
 }

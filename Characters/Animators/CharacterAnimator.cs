@@ -1163,17 +1163,18 @@ namespace AnyRPG {
         public void PerformEquipmentChange(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
             // Animate grip for weapon when an item is added or removed from hand
-            if (newItem != null && newItem.equipSlot == EquipmentSlot.MainHand && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
+            if (newItem != null && newItem is Weapon && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");
                 //animator.SetLayerWeight(1, 1);
                 //if (weaponAnimationsDict.ContainsKey(newItem)) {
                 SetAnimationProfileOverride((newItem as Weapon).MyDefaultAttackAnimationProfile);
-            } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.MainHand) {
+            } else if (newItem == null && oldItem != null && oldItem is Weapon && (oldItem as Weapon).MyDefaultAttackAnimationProfile != null) {
                 //animator.SetLayerWeight(1, 0);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: resetting the animation profile");
                 ResetAnimationProfile();
             }
 
+            /*
             // Animate grip for weapon when a shield is added or removed from hand
             if (newItem != null && newItem.equipSlot == EquipmentSlot.OffHand) {
                 //Debug.Log("we are animating the shield");
@@ -1181,6 +1182,7 @@ namespace AnyRPG {
             } else if (newItem == null && oldItem != null && oldItem.equipSlot == EquipmentSlot.OffHand) {
                 //animator.SetLayerWeight(2, 0);
             }
+            */
         }
 
 

@@ -311,12 +311,19 @@ namespace AnyRPG {
                 // auto-attack buttons are special and display the current weapon of the character
                 if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Values) {
+                        if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
+                            MyIcon.sprite = equipment.MyIcon;
+                        }
+                    }
+                    /*
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
                         if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
                             MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
                             //Debug.Log("ActionButton.UpdateVisual(): setting icon");
                         }
                     }
+                    */
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
                         coolDownIcon.enabled = true;
                         /*

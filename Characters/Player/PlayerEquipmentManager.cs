@@ -43,7 +43,7 @@ namespace AnyRPG {
                 }
             }
             foreach (Equipment equipment in equipmentToRemove) {
-                Unequip(equipment.equipSlot);
+                Unequip(equipment);
             }
         }
 
@@ -100,13 +100,13 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.NotifyOnEquipmentRefresh(equipment);
         }
 
-        public override void Equip(Equipment newItem) {
+        public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
             //Debug.Log("EquipmentManager.Equip()");
             if (newItem == null) {
                 //Debug.Log("Instructed to Equip a null item!");
                 return;
             }
-            base.Equip(newItem);
+            base.Equip(newItem, equipmentSlotProfile);
 
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.
@@ -114,9 +114,9 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, null);
         }
 
-        public override Equipment Unequip(EquipmentSlot equipmentSlot, int slotIndex = -1) {
+        public override Equipment Unequip(EquipmentSlotProfile equipmentSlotProfile, int slotIndex = -1) {
             //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
-            Equipment returnValue = base.Unequip(equipmentSlot, slotIndex);
+            Equipment returnValue = base.Unequip(equipmentSlotProfile, slotIndex);
             if (returnValue != null) {
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
 

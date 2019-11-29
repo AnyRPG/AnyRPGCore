@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         public string MyWeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool MyUseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
-        protected bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
+        public bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
 
         public float MyDamagePerSecond () {
             if (!MyUseDamagePerSecond) {
