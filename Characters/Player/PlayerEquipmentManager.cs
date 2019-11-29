@@ -101,9 +101,9 @@ namespace AnyRPG {
         }
 
         public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
-            //Debug.Log("EquipmentManager.Equip()");
+            Debug.Log(gameObject.name + ".PlayerEquipmentManager.Equip(" + (newItem == null ? "null" : newItem.MyName)+ ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName) + ")");
             if (newItem == null) {
-                //Debug.Log("Instructed to Equip a null item!");
+                Debug.Log("Instructed to Equip a null item!");
                 return;
             }
             base.Equip(newItem, equipmentSlotProfile);

@@ -72,56 +72,7 @@ namespace AnyRPG {
                 }
                 characterButton.UpdateVisual();
             }
-            /*
-            head.MyEmptyBackGroundColor = emptySlotColor;
-            head.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelHead != null) {
-                head.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelHead;
-            }
-            head.UpdateVisual();
-            shoulders.MyEmptyBackGroundColor = emptySlotColor;
-            shoulders.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelShoulders!= null) {
-                shoulders.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelShoulders;
-            }
-            shoulders.UpdateVisual();
-            chest.MyEmptyBackGroundColor = emptySlotColor;
-            chest.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelChest != null) {
-                chest.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelChest;
-            }
-            chest.UpdateVisual();
-            hands.MyEmptyBackGroundColor = emptySlotColor;
-            hands.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelHands != null) {
-                hands.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelHands;
-            }
-            hands.UpdateVisual();
-            legs.MyEmptyBackGroundColor = emptySlotColor;
-            legs.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelLegs != null) {
-                legs.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelLegs;
-            }
-            legs.UpdateVisual();
-            feet.MyEmptyBackGroundColor = emptySlotColor;
-            feet.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelFeet != null) {
-                feet.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelFeet;
-            }
-            feet.UpdateVisual();
-            mainhand.MyEmptyBackGroundColor = emptySlotColor;
-            mainhand.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelMainHand != null) {
-                mainhand.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelMainHand;
-            }
-            mainhand.UpdateVisual();
-            offhand.MyEmptyBackGroundColor = emptySlotColor;
-            offhand.MyFullBackGroundColor = fullSlotColor;
-            if (SystemConfigurationManager.MyInstance.MyCharacterPanelOffHand != null) {
-                offhand.MyEmptySlotImage.sprite = SystemConfigurationManager.MyInstance.MyCharacterPanelOffHand;
-            }
-            offhand.UpdateVisual();
-            */
+
         }
 
         protected virtual void CreateEventSubscriptions() {
@@ -186,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCharacterButtons() {
-            //Debug.Log("CharacterPanel.UpdateCharacterButtons");
+            Debug.Log("CharacterPanel.UpdateCharacterButtons");
             foreach (CharacterButton characterButton in characterButtons) {
                 if (characterButton != null) {
                     characterButton.UpdateVisual();

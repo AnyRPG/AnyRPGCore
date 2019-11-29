@@ -275,7 +275,7 @@ namespace AnyRPG {
                 go.transform.localPosition = holdableObject.MySheathedPhysicalPosition;
                 go.transform.localEulerAngles = holdableObject.MySheathedPhysicalRotation;
             } else {
-                Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
+                //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
             }
 
         }
@@ -329,10 +329,12 @@ namespace AnyRPG {
         }
 
         public virtual EquipmentSlotProfile GetFirstEmptySlot(List<string> slotProfileList) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetFirstEmptySlot()");
             foreach (string slotProfileName in slotProfileList) {
                 EquipmentSlotProfile equipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(slotProfileName);
                 if (equipmentSlotProfile != null) {
                     if (currentEquipment.ContainsKey(equipmentSlotProfile) == false || (currentEquipment.ContainsKey(equipmentSlotProfile) == true && currentEquipment[equipmentSlotProfile] == null)) {
+                        //Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetFirstEmptySlot(): " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID());
                         return equipmentSlotProfile;
                     }
                 }
@@ -341,9 +343,9 @@ namespace AnyRPG {
         }
 
         public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName)+ ")");
             if (newItem == null) {
-                //Debug.Log("Instructed to Equip a null item!");
+                Debug.Log("Instructed to Equip a null item!");
                 return;
             }
             //currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
@@ -363,15 +365,17 @@ namespace AnyRPG {
             if (emptySlotProfile == null) {
                 if (slotProfileList != null && slotProfileList.Count > 0) {
                     Unequip(slotProfileList[0]);
+                    emptySlotProfile = GetFirstEmptySlot(slotProfileList);
                 }
             }
             // unequip any item in an exclusive slot for this item
             UnequipExclusiveSlots(newItem.MyEquipmentSlotType);
 
-            //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile] = newItem;
             //newItem.MySlot.Clear();
 
+            //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
             // both of these not needed if character unit not yet spawned?
             HandleItemUMARecipe(newItem);
             HandleWeaponSlot(emptySlotProfile);
@@ -405,7 +409,7 @@ namespace AnyRPG {
         public virtual Equipment Unequip(string equipmentSlotProfileName) {
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
                 EquipmentSlotProfile equipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(equipmentSlotProfileName);
-                if (equipmentSlotProfile) {
+                if (equipmentSlotProfile != null) {
                     return Unequip(equipmentSlotProfile);
                 }
             }
