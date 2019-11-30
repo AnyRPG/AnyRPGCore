@@ -470,7 +470,7 @@ namespace AnyRPG {
                     //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
                     if (!ability.MyAnimatorCreatePrefabs) {
-                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(ability.MyHoldableObjectNames);
+                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(ability.MyHoldableObjectNames);
                     }
                 }
                 if (ability.MyCastingAudioClip != null) {
@@ -527,7 +527,7 @@ namespace AnyRPG {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.MyAnimatorCreatePrefabs) {
-                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObject(usedBaseAbility.MyHoldableObjectNames);
+                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjectNames);
                 }
             }
 

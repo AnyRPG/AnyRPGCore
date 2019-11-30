@@ -22,6 +22,9 @@ namespace AnyRPG {
         private string holdableObjectName;
 
         [SerializeField]
+        private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
+
+        [SerializeField]
         protected bool useArmorModifier;
 
         [SerializeField]
@@ -183,6 +186,7 @@ namespace AnyRPG {
         public bool MyUseManualAgility { get => useManualAgility; set => useManualAgility = value; }
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public string MyEquipmentSlotType { get => equipmentSlotType; set => equipmentSlotType = value; }
+        public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
 
         public override void Start() {
             base.Start();
