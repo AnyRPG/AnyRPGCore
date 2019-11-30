@@ -397,7 +397,7 @@ namespace AnyRPG {
             if (AcquiringGround() && animatedUnit.MyRigidBody.velocity.y <= 0f && Time.frameCount > lastJumpFrame + 2) {
                 if (((characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
-                    Debug.Log("Jump_StateUpdate() : Entering movement state on frame: " + Time.frameCount + "; Jumped: " + lastJumpFrame);
+                    //Debug.Log("Jump_StateUpdate() : Entering movement state on frame: " + Time.frameCount + "; Jumped: " + lastJumpFrame);
                     currentState = AnyRPGCharacterState.Move;
                     rpgCharacterState = AnyRPGCharacterState.Move;
                     return;

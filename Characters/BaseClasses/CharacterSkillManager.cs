@@ -61,7 +61,7 @@ public class CharacterSkillManager : MonoBehaviour {
     }
 
     public bool HasSkill(string skillName) {
-        //Debug.Log("CharacterSkillManager.HasSkill(" + skillName + ")");
+        //Debug.Log(gameObject.name + ".CharacterSkillManager.HasSkill(" + skillName + ")");
         string keyName = SystemResourceManager.prepareStringForMatch(skillName);
         if (skillList.ContainsKey(keyName)) {
             return true;
