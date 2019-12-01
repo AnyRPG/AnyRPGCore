@@ -63,7 +63,7 @@ namespace AnyRPG {
                     if (damageType == DamageType.physical) {
                         amountAddModifier = LevelEquations.GetPhysicalPowerForCharacter(sourceCharacter);
                     } else if (damageType == DamageType.ability) {
-                        amountAddModifier = LevelEquations.GetSpellPowerForCharacter(sourceCharacter);
+                        amountAddModifier = LevelEquations.GetSpellPowerForCharacter(sourceCharacter) * abilityEffectInput.spellDamageMultiplier;
                     }
 
                     // critical hit modifer

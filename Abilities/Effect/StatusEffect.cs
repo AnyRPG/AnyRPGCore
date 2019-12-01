@@ -269,6 +269,7 @@ namespace AnyRPG {
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
         public override void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
+            abilityEffectInput.spellDamageMultiplier = tickRate / duration;
             base.CastTick(source, target, abilityEffectInput);
             PerformAbilityTick(source, target, abilityEffectInput);
         }

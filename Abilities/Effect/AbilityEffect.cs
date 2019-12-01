@@ -240,6 +240,9 @@ namespace AnyRPG {
                 if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
                     Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
+                    if (!(abilityEffect is AmountEffect)) {
+                        effectOutput.spellDamageMultiplier = 1f;
+                    }
                     GameObject tmpObject = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
                     if (tmpObject != null) {
                         //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
