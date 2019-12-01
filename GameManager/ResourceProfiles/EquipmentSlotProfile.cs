@@ -11,10 +11,16 @@ namespace AnyRPG {
     [System.Serializable]
     public class EquipmentSlotProfile : DescribableResource {
 
+        
+        // a weighted value to control distribution of stats among gear
+        [SerializeField]
+        private float statWeight = 1;
+        
         [SerializeField]
         private List<string> equipmentSlotTypeList = new List<string>();
 
         public List<string> MyEquipmentSlotTypeList { get => equipmentSlotTypeList; set => equipmentSlotTypeList = value; }
+        public float MyStatWeight { get => statWeight; set => statWeight = value; }
     }
 
 }

@@ -49,6 +49,18 @@ namespace AnyRPG {
             return null;
         }
 
+        public LootTable GetNewResource(string resourceName) {
+            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
+            if (!RequestIsEmpty(resourceName)) {
+                string keyName = prepareStringForMatch(resourceName);
+                if (resourceList.ContainsKey(keyName)) {
+                    return (ScriptableObject.Instantiate(resourceList[keyName]) as LootTable);
+                }
+            }
+            return null;
+        }
+
+
         public List<LootTable> GetResourceList() {
             List<LootTable> returnList = new List<LootTable>();
 

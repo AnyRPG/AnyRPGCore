@@ -6,11 +6,13 @@ using UnityEngine;
 using UMA;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Equipment", menuName = "AnyRPG/Inventory/Equipment")]
-    public abstract class Equipment : Item {
+    [CreateAssetMenu(fileName = "New Equipment", menuName = "AnyRPG/Inventory/Equipment/Equipment")]
+    public class Equipment : Item {
 
         [SerializeField]
         protected string equipmentSlotType;
+
+        private EquipmentSlotType realEquipmentSlotType;
         
         //public UMASlot UMASlotAffinity;
         public UMA.UMATextRecipe UMARecipe = null;
@@ -97,7 +99,7 @@ namespace AnyRPG {
                     return damageModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
+                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -133,7 +135,7 @@ namespace AnyRPG {
                     return intellectModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count) ),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -146,7 +148,7 @@ namespace AnyRPG {
                     return staminaModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -159,7 +161,7 @@ namespace AnyRPG {
                     return strengthModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -172,7 +174,7 @@ namespace AnyRPG {
                     return agilityModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * (1f / (float)(SystemEquipmentProfileManager.MyInstance.MyResourceList.Count)),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -187,9 +189,20 @@ namespace AnyRPG {
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public string MyEquipmentSlotType { get => equipmentSlotType; set => equipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+        public EquipmentSlotType MyRealEquipmentSlotType { get => SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);  }
 
-        public override void Start() {
-            base.Start();
+        /*
+        public Equipment() {
+            realEquipmentSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);
+        }
+        */
+
+        public float GetTotalSlotWeights() {
+            float returnValue = 0f;
+            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Values) {
+                returnValue += equipmentSlotProfile.MyStatWeight;
+            }
+            return returnValue;
         }
 
         public float GetItemQualityNumber() {

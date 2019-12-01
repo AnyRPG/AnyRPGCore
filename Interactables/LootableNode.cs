@@ -93,7 +93,7 @@ namespace AnyRPG {
 
         public void CreateLootTables() {
             foreach (string lootTableName in lootTableNames) {
-                LootTable lootTable = SystemLootTableManager.MyInstance.GetResource(lootTableName);
+                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
                 }

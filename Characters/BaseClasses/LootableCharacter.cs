@@ -16,16 +16,20 @@ namespace AnyRPG {
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
 
+        /*
         [SerializeField]
         private LootTable lootTable;
+        */
 
         [SerializeField]
-        private List<string> LootTableNames = new List<string>();
+        private List<string> lootTableNames = new List<string>();
+
+        private List<LootTable> lootTables = new List<LootTable>();
 
         private CharacterUnit characterUnit;
 
-        public LootTable MyLootTable { get => lootTable; }
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public List<LootTable> MyLootTables { get => lootTables; set => lootTables = value; }
 
         protected override void Awake() {
             base.Awake();
@@ -63,6 +67,24 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableCharacter.OnDisable()");
             base.OnDisable();
             CleanupEventSubscriptions();
+            ClearLootTables();
+        }
+
+        public void CreateLootTables() {
+            foreach (string lootTableName in lootTableNames) {
+                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                if (lootTable != null) {
+                    lootTables.Add(lootTable);
+                }
+            }
+        }
+
+        public void ClearLootTables() {
+            lootTables.Clear();
+        }
+
+        public void OnEnable() {
+            CreateLootTables();
         }
 
         public void HandleDeath(CharacterStats characterStats) {
@@ -71,14 +93,17 @@ namespace AnyRPG {
                 // game is exiting
                 return;
             }
-            if (MyLootTable != null && characterStats.MyBaseCharacter.MyCharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            if (lootTableNames != null && characterStats.MyBaseCharacter.MyCharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
-                MyLootTable.GetLoot();
-                if (MyLootTable.MyDroppedItems == null) {
-                    //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): LootTable.droppedItems is null!!!!");
-                } else if (MyLootTable.MyDroppedItems.Count > 0) {
+                int lootCount = 0;
+                foreach (LootTable lootTable in lootTables) {
+                    if (lootTable != null) {
+                        lootTable.GetLoot();
+                        lootCount += lootTable.MyDroppedItems.Count;
+                    }
+                }
+                if (lootCount > 0) {
                     //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
-
 
                     PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
                 }
@@ -98,12 +123,16 @@ namespace AnyRPG {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
             }
-            if (MyLootTable == null) {
+            if (lootTables == null || lootTables.Count == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table was null, despawning");
                 Despawn();
                 return;
             }
-            if (MyLootTable.MyDroppedItems.Count == 0) {
+            int lootCount = 0;
+            foreach (LootTable lootTable in lootTables) {
+                lootCount += lootTable.MyDroppedItems.Count;
+            }
+            if (lootCount == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table had no dropped items, despawning");
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
 
@@ -132,12 +161,21 @@ namespace AnyRPG {
                 return false;
             }
 
+            int lootCount = GetLootCount();
             // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
-            if (lootTable != null && lootTable.MyLoot.Length > 0 && GetCurrentOptionCount() > 0) {
+            if (lootTables != null && lootCount > 0 && GetCurrentOptionCount() > 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
                 return true;
             }
             return false;
+        }
+
+        public int GetLootCount() {
+            int lootCount = 0;
+            foreach (LootTable lootTable in lootTables) {
+                lootCount += lootTable.MyLoot.Length;
+            }
+            return lootCount;
         }
 
         public List<GameObject> GetLootableTargets() {
@@ -165,10 +203,12 @@ namespace AnyRPG {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();
                     if (lootableCharacter != null) {
                         CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats as CharacterStats;
-                        if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.MyLootTable != null) {
+                        if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.lootTables != null) {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
-                            drops.AddRange(lootableCharacter.MyLootTable.GetLoot());
-                            lootableCharacter.MonitorLootTable();
+                            foreach (LootTable lootTable in lootableCharacter.MyLootTables) {
+                                drops.AddRange(lootTable.GetLoot());
+                                lootableCharacter.MonitorLootTable();
+                            }
                         }
                     }
                 }
@@ -239,7 +279,8 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            return ((GetValidOptionCount() == 1 && MyLootTable.MyDroppedItems.Count > 0) ? 1 : 0);
+            int lootCount = GetLootCount();
+            return ((GetValidOptionCount() == 1 && lootCount > 0) ? 1 : 0);
         }
 
         public void HandleRevive() {
@@ -247,8 +288,10 @@ namespace AnyRPG {
         }
 
         public void ClearLootTable() {
-            if (lootTable != null) {
-                lootTable.HandleRevive();
+            foreach (LootTable lootTable in lootTables) {
+                if (lootTable != null) {
+                    lootTable.HandleRevive();
+                }
             }
         }
 

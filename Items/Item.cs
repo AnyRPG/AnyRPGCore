@@ -108,11 +108,6 @@ namespace AnyRPG {
         public virtual void Awake() {
         }
 
-        public virtual void Start() {
-            // do nothing for now
-            return;
-        }
-
         public ItemQuality GetItemQuality() {
             if (itemQuality != null && itemQuality != string.Empty) {
                 return SystemItemQualityManager.MyInstance.GetResource(itemQuality);
