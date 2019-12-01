@@ -28,8 +28,8 @@ namespace AnyRPG {
                 source.MyCharacterCombat.ReceiveCombatMiss(target);
                 return;
             }
-
-            KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthBaseAmount, source, target.GetComponent<CharacterUnit>());
+            float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.MyCharacterStats.MyLevel);
+            KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
             int extraAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
             int abilityFinalAmount = (int)abilityKeyValuePair.Key;
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();

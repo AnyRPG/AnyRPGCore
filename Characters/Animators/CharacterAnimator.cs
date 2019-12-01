@@ -763,6 +763,10 @@ namespace AnyRPG {
                 //Debug.Log("current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MyDefaultCastClip].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
+
+                // save animation length for damage normalization
+                //lastAnimationLength = animationLength;
+
             }
 
             SetCasting(true);

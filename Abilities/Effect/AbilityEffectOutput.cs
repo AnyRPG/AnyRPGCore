@@ -10,6 +10,7 @@ namespace AnyRPG {
         public int manaAmount = 0;
         public int overrideDuration = 0;
         public bool savedEffect = false;
+        public float castTimeMultipler = 1f;
 
         public Vector3 prefabLocation = Vector3.zero;
     }

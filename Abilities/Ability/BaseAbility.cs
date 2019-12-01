@@ -125,6 +125,9 @@ namespace AnyRPG {
         [SerializeField]
         protected bool autoAddToBars = true;
 
+        // this will be set to the ability casting length only for direct cast abilities
+        protected float castTimeMultiplier = 1f;
+
         public List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         protected Vector3 groundTarget = Vector3.zero;
@@ -357,6 +360,8 @@ namespace AnyRPG {
                 }
                 AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
                 abilityEffectOutput.prefabLocation = groundTarget;
+
+                abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
                 if (_abilityEffect != null) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);

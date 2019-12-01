@@ -52,22 +52,22 @@ namespace AnyRPG {
         public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         private void Start() {
-            Debug.Log("CharacterPanel.Start()");
+            //Debug.Log("CharacterPanel.Start()");
             CreateEventSubscriptions();
 
             foreach (CharacterButton characterButton in characterButtons) {
                 characterButton.MyEmptyBackGroundColor = emptySlotColor;
                 characterButton.MyFullBackGroundColor = fullSlotColor;
-                Debug.Log("CharacterPanel.Start(): checking icon");
+                //Debug.Log("CharacterPanel.Start(): checking icon");
                 if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.MyIcon != null) {
-                    Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
+                    //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
                     characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.MyIcon;
                 } else {
                     if (characterButton.MyEquipmentSlotProfile == null) {
-                        Debug.Log("CharacterPanel.Start(): equipmentslotprofile is null");
+                        //Debug.Log("CharacterPanel.Start(): equipmentslotprofile is null");
                     }
                     if (characterButton.MyEquipmentSlotProfile.MyIcon == null) {
-                        Debug.Log("CharacterPanel.Start(): equipmentslotprofile.myicon is null");
+                        //Debug.Log("CharacterPanel.Start(): equipmentslotprofile.myicon is null");
                     }
                 }
                 characterButton.UpdateVisual();

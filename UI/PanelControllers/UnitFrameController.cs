@@ -181,7 +181,7 @@ namespace AnyRPG {
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
+            Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
             if (followGameObject != null) {
 
                 INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
