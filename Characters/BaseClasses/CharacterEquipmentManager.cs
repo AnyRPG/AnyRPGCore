@@ -414,7 +414,7 @@ namespace AnyRPG {
             // unequip any item in an exclusive slot for this item
             UnequipExclusiveSlots(newItem.MyEquipmentSlotType);
 
-            Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile.MyName] = newItem;
             //newItem.MySlot.Clear();
 

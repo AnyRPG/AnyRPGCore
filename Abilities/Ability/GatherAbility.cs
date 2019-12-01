@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             bool returnResult = base.Cast(source, target, groundTarget);
             if (returnResult == true) {
-                target.GetComponent<GatheringNode>().Gather();
+                target.GetComponent<GatheringNode>().PickUp();
             }
             return returnResult;
         }

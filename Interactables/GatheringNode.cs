@@ -1,11 +1,12 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class GatheringNode : InteractableOption {
+    public class GatheringNode : LootableNode {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
@@ -31,14 +32,6 @@ namespace AnyRPG {
 
         private GatherAbility realAbility;
 
-        [SerializeField]
-        private GatherLootTable lootTable;
-
-        [SerializeField]
-        private float spawnTimer = 5f;
-
-        private float currentTimer = 0f;
-
         public GatherAbility MyAbility { get => realAbility; }
 
         protected override void Awake() {
@@ -50,12 +43,18 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            if (lootTable == null) {
+            if (lootTableNames == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
-            if (lootTable.MyDroppedItems.Count > 0) {
-                Gather();
+            int lootCount = 0;
+            foreach (LootTable lootTable in lootTables) {
+                if (lootTable.MyDroppedItems.Count > 0) {
+                    lootCount += lootTable.MyDroppedItems.Count;
+                }
+            }
+            if (lootCount > 0) {
+                PickUp();
             } else {
                 source.GetComponent<CharacterUnit>().MyCharacter.MyCharacterAbilityManager.BeginAbility(MyAbility);
             }
@@ -64,103 +63,12 @@ namespace AnyRPG {
             //return PickUp();
         }
 
-        private IEnumerator StartSpawnCountdown() {
-            //Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
-            // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
-            HandlePrerequisiteUpdates();
-            currentTimer = spawnTimer;
-            while (currentTimer > 0) {
-                //Debug.Log("Spawn Timer: " + currentTimer);
-                currentTimer -= 1;
-                yield return new WaitForSeconds(1);
-            }
-            interactable.Spawn();
-            HandlePrerequisiteUpdates();
-        }
-
-        public void Gather() {
-            PickUp();
-        }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
-        void PickUp() {
-            //Debug.Log("GatheringNode.Pickup()");
-            LootUI.MyInstance.CreatePages(lootTable.GetLoot());
-            CreateEventSubscriptions();
-            PopupWindowManager.MyInstance.lootWindow.OpenWindow();
-        }
-
-        public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-            CleanupEventSubscriptions();
-        }
-
-        public void CreateEventSubscriptions() {
-            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
-            LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
-            eventSubscriptionsInitialized = true;
-        }
-
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
-                LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
-            }
-            eventSubscriptionsInitialized = false;
-        }
-
-        public override void OnDisable() {
-            base.OnDisable();
-            CleanupEventSubscriptions();
-            StopAllCoroutines();
-        }
-
-        public void CheckDropListSize() {
-            //Debug.Log("GatheringNode.CheckDropListSize()");
-            if (lootTable.MyDroppedItems.Count == 0) {
-                (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
-                interactable.DestroySpawn();
-                lootTable.Reset();
-                StartCoroutine(StartSpawnCountdown());
-            }
-        }
-
-        public override void StopInteract() {
-            base.StopInteract();
-
-            PopupWindowManager.MyInstance.lootWindow.CloseWindow();
-        }
-
-        public override bool HasMiniMapText() {
-            return true;
-        }
-
-        public override bool SetMiniMapText(Text text) {
-            if (!base.SetMiniMapText(text)) {
-                text.text = "";
-                text.color = new Color32(0, 0, 0, 0);
-                return false;
-            }
-            text.text = "o";
-            text.fontSize = 50;
-            text.color = Color.blue;
-            return true;
-        }
-
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
             return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
 
+        /*
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
@@ -173,6 +81,7 @@ namespace AnyRPG {
             }
             return (GetCurrentOptionCount() == 0 ? false : true);
         }
+        */
     }
 
 }
