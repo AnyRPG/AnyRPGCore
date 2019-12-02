@@ -453,12 +453,12 @@ namespace AnyRPG {
             OnManaChanged(MyMaxMana, currentMana);
         }
 
-        public void RecoverMana(int mana, BaseCharacter source, bool showCombatText = true) {
+        public void RecoverMana(int mana, BaseCharacter source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
             SetMana(mana);
             if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, mana, CombatTextType.gainMana, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, mana, CombatTextType.gainMana, combatMagnitude);
             }
         }
 
@@ -489,13 +489,13 @@ namespace AnyRPG {
             OnHealthChanged(MyMaxHealth, currentHealth);
         }
 
-        public void RecoverHealth(int health, BaseCharacter source, bool showCombatText = true) {
+        public void RecoverHealth(int health, BaseCharacter source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
             //Debug.Log(gameObject.name + ".CharacterStats.RecoverHealth(" + health + ", " + (source != null && source.MyDisplayName != null ? source.MyDisplayName : null) + ", " + showCombatText + ")");
             SetHealth(health);
 
             if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, health, CombatTextType.gainHealth, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, health, CombatTextType.gainHealth, combatMagnitude);
             }
         }
 

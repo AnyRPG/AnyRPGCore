@@ -15,25 +15,34 @@ namespace AnyRPG {
         public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".HealEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + abilityEffectName);
             int healthFinalAmount = 0;
+            CombatMagnitude combatMagnitude = CombatMagnitude.normal;
             if (useHealthAmount == true) {
                 float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.MyCharacterStats.MyLevel);
-                healthFinalAmount = (int)CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+                healthFinalAmount = (int)abilityKeyValuePair.Key;
+                combatMagnitude = abilityKeyValuePair.Value;
+                //healthFinalAmount = (int)CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
             }
             healthFinalAmount += (int)(abilityEffectInput.healthAmount * inputMultiplier);
+
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
             abilityEffectOutput.healthAmount = healthFinalAmount;
             if (healthFinalAmount > 0) {
-                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.RecoverHealth(healthFinalAmount, source);
+                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.RecoverHealth(healthFinalAmount, source, true, combatMagnitude);
             }
             int manaFinalAmount = 0;
+            combatMagnitude = CombatMagnitude.normal;
             if (useManaAmount == true) {
                 float manaTotalAmount = manaBaseAmount + (manaAmountPerLevel * source.MyCharacterStats.MyLevel);
-                manaFinalAmount = (int)CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+                manaFinalAmount = (int)abilityKeyValuePair.Key;
+                combatMagnitude = abilityKeyValuePair.Value;
+                //manaFinalAmount = (int)CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
             }
             manaFinalAmount += (int)(abilityEffectInput.manaAmount * inputMultiplier);
             abilityEffectOutput.manaAmount = manaFinalAmount;
             if (manaFinalAmount > 0) {
-                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.RecoverMana(manaFinalAmount, source);
+                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats.RecoverMana(manaFinalAmount, source, true, combatMagnitude);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
             base.PerformAbilityHit(source, target, abilityEffectOutput);

@@ -236,17 +236,19 @@ namespace AnyRPG {
             List<GameObject> returnList = new List<GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
-                //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + abilityEffect.MyName);
-                if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
-                    Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
-                } else {
-                    if (!(abilityEffect is AmountEffect)) {
-                        effectOutput.spellDamageMultiplier = 1f;
-                    }
-                    GameObject tmpObject = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
-                    if (tmpObject != null) {
-                        //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
-                        returnList.Add(tmpObject);
+                if (abilityEffect != null) {
+                    Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.MyName : "null") + "; MyName: " + (MyName == null ? "null" : MyName));
+                    if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
+                        Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
+                    } else {
+                        if (!(abilityEffect is AmountEffect)) {
+                            effectOutput.spellDamageMultiplier = 1f;
+                        }
+                        GameObject tmpObject = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                        if (tmpObject != null) {
+                            //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
+                            returnList.Add(tmpObject);
+                        }
                     }
                 }
             }
