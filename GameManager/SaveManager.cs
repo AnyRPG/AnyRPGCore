@@ -780,7 +780,9 @@ namespace AnyRPG {
 
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(anyRPGSaveData.playerFaction);
             //PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
+
+            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
+
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
             // moved to clearshareddata to have central clearing method
@@ -791,13 +793,17 @@ namespace AnyRPG {
 
             // fix for random start order
 
-            LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
 
             // complex data
             LoadEquippedBagData(anyRPGSaveData);
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
+            // testing - move here to prevent learning auto-attack ability twice
+            LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
+
+            // testing - move here to prevent learning abilities and filling up bars
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
 
             LoadSkillData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);
@@ -812,6 +818,7 @@ namespace AnyRPG {
 
             LoadStatusEffectData(anyRPGSaveData);
 
+            // necessary?  should be handled by setcharacterclass call
             CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
             PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplyClassTraits(characterClass);
 

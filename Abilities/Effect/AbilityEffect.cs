@@ -237,7 +237,7 @@ namespace AnyRPG {
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
                 if (abilityEffect != null) {
-                    Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.MyName : "null") + "; MyName: " + (MyName == null ? "null" : MyName));
+                    //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.MyName : "null") + "; MyName: " + (MyName == null ? "null" : MyName));
                     if (SystemResourceManager.MatchResource(abilityEffect.MyName, MyName)) {
                         Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
