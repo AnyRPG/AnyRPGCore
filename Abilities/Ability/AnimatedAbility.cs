@@ -22,7 +22,7 @@ namespace AnyRPG {
         public bool MyIsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
 
         public override bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
-            //Debug.Log(MyName + ".AnimatedAbility.Cast()");
+            //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
             if (base.Cast(sourceCharacter, target, groundTarget)) {
                 if (animationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
@@ -62,7 +62,7 @@ namespace AnyRPG {
                 }
                 return true;
             } else {
-                //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
+                Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY");
             }
             return false;
         }
@@ -128,5 +128,4 @@ namespace AnyRPG {
 
     }
 
-    public enum AnyRPGWeaponAffinity { Unarmed, Sword2H, Sword1H, Staff, Shield, Mace2H, Mace1H, Bow }
 }

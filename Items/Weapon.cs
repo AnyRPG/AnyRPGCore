@@ -25,9 +25,6 @@ namespace AnyRPG {
         [SerializeField]
         private InstantEffectAbility onHitAbility;
 
-        [SerializeField]
-        private AnyRPGWeaponAffinity weaponAffinity;
-
         // the skill required to use this weapon
         [SerializeField]
         private string weaponSkill;
@@ -42,31 +39,17 @@ namespace AnyRPG {
         }
 
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
-        public AnyRPGWeaponAffinity MyWeaponAffinity { get => weaponAffinity; set => weaponAffinity = value; }
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
 
+        /*
         public override int MyDamageModifier {
             get {
                 if (!useManualDamage) {
-                    if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                        return base.MyDamageModifier * 2;
-                    }
+                    return (int)(base.MyDamageModifier * MyRealEquipmentSlotType.MyStatWeight);
                 }
                 return base.MyDamageModifier;
             }
             set => base.MyDamageModifier = value;
-        }
-        /*
-        public override int MyArmorModifier {
-            get {
-                if (!useManualArmor) {
-                    if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                        return base.MyArmorModifier * 2;
-                    }
-                }
-                return base.MyArmorModifier;
-            }
-            set => base.MyArmorModifier = value;
         }
         */
 
@@ -82,51 +65,40 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber()),
+                (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber() * MyRealEquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
         }
-
+        /*
         public override int MyIntellectModifier(int currentLevel, BaseCharacter baseCharacter) {
             if (!useManualIntellect) {
-                if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                    return base.MyIntellectModifier(currentLevel, baseCharacter) * 2;
-                }
-
+                return (int)(base.MyIntellectModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
             }
             return base.MyIntellectModifier(currentLevel, baseCharacter);
         }
 
         public override int MyStaminaModifier(int currentLevel, BaseCharacter baseCharacter) {
             if (!useManualStamina) {
-                if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                    return base.MyStaminaModifier(currentLevel, baseCharacter) * 2;
-                }
-
+                return (int)(base.MyStaminaModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
             }
             return base.MyStaminaModifier(currentLevel, baseCharacter);
         }
 
         public override int MyStrengthModifier(int currentLevel, BaseCharacter baseCharacter) {
             if (!useManualStrength) {
-                if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                    return base.MyStrengthModifier(currentLevel, baseCharacter) * 2;
-                }
-
+                return (int)(base.MyStrengthModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
             }
             return base.MyStrengthModifier(currentLevel, baseCharacter);
         }
 
         public override int MyAgilityModifier(int currentLevel, BaseCharacter baseCharacter) {
             if (!useManualAgility) {
-                if (weaponAffinity == AnyRPGWeaponAffinity.Bow || weaponAffinity == AnyRPGWeaponAffinity.Staff || weaponAffinity == AnyRPGWeaponAffinity.Mace2H || weaponAffinity == AnyRPGWeaponAffinity.Sword2H) {
-                    return base.MyAgilityModifier(currentLevel, baseCharacter) * 2;
-                }
-
+                return (int)(base.MyAgilityModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
             }
             return base.MyAgilityModifier(currentLevel, baseCharacter);
         }
+        */
 
         public override string GetSummary() {
 
@@ -154,7 +126,7 @@ namespace AnyRPG {
                 if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
                     colorString = "white";
                 }
-                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponAffinity);
+                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill);
             }
             return base.GetSummary() + abilitiesString;
         }
@@ -162,9 +134,9 @@ namespace AnyRPG {
         public List<string> GetAllowedCharacterClasses() {
             List<string> returnValue = new List<string>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.MyWeaponAffinityList != null && characterClass.MyWeaponAffinityList.Count > 0) {
+                if (characterClass.MyWeaponSkillList != null && characterClass.MyWeaponSkillList.Count > 0) {
                     //bool foundMatch = false;
-                    if (characterClass.MyWeaponAffinityList.Contains(weaponAffinity)) {
+                    if (characterClass.MyWeaponSkillList.Contains(weaponSkill)) {
                         returnValue.Add(characterClass.MyName);
                     }
                 }

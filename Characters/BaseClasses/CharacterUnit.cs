@@ -184,6 +184,15 @@ namespace AnyRPG {
                 }
             }
             audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) {
+                Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): AUDIOSOURCE WAS NULL. ADDING ONE, BUT AN AUDIO SOURCE SHOULD BE MANUALLY ADDED.  CHECK INSPECTOR.");
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.spatialBlend = 1f;
+                audioSource.rolloffMode = AudioRolloffMode.Linear;
+                audioSource.minDistance = 1f;
+                audioSource.maxDistance = 50f;
+                audioSource.outputAudioMixerGroup = AudioManager.MyInstance.MyEffectsAudioSource.outputAudioMixerGroup;
+            }
             // ADD SOME CODE IN THE FUTURE TO AUTO-CONFIGURE THIS AUDIO SOURCE IN CASE IT HAS NOT BEEN ADDED TO THE UNIT PREFAB
         }
 

@@ -349,7 +349,7 @@ namespace AnyRPG {
                     return;
                 }
 
-                if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyWeaponAffinity.Count > 0) {
+                if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyWeaponAffinityNames.Count > 0) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
                         if (!((MyUseable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
                             //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");

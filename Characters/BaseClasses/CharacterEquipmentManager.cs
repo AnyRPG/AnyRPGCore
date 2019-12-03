@@ -508,21 +508,29 @@ namespace AnyRPG {
             */
         }
 
-        public bool HasAffinity(AnyRPGWeaponAffinity weaponAffinity) {
+        public bool HasAffinity(string weaponAffinity) {
             //Debug.Log("EquipmentManager.HasAffinity(" + weaponAffinity.ToString() + ")");
-            bool unarmed = true;
+            int weaponCount = 0;
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment is Weapon) {
-                    if ((equipment as Weapon).MyWeaponAffinity != AnyRPGWeaponAffinity.Unarmed) {
-                        unarmed = false;
-                        if (weaponAffinity == (equipment as Weapon).MyWeaponAffinity) {
-                            return true;
-                        }
+                    weaponCount++;
+                    if (weaponAffinity == (equipment as Weapon).MyWeaponSkill) {
+                        return true;
                     }
                 }
             }
-            if (weaponAffinity == AnyRPGWeaponAffinity.Unarmed && unarmed == true) {
-                return true;
+            if (weaponCount == 0) {
+                if (baseCharacter.MyCharacterClassName != null) {
+                    CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(baseCharacter.MyCharacterClassName);
+                    if (characterClass != null) {
+                        if (characterClass.MyWeaponSkillList.Contains(weaponAffinity)) {
+                            WeaponSkill weaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponAffinity);
+                            if (weaponSkill.MyDefaultWeaponSkill) {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
             return false;
         }

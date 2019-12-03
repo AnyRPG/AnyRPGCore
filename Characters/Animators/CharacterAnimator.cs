@@ -717,6 +717,7 @@ namespace AnyRPG {
         public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
             if (animator == null) {
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
                 return;
             }
             characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;

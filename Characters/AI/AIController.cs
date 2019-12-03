@@ -381,7 +381,7 @@ namespace AnyRPG {
                 // get random attack if no strategy exists
                 BaseAbility validAttackAbility = (MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
                 if (validAttackAbility != null) {
-                    //Debug.Log(aiController.gameObject.name + ": FollowState.Update(): Got valid attack ability: " + validAttackAbility.MyName);
+                    //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
                     MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
                 }

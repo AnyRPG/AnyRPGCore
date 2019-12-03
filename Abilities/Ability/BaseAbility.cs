@@ -13,9 +13,7 @@ namespace AnyRPG {
         //public event System.Action<IAbility> OnAbilityCast = delegate { };
 
         [SerializeField]
-        private List<AnyRPGWeaponAffinity> weaponAffinity = new List<AnyRPGWeaponAffinity>();
-
-        public List<AnyRPGWeaponAffinity> MyWeaponAffinity { get => weaponAffinity; set => weaponAffinity = value; }
+        private List<string> weaponAffinityNames = new List<string>();
 
         [SerializeField]
         protected string holdableObjectName;
@@ -166,20 +164,21 @@ namespace AnyRPG {
         protected List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
+        public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
             bool affinityMet = false;
             string colorString = string.Empty;
             string addString = string.Empty;
-            if (weaponAffinity.Count == 0) {
+            if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 affinityMet = true;
 
             } else {
                 List<string> requireStrings = new List<string>();
-                foreach (AnyRPGWeaponAffinity _weaponAffinity in weaponAffinity) {
-                    requireStrings.Add(_weaponAffinity.ToString());
+                foreach (string _weaponAffinity in weaponAffinityNames) {
+                    requireStrings.Add(_weaponAffinity);
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
@@ -196,12 +195,14 @@ namespace AnyRPG {
         }
 
         public bool CanCast(BaseCharacter sourceCharacter) {
-            if (weaponAffinity.Count == 0) {
+            if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 return true;
             } else {
-                foreach (AnyRPGWeaponAffinity _weaponAffinity in weaponAffinity) {
+                if (true) {
 
+                }
+                foreach (string _weaponAffinity in weaponAffinityNames) {
                     if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null && sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         return true;
                     }
@@ -219,8 +220,9 @@ namespace AnyRPG {
         }
 
         public virtual bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
-            //Debug.Log(resourceName + ".BaseAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
+            //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
             if (!CanCast(sourceCharacter)) {
+                //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
                 //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
                 return false;
             }

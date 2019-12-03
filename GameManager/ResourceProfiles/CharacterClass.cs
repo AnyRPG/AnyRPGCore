@@ -12,9 +12,6 @@ namespace AnyRPG {
     public class CharacterClass : DescribableResource {
 
         [SerializeField]
-        private List<AnyRPGWeaponAffinity> weaponAffinityList = new List<AnyRPGWeaponAffinity>();
-
-        [SerializeField]
         private List<string> weaponSkillList = new List<string>();
 
         [SerializeField]
@@ -41,7 +38,6 @@ namespace AnyRPG {
         [SerializeField]
         private int agilityPerLevel;
 
-        public List<AnyRPGWeaponAffinity> MyWeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
         public List<string> MyAbilityList { get => abilityList; set => abilityList = value; }
         public List<string> MyArmorClassList { get => armorClassList; set => armorClassList = value; }
         public int MyStaminaPerLevel { get => staminaPerLevel; set => staminaPerLevel = value; }

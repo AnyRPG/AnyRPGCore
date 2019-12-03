@@ -209,11 +209,13 @@ namespace AnyRPG {
         }
 
         public virtual void LearnDefaultAutoAttackAbility() {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
             if (AutoAttackKnown() == true) {
                 // can't learn two auto-attacks at the same time
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning ability");
                 LearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
             }
         }
@@ -392,7 +394,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LearnAbility(string abilityName) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility()");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + abilityName + ")");
             string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             if (baseAbility == null) {
@@ -536,7 +538,9 @@ namespace AnyRPG {
         public void EndCastCleanup() {
             currentCastCoroutine = null;
             currentCastAbility = null;
-            baseCharacter.MyCharacterUnit.MyAudioSource.Stop();
+            if (baseCharacter.MyCharacterUnit.MyAudioSource != null) {
+                baseCharacter.MyCharacterUnit.MyAudioSource.Stop();
+            }
         }
 
         public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
@@ -586,7 +590,7 @@ namespace AnyRPG {
             }
 
             if (!CanCastAbility(ability)) {
-                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
 

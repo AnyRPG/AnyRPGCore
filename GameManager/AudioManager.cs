@@ -56,6 +56,8 @@ namespace AnyRPG {
         public string MyAmbientVolume { get => ambientVolume; }
         public AudioClip MyUIClickSound { get => uiClickSound; set => uiClickSound = value; }
         public AudioSource MyMusicAudioSource { get => musicAudioSource; set => musicAudioSource = value; }
+        public AudioSource MyEffectsAudioSource { get => effectsAudioSource; set => effectsAudioSource = value; }
+        public AudioSource MyAmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
 
         private void Awake() {
             //Debug.Log("AudioManager.Awake()");
