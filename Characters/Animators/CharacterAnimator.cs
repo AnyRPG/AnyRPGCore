@@ -101,7 +101,7 @@ namespace AnyRPG {
                 characterUnit = GetComponentInParent<CharacterUnit>();
             }
             if (characterUnit == null) {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.Awake(): Unable to detect characterUnit!");
+                Debug.Log(gameObject.name + ".CharacterAnimator.Awake(): Unable to detect characterUnit!");
             }
             if (SystemConfigurationManager.MyInstance != null) {
                 if (animatorController == null) {
@@ -119,13 +119,19 @@ namespace AnyRPG {
         public virtual void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to handleattack");
+                //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to HandleDeath");
                 //characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
                 characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
                 characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
                 if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to onequipmentchanged");
                     characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += PerformEquipmentChange;
+                }
+            } else {
+                if (characterUnit == null) {
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): characterUnit is null");
+                } else if (characterUnit.MyCharacter == null) {
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): characterUnit.mycharacter is null");
                 }
             }
         }

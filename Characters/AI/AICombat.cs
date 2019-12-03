@@ -7,12 +7,13 @@ namespace AnyRPG {
     public class AICombat : CharacterCombat {
 
         protected override void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".AICombat.CreateEventSubscriptions()");
             base.CreateEventSubscriptions();
             baseCharacter.MyCharacterStats.OnDie += HandleDie;
         }
 
         protected override void Update() {
-            //Debug.Log(gameObject.name + ": Update()");
+            //Debug.Log(gameObject.name + ".AICombat.Update()");
             base.Update();
             if (!baseCharacter.MyCharacterStats.IsAlive) {
                 return;

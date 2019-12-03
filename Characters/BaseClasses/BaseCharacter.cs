@@ -78,9 +78,11 @@ namespace AnyRPG {
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
+            GetComponentReferences();
         }
 
         public virtual void GetComponentReferences() {
+            //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
             characterStats = GetComponent<CharacterStats>();
             characterCombat = GetComponent<CharacterCombat>();
@@ -88,13 +90,17 @@ namespace AnyRPG {
             characterAbilityManager = GetComponent<CharacterAbilityManager>();
             characterSkillManager = GetComponent<CharacterSkillManager>();
 
-            CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
-            if (_characterUnit != null) {
-                MyCharacterUnit = _characterUnit;
+            if (MyCharacterUnit == null) {
+                CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
+                if (_characterUnit != null) {
+                    MyCharacterUnit = _characterUnit;
+                }
             }
-            AnimatedUnit _animatedUnit = GetComponent<AnimatedUnit>();
-            if (_animatedUnit != null) {
-                MyAnimatedUnit = _animatedUnit;
+            if (MyAnimatedUnit == null) {
+                AnimatedUnit _animatedUnit = GetComponent<AnimatedUnit>();
+                if (_animatedUnit != null) {
+                    MyAnimatedUnit = _animatedUnit;
+                }
             }
             characterFactionManager = GetComponent<CharacterFactionManager>();
             characterEquipmentManager = GetComponent<CharacterEquipmentManager>();

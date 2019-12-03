@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCharacterButtons() {
-            Debug.Log("CharacterPanel.UpdateCharacterButtons");
+            //Debug.Log("CharacterPanel.UpdateCharacterButtons");
             foreach (CharacterButton characterButton in characterButtons) {
                 if (characterButton != null) {
                     characterButton.UpdateVisual();

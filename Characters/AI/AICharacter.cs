@@ -20,12 +20,13 @@ namespace AnyRPG {
         public GameObject MyCharacterModelGameObject { get => characterModelGameObject; set => characterModelGameObject = value; }
 
         protected override void Awake() {
+            //Debug.Log(gameObject.name + ".AICharacter.Awake()");
             base.Awake();
             OrchestratorStart();
-
         }
 
         public override void GetComponentReferences() {
+            //Debug.Log(gameObject.name + ".AICharacter.GetComponentReferences()");
             base.GetComponentReferences();
             characterController = GetComponent<AIController>();
             characterStats = GetComponent<AIStats>();
@@ -37,10 +38,12 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
             if (characterUnit != null) {
                 characterUnit.OrchestrateStartup();
             }
 
+            // if this is run, or the getcomponents part anyway before the above block, then character unit will be set properly
             base.OrchestratorStart();
 
         }

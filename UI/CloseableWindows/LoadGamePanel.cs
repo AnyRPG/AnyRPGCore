@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+            //Debug.Log("LoadGamePanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
             if (CharacterCreatorManager.MyInstance.MyPreviewUnit != null) {
@@ -187,14 +187,19 @@ namespace AnyRPG {
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(umaAvatar);
 
-            // FIX ME
-            /*
             CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (previewUnitEquipmentManager != null) {
+                //Debug.Log("LoadGamePanel.TargetReadyCallback(): about to equip character");
+
+                // needs to be set manually because this is neither a player or npc unit
+                previewUnitEquipmentManager.MyPlayerUnitObject = CharacterCreatorManager.MyInstance.MyPreviewUnit;
+
                 // results in equipment being sheathed
                 previewUnitEquipmentManager.EquipCharacter();
+            } else {
+                //Debug.Log("LoadGamePanel.TargetReadyCallback(): equipment manager was null");
             }
-            */
+
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
             CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;

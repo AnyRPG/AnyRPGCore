@@ -26,6 +26,8 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        protected bool orchestratorStartupComplete = false;
+
         /*
         public BaseCharacter MyCharacter {
             get => baseCharacter;
@@ -42,19 +44,28 @@ namespace AnyRPG {
         //public BaseCharacter MyBaseCharacter { get => MyCharacter; }
 
         protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Awake() about to get references to all local components");
+            //Debug.Log(gameObject.name + ".AnimatedUnit.Awake()");
+        }
+
+        protected virtual void Start() {
+            //Debug.Log(gameObject.name + ".AnimatedUnit.Start()");
             if (GetComponent<CharacterUnit>() != null) {
                 OrchestrateStartup();
             }
         }
 
         public virtual void OrchestrateStartup() {
+            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStartup()");
+            if (orchestratorStartupComplete == true) {
+                return;
+            }
             GetComponentReferences();
             CreateEventSubscriptions();
             characterMotor.OrchestrateStartup();
             if (characterAnimator != null) {
                 characterAnimator.OrchestratorStart();
             }
+            orchestratorStartupComplete = true;
         }
 
         public virtual void CreateEventSubscriptions() {

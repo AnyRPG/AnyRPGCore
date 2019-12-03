@@ -93,7 +93,7 @@ namespace AnyRPG {
             // multiplicative damage modifiers
             amountMultiplyModifier *= sourceCharacter.MyCharacterStats.GetOutGoingDamageModifiers();
 
-            return new KeyValuePair<float, CombatMagnitude>((abilityBaseAmount == 0 ? abilityBaseAmount : ((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier) * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
+            return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
 
         public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {

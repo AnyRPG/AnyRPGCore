@@ -315,9 +315,17 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIController.Reset()");
             target = null;
             MyAggroRange = initialAggroRange;
-            baseCharacter.MyCharacterStats.ResetHealth();
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.ResetPath();
+            if (baseCharacter != null) {
+                baseCharacter.MyCharacterStats.ResetHealth();
+                if (baseCharacter.MyAnimatedUnit != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.ResetPath();
+                } else {
+                    //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter.myanimatedunit was null!");
+                }
+            } else {
+                //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter was null!");
+            }
         }
 
         public void DisableAggro() {

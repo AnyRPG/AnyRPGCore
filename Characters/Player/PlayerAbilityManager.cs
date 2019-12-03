@@ -63,7 +63,7 @@ namespace AnyRPG {
         }
 
         public void LoadAbility(string abilityName) {
-            Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + ")");
+            //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + ")");
             IAbility ability = SystemAbilityManager.MyInstance.GetResource(abilityName) as IAbility;
             if (ability != null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.

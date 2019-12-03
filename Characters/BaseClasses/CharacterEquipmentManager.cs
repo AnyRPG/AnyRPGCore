@@ -33,6 +33,7 @@ namespace AnyRPG {
         protected string equipmentProfileName;
 
         public Dictionary<string, Equipment> MyCurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
+        public GameObject MyPlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
 
         protected virtual void Start() {
             int numSlots = SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count;
@@ -142,17 +143,17 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentModels(string equipmentSlotProfileName) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleEquipmentModels(" + equipmentSlotProfileName + ")");
             //public void HandleEquipmentModels(Equipment newItem) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleEquipmentModels(" + (newItem == null ? "null" : newItem.MyName) + ")");
             //HandleItemUMARecipe(newItem);
             HandleWeaponSlot(equipmentSlotProfileName);
         }
 
         public virtual void HandleWeaponSlot(string equipmentSlotProfileName) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfileName + ")");
 
             Equipment newItem = currentEquipment[equipmentSlotProfileName];
             //public virtual void HandleWeaponSlot(Equipment newItem) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + (newItem == null ? "null" : newItem.MyName) + ")");
             if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty || playerUnitObject == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
                 return;

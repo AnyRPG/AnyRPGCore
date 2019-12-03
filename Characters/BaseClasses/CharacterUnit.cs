@@ -102,13 +102,15 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            //Debug.Log(gameObject.name + ": running Start()");
+            //Debug.Log(gameObject.name + ".CharacterUnit.Start()");
             base.Start();
             InitializeNamePlate();
             CreateEventSubscriptions();
         }
 
         public virtual void OrchestrateStartup() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStartup()");
+            GetComponentReferences();
             AnimatedUnit animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit != null) {
                 animatedUnit.OrchestrateStartup();
