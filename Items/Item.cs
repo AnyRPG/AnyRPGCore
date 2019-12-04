@@ -19,9 +19,6 @@ namespace AnyRPG {
         private int stackSize;
 
         [SerializeField]
-        private Quality quality;
-
-        [SerializeField]
         protected string itemQuality;
 
         [SerializeField]
@@ -52,7 +49,6 @@ namespace AnyRPG {
 
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
-        public Quality MyQuality { get => quality; }
         public int MyPrice { get => price; set => price = value; }
         public bool MyUniqueItem { get => uniqueItem; }
         public Currency MyCurrency { get => currency; set => currency = value; }
@@ -115,9 +111,15 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual void Use() {
-            // use the item
+        public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
+            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
+                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                    MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyName);
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

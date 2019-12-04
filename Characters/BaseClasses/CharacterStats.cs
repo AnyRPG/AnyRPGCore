@@ -227,7 +227,7 @@ namespace AnyRPG {
                     returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyAccuracyMultiplier;
                 }
             }
-            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
+            //Debug.Log(gameObject.name + ".CharacterStats.GetAccuracyModifiers() returning: " + returnValue);
             return returnValue;
         }
 

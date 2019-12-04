@@ -7,12 +7,17 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "ManaPotion", menuName = "AnyRPG/Inventory/Items/ManaPotion", order = 1)]
     public class ManaPotion : CastableItem {
 
-        public override void Use() {
+        public override bool Use() {
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana < PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxMana) {
                 //Debug.Log("The current mana was less than the max mana and we can use the potion: " + this.GetInstanceID().ToString());
-                base.Use();
+                bool returnValue = base.Use();
+                if (returnValue == false) {
+                    return false;
+                }
+                return returnValue;
             } else {
                 MessageFeedManager.MyInstance.WriteMessage("Your mana is already full!");
+                return false;
             }
         }
 

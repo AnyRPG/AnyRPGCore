@@ -10,6 +10,6 @@ namespace AnyRPG {
     public interface IUseable {
         Sprite MyIcon { get; }
         string MyName { get; }
-        void Use();
+        bool Use();
     }
 }

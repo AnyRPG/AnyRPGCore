@@ -213,15 +213,21 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void Use() {
+        public override bool Use() {
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-                base.Use();
+                bool returnValue = base.Use();
+                if (returnValue == false) {
+                    return false;
+                }
                 if (CanEquip(PlayerManager.MyInstance.MyCharacter)) {
                     PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
                     Remove();
+                    return true;
                 } else {
+                    return false;
                 }
             }
+            return false;
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {

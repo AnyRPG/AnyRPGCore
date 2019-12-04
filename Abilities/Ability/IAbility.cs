@@ -33,7 +33,7 @@ namespace AnyRPG {
         string GetDescription();
         string GetSummary();
         GameObject ReturnTarget(BaseCharacter source, GameObject target);
-        void Use();
+        bool Use();
         void StartCasting(BaseCharacter source);
         void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target);
         void HandleCastStop(BaseCharacter source);

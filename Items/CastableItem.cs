@@ -10,15 +10,19 @@ namespace AnyRPG {
         [SerializeField]
         protected BaseAbility ability;
 
-        public override void Use() {
+        public override bool Use() {
             //Debug.Log("CastableItem.Use()");
             if (ability == null) {
                 Debug.LogError(MyName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");
-                return;
+                return false;
             }
-            base.Use();
+            bool returnValue = base.Use();
+            if (returnValue == false) {
+                return false;
+            }
             PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             Remove();
+            return returnValue;
         }
 
         /*

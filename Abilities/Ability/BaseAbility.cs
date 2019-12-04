@@ -211,12 +211,14 @@ namespace AnyRPG {
             return false;
         }
 
-        public void Use() {
+        public bool Use() {
             //Debug.Log("BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
             if (CanCast(PlayerManager.MyInstance.MyCharacter)) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
+                return true;
             }
+            return false;
         }
 
         public virtual bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
