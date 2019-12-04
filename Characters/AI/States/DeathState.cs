@@ -20,6 +20,9 @@ namespace AnyRPG {
                 this.aiController.ResetCombat();
             }
 
+            // handle despawn
+            (aiController.MyBaseCharacter as AICharacter).TryToDespawn();
+
         }
 
         public void Exit() {

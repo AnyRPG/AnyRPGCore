@@ -278,6 +278,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
+            //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
             // add all possible delays together
             float extraTime = 0f;
             if (addSystemDefaultTime) {
@@ -290,8 +291,11 @@ namespace AnyRPG {
             }
 
             if (baseCharacter.MyCharacterStats.IsAlive == false || forceDespawn == true) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 Destroy(gameObject);
+            } else {
+                //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }
         }
 

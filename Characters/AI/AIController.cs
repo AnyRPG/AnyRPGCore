@@ -114,7 +114,7 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
-            Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
+            //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
             if (!underControl) {
                 underControl = true;
                 masterUnit = source;
@@ -276,13 +276,13 @@ namespace AnyRPG {
         }
 
         public Vector3 SetDestination(Vector3 destination) {
-            Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
+            //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 // I THINK WE MAY NEED TO SEND IN CORRECTED NAVMESH POSITION HERE
                 CommonMovementNotifier();
                 return MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MoveToPoint(destination);
             } else {
-                Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
+                //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
             }
             return Vector3.zero;
         }

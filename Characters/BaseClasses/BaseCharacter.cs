@@ -103,6 +103,10 @@ namespace AnyRPG {
                 }
             }
             characterFactionManager = GetComponent<CharacterFactionManager>();
+            if (characterFactionManager == null) {
+                gameObject.AddComponent<CharacterFactionManager>();
+                Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences(): CharacterFactionManager MISSING.  ADDING BUT CHECK GAMEOBJECT AND ADD MANUALLY IF POSSIBLE.");
+            }
             characterEquipmentManager = GetComponent<CharacterEquipmentManager>();
 
         }

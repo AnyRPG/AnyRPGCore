@@ -10,8 +10,15 @@ namespace AnyRPG {
 
         private BaseCharacter baseCharacter;
 
+        [SerializeField]
+        protected List<FactionDisposition> dispositionDictionary = new List<FactionDisposition>();
+
         //public Dictionary<Faction, float> dispositionDictionary = new Dictionary<Faction, float>();
-        public List<FactionDisposition> MyDispositionDictionary;
+        public List<FactionDisposition> MyDispositionDictionary {
+            get {
+                return dispositionDictionary;
+            }
+        }
 
         protected void Awake() {
             //Debug.Log(gameObject.name + ".PlayerFactionManager.Awake()");

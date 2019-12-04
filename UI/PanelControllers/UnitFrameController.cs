@@ -230,7 +230,12 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnHealthChanged += OnHealthChanged;
                 baseCharacter.MyCharacterStats.OnManaChanged += OnManaChanged;
                 baseCharacter.MyCharacterStats.OnLevelChanged += OnLevelChanged;
-                baseCharacter.MyCharacterFactionManager.OnReputationChange += OnReputationChange;
+                if (baseCharacter.MyCharacterFactionManager != null) {
+                    baseCharacter.MyCharacterFactionManager.OnReputationChange += OnReputationChange;
+                } else {
+                    Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + baseCharacter.name + " has no CharacterFactionManager");
+                }
+
             } else {
                 // manually set everything to 1 if this is an inanimate unit
                 OnHealthChanged(1, 1);

@@ -15,9 +15,16 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject characterModelGameObject = null;
 
+        [SerializeField]
+        private LootableCharacter lootableCharacter = null;
+
+        [SerializeField]
+        private bool preventAutoDespawn = false;
+
         public GameObject MyCharacterModelPrefab { get => characterModelPrefab; set => characterModelPrefab = value; }
 
         public GameObject MyCharacterModelGameObject { get => characterModelGameObject; set => characterModelGameObject = value; }
+        public LootableCharacter MyLootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".AICharacter.Awake()");
@@ -31,6 +38,7 @@ namespace AnyRPG {
             characterController = GetComponent<AIController>();
             characterStats = GetComponent<AIStats>();
             characterCombat = GetComponent<AICombat>();
+            lootableCharacter = GetComponent<LootableCharacter>();
             animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit == null) {
                 animatedUnit = gameObject.AddComponent<AnimatedUnit>();
@@ -64,6 +72,17 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
                 }
             }
+        }
+
+        public void TryToDespawn() {
+            if (preventAutoDespawn == true) {
+                return;
+            }
+            if (lootableCharacter != null) {
+                // lootable character handles its own despawn logic
+                return;
+            }
+            characterUnit.Despawn();
         }
 
     }
