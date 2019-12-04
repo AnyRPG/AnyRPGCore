@@ -211,11 +211,12 @@ namespace AnyRPG {
         public virtual void LearnDefaultAutoAttackAbility() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
             if (AutoAttackKnown() == true) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): auto-attack already know, exiting");
                 // can't learn two auto-attacks at the same time
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning ability");
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
                 LearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
             }
         }
@@ -400,6 +401,10 @@ namespace AnyRPG {
             if (baseAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
+                return false;
+            }
+            if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack && baseCharacter.MyCharacterAbilityManager.AutoAttackKnown() == true) {
+                // can't learn 2 auto-attacks
                 return false;
             }
             if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
