@@ -326,7 +326,7 @@ namespace AnyRPG {
 
         public void HoldObject(GameObject go, string holdableObjectName, GameObject searchObject) {
             //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
-            if (holdableObjectName == null || holdableObjectName == string.Empty) {
+            if (holdableObjectName == null || holdableObjectName == string.Empty || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
             }
@@ -345,12 +345,16 @@ namespace AnyRPG {
         }
 
         public virtual void UnequipExclusiveSlots(string equipmentSlotTypeName) {
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + ")");
             if (equipmentSlotTypeName != null && equipmentSlotTypeName != string.Empty) {
                 EquipmentSlotType equipmentSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotTypeName);
                 if (equipmentSlotType != null) {
+                    //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): found resource");
                     if (equipmentSlotType.MyExclusiveSlotProfileList != null && equipmentSlotType.MyExclusiveSlotProfileList.Count > 0) {
+                        //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): has exclusive slots");
                         foreach (string equipmentSlotProfileName in equipmentSlotType.MyExclusiveSlotProfileList) {
-                            if (equipmentSlotProfileName != null && equipmentProfileName != string.Empty) {
+                            //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): exclusive slot: " + equipmentSlotProfileName);
+                            if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
                                 Unequip(equipmentSlotProfileName);
                             }
                         }
@@ -451,6 +455,7 @@ namespace AnyRPG {
         }
 
         public virtual Equipment Unequip(string equipmentSlotProfileName) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlotProfileName + ")");
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
                 EquipmentSlotProfile equipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(equipmentSlotProfileName);
                 if (equipmentSlotProfile != null) {
