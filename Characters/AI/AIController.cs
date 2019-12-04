@@ -114,7 +114,7 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
-            //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
+            Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
             if (!underControl) {
                 underControl = true;
                 masterUnit = source;
@@ -156,6 +156,7 @@ namespace AnyRPG {
         public void SetMasterRelativeDestination() {
             if (MyUnderControl == false) {
                 // only do this stuff if we actually have a master
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
                 return;
             }
             //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
@@ -164,7 +165,10 @@ namespace AnyRPG {
             Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
 
             if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > maxDistanceFromMasterOnMove) {
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
                 masterRelativeDestination = SetDestination(masterRelativeDestination);
+            } else {
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not greater than " + maxDistanceFromMasterOnMove);
             }
 
             MyLeashPosition = masterRelativeDestination;
@@ -272,11 +276,13 @@ namespace AnyRPG {
         }
 
         public Vector3 SetDestination(Vector3 destination) {
-            //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
+            Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 // I THINK WE MAY NEED TO SEND IN CORRECTED NAVMESH POSITION HERE
                 CommonMovementNotifier();
                 return MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MoveToPoint(destination);
+            } else {
+                Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
             }
             return Vector3.zero;
         }

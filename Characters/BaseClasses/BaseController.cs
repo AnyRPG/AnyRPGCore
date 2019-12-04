@@ -260,7 +260,7 @@ namespace AnyRPG {
         }
 
         public virtual void CommonMovementNotifier() {
-
+            OnManualMovement();
         }
     }
 

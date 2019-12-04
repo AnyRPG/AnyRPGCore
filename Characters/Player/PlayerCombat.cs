@@ -155,7 +155,7 @@ namespace AnyRPG {
             EnterCombat(source);
             // added damageTaken bool to prevent blood effects from showing if you ran out of range of the attack while it was in progress
             bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect);
-            if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
+            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
                 MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyTakeDamageAbility, MyBaseCharacter.MyCharacterUnit.gameObject);
             }
             return damageTaken;
@@ -202,7 +202,7 @@ namespace AnyRPG {
 
         public override bool AttackHit_AnimationEvent() {
             //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
-            if (onHitAbility == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget != null) {
+            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget != null) {
                 // TESTING, THIS WAS MESSING WITH ABILITIES THAT DONT' NEED A TARGET LIKE GROUND SLAM - OR NOT, ITS JUST FOR THE WHITE HIT...!!
                 //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
                 MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.MyCharacterController.MyTarget);

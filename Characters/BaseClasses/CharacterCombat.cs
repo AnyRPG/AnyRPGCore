@@ -36,7 +36,7 @@ namespace AnyRPG {
         protected BaseCharacter baseCharacter;
         //protected CharacterCombat opponentCombat;
 
-        protected BaseAbility onHitAbility = null;
+        protected AbilityEffect onHitEffect = null;
 
         protected AggroTable aggroTable = null;
 
@@ -76,6 +76,7 @@ namespace AnyRPG {
         public AudioClip MyOverrideHitSoundEffect { get => overrideHitSoundEffect; set => overrideHitSoundEffect = value; }
         public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool MyAutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
+        public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
 
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterCombat.OrchestratorStart()");
@@ -90,6 +91,7 @@ namespace AnyRPG {
         }
 
         protected virtual void CreateEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".CharacterCombat.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -357,14 +359,16 @@ namespace AnyRPG {
                     }
                 }
 
-
+                // moved inside attackEffect
+                /*
                 // OnHitAbility will not fire if target is dead. This is ok because regular weapon onhit ability should be set to something that requires a target anyway
-                if (onHitAbility != null) {
+                if (onHitEffect != null) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is not null!");
-                    baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitAbility);
+                    baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitEffect);
                 } else {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is null!!!");
                 }
+                */
                 return true;
             } else {
                 if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
@@ -496,19 +500,19 @@ namespace AnyRPG {
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
             if (oldItem != null) {
-                if (oldItem is Weapon && (oldItem as Weapon).MyUseDamagePerSecond == true && (oldItem as Weapon).OnHitAbility != null) {
-                    onHitAbility = null;
+                if (oldItem is Weapon && (oldItem as Weapon).MyOnHitEffect != null) {
+                    onHitEffect = null;
                 }
             }
             if (newItem != null) {
-                if (newItem is Weapon && (newItem as Weapon).MyUseDamagePerSecond == true) {
-                    onHitAbility = null;
+                if (newItem is Weapon) {
+                    onHitEffect = null;
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
-                    if (newItem is Weapon && (newItem as Weapon).OnHitAbility != null) {
-                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
-                        onHitAbility = (newItem as Weapon).OnHitAbility;
+                    if (newItem is Weapon && (newItem as Weapon).MyOnHitEffect != null) {
+                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
+                        onHitEffect = (newItem as Weapon).MyOnHitEffect;
                     }
                     overrideHitSoundEffect = null;
                     defaultHitSoundEffect = null;
