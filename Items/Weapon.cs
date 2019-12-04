@@ -19,11 +19,16 @@ namespace AnyRPG {
         [SerializeField]
         protected AnimationProfile defaultAttackAnimationProfile;
 
+        /*
         /// <summary>
         /// The ability to cast when the weapon hits a target
         /// </summary>
         [SerializeField]
         private InstantEffectAbility onHitAbility;
+        */
+
+        [SerializeField]
+        private AbilityEffect onHitEffect;
 
         // the skill required to use this weapon
         [SerializeField]
@@ -31,12 +36,13 @@ namespace AnyRPG {
 
         [SerializeField]
         private AudioClip defaultHitSoundEffect;
-
+        /*
         public InstantEffectAbility OnHitAbility {
             get {
                 return onHitAbility;
             }
         }
+        */
 
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
@@ -56,6 +62,7 @@ namespace AnyRPG {
         public string MyWeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool MyUseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
         public bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
+        public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
 
         public float MyDamagePerSecond () {
             if (!MyUseDamagePerSecond) {
@@ -107,8 +114,8 @@ namespace AnyRPG {
             if (useDamagePerSecond) {
                 abilitiesList.Add(string.Format("Damage Per Second: {0}", MyDamagePerSecond()));
             }
-            if (onHitAbility != null) {
-                abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitAbility.MyName));
+            if (onHitEffect != null) {
+                abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitEffect.MyName));
             }
             string abilitiesString = string.Empty;
             if (abilitiesList.Count > 0) {

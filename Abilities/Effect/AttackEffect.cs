@@ -39,6 +39,17 @@ namespace AnyRPG {
                 target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(abilityFinalAmount, source.MyCharacterUnit.transform.position, source, abilityKeyValuePair.Value, this);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
+
+            // handle weapon on hit effects
+            if (source.MyCharacterCombat != null && source.MyCharacterCombat.MyOnHitEffect != null && damageType == DamageType.physical && source.MyCharacterCombat.MyOnHitEffect.MyName != MyName) {
+                List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+                onHitEffectList.Add(source.MyCharacterCombat.MyOnHitEffect);
+                PerformAbilityEffects(source, target, abilityEffectOutput, onHitEffectList);
+            } else {
+                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");
+            }
+
+            // handle regular effects
             base.PerformAbilityHit(source, target, abilityEffectOutput);
         }
 
