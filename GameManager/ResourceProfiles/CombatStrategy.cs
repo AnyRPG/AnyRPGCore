@@ -46,14 +46,17 @@ namespace AnyRPG {
                     foreach (string baseAbilityName in validPhaseNode.MyAttackAbilities) {
                         BaseAbility baseAbility;
                         string usedBaseAbilityName = SystemResourceManager.prepareStringForMatch(baseAbilityName);
+                        //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
                         if (sourceCharacter.MyCharacterAbilityManager.HasAbility(usedBaseAbilityName)) {
                             baseAbility = sourceCharacter.MyCharacterAbilityManager.MyAbilityList[usedBaseAbilityName] as BaseAbility;
-                            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                            //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterController.MyTarget, sourceCharacter as BaseCharacter)) {
-                                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+                                //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 returnList.Add(baseAbility);
                             }
+                        } else {
+                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + usedBaseAbilityName);
                         }
                     }
 
@@ -61,10 +64,10 @@ namespace AnyRPG {
             }
             if (returnList.Count > 0) {
                 int randomIndex = Random.Range(0, returnList.Count);
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
+                //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
                 return returnList[randomIndex];
             }
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
 
         }
