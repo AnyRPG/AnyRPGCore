@@ -179,7 +179,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (oldItem != null) {
                 foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
                     UnlearnAbility(baseAbility.MyName);

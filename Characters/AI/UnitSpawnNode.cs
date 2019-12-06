@@ -58,6 +58,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool pointBased = true;
 
+        // if there are units spawned, and the prerequisite conditions are no longer met, despawn them
+        [SerializeField]
+        private bool forceDespawnUnits = false;
+
         private Coroutine countDownRoutine = null;
 
         private Coroutine delayRoutine = null;
@@ -135,6 +139,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CheckPrerequisites()");
             if (MyPrerequisitesMet && !triggerBased) {
                 SpawnWithDelay();
+            }
+            if (forceDespawnUnits && !MyPrerequisitesMet) {
+                DestroySpawns();
             }
         }
 
