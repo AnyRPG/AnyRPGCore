@@ -23,7 +23,9 @@ namespace AnyRPG {
         [HideInInspector] public float inputVertical = 0;
 
         //Variables
-        [HideInInspector] public bool allowedInput = true;
+        [HideInInspector]
+        public bool allowedInput = true;
+
         public bool canMove = false;
         public bool canAction = false;
 
@@ -66,19 +68,19 @@ namespace AnyRPG {
         }
 
         public override void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".PlayerController.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+                //Debug.Log(gameObject.name + ".PlayerController.CreateEventSubscriptions(): subscribing to OnDie");
                 baseCharacter.MyCharacterStats.OnDie += HandleDeath;
                 baseCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnLevelUnload += ClearInteractables;
             }
-            eventSubscriptionsInitialized = true;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -658,7 +660,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath(CharacterStats characterStats) {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
+            Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
             Lock(true, true, false, 0.1f, 0f);
         }
 

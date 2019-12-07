@@ -12,6 +12,10 @@ namespace AnyRPG {
 
         //public event System.Action<IAbility> OnAbilityCast = delegate { };
 
+        // ability cannot be cast in combat if true
+        [SerializeField]
+        protected bool requireOutOfCombat = false;
+
         [SerializeField]
         private List<string> weaponAffinityNames = new List<string>();
 
@@ -169,6 +173,7 @@ namespace AnyRPG {
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
+        public bool MyRequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

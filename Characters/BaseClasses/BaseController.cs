@@ -91,7 +91,8 @@ namespace AnyRPG {
         }
 
         public virtual void OnEnable() {
-            CreateEventSubscriptions();
+            // TESTING DISABLE - THIS IS RUN IN START
+            //CreateEventSubscriptions();
         }
 
         protected virtual void Update() {

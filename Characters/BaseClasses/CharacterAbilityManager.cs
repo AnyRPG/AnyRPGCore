@@ -680,6 +680,10 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (ability.MyRequireOutOfCombat == true && MyBaseCharacter.MyCharacterCombat.GetInCombat() == true) {
+                return false;
+            }
+
             // default is true, nothing has stopped us so far
             return true;
         }

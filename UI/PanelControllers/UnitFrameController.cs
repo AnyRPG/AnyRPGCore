@@ -319,7 +319,7 @@ namespace AnyRPG {
             if (followGameObject == null) {
                 return;
             }
-            Debug.Log(gameObject.name + ".UnitFrameController.OnReputationChange(): " + followGameObject.name);
+            //Debug.Log(gameObject.name + ".UnitFrameController.OnReputationChange(): " + followGameObject.name);
             INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
 
             if (namePlateUnit == null) {
