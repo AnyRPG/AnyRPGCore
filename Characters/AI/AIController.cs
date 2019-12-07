@@ -114,7 +114,7 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
-            //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
+            Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
             if (!underControl) {
                 underControl = true;
                 masterUnit = source;

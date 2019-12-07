@@ -58,6 +58,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventSubscriptions;
+            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
             SystemEventManager.MyInstance.OnReputationChange += SetFactionColor;
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += SetFactionColor;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
@@ -208,10 +209,27 @@ namespace AnyRPG {
 
             if (namePlateUnit.HasHealth()) {
                 namePlateUnit.HealthBarNeedsUpdate += OnHealthChanged;
+                if (namePlateUnit is CharacterUnit) {
+                    if ((namePlateUnit as CharacterUnit).MyBaseCharacter != null) {
+                        if ((namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager != null) {
+                            (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager.OnReputationChange += HandleReputationChange;
+                        } else {
+                            Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") nameplate unit has no character faction manager!");
+                        }
+                    } else {
+                        Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") nameplate unit has no base Character!");
+                    }
+                } else {
+                    Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") nameplate unit is not characterUnit!");
+                }
             } else {
                 MyHealthBar.SetActive(false);
             }
             namePlateUnit.MyNamePlate = this;
+        }
+
+        public void HandleReputationChange() {
+            SetFactionColor();
         }
 
         public void CheckForDisabledHealthBar() {
@@ -338,6 +356,9 @@ namespace AnyRPG {
             if (namePlateUnit != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
                 namePlateUnit.HealthBarNeedsUpdate -= OnHealthChanged;
+                if (namePlateUnit.HasHealth()) {
+                    (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                }
                 namePlateUnit.MyNamePlate = null;
             }
             CleanupEventSubscriptions();

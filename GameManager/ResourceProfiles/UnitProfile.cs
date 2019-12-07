@@ -23,10 +23,15 @@ namespace AnyRPG {
         [SerializeField]
         private bool isUMAUnit;
 
+        // this unit can be charmed and made into a pet
+        [SerializeField]
+        private bool isPet = false;
+
         public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public int MyDefaultToughness { get => defaultToughness; set => defaultToughness = value; }
         public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
+        public bool MyIsPet { get => isPet; set => isPet = value; }
     }
 
 }

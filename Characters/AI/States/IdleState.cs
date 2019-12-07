@@ -12,8 +12,9 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + " entering Idle state");
             this.aiController = aiController;
             this.aiController.Reset();
-            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.PatrolComplete() == false) {
+            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.enabled == true && aiController.MyAiPatrol.PatrolComplete() == false) {
                 aiController.ChangeState(new PatrolState());
+                return;
             }
         }
 
@@ -28,6 +29,7 @@ namespace AnyRPG {
             // change into follow state if the player is close
             if (aiController.MyTarget != null) {
                 aiController.ChangeState(new FollowState());
+                return;
             }
         }
     }

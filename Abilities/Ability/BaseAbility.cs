@@ -93,6 +93,10 @@ namespace AnyRPG {
         [SerializeField]
         protected Color groundTargetColor = new Color32(255, 255, 255, 255);
 
+        // ignore requireTarget and canCast variables and use the check from the first ability effect instead
+        [SerializeField]
+        private bool useAbilityEffectTargetting = false;
+
         public bool requiresTarget;
         public bool requiresLiveTarget = true;
 
@@ -265,6 +269,10 @@ namespace AnyRPG {
 
         public virtual bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
+
+            if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
+                return abilityEffects[0].CanUseOn(target, sourceCharacter);
+            }
 
             // create target booleans
             bool targetIsFriendly = false;

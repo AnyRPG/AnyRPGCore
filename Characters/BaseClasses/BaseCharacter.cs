@@ -60,8 +60,10 @@ namespace AnyRPG {
         public string MyCharacterName { get => characterName; }
         public string MyName { get => MyCharacterName; }
         public string MyFactionName {
+
             get {
                 if (MyCharacterController != null && MyCharacterController.MyUnderControl) {
+                    //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
                     return MyCharacterController.MyMasterUnit.MyFactionName;
                 }
                 if (factionName != null && factionName != string.Empty) {

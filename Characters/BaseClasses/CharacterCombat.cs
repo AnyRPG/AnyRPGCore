@@ -195,7 +195,7 @@ namespace AnyRPG {
             }
 
             if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
-                if (target == PlayerManager.MyInstance.MyCharacter || (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter)) {
+                if (target == PlayerManager.MyInstance.MyCharacter || (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) || (target.MyCharacterController != null && target.MyCharacterController.MyMasterUnit != null && target.MyCharacterController.MyMasterUnit == (PlayerManager.MyInstance.MyCharacter as BaseCharacter))) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
                     if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {

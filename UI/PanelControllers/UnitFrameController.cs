@@ -189,7 +189,7 @@ namespace AnyRPG {
                     (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnHealthChanged -= OnHealthChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnManaChanged -= OnManaChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnLevelChanged -= OnLevelChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterFactionManager.OnReputationChange -= OnReputationChange;
+                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
             }
             followGameObject = null;
@@ -210,7 +210,7 @@ namespace AnyRPG {
                 return;
             }
 
-            OnReputationChange();
+            HandleReputationChange();
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
             unitNameText.text = namePlateUnit.MyDisplayName;
 
@@ -231,7 +231,7 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnManaChanged += OnManaChanged;
                 baseCharacter.MyCharacterStats.OnLevelChanged += OnLevelChanged;
                 if (baseCharacter.MyCharacterFactionManager != null) {
-                    baseCharacter.MyCharacterFactionManager.OnReputationChange += OnReputationChange;
+                    baseCharacter.MyCharacterFactionManager.OnReputationChange += HandleReputationChange;
                 } else {
                     Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + baseCharacter.name + " has no CharacterFactionManager");
                 }
@@ -312,13 +312,14 @@ namespace AnyRPG {
             }
         }
 
-        public void OnReputationChange() {
+        public void HandleReputationChange() {
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                 return;
             }
             if (followGameObject == null) {
                 return;
             }
+            Debug.Log(gameObject.name + ".UnitFrameController.OnReputationChange(): " + followGameObject.name);
             INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
 
             if (namePlateUnit == null) {

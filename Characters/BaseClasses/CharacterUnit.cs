@@ -46,6 +46,8 @@ namespace AnyRPG {
 
         private Coroutine despawnCoroutine;
 
+        private bool startHasRun = false;
+
         public BaseCharacter MyCharacter {
             get => baseCharacter;
             set {
@@ -106,6 +108,7 @@ namespace AnyRPG {
             base.Start();
             InitializeNamePlate();
             CreateEventSubscriptions();
+            startHasRun = true;
         }
 
         public virtual void OrchestrateStartup() {
@@ -152,7 +155,10 @@ namespace AnyRPG {
 
         private void OnEnable() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OnEnable()");
-            InitializeNamePlate();
+            if (startHasRun) {
+                // this is the result of re-enabling a disabled character?
+                InitializeNamePlate();
+            }
             //CreateEventSubscriptions();
         }
 

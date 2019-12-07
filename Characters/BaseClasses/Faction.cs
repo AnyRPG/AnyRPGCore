@@ -39,7 +39,8 @@ public class Faction : DescribableResource {
     public static Color GetFactionColor(BaseCharacter characterToCheck, BaseCharacter myCharacter) {
         //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName);
         float relationValue = Faction.RelationWith(characterToCheck, myCharacter);
-        return GetColorFromRelationValue(relationValue);
+            //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName + "; relationValue: " + relationValue);
+            return GetColorFromRelationValue(relationValue);
     }
 
     /// <summary>

@@ -34,6 +34,10 @@ namespace AnyRPG {
 
         public void Update() {
             //Debug.Log(aiController.gameObject.name + ": PatrolState.Update() at location: " + aiController.transform.position);
+            if (aiController.MyAiPatrol.enabled == false) {
+                aiController.ChangeState(new IdleState());
+                return;
+            }
 
             aiController.UpdateTarget();
 
@@ -52,6 +56,7 @@ namespace AnyRPG {
                         aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
                     } else {
                         aiController.ChangeState(new IdleState());
+                        return;
                     }
                 } else {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached and patrol not complete yet!");
