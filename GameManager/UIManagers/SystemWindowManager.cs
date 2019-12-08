@@ -117,6 +117,15 @@ namespace AnyRPG {
 
         public void PlayerDeathHandler(CharacterStats characterStats) {
             //Debug.Log("PopupWindowManager.PlayerDeathHandler()");
+            StartCoroutine(PerformDeathWindowDelay());
+        }
+
+        public IEnumerator PerformDeathWindowDelay() {
+            float timeCount = 0f;
+            while (timeCount < 2f) {
+                timeCount += Time.deltaTime;
+                yield return null;
+            }
             playerOptionsMenuWindow.OpenWindow();
         }
 
