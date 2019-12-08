@@ -19,6 +19,7 @@ namespace AnyRPG {
         Vector3 MyUnitFrameCameraLookOffset { get; set; }
         string MyDisplayName { get; }
         string MyFactionName { get; }
+        Transform MyNamePlateTransform { get; }
         Interactable MyInteractable { get; }
 
         event System.Action<IInteractable> MiniMapStatusUpdateHandler;

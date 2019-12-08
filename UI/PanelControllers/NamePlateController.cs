@@ -289,7 +289,7 @@ namespace AnyRPG {
                 } else {
                     currentCamera = CameraManager.MyInstance.MyMainCamera;
                 }
-                Vector3 relativePosition = currentCamera.WorldToViewportPoint((namePlateUnit as MonoBehaviour).transform.position);
+                Vector3 relativePosition = currentCamera.WorldToViewportPoint(namePlateUnit.MyNamePlateTransform.position);
                 //Debug.Log("NamePlateController.LateUpdate(): the relative position of the character(" + (namePlateUnit as MonoBehaviour).gameObject.name + ") is " + relativePosition);
                 if (!(relativePosition.z >= 0 && (relativePosition.x >= 0 && relativePosition.x <= 1) && (relativePosition.y >= 0 && relativePosition.y <= 1))) {
                     //Debug.Log("outisde viewport, not rendering");
@@ -297,20 +297,20 @@ namespace AnyRPG {
                 }
                 if (LevelManager.MyInstance.GetActiveSceneNode().MyIsCutScene) {
                     //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera");
-                    float unitDistance = Mathf.Abs(Vector3.Distance(AnyRPGCutsceneCameraController.MyInstance.gameObject.transform.position, (namePlateUnit as MonoBehaviour).transform.position));
+                    float unitDistance = Mathf.Abs(Vector3.Distance(AnyRPGCutsceneCameraController.MyInstance.gameObject.transform.position, namePlateUnit.MyNamePlateTransform.position));
                     if (unitDistance > 40f) {
                         //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera: more than 40f: " + unitDistance);
                         renderNamePlate = false;
                     }
                 } else {
                     //Debug.Log("NamePlateController.LateUpdate(): not cutscene: calculating distance from player");
-                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, (namePlateUnit as MonoBehaviour).transform.position)) > 40f) {
+                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, namePlateUnit.MyNamePlateTransform.position)) > 40f) {
                         renderNamePlate = false;
                     }
                 }
                 if (renderNamePlate) {
                     //Debug.Log("renderNamePlate");
-                    transform.position = currentCamera.WorldToScreenPoint((namePlateUnit as MonoBehaviour).transform.position + Vector3.up * positionOffset);
+                    transform.position = currentCamera.WorldToScreenPoint(namePlateUnit.MyNamePlateTransform.position + Vector3.up * positionOffset);
                     //Debug.Log(characterUnit.gameObject.name + ".distance to player: " + Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, characterUnit.transform.position)));
                     canvasGroup.alpha = 1;
                     if (isPlayerUnitNamePlate) {

@@ -48,6 +48,9 @@ namespace AnyRPG {
 
         private bool startHasRun = false;
 
+        // keep track of mounted state
+        private bool mounted = false;
+
         public BaseCharacter MyCharacter {
             get => baseCharacter;
             set {
@@ -67,6 +70,16 @@ namespace AnyRPG {
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
         public BaseCharacter MyBaseCharacter { get => MyCharacter; }
         public AudioSource MyAudioSource { get => audioSource; set => audioSource = value; }
+        public Transform MyNamePlateTransform {
+            get {
+                if (mounted) {
+                    return baseCharacter.MyAnimatedUnit.transform;
+                }
+                return transform;
+            }
+        }
+
+        public bool MyMounted { get => mounted; set => mounted = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");

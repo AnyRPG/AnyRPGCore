@@ -166,7 +166,11 @@ namespace AnyRPG {
             if (relativeMovement.magnitude > 0.1 || (characterUnit.MyCharacter.MyCharacterController as PlayerController).inputJump) {
                 animatedUnit.MyCharacterMotor.Move(relativeMovement);
             } else {
-                Vector3 localVelocity = transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
+
+                Vector3 localVelocity = Vector3.zero;
+                if (animatedUnit != null && animatedUnit.MyRigidBody != null) {
+                    localVelocity = transform.InverseTransformDirection(animatedUnit.MyRigidBody.velocity);
+                }
                 if (localVelocity.x != 0f || localVelocity.z != 0f || localVelocity.y != 0f) {
                     //Debug.Log("Character is moving at velocity: " + animatedUnit.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
                     animatedUnit.MyCharacterMotor.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
@@ -183,6 +187,7 @@ namespace AnyRPG {
                 }
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput()) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + animatedUnit.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + animatedUnit.MyCharacterAnimator.MyAnimator.angularVelocity);
                     if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).inputStrafe == true) {
                         animatedUnit.MyCharacterAnimator.SetStrafing(true);
                     } else {
@@ -197,7 +202,11 @@ namespace AnyRPG {
                     animatedUnit.MyCharacterAnimator.SetStrafing(false);
                     animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
                 }*/
-                animatedUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
+                if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
+                    animatedUnit.MyCharacterAnimator.SetTurnVelocity(currentTurnVelocity.x);
+                } else {
+
+                }
             }
 
             if (characterUnit.MyCharacter.MyCharacterStats.IsAlive && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {

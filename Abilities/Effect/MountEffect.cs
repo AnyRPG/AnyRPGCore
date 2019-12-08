@@ -69,10 +69,14 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<AnimatedUnit>();
                     ConfigureCharacterRegularPhysics();
 
+                    // set player unit to normal state
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyMounted = false;
+
                     (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
 
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.transform);
+
 
                 }
             }
@@ -86,16 +90,24 @@ namespace AnyRPG {
 
                     //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
 
+
+                    // disable movement and input on player unit
                     (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
                     //Debug.Log("MountEffect.ActivateMountedState()Setting Animator Values");
-
+                    // set player animator to riding state
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", true);
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
 
+                    // set player unit to riding state
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyMounted = true;
+
                     ConfigureCharacterMountedPhysics();
+
+                    // initialize the mount animator
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = abilityEffectObject.GetComponent<AnimatedUnit>();
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestrateStartup();
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(abilityEffectObject.transform);
