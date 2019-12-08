@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         private int GetMaxCraftAmount(string recipeName) {
-            Debug.Log("CraftingUI.GetMaxCraftAmount()");
+            //Debug.Log("CraftingUI.GetMaxCraftAmount()");
             Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
 
             int maxAmount = -1;
@@ -279,7 +279,7 @@ namespace AnyRPG {
         }
 
         public void CraftAll() {
-            Debug.Log("CraftingUI.CraftAll()");
+            //Debug.Log("CraftingUI.CraftAll()");
             if (MySelectedRecipeScript != null) {
                 craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
                 UpdateCraftAmountArea();

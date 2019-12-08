@@ -192,7 +192,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToCombatEvents() {
-            if (MyUseable != null && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
+            if (MyUseable != null && MyUseable is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HandleEnterCombat;
                 PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += HandleDropCombat;
             }
@@ -450,7 +450,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromCombatEvents() {
-            if (MyUseable != null && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
+            if (MyUseable != null && MyUseable is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HandleEnterCombat;
                 PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= HandleDropCombat;
             }

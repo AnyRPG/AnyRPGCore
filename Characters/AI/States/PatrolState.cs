@@ -53,7 +53,9 @@ namespace AnyRPG {
                 // destination reached
                 if (aiController.MyAiPatrol.PatrolComplete()) {
                     if (aiController.MyAiPatrol.MyDespawnOnCompletion) {
-                        aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
+                        if (aiController.MyBaseCharacter.MyCharacterUnit != null) {
+                            aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
+                        }
                     } else {
                         aiController.ChangeState(new IdleState());
                         return;

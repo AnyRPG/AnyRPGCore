@@ -898,7 +898,9 @@ namespace AnyRPG {
         }
 
         public void ClearAutoAttack() {
-            characterUnit.MyCharacter.MyCharacterCombat.SetWaitingForAutoAttack(false);
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null) {
+                characterUnit.MyCharacter.MyCharacterCombat.SetWaitingForAutoAttack(false);
+            }
             SetAttacking(false);
         }
 
@@ -1004,7 +1006,9 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting = varValue;
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
+                characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting = varValue;
+            }
             animator.SetBool("Casting", varValue);
             if (varValue == true) {
                 SetTrigger("CastingTrigger");

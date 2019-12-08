@@ -271,7 +271,9 @@ namespace AnyRPG {
         public void Despawn() {
             //Debug.Log(gameObject.name + ".LootableCharacter.Despawn()");
             //gameObject.SetActive(false);
-            MyCharacterUnit.Despawn();
+            if (MyCharacterUnit != null) {
+                MyCharacterUnit.Despawn();
+            }
         }
 
         public override int GetValidOptionCount() {

@@ -151,7 +151,9 @@ namespace AnyRPG {
             if (requiresTarget == true) {
 
                 if (target == null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(MyName + " requires a target");
+                    if (CombatLogUI.MyInstance != null) {
+                        CombatLogUI.MyInstance.WriteCombatMessage(MyName + " requires a target");
+                    }
                     return false;
                 }
 

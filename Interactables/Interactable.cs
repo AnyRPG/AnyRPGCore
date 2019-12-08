@@ -167,7 +167,7 @@ namespace AnyRPG {
                 }
             } else {
                 //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
-                //Debug.Log(gameObject.name + ".Interactable.Start(): namePlateUnit is null!!!");
+                //Debug.Log(gameObject.name + ".Interactable.InitializeComponents(): namePlateUnit is null");
             }
 
             foreach (IInteractable interactable in interactables) {
@@ -219,7 +219,7 @@ namespace AnyRPG {
                 return;
             }
             if (namePlateUnit == null || namePlateUnit.MyNamePlate == null) {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplate is null!");
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.MyNamePlate != null ? namePlateUnit.MyNamePlate.name : "null"));
                 return;
             }
             int currentInteractableCount = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count;
