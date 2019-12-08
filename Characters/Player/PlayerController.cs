@@ -660,7 +660,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath(CharacterStats characterStats) {
-            Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
+            //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
             Lock(true, true, false, 0.1f, 0f);
         }
 
