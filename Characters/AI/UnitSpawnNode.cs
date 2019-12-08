@@ -240,6 +240,7 @@ namespace AnyRPG {
             //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
             //spawnReference.transform.position = newSpawnLocation;
             navMeshAgent.Warp(newSpawnLocation);
+            spawnReference.transform.forward = transform.forward;
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
             CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
             if (_characterUnit != null) {
