@@ -154,7 +154,7 @@ namespace AnyRPG {
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
             }
             if (MyCurrency == null) {
-                summaryString = "\nNo Sell Price";
+                summaryString += "\nNo Sell Price";
             }
 
 
