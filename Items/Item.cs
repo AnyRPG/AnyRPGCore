@@ -145,16 +145,20 @@ namespace AnyRPG {
         
         public override string GetSummary() {
             //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
-            string abilitiesString = string.Empty;
+            string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
                 if (characterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
                     colorString = "white";
                 }
-                abilitiesString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
+                summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
+            }
+            if (MyCurrency == null) {
+                summaryString = "\nNo Sell Price";
             }
 
-            return string.Format("{0}", abilitiesString);
+
+            return string.Format("{0}", summaryString);
         }
         
     }
