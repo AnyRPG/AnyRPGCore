@@ -32,6 +32,8 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip moveBackClip;
         [SerializeField]
+        private AnimationClip moveBackFastClip;
+        [SerializeField]
         private AnimationClip turnLeftClip;
         [SerializeField]
         private AnimationClip turnRightClip;
@@ -54,7 +56,11 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip strafeBackLeftClip;
         [SerializeField]
+        private AnimationClip jogStrafeBackLeftClip;
+        [SerializeField]
         private AnimationClip strafeBackRightClip;
+        [SerializeField]
+        private AnimationClip jogStrafeBackRightClip;
         [SerializeField]
         private AnimationClip stunnedClip;
         [SerializeField]
@@ -71,6 +77,8 @@ namespace AnyRPG {
         private AnimationClip combatMoveForwardFastClip;
         [SerializeField]
         private AnimationClip combatMoveBackClip;
+        [SerializeField]
+        private AnimationClip combatMoveBackFastClip;
         [SerializeField]
         private AnimationClip combatTurnLeftClip;
         [SerializeField]
@@ -94,7 +102,11 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip combatStrafeBackLeftClip;
         [SerializeField]
+        private AnimationClip combatJogStrafeBackLeftClip;
+        [SerializeField]
         private AnimationClip combatStrafeBackRightClip;
+        [SerializeField]
+        private AnimationClip combatJogStrafeBackRightClip;
         [SerializeField]
         private AnimationClip combatStunnedClip;
         [SerializeField]
@@ -123,6 +135,7 @@ namespace AnyRPG {
         public AnimationClip MyMoveForwardClip { get => moveForwardClip; set => moveForwardClip = value; }
         public AnimationClip MyMoveForwardFastClip { get => moveForwardFastClip; set => moveForwardFastClip = value; }
         public AnimationClip MyMoveBackClip { get => moveBackClip; set => moveBackClip = value; }
+        public AnimationClip MyMoveBackFastClip { get => moveBackFastClip; set => moveBackFastClip = value; }
         public AnimationClip MyDeathClip { get => deathClip; set => deathClip = value; }
         public AnimationClip MyReviveClip { get => reviveClip; set => reviveClip = value; }
         public AnimationClip MyStunnedClip { get => stunnedClip; set => stunnedClip = value; }
@@ -131,6 +144,8 @@ namespace AnyRPG {
         public AnimationClip MyJogStrafeRightClip { get => jogStrafeRightClip; set => jogStrafeRightClip = value; }
         public AnimationClip MyJogStrafeForwardLeftClip { get => jogStrafeForwardLeftClip; set => jogStrafeForwardLeftClip = value; }
         public AnimationClip MyJogStrafeForwardRightClip { get => jogStrafeForwardRightClip; set => jogStrafeForwardRightClip = value; }
+        public AnimationClip MyJogStrafeBackLeftClip { get => jogStrafeBackLeftClip; set => jogStrafeBackLeftClip = value; }
+        public AnimationClip MyJogStrafeBackRightClip { get => jogStrafeBackRightClip; set => jogStrafeBackRightClip = value; }
         public AnimationClip MyCombatTurnLeftClip { get => combatTurnLeftClip; set => combatTurnLeftClip = value; }
         public AnimationClip MyCombatTurnRightClip { get => combatTurnRightClip; set => combatTurnRightClip = value; }
         public AnimationClip MyCombatStrafeLeftClip { get => combatStrafeLeftClip; set => combatStrafeLeftClip = value; }
@@ -142,10 +157,13 @@ namespace AnyRPG {
         public AnimationClip MyCombatStrafeForwardRightClip { get => combatStrafeForwardRightClip; set => combatStrafeForwardRightClip = value; }
         public AnimationClip MyCombatJogStrafeForwardRightClip { get => combatJogStrafeForwardRightClip; set => combatJogStrafeForwardRightClip = value; }
         public AnimationClip MyCombatStrafeBackLeftClip { get => combatStrafeBackLeftClip; set => combatStrafeBackLeftClip = value; }
+        public AnimationClip MyCombatJogStrafeBackLeftClip { get => combatJogStrafeBackLeftClip; set => combatJogStrafeBackLeftClip = value; }
         public AnimationClip MyCombatStrafeBackRightClip { get => combatStrafeBackRightClip; set => combatStrafeBackRightClip = value; }
+        public AnimationClip MyCombatJogStrafeBackRightClip { get => combatJogStrafeBackRightClip; set => combatJogStrafeBackRightClip = value; }
         public AnimationClip MyCombatMoveForwardClip { get => combatMoveForwardClip; set => combatMoveForwardClip = value; }
         public AnimationClip MyCombatMoveForwardFastClip { get => combatMoveForwardFastClip; set => combatMoveForwardFastClip = value; }
         public AnimationClip MyCombatMoveBackClip { get => combatMoveBackClip; set => combatMoveBackClip = value; }
+        public AnimationClip MyCombatMoveBackFastClip { get => combatMoveBackFastClip; set => combatMoveBackFastClip = value; }
         public AnimationClip MyCombatStunnedClip { get => combatStunnedClip; set => combatStunnedClip = value; }
         public AnimationClip MyCombatJumpClip { get => combatJumpClip; set => combatJumpClip = value; }
         public AnimationClip MyCombatFallClip { get => combatFallClip; set => combatFallClip = value; }

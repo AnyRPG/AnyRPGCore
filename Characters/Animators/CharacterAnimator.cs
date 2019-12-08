@@ -37,32 +37,38 @@ namespace AnyRPG {
         // in combat animations
         private float baseWalkAnimationSpeed = 1f;
         private float baseRunAnimationSpeed = 3.4f;
+        private float baseWalkBackAnimationSpeed = 1.6f;
+        private float baseRunBackAnimationSpeed = 3.4f;
         private float baseWalkStrafeRightAnimationSpeed = 1f;
         private float baseJogStrafeRightAnimationSpeed = 2.4f;
         private float baseWalkStrafeBackRightAnimationSpeed = 1f;
+        private float baseJogStrafeBackRightAnimationSpeed = 1f;
         private float baseWalkStrafeForwardRightAnimationSpeed = 1f;
         private float baseJogStrafeForwardRightAnimationSpeed = 2.67f;
         private float baseWalkStrafeLeftAnimationSpeed = 1f;
         private float baseJogStrafeLeftAnimationSpeed = 2.4f;
         private float baseWalkStrafeBackLeftAnimationSpeed = 1f;
+        private float baseJogStrafeBackLeftAnimationSpeed = 2.67f;
         private float baseWalkStrafeForwardLeftAnimationSpeed = 1f;
         private float baseJogStrafeForwardLeftAnimationSpeed = 2.67f;
-        private float baseWalkBackAnimationSpeed = 1.6f;
 
         // in combat animations
         private float baseCombatWalkAnimationSpeed = 1f;
         private float baseCombatRunAnimationSpeed = 3.4f;
+        private float baseCombatWalkBackAnimationSpeed = 1.6f;
+        private float baseCombatRunBackAnimationSpeed = 3.4f;
         private float baseCombatWalkStrafeRightAnimationSpeed = 1f;
         private float baseCombatJogStrafeRightAnimationSpeed = 2.4f;
         private float baseCombatWalkStrafeBackRightAnimationSpeed = 1f;
+        private float baseCombatJogStrafeBackRightAnimationSpeed = 2.67f;
         private float baseCombatWalkStrafeForwardRightAnimationSpeed = 1f;
         private float baseCombatJogStrafeForwardRightAnimationSpeed = 2.67f;
         private float baseCombatWalkStrafeLeftAnimationSpeed = 1f;
         private float baseCombatJogStrafeLeftAnimationSpeed = 2.4f;
         private float baseCombatWalkStrafeBackLeftAnimationSpeed = 1f;
+        private float baseCombatJogStrafeBackLeftAnimationSpeed = 2.67f;
         private float baseCombatWalkStrafeForwardLeftAnimationSpeed = 1f;
         private float baseCombatJogStrafeForwardLeftAnimationSpeed = 2.67f;
-        private float baseCombatWalkBackAnimationSpeed = 1.6f;
 
 
         private Coroutine attackCoroutine = null;
@@ -331,6 +337,31 @@ namespace AnyRPG {
                     Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
                 }
             }
+            if (currentAttackAnimationProfile.MyMoveBackFastClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultMoveBackFastClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultMoveBackFastClip] = currentAttackAnimationProfile.MyMoveBackFastClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyMoveBackFastClip.averageSpeed.z) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseRunBackAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyMoveBackFastClip.averageSpeed.z);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+
+            }
+            if (currentAttackAnimationProfile.MyCombatMoveBackFastClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultCombatMoveBackFastClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultCombatMoveBackFastClip] = currentAttackAnimationProfile.MyCombatMoveBackFastClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveBackFastClip.averageSpeed.z) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseCombatRunBackAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatMoveBackFastClip.averageSpeed.z);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+            }
 
 
             if (currentAttackAnimationProfile.MyJumpClip != null) {
@@ -508,12 +539,39 @@ namespace AnyRPG {
                 }
 
             }
+            if (currentAttackAnimationProfile.MyJogStrafeBackLeftClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultJogStrafeBackLeftClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultJogStrafeBackLeftClip] = currentAttackAnimationProfile.MyJogStrafeBackLeftClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeBackLeftClip.averageSpeed.magnitude);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+
+            }
+
             if (currentAttackAnimationProfile.MyStrafeBackRightClip != null) {
                 if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultStrafeBackRightClip)) {
                     tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultStrafeBackRightClip] = currentAttackAnimationProfile.MyStrafeBackRightClip;
                     if (Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                         // our clip has forward motion.  override the default animation motion speed of 2
                         baseWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyStrafeBackRightClip.averageSpeed.magnitude);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+
+            }
+            if (currentAttackAnimationProfile.MyJogStrafeBackRightClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultJogStrafeBackRightClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultJogStrafeBackRightClip] = currentAttackAnimationProfile.MyJogStrafeBackRightClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyJogStrafeBackRightClip.averageSpeed.magnitude);
                         //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                     }
                 } else {
@@ -635,12 +693,37 @@ namespace AnyRPG {
                     Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
                 }
             }
+            if (currentAttackAnimationProfile.MyCombatJogStrafeBackLeftClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultCombatJogStrafeBackLeftClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultCombatJogStrafeBackLeftClip] = currentAttackAnimationProfile.MyCombatJogStrafeBackLeftClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseCombatJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeBackLeftClip.averageSpeed.magnitude);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+            }
+
             if (currentAttackAnimationProfile.MyCombatStrafeBackRightClip != null) {
                 if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultCombatStrafeBackRightClip)) {
                     tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultCombatStrafeBackRightClip] = currentAttackAnimationProfile.MyCombatStrafeBackRightClip;
                     if (Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                         // our clip has forward motion.  override the default animation motion speed of 2
                         baseCombatWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatStrafeBackRightClip.averageSpeed.magnitude);
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
+                    }
+                } else {
+                    Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
+                }
+            }
+            if (currentAttackAnimationProfile.MyCombatJogStrafeBackRightClip != null) {
+                if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultCombatJogStrafeBackRightClip)) {
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultCombatJogStrafeBackRightClip] = currentAttackAnimationProfile.MyCombatJogStrafeBackRightClip;
+                    if (Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                        // our clip has forward motion.  override the default animation motion speed of 2
+                        baseCombatJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAttackAnimationProfile.MyCombatJogStrafeBackRightClip.averageSpeed.magnitude);
                         //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                     }
                 } else {
@@ -1017,21 +1100,21 @@ namespace AnyRPG {
                 if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null && characterUnit.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
                     // in combat
                     usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
-                    usedbaseWalkBackAnimationSpeed = baseCombatWalkBackAnimationSpeed;
+                    usedbaseWalkBackAnimationSpeed = (absZValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);
                     usedBaseStrafeLeftAnimationSpeed = (absValue > baseCombatJogStrafeLeftAnimationSpeed ? baseCombatJogStrafeLeftAnimationSpeed : baseCombatWalkStrafeLeftAnimationSpeed);
                     usedBaseStrafeRightAnimationSpeed = (absValue > baseCombatJogStrafeRightAnimationSpeed ? baseCombatJogStrafeRightAnimationSpeed : baseCombatWalkStrafeRightAnimationSpeed);
-                    usedBaseWalkStrafeBackRightAnimationSpeed = baseCombatWalkStrafeBackRightAnimationSpeed;
-                    usedBaseWalkStrafeBackLeftAnimationSpeed = baseCombatWalkStrafeBackLeftAnimationSpeed;
+                    usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseCombatJogStrafeBackRightAnimationSpeed ? baseCombatJogStrafeBackRightAnimationSpeed : baseCombatWalkStrafeBackRightAnimationSpeed);
+                    usedBaseWalkStrafeBackLeftAnimationSpeed = (absValue > baseCombatJogStrafeBackLeftAnimationSpeed ? baseCombatJogStrafeBackLeftAnimationSpeed : baseCombatWalkStrafeBackLeftAnimationSpeed);
                     usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseCombatJogStrafeForwardLeftAnimationSpeed ? baseCombatJogStrafeForwardLeftAnimationSpeed : baseCombatWalkStrafeForwardLeftAnimationSpeed);
                     usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseCombatJogStrafeForwardRightAnimationSpeed ? baseCombatJogStrafeForwardRightAnimationSpeed : baseCombatWalkStrafeForwardRightAnimationSpeed);
                 } else {
                     // out of combat
                     usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
-                    usedbaseWalkBackAnimationSpeed = baseWalkBackAnimationSpeed;
+                    usedbaseWalkBackAnimationSpeed = (absZValue >= 2 ? baseRunBackAnimationSpeed : baseWalkBackAnimationSpeed);
                     usedBaseStrafeLeftAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
                     usedBaseStrafeRightAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
-                    usedBaseWalkStrafeBackRightAnimationSpeed = baseWalkStrafeBackRightAnimationSpeed;
-                    usedBaseWalkStrafeBackLeftAnimationSpeed = baseWalkStrafeBackLeftAnimationSpeed;
+                    usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseJogStrafeBackRightAnimationSpeed ? baseJogStrafeBackRightAnimationSpeed : baseWalkStrafeBackRightAnimationSpeed);
+                    usedBaseWalkStrafeBackLeftAnimationSpeed = (absValue > baseJogStrafeBackLeftAnimationSpeed ? baseJogStrafeBackLeftAnimationSpeed : baseWalkStrafeBackLeftAnimationSpeed);
                     usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
                     usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
                 }

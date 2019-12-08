@@ -88,7 +88,13 @@ namespace AnyRPG {
         private string defaultMoveBackClip;
 
         [SerializeField]
+        private string defaultMoveBackFastClip;
+
+        [SerializeField]
         private string defaultCombatMoveBackClip;
+
+        [SerializeField]
+        private string defaultCombatMoveBackFastClip;
 
         [SerializeField]
         private string defaultJumpClip;
@@ -142,7 +148,13 @@ namespace AnyRPG {
         private string defaultStrafeBackLeftClip;
 
         [SerializeField]
+        private string defaultJogStrafeBackLeftClip;
+
+        [SerializeField]
         private string defaultStrafeBackRightClip;
+
+        [SerializeField]
+        private string defaultJogStrafeBackRightClip;
 
         [SerializeField]
         private string defaultCombatStrafeLeftClip;
@@ -172,7 +184,13 @@ namespace AnyRPG {
         private string defaultCombatStrafeBackLeftClip;
 
         [SerializeField]
+        private string defaultCombatJogStrafeBackLeftClip;
+
+        [SerializeField]
         private string defaultCombatStrafeBackRightClip;
+
+        [SerializeField]
+        private string defaultCombatJogStrafeBackRightClip;
 
         [SerializeField]
         private string defaultStunnedClip;
@@ -454,7 +472,9 @@ namespace AnyRPG {
         public string MyDefaultCombatMoveForwardClip { get => defaultCombatMoveForwardClip; set => defaultCombatMoveForwardClip = value; }
         public string MyDefaultCombatMoveForwardFastClip { get => defaultCombatMoveForwardFastClip; set => defaultCombatMoveForwardFastClip = value; }
         public string MyDefaultMoveBackClip { get => defaultMoveBackClip; set => defaultMoveBackClip = value; }
+        public string MyDefaultMoveBackFastClip { get => defaultMoveBackFastClip; set => defaultMoveBackFastClip = value; }
         public string MyDefaultCombatMoveBackClip { get => defaultCombatMoveBackClip; set => defaultCombatMoveBackClip = value; }
+        public string MyDefaultCombatMoveBackFastClip { get => defaultCombatMoveBackFastClip; set => defaultCombatMoveBackFastClip = value; }
         public string MyDefaultJumpClip { get => defaultJumpClip; set => defaultJumpClip = value; }
         public string MyDefaultCombatJumpClip { get => defaultCombatJumpClip; set => defaultCombatJumpClip = value; }
         public string MyDefaultIdleClip { get => defaultIdleClip; set => defaultIdleClip = value; }
@@ -472,7 +492,9 @@ namespace AnyRPG {
         public string MyDefaultStrafeForwardLeftClip { get => defaultStrafeForwardLeftClip; set => defaultStrafeForwardLeftClip = value; }
         public string MyDefaultJogStrafeForwardLeftClip { get => defaultJogStrafeForwardLeftClip; set => defaultJogStrafeForwardLeftClip = value; }
         public string MyDefaultStrafeBackLeftClip { get => defaultStrafeBackLeftClip; set => defaultStrafeBackLeftClip = value; }
+        public string MyDefaultJogStrafeBackLeftClip { get => defaultJogStrafeBackLeftClip; set => defaultJogStrafeBackLeftClip = value; }
         public string MyDefaultStrafeBackRightClip { get => defaultStrafeBackRightClip; set => defaultStrafeBackRightClip = value; }
+        public string MyDefaultJogStrafeBackRightClip { get => defaultJogStrafeBackRightClip; set => defaultJogStrafeBackRightClip = value; }
         public string MyDefaultCombatStrafeLeftClip { get => defaultCombatStrafeLeftClip; set => defaultCombatStrafeLeftClip = value; }
         public string MyDefaultCombatJogStrafeLeftClip { get => defaultCombatJogStrafeLeftClip; set => defaultCombatJogStrafeLeftClip = value; }
         public string MyDefaultCombatStrafeRightClip { get => defaultCombatStrafeRightClip; set => defaultCombatStrafeRightClip = value; }
@@ -482,7 +504,9 @@ namespace AnyRPG {
         public string MyDefaultCombatStrafeForwardLeftClip { get => defaultCombatStrafeForwardLeftClip; set => defaultCombatStrafeForwardLeftClip = value; }
         public string MyDefaultCombatJogStrafeForwardLeftClip { get => defaultCombatJogStrafeForwardLeftClip; set => defaultCombatJogStrafeForwardLeftClip = value; }
         public string MyDefaultCombatStrafeBackLeftClip { get => defaultCombatStrafeBackLeftClip; set => defaultCombatStrafeBackLeftClip = value; }
+        public string MyDefaultCombatJogStrafeBackLeftClip { get => defaultCombatJogStrafeBackLeftClip; set => defaultCombatJogStrafeBackLeftClip = value; }
         public string MyDefaultCombatStrafeBackRightClip { get => defaultCombatStrafeBackRightClip; set => defaultCombatStrafeBackRightClip = value; }
+        public string MyDefaultCombatJogStrafeBackRightClip { get => defaultCombatJogStrafeBackRightClip; set => defaultCombatJogStrafeBackRightClip = value; }
         public string MyDefaultStunnedClip { get => defaultStunnedClip; set => defaultStunnedClip = value; }
         public string MyDefaultCombatStunnedClip { get => defaultCombatStunnedClip; set => defaultCombatStunnedClip = value; }
         public string MyDefaultDeathClip { get => defaultDeathClip; set => defaultDeathClip = value; }
