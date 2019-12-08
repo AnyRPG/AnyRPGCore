@@ -296,7 +296,7 @@ namespace AnyRPG {
         }
 
         public virtual void CastReflect(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityReflect(source, target, abilityEffectInput);
         }
 

@@ -183,7 +183,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
-            //Debug.Log("OnTakeDamageHandler activated on " + gameObject.name);
+            //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
             AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
             abilityAffectInput.healthAmount = damage;
             foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {

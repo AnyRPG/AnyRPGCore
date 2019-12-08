@@ -28,15 +28,21 @@ namespace AnyRPG {
                 source.MyCharacterCombat.ReceiveCombatMiss(target);
                 return;
             }
-            float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.MyCharacterStats.MyLevel);
-            KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
-            int extraAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
-            int abilityFinalAmount = (int)abilityKeyValuePair.Key;
+            int healthFinalAmount = 0;
+            CombatMagnitude combatMagnitude = CombatMagnitude.normal;
+            if (useHealthAmount == true) {
+                float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.MyCharacterStats.MyLevel);
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+                healthFinalAmount = (int)abilityKeyValuePair.Key;
+                combatMagnitude = abilityKeyValuePair.Value;
+            }
+            healthFinalAmount += (int)(abilityEffectInput.healthAmount * inputMultiplier);
+
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
-            abilityEffectOutput.healthAmount = abilityFinalAmount;
-            if (abilityFinalAmount > 0) {
+            abilityEffectOutput.healthAmount = healthFinalAmount;
+            if (healthFinalAmount > 0) {
                 // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(abilityFinalAmount, source.MyCharacterUnit.transform.position, source, abilityKeyValuePair.Value, this);
+                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(healthFinalAmount, source.MyCharacterUnit.transform.position, source, combatMagnitude, this);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
 
