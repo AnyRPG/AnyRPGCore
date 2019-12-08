@@ -91,13 +91,16 @@ namespace AnyRPG {
             if (MyAutoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
                 //Debug.Log("player controller is in combat and target is not null");
                 //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
-                BaseCharacter targetCharacter = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter;
-                if (targetCharacter != null) {
-                    //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
-                    Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
-                    return;
-                } else {
-                    //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is null. deactivating auto attack");
+                CharacterUnit _characterUnit = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>();
+                if (_characterUnit != null) {
+                    BaseCharacter targetCharacter = _characterUnit.MyCharacter;
+                    if (targetCharacter != null) {
+                        //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
+                        Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
+                        return;
+                    } else {
+                        //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is null. deactivating auto attack");
+                    }
                 }
                 // autoattack is active, but we were unable to attack the target because they were dead, or not a lootable character, or didn't have an interactable.
                 // There is no reason for autoattack to remain active under these circumstances

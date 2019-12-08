@@ -127,6 +127,14 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleDropCombat() {
+            UpdateVisual();
+        }
+
+        public void HandleEnterCombat() {
+            UpdateVisual();
+        }
+
         /// <summary>
         /// Sets the useable on the actionbutton
         /// </summary>
@@ -141,6 +149,7 @@ namespace AnyRPG {
                 } else {
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
                 }
+                UnsubscribeFromCombatEvents();
             }
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
@@ -166,6 +175,7 @@ namespace AnyRPG {
                 } else {
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
                 }
+                SubscribeToCombatEvents();
             }
             UpdateVisual();
 
@@ -179,6 +189,13 @@ namespace AnyRPG {
             //UIManager.MyInstance.RefreshTooltip(useable as IDescribable);
 
             initialized = true;
+        }
+
+        public void SubscribeToCombatEvents() {
+            if (MyUseable != null && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
+                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HandleEnterCombat;
+                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += HandleDropCombat;
+            }
         }
 
         public void OnAttemptUseableUse(IAbility ability) {
@@ -349,6 +366,14 @@ namespace AnyRPG {
                     return;
                 }
 
+                if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat) {
+                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                        //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
+                        EnableFullCoolDownIcon();
+                        return;
+                    }
+                }
+
                 if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyWeaponAffinityNames.Count > 0) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
                         if (!((MyUseable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
@@ -424,8 +449,17 @@ namespace AnyRPG {
             UIManager.MyInstance.HideToolTip();
         }
 
+        public void UnsubscribeFromCombatEvents() {
+            if (MyUseable != null && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
+                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HandleEnterCombat;
+                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= HandleDropCombat;
+            }
+        }
+
         public void ClearUseable() {
             //Debug.Log("ActionButton.ClearUseable()");
+
+            UnsubscribeFromCombatEvents();
             MyUseable = null;
             UpdateVisual();
         }
