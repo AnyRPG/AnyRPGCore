@@ -131,6 +131,7 @@ namespace AnyRPG {
             if (animatedUnit != null) {
                 animatedUnit.OrchestrateStartup();
             }
+            InitializeNamePlate();
         }
 
         public void CreateEventSubscriptions() {
