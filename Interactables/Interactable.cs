@@ -682,14 +682,22 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
-                tempList.AddRange(meshRenderers);
+                foreach (Renderer renderer in meshRenderers) {
+                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
+                        tempList.Add(renderer);
+                    }
+                }
             }
             Renderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             if (skinnedMeshRenderers == null || skinnedMeshRenderers.Length == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
-                tempList.AddRange(skinnedMeshRenderers);
+                foreach (Renderer renderer in skinnedMeshRenderers) {
+                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
+                        tempList.Add(renderer);
+                    }
+                }
             }
             meshRenderers = tempList.ToArray();
             if (meshRenderers.Length != 0) {
