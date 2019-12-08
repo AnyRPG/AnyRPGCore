@@ -210,6 +210,7 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());
             ShowPreviewButtonsCommon();
+            SetLevelType(0);
 
         }
 
