@@ -465,6 +465,17 @@ namespace AnyRPG {
                 }
             }
             if (canCast == true) {
+                // dismount if mounted
+                if (baseCharacter.MyCharacterUnit.MyMounted == true) {
+                    //List<StatusEff>
+                    foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                        if (statusEffectNode.MyStatusEffect is MountEffect) {
+                            statusEffectNode.CancelStatusEffect();
+                            break;
+                        }
+                    }
+                }
+
                 //Debug.Log("Ground Targetting: cancast is true");
                 if (!ability.MyCanSimultaneousCast) {
                     //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
