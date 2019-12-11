@@ -593,7 +593,7 @@ namespace AnyRPG {
         }
 
         public void BeginAbility(IAbility ability, GameObject target) {
-            //Debug.Log("CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
             BeginAbilityCommon(ability, target);
         }
 
@@ -616,7 +616,7 @@ namespace AnyRPG {
             }
             if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
                 if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, baseCharacter) <= -1) {
-                    if (targetCharacterUnit.MyBaseCharacter.MyCharacterCombat != null && ability.MyCanCastOnEnemy == true) {
+                    if (targetCharacterUnit.MyBaseCharacter.MyCharacterCombat != null && ability.MyCanCastOnEnemy == true && targetCharacterUnit.MyBaseCharacter.MyCharacterStats.IsAlive == true) {
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
                         if (baseCharacter.MyCharacterCombat.GetInCombat() == false) {
                             baseCharacter.MyCharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter);

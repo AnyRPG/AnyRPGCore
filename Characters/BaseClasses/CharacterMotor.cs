@@ -201,7 +201,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL! moveToDestination: true. current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; animatedUnit.MyAgent.destination: " + animatedUnit.MyAgent.destination + "; pathpending: " + animatedUnit.MyAgent.pathPending);
                     float agentDestinationDrift = Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination);
                     if (agentDestinationDrift >= (animatedUnit.MyAgent.stoppingDistance + navMeshDistancePadding) && destinationPosition != animatedUnit.MyAgent.destination) {
-                        Debug.Log(gameObject.name + ": FixedUpdate() Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination): " + agentDestinationDrift + "; animatedUnit.MyAgent.stoppingDistance: " + animatedUnit.MyAgent.stoppingDistance);
+                        //Debug.Log(gameObject.name + ": FixedUpdate() Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination): " + agentDestinationDrift + "; animatedUnit.MyAgent.stoppingDistance: " + animatedUnit.MyAgent.stoppingDistance);
                         //Debug.Log(gameObject.name + ": FixedUpdate() agent.destination: " + animatedUnit.MyAgent.destination + " but should be point: " + destinationPosition + ". Issuing MoveToPoint()");
                         MoveToPoint(destinationPosition);
                     } else {

@@ -160,17 +160,17 @@ namespace AnyRPG {
         }
 
         public void OnMasterMovement() {
-            Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
+            //Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
             SetMasterRelativeDestination();
         }
 
         public void SetMasterRelativeDestination() {
             if (MyUnderControl == false) {
                 // only do this stuff if we actually have a master
-                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
                 return;
             }
-            Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
+            //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
             Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
@@ -182,11 +182,11 @@ namespace AnyRPG {
             }
 
             if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(MyLeashPosition, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance) {
-                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
                 masterRelativeDestination = SetDestination(masterRelativeDestination);
                 MyLeashPosition = masterRelativeDestination;
             } else {
-                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not greater than " + usedMaxDistance);
+                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not greater than " + usedMaxDistance);
             }
 
         }

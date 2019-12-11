@@ -48,11 +48,11 @@ public class ResurrectEffect : InstantEffect {
             //Debug.Log("Ressurect spell cast, but there was no target");
             return null;
         }
-        CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
-        if (characterUnit == null) {
+        CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+        if (targetCharacterUnit == null) {
             return null;
         }
-        if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
+        if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
             return target;
         }
         return null;
