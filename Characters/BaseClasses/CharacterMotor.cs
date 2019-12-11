@@ -275,7 +275,7 @@ namespace AnyRPG {
             Vector3 firstTestPosition = Vector3.zero;
             bool foundMatch = false;
             //if (Physics.Raycast(testPosition + new Vector3(0f, -0.1f, 0f), Vector3.up, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
-            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
+            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.MyDefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
                 //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; mask: " + raycastHit.collider.name);
