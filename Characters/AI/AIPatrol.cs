@@ -116,7 +116,7 @@ namespace AnyRPG {
         }
 
         public Vector3 GetRandomDestination() {
-            //Debug.Log("AIPatrol.GetRandomDestination()");
+            //Debug.Log(gameObject.name + ".AIPatrol.GetRandomDestination()");
             if (destinationList.Count > 0) {
                 // get destination from list
                 int randomNumber = Random.Range(0, destinationList.Count);
@@ -132,6 +132,8 @@ namespace AnyRPG {
 
                 // get a random point that's on the navmesh
                 Vector3 randomPoint = (characterUnit.MyCharacter.MyCharacterController as AIController).MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
+                randomPoint = characterUnit.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(randomPoint);
+                /*
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPoint, out hit, 10.0f, NavMesh.AllAreas)) {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + destinationPosition + " on NavMesh found closest point: " + hit.position + ")");
@@ -140,6 +142,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): destinationPosition " + randomPoint + " was not on NavMesh! return start position instead");
                     return (characterUnit.MyCharacter.MyCharacterController as AIController).MyStartPosition;
                 }
+                */
                 return randomPoint;
             }
         }

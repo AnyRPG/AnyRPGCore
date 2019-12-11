@@ -36,6 +36,9 @@ namespace AnyRPG {
         // last frame number that a navmeshagent setdestination command was performed
         private int lastCommandFrame = -1;
 
+        // debugging variable to see how long paths are remaining pending for
+        private int pathPendingCount = 0;
+
         // properties
         public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
         public GameObject MyTarget { get => target; }
@@ -90,16 +93,31 @@ namespace AnyRPG {
                 lastCommandFrame = Time.frameCount;
                 setMoveDestination = false;
             }
-
+            /*
+            if (!setMoveDestination) {
+                Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: false.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
+            }
+            */
+            if (animatedUnit.MyAgent.pathPending == true) {
+                pathPendingCount++;
+                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + transform.position + "; PATHPENDING: TRUE!!!; status: " + animatedUnit.MyAgent.pathStatus + "; count: " + pathPendingCount);
+            } else {
+                pathPendingCount = 0;
+            }
+            if (animatedUnit.MyAgent.hasPath == true) {
+                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + transform.position + "; HASPATH: TRUE!!!; status: " + animatedUnit.MyAgent.pathStatus);
+            }
         }
 
         protected virtual void FixedUpdate() {
             //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(). current location: " + transform.position);
             //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending);
             if (frozen) {
+                //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; FROZEN: RETURNING!!!");
                 return;
             }
             if (characterUnit != null && animatedUnit.MyAgent != null && animatedUnit.MyAgent.isActiveAndEnabled) {
+                //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; ANIMATED UNIT IS NOT NULL, SETTING SPEED");
                 animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
@@ -178,11 +196,12 @@ namespace AnyRPG {
                 //} else if (moveToDestination == true) {
                 // i think this next statement was the short version to stop agents getting stuck on corners so it continously updated the destination
             } else {
+                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL!");
                 if (moveToDestination == true && destinationPosition != animatedUnit.MyAgent.destination) {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL! moveToDestination: true. current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; animatedUnit.MyAgent.destination: " + animatedUnit.MyAgent.destination + "; pathpending: " + animatedUnit.MyAgent.pathPending);
                     float agentDestinationDrift = Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination);
                     if (agentDestinationDrift >= (animatedUnit.MyAgent.stoppingDistance + navMeshDistancePadding) && destinationPosition != animatedUnit.MyAgent.destination) {
-                        //Debug.Log(gameObject.name + ": FixedUpdate() Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination): " + agentDestinationDrift + "; animatedUnit.MyAgent.stoppingDistance: " + animatedUnit.MyAgent.stoppingDistance);
+                        Debug.Log(gameObject.name + ": FixedUpdate() Vector3.Distance(destinationPosition, animatedUnit.MyAgent.destination): " + agentDestinationDrift + "; animatedUnit.MyAgent.stoppingDistance: " + animatedUnit.MyAgent.stoppingDistance);
                         //Debug.Log(gameObject.name + ": FixedUpdate() agent.destination: " + animatedUnit.MyAgent.destination + " but should be point: " + destinationPosition + ". Issuing MoveToPoint()");
                         MoveToPoint(destinationPosition);
                     } else {
@@ -211,23 +230,110 @@ namespace AnyRPG {
         }
 
         public Vector3 CorrectedNavmeshPosition(Vector3 testPosition) {
+            //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + ")");
+
             NavMeshHit hit;
+            
+            // get current mask
+            /*
+            int currentMask = NavMesh.AllAreas;
+            bool foundCurrentNavMesh = false;
+            if (NavMesh.SamplePosition(transform.position, out hit, 0.1f, NavMesh.AllAreas)) {
+                currentMask = hit.mask;
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + ") character transform: " + transform.position + " was on NavMesh: " + currentMask);
+                foundCurrentNavMesh = true;
+            }
+            */
+
+            // NOTE: SUPER MESSED UP... UNITY WILL NOT RAYCAST FROM BELOW TERRAIN, MUST BE FROM TOP BECAUSE PHYSICS RAYCAST WILL NOT HIT BACK FACE OF TRIANGLES
 
             // THIS NEEDS FIXING THANKS TO UNITY BUG OF NOT PROPERLY HANDLING SAMPLEPOSITION AND IGNORING XZ AND ONLY USING Y
-            // ONE POSSIBLE SOLUTION IS TO start with a RADIUS OF 0.5 AND CONTINUALLY EXPAND 0.5 AT A TIME UNTIL WE FIND A VALID POINT - DONE AND WORKING
+            // start with a RADIUS OF 0.5 AND CONTINUALLY EXPAND 0.5 AT A TIME UNTIL WE FIND A VALID POINT
+
+            /*
+            // new code to try all areas only after current area - this hopefully does not lead to lag when switching areas
             float sampleRadius = 0.5f;
-            while (sampleRadius <= maxNavMeshSampleRadius) {
-                if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
+            while (sampleRadius <= maxNavMeshSampleRadius) { 
+                if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, currentMask)) {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " on NavMesh found closest point: " + hit.position + ")");
                     return hit.position;
                 }
                 sampleRadius += navMeshSampleStepSize;
             }
+            */
 
+            // attempt sample at 0.5f radius using current navmesharea.  if this works, we found a valid point on the current navmesh
+            if (NavMesh.SamplePosition(testPosition, out hit, 0.5f, NavMesh.AllAreas)) {
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " was on current NavMesh near: " + hit.position + ")");
+                return hit.position;
+            }
+
+            // we did not find a valid point on the current navmesh
+            // since unity prefers finding stuff downward rather than sideways, we want to shoot updward to find out if we landed under a hill
+            // attempt vertical updward shot to find position on current navmesh first
+            RaycastHit raycastHit;
+            Vector3 firstTestPosition = Vector3.zero;
+            bool foundMatch = false;
+            //if (Physics.Raycast(testPosition + new Vector3(0f, -0.1f, 0f), Vector3.up, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
+            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
+                firstTestPosition = raycastHit.point;
+                foundMatch = true;
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; mask: " + raycastHit.collider.name);
+            }
+
+            float sampleRadius = 0.5f;
+            if (foundMatch) {
+                // our upward raycast found a walkable area.  is it the same area?  check outward for valid point on same area
+                while (sampleRadius <= maxNavMeshSampleRadius) {
+                    if (NavMesh.SamplePosition(firstTestPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
+                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " got hit above on walkable ground at current mask: " + firstTestPosition + ")");
+                        return hit.position;
+                    }
+                    sampleRadius += navMeshSampleStepSize;
+                }
+                // if we actually got a hit, but did not detect a navmesh, then don't try raycast downward.  the hit was probably on a steep up hill and trying a downcast from our current
+                // level would result in a ray inside the hill shooting downward to a potentially inaccessible navmesh below
+                return Vector3.zero;
+            }
+
+            // now try raycast downward in case we are at the top of a hill
+            firstTestPosition = Vector3.zero;
+            foundMatch = false;
+            if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
+                firstTestPosition = raycastHit.point;
+                foundMatch = true;
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit below on walkable ground: " + firstTestPosition + ")");
+            }
+
+            sampleRadius = 0.5f;
+            if (foundMatch) {
+                // our downward raycast found a walkable area.  is it the same area?  check outward for valid point on same area
+                while (sampleRadius <= maxNavMeshSampleRadius) {
+                    if (NavMesh.SamplePosition(firstTestPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
+                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " got hit below on walkable ground at current mask: " + firstTestPosition + ")");
+                        return hit.position;
+                    }
+                    sampleRadius += navMeshSampleStepSize;
+                }
+            }
+
+            // we didn't find anything on the same navmesharea above the raycast hit, so it's probably a floor of another area.  try just searching outward for any navmesh instead
+            // it's possible we are switching areas between navmesh boundaries
+            
+            sampleRadius = 0.5f;
+            while (sampleRadius <= maxNavMeshSampleRadius) {
+                if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
+                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " on NavMesh found closest point on a different navmesh at : " + hit.position + ")");
+                    return hit.position;
+                }
+                sampleRadius += navMeshSampleStepSize;
+            }
+            
 
             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition: " + testPosition + " was not within " + maxNavMeshSampleRadius + " of a NavMesh!");
             // should the code that calls this go into evade 
 
+            Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", RETURNING VECTOR3.ZERO!!!");
             return Vector3.zero;
         }
 
@@ -247,6 +353,7 @@ namespace AnyRPG {
         public Vector3 MoveToPoint(Vector3 point) {
             //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount);
             if (frozen) {
+                //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");
                 return Vector3.zero;
             }
 

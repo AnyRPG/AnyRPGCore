@@ -19,7 +19,10 @@ namespace AnyRPG {
         private float leashDistance = 40f;
 
         [SerializeField]
-        private float maxDistanceFromMasterOnMove = 10f;
+        private float maxDistanceFromMasterOnMove = 3f;
+
+        [SerializeField]
+        private float maxCombatDistanceFromMasterOnMove = 15f;
 
         /// <summary>
         /// A reference to the agro range script 
@@ -40,7 +43,15 @@ namespace AnyRPG {
 
         private SphereCollider sphereCollider;
 
-        public Vector3 MyStartPosition { get { return startPosition; } set { startPosition = value; MyLeashPosition = MyStartPosition; } }
+        public Vector3 MyStartPosition {
+            get {
+                return startPosition;
+            }
+            set {
+                startPosition = value;
+                MyLeashPosition = startPosition;
+            }
+        }
         public Vector3 MyLeashPosition { get; set; }
 
         private AIPatrol aiPatrol;
@@ -95,7 +106,7 @@ namespace AnyRPG {
             // moved next 2 lines here from awake because we need some references first for them to work
             Vector3 correctedPosition = Vector3.zero;
             if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
+                correctedPosition = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
             } else {
                 //Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");
             }
@@ -149,29 +160,35 @@ namespace AnyRPG {
         }
 
         public void OnMasterMovement() {
-            //Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
+            Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
             SetMasterRelativeDestination();
         }
 
         public void SetMasterRelativeDestination() {
             if (MyUnderControl == false) {
                 // only do this stuff if we actually have a master
-                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
+                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
                 return;
             }
-            //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
+            Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
             Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
-
-            if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > maxDistanceFromMasterOnMove) {
-                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
-                masterRelativeDestination = SetDestination(masterRelativeDestination);
+            float usedMaxDistance = 0f;
+            if (baseCharacter.MyCharacterCombat.GetInCombat() == true) {
+                usedMaxDistance = maxCombatDistanceFromMasterOnMove;
             } else {
-                //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not greater than " + maxDistanceFromMasterOnMove);
+                usedMaxDistance = maxDistanceFromMasterOnMove;
             }
 
-            MyLeashPosition = masterRelativeDestination;
+            if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(MyLeashPosition, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance) {
+                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
+                masterRelativeDestination = SetDestination(masterRelativeDestination);
+                MyLeashPosition = masterRelativeDestination;
+            } else {
+                Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not greater than " + usedMaxDistance);
+            }
+
         }
 
         public void OnMasterAttack(BaseCharacter target) {
@@ -278,7 +295,6 @@ namespace AnyRPG {
         public Vector3 SetDestination(Vector3 destination) {
             //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
-                // I THINK WE MAY NEED TO SEND IN CORRECTED NAVMESH POSITION HERE
                 CommonMovementNotifier();
                 return MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MoveToPoint(destination);
             } else {

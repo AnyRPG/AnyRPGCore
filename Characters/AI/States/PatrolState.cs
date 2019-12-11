@@ -17,8 +17,10 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.aiController = aiController;
             if (!aiController.MyAiPatrol.PatrolComplete()) {
-                currentDestination = aiController.MyAiPatrol.GetDestination(false);
-                currentDestination = this.aiController.SetDestination(currentDestination);
+                Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(false);
+                if (tmpDestination != Vector3.zero) {
+                    currentDestination = this.aiController.SetDestination(tmpDestination);
+                }
                 this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             } else {
                 aiController.ChangeState(new IdleState());
@@ -46,9 +48,12 @@ namespace AnyRPG {
                 aiController.ChangeState(new FollowState());
             }
 
-            if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+            bool getNewDestination = false;
+
+            if (currentDestination == Vector3.zero && coroutine == null) {
+                getNewDestination = true;
+            } else if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
-                currentDestination = aiController.MyAiPatrol.GetDestination(true);
 
                 // destination reached
                 if (aiController.MyAiPatrol.PatrolComplete()) {
@@ -62,23 +67,33 @@ namespace AnyRPG {
                     }
                 } else {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached and patrol not complete yet!");
-                    coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
-                    this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                    getNewDestination = true;
                 }
+            }
+
+            if (getNewDestination == true) {
+                Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(true);
+                if (tmpDestination == Vector3.zero) {
+                    Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
+                    return;
+                }
+                // destination is safe, set it
+                currentDestination = tmpDestination;
+
+                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
             }
         }
 
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
-            if (aiController.MyAiPatrol.MyDestinationPauseTime == 0f) {
+
+            float remainingPauseTime = aiController.MyAiPatrol.MyDestinationPauseTime;
+            while (remainingPauseTime > 0f) {
+                remainingPauseTime -= Time.deltaTime;
+                Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
                 yield return null;
-            } else {
-                float remainingPauseTime = aiController.MyAiPatrol.MyDestinationPauseTime;
-                while (remainingPauseTime > 0f) {
-                    remainingPauseTime -= Time.deltaTime;
-                    yield return null;
-                }
             }
-            currentDestination = this.aiController.SetDestination(currentDestination);
+            currentDestination = this.aiController.SetDestination(nextDestination);
         }
     }
 

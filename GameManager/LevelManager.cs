@@ -143,6 +143,7 @@ namespace AnyRPG {
                 return;
             }
             PerformLevelLoadActivities();
+            NavMesh.pathfindingIterationsPerFrame = 500;
         }
 
         public void PerformLevelLoadActivities() {

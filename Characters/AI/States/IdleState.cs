@@ -28,6 +28,7 @@ namespace AnyRPG {
 
             // change into follow state if the player is close
             if (aiController.MyTarget != null) {
+                //Debug.Log(aiController.gameObject.name + ": IdleState.Update(): setting follow state");
                 aiController.ChangeState(new FollowState());
                 return;
             }
