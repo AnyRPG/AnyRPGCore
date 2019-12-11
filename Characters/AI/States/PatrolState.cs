@@ -71,6 +71,18 @@ namespace AnyRPG {
                 }
             }
 
+
+            //pathstatus: " + animatedUnit.MyAgent.pathStatus
+            if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
+                Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS INVALID, GETTING NEW DESTINATION");
+                getNewDestination = true;
+            }
+
+            if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
+                Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS PARTIAL, GETTING NEW DESTINATION");
+                getNewDestination = true;
+            }
+
             if (getNewDestination == true) {
                 Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(true);
                 if (tmpDestination == Vector3.zero) {
@@ -90,7 +102,7 @@ namespace AnyRPG {
             float remainingPauseTime = aiController.MyAiPatrol.MyDestinationPauseTime;
             while (remainingPauseTime > 0f) {
                 remainingPauseTime -= Time.deltaTime;
-                Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
+                //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
                 yield return null;
             }
             currentDestination = this.aiController.SetDestination(nextDestination);
