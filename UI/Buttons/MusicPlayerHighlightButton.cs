@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log(gameObject.name + ".MusicPlayerHighlightButton.Select()");
+            //Debug.Log(gameObject.name + ".MusicPlayerHighlightButton.Select()");
 
             base.Select();
             MusicPlayerUI.MyInstance.MySelectedMusicPlayerHighlightButton = this;
@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            Debug.Log("MusicPlayerHighlightButton.Deselect()");
+            //Debug.Log("MusicPlayerHighlightButton.Deselect()");
 
             base.DeSelect();
         }

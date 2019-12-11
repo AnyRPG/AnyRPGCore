@@ -123,7 +123,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
+            //Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
             ClearButtons();
             ClearPages();
             base.ReceiveOpenWindowNotification();

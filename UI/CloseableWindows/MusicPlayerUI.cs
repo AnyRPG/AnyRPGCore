@@ -174,11 +174,11 @@ namespace AnyRPG {
         }
 
         public void DeselectMusicButtons() {
-            Debug.Log("MusicPlayerUI.DeselectMusicButtons()");
+            //Debug.Log("MusicPlayerUI.DeselectMusicButtons()");
             foreach (MusicPlayerHighlightButton musicPlayerHighlightButton in musicPlayerHighlightButtons) {
-                Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button");
+                //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button");
                 if (musicPlayerHighlightButton != MySelectedMusicPlayerHighlightButton) {
-                    Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button and clearing it");
+                    //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button and clearing it");
                     musicPlayerHighlightButton.DeSelect();
                 }
             }
