@@ -20,6 +20,8 @@ namespace AnyRPG {
         }
         #endregion
 
+        private int spawnCount = 0;
+
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
         }
@@ -44,6 +46,11 @@ namespace AnyRPG {
 
         public void LoadResources() {
             //Debug.Log("Loading ScriptableObject Resources From Disk");
+        }
+
+        public int GetSpawnCount() {
+            spawnCount++;
+            return spawnCount;
         }
 
     }

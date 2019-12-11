@@ -231,6 +231,7 @@ namespace AnyRPG {
             }
             //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
             GameObject spawnReference = Instantiate(spawnPrefab);
+            spawnReference.name = spawnReference.name + SystemGameManager.MyInstance.GetSpawnCount();
             //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
             Vector3 newSpawnLocation = GetSpawnLocation();
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
