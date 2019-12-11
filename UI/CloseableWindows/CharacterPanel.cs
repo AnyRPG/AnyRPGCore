@@ -237,7 +237,7 @@ namespace AnyRPG {
             updateString += "SpellPower: " + LevelEquations.GetSpellPowerForCharacter(PlayerManager.MyInstance.MyCharacter);
             updateString += "\n";
             updateString += "Critical Hit Chance: " + LevelEquations.GetCritChanceForCharacter(PlayerManager.MyInstance.MyCharacter) + "%\n\n";
-            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMovementSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed) + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMovementSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }
