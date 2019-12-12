@@ -35,6 +35,10 @@ namespace AnyRPG {
 
         public void Start() {
             //List<GameObject> foundObjects = combatTextCanvas.transform.fi
+            PopulateObjectPool();
+        }
+
+        public void PopulateObjectPool() {
             foreach (Transform child in combatTextCanvas.transform) {
                 CombatTextController combatTextController = child.GetComponent<CombatTextController>();
                 if (combatTextController != null) {
