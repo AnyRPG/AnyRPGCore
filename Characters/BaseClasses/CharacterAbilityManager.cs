@@ -313,8 +313,8 @@ namespace AnyRPG {
 
         public virtual void OnDieHandler(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".OnDieHandler()");
-
-            MyWaitingForAnimatedAbility = false;
+            StopCasting();
+            //MyWaitingForAnimatedAbility = false;
         }
 
 
