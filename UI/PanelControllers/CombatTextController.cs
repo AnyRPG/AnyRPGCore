@@ -25,6 +25,9 @@ namespace AnyRPG {
         [SerializeField]
         private float fadeTime;
 
+        [SerializeField]
+        private int defaultFontSize = 30;
+
         private string displayText;
         private GameObject mainTarget;
         private float alpha;
@@ -50,13 +53,22 @@ namespace AnyRPG {
         public CombatTextType MyCombatType { get => textType; set => textType = value; }
         public Image MyImage { get => image; set => image = value; }
 
+        /*
         void Start() {
+            
+        }
+        */
+
+        public void InitializeCombatTextController() {
+            gameObject.SetActive(true);
             //Debug.Log("Combat Text spawning: " + textType);
             randomX = Random.Range(0, randomXLimit);
             randomY = Random.Range(0, randomYLimit);
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
             targetPos = Camera.main.WorldToScreenPoint(mainTarget.transform.position);
-            alpha = text.color.a;
+            //alpha = text.color.a;
+            alpha = 1f;
+            text.fontSize = defaultFontSize;
             fadeOutTimer = fadeTime;
             fadeRate = 1.0f / fadeTime;
 
@@ -140,9 +152,10 @@ namespace AnyRPG {
             if (MyCombatMagnitude == CombatMagnitude.critical) {
                 text.fontSize = text.fontSize * 2;
             }
+            RunCombatTextUpdate();
         }
 
-        void FixedUpdate() {
+        public void RunCombatTextUpdate() {
             //Debug.Log("CombatTextController.FixedUpdate()");
             if (mainTarget != null) {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
@@ -171,8 +184,14 @@ namespace AnyRPG {
 
                 randomY += (movementSpeed * directionMultiplier);
             } else {
-                Destroy(this.gameObject);
+                CombatTextManager.MyInstance.returnControllerToPool(this);
+                //Destroy(this.gameObject);
             }
+
+        }
+
+        void FixedUpdate() {
+            RunCombatTextUpdate();
         }
     }
 
