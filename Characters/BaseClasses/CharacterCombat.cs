@@ -156,7 +156,7 @@ namespace AnyRPG {
 
         public IEnumerator outOfCombatRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning");
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+            if (baseCharacter != null && baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.IsAlive == true) {
                 while (baseCharacter.MyCharacterStats.currentHealth < baseCharacter.MyCharacterStats.MyMaxHealth || baseCharacter.MyCharacterStats.currentMana < baseCharacter.MyCharacterStats.MyMaxMana) {
                     yield return new WaitForSeconds(1);
                     int healthAmount = baseCharacter.MyCharacterStats.MyMaxHealth / 100;
@@ -482,7 +482,7 @@ namespace AnyRPG {
 
         public void AttemptRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
-            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true) {
+            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter.MyCharacterStats.IsAlive == true) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(): starting coroutine");
                 regenRoutine = StartCoroutine(outOfCombatRegen());
             }

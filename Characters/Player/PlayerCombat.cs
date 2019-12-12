@@ -49,7 +49,7 @@ namespace AnyRPG {
         public override void OnEnable() {
             //Debug.Log("PlayerCombat.OnEnable()");
             base.OnEnable();
-            AttemptRegen();
+            //AttemptRegen();
         }
 
         public override void OnDisable() {
