@@ -180,7 +180,8 @@ namespace AnyRPG {
         public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
 
-        public virtual void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
             abilityEffects = new List<AbilityEffect>();
             if (MyAbilityEffectNames != null) {
                 foreach (string abilityEffectName in MyAbilityEffectNames) {

@@ -8,9 +8,10 @@ namespace AnyRPG {
     public class QuestStartItem : Item, IUseable, IQuestGiver {
 
         [SerializeField]
-        private QuestNode[] quests;
+        private List<QuestNode> quests = new List<QuestNode>();
 
-        public QuestNode[] MyQuests { get => quests; }
+        public List<QuestNode> MyQuests { get => quests; }
+
         public Interactable MyInteractable { get => null; }
 
         public override bool Use() {
@@ -82,6 +83,16 @@ namespace AnyRPG {
                 }
             }
             return false;
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (quests != null) {
+                foreach (QuestNode questNode in quests) {
+                    questNode.SetupScriptableObjects();
+                }
+            }
         }
     }
 

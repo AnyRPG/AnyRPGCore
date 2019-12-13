@@ -17,6 +17,9 @@ namespace AnyRPG {
         protected float damagePerSecond;
 
         [SerializeField]
+        protected string defaultAttackAnimationProfileName;
+
+        //[SerializeField]
         protected AnimationProfile defaultAttackAnimationProfile;
 
         /*
@@ -28,6 +31,9 @@ namespace AnyRPG {
         */
 
         [SerializeField]
+        private string onHitEffectName;
+
+        //[SerializeField]
         private AbilityEffect onHitEffect;
 
         // the skill required to use this weapon
@@ -164,6 +170,29 @@ namespace AnyRPG {
             return true;
         }
 
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            onHitEffect = null;
+            if (onHitEffectName != null) {
+                AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(onHitEffectName);
+                if (abilityEffect != null) {
+                    onHitEffect = abilityEffect;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            defaultAttackAnimationProfile = null;
+            if (defaultAttackAnimationProfileName != null) {
+                AnimationProfile animationProfile = SystemAnimationProfileManager.MyInstance.GetResource(defaultAttackAnimationProfileName);
+                if (animationProfile != null) {
+                    defaultAttackAnimationProfile = animationProfile;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+        }
 
     }
 

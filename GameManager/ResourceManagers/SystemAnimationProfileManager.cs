@@ -2,58 +2,58 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SystemSkillManager : SystemResourceManager {
+    public class SystemAnimationProfileManager : SystemResourceManager {
 
         #region Singleton
-        private static SystemSkillManager instance;
+        private static SystemAnimationProfileManager instance;
 
-        public static SystemSkillManager MyInstance {
+        public static SystemAnimationProfileManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<SystemSkillManager>();
+                    instance = FindObjectOfType<SystemAnimationProfileManager>();
                 }
 
                 return instance;
             }
         }
+
         #endregion
 
-        const string resourceClassName = "Skill";
+        const string resourceClassName = "AnimationProfile";
 
         protected override void Awake() {
-            //Debug.Log(this.GetType().Name + ".Awake()");
             base.Awake();
         }
 
         public override void LoadResourceList() {
-            //Debug.Log(this.GetType().Name + ".LoadResourceList()");
-            masterList.Add(Resources.LoadAll<Skill>(resourceClassName));
+            masterList.Add(Resources.LoadAll<AnimationProfile>(resourceClassName));
             if (SystemConfigurationManager.MyInstance != null) {
                 foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.MyLoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<Skill>(loadResourcesFolder + "/" + resourceClassName));
+                    masterList.Add(Resources.LoadAll<AnimationProfile>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }
             base.LoadResourceList();
         }
 
-        public Skill GetResource(string resourceName) {
+        public AnimationProfile GetResource(string resourceName) {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
-                    return (resourceList[keyName] as Skill);
+                    return (resourceList[keyName] as AnimationProfile);
                 }
             }
             return null;
         }
 
-        public List<Skill> GetResourceList() {
-            List<Skill> returnList = new List<Skill>();
+        public List<AnimationProfile> GetResourceList() {
+            List<AnimationProfile> returnList = new List<AnimationProfile>();
 
             foreach (UnityEngine.Object listItem in resourceList.Values) {
-                returnList.Add(listItem as Skill);
+                returnList.Add(listItem as AnimationProfile);
             }
             return returnList;
         }

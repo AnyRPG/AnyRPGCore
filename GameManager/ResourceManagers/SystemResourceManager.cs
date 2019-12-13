@@ -56,7 +56,7 @@ namespace AnyRPG {
         }
 
         public virtual void LoadResourceList() {
-            Debug.Log("SystemResourceManager.LoadResourceList()");
+            //Debug.Log("SystemResourceManager.LoadResourceList()");
             int tmpLength = 0;
             foreach (UnityEngine.Object[] subList in masterList) {
                 tmpLength += subList.Length;
@@ -112,7 +112,9 @@ namespace AnyRPG {
         }
 
         public virtual void SetupScriptableObjects() {
-            // overwrite me
+            foreach (UnityEngine.Object listItem in resourceList.Values) {
+                (listItem as DescribableResource).SetupScriptableObjects();
+            }
         }
 
     }

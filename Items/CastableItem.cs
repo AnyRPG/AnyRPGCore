@@ -8,6 +8,9 @@ namespace AnyRPG {
     public abstract class CastableItem : Item, IUseable {
 
         [SerializeField]
+        protected string abilityName;
+
+        //[SerializeField]
         protected BaseAbility ability;
 
         public override bool Use() {
@@ -34,6 +37,19 @@ namespace AnyRPG {
             return string.Format("{0}\n<color=green>Use: Cast {1}</color>", base.GetSummary(), abilityName);
         }
         */
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            ability = null;
+            if (abilityName != null) {
+                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                if (baseAbility != null) {
+                    ability = baseAbility;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+        }
+
 
     }
 

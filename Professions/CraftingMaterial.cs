@@ -1,20 +1,37 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[System.Serializable]
-public class CraftingMaterial
-{
-    [SerializeField]
-    private Item item;
+    [System.Serializable]
+    public class CraftingMaterial {
 
-    [SerializeField]
-    private int count;
+        [SerializeField]
+        private string itemName;
 
-    public Item MyItem { get => item; }
-    public int MyCount { get => count; }
-}
+        //[SerializeField]
+        private Item item;
+
+        [SerializeField]
+        private int count;
+
+        public Item MyItem { get => item; }
+        public int MyCount { get => count; }
+
+        public void SetupScriptableObjects() {
+
+            item = null;
+            if (itemName != null) {
+                Item tmpItem = SystemItemManager.MyInstance.GetResource(itemName);
+                if (tmpItem != null) {
+                    item = tmpItem;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material.  CHECK INSPECTOR");
+                }
+            }
+        }
+
+    }
 
 }

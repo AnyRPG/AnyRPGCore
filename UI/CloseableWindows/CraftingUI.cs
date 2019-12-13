@@ -178,12 +178,12 @@ namespace AnyRPG {
 
             outputIcon.SetDescribable(recipe.MyOutput, recipe.MyOutputCount);
 
-            if (recipe.MyCraftingMaterials.Length > 0) {
+            if (recipe.MyCraftingMaterials.Count > 0) {
                 materialsHeading.gameObject.SetActive(true);
             }
 
             // show crafting materials
-            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
                 inputIcons[i].MyMaterialSlot.SetActive(true);
                 inputIcons[i].SetDescribable(recipe.MyCraftingMaterials[i].MyItem, recipe.MyCraftingMaterials[i].MyCount);
             }
@@ -195,7 +195,7 @@ namespace AnyRPG {
 
         private bool CanCraft(Recipe recipe) {
             //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
-            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
                 if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) < recipe.MyCraftingMaterials[i].MyCount) {
                     return false;
                 }
@@ -266,7 +266,7 @@ namespace AnyRPG {
             Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
 
             int maxAmount = -1;
-            for (int i = 0; i < recipe.MyCraftingMaterials.Length; i++) {
+            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
                 int possibleAmount = InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) / recipe.MyCraftingMaterials[i].MyCount;
                 if (maxAmount == -1) {
                     maxAmount = possibleAmount;

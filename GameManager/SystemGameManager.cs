@@ -53,7 +53,7 @@ namespace AnyRPG {
         }
 
         public void LoadResources() {
-            Debug.Log("SystemGameManager.LoadResources()");
+            //Debug.Log("SystemGameManager.LoadResources()");
 
             // load all resource managers into a list and get them to load their scriptableobjects from disk
             SystemResourceManager[] systemResourceManagerArray = resourceManagerParent.GetComponents<SystemResourceManager>();

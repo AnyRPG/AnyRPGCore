@@ -11,14 +11,14 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private QuestNode[] quests;
+        private List<QuestNode> quests = new List<QuestNode>();
 
         [SerializeField]
         private INamePlateUnit namePlateUnit;
 
         private bool questGiverInitialized = false;
 
-        public QuestNode[] MyQuests { get => quests; }
+        public List<QuestNode> MyQuests { get => quests; }
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage : base.MyNamePlateImage); }

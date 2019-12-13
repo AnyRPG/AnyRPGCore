@@ -85,10 +85,16 @@ namespace AnyRPG {
         private int agilityModifier;
 
         [SerializeField]
+        private string onEquipAbilityName;
+
+        //[SerializeField]
         private BaseAbility onEquipAbility;
 
         [SerializeField]
-        private List<BaseAbility> learnedAbilities;
+        private List<string> learnedAbilityNames;
+
+        //[SerializeField]
+        private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
 
         public virtual int MyDamageModifier {
             get {
@@ -274,6 +280,32 @@ namespace AnyRPG {
             }
 
             return base.GetSummary() + "\n" + string.Join("\n", abilitiesList);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            onEquipAbility = null;
+            if (onEquipAbilityName != null) {
+                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(onEquipAbilityName);
+                if (baseAbility != null) {
+                    onEquipAbility = baseAbility;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            learnedAbilities = new List<BaseAbility>();
+            if (learnedAbilityNames != null) {
+                foreach (string baseAbilityName in learnedAbilityNames) {
+                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    if (baseAbility != null) {
+                        learnedAbilities.Add(baseAbility);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
         }
 
     }

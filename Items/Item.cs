@@ -39,6 +39,9 @@ namespace AnyRPG {
         //public CharacterButton MyCharacterButton { get; set; }
 
         [SerializeField]
+        private string currencyName;
+
+        //[SerializeField]
         private Currency currency;
 
         [SerializeField]
@@ -160,7 +163,23 @@ namespace AnyRPG {
 
             return string.Format("{0}", summaryString);
         }
-        
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            currency = null;
+            if (currencyName != null) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(currencyName);
+                if (tmpCurrency != null) {
+                    currency = tmpCurrency;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + currencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+        }
+
+
+
     }
 
 }

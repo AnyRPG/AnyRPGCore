@@ -1,34 +1,39 @@
 using AnyRPG;
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-[CreateAssetMenu(fileName = "New Describable Resource",menuName = "AnyRPG/Describable Resource")]
-public abstract class DescribableResource : ScriptableObject, IDescribable {
+    [CreateAssetMenu(fileName = "New Describable Resource", menuName = "AnyRPG/Describable Resource")]
+    public abstract class DescribableResource : ScriptableObject, IDescribable {
 
-    [SerializeField]
-    protected string resourceName;
+        [SerializeField]
+        protected string resourceName;
 
-    [SerializeField]
-    protected Sprite icon;
+        [SerializeField]
+        protected Sprite icon;
 
-    [SerializeField]
-    [TextArea(10, 20)]
-    protected string description;
+        [SerializeField]
+        [TextArea(10, 20)]
+        protected string description;
 
-    public Sprite MyIcon { get => icon; set => icon = value; }
-    public string MyName { get => resourceName; set => resourceName = value; }
-    public string MyDescription { get => description; set => description = value; }
+        public Sprite MyIcon { get => icon; set => icon = value; }
+        public string MyName { get => resourceName; set => resourceName = value; }
+        public string MyDescription { get => description; set => description = value; }
 
-    public virtual string GetDescription() {
-        return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
+        public virtual string GetDescription() {
+            return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
+        }
+
+        public virtual string GetSummary() {
+            return string.Format("{0}", description);
+        }
+
+        public virtual void SetupScriptableObjects() {
+            // overwrite me
+        }
+
+
     }
-
-    public virtual string GetSummary() {
-        return string.Format("{0}", description);
-    }
-
-}
 
 }

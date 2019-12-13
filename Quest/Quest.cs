@@ -441,19 +441,19 @@ namespace AnyRPG {
             }
         }
 
-        public static List<Quest> GetCompleteQuests(QuestNode[] questNodeArray, bool requireInQuestLog = false) {
+        public static List<Quest> GetCompleteQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
             return GetQuestListByType("complete", questNodeArray, requireInQuestLog, false, true);
         }
 
-        public static List<Quest> GetInProgressQuests(QuestNode[] questNodeArray, bool requireInQuestLog = true) {
+        public static List<Quest> GetInProgressQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = true) {
             return GetQuestListByType("inprogress", questNodeArray, requireInQuestLog, false, true);
         }
 
-        public static List<Quest> GetAvailableQuests(QuestNode[] questNodeArray, bool requireInQuestLog = false) {
+        public static List<Quest> GetAvailableQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
             return GetQuestListByType("available", questNodeArray, requireInQuestLog, true, false);
         }
 
-        public static List<Quest> GetQuestListByType(string questStatusType, QuestNode[] questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
+        public static List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
                 if (questNode.MyQuest != null && questNode.MyQuest.MyName != null && questNode.MyQuest.MyName != string.Empty) {
