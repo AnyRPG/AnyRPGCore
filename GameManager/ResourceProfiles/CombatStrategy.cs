@@ -35,7 +35,7 @@ namespace AnyRPG {
                             baseAbility = sourceCharacter.MyCharacterAbilityManager.MyAbilityList[usedBaseAbilityName] as BaseAbility;
                             //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (!sourceCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.abilityEffects[0].MyName)) && sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterUnit.gameObject, sourceCharacter as BaseCharacter)) {
+                            if (!sourceCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].MyName)) && sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterUnit.gameObject, sourceCharacter as BaseCharacter)) {
                                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                                 return baseAbility;
                             }

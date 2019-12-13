@@ -19,7 +19,7 @@ namespace AnyRPG {
         public Dictionary<string, UnityEngine.Object> MyResourceList { get => resourceList; set => resourceList = value; }
 
         protected virtual void Awake() {
-            LoadResourceList();
+            //LoadResourceList();
         }
 
         protected virtual void Start() {
@@ -56,6 +56,7 @@ namespace AnyRPG {
         }
 
         public virtual void LoadResourceList() {
+            Debug.Log("SystemResourceManager.LoadResourceList()");
             int tmpLength = 0;
             foreach (UnityEngine.Object[] subList in masterList) {
                 tmpLength += subList.Length;
@@ -108,6 +109,10 @@ namespace AnyRPG {
                 return true;
             }
             return false;
+        }
+
+        public virtual void SetupScriptableObjects() {
+            // overwrite me
         }
 
     }

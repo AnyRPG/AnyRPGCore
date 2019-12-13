@@ -20,6 +20,11 @@ namespace AnyRPG {
         }
         #endregion
 
+        [SerializeField]
+        private GameObject resourceManagerParent = null;
+
+        private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
+
         private int spawnCount = 0;
 
         private void Awake() {
@@ -37,6 +42,9 @@ namespace AnyRPG {
             // next, load scriptable object resources
             LoadResources();
 
+            // next, verify systemconfiguration manager references to resources
+            SystemConfigurationManager.MyInstance.VerifySystemAbilities();
+
             PlayerManager.MyInstance.OrchestratorStart();
 
             // then launch level manager to start loading the game
@@ -45,7 +53,24 @@ namespace AnyRPG {
         }
 
         public void LoadResources() {
-            //Debug.Log("Loading ScriptableObject Resources From Disk");
+            Debug.Log("SystemGameManager.LoadResources()");
+
+            // load all resource managers into a list and get them to load their scriptableobjects from disk
+            SystemResourceManager[] systemResourceManagerArray = resourceManagerParent.GetComponents<SystemResourceManager>();
+            foreach (SystemResourceManager systemResourceManager in systemResourceManagerArray) {
+                //Debug.Log("SystemGameManager.LoadResources(): found a child: " + child.name);
+                //SystemResourceManager systemResourceManager = child.GetComponent<SystemResourceManager>();
+                if (systemResourceManager != null) {
+                    systemResourceManagers.Add(systemResourceManager);
+                    systemResourceManager.LoadResourceList();
+                }
+            }
+
+            // give each resource manager a chance to loop through their scriptableOjects and create references to other scriptableOjects to avoid costly
+            // and repetitive runtime lookups
+            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
+                systemResourceManager.SetupScriptableObjects();
+            }
         }
 
         public int GetSpawnCount() {

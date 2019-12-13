@@ -134,7 +134,10 @@ namespace AnyRPG {
         // this will be set to the ability casting length only for direct cast abilities
         protected float castTimeMultiplier = 1f;
 
-        public List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
+        [SerializeField]
+        protected List<string> abilityEffectNames = new List<string>();
+
+        protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         protected Vector3 groundTarget = Vector3.zero;
 
@@ -169,11 +172,27 @@ namespace AnyRPG {
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
         public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        protected List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
+        public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool MyRequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
+        public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
+        public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
+
+        public virtual void SetupScriptableObjects() {
+            abilityEffects = new List<AbilityEffect>();
+            if (MyAbilityEffectNames != null) {
+                foreach (string abilityEffectName in MyAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        abilityEffects.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+        }
 
         public override string GetSummary() {
             string requireString = string.Empty;

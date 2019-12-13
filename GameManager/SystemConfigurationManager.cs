@@ -284,19 +284,29 @@ namespace AnyRPG {
         [Header("SYSTEM ABILITIES")]
 
         [SerializeField]
-        private DirectAbility levelUpAbility;
+        private string levelUpAbilityName;
+
+        private BaseAbility levelUpAbility;
 
         [SerializeField]
-        private DirectAbility deathAbility;
+        private string deathAbilityName;
+
+        private BaseAbility deathAbility;
 
         [SerializeField]
-        private DirectAbility lootSparkleAbility;
+        private string lootSparkleAbilityName;
+
+        private BaseAbility lootSparkleAbility;
 
         [SerializeField]
-        private DirectAbility doWhiteDamageAbility;
+        private string doWhiteDamageAbilityName;
+
+        private BaseAbility doWhiteDamageAbility;
 
         [SerializeField]
-        private DirectAbility takeDamageAbility;
+        private string takeDamageAbilityName;
+
+        private BaseAbility takeDamageAbility;
 
         [SerializeField]
         private AudioClip defaultHitSoundEffect;
@@ -404,9 +414,9 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public DirectAbility MyLootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
+        public BaseAbility MyLootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
         public Material MyTemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
-        public DirectAbility MyLevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
+        public BaseAbility MyLevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
         public Sprite MyQuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
         public Sprite MyQuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }
         public Sprite MyDialogInteractionPanelImage { get => dialogInteractionPanelImage; set => dialogInteractionPanelImage = value; }
@@ -428,9 +438,9 @@ namespace AnyRPG {
         public Sprite MySkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
         public Sprite MySkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
-        public DirectAbility MyDoWhiteDamageAbility { get => doWhiteDamageAbility; set => doWhiteDamageAbility = value; }
-        public DirectAbility MyTakeDamageAbility { get => takeDamageAbility; set => takeDamageAbility = value; }
-        public DirectAbility MyDeathAbility { get => deathAbility; set => deathAbility = value; }
+        public BaseAbility MyDoWhiteDamageAbility { get => doWhiteDamageAbility; set => doWhiteDamageAbility = value; }
+        public BaseAbility MyTakeDamageAbility { get => takeDamageAbility; set => takeDamageAbility = value; }
+        public BaseAbility MyDeathAbility { get => deathAbility; set => deathAbility = value; }
         public Sprite MyMultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
         public float MyDefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite MyBankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
@@ -524,7 +534,7 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
             CreateEventSubscriptions();
-            VerifySystemAbilities();
+            //VerifySystemAbilities();
         }
 
         private void CreateEventSubscriptions() {
@@ -549,41 +559,51 @@ namespace AnyRPG {
         }
 
         // verify that system abilities are available through the factory
-        private void VerifySystemAbilities() {
+        public void VerifySystemAbilities() {
             BaseAbility testAbility = null;
-            if (levelUpAbility != null) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbility.MyName);
+            if (levelUpAbilityName != null && levelUpAbilityName != string.Empty) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + levelUpAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + levelUpAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
+                } else {
+                    levelUpAbility = testAbility;
                 }
             }
-            if (deathAbility != null) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbility.MyName);
+            if (deathAbilityName != null && deathAbilityName != string.Empty) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + deathAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + deathAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
+                } else {
+                    deathAbility = testAbility;
                 }
             }
-            if (lootSparkleAbility != null) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbility.MyName);
+            if (lootSparkleAbilityName != null && lootSparkleAbilityName != string.Empty) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + lootSparkleAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + lootSparkleAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
+                } else {
+                    lootSparkleAbility = testAbility;
                 }
             }
-            if (doWhiteDamageAbility != null) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(doWhiteDamageAbility.MyName);
+            if (doWhiteDamageAbilityName != null && doWhiteDamageAbilityName != string.Empty) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(doWhiteDamageAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + doWhiteDamageAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + doWhiteDamageAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
+                } else {
+                    doWhiteDamageAbility = testAbility;
                 }
             }
-            if (takeDamageAbility != null) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(takeDamageAbility.MyName);
+            if (takeDamageAbilityName != null && takeDamageAbilityName != string.Empty) {
+                testAbility = SystemAbilityManager.MyInstance.GetResource(takeDamageAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + takeDamageAbility.MyName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + takeDamageAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
+                } else {
+                    takeDamageAbility = testAbility;
                 }
             }
             if (defaultCurrencyGroup == null) {

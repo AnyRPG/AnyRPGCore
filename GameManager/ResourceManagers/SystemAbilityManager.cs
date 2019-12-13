@@ -60,5 +60,13 @@ namespace AnyRPG {
             return returnList;
 
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            foreach (UnityEngine.Object listItem in resourceList.Values) {
+                (listItem as BaseAbility).SetupScriptableObjects();
+            }
+
+        }
     }
 }
