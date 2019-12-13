@@ -173,7 +173,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             onHitEffect = null;
-            if (onHitEffectName != null) {
+            if (onHitEffectName != null && onHitEffectName != string.Empty) {
                 AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(onHitEffectName);
                 if (abilityEffect != null) {
                     onHitEffect = abilityEffect;
@@ -183,12 +183,12 @@ namespace AnyRPG {
             }
 
             defaultAttackAnimationProfile = null;
-            if (defaultAttackAnimationProfileName != null) {
+            if (defaultAttackAnimationProfileName != null && defaultAttackAnimationProfileName != string.Empty) {
                 AnimationProfile animationProfile = SystemAnimationProfileManager.MyInstance.GetResource(defaultAttackAnimationProfileName);
                 if (animationProfile != null) {
                     defaultAttackAnimationProfile = animationProfile;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 

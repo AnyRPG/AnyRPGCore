@@ -167,12 +167,12 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             currency = null;
-            if (currencyName != null) {
+            if (currencyName != null && currencyName != string.Empty) {
                 Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + currencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 

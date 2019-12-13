@@ -80,7 +80,13 @@ namespace AnyRPG {
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
         [SerializeField]
+        protected List<string> reflectAbilityEffectNames = new List<string>();
+
+        [SerializeField]
         protected List<AbilityEffect> reflectAbilityEffectList = new List<AbilityEffect>();
+
+        [SerializeField]
+        protected List<string> weaponHitAbilityEffectNames = new List<string>();
 
         [SerializeField]
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
@@ -413,6 +419,35 @@ namespace AnyRPG {
                 targetCharacter.MyCharacterController.UnLevitateCharacter();
             }
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            reflectAbilityEffectList = new List<AbilityEffect>();
+            if (reflectAbilityEffectNames != null) {
+                foreach (string abilityEffectName in reflectAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        reflectAbilityEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            weaponHitAbilityEffectList = new List<AbilityEffect>();
+            if (weaponHitAbilityEffectNames != null) {
+                foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        weaponHitAbilityEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+        }
+
     }
 
     public enum StatBuffType { Stamina, Strength, Intellect, Agility, MovementSpeed }

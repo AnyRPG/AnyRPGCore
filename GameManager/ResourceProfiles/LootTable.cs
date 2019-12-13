@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class LootTable : DescribableResource {
 
         [SerializeField]
-        protected Loot[] loot;
+        protected List<Loot> loot = new List<Loot>();
 
         private List<LootDrop> droppedItems = new List<LootDrop>();
 
@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public List<LootDrop> MyDroppedItems { get => droppedItems; set => droppedItems = value; }
 
-        public Loot[] MyLoot { get => loot; set => loot = value; }
+        public List<Loot> MyLoot { get => loot; set => loot = value; }
 
         public List<LootDrop> GetLoot() {
             //Debug.Log("LootTable.GetLoot().");
@@ -72,6 +72,17 @@ namespace AnyRPG {
         public void Reset() {
             rolled = false;
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (loot != null) {
+                foreach (Loot tmpLoot in loot) {
+                    tmpLoot.SetupScriptableObjects();
+                }
+            }
+        }
+
     }
 
 }

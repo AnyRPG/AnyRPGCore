@@ -6,6 +6,10 @@ using UnityEngine;
 namespace AnyRPG {
     [System.Serializable]
     public class VendorItem {
+
+        [SerializeField]
+        private string itemName;
+
         [SerializeField]
         private Item item;
 
@@ -39,6 +43,20 @@ namespace AnyRPG {
                 return unlimited;
             }
         }
+
+        public void SetupScriptableObjects() {
+
+            item = null;
+            if (itemName != null) {
+                Item tmpItem = SystemItemManager.MyInstance.GetResource(itemName);
+                if (tmpItem != null) {
+                    item = tmpItem;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material.  CHECK INSPECTOR");
+                }
+            }
+        }
+
     }
 
 }

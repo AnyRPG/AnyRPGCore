@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Animation Profile", menuName = "AnyRPG/Animation/Profile")]
-    public class AnimationProfile : ScriptableObject {
+    public class AnimationProfile : DescribableResource {
 
+        /*
         [SerializeField]
         private string profileName;
-
+    */
         [SerializeField]
         private bool suppressAdjustAnimatorSpeed = false;
 
@@ -116,7 +117,7 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip levitatedClip;
 
-        public string MyProfileName { get => profileName; set => profileName = value; }
+        //public string MyProfileName { get => profileName; set => profileName = value; }
         public AnimationProfileNode[] MyProfileNodes { get => animationProfileNodes; set => animationProfileNodes = value; }
         public AnimationClip[] MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
         public AnimationClip MyJumpClip { get => jumpClip; set => jumpClip = value; }

@@ -13,6 +13,9 @@ namespace AnyRPG {
 
         // the smallest currency in this group
         [SerializeField]
+        private string baseCurrencyName;
+
+        [SerializeField]
         private Currency baseCurrency;
 
         [SerializeField]
@@ -39,10 +42,35 @@ namespace AnyRPG {
             }
             return false;
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            baseCurrency = null;
+            if (baseCurrencyName != null) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(baseCurrencyName);
+                if (tmpCurrency != null) {
+                    baseCurrency = tmpCurrency;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + baseCurrencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (currencyGroupRates != null) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
+                    currencyGroupRate.SetupScriptableObjects();
+                }
+            }
+
+
+        }
+
     }
 
     [System.Serializable]
     public class CurrencyGroupRate {
+
+        [SerializeField]
+        private string currencyName;
 
         [SerializeField]
         private Currency currency;
@@ -53,6 +81,19 @@ namespace AnyRPG {
 
         public Currency MyCurrency { get => currency; set => currency = value; }
         public int MyBaseMultiple { get => baseMultiple; set => baseMultiple = value; }
+
+        public void SetupScriptableObjects() {
+            currency = null;
+            if (currencyName != null) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(currencyName);
+                if (tmpCurrency != null) {
+                    currency = tmpCurrency;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + currencyName + " while inititalizing a currency group rate.  CHECK INSPECTOR");
+                }
+            }
+
+        }
     }
 
 }

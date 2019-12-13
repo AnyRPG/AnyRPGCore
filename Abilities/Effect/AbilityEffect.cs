@@ -55,6 +55,9 @@ namespace AnyRPG {
 
         // any abilities to cast immediately on hit
         [SerializeField]
+        protected List<string> hitAbilityEffectNames = new List<string>();
+
+        //[SerializeField]
         protected List<AbilityEffect> hitAbilityEffectList = new List<AbilityEffect>();
 
         // the character that cast the spell
@@ -330,6 +333,22 @@ namespace AnyRPG {
             abilityEffectInput.manaAmount = (int)(abilityEffectInput.manaAmount * inputMultiplier);
             return abilityEffectInput;
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            hitAbilityEffectList = new List<AbilityEffect>();
+            if (hitAbilityEffectNames != null) {
+                foreach (string abilityEffectName in hitAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        hitAbilityEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+        }
+
 
     }
 }

@@ -1,44 +1,62 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[System.Serializable]
-public class Loot
-{
-    [SerializeField]
-    private Item item;
+    [System.Serializable]
+    public class Loot {
 
-    [SerializeField]
-    private float dropChance;
+        [SerializeField]
+        private string itemName;
 
-    [SerializeField]
-    private int minDrops = 1;
+        [SerializeField]
+        private Item item;
 
-    [SerializeField]
-    private int maxDrops = 1;
+        [SerializeField]
+        private float dropChance;
 
-    [SerializeField]
-    protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+        [SerializeField]
+        private int minDrops = 1;
 
-    public Item MyItem { get => item; }
-    public float MyDropChance { get => dropChance; }
-    public int MyMinDrops { get => minDrops; set => minDrops = value; }
-    public int MyMaxDrops { get => maxDrops; set => maxDrops = value; }
+        [SerializeField]
+        private int maxDrops = 1;
 
-    public bool MyPrerequisitesMet {
-        get {
-            foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
-                if (!prerequisiteCondition.IsMet()) {
-                    return false;
+        [SerializeField]
+        protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+
+        public Item MyItem { get => item; }
+        public float MyDropChance { get => dropChance; }
+        public int MyMinDrops { get => minDrops; set => minDrops = value; }
+        public int MyMaxDrops { get => maxDrops; set => maxDrops = value; }
+
+        public bool MyPrerequisitesMet {
+            get {
+                foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                    if (!prerequisiteCondition.IsMet()) {
+                        return false;
+                    }
+                }
+                // there are no prerequisites, or all prerequisites are complete
+                return true;
+            }
+        }
+
+        public void SetupScriptableObjects() {
+            item = null;
+            if (itemName != null) {
+                Item tmpItem = SystemItemManager.MyInstance.GetResource(itemName);
+                if (tmpItem != null) {
+                    item = tmpItem;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + itemName + " while inititalizing a loot.  CHECK INSPECTOR");
                 }
             }
-            // there are no prerequisites, or all prerequisites are complete
-            return true;
-        }
-    }
 
-}
+        }
+
+
+
+    }
 
 }

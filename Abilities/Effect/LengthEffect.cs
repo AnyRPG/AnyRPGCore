@@ -43,6 +43,9 @@ namespace AnyRPG {
 
         // any abilities to cast every tick
         [SerializeField]
+        protected List<string> tickAbilityEffectNames = new List<string>();
+
+        //[SerializeField]
         protected List<AbilityEffect> tickAbilityEffectList = new List<AbilityEffect>();
 
         //private float nextTickTime;
@@ -50,6 +53,9 @@ namespace AnyRPG {
 
         // any abilities to cast when the effect completes
         [SerializeField]
+        protected List<string> completeAbilityEffectNames = new List<string>();
+
+        //[SerializeField]
         protected List<AbilityEffect> completeAbilityEffectList = new List<AbilityEffect>();
 
         public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
@@ -164,6 +170,33 @@ namespace AnyRPG {
 
         }
 
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            tickAbilityEffectList = new List<AbilityEffect>();
+            if (tickAbilityEffectNames != null) {
+                foreach (string abilityEffectName in tickAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        tickAbilityEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            completeAbilityEffectList = new List<AbilityEffect>();
+            if (completeAbilityEffectNames != null) {
+                foreach (string abilityEffectName in completeAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        completeAbilityEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+        }
 
     }
 }
