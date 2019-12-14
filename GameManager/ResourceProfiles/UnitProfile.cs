@@ -45,9 +45,9 @@ namespace AnyRPG {
             realDefaultAutoAttackAbility = null;
             if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
                 realDefaultAutoAttackAbility = SystemAbilityManager.MyInstance.GetResource(defaultAutoAttackAbilityName);
-            } else {
+            }/* else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + defaultAutoAttackAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-            }
+            }*/
         }
     }
 

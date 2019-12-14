@@ -54,16 +54,16 @@ namespace AnyRPG {
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
                 realAmbientMusicProfile = SystemMusicProfileManager.MyInstance.GetResource(ambientMusicProfile);
-            } else {
+            }/* else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-            }
+            }*/
 
             realBackgroundMusicProfile = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
                 realBackgroundMusicProfile = SystemMusicProfileManager.MyInstance.GetResource(backgroundMusicProfile);
-            } else {
+            }/* else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-            }
+            }*/
         }
 
     }
