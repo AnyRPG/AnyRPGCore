@@ -290,7 +290,7 @@ namespace AnyRPG {
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
                 if (MyUseable != null && (MyUseable is IAbility)) {
-                    if (!PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyUseable.MyName)) {
+                    if (!PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyUseable as BaseAbility)) {
                         MyUseable = null;
                     }
                 }

@@ -222,7 +222,7 @@ namespace AnyRPG {
             // prevent status effect from sending scaled up damage to its ticks
             abilityEffectInput.castTimeMultipler = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetResource(MyName) as StatusEffect, source, targetCharacterUnit, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(MyName) as StatusEffect, source, targetCharacterUnit, abilityEffectInput);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {

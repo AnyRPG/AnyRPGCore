@@ -12,14 +12,16 @@ namespace AnyRPG {
         [SerializeField]
         private string armorClassName;
 
-        public string MyArmorClassName { get => armorClassName; set => armorClassName = value; }
+        private ArmorClass armorClass = null;
+
+        public ArmorClass MyArmorClass { get => armorClass; set => armorClass = value; }
 
         public override float MyArmorModifier {
             get {
                 float returnValue = base.MyArmorModifier;
                 if (useArmorModifier && !useManualArmor) {
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClassName) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
+                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
                         0f,
                         Mathf.Infinity
                         ));
@@ -36,10 +38,10 @@ namespace AnyRPG {
             if (abilitiesList.Count > 0) {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
-            List<string> allowedCharacterClasses = GetAllowedCharacterClasses();
+            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
-                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
                     colorString = "white";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
@@ -47,13 +49,13 @@ namespace AnyRPG {
             return base.GetSummary() + abilitiesString;
         }
 
-        public List<string> GetAllowedCharacterClasses() {
-            List<string> returnValue = new List<string>();
+        public List<CharacterClass> GetAllowedCharacterClasses() {
+            List<CharacterClass> returnValue = new List<CharacterClass>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
                 if (characterClass.MyArmorClassList != null && characterClass.MyArmorClassList.Count > 0) {
                     //bool foundMatch = false;
                     if (characterClass.MyArmorClassList.Contains(armorClassName)) {
-                        returnValue.Add(characterClass.MyName);
+                        returnValue.Add(characterClass);
                     }
                 }
             }
@@ -65,12 +67,27 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            List<string> allowedCharacterClasses = GetAllowedCharacterClasses();
-            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.MyCharacterClassName)) {
+            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
+            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.MyCharacterClass)) {
                 MessageFeedManager.MyInstance.WriteMessage("You do not have the right armor proficiency to equip " + MyName);
                 return false;
             }
             return true;
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            armorClass = null;
+            if (armorClassName != null && armorClassName != string.Empty) {
+                ArmorClass tmpArmorClass = SystemArmorClassManager.MyInstance.GetResource(armorClassName);
+                if (tmpArmorClass != null) {
+                    armorClass = tmpArmorClass;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find armor class : " + armorClassName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
         }
 
     }

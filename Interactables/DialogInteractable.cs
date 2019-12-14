@@ -111,8 +111,8 @@ namespace AnyRPG {
             //Debug.Log("DialogInteractable.GetValidOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             foreach (Dialog dialog in dialogList) {
-                if (SystemDialogManager.MyInstance.GetResource(dialog.MyName).MyPrerequisitesMet == true && SystemDialogManager.MyInstance.GetResource(dialog.MyName).TurnedIn == false) {
-                    currentList.Add(SystemDialogManager.MyInstance.GetResource(dialog.MyName));
+                if (dialog.MyPrerequisitesMet == true && dialog.TurnedIn == false) {
+                    currentList.Add(dialog);
                 }
             }
             //Debug.Log("DialogInteractable.GetValidOptionList(): List Size: " + validList.Count);
@@ -125,7 +125,7 @@ namespace AnyRPG {
             if (currentList.Count == 0) {
                 return false;
             } else if (currentList.Count == 1) {
-                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(currentList[0].MyName, this.interactable);
+                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(currentList[0], this.interactable);
                 (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
                 (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
             } else {

@@ -19,8 +19,28 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> equipmentSlotTypeList = new List<string>();
 
-        public List<string> MyEquipmentSlotTypeList { get => equipmentSlotTypeList; set => equipmentSlotTypeList = value; }
+        private List<EquipmentSlotType> realEquipmentSlotTypeList = new List<EquipmentSlotType>();
+
+        public List<EquipmentSlotType> MyEquipmentSlotTypeList { get => realEquipmentSlotTypeList; set => realEquipmentSlotTypeList = value; }
         public float MyStatWeight { get => statWeight; set => statWeight = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            realEquipmentSlotTypeList = new List<EquipmentSlotType>();
+            if (equipmentSlotTypeList != null) {
+                foreach (string equipmentSlotTypeName in equipmentSlotTypeList) {
+                    EquipmentSlotType tmpSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotTypeName);
+                    if (tmpSlotType != null) {
+                        realEquipmentSlotTypeList.Add(tmpSlotType);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotType: " + equipmentSlotTypeName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+        }
+
     }
 
 }

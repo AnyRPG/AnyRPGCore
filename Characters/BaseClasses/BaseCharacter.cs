@@ -15,8 +15,12 @@ namespace AnyRPG {
         [SerializeField]
         protected string factionName;
 
+        protected Faction faction;
+
         [SerializeField]
         protected string characterClassName;
+
+        protected CharacterClass characterClass;
 
         [SerializeField]
         protected CharacterStats characterStats = null;
@@ -59,7 +63,8 @@ namespace AnyRPG {
 
         public string MyCharacterName { get => characterName; }
         public string MyName { get => MyCharacterName; }
-        public string MyFactionName {
+        /*
+        private string MyFactionName {
 
             get {
                 if (MyCharacterController != null && MyCharacterController.MyUnderControl) {
@@ -74,13 +79,27 @@ namespace AnyRPG {
             }
             set => factionName = value;
         }
-        public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
+        */
+        public Faction MyFaction {
+
+            get {
+                if (MyCharacterController != null && MyCharacterController.MyUnderControl) {
+                    //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
+                    return MyCharacterController.MyMasterUnit.MyFaction;
+                }
+                return faction;
+            }
+            set => faction = value;
+        }
+
+        public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
             GetComponentReferences();
+            SetupScriptableObjects();
         }
 
         public virtual void GetComponentReferences() {
@@ -127,6 +146,7 @@ namespace AnyRPG {
 
         public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
+
             GetUnitProfile();
 
             GetComponentReferences();
@@ -170,23 +190,43 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void SetCharacterFaction(string newFaction) {
+        public virtual void SetCharacterFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
-            if (newFaction != null && newFaction != string.Empty) {
-                factionName = newFaction;
+            if (newFaction != null) {
+                faction = newFaction;
             }
         }
 
-        public virtual void SetCharacterClass(string newCharacterClassName) {
+        public virtual void SetCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
-            if (newCharacterClassName != null && newCharacterClassName != string.Empty) {
-                string oldCharacterClassName = characterClassName;
-                characterClassName = newCharacterClassName;
+            if (newCharacterClass != null) {
+                CharacterClass oldCharacterClass = characterClass;
+                characterClass = newCharacterClass;
                 characterStats.SetLevel(characterStats.MyLevel);
-                CharacterClass oldCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(oldCharacterClassName);
-                CharacterClass newCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(newCharacterClassName);
                 OnClassChange(newCharacterClass, oldCharacterClass);
             }
+        }
+
+        public void SetupScriptableObjects() {
+            if (faction == null && factionName != null && factionName != string.Empty) {
+                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                if (tmpFaction != null) {
+                    faction = tmpFaction;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+            if (characterClass == null && characterClassName != null && characterClassName != string.Empty) {
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                if (tmpCharacterClass != null) {
+                    characterClass = tmpCharacterClass;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+
         }
 
     }

@@ -141,7 +141,7 @@ namespace AnyRPG {
                     return intellectModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f) ) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f) ) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -154,7 +154,7 @@ namespace AnyRPG {
                     return staminaModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -167,7 +167,7 @@ namespace AnyRPG {
                     return strengthModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -180,7 +180,7 @@ namespace AnyRPG {
                     return agilityModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -193,9 +193,9 @@ namespace AnyRPG {
         public bool MyUseManualStrength { get => useManualStrength; set => useManualStrength = value; }
         public bool MyUseManualAgility { get => useManualAgility; set => useManualAgility = value; }
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
-        public string MyEquipmentSlotType { get => equipmentSlotType; set => equipmentSlotType = value; }
+        public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
-        public EquipmentSlotType MyRealEquipmentSlotType { get => SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);  }
+        public EquipmentSlotType MyRealEquipmentSlotType { get => realEquipmentSlotType;  }
 
         /*
         public Equipment() {
@@ -213,8 +213,8 @@ namespace AnyRPG {
 
         public float GetItemQualityNumber() {
             float returnValue = 1;
-            if (GetItemQuality() != null) {
-                returnValue = GetItemQuality().MyStatMultiplier;
+            if (MyItemQuality != null) {
+                returnValue = MyItemQuality.MyStatMultiplier;
             }
             return returnValue;
         }
@@ -237,7 +237,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
-            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0 && !MyCharacterClassRequirementList.Contains(baseCharacter.MyCharacterClassName)) {
+            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0 && !MyCharacterClassRequirementList.Contains(baseCharacter.MyCharacterClass)) {
                 MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyName);
                 return false;
             }

@@ -59,7 +59,7 @@ namespace AnyRPG {
             }
         }
 
-        public string MyFactionName { get => MyCharacter.MyFactionName; }
+        public Faction MyFaction { get => MyCharacter.MyFaction; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.MyCharacterName : interactionPanelTitle); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
@@ -280,7 +280,7 @@ namespace AnyRPG {
             }
             text.text = "o";
             text.fontSize = 50;
-            if (baseCharacter != null && baseCharacter.MyFactionName != null && baseCharacter.MyFactionName != string.Empty) {
+            if (baseCharacter != null && baseCharacter.MyFaction != null) {
                 text.color = Faction.GetFactionColor(PlayerManager.MyInstance.MyCharacter, baseCharacter);
             }
             return true;

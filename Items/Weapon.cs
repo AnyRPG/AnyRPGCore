@@ -40,6 +40,8 @@ namespace AnyRPG {
         [SerializeField]
         private string weaponSkill;
 
+        private WeaponSkill realWeaponSkill;
+
         [SerializeField]
         private AudioClip defaultHitSoundEffect;
         /*
@@ -65,7 +67,7 @@ namespace AnyRPG {
         }
         */
 
-        public string MyWeaponSkill { get => weaponSkill; set => weaponSkill = value; }
+        public WeaponSkill MyWeaponSkill { get => realWeaponSkill; set => realWeaponSkill = value; }
         public bool MyUseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
         public bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
         public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
@@ -127,7 +129,7 @@ namespace AnyRPG {
             if (abilitiesList.Count > 0) {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
-            List<string> allowedCharacterClasses = GetAllowedCharacterClasses();
+            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
                 /*
@@ -136,21 +138,21 @@ namespace AnyRPG {
                     playerClass = SystemCharacterClassManager.MyInstance.GetResource(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName);
                 }
                 */
-                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
                     colorString = "white";
                 }
-                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill);
+                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, realWeaponSkill.MyName);
             }
             return base.GetSummary() + abilitiesString;
         }
 
-        public List<string> GetAllowedCharacterClasses() {
-            List<string> returnValue = new List<string>();
+        public List<CharacterClass> GetAllowedCharacterClasses() {
+            List<CharacterClass> returnValue = new List<CharacterClass>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
                 if (characterClass.MyWeaponSkillList != null && characterClass.MyWeaponSkillList.Count > 0) {
                     //bool foundMatch = false;
-                    if (characterClass.MyWeaponSkillList.Contains(weaponSkill)) {
-                        returnValue.Add(characterClass.MyName);
+                    if (characterClass.MyWeaponSkillList.Contains(realWeaponSkill)) {
+                        returnValue.Add(characterClass);
                     }
                 }
             }
@@ -162,8 +164,8 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            List<string> allowedCharacterClasses = GetAllowedCharacterClasses();
-            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.MyCharacterClassName)) {
+            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
+            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.MyCharacterClass)) {
                 MessageFeedManager.MyInstance.WriteMessage("You do not have the right weapon skill to equip " + MyName);
                 return false;
             }
@@ -189,6 +191,16 @@ namespace AnyRPG {
                     defaultAttackAnimationProfile = animationProfile;
                 } else {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            realWeaponSkill = null;
+            if (weaponSkill != null && weaponSkill != string.Empty) {
+                WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponSkill);
+                if (tmpWeaponSkill != null) {
+                    realWeaponSkill = tmpWeaponSkill;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find weapon skill : " + weaponSkill + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 

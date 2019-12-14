@@ -269,7 +269,7 @@ namespace AnyRPG {
 
             if (abilityEffect.CanUseOn(finalTarget, source)) {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
                 returnObject = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
             } else {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");

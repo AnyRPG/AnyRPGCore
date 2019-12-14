@@ -21,51 +21,51 @@ namespace AnyRPG {
 
         }
 
-        public override void SetCharacterFaction(string newFaction) {
+        public override void SetCharacterFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.SetCharacterFaction(" + newFaction + ")");
             base.SetCharacterFaction(newFaction);
 
-            if (newFaction != null && newFaction != string.Empty) {
-                factionName = newFaction;
+            if (newFaction != null) {
+                faction = newFaction;
                 characterFactionManager.SetReputation(newFaction);
             }
         }
 
-        public override void SetCharacterClass(string newCharacterClass) {
+        public override void SetCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.SetCharacterFaction(" + newFaction + ")");
 
             base.SetCharacterClass(newCharacterClass);
-            if (newCharacterClass == null || newCharacterClass == string.Empty) {
+            if (newCharacterClass == null) {
                 // don't print messages for no reason
                 return;
             }
-            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass);
+            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.MyName);
         }
 
-        public void JoinFaction(string newFaction) {
+        public void JoinFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
-            if (newFaction != null && newFaction != string.Empty && SystemResourceManager.MatchResource(newFaction, PlayerManager.MyInstance.MyCharacter.MyFactionName) == false) {
+            if (newFaction != null && newFaction != PlayerManager.MyInstance.MyCharacter.MyFaction) {
                 SetCharacterFaction(newFaction);
                 LearnFactionAbilities(newFaction);
             }
         }
 
-        public void ChangeCharacterClass(string newCharacterClass) {
+        public void ChangeCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
-            if (newCharacterClass != null && newCharacterClass != string.Empty && SystemResourceManager.MatchResource(newCharacterClass, PlayerManager.MyInstance.MyCharacter.MyCharacterClassName) == false) {
+            if (newCharacterClass != null && newCharacterClass != PlayerManager.MyInstance.MyCharacter.MyCharacterClass) {
                 SetCharacterClass(newCharacterClass);
                 SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
             }
         }
 
 
-        public void LearnFactionAbilities(string newFaction) {
+        public void LearnFactionAbilities(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
-            foreach (string abilityName in SystemFactionManager.MyInstance.GetResource(newFaction).MyLearnedAbilityList) {
+            foreach (BaseAbility baseAbility in newFaction.MyLearnedAbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName) == false) {
+                if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(abilityName);
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
                 }

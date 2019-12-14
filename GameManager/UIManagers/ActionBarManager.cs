@@ -88,7 +88,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool AddNewAbility(string newAbility) {
+        public bool AddNewAbility(BaseAbility newAbility) {
             //Debug.Log("ActionBarManager.AddNewAbility()");
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
@@ -125,8 +125,8 @@ namespace AnyRPG {
             // TODO: set maximum size of loop to less of abilitylist count or button count
             int abilityListCount = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (string abilityName in PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Keys) {
-                AddNewAbility(abilityName);
+            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;
         }

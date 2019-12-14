@@ -69,7 +69,7 @@ namespace AnyRPG {
         public virtual void PerformChanneledEffect(BaseCharacter source, GameObject target) {
             //Debug.Log("BaseAbility.PerformAbilityEffect(" + abilityName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;

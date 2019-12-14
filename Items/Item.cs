@@ -21,6 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         protected string itemQuality;
 
+        protected ItemQuality realItemQuality;
+
         [SerializeField]
         private bool dynamicLevel;
 
@@ -50,12 +52,14 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> characterClassRequirementList = new List<string>();
 
+        private List<CharacterClass> realCharacterClassRequirementList = new List<CharacterClass>();
+
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
         public int MyPrice { get => price; set => price = value; }
         public bool MyUniqueItem { get => uniqueItem; }
         public Currency MyCurrency { get => currency; set => currency = value; }
-        public string MyItemQuality { get => itemQuality; set => itemQuality = value; }
+        public ItemQuality MyItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int MyItemLevel {
             get {
                 int returnLevel = itemLevel;
@@ -66,10 +70,10 @@ namespace AnyRPG {
                         returnLevel = itemLevel;
                     }
                 }
-                if (GetItemQuality() == null) {
+                if (MyItemQuality == null) {
                     return returnLevel;
                 } else {
-                    if (GetItemQuality().MyDynamicItemLevel) {
+                    if (MyItemQuality.MyDynamicItemLevel) {
                         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
                             return PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
                         } else {
@@ -102,22 +106,15 @@ namespace AnyRPG {
             }
         }
 
-        public List<string> MyCharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
+        public List<CharacterClass> MyCharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
 
         public virtual void Awake() {
-        }
-
-        public ItemQuality GetItemQuality() {
-            if (itemQuality != null && itemQuality != string.Empty) {
-                return SystemItemQualityManager.MyInstance.GetResource(itemQuality);
-            }
-            return null;
         }
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
-                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
                     MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyName);
                     return false;
                 }
@@ -151,7 +148,7 @@ namespace AnyRPG {
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (characterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName)) {
+                if (realCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
                     colorString = "white";
                 }
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
@@ -175,6 +172,29 @@ namespace AnyRPG {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
+
+            realItemQuality = null;
+            if (itemQuality != null && itemQuality != string.Empty) {
+                ItemQuality tmpItemQuality = SystemItemQualityManager.MyInstance.GetResource(itemQuality);
+                if (tmpItemQuality != null) {
+                    realItemQuality = tmpItemQuality;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            realCharacterClassRequirementList = new List<CharacterClass>();
+            if (characterClassRequirementList != null) {
+                foreach (string characterClassName in characterClassRequirementList) {
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    if (tmpCharacterClass != null) {
+                        realCharacterClassRequirementList.Add(tmpCharacterClass);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
 
         }
 

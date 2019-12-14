@@ -50,12 +50,12 @@ namespace AnyRPG {
             }
         }
 
-        public override bool LearnAbility(string abilityName) {
+        public override bool LearnAbility(BaseAbility newAbility) {
             //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
-            bool returnValue = base.LearnAbility(abilityName);
+            bool returnValue = base.LearnAbility(newAbility);
             if (returnValue) {
                 //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue is true");
-                SystemEventManager.MyInstance.NotifyOnAbilityListChanged(abilityName);
+                SystemEventManager.MyInstance.NotifyOnAbilityListChanged(newAbility);
             } else {
                 //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
@@ -85,15 +85,15 @@ namespace AnyRPG {
             base.UpdateAbilityList(newLevel);
             foreach (BaseAbility ability in SystemAbilityManager.MyInstance.GetResourceList()) {
                 if (ability.MyRequiredLevel <= newLevel && ability.MyAutoLearn == true) {
-                    if (!HasAbility(ability.MyName)) {
-                        LearnAbility(ability.MyName);
+                    if (!HasAbility(ability)) {
+                        LearnAbility(ability);
                     } else {
                         //Debug.Log(ability.MyName + " already known, no need to re-learn");
                     }
                 }
             }
-            if (PlayerManager.MyInstance.MyCharacter.MyFactionName != null && PlayerManager.MyInstance.MyCharacter.MyFactionName != string.Empty) {
-                PlayerManager.MyInstance.MyCharacter.LearnFactionAbilities(PlayerManager.MyInstance.MyCharacter.MyFactionName);
+            if (PlayerManager.MyInstance.MyCharacter.MyFaction != null) {
+                PlayerManager.MyInstance.MyCharacter.LearnFactionAbilities(PlayerManager.MyInstance.MyCharacter.MyFaction);
             }
         }
 

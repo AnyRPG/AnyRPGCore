@@ -1,6 +1,7 @@
 using AnyRPG;
 using UnityEngine;
 using UnityEngine.Serialization;
+using System;
 using System.Collections.Generic;
 
 namespace AnyRPG {
@@ -13,5 +14,14 @@ namespace AnyRPG {
         }
 
     }
+
+    [System.Serializable]
+    public struct CurrencyNode {
+
+        public Currency currency;
+        public int MyAmount;
+
+    }
+
 
 }

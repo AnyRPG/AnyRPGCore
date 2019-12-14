@@ -7,9 +7,16 @@ namespace AnyRPG {
     [System.Serializable]
     public class FactionDisposition {
 
+
         //public Faction faction;
-        public string factionName;
+        [SerializeField]
+        private string factionName;
+
+        private Faction faction;
+
         public float disposition;
+
+        public Faction MyFaction { get => faction; set => faction = value; }
     }
 
 }

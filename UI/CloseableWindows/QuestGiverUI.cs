@@ -82,6 +82,8 @@ namespace AnyRPG {
 
         private string currentQuestName;
 
+        private Quest currentQuest = null;
+
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
         public QuestGiverQuestScript MySelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
@@ -230,23 +232,22 @@ namespace AnyRPG {
             }
         }
 
-        private void UpdateButtons(string questName) {
+        private void UpdateButtons(Quest newQuest) {
             //Debug.Log("QuestGiverUI.UpdateButtons(" + quest.name + "). iscomplete: " + quest.IsComplete + ". HasQuest: " + QuestLog.MyInstance.HasQuest(quest));
-            Quest quest = SystemQuestManager.MyInstance.GetResource(questName);
-            if (quest.MyAllowRawComplete == true) {
+            if (newQuest.MyAllowRawComplete == true) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 return;
             }
-            if (quest.GetStatus() == "available" && QuestLog.MyInstance.HasQuest(quest.MyName) == false) {
+            if (newQuest.GetStatus() == "available" && QuestLog.MyInstance.HasQuest(newQuest.MyName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.GetComponent<Button>().enabled = true;
                 completeButton.gameObject.SetActive(false);
                 return;
             }
 
-            if (quest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(quest.MyName) == true && questGiver != null && questGiver.EndsQuest(questName)) {
+            if (newQuest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(newQuest.MyName) == true && questGiver != null && questGiver.EndsQuest(newQuest.MyName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 acceptButton.gameObject.SetActive(false);
@@ -270,8 +271,7 @@ namespace AnyRPG {
             currentQuestName = quest.MyName;
 
             if (quest.MyHasOpeningDialog == true) {
-                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(quest.MyName);
-                if (tmpDialog != null && tmpDialog.TurnedIn == false) {
+                if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
                     (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
@@ -301,7 +301,7 @@ namespace AnyRPG {
             questDetailsArea.gameObject.SetActive(true);
             questDetailsArea.ShowDescription(quest);
 
-            UpdateButtons(quest.MyName);
+            UpdateButtons(quest);
 
         }
 
@@ -356,13 +356,13 @@ namespace AnyRPG {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
 
-                QuestLog.MyInstance.AcceptQuest(currentQuestName);
+                QuestLog.MyInstance.AcceptQuest(currentQuest);
 
                 if (MyQuestGiver != null) {
                     // notify a bag item so it can remove itself
                     MyQuestGiver.HandleAcceptQuest();
                 }
-                UpdateButtons(currentQuestName);
+                UpdateButtons(currentQuest);
                 if (interactable != null) {
                     /*
                     if (interactable.CheckForInteractableObjectives(currentQuestName)) {
@@ -389,26 +389,26 @@ namespace AnyRPG {
 
         public void CompleteQuest() {
             //Debug.Log("QuestGiverUI.CompleteQuest()");
-            if (!SystemQuestManager.MyInstance.GetResource(currentQuestName).IsComplete) {
+            if (!currentQuest.IsComplete) {
                 return;
             }
 
             // DO THIS NOW SO NO NULL REFERENCES WHEN IT GETS DESELECTED DURING THIS PROCESS
-            Quest questToComplete = SystemQuestManager.MyInstance.GetResource(currentQuestName);
+            //Quest questToComplete = SystemQuestManager.MyInstance.GetResource(currentQuestName);
 
             //questDetailsArea.myreward
 
             bool itemCountMatches = false;
             bool abilityCountMatches = false;
             bool factionCountMatches = false;
-            if (questToComplete.MyItemRewards.Count == 0 || questToComplete.MyMaxItemRewards == 0 || questToComplete.MyMaxItemRewards == questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+            if (currentQuest.MyItemRewards.Count == 0 || currentQuest.MyMaxItemRewards == 0 || currentQuest.MyMaxItemRewards == questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                 itemCountMatches = true;
             }
-            if (questToComplete.MyFactionRewards.Count == 0 || questToComplete.MyMaxFactionRewards == 0 || questToComplete.MyMaxFactionRewards == questDetailsArea.GetHighlightedFactionRewardIcons().Count) {
+            if (currentQuest.MyFactionRewards.Count == 0 || currentQuest.MyMaxFactionRewards == 0 || currentQuest.MyMaxFactionRewards == questDetailsArea.GetHighlightedFactionRewardIcons().Count) {
                 factionCountMatches = true;
             }
 
-            if (questToComplete.MyAbilityRewards.Count == 0 || questToComplete.MyMaxAbilityRewards == 0 || questToComplete.MyMaxAbilityRewards == questDetailsArea.GetHighlightedAbilityRewardIcons().Count) {
+            if (currentQuest.MyAbilityRewards.Count == 0 || currentQuest.MyMaxAbilityRewards == 0 || currentQuest.MyMaxAbilityRewards == questDetailsArea.GetHighlightedAbilityRewardIcons().Count) {
                 abilityCountMatches = true;
             }
 
@@ -436,52 +436,52 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (CollectObjective o in questToComplete.MyCollectObjectives) {
-                if (questToComplete.MyTurnInItems == true) {
+            foreach (CollectObjective o in currentQuest.MyCollectObjectives) {
+                if (currentQuest.MyTurnInItems == true) {
                     o.Complete();
                 }
             }
 
             // faction rewards
-            if (questToComplete.MyFactionRewards.Count > 0) {
+            if (currentQuest.MyFactionRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                     if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).factionName, (rewardButton.MyDescribable as FactionNode).reputationAmount);
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).faction, (rewardButton.MyDescribable as FactionNode).reputationAmount);
                     }
                 }
             }
 
             // ability rewards
-            if (questToComplete.MyAbilityRewards.Count > 0) {
+            if (currentQuest.MyAbilityRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
                     if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(rewardButton.MyDescribable.MyName);
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(rewardButton.MyDescribable as BaseAbility);
                     }
                 }
             }
 
             // skill rewards
-            if (questToComplete.MySkillRewards.Count > 0) {
+            if (currentQuest.MySkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
                     if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(rewardButton.MyDescribable.MyName);
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(rewardButton.MyDescribable as Skill);
                     }
                 }
             }
 
             // xp reward
-            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, questToComplete));
+            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, currentQuest));
 
-            UpdateButtons(questToComplete.MyName);
+            UpdateButtons(currentQuest);
 
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
 
-            QuestLog.MyInstance.TurnInQuest(questToComplete.MyName);
+            QuestLog.MyInstance.TurnInQuest(currentQuest);
 
             // do this last
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT

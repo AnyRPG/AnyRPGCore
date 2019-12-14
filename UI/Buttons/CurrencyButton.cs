@@ -20,10 +20,12 @@ namespace AnyRPG {
         [SerializeField]
         private Text description;
 
+        /*
         public void AddCurrency(string currency) {
             Currency addCurrency = SystemCurrencyManager.MyInstance.GetResource(currency);
             AddCurrency(addCurrency);
         }
+        */
 
         public void AddCurrency(Currency currency) {
             this.currency = currency as Currency;

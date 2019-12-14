@@ -11,7 +11,12 @@ namespace AnyRPG {
     public class PetControlEffect : StatusEffect {
 
         [SerializeField]
+        private List<string> petEffectNames = new List<string>();
+
+        [SerializeField]
         private List<string> petEffectList = new List<string>();
+
+        private List<AbilityEffect> realPetEffectList = new List<AbilityEffect>();
 
         private List<CharacterUnit> petUnits = new List<CharacterUnit>();
 
@@ -40,13 +45,13 @@ namespace AnyRPG {
                 //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): SPAWNING PETS");
                 // spawn pet
                 List<AbilityEffect> castList = new List<AbilityEffect>();
-                foreach (string petEffectName in petEffectList) {
+                foreach (AbilityEffect petEffect in realPetEffectList) {
                     //if (source.MyCharacterAbilityManager.HasAbility(petAbilityName)) {
-                        if (SystemResourceManager.MatchResource(petEffectName, MyName)) {
+                        if (SystemResourceManager.MatchResource(petEffect.MyName, MyName)) {
                             Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                         } else {
                             //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
-                            castList.Add(SystemAbilityEffectManager.MyInstance.GetResource(petEffectName));
+                            castList.Add(petEffect);
                         }
                     //}
                 }
@@ -74,6 +79,24 @@ namespace AnyRPG {
             }
 
             base.CancelEffect(targetCharacter);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            realPetEffectList = new List<AbilityEffect>();
+            if (petEffectNames != null) {
+                foreach (string petEffectName in petEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(petEffectName);
+                    if (abilityEffect != null) {
+                        realPetEffectList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+
         }
 
     }

@@ -10,6 +10,8 @@ namespace AnyRPG {
         [SerializeField]
         private string prerequisiteName;
 
+        private Dialog prerequisiteDialog = null;
+
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("QuestPrerequisite.IsMet()");
             Dialog _dialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
@@ -20,6 +22,16 @@ namespace AnyRPG {
             }
             return false;
         }
+
+        public void SetupScriptableObjects() {
+            prerequisiteDialog = null;
+            if (prerequisiteName != null && prerequisiteName != string.Empty) {
+                prerequisiteDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+            }
+        }
+
     }
 
 }

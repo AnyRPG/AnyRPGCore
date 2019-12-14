@@ -260,7 +260,7 @@ namespace AnyRPG {
             } else if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == true && PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
-                    if (MyItem.GetItemQuality() != null && MyItem.GetItemQuality().MyRequireSellConfirmation) {
+                    if (MyItem.MyItemQuality != null && MyItem.MyItemQuality.MyRequireSellConfirmation) {
                         SystemWindowManager.MyInstance.confirmSellItemMenuWindow.OpenWindow();
                         (SystemWindowManager.MyInstance.confirmSellItemMenuWindow.MyCloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;

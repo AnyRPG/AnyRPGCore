@@ -1,16 +1,39 @@
-﻿using System.Collections;
+﻿using AnyRPG;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class AttachmentNode {
+namespace AnyRPG {
+    [System.Serializable]
+    public class AttachmentNode {
 
-    [SerializeField]
-    private string equipmentSlotProfileName;
+        [SerializeField]
+        private string equipmentSlotProfileName;
 
-    [SerializeField]
-    private string holdableObjectName;
+        private EquipmentSlotProfile equipmentSlotProfile = null;
 
-    public string MyEquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
-    public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
+        [SerializeField]
+        private string holdableObjectName;
+
+        private HoldableObject holdableObject = null;
+
+        public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
+        public HoldableObject MyHoldableObject { get => holdableObject; set => holdableObject = value; }
+
+        public void SetupScriptableObjects() {
+            holdableObject = null;
+            if (holdableObjectName != null && holdableObjectName != string.Empty) {
+                holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node.  CHECK INSPECTOR");
+            }
+            equipmentSlotProfile = null;
+            if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
+                equipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(equipmentSlotProfileName);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotProfile : " + equipmentSlotProfileName + " while inititalizing an attachment node.  CHECK INSPECTOR");
+            }
+        }
+    }
+
 }

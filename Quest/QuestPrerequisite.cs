@@ -10,6 +10,8 @@ namespace AnyRPG {
         [SerializeField]
         private string prerequisiteName;
 
+        private Quest prerequisiteQuest = null;
+
         // does the quest need to be complete, or just in progress for this prerequisite to be met
         [SerializeField]
         private bool requireComplete = true;
@@ -19,24 +21,31 @@ namespace AnyRPG {
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("QuestPrerequisite.IsMet()");
-            if (prerequisiteName == null || prerequisiteName == string.Empty) {
+            if (prerequisiteQuest == null) {
                 Debug.Log("QuestPrerequisite.IsMet(): PREREQUISITE IS NULL!  FIX THIS!  DO NOT COMMENT THIS LINE");
                 return false;
             }
-            Quest _quest = SystemQuestManager.MyInstance.GetResource(prerequisiteName);
-            if (_quest != null) {
-                if (requireTurnedIn && _quest.TurnedIn == true) {
-                    return true;
-                }
-                if (!requireTurnedIn && requireComplete && _quest.IsComplete && QuestLog.MyInstance.HasQuest(_quest.MyName)) {
-                    return true;
-                }
-                if (!requireTurnedIn && !requireComplete && QuestLog.MyInstance.HasQuest(_quest.MyName)) {
-                    return true;
-                }
+            if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
+                return true;
+            }
+            if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
+                return true;
+            }
+            if (!requireTurnedIn && !requireComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
+                return true;
             }
             return false;
         }
+
+        public void SetupScriptableObjects() {
+            prerequisiteQuest = null;
+            if (prerequisiteName != null && prerequisiteName != string.Empty) {
+                prerequisiteQuest = SystemQuestManager.MyInstance.GetResource(prerequisiteName);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + prerequisiteName + " while inititalizing a quest prerequisite.  CHECK INSPECTOR");
+            }
+        }
+
     }
 
 }

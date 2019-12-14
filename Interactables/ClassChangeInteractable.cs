@@ -13,7 +13,9 @@ namespace AnyRPG {
         [SerializeField]
         private string className;
 
-        public string MyClassName { get => className; set => className = value; }
+        private CharacterClass characterClass;
+
+        public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.MyNamePlateImage); }
@@ -21,6 +23,7 @@ namespace AnyRPG {
         protected override void Awake() {
             //Debug.Log("ClassChangeInteractable.Awake()");
             base.Awake();
+            SetupScriptableObjects();
         }
 
         protected override void Start() {
@@ -56,7 +59,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized == true) {
                 return false;
             }
-            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(MyClassName);
+            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(MyCharacterClass);
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             eventSubscriptionsInitialized = true;
@@ -102,6 +105,20 @@ namespace AnyRPG {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
+
+        public void SetupScriptableObjects() {
+            if (characterClass == null && className != null && className != string.Empty) {
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(className);
+                if (tmpCharacterClass != null) {
+                    characterClass = tmpCharacterClass;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + className + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+
+        }
+
     }
 
 }

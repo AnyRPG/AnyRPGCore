@@ -26,6 +26,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool hasOpeningDialog;
 
+        private Dialog openingDialog;
+
         private bool markedComplete = false;
 
         /// <summary>
@@ -61,7 +63,12 @@ namespace AnyRPG {
         private int maxItemRewards = 0;
 
         [SerializeField]
+        private List<string> itemRewardNames = new List<string>();
+
+        [SerializeField]
         private List<string> itemRewardList = new List<string>();
+
+        private List<Item> realItemRewardList = new List<Item>();
 
         [SerializeField]
         private int maxFactionRewards = 0;
@@ -73,13 +80,23 @@ namespace AnyRPG {
         private int maxAbilityRewards = 0;
 
         [SerializeField]
+        private List<string> abilityRewardNames = new List<string>();
+
+        [SerializeField]
         private List<string> abilityRewardList = new List<string>();
+
+        private List<BaseAbility> realAbilityRewardList = new List<BaseAbility>();
 
         [SerializeField]
         private int maxSkillRewards = 0;
 
         [SerializeField]
+        private List<string> skillRewardNames = new List<string>();
+
+        [SerializeField]
         private List<string> skillRewardList = new List<string>();
+
+        private List<Skill> realSkillRewardList = new List<Skill>();
 
         /// <summary>
         /// The maximum number of copies of this quest you can have in your quest log at once.
@@ -214,10 +231,10 @@ namespace AnyRPG {
         public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : experienceLevel) + extraLevels); }
 
         public int MyExperienceReward { get => experienceReward; set => experienceReward = value; }
-        public List<string> MyItemRewards { get => itemRewardList; }
+        public List<Item> MyItemRewards { get => realItemRewardList; }
         public List<FactionNode> MyFactionRewards { get => factionRewards; }
-        public List<string> MyAbilityRewards { get => abilityRewardList; }
-        public List<string> MySkillRewards { get => skillRewardList; }
+        public List<BaseAbility> MyAbilityRewards { get => realAbilityRewardList; }
+        public List<Skill> MySkillRewards { get => realSkillRewardList; }
 
         public bool MyTurnInItems { get => turnInItems; set => turnInItems = value; }
         public bool MyAllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
@@ -229,6 +246,7 @@ namespace AnyRPG {
         public bool MyIsAchievement { get => isAchievement; set => isAchievement = value; }
         //public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
         public bool MyHasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
+        public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
@@ -456,16 +474,68 @@ namespace AnyRPG {
         public static List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
-                if (questNode.MyQuest != null && questNode.MyQuest.MyName != null && questNode.MyQuest.MyName != string.Empty) {
-                    Quest tempQuest = SystemQuestManager.MyInstance.GetResource(questNode.MyQuest.MyName);
-                    if (tempQuest != null && tempQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
+                if (questNode.MyQuest != null) {
+                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
                         //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
-                        returnList.Add(SystemQuestManager.MyInstance.GetResource(questNode.MyQuest.MyName));
+                        returnList.Add(questNode.MyQuest);
                     }
                 }
             }
             return returnList;
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            realAbilityRewardList = new List<BaseAbility>();
+            if (abilityRewardNames != null) {
+                foreach (string baseAbilityName in abilityRewardNames) {
+                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    if (baseAbility != null) {
+                        realAbilityRewardList.Add(baseAbility);
+                    } else {
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            realSkillRewardList = new List<Skill>();
+            if (skillRewardNames != null) {
+                foreach (string skillName in skillRewardNames) {
+                    Skill skill = SystemSkillManager.MyInstance.GetResource(skillName);
+                    if (skill != null) {
+                        realSkillRewardList.Add(skill);
+                    } else {
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            realItemRewardList = new List<Item>();
+            if (itemRewardNames != null) {
+                foreach (string itemName in itemRewardNames) {
+                    Item item = SystemItemManager.MyInstance.GetResource(itemName);
+                    if (item != null) {
+                        realItemRewardList.Add(item);
+                    } else {
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            openingDialog = null;
+            if (hasOpeningDialog) {
+                Dialog dialog = SystemDialogManager.MyInstance.GetResource(MyName);
+                if (dialog != null) {
+                    openingDialog = dialog;
+                } else {
+                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + MyName + " while inititalizing quest " + MyName + ".  CHECK INSPECTOR");
+                }
+
+            }
+
+        }
+
 
 
     }

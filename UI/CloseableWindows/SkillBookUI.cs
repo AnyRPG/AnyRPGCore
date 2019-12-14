@@ -14,7 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private SkillButton[] skillButtons;
 
-        private List<List<string>> pages = new List<List<string>>();
+        private List<List<Skill>> pages = new List<List<Skill>>();
 
         private int pageSize = 10;
 
@@ -48,12 +48,12 @@ namespace AnyRPG {
         public void CreatePages() {
             //Debug.Log("SkillBookUI.CreatePages()");
             ClearPages();
-            List<string> page = new List<string>();
-            foreach (string skillName in PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.MySkillList.Keys) {
-                page.Add(skillName);
+            List<Skill> page = new List<Skill>();
+            foreach (Skill playerSkill in PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.MySkillList.Values) {
+                page.Add(playerSkill);
                 if (page.Count == pageSize) {
                     pages.Add(page);
-                    page = new List<string>();
+                    page = new List<Skill>();
                 }
             }
             if (page.Count > 0) {

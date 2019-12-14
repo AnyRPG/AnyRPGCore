@@ -28,11 +28,8 @@ namespace AnyRPG {
                     validPhaseNode.StartPhase();
 
                     // ATTEMPT BUFF AND IMMEDIATELY RETURN ANY BUFF THAT NEEDS CASTING
-                    foreach (string baseAbilityName in validPhaseNode.MyMaintainBuffs) {
-                        BaseAbility baseAbility;
-                        string usedBaseAbilityName = SystemResourceManager.prepareStringForMatch(baseAbilityName);
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(usedBaseAbilityName)) {
-                            baseAbility = sourceCharacter.MyCharacterAbilityManager.MyAbilityList[usedBaseAbilityName] as BaseAbility;
+                    foreach (BaseAbility baseAbility in validPhaseNode.MyMaintainBuffList) {
+                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (!sourceCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].MyName)) && sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterUnit.gameObject, sourceCharacter as BaseCharacter)) {
@@ -43,12 +40,9 @@ namespace AnyRPG {
                     }
 
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
-                    foreach (string baseAbilityName in validPhaseNode.MyAttackAbilities) {
-                        BaseAbility baseAbility;
-                        string usedBaseAbilityName = SystemResourceManager.prepareStringForMatch(baseAbilityName);
+                    foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(usedBaseAbilityName)) {
-                            baseAbility = sourceCharacter.MyCharacterAbilityManager.MyAbilityList[usedBaseAbilityName] as BaseAbility;
+                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterController.MyTarget, sourceCharacter as BaseCharacter)) {
@@ -56,7 +50,7 @@ namespace AnyRPG {
                                 returnList.Add(baseAbility);
                             }
                         } else {
-                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + usedBaseAbilityName);
+                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyName);
                         }
                     }
 

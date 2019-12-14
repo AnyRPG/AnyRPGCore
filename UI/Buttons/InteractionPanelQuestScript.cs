@@ -54,7 +54,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
             //Debug.Log("InteractionPanelQuestScript.Select(): MYQUEST: " + MyQuest.MyName);
         }
 
-        if (MyQuest.MyHasOpeningDialog == true && SystemDialogManager.MyInstance.GetResource(MyQuest.MyName) != null && SystemDialogManager.MyInstance.GetResource(MyQuest.MyName).TurnedIn == false) {
+        if (MyQuest.MyHasOpeningDialog == true && MyQuest.MyOpeningDialog != null && MyQuest.MyOpeningDialog.TurnedIn == false) {
             //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog");
             QuestGiverUI.MyInstance.ShowDescription(MyQuest);
         } else {

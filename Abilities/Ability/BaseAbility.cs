@@ -19,12 +19,17 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> weaponAffinityNames = new List<string>();
 
+        private List<WeaponSkill> weaponAffinityList = new List<WeaponSkill>();
+
         [SerializeField]
         protected string holdableObjectName;
 
         // now we have multiple objects
         [SerializeField]
         private List<string> holdableObjectNames = new List<string>();
+
+        [SerializeField]
+        private List<HoldableObject> holdableObjects = new List<HoldableObject>();
 
         // holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start
         [SerializeField]
@@ -170,7 +175,7 @@ namespace AnyRPG {
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
-        public List<string> MyHoldableObjectNames { get => holdableObjectNames; set => holdableObjectNames = value; }
+        public List<HoldableObject> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
@@ -193,6 +198,28 @@ namespace AnyRPG {
                     }
                 }
             }
+            holdableObjects = new List<HoldableObject>();
+            if (holdableObjectNames != null) {
+                foreach (string holdableObjectName in holdableObjectNames) {
+                    HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+                    if (holdableObject != null) {
+                        holdableObjects.Add(holdableObject);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+            weaponAffinityList = new List<WeaponSkill>();
+            if (weaponAffinityNames != null) {
+                foreach (string weaponAffinityName in weaponAffinityNames) {
+                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponAffinityName);
+                    if (tmpWeaponSkill != null) {
+                        weaponAffinityList.Add(tmpWeaponSkill);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon skill: " + weaponAffinityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
         }
 
         public override string GetSummary() {
@@ -205,9 +232,9 @@ namespace AnyRPG {
                 affinityMet = true;
 
             } else {
-                List<string> requireStrings = new List<string>();
-                foreach (string _weaponAffinity in weaponAffinityNames) {
-                    requireStrings.Add(_weaponAffinity);
+                List<WeaponSkill> requireWeaponSkills = new List<WeaponSkill>();
+                foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
+                    requireWeaponSkills.Add(_weaponAffinity);
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
@@ -217,7 +244,7 @@ namespace AnyRPG {
                 } else {
                     colorString = "#ff0000ff";
                 }
-                addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireStrings));
+                addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\n<color=#ffff00ff>{3}</color>{4}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, description, addString);
@@ -231,7 +258,7 @@ namespace AnyRPG {
                 if (true) {
 
                 }
-                foreach (string _weaponAffinity in weaponAffinityNames) {
+                foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
                     if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null && sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         return true;
                     }
@@ -284,7 +311,7 @@ namespace AnyRPG {
 
         public virtual void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbilitiy.ProcessAbilityPrefabs()");
-            if (MyHoldableObjectNames.Count == 0) {
+            if (MyHoldableObjects.Count == 0) {
                 return;
             }
             if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null) {
@@ -399,7 +426,7 @@ namespace AnyRPG {
                 abilityEffectOutput.prefabLocation = groundTarget;
 
                 abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffect.MyName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
                 if (_abilityEffect != null) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {

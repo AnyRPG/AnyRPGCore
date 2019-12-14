@@ -182,7 +182,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (oldItem != null) {
                 foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
-                    UnlearnAbility(baseAbility.MyName);
+                    UnlearnAbility(baseAbility);
                 }
             }
 
@@ -196,14 +196,14 @@ namespace AnyRPG {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
-                    LearnAbility(baseAbility.MyName);
+                    LearnAbility(baseAbility);
                 }
             }
             LearnDefaultAutoAttackAbility();
         }
 
         public virtual void UnLearnDefaultAutoAttackAbility() {
-            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
+            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null) {
                 UnlearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
             }
         }
@@ -215,7 +215,7 @@ namespace AnyRPG {
                 // can't learn two auto-attacks at the same time
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != string.Empty) {
+            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
                 LearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
             }
@@ -231,20 +231,20 @@ namespace AnyRPG {
         public void ApplyClassTraits(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
             if (newCharacterClass != null && newCharacterClass.MyTraitList != null && newCharacterClass.MyTraitList.Count > 0) {
-                foreach (string classTrait in newCharacterClass.MyTraitList) {
+                foreach (AbilityEffect classTrait in newCharacterClass.MyTraitList) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
                     ApplyStatusEffect(classTrait);
                 }
             }
         }
 
-        public void ApplyStatusEffect(string statusEffectname, int overrideDuration = 0) {
+        public void ApplyStatusEffect(AbilityEffect statusEffect, int overrideDuration = 0) {
             if (baseCharacter.MyCharacterStats != null) {
                 AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
                 abilityEffectOutput.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
                 abilityEffectOutput.savedEffect = true;
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(statusEffectname);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyName);
                 if (_abilityEffect != null) {
                     _abilityEffect.Cast(baseCharacter, null, null, abilityEffectOutput);
                 }
@@ -253,14 +253,14 @@ namespace AnyRPG {
         }
 
         public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
-            ApplyStatusEffect(statusEffectSaveData.MyName, statusEffectSaveData.remainingSeconds);
+            ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
         public void RemoveClassTraits(CharacterClass oldCharacterClass) {
             if (oldCharacterClass !=null && oldCharacterClass.MyTraitList != null && oldCharacterClass.MyTraitList.Count > 0) {
-                foreach (string classTrait in oldCharacterClass.MyTraitList) {
-                    if (baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait))) {
-                        baseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait)].CancelStatusEffect();
+                foreach (AbilityEffect classTrait in oldCharacterClass.MyTraitList) {
+                    if (baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyName))) {
+                        baseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyName)].CancelStatusEffect();
                     }
                 }
             }
@@ -271,11 +271,11 @@ namespace AnyRPG {
             if (characterClass == null) {
                 return;
             }
-            foreach (string abilityName in characterClass.MyAbilityList) {
+            foreach (BaseAbility baseAbility in characterClass.MyAbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName) == false) {
+                if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(abilityName);
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
                 }
@@ -286,8 +286,8 @@ namespace AnyRPG {
             if (characterClass == null) {
                 return;
             }
-            foreach (string abilityName in characterClass.MyAbilityList) {
-                UnlearnAbility(abilityName);
+            foreach (BaseAbility oldAbility in characterClass.MyAbilityList) {
+                UnlearnAbility(oldAbility);
             }
         }
 
@@ -335,11 +335,11 @@ namespace AnyRPG {
             killStopCast = true;
         }
 
-        public bool HasAbility(string abilityName) {
+        public bool HasAbility(BaseAbility baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
-            string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
+            //string keyName = SystemResourceManager.prepareStringForMatch(baseAbility);
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + "): keyname: " + keyName);
-            if (MyAbilityList.ContainsKey(keyName)) {
+            if (MyAbilityList.ContainsValue(baseAbility)) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }
@@ -394,35 +394,33 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
         }
 
-        public virtual bool LearnAbility(string abilityName) {
+        public virtual bool LearnAbility(BaseAbility newAbility) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + abilityName + ")");
-            string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
-            BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
-            if (baseAbility == null) {
+            if (newAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
                 return false;
             }
-            if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack && baseCharacter.MyCharacterAbilityManager.AutoAttackKnown() == true) {
+            if (newAbility is AnimatedAbility && (newAbility as AnimatedAbility).MyIsAutoAttack && baseCharacter.MyCharacterAbilityManager.AutoAttackKnown() == true) {
                 // can't learn 2 auto-attacks
                 return false;
             }
-            if (!HasAbility(abilityName) && baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
-                abilityList[keyName] = baseAbility;
+            if (!HasAbility(newAbility) && newAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel) {
+                abilityList[SystemResourceManager.prepareStringForMatch(newAbility.MyName)] = newAbility;
                 return true;
-            } else {
-                if (HasAbility(abilityName)) {
+            }/* else {
+                if (HasAbility(newAbility)) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
                 }
-                if (!(baseAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
+                if (!(newAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
                 }
-            }
+            }*/
             return false;
         }
 
-        public void UnlearnAbility(string abilityName) {
-            string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
+        public void UnlearnAbility(BaseAbility oldAbility) {
+            string keyName = SystemResourceManager.prepareStringForMatch(oldAbility.MyName);
             if (abilityList.ContainsKey(keyName)) {
                 abilityList.Remove(keyName);
                 /*
@@ -484,11 +482,11 @@ namespace AnyRPG {
                 float currentCastTime = 0f;
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyHoldableObjectNames.Count != 0) {
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyHoldableObjects.Count != 0) {
                     //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
                     if (!ability.MyAnimatorCreatePrefabs) {
-                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(ability.MyHoldableObjectNames);
+                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(ability.MyHoldableObjects);
                     }
                 }
                 if (ability.MyCastingAudioClip != null) {
@@ -541,11 +539,11 @@ namespace AnyRPG {
                 usedBaseAbility = currentCastAbility;
             }
 
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && usedBaseAbility.MyHoldableObjectNames.Count != 0) {
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && usedBaseAbility.MyHoldableObjects.Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.MyAnimatorCreatePrefabs) {
-                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjectNames);
+                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjects);
                 }
             }
 

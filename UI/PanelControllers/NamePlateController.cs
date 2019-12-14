@@ -152,7 +152,7 @@ namespace AnyRPG {
             if (MyCharacterName != null && namePlateUnit != null) {
                 if (MyCharacterName.text != null) {
                     // character names have special coloring. white if no faction, green if character, otherwise normal faction colors
-                    if (namePlateUnit.MyFactionName != string.Empty) {
+                    if (namePlateUnit.MyFaction != null) {
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFactionName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate);
                         Color textColor = Faction.GetFactionColor(namePlateUnit);
                         string nameString = string.Empty;
@@ -167,7 +167,7 @@ namespace AnyRPG {
                         if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): not showing faction");
                         } else {
-                            factionString = "<" + namePlateUnit.MyFactionName + ">";
+                            factionString = "<" + namePlateUnit.MyFaction.MyName + ">";
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): showing faction");
                         }
                         string newLineString = string.Empty;

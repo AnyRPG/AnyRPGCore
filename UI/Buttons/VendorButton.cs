@@ -44,9 +44,8 @@ namespace AnyRPG {
                 //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
                 title.text = string.Format("{0}", vendorItem.MyItem.MyName);
 
-                ItemQuality itemQuality = SystemItemQualityManager.MyInstance.GetResource(vendorItem.MyItem.MyItemQuality);
-                if (itemQuality != null) {
-                    qualityColorOutline.effectColor = itemQuality.MyQualityColor;
+                if (vendorItem.MyItem.MyItemQuality != null) {
+                    qualityColorOutline.effectColor = vendorItem.MyItem.MyItemQuality.MyQualityColor;
                 }
 
                 if (!vendorItem.Unlimited) {

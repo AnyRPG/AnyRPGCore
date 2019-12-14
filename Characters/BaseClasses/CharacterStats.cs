@@ -423,10 +423,10 @@ namespace AnyRPG {
             int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
             currentLevel = newLevel;
 
-            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
-            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
-            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
-            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClassName) * usedToughNess);
+            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
+            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
+            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
+            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
 
             ResetHealth();
             ResetMana();

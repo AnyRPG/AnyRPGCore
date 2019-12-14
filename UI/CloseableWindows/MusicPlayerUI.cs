@@ -56,7 +56,7 @@ namespace AnyRPG {
 
         private MusicPlayerHighlightButton selectedMusicPlayerHighlightButton;
 
-        private string currentMusicProfileName = null;
+        private MusicProfile currentMusicProfile = null;
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
@@ -90,7 +90,7 @@ namespace AnyRPG {
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.MyText.text = musicProfile.MyName;
                 qs.MyText.color = Color.white;
-                qs.SetMusicProfileName(musicProfile.MyName);
+                qs.SetMusicProfile(musicProfile);
                 musicPlayerHighlightButtons.Add(qs);
                 musicProfileList.Add(musicProfile);
                 if (firstAvailableMusicProfile == null) {
@@ -123,12 +123,12 @@ namespace AnyRPG {
         public void UpdateSelected() {
             //Debug.Log("SkillTrainerUI.UpdateSelected()");
             if (MySelectedMusicPlayerHighlightButton != null) {
-                ShowDescription(MySelectedMusicPlayerHighlightButton.MyMusicProfileName);
+                ShowDescription(MySelectedMusicPlayerHighlightButton.MyMusicProfile);
             }
         }
 
         // Enable or disable learn and unlearn buttons based on what is selected
-        private void UpdateButtons(string musicProfileName) {
+        private void UpdateButtons(MusicProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
             /*
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(musicProfileName)) {
@@ -145,20 +145,16 @@ namespace AnyRPG {
             */
         }
 
-        public void ShowDescription(string musicProfileName) {
+        public void ShowDescription(MusicProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
             ClearDescription();
 
-            if (musicProfileName == null || musicProfileName == string.Empty) {
+            if (musicProfile == null) {
                 return;
             }
-            currentMusicProfileName = musicProfileName;
+            currentMusicProfile = musicProfile;
 
-            MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(musicProfileName);
-            if (musicProfile == null) {
-                //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + "): failed to get skill from SystemSkillManager");
-            }
-            UpdateButtons(musicProfileName);
+            UpdateButtons(musicProfile);
 
             musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.MyName, musicProfile.MyDescription);
             if (musicProfile.MyArtistName != null && musicProfile.MyArtistName != string.Empty) {
@@ -205,11 +201,8 @@ namespace AnyRPG {
 
         public void PlayMusic() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
-            if (currentMusicProfileName != null && currentMusicProfileName != string.Empty) {
-                MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(currentMusicProfileName);
-                if (musicProfile != null && musicProfile.MyAudioClip != null) {
-                    AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
-                }
+            if (currentMusicProfile != null && currentMusicProfile.MyAudioClip != null) {
+                AudioManager.MyInstance.PlayMusic(currentMusicProfile.MyAudioClip);
             }
         }
 

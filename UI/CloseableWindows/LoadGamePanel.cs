@@ -88,7 +88,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.SetPlayerManagerPrefab(loadGameButton.MySaveData);
 
             ClearPreviewTarget();
-            SetPreviewTarget(loadGameButton.MySaveData.unitProfileName);
+            SetPreviewTarget(loadGameButton.MyUnitProfile);
 
             anyRPGSaveData = loadGameButton.MySaveData;
         }
@@ -135,13 +135,12 @@ namespace AnyRPG {
         }
 
 
-        public void SetPreviewTarget(string unitProfileName) {
+        public void SetPreviewTarget(UnitProfile unitProfile) {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             if (umaAvatar != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
-            UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
             if (unitProfile == null) {
                 Debug.Log("CharacterPanel.SetPreviewTarget(): unit profile was null, setting to character creator default");
                 unitProfile = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile;

@@ -78,7 +78,7 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
                 if (i < pages[pageIndex].Count) {
                     //Debug.Log("adding ability");
                     resourceButtons[i].gameObject.SetActive(true);
-                    resourceButtons[i].AddResource(pages[pageIndex][i].MyName);
+                    resourceButtons[i].AddResource(pages[pageIndex][i]);
                 } else {
                     //Debug.Log("clearing ability");
                     resourceButtons[i].ClearResource();

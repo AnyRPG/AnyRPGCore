@@ -116,9 +116,9 @@ namespace AnyRPG {
             GetLocalComponents();
             GetSystemResourceReferences();
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile.MyName)) {
+            if (equipmentSlotProfile != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
-                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlotProfile.MyName];
+                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlotProfile];
             } else {
                 /*
                 if (equipmentSlotProfile == null) {

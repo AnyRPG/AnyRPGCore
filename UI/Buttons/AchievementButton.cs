@@ -20,9 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private Text descriptionField;
 
-        public void AddResource(string resourceName) {
-            Quest addResource = SystemQuestManager.MyInstance.GetResource(resourceName);
-            this.rawResource = addResource;
+        public void AddResource(Quest quest) {
+            this.rawResource = quest;
             icon.sprite = this.rawResource.MyIcon;
             icon.color = Color.white;
             resourceNameField.text = this.rawResource.MyName;

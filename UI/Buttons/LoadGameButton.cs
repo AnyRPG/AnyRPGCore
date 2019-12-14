@@ -22,7 +22,10 @@ namespace AnyRPG {
         [SerializeField]
         private AnyRPGSaveData mySaveData;
 
+        private UnitProfile unitProfile;
+
         public AnyRPGSaveData MySaveData { get => mySaveData; set => mySaveData = value; }
+        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public void AddSaveData(AnyRPGSaveData mySaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
@@ -58,6 +61,8 @@ namespace AnyRPG {
 
             // set the text on the button
             description.text = descriptionText;
+
+            unitProfile = SystemUnitProfileManager.MyInstance.GetResource(mySaveData.unitProfileName);
         }
 
         /*

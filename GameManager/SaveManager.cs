@@ -300,8 +300,8 @@ namespace AnyRPG {
             anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
             anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
-            anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFactionName;
-            anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClassName;
+            anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFaction.MyName;
+            anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName;
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
             anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana;
@@ -477,7 +477,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveReputationData()");
             foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.MyDispositionDictionary) {
                 ReputationSaveData saveData = new ReputationSaveData();
-                saveData.MyName = factionDisposition.factionName;
+                saveData.MyName = factionDisposition.MyFaction.MyName;
                 saveData.MyAmount = factionDisposition.disposition;
                 anyRPGSaveData.reputationSaveData.Add(saveData);
             }
@@ -485,8 +485,11 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencySaveData saveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
-                anyRPGSaveData.currencySaveData.Add(saveData);
+            foreach (CurrencyNode currencyNode in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
+                CurrencySaveData currencySaveData = new CurrencySaveData();
+                currencySaveData.MyAmount = currencyNode.MyAmount;
+                currencySaveData.MyName = currencyNode.currency.MyName;
+                anyRPGSaveData.currencySaveData.Add(currencySaveData);
             }
         }
 
@@ -613,9 +616,9 @@ namespace AnyRPG {
             //int counter = 0;
             foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
-                factionDisposition.factionName = reputationSaveData.MyName;
+                factionDisposition.MyFaction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.factionName, (int)factionDisposition.disposition);
+                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition);
                 //counter++;
             }
         }
@@ -623,7 +626,7 @@ namespace AnyRPG {
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
-                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencySaveData.MyName, currencySaveData.MyAmount);
+                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(SystemCurrencyManager.MyInstance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
             }
         }
 
@@ -778,7 +781,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
-            PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(anyRPGSaveData.playerFaction);
+            PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
             //PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
 
             //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
@@ -803,7 +806,7 @@ namespace AnyRPG {
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
 
             // testing - move here to prevent learning abilities and filling up bars
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass));
 
             LoadSkillData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);

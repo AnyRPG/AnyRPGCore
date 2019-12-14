@@ -33,13 +33,15 @@ namespace AnyRPG {
 
         private List<RewardButton> traitRewardIcons = new List<RewardButton>();
 
-        private string characterClassName;
+        //private string characterClassName;
 
-        public void Setup(string newCharacterClassName) {
+        private CharacterClass characterClass;
+
+        public void Setup(CharacterClass newCharacterClass) {
             //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
-            characterClassName = newCharacterClassName;
-            characterClassButton.AddCharacterClass(characterClassName);
-            PopupWindowManager.MyInstance.classChangeWindow.SetWindowTitle(characterClassName);
+            characterClass = newCharacterClass;
+            characterClassButton.AddCharacterClass(characterClass);
+            PopupWindowManager.MyInstance.classChangeWindow.SetWindowTitle(characterClass.MyName);
             ShowAbilityRewards();
             ShowTraitRewards();
             PopupWindowManager.MyInstance.classChangeWindow.OpenWindow();
@@ -50,23 +52,19 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
             if (characterClass.MyTraitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);
             } else {
                 traitsArea.gameObject.SetActive(false);
             }
             for (int i = 0; i < characterClass.MyTraitList.Count; i++) {
-                if (characterClass.MyTraitList[i] != null && characterClass.MyTraitList[i] != string.Empty) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]);
-                    if (abilityEffect != null) {
-                        RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
-                        rewardIcon.SetDescribable(abilityEffect);
-                        traitRewardIcons.Add(rewardIcon);
-                        if ((SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]) as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                            rewardIcon.MyStackSizeText.text = "Level\n" + (SystemAbilityEffectManager.MyInstance.GetResource(characterClass.MyTraitList[i]) as StatusEffect).MyRequiredLevel;
-                            rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
-                        }
+                if (characterClass.MyTraitList[i] != null) {
+                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
+                    rewardIcon.SetDescribable(characterClass.MyTraitList[i]);
+                    traitRewardIcons.Add(rewardIcon);
+                    if ((characterClass.MyTraitList[i] as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                        rewardIcon.MyStackSizeText.text = "Level\n" + (characterClass.MyTraitList[i] as StatusEffect).MyRequiredLevel;
+                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }
@@ -77,23 +75,19 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
             if (characterClass.MyAbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
                 abilitiesArea.gameObject.SetActive(false);
             }
             for (int i = 0; i < characterClass.MyAbilityList.Count; i++) {
-                if (characterClass.MyAbilityList[i] != null && characterClass.MyAbilityList[i] != string.Empty) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(characterClass.MyAbilityList[i]);
-                    if (baseAbility != null) {
-                        RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                        rewardIcon.SetDescribable(baseAbility);
-                        abilityRewardIcons.Add(rewardIcon);
-                        if (SystemAbilityManager.MyInstance.GetResource(characterClass.MyAbilityList[i]).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                            rewardIcon.MyStackSizeText.text = "Level\n" + SystemAbilityManager.MyInstance.GetResource(characterClass.MyAbilityList[i]).MyRequiredLevel;
-                            rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
-                        }
+                if (characterClass.MyAbilityList[i] != null) {
+                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                    rewardIcon.SetDescribable(characterClass.MyAbilityList[i]);
+                    abilityRewardIcons.Add(rewardIcon);
+                    if (characterClass.MyAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                        rewardIcon.MyStackSizeText.text = "Level\n" + characterClass.MyAbilityList[i].MyRequiredLevel;
+                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }
@@ -124,7 +118,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            PlayerManager.MyInstance.SetPlayerCharacterClass(characterClassName);
+            PlayerManager.MyInstance.SetPlayerCharacterClass(characterClass);
             OnConfirmAction();
             PopupWindowManager.MyInstance.classChangeWindow.CloseWindow();
         }

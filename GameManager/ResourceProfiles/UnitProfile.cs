@@ -18,7 +18,14 @@ namespace AnyRPG {
         private int defaultToughness = 1;
 
         [SerializeField]
+        private string defaultAutoAttackAbilityName;
+
+        /*
+        [SerializeField]
         private string defaultAutoAttackAbility;
+        */
+
+        private BaseAbility realDefaultAutoAttackAbility = null;
 
         [SerializeField]
         private bool isUMAUnit;
@@ -29,9 +36,19 @@ namespace AnyRPG {
 
         public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public int MyDefaultToughness { get => defaultToughness; set => defaultToughness = value; }
-        public string MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public BaseAbility MyDefaultAutoAttackAbility { get => realDefaultAutoAttackAbility; set => realDefaultAutoAttackAbility = value; }
         public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool MyIsPet { get => isPet; set => isPet = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            realDefaultAutoAttackAbility = null;
+            if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
+                realDefaultAutoAttackAbility = SystemAbilityManager.MyInstance.GetResource(defaultAutoAttackAbilityName);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + defaultAutoAttackAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+            }
+        }
     }
 
 }

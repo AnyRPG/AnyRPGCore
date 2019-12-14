@@ -18,7 +18,8 @@ public class KillObjective : QuestObjective {
             return;
         }
 
-        if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.MyCharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFactionName, MyType)) {
+        // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
+        if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.MyCharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFaction.MyName, MyType)) {
             MyCurrentAmount++;
             quest.CheckCompletion();
             if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && MyCurrentAmount != 0) {

@@ -20,13 +20,13 @@ namespace AnyRPG {
         [SerializeField]
         private Text description;
 
-        public void AddFaction(string newFactionName) {
-            this.faction = SystemFactionManager.MyInstance.GetResource(newFactionName);
+        public void AddFaction(Faction newFaction) {
+            this.faction = newFaction;
             icon.sprite = this.faction.MyIcon;
             icon.color = Color.white;
             factionName.text = faction.MyName;
             //description.text = this.faction.GetSummary();
-            description.text = faction.GetExtendedSummary(faction.MyName);
+            description.text = faction.GetExtendedSummary(faction);
 
         }
 

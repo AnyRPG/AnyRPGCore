@@ -633,10 +633,10 @@ namespace AnyRPG {
             }
             Color textColor = Color.white;
             string factionString = string.Empty;
-            if (namePlateUnit != null && namePlateUnit.MyFactionName != string.Empty) {
+            if (namePlateUnit != null && namePlateUnit.MyFaction != null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
                 textColor = Faction.GetFactionColor(namePlateUnit);
-                factionString = "\n" + namePlateUnit.MyFactionName;
+                factionString = "\n" + namePlateUnit.MyFaction.MyName;
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription():  namePlateUnit is null: " + (namePlateUnit == null));
             }

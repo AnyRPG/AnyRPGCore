@@ -20,8 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private Text description;
 
-        public void AddCharacterClass(string newCharacterClassName) {
-            this.characterClass = SystemCharacterClassManager.MyInstance.GetResource(newCharacterClassName);
+        public void AddCharacterClass(CharacterClass newCharacterClass) {
+            characterClass = newCharacterClass;
             icon.sprite = this.characterClass.MyIcon;
             icon.color = Color.white;
             characterClassName.text = characterClass.MyName;

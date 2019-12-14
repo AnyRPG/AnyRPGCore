@@ -166,7 +166,7 @@ namespace AnyRPG {
             foreach (FactionDisposition factionDisposition in factionDispositionPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
-                bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.factionName) >= factionDisposition.disposition);
+                bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.MyFaction) >= factionDisposition.disposition);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;

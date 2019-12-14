@@ -55,9 +55,8 @@ namespace AnyRPG {
             //float physicalDamageModifier = 0f;
             float critChanceModifier = 0f;
             float critDamageModifier = 1f;
-            if (sourceCharacter.MyCharacterClassName != null && sourceCharacter.MyCharacterClassName != string.Empty) {
-                CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(sourceCharacter.MyCharacterClassName);
-                if (characterClass != null) {
+            if (sourceCharacter.MyCharacterClass != null) {
+                if (sourceCharacter.MyCharacterClass != null) {
 
                     // stats
                     if (damageType == DamageType.physical) {

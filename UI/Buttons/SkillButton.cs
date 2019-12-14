@@ -11,6 +11,8 @@ namespace AnyRPG {
         [SerializeField]
         private string skillName;
 
+        private Skill skill;
+
         [SerializeField]
         private Image icon;
 
@@ -20,10 +22,9 @@ namespace AnyRPG {
         [SerializeField]
         private Text description;
 
-        public void AddSkill(string skillName) {
+        public void AddSkill(Skill newSkill) {
             //Debug.Log("SkillButton.AddSkill(" + (skillName != null && skillName != string.Empty ? skillName : "null") + ")");
-            this.skillName = skillName;
-            Skill skill = SystemSkillManager.MyInstance.GetResource(skillName);
+            skill = newSkill;
             if (skill != null) {
                 icon.sprite = skill.MyIcon;
                 icon.color = Color.white;

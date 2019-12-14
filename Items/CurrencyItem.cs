@@ -8,9 +8,9 @@ namespace AnyRPG {
     public class CurrencyItem : Item, IUseable {
 
         [SerializeField]
-        private CurrencySaveData currencyNode;
+        private CurrencyNode currencyNode;
 
-        public CurrencySaveData MyCurrencyNode { get => currencyNode; }
+        public CurrencyNode MyCurrencyNode { get => currencyNode; }
 
         public override bool Use() {
             //Debug.Log("CurrencyItem.Use()");
@@ -18,15 +18,15 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (currencyNode.MyName != string.Empty) {
-                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNode.MyName, currencyNode.MyAmount);
+            if (currencyNode.currency != null) {
+                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
             }
             Remove();
             return true;
         }
 
         public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", currencyNode.MyName, currencyNode.MyAmount);
+            return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", currencyNode.currency.MyName, currencyNode.MyAmount);
         }
 
     }

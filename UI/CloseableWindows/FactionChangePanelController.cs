@@ -25,13 +25,13 @@ namespace AnyRPG {
 
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 
-        private string factionName;
+        private Faction faction;
 
-        public void Setup(string newFactionName) {
+        public void Setup(Faction newFaction) {
             //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
-            factionName = newFactionName;
-            factionButton.AddFaction(factionName);
-            PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(factionName);
+            faction = newFaction;
+            factionButton.AddFaction(faction);
+            PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(faction.MyName);
             ShowAbilityRewards();
             PopupWindowManager.MyInstance.factionChangeWindow.OpenWindow();
         }
@@ -41,7 +41,6 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            Faction faction = SystemFactionManager.MyInstance.GetResource(factionName);
             if (faction.MyLearnedAbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -49,10 +48,10 @@ namespace AnyRPG {
             }
             for (int i = 0; i < faction.MyLearnedAbilityList.Count; i++) {
                 RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                rewardIcon.SetDescribable(SystemAbilityManager.MyInstance.GetResource(faction.MyLearnedAbilityList[i]));
+                rewardIcon.SetDescribable(faction.MyLearnedAbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (SystemAbilityManager.MyInstance.GetResource(faction.MyLearnedAbilityList[i]).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                    rewardIcon.MyStackSizeText.text = "Level\n" + SystemAbilityManager.MyInstance.GetResource(faction.MyLearnedAbilityList[i]).MyRequiredLevel;
+                if (faction.MyLearnedAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                    rewardIcon.MyStackSizeText.text = "Level\n" + faction.MyLearnedAbilityList[i].MyRequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
             }
@@ -74,7 +73,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
-            PlayerManager.MyInstance.SetPlayerFaction(factionName);
+            PlayerManager.MyInstance.SetPlayerFaction(faction);
             OnConfirmAction();
             PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
         }

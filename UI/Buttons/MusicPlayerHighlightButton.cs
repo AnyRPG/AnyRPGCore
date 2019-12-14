@@ -9,13 +9,13 @@ namespace AnyRPG {
 
     public class MusicPlayerHighlightButton : HighlightButton {
 
-        private string musicProfileName;
+        private MusicProfile musicProfile;
 
-        public string MyMusicProfileName { get => musicProfileName; }
+        public MusicProfile MyMusicProfile { get => musicProfile; }
 
-        public void SetMusicProfileName(string musicProfileName) {
-            if (musicProfileName != null && musicProfileName != string.Empty) {
-                this.musicProfileName = musicProfileName;
+        public void SetMusicProfile(MusicProfile newMusicProfile) {
+            if (newMusicProfile != null) {
+                musicProfile = newMusicProfile;
             }
         }
 
@@ -26,7 +26,7 @@ namespace AnyRPG {
             MusicPlayerUI.MyInstance.MySelectedMusicPlayerHighlightButton = this;
 
             //GetComponent<Text>().color = Color.red;
-            MusicPlayerUI.MyInstance.ShowDescription(musicProfileName);
+            MusicPlayerUI.MyInstance.ShowDescription(musicProfile);
 
         }
 

@@ -90,7 +90,7 @@ public class SkillTrainer : InteractableOption {
         //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount()");
         int optionCount = 0;
         foreach (Skill skill in skills) {
-            if (!PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skill.MyName)) {
+            if (!PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skill)) {
                 optionCount++;
             }
         }

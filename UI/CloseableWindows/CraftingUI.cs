@@ -70,11 +70,13 @@ namespace AnyRPG {
 
         private List<RecipeScript> recipeScripts = new List<RecipeScript>();
 
-        private List<string> craftingQueue = new List<string>();
+        private List<Recipe> craftingQueue = new List<Recipe>();
 
         private RecipeScript selectedRecipeScript;
 
         private string currentRecipeName = null;
+
+        private Recipe currentRecipe = null;
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
@@ -156,36 +158,31 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.UpdateSelected()");
             if (selectedRecipeScript != null) {
                 craftAmount = 1;
-                ShowDescription(selectedRecipeScript.MyRecipeName);
+                ShowDescription(selectedRecipeScript.MyRecipe);
             }
         }
 
-        public void ShowDescription(string recipeName) {
+        public void ShowDescription(Recipe newRecipe) {
             //Debug.Log("CraftingUI.ShowDescription(" + recipeName + ")");
             ClearDescription();
 
-            if (recipeName == null && recipeName == string.Empty) {
+            if (newRecipe == null) {
                 return;
             }
-            currentRecipeName = recipeName;
+            currentRecipe = newRecipe;
 
-            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
-            if (recipe == null) {
-                //Debug.Log("SkillTrainerUI.ShowDescription(" + recipeName + "): failed to get skill from SystemSkillManager");
-            }
+            recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.MyOutput.MyName, newRecipe.MyDescription);
 
-            recipeDescription.text = string.Format("<b>{0}</b>", recipe.MyOutput.MyName, recipe.MyDescription);
+            outputIcon.SetDescribable(newRecipe.MyOutput, newRecipe.MyOutputCount);
 
-            outputIcon.SetDescribable(recipe.MyOutput, recipe.MyOutputCount);
-
-            if (recipe.MyCraftingMaterials.Count > 0) {
+            if (newRecipe.MyCraftingMaterials.Count > 0) {
                 materialsHeading.gameObject.SetActive(true);
             }
 
             // show crafting materials
-            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
+            for (int i = 0; i < newRecipe.MyCraftingMaterials.Count; i++) {
                 inputIcons[i].MyMaterialSlot.SetActive(true);
-                inputIcons[i].SetDescribable(recipe.MyCraftingMaterials[i].MyItem, recipe.MyCraftingMaterials[i].MyCount);
+                inputIcons[i].SetDescribable(newRecipe.MyCraftingMaterials[i].MyItem, newRecipe.MyCraftingMaterials[i].MyCount);
             }
 
             UpdateCraftAmountArea();
@@ -261,13 +258,12 @@ namespace AnyRPG {
             }
         }
 
-        private int GetMaxCraftAmount(string recipeName) {
+        private int GetMaxCraftAmount(Recipe checkRecipe) {
             //Debug.Log("CraftingUI.GetMaxCraftAmount()");
-            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(recipeName);
 
             int maxAmount = -1;
-            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
-                int possibleAmount = InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyName) / recipe.MyCraftingMaterials[i].MyCount;
+            for (int i = 0; i < checkRecipe.MyCraftingMaterials.Count; i++) {
+                int possibleAmount = InventoryManager.MyInstance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.MyName) / checkRecipe.MyCraftingMaterials[i].MyCount;
                 if (maxAmount == -1) {
                     maxAmount = possibleAmount;
                 }
@@ -281,7 +277,7 @@ namespace AnyRPG {
         public void CraftAll() {
             //Debug.Log("CraftingUI.CraftAll()");
             if (MySelectedRecipeScript != null) {
-                craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
+                craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
                 UpdateCraftAmountArea();
                 BeginCrafting();
             } else {
@@ -293,7 +289,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.BeginCrafting()");
             if (MySelectedRecipeScript != null) {
                 for (int i = 0; i < craftAmount; i++) {
-                    craftingQueue.Add(MySelectedRecipeScript.MyRecipeName);
+                    craftingQueue.Add(MySelectedRecipeScript.MyRecipe);
                 }
                 PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAbility);
             } else {
@@ -308,11 +304,10 @@ namespace AnyRPG {
                 return;
             }
 
-            Recipe recipe = SystemRecipeManager.MyInstance.GetResource(craftingQueue[0]);
             // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
-            if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(recipe.MyOutput.MyName))) {
+            if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.MyName))) {
                 //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
-                foreach (CraftingMaterial craftingMaterial in recipe.MyCraftingMaterials) {
+                foreach (CraftingMaterial craftingMaterial in craftingQueue[0].MyCraftingMaterials) {
                     //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                     for (int i = 0; i < craftingMaterial.MyCount; i++) {
                         //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
@@ -338,7 +333,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
             int maxAmount = 0;
             if (MySelectedRecipeScript != null) {
-                maxAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipeName);
+                maxAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
                 if (craftAmount == 0 && maxAmount > 0) {
                     craftAmount = 1;
                 }

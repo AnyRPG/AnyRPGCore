@@ -1,108 +1,103 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class CharacterSkillManager : MonoBehaviour {
+    public class CharacterSkillManager : MonoBehaviour {
 
-    protected BaseCharacter baseCharacter;
+        protected BaseCharacter baseCharacter;
 
-    protected Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
+        protected Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
-    public BaseCharacter MyBaseCharacter {
-        get => baseCharacter;
-        set => baseCharacter = value;
-    }
-
-    public Dictionary<string, Skill> MySkillList { get => skillList; }
-
-    //public List<string> MySkillList { get => skillList;}
-
-    protected virtual void Awake() {
-        //Debug.Log("CharacterAbilityManager.Awake()");
-        baseCharacter = GetComponent<BaseCharacter>();
-    }
-
-    protected virtual void Start() {
-        //Debug.Log("CharacterAbilityManager.Start()");
-        CreateEventSubscriptions();
-        UpdateSkillList(baseCharacter.MyCharacterStats.MyLevel);
-    }
-
-    public virtual void OnDisable() {
-        CleanupEventSubscriptions();
-    }
-
-    public void CreateEventSubscriptions() {
-        SystemEventManager.MyInstance.OnLevelChanged += UpdateSkillList;
-    }
-
-    public void CleanupEventSubscriptions() {
-        if (SystemEventManager.MyInstance != null) {
-            SystemEventManager.MyInstance.OnLevelChanged -= UpdateSkillList;
+        public BaseCharacter MyBaseCharacter {
+            get => baseCharacter;
+            set => baseCharacter = value;
         }
-    }
 
-    /*
-    public List<string> GetSkillList() {
+        public Dictionary<string, Skill> MySkillList { get => skillList; }
 
-        return skillList.Keys;
-    }
-    */
+        //public List<string> MySkillList { get => skillList;}
 
-    public void UpdateSkillList(int newLevel) {
-        //Debug.Log("CharacterSkillManager.UpdateSkillList()");
-        foreach (Skill skill in SystemSkillManager.MyInstance.GetResourceList()) {
-            if (!HasSkill(skill.MyName) && skill.MyRequiredLevel <= newLevel && skill.MyAutoLearn == true) {
-                LearnSkill(skill.MyName);
+        protected virtual void Awake() {
+            //Debug.Log("CharacterAbilityManager.Awake()");
+            baseCharacter = GetComponent<BaseCharacter>();
+        }
+
+        protected virtual void Start() {
+            //Debug.Log("CharacterAbilityManager.Start()");
+            CreateEventSubscriptions();
+            UpdateSkillList(baseCharacter.MyCharacterStats.MyLevel);
+        }
+
+        public virtual void OnDisable() {
+            CleanupEventSubscriptions();
+        }
+
+        public void CreateEventSubscriptions() {
+            SystemEventManager.MyInstance.OnLevelChanged += UpdateSkillList;
+        }
+
+        public void CleanupEventSubscriptions() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnLevelChanged -= UpdateSkillList;
             }
         }
-    }
 
-    public bool HasSkill(string skillName) {
-        //Debug.Log(gameObject.name + ".CharacterSkillManager.HasSkill(" + skillName + ")");
-        string keyName = SystemResourceManager.prepareStringForMatch(skillName);
-        if (skillList.ContainsKey(keyName)) {
-            return true;
+        /*
+        public List<string> GetSkillList() {
+
+            return skillList.Keys;
         }
-        return false;
-    }
+        */
 
-    public void LearnSkill(string skillName) {
-        Skill skill = SystemSkillManager.MyInstance.GetResource(skillName);
-        //Debug.Log("CharacterSkillManager.LearnSkill(" + skill.name + ")");
-        string keyName = SystemResourceManager.prepareStringForMatch(skillName);
-        if (!skillList.ContainsKey(keyName)) {
-            skillList[keyName] = skill;
-            foreach (BaseAbility ability in skill.MyAbilityList) {
-                MyBaseCharacter.MyCharacterAbilityManager.LearnAbility(ability.MyName);
-            }
-            SystemEventManager.MyInstance.NotifyOnSkillListChanged(skill);
-        }
-    }
-
-    public void LoadSkill(string skillName) {
-        //Debug.Log("CharacterSkillManager.LoadSkill()");
-        string keyName = SystemResourceManager.prepareStringForMatch(skillName);
-        if (!skillList.ContainsKey(skillName)) {
-            skillList[skillName] = SystemSkillManager.MyInstance.GetResource(skillName);
-        }
-    }
-
-
-    public void UnlearnSkill(string skillName) {
-        Skill skill = SystemSkillManager.MyInstance.GetResource(skillName);
-        string keyName = SystemResourceManager.prepareStringForMatch(skillName);
-        if (skillList.ContainsKey(keyName)) {
-            skillList.Remove(skillName);
-            foreach (BaseAbility ability in skill.MyAbilityList) {
-                MyBaseCharacter.MyCharacterAbilityManager.UnlearnAbility(ability.MyName);
+        public void UpdateSkillList(int newLevel) {
+            //Debug.Log("CharacterSkillManager.UpdateSkillList()");
+            foreach (Skill skill in SystemSkillManager.MyInstance.GetResourceList()) {
+                if (!HasSkill(skill) && skill.MyRequiredLevel <= newLevel && skill.MyAutoLearn == true) {
+                    LearnSkill(skill);
+                }
             }
         }
+
+        public bool HasSkill(Skill checkSkill) {
+            //Debug.Log(gameObject.name + ".CharacterSkillManager.HasSkill(" + skillName + ")");
+            if (skillList.ContainsValue(checkSkill)) {
+                return true;
+            }
+            return false;
+        }
+
+        public void LearnSkill(Skill newSkill) {
+            //Debug.Log("CharacterSkillManager.LearnSkill(" + skill.name + ")");
+            if (!skillList.ContainsValue(newSkill)) {
+                skillList[SystemResourceManager.prepareStringForMatch(newSkill.MyName)] = newSkill;
+                foreach (BaseAbility ability in newSkill.MyAbilityList) {
+                    MyBaseCharacter.MyCharacterAbilityManager.LearnAbility(ability);
+                }
+                SystemEventManager.MyInstance.NotifyOnSkillListChanged(newSkill);
+            }
+        }
+
+        public void LoadSkill(string skillName) {
+            //Debug.Log("CharacterSkillManager.LoadSkill()");
+            string keyName = SystemResourceManager.prepareStringForMatch(skillName);
+            if (!skillList.ContainsKey(keyName)) {
+                skillList[keyName] = SystemSkillManager.MyInstance.GetResource(skillName);
+            }
+        }
+
+
+        public void UnlearnSkill(Skill oldSkill) {
+            if (skillList.ContainsValue(oldSkill)) {
+                skillList.Remove(SystemResourceManager.prepareStringForMatch(oldSkill.MyName));
+                foreach (BaseAbility ability in oldSkill.MyAbilityList) {
+                    MyBaseCharacter.MyCharacterAbilityManager.UnlearnAbility(ability);
+                }
+            }
+        }
+
+
     }
-
-
-}
 
 }

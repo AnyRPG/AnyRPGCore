@@ -17,8 +17,12 @@ namespace AnyRPG {
         [SerializeField]
         private string ambientMusicProfile;
 
+        private MusicProfile realAmbientMusicProfile;
+
         [SerializeField]
         private string backgroundMusicProfile;
+
+        private MusicProfile realBackgroundMusicProfile;
 
         [SerializeField]
         private bool suppressCharacterSpawn;
@@ -41,8 +45,27 @@ namespace AnyRPG {
         public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
         public bool MyCutsceneViewed { get => cutsceneViewed; set => cutsceneViewed = value; }
         public bool MyIsCutScene { get => isCutScene; set => isCutScene = value; }
-        public string MyAmbientMusicProfile { get => ambientMusicProfile; set => ambientMusicProfile = value; }
-        public string MyBackgroundMusicProfile { get => backgroundMusicProfile; set => backgroundMusicProfile = value; }
+        public MusicProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
+        public MusicProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            realAmbientMusicProfile = null;
+            if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
+                realAmbientMusicProfile = SystemMusicProfileManager.MyInstance.GetResource(ambientMusicProfile);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+            }
+
+            realBackgroundMusicProfile = null;
+            if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
+                realBackgroundMusicProfile = SystemMusicProfileManager.MyInstance.GetResource(backgroundMusicProfile);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+            }
+        }
+
     }
 
 }

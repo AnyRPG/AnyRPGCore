@@ -26,7 +26,7 @@ namespace AnyRPG {
         public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
         //public event System.Action<IAbility> OnAbilityCast = delegate { };
         public event System.Action<BaseAbility> OnAbilityUsed = delegate { };
-        public event System.Action<string> OnAbilityListChanged = delegate { };
+        public event System.Action<BaseAbility> OnAbilityListChanged = delegate { };
         public event System.Action<Skill> OnSkillListChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action OnReputationChange = delegate { };
@@ -226,9 +226,9 @@ namespace AnyRPG {
             OnPrerequisiteUpdated();
         }
 
-        public void NotifyOnAbilityListChanged(string abilityName) {
+        public void NotifyOnAbilityListChanged(BaseAbility newAbility) {
             //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
-            OnAbilityListChanged(abilityName);
+            OnAbilityListChanged(newAbility);
             OnPrerequisiteUpdated();
         }
 

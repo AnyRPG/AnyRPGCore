@@ -14,7 +14,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
     [SerializeField]
     private CurrencyButton[] currencyButtons;
 
-    private List<List<CurrencySaveData>> pages = new List<List<CurrencySaveData>>();
+    private List<List<CurrencyNode>> pages = new List<List<CurrencyNode>>();
 
     private int pageSize = 10;
 
@@ -44,12 +44,12 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
     public void CreatePages() {
         //Debug.Log("ReputationBookUI.CreatePages()");
         ClearPages();
-        List<CurrencySaveData> page = new List<CurrencySaveData>();
-        foreach (CurrencySaveData currencySaveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
+        List<CurrencyNode> page = new List<CurrencyNode>();
+        foreach (CurrencyNode currencySaveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
             page.Add(currencySaveData);
             if (page.Count == pageSize) {
                 pages.Add(page);
-                page = new List<CurrencySaveData>();
+                page = new List<CurrencyNode>();
             }
         }
         if (page.Count > 0) {
@@ -69,7 +69,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
                 if (i < pages[pageIndex].Count) {
                     //Debug.Log("adding ability");
                     currencyButtons[i].gameObject.SetActive(true);
-                    currencyButtons[i].AddCurrency(pages[pageIndex][i].MyName);
+                    currencyButtons[i].AddCurrency(pages[pageIndex][i].currency);
                 } else {
                     //Debug.Log("clearing ability");
                     currencyButtons[i].ClearCurrency();

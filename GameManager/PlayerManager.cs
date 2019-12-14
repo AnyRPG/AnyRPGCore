@@ -206,18 +206,18 @@ namespace AnyRPG {
             }
         }
 
-        public void SetPlayerCharacterClass(string characterClassName) {
+        public void SetPlayerCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
-            if (characterClassName != null && characterClassName != string.Empty) {
-                MyCharacter.ChangeCharacterClass(characterClassName);
+            if (newCharacterClass != null) {
+                MyCharacter.ChangeCharacterClass(newCharacterClass);
             }
             SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
         }
 
-        public void SetPlayerFaction(string factionName) {
+        public void SetPlayerFaction(Faction newFaction) {
             //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
-            if (factionName != null && factionName != string.Empty) {
-                MyCharacter.JoinFaction(factionName);
+            if (newFaction != null) {
+                MyCharacter.JoinFaction(newFaction);
             }
             SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
         }

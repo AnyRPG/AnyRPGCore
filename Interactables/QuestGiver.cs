@@ -128,7 +128,7 @@ namespace AnyRPG {
                 interactable.OpenInteractionWindow();
                 return true;
             } else if (Quest.GetAvailableQuests(MyQuests).Count == 1 && Quest.GetCompleteQuests(MyQuests).Count == 0) {
-                if (Quest.GetAvailableQuests(MyQuests)[0].MyHasOpeningDialog == true && SystemDialogManager.MyInstance.GetResource(Quest.GetAvailableQuests(MyQuests)[0].MyName).TurnedIn == false) {
+                if (Quest.GetAvailableQuests(MyQuests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(MyQuests)[0].MyOpeningDialog.TurnedIn == false) {
                     (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(MyQuests)[0], interactable);
                     return true;
                 } else {

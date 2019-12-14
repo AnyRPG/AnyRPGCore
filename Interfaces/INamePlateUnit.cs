@@ -18,7 +18,7 @@ namespace AnyRPG {
         // the offset from the target position where the camera should look
         Vector3 MyUnitFrameCameraLookOffset { get; set; }
         string MyDisplayName { get; }
-        string MyFactionName { get; }
+        Faction MyFaction { get; }
         Transform MyNamePlateTransform { get; }
         Interactable MyInteractable { get; }
 

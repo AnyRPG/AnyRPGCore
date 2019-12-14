@@ -53,14 +53,14 @@ namespace AnyRPG {
             ClearSettings();
             MyQuest = quest;
             MyInteractable = interactable;
-            MyDialog = SystemDialogManager.MyInstance.GetResource(quest.MyName);
+            MyDialog = quest.MyOpeningDialog;
             PopupWindowManager.MyInstance.dialogWindow.OpenWindow();
         }
 
-        public void Setup(string dialogName, Interactable interactable) {
+        public void Setup(Dialog dialog, Interactable interactable) {
             ClearSettings();
             MyInteractable = interactable;
-            MyDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+            MyDialog = dialog;
             PopupWindowManager.MyInstance.dialogWindow.OpenWindow();
         }
 
@@ -121,7 +121,7 @@ namespace AnyRPG {
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
 
-            QuestLog.MyInstance.AcceptQuest(MyQuest.MyName);
+            QuestLog.MyInstance.AcceptQuest(MyQuest);
             //interactable.CheckForInteractableObjectives(MyQuest.MyName);
         }
 

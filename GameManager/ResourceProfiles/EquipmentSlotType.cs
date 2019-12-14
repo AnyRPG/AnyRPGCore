@@ -18,19 +18,36 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> exclusiveSlotProfileList = new List<string>();
 
-        public List<string> MyExclusiveSlotProfileList { get => exclusiveSlotProfileList; set => exclusiveSlotProfileList = value; }
+        private List<EquipmentSlotProfile> realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();
+
+        public List<EquipmentSlotProfile> MyExclusiveSlotProfileList { get => realExclusiveSlotProfileList; set => realExclusiveSlotProfileList = value; }
         public float MyStatWeight { get => statWeight; set => statWeight = value; }
 
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles() {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
-            if (MyName != null && MyName != string.Empty) {
-                foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Values) {
-                    if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(MyName)) {
-                        returnValue.Add(equipmentSlotProfile);
-                    }
+            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Values) {
+                if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(this)) {
+                    returnValue.Add(equipmentSlotProfile);
                 }
             }
             return returnValue;
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();
+            if (exclusiveSlotProfileList != null) {
+                foreach (string exclusiveSlotProfile in exclusiveSlotProfileList) {
+                    EquipmentSlotProfile tmpSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(exclusiveSlotProfile);
+                    if (tmpSlotProfile != null) {
+                        realExclusiveSlotProfileList.Add(tmpSlotProfile);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
         }
     }
 

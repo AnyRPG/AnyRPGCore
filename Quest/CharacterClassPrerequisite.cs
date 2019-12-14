@@ -10,6 +10,8 @@ namespace AnyRPG {
         [SerializeField]
         private string requiredCharacterClass;
 
+        private CharacterClass prerequisiteCharacterClass = null;
+
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("LevelPrerequisite.IsMet()");
             if (baseCharacter == null) {
@@ -20,11 +22,21 @@ namespace AnyRPG {
                 //Debug.Log("LevelPrerequisite.IsMet(): baseCharacter.MyCharacterStats is null!!");
                 return false;
             }
-            if (SystemResourceManager.MatchResource(requiredCharacterClass, baseCharacter.MyCharacterClassName)) {
+            if (prerequisiteCharacterClass == baseCharacter.MyCharacterClass) {
                 return true;
             }
             return false;
         }
+
+        public void SetupScriptableObjects() {
+            prerequisiteCharacterClass = null;
+            if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {
+                prerequisiteCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(requiredCharacterClass);
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
+            }
+        }
+
     }
 
 }

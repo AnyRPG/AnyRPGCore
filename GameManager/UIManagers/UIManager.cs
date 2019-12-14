@@ -336,11 +336,11 @@ namespace AnyRPG {
             miniMapController.ClearTarget();
         }
 
-        public void HandleAbilityListChanged(string newAbility) {
+        public void HandleAbilityListChanged(BaseAbility newAbility) {
             //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {
-                if (SystemAbilityManager.MyInstance.GetResource(newAbility).MyAutoAddToBars == true) {
+                if (newAbility.MyAutoAddToBars == true) {
                     if (!actionBarManager.AddNewAbility(newAbility)) {
                         //Debug.Log("UIManager.HandleAbilityListChanged(): All Ability Bars were full.  unable to add " + newAbility);
                     }

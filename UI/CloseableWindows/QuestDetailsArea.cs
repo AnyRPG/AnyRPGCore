@@ -123,7 +123,7 @@ public class QuestDetailsArea : MonoBehaviour {
 
         if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(rewardButton.MyDescribable.MyName)) {
+            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(rewardButton.MyDescribable as BaseAbility)) {
                 rewardButton.Unselect();
             }
         }
@@ -157,7 +157,7 @@ public class QuestDetailsArea : MonoBehaviour {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
             rewardIcon.OnAttempSelect += HandleAttemptSelect;
             //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
-            rewardIcon.SetDescribable(SystemItemManager.MyInstance.GetResource(quest.MyItemRewards[i]));
+            rewardIcon.SetDescribable(quest.MyItemRewards[i]);
             itemRewardIcons.Add(rewardIcon);
         }
 
@@ -176,7 +176,7 @@ public class QuestDetailsArea : MonoBehaviour {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
             rewardIcon.OnAttempSelect += HandleAttemptSelect;
             //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
-            rewardIcon.SetDescribable(SystemAbilityManager.MyInstance.GetResource(quest.MyAbilityRewards[i]));
+            rewardIcon.SetDescribable(quest.MyAbilityRewards[i]);
             abilityRewardIcons.Add(rewardIcon);
         }
 
@@ -212,7 +212,7 @@ public class QuestDetailsArea : MonoBehaviour {
         }
         for (int i = 0; i < quest.MySkillRewards.Count; i++) {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
-            rewardIcon.SetDescribable(SystemSkillManager.MyInstance.GetResource(quest.MySkillRewards[i]));
+            rewardIcon.SetDescribable(quest.MySkillRewards[i]);
             skillRewardIcons.Add(rewardIcon);
         }
 
