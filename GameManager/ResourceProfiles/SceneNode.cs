@@ -20,7 +20,7 @@ namespace AnyRPG {
         private MusicProfile realAmbientMusicProfile;
 
         [SerializeField]
-        private string backgroundMusicProfile;
+        private string backgroundMusicProfile = string.Empty;
 
         private MusicProfile realBackgroundMusicProfile;
 

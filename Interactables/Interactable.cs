@@ -91,6 +91,7 @@ namespace AnyRPG {
                 //Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
             }
             InitializeComponents();
+            SetupScriptableObjects();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
@@ -789,6 +790,17 @@ namespace AnyRPG {
         protected virtual void OnDestroy() {
             //Debug.Log(gameObject.name + ".Interactable.OnDestroy()");
         }
+
+        public void SetupScriptableObjects() {
+            if (interactables != null) {
+                foreach (IInteractable interactable in interactables) {
+                    if (interactable != null) {
+                        interactable.SetupScriptableObjects();
+                    }
+                }
+            }
+        }
+
 
     }
 

@@ -57,7 +57,8 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnSkillListChanged -= UpdateCompletionCount;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
             skill = null;
             if (MyType != null && MyType != string.Empty) {
                 skill = SystemSkillManager.MyInstance.GetResource(MyType);

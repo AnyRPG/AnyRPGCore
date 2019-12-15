@@ -87,6 +87,19 @@ namespace AnyRPG {
             }
             return false;
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (phaseNodes != null) {
+                foreach (CombatStrategyNode combatStrategyNode in phaseNodes) {
+                    if (combatStrategyNode != null) {
+                        combatStrategyNode.SetupScriptableObjects();
+                    }
+                    
+                }
+            }
+        }
     }
 
 }

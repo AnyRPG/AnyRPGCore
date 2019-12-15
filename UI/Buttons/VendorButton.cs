@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class VendorButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
         private Text title;

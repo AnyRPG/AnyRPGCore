@@ -29,7 +29,7 @@ namespace AnyRPG {
         private GameObject viewQuestButton;
 
         [SerializeField]
-        private GameObject acceptQuestButton;
+        private GameObject acceptQuestButton = null;
 
         [SerializeField]
         private GameObject continueButton;

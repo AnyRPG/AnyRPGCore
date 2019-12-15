@@ -32,7 +32,6 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceList;
             eventSubscriptionsInitialized = true;
         }
 
@@ -41,7 +40,6 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceList;
             eventSubscriptionsInitialized = false;
         }
 
@@ -51,12 +49,13 @@ namespace AnyRPG {
         }
 
         public void ReloadResourceList() {
+            //Debug.Log(gameObject.name + ".SystemResourceManager.ReloadResourceList()");
             resourceList.Clear();
             LoadResourceList();
         }
 
         public virtual void LoadResourceList() {
-            //Debug.Log("SystemResourceManager.LoadResourceList()");
+            //Debug.Log(gameObject.name + ".SystemResourceManager.LoadResourceList()");
             int tmpLength = 0;
             foreach (UnityEngine.Object[] subList in masterList) {
                 tmpLength += subList.Length;

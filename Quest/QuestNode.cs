@@ -29,13 +29,15 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             questTemplate = null;
-            if (questName != null) {
+            if (questName != null && questName != string.Empty) {
                 Quest quest = SystemQuestManager.MyInstance.GetResource(questName);
                 if (quest != null) {
                     questTemplate = quest;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + questName + " while inititalizing a quest node.  CHECK INSPECTOR");
+                    Debug.LogError("QuestNode.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest node.  CHECK INSPECTOR");
                 }
+            } else {
+                Debug.LogError("QuestNode.SetupScriptableObjects(): questName was null or empty while inititalizing a quest node.  CHECK INSPECTOR");
             }
         }
 

@@ -150,11 +150,18 @@ namespace AnyRPG {
         }
 
         public virtual void HandleWeaponSlot(EquipmentSlotProfile equipmentSlotProfile) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfileName + ")");
-
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.MyName + ")");
+            if (currentEquipment == null) {
+                Debug.LogError(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.MyName + "): currentEquipment is null!");
+                return;
+            }
+            if (!currentEquipment.ContainsKey(equipmentSlotProfile)) {
+                Debug.LogError(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.MyName + "): currentEquipment does not have key");
+                return;
+            }
             Equipment newItem = currentEquipment[equipmentSlotProfile];
             //public virtual void HandleWeaponSlot(Equipment newItem) {
-            if (newItem.MyHoldableObjectName == null || newItem.MyHoldableObjectName == string.Empty || playerUnitObject == null) {
+            if (newItem == null || playerUnitObject == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
                 return;
             }
@@ -170,14 +177,14 @@ namespace AnyRPG {
         }
 
         public void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
-            if (newEquipment.MyHoldableObjectList == null) {
+            if (newEquipment == null || newEquipment.MyHoldableObjectList == null || equipmentSlotProfile == null) {
                 return;
             }
             Dictionary<HoldableObject, GameObject> holdableObjects = new Dictionary<HoldableObject, GameObject>();
             foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.MyHoldableObjectList) {
-                if (holdableObjectAttachment.MyAttachmentNodes != null) {
+                if (holdableObjectAttachment != null && holdableObjectAttachment.MyAttachmentNodes != null) {
                     foreach (AttachmentNode attachmentNode in holdableObjectAttachment.MyAttachmentNodes) {
-                        if (equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
+                        if (attachmentNode != null && attachmentNode.MyEquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
                             //CreateComponentReferences();
                             if (attachmentNode.MyHoldableObject != null && attachmentNode.MyHoldableObject.MyPhysicalPrefab != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
@@ -206,26 +213,6 @@ namespace AnyRPG {
             if (holdableObjects.Count > 0) {
                 currentEquipmentPhysicalObjects[equipmentSlotProfile] = holdableObjects;
             }
-            /*
-            foreach (string holdableObjectName in holdableObjectNames) {
-                HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
-                if (holdableObject != null) {
-
-                    if (holdableObject.MyPhysicalPrefab != null) {
-                        targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
-                        if (targetBone != null) {
-                            //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                            GameObject abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
-                            abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
-                            HoldObject(abilityObject, holdableObject.MyName, playerUnitObject);
-                            abilityObjects.Add(abilityObject);
-                        } else {
-                            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
-                        }
-                    }
-                }
-            }
-            */
         }
 
         public void SpawnAbilityObjects(List<HoldableObject> holdableObjects) {
@@ -376,6 +363,7 @@ namespace AnyRPG {
 
         public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName)+ ")");
+            //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
                 return;
@@ -384,6 +372,7 @@ namespace AnyRPG {
             //Unequip(newItem.equipSlot);
             if (newItem.MyEquipmentSlotType == null) {
                 Debug.LogError(gameObject + ".CharacterEquipmentManager.Equip() " + newItem.MyName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
+                return;
             }
 
             // get list of compatible slots that can take this slot type
@@ -399,7 +388,12 @@ namespace AnyRPG {
                     Unequip(slotProfileList[0]);
                     emptySlotProfile = GetFirstEmptySlot(slotProfileList);
                 }
+                if (emptySlotProfile == null) {
+                    Debug.LogError(gameObject + ".CharacterEquipmentManager.Equip() " + newItem.MyName + " emptyslotProfile is null.  CHECK INSPECTOR.");
+                    return;
+                }
             }
+
             // unequip any item in an exclusive slot for this item
             UnequipExclusiveSlots(newItem.MyEquipmentSlotType);
 
@@ -407,6 +401,7 @@ namespace AnyRPG {
             currentEquipment[emptySlotProfile] = newItem;
             //newItem.MySlot.Clear();
 
+            //Debug.Break();
             //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
             // both of these not needed if character unit not yet spawned?
             HandleItemUMARecipe(newItem);
@@ -438,13 +433,16 @@ namespace AnyRPG {
             return null;
         }
 
+        /*
         public virtual Equipment Unequip(EquipmentSlotProfile equipmentSlotProfile) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlotProfileName + ")");
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlotProfileName + ")");
+
             if (equipmentSlotProfile != null) {
                 return Unequip(equipmentSlotProfile);
             }
             return null;
         }
+        */
 
         public virtual Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ")");

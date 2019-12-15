@@ -106,7 +106,8 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
             if (characterClass == null && className != null && className != string.Empty) {
                 CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(className);
                 if (tmpCharacterClass != null) {

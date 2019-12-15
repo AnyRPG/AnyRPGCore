@@ -21,9 +21,6 @@ namespace AnyRPG {
         // However, this will likely not happen and these should probably just be moved to weapon.
 
         [SerializeField]
-        private string holdableObjectName;
-
-        [SerializeField]
         private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
 
         [SerializeField]
@@ -105,7 +102,7 @@ namespace AnyRPG {
                     return damageModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -141,7 +138,7 @@ namespace AnyRPG {
                     return intellectModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f) ) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f) ) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -154,7 +151,7 @@ namespace AnyRPG {
                     return staminaModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -167,7 +164,7 @@ namespace AnyRPG {
                     return strengthModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
@@ -180,14 +177,13 @@ namespace AnyRPG {
                     return agilityModifier;
                 }
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyRealEquipmentSlotType.MyStatWeight * MyRealEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                     0f,
                     Mathf.Infinity
                     ));
         }
         public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
-        public string MyHoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
         public bool MyUseManualIntellect { get => useManualIntellect; set => useManualIntellect = value; }
         public bool MyUseManualStamina { get => useManualStamina; set => useManualStamina = value; }
         public bool MyUseManualStrength { get => useManualStrength; set => useManualStrength = value; }
@@ -195,13 +191,6 @@ namespace AnyRPG {
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
-        public EquipmentSlotType MyRealEquipmentSlotType { get => realEquipmentSlotType;  }
-
-        /*
-        public Equipment() {
-            realEquipmentSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);
-        }
-        */
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -305,6 +294,28 @@ namespace AnyRPG {
                     }
                 }
             }
+            
+            
+            realEquipmentSlotType = null;
+            if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
+                EquipmentSlotType tmpEquipmentSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);
+                if (tmpEquipmentSlotType != null) {
+                    realEquipmentSlotType = tmpEquipmentSlotType;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            } else {
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + MyName + ".  CHECK INSPECTOR");
+            }
+            
+            if (holdableObjectList != null) {
+                foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
+                    if (holdableObjectAttachment != null) {
+                        holdableObjectAttachment.SetupScriptableObjects();
+                    }
+                }
+            }
+
 
         }
 

@@ -865,8 +865,11 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("popupwindowmanager was was null");
             }
+            // since this is done on logout anyway, doesn't seem to be any point in doing it here
+            /*
             SystemQuestManager.MyInstance.ReloadResourceList();
             SystemDialogManager.MyInstance.ReloadResourceList();
+            */
             UIManager.MyInstance.MyActionBarManager.ClearActionBars();
             QuestLog.MyInstance.ClearLog();
             PlayerManager.MyInstance.ResetInitialLevel();

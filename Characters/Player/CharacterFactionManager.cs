@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         private BaseCharacter baseCharacter;
 
-        [SerializeField]
+        //[SerializeField]
         protected List<FactionDisposition> dispositionDictionary = new List<FactionDisposition>();
 
         //public Dictionary<Faction, float> dispositionDictionary = new Dictionary<Faction, float>();

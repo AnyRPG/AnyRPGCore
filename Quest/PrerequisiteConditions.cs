@@ -191,6 +191,31 @@ namespace AnyRPG {
             //Debug.Log("PrerequisiteConditions: reversematch: " + reverseMatch + "; returnvalue native: " + returnValue);
             return reverseMatch ? !returnValue : returnValue;
         }
+
+        public void SetupScriptableObjects() {
+            foreach (IPrerequisite prerequisite in levelPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (IPrerequisite prerequisite in characterClassPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (IPrerequisite prerequisite in questPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (IPrerequisite prerequisite in dialogPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (IPrerequisite prerequisite in abilityPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+            foreach (FactionDisposition prerequisite in factionDispositionPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+            }
+        }
+
     }
 
 }

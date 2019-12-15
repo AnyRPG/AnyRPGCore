@@ -52,7 +52,7 @@ namespace AnyRPG {
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item.  CHECK INSPECTOR");
                 }
             }
         }

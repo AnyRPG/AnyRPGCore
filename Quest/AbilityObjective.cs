@@ -90,7 +90,8 @@ namespace AnyRPG {
             }
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
             baseAbility = null;
             if (MyType != null && MyType != string.Empty) {
                 baseAbility = SystemAbilityManager.MyInstance.GetResource(MyType);

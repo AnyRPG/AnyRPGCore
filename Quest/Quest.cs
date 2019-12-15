@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     //[System.Serializable]
-    [CreateAssetMenu(fileName = "New Quest",menuName = "AnyRPG/Quests/Quest")]
+    [CreateAssetMenu(fileName = "New Quest", menuName = "AnyRPG/Quests/Quest")]
     public class Quest : DescribableResource {
 
         [SerializeField]
@@ -217,6 +217,7 @@ namespace AnyRPG {
 
         public bool MyPrerequisitesMet {
             get {
+                //Debug.Log(MyName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -485,6 +486,8 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects() {
+            //Debug.Log(MyName + ".Quest.SetupScriptableObjects(): ID: " + GetInstanceID());
+        
             base.SetupScriptableObjects();
 
             realAbilityRewardList = new List<BaseAbility>();
@@ -531,12 +534,35 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + MyName + " while inititalizing quest " + MyName + ".  CHECK INSPECTOR");
                 }
+            }
 
+            foreach (QuestObjective objective in collectObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in killObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in tradeSkillObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in abilityObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in useInteractableObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in questQuestObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in dialogObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
+            foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
+                conditions.SetupScriptableObjects();
             }
 
         }
-
-
 
     }
 }

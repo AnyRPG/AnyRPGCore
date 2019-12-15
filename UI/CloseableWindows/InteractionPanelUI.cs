@@ -125,7 +125,7 @@ namespace AnyRPG {
             }
 
             // going to just pop the first available interaction window for now and see how that feels
-            bool optionOpened = false;
+            //bool optionOpened = false;
             foreach (IInteractable _interactable in currentInteractables) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "; type: " + _interactable.GetType() + "; Checking for valid button");
                 // handle questgiver
@@ -197,7 +197,7 @@ namespace AnyRPG {
                 if (questScript.MyQuest.IsComplete) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is complete, selecting");
                     questScript.Select();
-                    optionOpened = true;
+                    //optionOpened = true;
                     return;
                 }
             }
@@ -208,7 +208,7 @@ namespace AnyRPG {
                 if (questScript.MyQuest.GetStatus() == "available") {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is available, selecting");
                     questScript.Select();
-                    optionOpened = true;
+                    //optionOpened = true;
                     return;
                 }
             }
@@ -223,7 +223,7 @@ namespace AnyRPG {
                 if (iPS.MyInteractableOption.CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
                     iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
-                    optionOpened = true;
+                    //optionOpened = true;
                     return;
                 }
             }

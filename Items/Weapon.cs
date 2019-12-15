@@ -80,40 +80,11 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber() * MyRealEquipmentSlotType.MyStatWeight),
+                (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber() * MyEquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
         }
-        /*
-        public override int MyIntellectModifier(int currentLevel, BaseCharacter baseCharacter) {
-            if (!useManualIntellect) {
-                return (int)(base.MyIntellectModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
-            }
-            return base.MyIntellectModifier(currentLevel, baseCharacter);
-        }
-
-        public override int MyStaminaModifier(int currentLevel, BaseCharacter baseCharacter) {
-            if (!useManualStamina) {
-                return (int)(base.MyStaminaModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
-            }
-            return base.MyStaminaModifier(currentLevel, baseCharacter);
-        }
-
-        public override int MyStrengthModifier(int currentLevel, BaseCharacter baseCharacter) {
-            if (!useManualStrength) {
-                return (int)(base.MyStrengthModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
-            }
-            return base.MyStrengthModifier(currentLevel, baseCharacter);
-        }
-
-        public override int MyAgilityModifier(int currentLevel, BaseCharacter baseCharacter) {
-            if (!useManualAgility) {
-                return (int)(base.MyAgilityModifier(currentLevel, baseCharacter) * MyRealEquipmentSlotType.MyStatWeight);
-            }
-            return base.MyAgilityModifier(currentLevel, baseCharacter);
-        }
-        */
 
         public override string GetSummary() {
 

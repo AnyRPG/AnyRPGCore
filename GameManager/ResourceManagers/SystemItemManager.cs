@@ -55,7 +55,9 @@ namespace AnyRPG {
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
-                    return (ScriptableObject.Instantiate(resourceList[keyName]) as Item);
+                    Item returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as Item;
+                    returnValue.SetupScriptableObjects();
+                    return returnValue;
                 }
             }
             return null;

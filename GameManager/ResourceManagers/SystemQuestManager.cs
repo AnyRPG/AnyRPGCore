@@ -84,6 +84,7 @@ namespace AnyRPG {
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
+                    //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + "): returning ID: " + (resourceList[keyName] as Quest).GetInstanceID());
                     return (resourceList[keyName] as Quest);
                 }
             }

@@ -153,6 +153,18 @@ namespace AnyRPG {
             // overwrite me
         }
 
+        public virtual void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".InteractableOption.SetupScriptableObjects()");
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                    }
+                }
+            }
+        }
+
+
     }
 
 }

@@ -27,6 +27,8 @@ namespace AnyRPG {
 
         private int spawnCount = 0;
 
+        private bool eventSubscriptionsInitialized = false;
+
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
         }
@@ -47,8 +49,42 @@ namespace AnyRPG {
 
             PlayerManager.MyInstance.OrchestratorStart();
 
+            // subscribe to player connection despawn events for reloading resources
+            CreateEventSubscriptions();
+
             // then launch level manager to start loading the game
             LevelManager.MyInstance.PerformSetupActivities();
+
+        }
+
+        public virtual void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceLists;
+            eventSubscriptionsInitialized = true;
+        }
+
+        public virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceLists;
+            eventSubscriptionsInitialized = false;
+        }
+
+        public void ReloadResourceLists() {
+            //Debug.Log("SystemGameManager.ReloadResourceLists()");
+
+            // this has to be done in two loops to avoid invalidating scriptableobject references as we clear the lists to reload them
+            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
+                systemResourceManager.ReloadResourceList();
+            }
+            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
+                systemResourceManager.SetupScriptableObjects();
+            }
 
         }
 

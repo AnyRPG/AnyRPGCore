@@ -16,7 +16,10 @@ namespace AnyRPG {
         private BoxCollider boxCollider;
 
         [SerializeField]
-        private List<Dialog> dialogList;
+        private List<string> dialogNames = new List<string>();
+
+        [SerializeField]
+        private List<Dialog> dialogList = new List<Dialog>();
 
         private int dialogIndex = -1;
 
@@ -179,6 +182,19 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            dialogList = new List<Dialog>();
+            if (dialogNames != null) {
+                foreach (string dialogName in dialogNames) {
+                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+                    if (tmpDialog != null) {
+                        dialogList.Add(tmpDialog);
+                    }
+                }
+            }
         }
     }
 

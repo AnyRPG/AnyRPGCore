@@ -35,9 +35,12 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteSkill = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteSkill = SystemSkillManager.MyInstance.GetResource(prerequisiteName);
-            } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
+                Skill tmpPrerequisiteSkill = SystemSkillManager.MyInstance.GetResource(prerequisiteName);
+                if (tmpPrerequisiteSkill != null) {
+                    prerequisiteSkill = tmpPrerequisiteSkill;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
+                }
             }
         }
     }

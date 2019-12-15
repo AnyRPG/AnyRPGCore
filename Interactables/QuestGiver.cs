@@ -11,6 +11,11 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
+        private List<string> questGiverProfileNames = new List<string>();
+
+        private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();
+
+        [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 
         [SerializeField]
@@ -29,8 +34,9 @@ namespace AnyRPG {
             namePlateUnit = GetComponent<INamePlateUnit>();
         }
 
-        protected void Start() {
+        protected override void Start() {
             //Debug.Log(gameObject.name + ".QuestGiver.Start()");
+            base.Start();
 
             InitializeQuestGiver();
 
@@ -305,6 +311,33 @@ namespace AnyRPG {
                 }
             }
             return false;
+        }
+
+        public override void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".QuestGiver.SetupScriptableObjects()");
+            
+            base.SetupScriptableObjects();
+
+            questGiverProfiles = new List<QuestGiverProfile>();
+            if (questGiverProfileNames != null) {
+                foreach (string questGiverProfileName in questGiverProfileNames) {
+                    QuestGiverProfile tmpQuestGiverProfile = SystemQuestGiverProfileManager.MyInstance.GetResource(questGiverProfileName);
+                    if (tmpQuestGiverProfile != null) {
+                        questGiverProfiles.Add(tmpQuestGiverProfile);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
+                if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
+                    foreach (QuestNode questNode in questGiverProfile.MyQuests) {
+                        quests.Add(questNode);
+                    }
+                }
+            }
+
         }
     }
 

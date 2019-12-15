@@ -61,6 +61,10 @@ namespace AnyRPG {
         public virtual void HandleQuestStatusUpdated() {
             UpdateCompletionCount();
         }
+
+        public virtual void SetupScriptableObjects() {
+            // overwrite me
+        }
     }
 
 

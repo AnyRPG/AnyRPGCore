@@ -94,6 +94,10 @@ namespace AnyRPG {
             }
         }
 
+        private void Awake() {
+            SetupScriptableObjects();
+        }
+
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Start()");
             //boxCollider = GetComponent<BoxCollider>();
@@ -336,6 +340,17 @@ namespace AnyRPG {
                 Spawn();
             }
         }
+
+        public void SetupScriptableObjects() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                    }
+                }
+            }
+        }
+
 
     }
 

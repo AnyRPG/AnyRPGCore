@@ -106,7 +106,8 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
             if (faction == null && factionName != null && factionName != string.Empty) {
                 Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
                 if (tmpFaction != null) {

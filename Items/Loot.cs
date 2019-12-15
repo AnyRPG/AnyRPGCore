@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private string itemName;
 
-        [SerializeField]
+        //[SerializeField]
         private Item item;
 
         [SerializeField]
@@ -53,9 +53,14 @@ namespace AnyRPG {
                 }
             }
 
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                    }
+                }
+            }
         }
-
-
 
     }
 

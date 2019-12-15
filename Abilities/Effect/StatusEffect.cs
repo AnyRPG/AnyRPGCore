@@ -446,6 +446,15 @@ namespace AnyRPG {
                 }
             }
 
+            if (factionModifiers != null) {
+                foreach (FactionDisposition factionDisposition in factionModifiers) {
+                    if (factionDisposition != null) {
+                        factionDisposition.SetupScriptableObjects();
+                    }
+                }
+            }
+
+
         }
 
     }

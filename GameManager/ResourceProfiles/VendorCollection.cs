@@ -15,6 +15,19 @@ namespace AnyRPG {
         private List<VendorItem> vendorItems = new List<VendorItem>();
 
         public List<VendorItem> MyVendorItems { get => vendorItems; set => vendorItems = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (vendorItems != null) {
+                foreach (VendorItem vendorItem in vendorItems) {
+                    if (vendorItem != null) {
+                        vendorItem.SetupScriptableObjects();
+                    }
+
+                }
+            }
+        }
     }
 
 }

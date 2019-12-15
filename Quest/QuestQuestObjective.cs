@@ -17,6 +17,10 @@ namespace AnyRPG {
                 return;
             }
             if (SystemQuestManager.MyInstance != null) {
+                if (questObjective == null) {
+                    Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
+                    return;
+                }
                 if (questObjective.GetStatus() == "completed") {
                     MyCurrentAmount++;
                     questObjective.CheckCompletion(true, printMessages);
@@ -43,12 +47,19 @@ namespace AnyRPG {
         }
 
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
+            //Debug.Log("QuestQuestObjective.SetupScriptableObjects()");
+            base.SetupScriptableObjects();
             questObjective = null;
             if (MyType != null && MyType != string.Empty) {
-                questObjective = SystemQuestManager.MyInstance.GetResource(MyType);
+                Quest tmpQuestObjective = SystemQuestManager.MyInstance.GetResource(MyType);
+                if (tmpQuestObjective != null) {
+                    questObjective = tmpQuestObjective;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + MyType + " while inititalizing a quest quest objective.  CHECK INSPECTOR");
+                }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + MyType + " while inititalizing a quest quest objective.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective.  CHECK INSPECTOR");
             }
         }
     }
