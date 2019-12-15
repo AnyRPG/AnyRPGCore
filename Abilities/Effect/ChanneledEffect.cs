@@ -11,7 +11,7 @@ namespace AnyRPG {
         // the amount of time to delay damage after spawning the prefab
         public float effectDelay = 0f;
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
@@ -20,33 +20,37 @@ namespace AnyRPG {
             if (abilityEffectInput == null) {
                 abilityEffectInput = new AbilityEffectOutput();
             }
-            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
-            if (abilityEffectObject != null) {
-                abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
-                IChanneledObject channeledObjectScript = abilityEffectObject.GetComponent<IChanneledObject>();
-                if (channeledObjectScript != null) {
-                    GameObject prefabParent = source.MyCharacterUnit.gameObject;
-                    Transform usedPrefabSourceBone = null;
-                    if (prefabSourceBone != null && prefabSourceBone != string.Empty) {
-                        usedPrefabSourceBone = prefabParent.transform.FindChildByRecursive(prefabSourceBone);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            if (prefabObjects != null) {
+                foreach (PrefabProfile prefabProfile in prefabObjects.Keys) {
+
+                    prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
+                    IChanneledObject channeledObjectScript = prefabObjects[prefabProfile].GetComponent<IChanneledObject>();
+                    if (channeledObjectScript != null) {
+                        GameObject prefabParent = source.MyCharacterUnit.gameObject;
+                        Transform usedPrefabSourceBone = null;
+                        if (prefabProfile.MyTargetBone != null && prefabProfile.MyTargetBone != string.Empty) {
+                            usedPrefabSourceBone = prefabParent.transform.FindChildByRecursive(prefabProfile.MyTargetBone);
+                        }
+                        if (usedPrefabSourceBone != null) {
+                            prefabParent = usedPrefabSourceBone.gameObject;
+                        }
+                        channeledObjectScript.MyStartObject = prefabParent;
+                        //channeledObjectScript.MyStartPosition = source.MyCharacterUnit.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
+                        channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;
+                        //channeledObjectScript.MyStartPosition = prefabParent.transform.TransformPoint(prefabOffset);
+                        channeledObjectScript.MyEndObject = target.gameObject;
+                        channeledObjectScript.MyEndPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
+                    } else {
+                        //Debug.Log(MyName + ".ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): CHECK INSPECTOR, CHANNELEDOBJECT NOT FOUND");
                     }
-                    if (usedPrefabSourceBone != null) {
-                        prefabParent = usedPrefabSourceBone.gameObject;
-                    }
-                    channeledObjectScript.MyStartObject = prefabParent;
-                    //channeledObjectScript.MyStartPosition = source.MyCharacterUnit.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
-                    channeledObjectScript.MyStartPosition = prefabOffset;
-                    //channeledObjectScript.MyStartPosition = prefabParent.transform.TransformPoint(prefabOffset);
-                    channeledObjectScript.MyEndObject = target.gameObject;
-                    channeledObjectScript.MyEndPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
-                } else {
-                    //Debug.Log(MyName + ".ChanelledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): CHECK INSPECTOR, CHANNELEDOBJECT NOT FOUND");
                 }
+
                 // delayed damage
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
                 source.MyCharacterAbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectInput, this);
             }
-            return returnObject;
+            return returnObjects;
         }
 
         public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {

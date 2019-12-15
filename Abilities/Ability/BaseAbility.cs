@@ -29,7 +29,7 @@ namespace AnyRPG {
         private List<string> holdableObjectNames = new List<string>();
 
         [SerializeField]
-        private List<HoldableObject> holdableObjects = new List<HoldableObject>();
+        private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
 
         // holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start
         [SerializeField]
@@ -175,7 +175,7 @@ namespace AnyRPG {
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
         public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
-        public List<HoldableObject> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
+        public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
@@ -198,10 +198,10 @@ namespace AnyRPG {
                     }
                 }
             }
-            holdableObjects = new List<HoldableObject>();
+            holdableObjects = new List<PrefabProfile>();
             if (holdableObjectNames != null) {
                 foreach (string holdableObjectName in holdableObjectNames) {
-                    HoldableObject holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+                    PrefabProfile holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
                     if (holdableObject != null) {
                         holdableObjects.Add(holdableObject);
                     } else {

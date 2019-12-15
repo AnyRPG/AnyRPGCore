@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemHoldableObjectManager : SystemResourceManager {
+    public class SystemPrefabProfileManager : SystemResourceManager {
 
         #region Singleton
-        private static SystemHoldableObjectManager instance;
+        private static SystemPrefabProfileManager instance;
 
-        public static SystemHoldableObjectManager MyInstance {
+        public static SystemPrefabProfileManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<SystemHoldableObjectManager>();
+                    instance = FindObjectOfType<SystemPrefabProfileManager>();
                 }
 
                 return instance;
@@ -29,33 +29,33 @@ namespace AnyRPG {
 
         public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
-            masterList.Add(Resources.LoadAll<HoldableObject>(resourceClassName));
+            masterList.Add(Resources.LoadAll<PrefabProfile>(resourceClassName));
             if (SystemConfigurationManager.MyInstance != null) {
                 foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.MyLoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<HoldableObject>(loadResourcesFolder + "/" + resourceClassName));
+                    masterList.Add(Resources.LoadAll<PrefabProfile>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }
             base.LoadResourceList();
         }
 
-        public HoldableObject GetResource(string resourceName) {
+        public PrefabProfile GetResource(string resourceName) {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
-                    return (resourceList[keyName] as HoldableObject);
+                    return (resourceList[keyName] as PrefabProfile);
                 }
             }
             return null;
         }
 
 
-        public HoldableObject GetNewResource(string resourceName) {
+        public PrefabProfile GetNewResource(string resourceName) {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
-                    HoldableObject returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as HoldableObject;
+                    PrefabProfile returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as PrefabProfile;
                     returnValue.SetupScriptableObjects();
                     return returnValue;
                 }
@@ -64,11 +64,11 @@ namespace AnyRPG {
         }
 
 
-        public List<HoldableObject> GetResourceList() {
-            List<HoldableObject> returnList = new List<HoldableObject>();
+        public List<PrefabProfile> GetResourceList() {
+            List<PrefabProfile> returnList = new List<PrefabProfile>();
 
             foreach (UnityEngine.Object listItem in resourceList.Values) {
-                returnList.Add(listItem as HoldableObject);
+                returnList.Add(listItem as PrefabProfile);
             }
             return returnList;
         }

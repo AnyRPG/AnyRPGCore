@@ -21,7 +21,7 @@ namespace AnyRPG {
         private Vector3 spawnLocation = Vector3.zero;
         */
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             if (target == null) {
                 return null;
             }
@@ -31,7 +31,7 @@ namespace AnyRPG {
                 return null;
             }
 
-            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
 
             Vector3 sourcePosition = source.MyCharacterUnit.transform.position;
             Vector3 targetPosition = target.transform.position;
@@ -51,7 +51,7 @@ namespace AnyRPG {
             //Debug.Log("KnockBackEffect.Cast(): originalDirection: " + originalDirection + "; rotationDirection: " + rotationDirection + "; finalDirection: " + finalDirection + "; knockbackAngle: " + knockBackAngle);
             animatedUnit.MyCharacterMotor.Move(finalDirection, true);
 
-            return returnObject;
+            return returnObjects;
         }
 
 

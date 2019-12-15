@@ -15,15 +15,15 @@ namespace AnyRPG {
         [SerializeField]
         private string holdableObjectName;
 
-        private HoldableObject holdableObject = null;
+        private PrefabProfile holdableObject = null;
 
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
-        public HoldableObject MyHoldableObject { get => holdableObject; set => holdableObject = value; }
+        public PrefabProfile MyHoldableObject { get => holdableObject; set => holdableObject = value; }
 
         public void SetupScriptableObjects() {
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
-                holdableObject = SystemHoldableObjectManager.MyInstance.GetResource(holdableObjectName);
+                holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node.  CHECK INSPECTOR");
             }

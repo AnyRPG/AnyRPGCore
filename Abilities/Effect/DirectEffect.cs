@@ -10,7 +10,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New DirectEffect",menuName = "AnyRPG/Abilities/Effects/DirectEffect")]
     public class DirectEffect : FixedLengthEffect {
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".DirectEffect.Cast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }

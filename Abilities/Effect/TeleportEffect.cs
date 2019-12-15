@@ -17,8 +17,8 @@ namespace AnyRPG {
 
         public string MyLevelName { get => levelName; set => levelName = value; }
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (levelName != null) {
                 if (spawnLocation != Vector3.zero) {
                     LevelManager.MyInstance.LoadLevel(levelName, spawnLocation);
@@ -26,7 +26,7 @@ namespace AnyRPG {
                     LevelManager.MyInstance.LoadLevel(levelName);
                 }
             }
-            return returnObject;
+            return returnObjects;
         }
 
     }

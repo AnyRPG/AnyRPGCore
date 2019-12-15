@@ -204,12 +204,12 @@ namespace AnyRPG {
         }
 
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
             }
-            GameObject returnObject = null;
+            Dictionary<PrefabProfile, GameObject> returnObjects = null;
             CharacterStats targetCharacterStats = null;
             CharacterUnit targetCharacterUnit = null;
             if (classTrait || abilityEffectInput.savedEffect) {
@@ -226,14 +226,14 @@ namespace AnyRPG {
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
-                returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
-                if (abilityEffectObject != null) {
+                returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+                if (returnObjects != null) {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                    _statusEffectNode.MyStatusEffect.abilityEffectObject = abilityEffectObject;
+                    _statusEffectNode.MyStatusEffect.MyPrefabObjects = returnObjects;
                 }
                 PerformAbilityHit(source, target, abilityEffectInput);
             }
-            return returnObject;
+            return returnObjects;
         }
 
         public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {

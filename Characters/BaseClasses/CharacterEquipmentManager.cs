@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         protected Dictionary<EquipmentSlotProfile, Equipment> currentEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
 
-        protected Dictionary<EquipmentSlotProfile, Dictionary<HoldableObject, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<HoldableObject, GameObject>>();
+        protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
 
         protected Transform targetBone;
 
@@ -180,23 +180,23 @@ namespace AnyRPG {
             if (newEquipment == null || newEquipment.MyHoldableObjectList == null || equipmentSlotProfile == null) {
                 return;
             }
-            Dictionary<HoldableObject, GameObject> holdableObjects = new Dictionary<HoldableObject, GameObject>();
+            Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
             foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.MyHoldableObjectList) {
                 if (holdableObjectAttachment != null && holdableObjectAttachment.MyAttachmentNodes != null) {
                     foreach (AttachmentNode attachmentNode in holdableObjectAttachment.MyAttachmentNodes) {
                         if (attachmentNode != null && attachmentNode.MyEquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
                             //CreateComponentReferences();
-                            if (attachmentNode.MyHoldableObject != null && attachmentNode.MyHoldableObject.MyPhysicalPrefab != null) {
+                            if (attachmentNode.MyHoldableObject != null && attachmentNode.MyHoldableObject.MyPrefab != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
                                 // attach a mesh to a bone for weapons
                                 targetBone = playerUnitObject.transform.FindChildByRecursive(attachmentNode.MyHoldableObject.MySheathedTargetBone);
                                 if (targetBone != null) {
                                     //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                    GameObject newEquipmentPrefab = Instantiate(attachmentNode.MyHoldableObject.MyPhysicalPrefab, targetBone, false);
+                                    GameObject newEquipmentPrefab = Instantiate(attachmentNode.MyHoldableObject.MyPrefab, targetBone, false);
                                     holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                     //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
-                                    newEquipmentPrefab.transform.localScale = attachmentNode.MyHoldableObject.MyPhysicalScale;
+                                    newEquipmentPrefab.transform.localScale = attachmentNode.MyHoldableObject.MyScale;
                                     if (baseCharacter != null && baseCharacter.MyCharacterCombat != null && baseCharacter.MyCharacterCombat.GetInCombat() == true) {
                                         HoldObject(newEquipmentPrefab, attachmentNode.MyHoldableObject, playerUnitObject);
                                     } else {
@@ -215,16 +215,16 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnAbilityObjects(List<HoldableObject> holdableObjects) {
-            foreach (HoldableObject holdableObject in holdableObjects) {
+        public void SpawnAbilityObjects(List<PrefabProfile> holdableObjects) {
+            foreach (PrefabProfile holdableObject in holdableObjects) {
                 if (holdableObject != null) {
 
-                    if (holdableObject.MyPhysicalPrefab != null) {
+                    if (holdableObject.MyPrefab != null) {
                         targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
                         if (targetBone != null) {
                             //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                            GameObject abilityObject = Instantiate(holdableObject.MyPhysicalPrefab, targetBone, false);
-                            abilityObject.transform.localScale = holdableObject.MyPhysicalScale;
+                            GameObject abilityObject = Instantiate(holdableObject.MyPrefab, targetBone, false);
+                            abilityObject.transform.localScale = holdableObject.MyScale;
                             HoldObject(abilityObject, holdableObject, playerUnitObject);
                             abilityObjects.Add(abilityObject);
                         } else {
@@ -256,7 +256,7 @@ namespace AnyRPG {
             //if they do, run sheathobject on that slot
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
-                    foreach (KeyValuePair<HoldableObject, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                         SheathObject(holdableObjectReference.Value, holdableObjectReference.Key, playerUnitObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
@@ -268,7 +268,7 @@ namespace AnyRPG {
         public void HoldWeapons() {
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
-                    foreach (KeyValuePair<HoldableObject, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                         HoldObject(holdableObjectReference.Value, holdableObjectReference.Key, playerUnitObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
@@ -283,7 +283,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SheathObject(GameObject go, HoldableObject holdableObject, GameObject searchObject) {
+        public void SheathObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
             if (searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): searchObject is null");
                 return;
@@ -296,15 +296,15 @@ namespace AnyRPG {
             if (targetBone != null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
                 go.transform.parent = targetBone;
-                go.transform.localPosition = holdableObject.MySheathedPhysicalPosition;
-                go.transform.localEulerAngles = holdableObject.MySheathedPhysicalRotation;
+                go.transform.localPosition = holdableObject.MySheathedPosition;
+                go.transform.localEulerAngles = holdableObject.MySheathedRotation;
             } else {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
             }
 
         }
 
-        public void HoldObject(GameObject go, HoldableObject holdableObject, GameObject searchObject) {
+        public void HoldObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
             //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
             if (holdableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
@@ -314,8 +314,8 @@ namespace AnyRPG {
             if (targetBone != null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyPhysicalRotation);
                 go.transform.parent = targetBone;
-                go.transform.localPosition = holdableObject.MyPhysicalPosition;
-                go.transform.localEulerAngles = holdableObject.MyPhysicalRotation;
+                go.transform.localPosition = holdableObject.MyPosition;
+                go.transform.localEulerAngles = holdableObject.MyRotation;
             }
         }
 
@@ -450,7 +450,7 @@ namespace AnyRPG {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
                 if (currentEquipmentPhysicalObjects.ContainsKey(equipmentSlot)) {
                     // LOOP THOUGH THEM INSTEAD
-                    foreach (KeyValuePair<HoldableObject, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
+                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                         GameObject destroyObject = holdableObjectReference.Value;
                         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
                         Destroy(destroyObject);

@@ -780,11 +780,11 @@ namespace AnyRPG {
             abilityHitDelayCoroutine = null;
         }
 
-        public void BeginDestroyAbilityEffectObject(GameObject abilityEffectObject, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
-            destroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObject, source, target, timer, abilityEffectInput, fixedLengthEffect));
+        public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
+            destroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
         }
 
-        public IEnumerator DestroyAbilityEffectObject(GameObject abilityEffectObject, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
+        public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
             //Debug.Log("FixedLengthEffect.DestroyAbilityEffectObject(" + timer + ")");
             float timeRemaining = timer;
 
@@ -820,7 +820,10 @@ namespace AnyRPG {
             }
             //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
-            Destroy(abilityEffectObject, fixedLengthEffect.MyPrefabDestroyDelay);
+            foreach (GameObject go in abilityEffectObjects.Values) {
+                Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
+            }
+            abilityEffectObjects.Clear();
 
             destroyAbilityEffectObjectCoroutine = null;
         }

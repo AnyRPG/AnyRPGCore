@@ -57,10 +57,10 @@ namespace AnyRPG {
                 }
                 if (castList.Count > 0) {
                     //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
-                    List<GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
-                    foreach (GameObject tmpObject in rawObjectList) {
+                    Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
+                    foreach (KeyValuePair<PrefabProfile, GameObject> tmpObject in rawObjectList) {
                         //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): LOOPING THROUGH RAW OBJECT LIST ");
-                        CharacterUnit _characterUnit = tmpObject.GetComponent<CharacterUnit>();
+                        CharacterUnit _characterUnit = tmpObject.Value.GetComponent<CharacterUnit>();
                         if (_characterUnit != null) {
                             //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING PET TO UNIT LIST");
                             petUnits.Add(_characterUnit);

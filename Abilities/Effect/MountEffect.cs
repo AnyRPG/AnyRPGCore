@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
 
             // we could skip this and just let the player fall through gravity
-            PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = abilityEffectObject.transform.position;
+            PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
             DeActivateMountedState();
             base.CancelEffect(targetCharacter);
         }
@@ -27,38 +28,38 @@ namespace AnyRPG {
         }
         */
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
                 return null;
             }
-            string originalPrefabSourceBone = prefabSourceBone;
-            Vector3 originalPrefabOffset = prefabOffset;
-            prefabOffset = Vector3.zero;
-            prefabSourceBone = string.Empty;
-            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
-            prefabSourceBone = originalPrefabSourceBone;
-            prefabOffset = originalPrefabOffset;
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            PrefabProfile prefabProfile = returnObjects.Keys.ElementAt(0);
+            GameObject abilityEffectObject = returnObjects[prefabProfile];
+
+            string originalPrefabSourceBone = prefabProfile.MyTargetBone;
+            Vector3 originalPrefabOffset = prefabProfile.MyPosition;
             if (abilityEffectObject != null) {
                 // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                 abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
-                if (prefabSourceBone != null && prefabSourceBone != string.Empty) {
-                    Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(prefabSourceBone);
+                if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
+                    Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
                     if (mountPoint != null) {
                         PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
                         //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(prefabOffset);
+                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         ActivateMountedState();
                     }
                 }
             }
-            return returnObject;
+            return returnObjects;
         }
 
         public void DeActivateMountedState() {
             //Debug.Log("MountEffect.DeActivateMountedState()");
-            if (abilityEffectObject != null) {
-                PlayerUnitMovementController playerUnitMovementController = abilityEffectObject.GetComponent<PlayerUnitMovementController>();
+            if (prefabObjects != null) {
+                GameObject go = prefabObjects.Values.ElementAt(0);
+                PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
                 if (playerUnitMovementController != null) {
                     //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
 
@@ -83,9 +84,10 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState() {
-            if (abilityEffectObject != null) {
+            if (prefabObjects != null) {
                 ConfigureMountPhysics();
-                PlayerUnitMovementController playerUnitMovementController = abilityEffectObject.GetComponent<PlayerUnitMovementController>();
+                GameObject go = prefabObjects.Values.ElementAt(0);
+                PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
                 if (playerUnitMovementController != null) {
 
                     //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
@@ -106,11 +108,11 @@ namespace AnyRPG {
                     ConfigureCharacterMountedPhysics();
 
                     // initialize the mount animator
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = abilityEffectObject.GetComponent<AnimatedUnit>();
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = go.GetComponent<AnimatedUnit>();
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestrateStartup();
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
-                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(abilityEffectObject.transform);
+                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(go.transform);
                 }
             }
         }
@@ -151,14 +153,15 @@ namespace AnyRPG {
 
         public void ConfigureMountPhysics() {
             //Debug.Log("MountEffect.ConfigureMountPhysics()");
-            Collider anyCollider = abilityEffectObject.GetComponent<Collider>();
+            GameObject go = prefabObjects.Values.ElementAt(0);
+            Collider anyCollider = go.GetComponent<Collider>();
             if (anyCollider != null) {
                 //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring trigger");
                 anyCollider.isTrigger = false;
             } else {
                 //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
             }
-            Rigidbody mountRigidBody = abilityEffectObject.GetComponent<Rigidbody>();
+            Rigidbody mountRigidBody = go.GetComponent<Rigidbody>();
             if (mountRigidBody != null) {
                 //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring rigidbody");
                 mountRigidBody.isKinematic = false;
@@ -166,7 +169,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
             }
-            NavMeshAgent navMeshAgent = abilityEffectObject.GetComponent<NavMeshAgent>();
+            NavMeshAgent navMeshAgent = go.GetComponent<NavMeshAgent>();
             if (navMeshAgent != null) {
                 navMeshAgent.enabled = false;
             }

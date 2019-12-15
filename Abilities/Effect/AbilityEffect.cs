@@ -216,7 +216,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public virtual Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             /*
             if (abilityEffectInput != null) {
@@ -235,10 +235,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        protected List<GameObject> PerformAbilityEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects(): effectOutput.healthAmount: " + effectOutput.healthAmount);
-            List<GameObject> returnList = new List<GameObject>();
+            Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
                 if (abilityEffect != null) {
@@ -249,10 +249,12 @@ namespace AnyRPG {
                         if (!(abilityEffect is AmountEffect)) {
                             effectOutput.spellDamageMultiplier = 1f;
                         }
-                        GameObject tmpObject = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
-                        if (tmpObject != null) {
+                        Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                        if (tmpObjects != null) {
                             //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
-                            returnList.Add(tmpObject);
+                            foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in tmpObjects) {
+                                returnList[tmpPair.Key] = tmpPair.Value;
+                            }
                         }
                     }
                 }
@@ -260,9 +262,9 @@ namespace AnyRPG {
             return returnList;
         }
 
-        protected GameObject PerformAbilityEffect(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
             //Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
-            GameObject returnObject = null;
+            Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
             GameObject finalTarget = abilityEffect.ReturnTarget(source, target);
             //Debug.Log("FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
@@ -270,11 +272,11 @@ namespace AnyRPG {
             if (abilityEffect.CanUseOn(finalTarget, source)) {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
-                returnObject = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
+                returnObjects = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
             } else {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
             }
-            return returnObject;
+            return returnObjects;
         }
 
         public virtual void PerformAbilityHitEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {

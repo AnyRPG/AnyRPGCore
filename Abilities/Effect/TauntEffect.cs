@@ -28,13 +28,13 @@ namespace AnyRPG {
         }
         */
 
-        public override GameObject Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
                 //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CANNOT USE RETURNING");
                 return null;
             }
-            GameObject returnObject = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             // make ourselves the top threat in his threat table
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null) {
@@ -57,7 +57,7 @@ namespace AnyRPG {
 
             // override aggro checks
 
-            return returnObject;
+            return returnObjects;
         }
 
 
