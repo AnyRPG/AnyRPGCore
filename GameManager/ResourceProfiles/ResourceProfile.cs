@@ -4,11 +4,13 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Describable Resource", menuName = "AnyRPG/Describable Resource")]
-    public abstract class DescribableResource : ScriptableObject, IDescribable {
+    [CreateAssetMenu(fileName = "New Resource Profile", menuName = "AnyRPG/ResourceProfile")]
+    public abstract class ResourceProfile : ScriptableObject, IDescribable {
 
         [SerializeField]
         protected string resourceName;
+
+        //protected string displayName = string.Empty;
 
         [SerializeField]
         protected Sprite icon;
@@ -18,6 +20,7 @@ namespace AnyRPG {
         protected string description;
 
         public Sprite MyIcon { get => icon; set => icon = value; }
+        //public string MyName { get => displayName; set => displayName = value; }
         public string MyName { get => resourceName; set => resourceName = value; }
         public string MyDescription { get => description; set => description = value; }
 
@@ -30,7 +33,11 @@ namespace AnyRPG {
         }
 
         public virtual void SetupScriptableObjects() {
-            // overwrite me
+            /*
+            if (displayName == null || displayName == string.Empty) {
+                displayName = resourceName;
+            }
+            */
         }
 
 

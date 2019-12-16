@@ -80,7 +80,7 @@ namespace AnyRPG {
                 GameObject go = Instantiate(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
-                qs.SetQuestName(quest.MyName);
+                qs.SetQuest(quest);
                 questScripts.Add(qs);
                 if (firstAvailableQuest == null) {
                     firstAvailableQuest = qs;

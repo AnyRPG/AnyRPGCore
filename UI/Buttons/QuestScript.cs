@@ -10,7 +10,7 @@ namespace AnyRPG {
     /// </summary>
     public class QuestScript : HighlightButton {
 
-        private string questName;
+        //private string questName;
 
         private Quest quest = null;
 
@@ -18,10 +18,10 @@ namespace AnyRPG {
 
         public Quest MyQuest { get => quest; }
 
-        public void SetQuestName(string questName) {
-            if (questName != null && questName != string.Empty) {
-                this.questName = questName;
-                MyText.text = questName;
+        public void SetQuest(Quest newQuest) {
+            if (newQuest != null) {
+                quest = newQuest;
+                MyText.text = quest.MyName;
                 IsComplete();
             }
         }
