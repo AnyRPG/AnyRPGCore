@@ -35,9 +35,16 @@ namespace AnyRPG {
         [SerializeField]
         protected bool animatorCreatePrefabs;
 
+        [SerializeField]
+        protected string animationProfileName = string.Empty;
+
+        protected AnimationProfile animationProfile;
+
+        /*
         // will randomly rotate through these
         [SerializeField]
         protected List<AnimationClip> animationClips = new List<AnimationClip>();
+        */
 
         [SerializeField]
         protected string animationHitAudioProfileName;
@@ -49,9 +56,11 @@ namespace AnyRPG {
         protected AudioClip animationHitAudioClip;
         */
 
+        /*
         // on hit animation
         [SerializeField]
         protected AnimationClip castingAnimationClip = null;
+        */
 
         [SerializeField]
         protected string castingAudioProfileName;
@@ -64,7 +73,7 @@ namespace AnyRPG {
         */
 
         //public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
-        public AnimationClip MyCastingAnimationClip { get => castingAnimationClip; set => castingAnimationClip = value; }
+        public AnimationClip MyCastingAnimationClip { get => (animationProfile != null && animationProfile.MyAnimationClips != null && animationProfile.MyAnimationClips.Count > 0 ? animationProfile.MyAnimationClips[0] : null); }
 
         [SerializeField]
         protected int requiredLevel = 1;
@@ -94,14 +103,17 @@ namespace AnyRPG {
         [SerializeField]
         protected float abilityCastingTime = 0f;
 
+        /*
         // a prefab to spawn while casting
         [SerializeField]
         protected GameObject abilityCastingPrefab;
+        */
 
         // delay to destroy prefab after casting completes
         [SerializeField]
         protected float prefabDestroyDelay = 0f;
 
+        /*
         [SerializeField]
         protected Vector3 prefabOffset = Vector3.zero;
 
@@ -109,6 +121,7 @@ namespace AnyRPG {
         protected Vector3 prefabRotation = Vector3.zero;
 
         protected GameObject abilityCastingPrefabRef;
+        */
 
         [SerializeField]
         private bool requiresGroundTarget = false;
@@ -170,8 +183,8 @@ namespace AnyRPG {
                 if (useAnimationCastTime == false) {
                     return abilityCastingTime;
                 } else {
-                    if (castingAnimationClip != null) {
-                        return castingAnimationClip.length;
+                    if (MyCastingAnimationClip != null) {
+                        return MyCastingAnimationClip.length;
                     }
                     return abilityCastingTime;
                 }
@@ -191,7 +204,7 @@ namespace AnyRPG {
         public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
         public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
+        public List<AnimationClip> MyAnimationClips { get => (animationProfile != null ? animationProfile.MyAnimationClips : null); }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
@@ -446,14 +459,14 @@ namespace AnyRPG {
         public virtual void StartCasting(BaseCharacter source) {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
             //Debug.Log("setting casting animation");
-            if (castingAnimationClip != null) {
-                source.MyAnimatedUnit.MyCharacterAnimator.HandleCastingAbility(castingAnimationClip, this);
+            if (MyCastingAnimationClip != null) {
+                source.MyAnimatedUnit.MyCharacterAnimator.HandleCastingAbility(MyCastingAnimationClip, this);
             }
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
             // NEXT LINE NO LONGER NEEDED SINCE WE NOW ACTUALLY CHECK THE REAL DISTANCE MOVED BY THE CHARACTER AND DON'T CANCEL CAST UNTIL DISTANCE IS > 0.1F
             //source.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
-
+            /*
             if (abilityCastingPrefab != null) {
                 if (abilityCastingPrefabRef == null) {
                     //Vector3 relativePrefabOffset = source.MyCharacterUnit.transform.TransformPoint(prefabOffset);
@@ -464,7 +477,8 @@ namespace AnyRPG {
                     abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
                 }
             }
-            source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
+            */
+            //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
         public virtual void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target) {
@@ -472,9 +486,10 @@ namespace AnyRPG {
             // overwrite me
         }
 
+        /*
         public virtual void HandleCastStop(BaseCharacter source) {
             //Debug.Log("BaseAbility.OnCastComplete()");
-            Destroy(abilityCastingPrefabRef, prefabDestroyDelay);
+            //Destroy(abilityCastingPrefabRef, prefabDestroyDelay);
 
             // this may lead to bugs, not sure...
             // taking out for now, seems to be messing with attacks?
@@ -482,6 +497,7 @@ namespace AnyRPG {
 
             source.MyCharacterAbilityManager.OnCastStop -= HandleCastStop;
         }
+        */
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -536,6 +552,16 @@ namespace AnyRPG {
                     animationHitAudioProfile = audioProfile;
                 } else {
                     Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + animationHitAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            animationProfile = null;
+            if (animationProfileName != null && animationProfileName != string.Empty) {
+                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.MyInstance.GetResource(animationProfileName);
+                if (tmpAnimationProfile != null) {
+                    animationProfile = tmpAnimationProfile;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 

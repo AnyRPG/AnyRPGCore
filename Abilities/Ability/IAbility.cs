@@ -22,7 +22,7 @@ namespace AnyRPG {
         bool MyCanCastOnSelf { get; }
         bool MyCanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
-        AnimationClip MyCastingAnimationClip { get; set; }
+        AnimationClip MyCastingAnimationClip { get; }
         List<PrefabProfile> MyHoldableObjects { get; set; }
         AudioClip MyCastingAudioClip { get; }
         bool MyAnimatorCreatePrefabs { get; set; }
@@ -37,7 +37,7 @@ namespace AnyRPG {
         bool Use();
         void StartCasting(BaseCharacter source);
         void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target);
-        void HandleCastStop(BaseCharacter source);
+        //void HandleCastStop(BaseCharacter source);
 
     }
 }

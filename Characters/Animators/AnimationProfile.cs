@@ -15,7 +15,8 @@ namespace AnyRPG {
         private bool suppressAdjustAnimatorSpeed = false;
 
         [SerializeField]
-        private AnimationProfileNode[] animationProfileNodes;
+        private List<AnimationClip> animationClips = new List<AnimationClip>();
+
         [SerializeField]
         private AnimationClip[] takeDamageClips;
         [SerializeField]
@@ -118,7 +119,7 @@ namespace AnyRPG {
         private AnimationClip levitatedClip;
 
         //public string MyProfileName { get => profileName; set => profileName = value; }
-        public AnimationProfileNode[] MyProfileNodes { get => animationProfileNodes; set => animationProfileNodes = value; }
+        public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
         public AnimationClip[] MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
         public AnimationClip MyJumpClip { get => jumpClip; set => jumpClip = value; }
         public AnimationClip MyFallClip { get => fallClip; set => fallClip = value; }

@@ -24,7 +24,7 @@ namespace AnyRPG {
         public override bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
             if (base.Cast(sourceCharacter, target, groundTarget)) {
-                if (animationClips.Count > 0) {
+                if (MyAnimationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
                     // this type of ability is allowed to interrupt other types of animations, so clear them all
@@ -46,16 +46,16 @@ namespace AnyRPG {
                         targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;
                     }
 
-                    int attackIndex = UnityEngine.Random.Range(0, animationClips.Count);
-                    if (animationClips[attackIndex] != null) {
+                    int attackIndex = UnityEngine.Random.Range(0, MyAnimationClips.Count);
+                    if (MyAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(animationClips[attackIndex], this, targetBaseCharacter);
+                        sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
 
                         // unblock 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (!isAutoAttack) {
                             //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
-                            ProcessGCDManual(sourceCharacter, animationClips[attackIndex].length);
+                            ProcessGCDManual(sourceCharacter, MyAnimationClips[attackIndex].length);
                         }
                     }
 
