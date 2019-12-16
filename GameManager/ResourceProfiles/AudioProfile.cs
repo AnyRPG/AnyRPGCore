@@ -7,9 +7,9 @@ using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Music Profile", menuName = "AnyRPG/MusicProfile")]
+    [CreateAssetMenu(fileName = "New Audio Profile", menuName = "AnyRPG/AudioProfile")]
     [System.Serializable]
-    public class MusicProfile : DescribableResource {
+    public class AudioProfile : DescribableResource {
 
         [SerializeField]
         private string artistName;

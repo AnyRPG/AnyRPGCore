@@ -50,13 +50,13 @@ namespace AnyRPG {
         private GameObject learnedArea;
 
         //private List<GameObject> Skills = new List<GameObject>();
-        private List<MusicProfile> musicProfileList = new List<MusicProfile>();
+        private List<AudioProfile> musicProfileList = new List<AudioProfile>();
 
         private List<MusicPlayerHighlightButton> musicPlayerHighlightButtons = new List<MusicPlayerHighlightButton>();
 
         private MusicPlayerHighlightButton selectedMusicPlayerHighlightButton;
 
-        private MusicProfile currentMusicProfile = null;
+        private AudioProfile currentMusicProfile = null;
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
@@ -85,7 +85,7 @@ namespace AnyRPG {
 
             MusicPlayerHighlightButton firstAvailableMusicProfile = null;
 
-            foreach (MusicProfile musicProfile in musicPlayer.MyMusicProfileList) {
+            foreach (AudioProfile musicProfile in musicPlayer.MyMusicProfileList) {
                 GameObject go = Instantiate(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.MyText.text = musicProfile.MyName;
@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         // Enable or disable learn and unlearn buttons based on what is selected
-        private void UpdateButtons(MusicProfile musicProfile) {
+        private void UpdateButtons(AudioProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
             /*
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(musicProfileName)) {
@@ -145,7 +145,7 @@ namespace AnyRPG {
             */
         }
 
-        public void ShowDescription(MusicProfile musicProfile) {
+        public void ShowDescription(AudioProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
             ClearDescription();
 

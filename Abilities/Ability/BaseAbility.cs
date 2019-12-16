@@ -40,14 +40,28 @@ namespace AnyRPG {
         protected List<AnimationClip> animationClips = new List<AnimationClip>();
 
         [SerializeField]
+        protected string animationHitAudioProfileName;
+
+        protected AudioProfile animationHitAudioProfile;
+
+        /*
+        [SerializeField]
         protected AudioClip animationHitAudioClip;
+        */
 
         // on hit animation
         [SerializeField]
         protected AnimationClip castingAnimationClip = null;
 
         [SerializeField]
+        protected string castingAudioProfileName;
+
+        protected AudioProfile castingAudioProfile;
+
+        /*
+        [SerializeField]
         protected AudioClip castingAudioClip;
+        */
 
         //public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
         public AnimationClip MyCastingAnimationClip { get => castingAnimationClip; set => castingAnimationClip = value; }
@@ -173,8 +187,8 @@ namespace AnyRPG {
         public bool MyCanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
-        public AudioClip MyCastingAudioClip { get => castingAudioClip; set => castingAudioClip = value; }
-        public AudioClip MyAnimationHitAudioClip { get => animationHitAudioClip; set => animationHitAudioClip = value; }
+        public AudioClip MyCastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.MyAudioClip); }
+        public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
         public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
@@ -184,43 +198,6 @@ namespace AnyRPG {
         public bool MyRequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            abilityEffects = new List<AbilityEffect>();
-            if (MyAbilityEffectNames != null) {
-                foreach (string abilityEffectName in MyAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
-                    if (abilityEffect != null) {
-                        abilityEffects.Add(abilityEffect);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-            holdableObjects = new List<PrefabProfile>();
-            if (holdableObjectNames != null) {
-                foreach (string holdableObjectName in holdableObjectNames) {
-                    PrefabProfile holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
-                    if (holdableObject != null) {
-                        holdableObjects.Add(holdableObject);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-            weaponAffinityList = new List<WeaponSkill>();
-            if (weaponAffinityNames != null) {
-                foreach (string weaponAffinityName in weaponAffinityNames) {
-                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponAffinityName);
-                    if (tmpWeaponSkill != null) {
-                        weaponAffinityList.Add(tmpWeaponSkill);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon skill: " + weaponAffinityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-        }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -504,6 +481,64 @@ namespace AnyRPG {
             //source.MyCharacterCombat.SetWaitingForHits(false);
 
             source.MyCharacterAbilityManager.OnCastStop -= HandleCastStop;
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            abilityEffects = new List<AbilityEffect>();
+            if (MyAbilityEffectNames != null) {
+                foreach (string abilityEffectName in MyAbilityEffectNames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        abilityEffects.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+            holdableObjects = new List<PrefabProfile>();
+            if (holdableObjectNames != null) {
+                foreach (string holdableObjectName in holdableObjectNames) {
+                    PrefabProfile holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
+                    if (holdableObject != null) {
+                        holdableObjects.Add(holdableObject);
+                    } else {
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+            weaponAffinityList = new List<WeaponSkill>();
+            if (weaponAffinityNames != null) {
+                foreach (string weaponAffinityName in weaponAffinityNames) {
+                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponAffinityName);
+                    if (tmpWeaponSkill != null) {
+                        weaponAffinityList.Add(tmpWeaponSkill);
+                    } else {
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find weapon skill: " + weaponAffinityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            castingAudioProfile = null;
+            if (castingAudioProfileName != null && castingAudioProfileName != string.Empty) {
+                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(castingAudioProfileName);
+                if (audioProfile != null) {
+                    castingAudioProfile = audioProfile;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + castingAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            animationHitAudioProfile = null;
+            if (animationHitAudioProfileName != null && animationHitAudioProfileName != string.Empty) {
+                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(animationHitAudioProfileName);
+                if (audioProfile != null) {
+                    animationHitAudioProfile = audioProfile;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + animationHitAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
         }
 
     }

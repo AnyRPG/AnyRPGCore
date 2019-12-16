@@ -51,7 +51,14 @@ namespace AnyRPG {
         private float materialChangeDuration = 2f;
 
         [SerializeField]
+        protected string onHitAudioProfileName;
+
+        protected AudioProfile onHitAudioProfile;
+
+        /*
+        [SerializeField]
         protected AudioClip OnHitAudioClip;
+        */
 
         // any abilities to cast immediately on hit
         [SerializeField]
@@ -88,6 +95,7 @@ namespace AnyRPG {
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public BaseCharacter MySourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float MyThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
+        public AudioClip MyOnHitAudioClip { get => (onHitAudioProfile == null ? null : onHitAudioProfile.MyAudioClip ); }
 
         public virtual void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
@@ -287,10 +295,10 @@ namespace AnyRPG {
         public virtual void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityHitEffects(source, target, abilityEffectInput);
-            if (OnHitAudioClip != null) {
+            if (MyOnHitAudioClip != null) {
                 AudioSource audioSource = target.GetComponent<AudioSource>();
                 if (audioSource != null) {
-                    audioSource.PlayOneShot(OnHitAudioClip);
+                    audioSource.PlayOneShot(MyOnHitAudioClip);
                 }
                 //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
             }
@@ -349,6 +357,17 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            onHitAudioProfile = null;
+            if (onHitAudioProfileName != null && onHitAudioProfileName != string.Empty) {
+                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(onHitAudioProfileName);
+                if (audioProfile != null) {
+                    onHitAudioProfile = audioProfile;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + onHitAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
         }
 
 

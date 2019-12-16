@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UMA;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Prefab Profile", menuName = "AnyRPG/Prefab Profile")]
+    [CreateAssetMenu(fileName = "New Prefab Profile", menuName = "AnyRPG/PrefabProfile")]
     public class PrefabProfile : DescribableResource {
 
         /// <summary>

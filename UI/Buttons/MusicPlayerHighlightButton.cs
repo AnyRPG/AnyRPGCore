@@ -9,11 +9,11 @@ namespace AnyRPG {
 
     public class MusicPlayerHighlightButton : HighlightButton {
 
-        private MusicProfile musicProfile;
+        private AudioProfile musicProfile;
 
-        public MusicProfile MyMusicProfile { get => musicProfile; }
+        public AudioProfile MyMusicProfile { get => musicProfile; }
 
-        public void SetMusicProfile(MusicProfile newMusicProfile) {
+        public void SetMusicProfile(AudioProfile newMusicProfile) {
             if (newMusicProfile != null) {
                 musicProfile = newMusicProfile;
             }

@@ -13,14 +13,14 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
-        private List<MusicProfile> musicProfileList = new List<MusicProfile>();
+        private List<AudioProfile> musicProfileList = new List<AudioProfile>();
 
         /*
         [SerializeField]
         private CharacterUnit characterUnit;
         */
 
-        public List<MusicProfile> MyMusicProfileList { get => musicProfileList; set => musicProfileList = value; }
+        public List<AudioProfile> MyMusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
 
         protected override void Awake() {

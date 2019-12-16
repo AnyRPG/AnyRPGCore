@@ -24,7 +24,7 @@ namespace AnyRPG {
         //AnimationClip MyAnimationClip { get; set; }
         AnimationClip MyCastingAnimationClip { get; set; }
         List<PrefabProfile> MyHoldableObjects { get; set; }
-        AudioClip MyCastingAudioClip { get; set; }
+        AudioClip MyCastingAudioClip { get; }
         bool MyAnimatorCreatePrefabs { get; set; }
         bool MyRequireOutOfCombat { get; set; }
 

@@ -19,7 +19,7 @@ namespace AnyRPG {
         [SerializeField]
         private string phaseMusicProfileName;
 
-        private MusicProfile phaseMusicProfile;
+        private AudioProfile phaseMusicProfile;
 
         [SerializeField]
         private List<string> maintainBuffNames = new List<string>();
@@ -82,7 +82,7 @@ namespace AnyRPG {
 
             phaseMusicProfile = null;
             if (phaseMusicProfileName != null && phaseMusicProfileName != string.Empty) {
-                MusicProfile musicProfile = SystemMusicProfileManager.MyInstance.GetResource(phaseMusicProfileName);
+                AudioProfile musicProfile = SystemAudioProfileManager.MyInstance.GetResource(phaseMusicProfileName);
                 if (musicProfile != null) {
                     phaseMusicProfile = musicProfile;
                 } else {

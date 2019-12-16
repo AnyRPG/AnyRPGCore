@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemMusicProfileManager : SystemResourceManager {
+    public class SystemAudioProfileManager : SystemResourceManager {
 
         #region Singleton
-        private static SystemMusicProfileManager instance;
+        private static SystemAudioProfileManager instance;
 
-        public static SystemMusicProfileManager MyInstance {
+        public static SystemAudioProfileManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<SystemMusicProfileManager>();
+                    instance = FindObjectOfType<SystemAudioProfileManager>();
                 }
 
                 return instance;
@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
         #endregion
 
-        const string resourceClassName = "MusicProfile";
+        const string resourceClassName = "AudioProfile";
 
         protected override void Awake() {
             //Debug.Log(this.GetType().Name + ".Awake()");
@@ -29,31 +29,31 @@ namespace AnyRPG {
 
         public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
-            masterList.Add(Resources.LoadAll<MusicProfile>(resourceClassName));
+            masterList.Add(Resources.LoadAll<AudioProfile>(resourceClassName));
             if (SystemConfigurationManager.MyInstance != null) {
                 foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.MyLoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<MusicProfile>(loadResourcesFolder + "/" + resourceClassName));
+                    masterList.Add(Resources.LoadAll<AudioProfile>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }
             base.LoadResourceList();
         }
 
-        public MusicProfile GetResource(string resourceName) {
+        public AudioProfile GetResource(string resourceName) {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!RequestIsEmpty(resourceName)) {
                 string keyName = prepareStringForMatch(resourceName);
                 if (resourceList.ContainsKey(keyName)) {
-                    return (resourceList[keyName] as MusicProfile);
+                    return (resourceList[keyName] as AudioProfile);
                 }
             }
             return null;
         }
 
-        public List<MusicProfile> GetResourceList() {
-            List<MusicProfile> returnList = new List<MusicProfile>();
+        public List<AudioProfile> GetResourceList() {
+            List<AudioProfile> returnList = new List<AudioProfile>();
 
             foreach (UnityEngine.Object listItem in resourceList.Values) {
-                returnList.Add(listItem as MusicProfile);
+                returnList.Add(listItem as AudioProfile);
             }
             return returnList;
         }
