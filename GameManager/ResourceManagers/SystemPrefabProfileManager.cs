@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
         #endregion
 
-        const string resourceClassName = "HoldableObject";
+        const string resourceClassName = "PrefabProfile";
 
         protected override void Awake() {
             //Debug.Log(this.GetType().Name + ".Awake()");
