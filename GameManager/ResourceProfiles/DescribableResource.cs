@@ -30,7 +30,8 @@ namespace AnyRPG {
                     if (tmpResourceDescription.MyDescription != null && tmpResourceDescription.MyDescription != string.Empty) {
                         description = tmpResourceDescription.MyDescription;
                     }
-
+                } else {
+                    Debug.LogError("DescribableResource.SetupScriptableObjects(): COULD NOT FIND " + resourceDescriptionProfile + " while processing " + MyName + ". CHECK INSPECTOR!");
                 }
             }
         }
