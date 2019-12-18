@@ -13,9 +13,12 @@ namespace AnyRPG {
         protected string equipmentSlotType;
 
         private EquipmentSlotType realEquipmentSlotType;
-        
-        //public UMASlot UMASlotAffinity;
-        public UMA.UMATextRecipe UMARecipe = null;
+
+        [SerializeField]
+        private string umaRecipeProfileName = string.Empty;
+
+        [SerializeField]
+        private UMA.UMATextRecipe UMARecipe = null;
 
         // The next 5 fiels are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
         // However, this will likely not happen and these should probably just be moved to weapon.
@@ -191,6 +194,7 @@ namespace AnyRPG {
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+        public UMATextRecipe MyUMARecipe { get => UMARecipe; set => UMARecipe = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -313,6 +317,13 @@ namespace AnyRPG {
                     if (holdableObjectAttachment != null) {
                         holdableObjectAttachment.SetupScriptableObjects();
                     }
+                }
+            }
+
+            if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
+                UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
+                if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipe != null) {
+                    UMARecipe = umaRecipeProfile.MyUMARecipe;
                 }
             }
 
