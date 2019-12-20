@@ -10,6 +10,11 @@ namespace AnyRPG {
     public class UnitSpawnNode : MonoBehaviour {
 
         [SerializeField]
+        private List<string> unitProfileNames = new List<string>();
+
+        private List<UnitProfile> unitProfiles = new List<UnitProfile>();
+
+        [SerializeField]
         private List<GameObject> spawnPrefabs = new List<GameObject>();
 
         [SerializeField]
@@ -218,12 +223,14 @@ namespace AnyRPG {
 
         public void Spawn() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): GetMaxUnits(): " + GetMaxUnits());
-            if (spawnPrefabs.Count == 0) {
+            if (unitProfiles.Count == 0) {
                 return;
             }
             if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
-                int spawnIndex = UnityEngine.Random.Range(0, spawnPrefabs.Count - 1);
-                CommonSpawn(unitLevel, extraLevels, dynamicLevel, spawnPrefabs[spawnIndex]);
+                int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count - 1);
+                if (unitProfiles[spawnIndex].MyUnitPrefab != null) {
+                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].MyUnitPrefab);
+                }
             }
         }
 
@@ -265,7 +272,7 @@ namespace AnyRPG {
             if (suppressAutoSpawn) {
                 return;
             }
-            if (spawnPrefabs.Count == 0) {
+            if (unitProfiles.Count == 0) {
                 return;
             }
             // this method is necessary to ensure that the main spawn count cycle is followed and the delay does not get directly added to the restart time
@@ -349,6 +356,19 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            unitProfiles = new List<UnitProfile>();
+            if (unitProfileNames != null) {
+                foreach (string unitProfileName in unitProfileNames) {
+                    if (unitProfileName != null && unitProfileName != string.Empty) {
+                        UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                        if (unitProfile != null) {
+                            unitProfiles.Add(unitProfile);
+                        }
+                    }
+                }
+            }
+
         }
 
 

@@ -74,19 +74,21 @@ namespace AnyRPG {
 
             //pathstatus: " + animatedUnit.MyAgent.pathStatus
             if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
-                Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS INVALID, GETTING NEW DESTINATION");
+                // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
+                //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS INVALID, GETTING NEW DESTINATION");
                 getNewDestination = true;
             }
 
             if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
-                Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS PARTIAL, GETTING NEW DESTINATION");
+                // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
+                //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS PARTIAL, GETTING NEW DESTINATION");
                 getNewDestination = true;
             }
 
             if (getNewDestination == true) {
                 Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(true);
                 if (tmpDestination == Vector3.zero) {
-                    Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
+                    //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
                     return;
                 }
                 // destination is safe, set it
