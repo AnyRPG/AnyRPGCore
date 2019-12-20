@@ -17,6 +17,9 @@ namespace AnyRPG {
         private Sprite interactableIcon;
 
         [SerializeField]
+        private string prefabProfileName;
+
+        [SerializeField]
         private GameObject spawnPrefab;
 
         [SerializeField]
@@ -797,6 +800,12 @@ namespace AnyRPG {
                     if (interactable != null) {
                         interactable.SetupScriptableObjects();
                     }
+                }
+            }
+            if (prefabProfileName != null && prefabProfileName != string.Empty) {
+                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
+                if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
+                    spawnPrefab = tmpPrefabProfile.MyPrefab;
                 }
             }
         }
