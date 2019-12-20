@@ -610,6 +610,11 @@ namespace AnyRPG {
                 Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT CURRENCY GROUP SET.  CHECK INSPECTOR");
                 return;
             }
+            
+            if (defaultAttackAnimationProfile == null) {
+                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT ATTACK ANIMATION PROFILE SET.  CHECK INSPECTOR");
+                return;
+            }
         }
 
     }

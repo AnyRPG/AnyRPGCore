@@ -256,7 +256,10 @@ namespace AnyRPG {
                 //Debug.Log("Found clip from overrideController: " + animationClip.name);
                 overrideControllerClipList.Add(animationClip.name);
             }
-
+            if (currentAttackAnimationProfile == null) {
+                // can't do anything since we don't have any clips
+                return;
+            }
             if (currentAttackAnimationProfile.MyMoveForwardClip != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): WalkForward is not null.");
                 if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultMoveForwardClip)) {
