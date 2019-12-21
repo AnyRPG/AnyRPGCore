@@ -80,7 +80,7 @@ namespace AnyRPG {
 
         private bool showAllQuests = false;
 
-        private string currentQuestName;
+        //private string currentQuestName;
 
         private Quest currentQuest = null;
 
@@ -268,7 +268,8 @@ namespace AnyRPG {
                 return;
             }
 
-            currentQuestName = quest.MyName;
+            //currentQuestName = quest.MyName;
+            currentQuest = quest;
 
             if (quest.MyHasOpeningDialog == true) {
                 if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
@@ -352,7 +353,7 @@ namespace AnyRPG {
 
         public void AcceptQuest() {
             //Debug.Log("QuestGiverUI.AcceptQuest()");
-            if (currentQuestName != null && currentQuestName != string.Empty) {
+            if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
 

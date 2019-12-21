@@ -300,8 +300,12 @@ namespace AnyRPG {
             anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
             anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
-            anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFaction.MyName;
-            anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName;
+            if (PlayerManager.MyInstance.MyCharacter.MyFaction != null) {
+                anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFaction.MyName;
+            }
+            if (PlayerManager.MyInstance.MyCharacter.MyCharacterClass != null) {
+                anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName;
+            }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
             anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana;

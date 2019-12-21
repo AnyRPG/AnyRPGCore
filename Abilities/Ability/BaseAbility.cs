@@ -222,9 +222,9 @@ namespace AnyRPG {
                 affinityMet = true;
 
             } else {
-                List<WeaponSkill> requireWeaponSkills = new List<WeaponSkill>();
+                List<string> requireWeaponSkills = new List<string>();
                 foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
-                    requireWeaponSkills.Add(_weaponAffinity);
+                    requireWeaponSkills.Add(_weaponAffinity.MyName);
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
