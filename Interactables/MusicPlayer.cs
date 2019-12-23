@@ -13,6 +13,9 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
+        private List<string> musicProfileNames = new List<string>();
+
+        [SerializeField]
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();
 
         /*
@@ -88,6 +91,21 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            musicProfileList = new List<AudioProfile>();
+            if (musicProfileNames != null) {
+                foreach (string musicProfileName in musicProfileNames) {
+                    AudioProfile tmpMusicProfile = SystemAudioProfileManager.MyInstance.GetResource(musicProfileName);
+                    if (tmpMusicProfile != null) {
+                        musicProfileList.Add(tmpMusicProfile);
+                    } else {
+                        Debug.LogError(gameObject.name + "UnitSpawnControllerInteractable.SetupScriptableObjects(): COULD NOT FIND AUDIO PROFILE: " + musicProfileName + " while initializing " + gameObject.name);
+                    }
+                }
+            }
         }
     }
 
