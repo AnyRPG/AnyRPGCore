@@ -30,6 +30,12 @@ namespace AnyRPG {
         [SerializeField]
         private BaseAbility ability;
 
+        /// <summary>
+        /// The ability to cast in order to mine this node
+        /// </summary>
+        [SerializeField]
+        private string abilityName;
+
         public BaseAbility MyAbility { get => ability; }
 
         public override bool Interact(CharacterUnit source) {
@@ -64,6 +70,18 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (abilityName != null && abilityName != string.Empty) {
+                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                if (baseAbility != null) {
+                    ability = baseAbility;
+                } else {
+                    Debug.LogError(gameObject.name + ".PortalInteractable.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing " + gameObject.name);
+                }
+            }
         }
 
     }
