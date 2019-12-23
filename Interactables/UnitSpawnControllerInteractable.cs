@@ -14,6 +14,9 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
+        private List<string> unitProfileNames = new List<string>();
+
+        [SerializeField]
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         [SerializeField]
@@ -117,6 +120,21 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            unitProfileList = new List<UnitProfile>();
+            if (unitProfileNames != null) {
+                foreach (string unitProfileName in unitProfileNames) {
+                    UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                    if (tmpUnitProfile != null) {
+                        unitProfileList.Add(tmpUnitProfile);
+                    } else {
+                        Debug.LogError(gameObject.name + "UnitSpawnControllerInteractable.SetupScriptableObjects(): COULD NOT FIND UNIT PROFILE: " + unitProfileName + " while initializing " + gameObject.name);
+                    }
+                }
+            }
         }
     }
 }
