@@ -790,7 +790,10 @@ namespace AnyRPG {
 
             CharacterStats targetStats = null;
             if (target != null) {
-                targetStats = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats;
+                CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
+                if (_characterUnit != null) {
+                    targetStats = _characterUnit.MyCharacter.MyCharacterStats;
+                }
             }
 
             int milliseconds = (int)((fixedLengthEffect.MyTickRate - (int)fixedLengthEffect.MyTickRate) * 1000);

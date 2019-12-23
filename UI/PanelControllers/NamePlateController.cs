@@ -331,7 +331,8 @@ namespace AnyRPG {
 
         private void SetFactionColor() {
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && !LevelManager.MyInstance.GetActiveSceneNode().MyIsCutScene) {
+            SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && activeSceneNode != null && !activeSceneNode.MyIsCutScene) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
