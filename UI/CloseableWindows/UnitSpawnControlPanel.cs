@@ -318,7 +318,7 @@ namespace AnyRPG {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
                 bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
                 GameObject spawnPrefab = MySelectedUnitSpawnButton.MyUnitProfile.MyUnitPrefab;
-                if (spawnPrefab != null) {
+                if (spawnPrefab != null && unitSpawnNode != null) {
                     unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, spawnPrefab, unitToughness);
                 }
             }
