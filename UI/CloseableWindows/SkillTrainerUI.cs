@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         private SkillTrainerSkillScript selectedSkillTrainerSkillScript;
 
-        private string currentSkillName = null;
+        //private string currentSkillName = null;
 
         private Skill currentSkill = null;
 
@@ -210,7 +210,7 @@ namespace AnyRPG {
 
         public void LearnSkill() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
-            if (currentSkillName != null && currentSkillName != string.Empty) {
+            if (currentSkill != null) {
                 //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
                 //UpdateButtons(MySelectedSkillTrainerSkillScript.MySkillName);

@@ -12,13 +12,16 @@ namespace AnyRPG {
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.MyNamePlateImage); }
 
-        [SerializeField]
-        private Skill[] skills;
+        //[SerializeField]
+        private List<Skill> skills = new List<Skill>();
 
         [SerializeField]
         private CharacterUnit characterUnit;
 
-        public Skill[] MySkills { get => skills; }
+        [SerializeField]
+        private List<string> skillNames = new List<string>();
+
+        public List<Skill> MySkills { get => skills; }
 
 
         protected override void Awake() {
@@ -113,6 +116,22 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (skillNames != null) {
+                skills = new List<Skill>();
+                foreach (string skillName in skillNames) {
+                    Skill tmpSkill = SystemSkillManager.MyInstance.GetResource(skillName);
+                    if (tmpSkill != null) {
+                        skills.Add(tmpSkill);
+                    } else {
+                        Debug.LogError(gameObject.name + ".SkillTrainer.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
         }
     }
 

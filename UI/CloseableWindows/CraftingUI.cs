@@ -74,7 +74,7 @@ namespace AnyRPG {
 
         private RecipeScript selectedRecipeScript;
 
-        private string currentRecipeName = null;
+        //private string currentRecipeName = null;
 
         private Recipe currentRecipe = null;
 
@@ -128,7 +128,7 @@ namespace AnyRPG {
                         firstScript = qs;
                     }
                     qs.MyText.text = recipe.MyOutput.MyName;
-                    qs.SetRecipeName(recipe.MyName);
+                    qs.SetRecipe(recipe);
                     recipeScripts.Add(qs);
                 } else {
                     //Debug.Log("Recipe Output is null!");

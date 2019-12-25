@@ -9,20 +9,20 @@ namespace AnyRPG {
 
     public class RecipeScript : HighlightButton {
 
-        private string recipeName;
+        //private string recipeName;
 
         private Recipe recipe;
 
         public Recipe MyRecipe { get => recipe; set => recipe = value; }
 
-        public void SetRecipeName(string recipeName) {
-            if (recipeName != null && recipeName != string.Empty) {
-                this.recipeName = recipeName;
-            }
+        public void SetRecipe(Recipe newRecipe) {
+            //if (recipeName != null && recipeName != string.Empty) {
+                recipe = newRecipe;
+            //}
         }
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipeName);
+            Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipe.MyName);
 
             base.Select();
             CraftingUI.MyInstance.MySelectedRecipeScript = this;

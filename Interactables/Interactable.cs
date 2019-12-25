@@ -795,6 +795,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
             if (interactables != null) {
                 foreach (IInteractable interactable in interactables) {
                     if (interactable != null) {
@@ -806,6 +807,8 @@ namespace AnyRPG {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
                     spawnPrefab = tmpPrefabProfile.MyPrefab;
+                } else {
+                    Debug.LogError(gameObject.name + ".Interactable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " WHILE INITIALIZING " + gameObject.name);
                 }
             }
         }
