@@ -17,7 +17,7 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.OnClassChange += HandleClassChange;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             base.CreateEventSubscriptions();
         }
@@ -30,9 +30,14 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.OnClassChange -= HandleClassChange;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             base.CleanupEventSubscriptions();
+        }
+
+        public override void HandleCharacterUnitSpawn() {
+            CreateComponentReferences();
+            base.HandleCharacterUnitSpawn();
         }
 
         public void HandleClassChange(CharacterClass newClass, CharacterClass oldClass) {
@@ -46,13 +51,7 @@ namespace AnyRPG {
                 Unequip(equipment);
             }
         }
-
-        public void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".EquipmentManager.OnPlayerUnitSpawn()");
-            CreateComponentReferences();
-            EquipCharacter();
-            SubscribeToCombatEvents();
-        }
+        
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("EquipmentManager.OnPlayerUnitDespawn()");

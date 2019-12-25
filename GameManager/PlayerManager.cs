@@ -432,7 +432,7 @@ namespace AnyRPG {
             UMAData umaData = avatar.umaData;
             umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;
             umaData.OnCharacterBeforeUpdated += OnCharacterBeforeUpdated;
-            umaData.OnCharacterCreated += OnCharacterCreated;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
             umaData.OnCharacterDnaUpdated += OnCharacterDnaUpdated;
             umaData.OnCharacterDestroyed += OnCharacterDestroyed;
             umaData.OnCharacterUpdated += OnCharacterUpdatedCallback;
@@ -444,7 +444,7 @@ namespace AnyRPG {
         public void OnCharacterBeforeUpdated(UMAData umaData) {
             //Debug.Log("PlayerManager.OnCharacterBeforeUpdated(): " + umaData);
         }
-        public void OnCharacterCreated(UMAData umaData) {
+        public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
             HandleUMACreated();
         }

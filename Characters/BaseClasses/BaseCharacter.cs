@@ -149,6 +149,10 @@ namespace AnyRPG {
 
             GetUnitProfile();
 
+            OrchestratorStartCommon();
+        }
+
+        public virtual void OrchestratorStartCommon() {
             GetComponentReferences();
             if (characterStats != null) {
                 characterStats.OrchestratorStart();
@@ -170,7 +174,6 @@ namespace AnyRPG {
             if (characterAbilityManager != null) {
                 characterAbilityManager.LearnDefaultAutoAttackAbility();
             }
-
         }
 
         protected virtual void Start() {

@@ -534,6 +534,14 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual void HandleCharacterUnitSpawn() {
+            //Debug.Log(gameObject.name + ".EquipmentManager.OnPlayerUnitSpawn()");
+            // handled differently in player, and already in ai
+            //CreateComponentReferences();
+            EquipCharacter();
+            SubscribeToCombatEvents();
+        }
+
         protected void SubscribeToCombatEvents() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (subscribedToCombatEvents) {

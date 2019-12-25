@@ -18,6 +18,33 @@ namespace AnyRPG {
             // NPC case
             if (dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
+                    SubscribeToUMACreate();
+                }
+            }
+        }
+
+        public void HandleCharacterCreated(UMAData umaData) {
+            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            UnsubscribeFromUMACreate();
+            HandleCharacterUnitSpawn();
+        }
+
+
+        public void SubscribeToUMACreate() {
+
+            // is this stuff necessary on ai characters?
+            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            dynamicCharacterAvatar.Initialize();
+            // is this stuff necessary end
+
+            UMAData umaData = dynamicCharacterAvatar.umaData;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
+        }
+
+        public void UnsubscribeFromUMACreate() {
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
             }
         }
 
@@ -29,6 +56,7 @@ namespace AnyRPG {
         public override void OnDisable() {
             base.OnDisable();
             UnSubscribeFromCombatEvents();
+            UnsubscribeFromUMACreate();
         }
 
     }
