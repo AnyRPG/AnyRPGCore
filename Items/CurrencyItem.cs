@@ -8,6 +8,12 @@ namespace AnyRPG {
     public class CurrencyItem : Item, IUseable {
 
         [SerializeField]
+        private string gainCurrencyName = string.Empty;
+
+        [SerializeField]
+        private int gainCurrencyAmount = 0;
+
+        [SerializeField]
         private CurrencyNode currencyNode;
 
         public CurrencyNode MyCurrencyNode { get => currencyNode; }
@@ -26,7 +32,25 @@ namespace AnyRPG {
         }
 
         public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", currencyNode.currency.MyName, currencyNode.MyAmount);
+            //Debug.Log(MyName + ".CurrencyItem.GetSummary();");
+            string tmpCurrencyName = string.Empty;
+            if (currencyNode.currency != null) {
+                tmpCurrencyName = currencyNode.currency.MyName;
+            }
+            return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.MyAmount);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (gainCurrencyName != null && gainCurrencyName != string.Empty) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(gainCurrencyName);
+                if (tmpCurrency != null) {
+                    currencyNode.currency = tmpCurrency;
+                    currencyNode.MyAmount = gainCurrencyAmount;
+                } else {
+                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
         }
 
     }
