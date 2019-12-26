@@ -76,6 +76,7 @@ namespace AnyRPG {
         }
 
         public void GetCombatStrategy() {
+            //Debug.Log(gameObject.name + ".AIController.GetCombatStategy()");
             string usedStrategyName = combatStrategyName;
             if (usedStrategyName == null || usedStrategyName == string.Empty) {
                 //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured");

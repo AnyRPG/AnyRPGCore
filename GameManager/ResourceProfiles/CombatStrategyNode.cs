@@ -75,7 +75,19 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         attackAbilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find attack ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            maintainBuffList = new List<BaseAbility>();
+            if (maintainBuffNames != null) {
+                foreach (string baseAbilityName in maintainBuffNames) {
+                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    if (baseAbility != null) {
+                        maintainBuffList.Add(baseAbility);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find buff ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
                     }
                 }
             }
