@@ -345,6 +345,7 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects() {
+            //Debug.Log(MyName + ".AbilityEffect.SetupscriptableObjects()");
             base.SetupScriptableObjects();
             hitAbilityEffectList = new List<AbilityEffect>();
             if (hitAbilityEffectNames != null) {

@@ -193,7 +193,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         tickAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -205,19 +205,22 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         completeAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
             prefabProfileList = new List<PrefabProfile>();
             if (prefabNames != null) {
+                if (prefabNames.Count > 0 && prefabSpawnLocation == PrefabSpawnLocation.None) {
+                    Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + MyName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");
+                }
                 foreach (string prefabName in prefabNames) {
                     PrefabProfile prefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabName);
                     if (prefabProfile != null) {
                         prefabProfileList.Add(prefabProfile);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }
                 }
             }
