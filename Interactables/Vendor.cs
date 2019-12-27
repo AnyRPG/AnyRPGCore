@@ -18,6 +18,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
+        [SerializeField]
+        private List<string> vendorCollectionNames = new List<string>();
+
         protected override void Start() {
             base.Start();
             interactionPanelTitle = "Purchase Items";
@@ -49,6 +52,25 @@ namespace AnyRPG {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (vendorCollectionNames != null && vendorCollectionNames.Count > 0) {
+                vendorCollections = new List<VendorCollection>();
+                foreach (string vendorCollectionName in vendorCollectionNames) {
+                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
+                    if (tmpVendorCollection != null) {
+                        vendorCollections.Add(tmpVendorCollection);
+                    } else {
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+        }
+
+
     }
 
 }

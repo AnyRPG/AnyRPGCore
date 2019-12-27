@@ -1,27 +1,42 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-[System.Serializable]
-public class FactionNode : IDescribable {
+    [System.Serializable]
+    public class FactionNode : IDescribable {
 
-    public Faction faction;
-    public string factionName;
-    public int reputationAmount;
+        public Faction faction;
 
-    public Sprite MyIcon { get => faction.MyIcon; }
+        [SerializeField]
+        private string factionName = string.Empty;
 
-    public string MyName { get => faction.MyName; }
+        public int reputationAmount;
 
-    public string GetDescription() {
-        return faction.GetDescription(); ;
+        public Sprite MyIcon { get => faction.MyIcon; }
+
+        public string MyName { get => faction.MyName; }
+
+        public string GetDescription() {
+            return faction.GetDescription(); ;
+        }
+
+        public string GetSummary() {
+            return faction.GetSummary();
+        }
+
+        public void SetupScriptableObjects() {
+            if (factionName != null && factionName != string.Empty) {
+                faction = null;
+                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                if (tmpFaction != null) {
+                    faction = tmpFaction;
+                } else {
+                    Debug.LogError("FactionNode.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing quest " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+        }
     }
-
-    public string GetSummary() {
-        return faction.GetSummary();
-    }
-}
 
 }

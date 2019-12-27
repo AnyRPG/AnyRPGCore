@@ -526,6 +526,12 @@ namespace AnyRPG {
                 }
             }
 
+            if (factionRewards != null && factionRewards.Count > 0) {
+                foreach (FactionNode factionNode in factionRewards) {
+                    factionNode.SetupScriptableObjects();
+                }
+            }
+
             openingDialog = null;
             if (hasOpeningDialog) {
                 Dialog dialog = SystemDialogManager.MyInstance.GetResource(MyName);
