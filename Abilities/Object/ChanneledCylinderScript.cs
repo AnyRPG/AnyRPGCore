@@ -62,6 +62,7 @@ namespace AnyRPG {
             if (MyStartObject == null || MyEndObject == null) {
                 // can't do anything without objects to connect
                 Destroy(gameObject);
+                return;
             }
             Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);
             Vector3 absoluteEndPosition = MyEndObject.transform.TransformPoint(MyEndPosition);
