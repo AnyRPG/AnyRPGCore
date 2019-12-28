@@ -49,6 +49,7 @@ namespace AnyRPG {
         private void Update() {
             if (MyStartObject == null || MyEndObject == null) {
                 Destroy(gameObject);
+                return;
             }
             UpdateTransform();
             if (objectInitialized == false || lastStartPosition != MyStartObject.transform.position || lastEndPosition != MyEndObject.transform.position) {
