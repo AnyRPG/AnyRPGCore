@@ -22,7 +22,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipe.MyName);
+            //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipe.MyName);
 
             base.Select();
             CraftingUI.MyInstance.MySelectedRecipeScript = this;

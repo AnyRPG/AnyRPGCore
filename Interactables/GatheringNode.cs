@@ -43,6 +43,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
+            Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
             if (lootTableNames == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
@@ -56,7 +57,7 @@ namespace AnyRPG {
             if (lootCount > 0) {
                 PickUp();
             } else {
-                source.GetComponent<CharacterUnit>().MyCharacter.MyCharacterAbilityManager.BeginAbility(MyAbility);
+                source.GetComponent<CharacterUnit>().MyCharacter.MyCharacterAbilityManager.BeginAbility(MyAbility, gameObject);
             }
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
