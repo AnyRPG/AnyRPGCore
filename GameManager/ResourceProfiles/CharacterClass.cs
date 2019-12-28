@@ -29,8 +29,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> traitNames = new List<string>();
 
-        [SerializeField]
-        private List<string> traitList = new List<string>();
+        //[SerializeField]
+        //private List<string> traitList = new List<string>();
 
         private List<AbilityEffect> realTraitList = new List<AbilityEffect>();
 
