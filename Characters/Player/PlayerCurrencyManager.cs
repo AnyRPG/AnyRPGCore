@@ -53,7 +53,7 @@ namespace AnyRPG {
             CurrencyNode newCurrencyNode = new CurrencyNode();
             string keyName = SystemResourceManager.prepareStringForMatch(currency.MyName);
             if (MyCurrencyList.ContainsKey(keyName)) {
-                if (CurrencyConverter.GetConvertedValue(currency, currencyAmount) < GetBaseCurrencyValue(currency) ) {
+                if (CurrencyConverter.GetConvertedValue(currency, currencyAmount) <= GetBaseCurrencyValue(currency) ) {
                     //if (currencyAmount < MyCurrencyList[keyName].MyAmount) {
                     newCurrencyNode = new CurrencyNode();
                     newCurrencyNode.currency = MyCurrencyList[keyName].currency;
