@@ -65,8 +65,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> itemRewardNames = new List<string>();
 
-        [SerializeField]
-        private List<string> itemRewardList = new List<string>();
+        //[SerializeField]
+        //private List<string> itemRewardList = new List<string>();
 
         private List<Item> realItemRewardList = new List<Item>();
 
@@ -82,8 +82,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> abilityRewardNames = new List<string>();
 
-        [SerializeField]
-        private List<string> abilityRewardList = new List<string>();
+        //[SerializeField]
+        //private List<string> abilityRewardList = new List<string>();
 
         private List<BaseAbility> realAbilityRewardList = new List<BaseAbility>();
 
