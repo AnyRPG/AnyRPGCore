@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(GameObject target, BaseCharacter source) {
-            //Debug.Log("DirectAbility.CanUseOn(" + (target ? target.name : "null") + ")");
+            //Debug.Log("DirectAbility.CanUseOn(" + (target != null ? target.name : "null") + ")");
             if (!base.CanUseOn(target, source)) {
                 return false;
             }

@@ -310,7 +310,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
-            //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (source != null ? source.name : "null") + ")");
+            //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
                 return abilityEffects[0].CanUseOn(target, sourceCharacter);
@@ -351,7 +351,7 @@ namespace AnyRPG {
                         return false;
                     }
                     if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
-                        //Debug.Log("This ability requires a dead target");
+                        Debug.Log("This ability requires a dead target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
@@ -363,14 +363,27 @@ namespace AnyRPG {
             }
 
             // correct match conditions.  if any of these are met, the target is already valid
-            if (!(canCastOnFriendly && targetIsFriendly || canCastOnEnemy && targetIsEnemy || canCastOnSelf && targetIsSelf)) {
+            if (!canCastOnSelf && targetIsSelf) {
+                return false;
+            }
+            if (!canCastOnEnemy && targetIsEnemy) {
+                return false;
+            }
+            if (!canCastOnFriendly && targetIsFriendly) {
                 return false;
             }
 
+            /*
+            if (!(canCastOnFriendly && targetIsFriendly)) {
+                Debug.Log("Friendly check failed");
+                return false;
+            }
+            */
+
             
             // range checks
-            if (target != null && targetCharacterUnit != null) {
-                if (canCastOnFriendly && targetIsFriendly || canCastOnEnemy && targetIsEnemy) {
+            if (target != null) {
+                if (!(canCastOnSelf && targetIsSelf)) {
                     // if none of those is true, then we are casting on ourselves, so don't need to do range check
                     if (MyUseMeleeRange) {
                         if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
@@ -388,6 +401,7 @@ namespace AnyRPG {
                 }
             }
 
+            Debug.Log(MyName + ": returning true");
             return true;
         }
 
@@ -433,18 +447,18 @@ namespace AnyRPG {
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
         public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
-            //Debug.Log("BaseAbility.ReturnTarget()");
+            Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 
             if (sourceCharacter == null || sourceCharacter.MyCharacterUnit == null) {
-                //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
+                Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
                 return null;
             }
 
             // perform ability dependent checks
             if (!CanUseOn(target, sourceCharacter) == true) {
-                //Debug.Log("ability.CanUseOn(" + ability.MyName + ", " + (target != null ? target.name : "null") + " was false.  exiting");
+                Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false.  exiting");
                 if (canCastOnSelf && autoSelfCast) {
                     target = sourceCharacter.MyCharacterUnit.gameObject;
                     return target;
