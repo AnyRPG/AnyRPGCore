@@ -159,6 +159,9 @@ namespace AnyRPG {
 
         //Put any code in here you want to run AFTER the state's update function.  This is run regardless of what state you're in.
         protected override void LateGlobalStateUpdate() {
+            if (characterUnit == null) {
+                return;
+            }
 
             //Move the player by our velocity every frame.
             // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
@@ -256,6 +259,11 @@ namespace AnyRPG {
         //Run every frame we are in the idle state.
         void Idle_StateUpdate() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
+
+            if (characterUnit == null) {
+                // still waiting for character to spawn
+                return;
+            }
 
             if ((characterUnit.MyCharacter.MyCharacterController as PlayerController).allowedInput && (characterUnit.MyCharacter.MyCharacterController as PlayerController).inputJump) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering jump state");

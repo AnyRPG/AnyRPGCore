@@ -30,7 +30,6 @@ namespace AnyRPG {
             HandleCharacterUnitSpawn();
         }
 
-
         public void SubscribeToUMACreate() {
 
             // is this stuff necessary on ai characters?

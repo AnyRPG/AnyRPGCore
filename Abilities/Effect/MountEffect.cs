@@ -6,10 +6,16 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UMA;
+using UMA.CharacterSystem;
+
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New MountEffect", menuName = "AnyRPG/Abilities/Effects/MountEffect")]
     public class MountEffect : StatusEffect {
+
+        // reference to the dynamic character avatar on the mount, if it exists
+        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
@@ -18,6 +24,7 @@ namespace AnyRPG {
             // we could skip this and just let the player fall through gravity
             PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
             DeActivateMountedState();
+            UnsubscribeFromUMACreate();
             base.CancelEffect(targetCharacter);
         }
 
@@ -37,22 +44,39 @@ namespace AnyRPG {
             PrefabProfile prefabProfile = returnObjects.Keys.ElementAt(0);
             GameObject abilityEffectObject = returnObjects[prefabProfile];
 
-            string originalPrefabSourceBone = prefabProfile.MyTargetBone;
-            Vector3 originalPrefabOffset = prefabProfile.MyPosition;
+            GameObject go = prefabObjects.Values.ElementAt(0);
             if (abilityEffectObject != null) {
+
                 // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                 abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
-                if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
-                    Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
-                    if (mountPoint != null) {
-                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
-                        //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                        PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                        ActivateMountedState();
-                    }
+
+                dynamicCharacterAvatar = go.GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
+                    SubscribeToUMACreate();
+                } else {
+                    HandleMountUnitSpawn();
                 }
             }
             return returnObjects;
+        }
+
+        private void HandleMountUnitSpawn() {
+
+            PrefabProfile prefabProfile = prefabObjects.Keys.ElementAt(0);
+            GameObject abilityEffectObject = prefabObjects[prefabProfile];
+
+            string originalPrefabSourceBone = prefabProfile.MyTargetBone;
+            Vector3 originalPrefabOffset = prefabProfile.MyPosition;
+
+            if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
+                Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
+                if (mountPoint != null) {
+                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
+                    //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
+                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
+                    ActivateMountedState();
+                }
+            }
         }
 
         public void DeActivateMountedState() {
@@ -89,10 +113,6 @@ namespace AnyRPG {
                 GameObject go = prefabObjects.Values.ElementAt(0);
                 PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
                 if (playerUnitMovementController != null) {
-
-                    //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
-
-
                     // disable movement and input on player unit
                     (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
@@ -115,6 +135,36 @@ namespace AnyRPG {
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(go.transform);
                 }
             }
+        }
+
+
+        public void HandleCharacterCreated(UMAData umaData) {
+            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            UnsubscribeFromUMACreate();
+            HandleMountUnitSpawn();
+        }
+
+        public void UnsubscribeFromUMACreate() {
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+            }
+        }
+
+        public void SubscribeToUMACreate() {
+
+            // is this stuff necessary on ai characters?
+            AnimatedUnit animatedUnit = dynamicCharacterAvatar.gameObject.GetComponent<AnimatedUnit>();
+            animatedUnit.OrchestrateStartup();
+            if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
+                animatedUnit.MyCharacterAnimator.InitializeAnimator();
+            } else {
+
+            }
+            dynamicCharacterAvatar.Initialize();
+            // is this stuff necessary end
+
+            UMAData umaData = dynamicCharacterAvatar.umaData;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
         }
 
         public void ConfigureCharacterMountedPhysics() {
