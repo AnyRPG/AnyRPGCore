@@ -1059,7 +1059,7 @@ namespace AnyRPG {
         }
 
         public void SetVelocity(Vector3 varValue, bool rotateModel = false) {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ")");
             // receives velocity in LOCAL SPACE
 
             if (animator == null) {
@@ -1073,7 +1073,7 @@ namespace AnyRPG {
                     Vector3 normalizedVector = varValue.normalized;
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
                         animator.transform.forward = transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
-                        Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): setting forward to: " + transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z)));
+                        //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): setting forward to: " + transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z)));
                     }
                     //animator.transform.forward = varValue.normalized;
                 }

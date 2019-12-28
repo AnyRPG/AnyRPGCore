@@ -43,7 +43,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
+            //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
             if (lootTableNames == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;

@@ -19,10 +19,12 @@ namespace AnyRPG {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
-            PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
+            if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
+                PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
 
-            // we could skip this and just let the player fall through gravity
-            PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
+                // we could skip this and just let the player fall through gravity
+                PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
+            }
             DeActivateMountedState();
             UnsubscribeFromUMACreate();
             base.CancelEffect(targetCharacter);
@@ -84,7 +86,7 @@ namespace AnyRPG {
             if (prefabObjects != null) {
                 GameObject go = prefabObjects.Values.ElementAt(0);
                 PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
-                if (playerUnitMovementController != null) {
+                if (playerUnitMovementController != null && PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                     //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
 
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;

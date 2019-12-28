@@ -2,6 +2,8 @@ using AnyRPG;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
@@ -70,11 +72,11 @@ namespace AnyRPG {
         private Vector3 maintainingGroundExtents = new Vector3(0.65f, 0.5f, 0.65f);
 
         // raycast to determine ground normal
-        RaycastHit groundHitInfo;
+        private RaycastHit groundHitInfo;
 
         // raycasts to determine 
-        RaycastHit downHitInfo;
-        RaycastHit forwardHitInfo;
+        private RaycastHit downHitInfo;
+        private RaycastHit forwardHitInfo;
 
         // ensure that pressing forward moves us in the direction of the ground angle to avoid jittery movement on slopes
         private Vector3 forwardDirection;
@@ -94,6 +96,9 @@ namespace AnyRPG {
         // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
         private float collisionMinimumHeight = 0.05f;
 
+        private bool rotateModel = false;
+
+
         private void Awake() {
             if (PlayerManager.MyInstance != null) {
                 groundMask = PlayerManager.MyInstance.MyDefaultGroundMask;
@@ -106,6 +111,15 @@ namespace AnyRPG {
             airForwardDirection = transform.forward;
 
             SwitchCollisionOn();
+            SetupRotateModel();
+        }
+
+        public void SetupRotateModel() {
+            CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
+            DynamicCharacterAvatar dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
+            if (tmpUnit == null && dynamicCharacterAvatar == null) {
+                rotateModel = true;
+            }
         }
 
         public void OrchestrateStartup() {
@@ -183,11 +197,6 @@ namespace AnyRPG {
             //If alive and is moving, set animator.
             if (!useMeshNav && characterUnit.MyCharacter.MyCharacterStats.IsAlive && (characterUnit.MyCharacter.MyCharacterController as PlayerController).canMove) {
 
-                CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
-                bool rotateModel = false;
-                if (tmpUnit == null) {
-                    rotateModel = true;
-                }
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && (characterUnit.MyCharacter.MyCharacterController as PlayerController).HasMoveInput()) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + animatedUnit.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + animatedUnit.MyCharacterAnimator.MyAnimator.angularVelocity);
@@ -242,12 +251,6 @@ namespace AnyRPG {
             // reset velocity from any falling movement that was happening
             currentMoveVelocity = Vector3.zero;
             EnterGroundStateCommon();
-
-            CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
-            bool rotateModel = false;
-            if (tmpUnit == null) {
-                rotateModel = true;
-            }
 
             isMoving = false;
             animatedUnit.MyCharacterAnimator.SetMoving(false);
