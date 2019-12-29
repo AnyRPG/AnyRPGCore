@@ -21,15 +21,16 @@ namespace AnyRPG {
         */
 
         public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(MyName + ".SummonEffect.Cast()");
+            Debug.Log(MyName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
             Dictionary<PrefabProfile, GameObject> returnObjects = Spawn(source);
             return returnObjects;
         }
 
         private Dictionary<PrefabProfile, GameObject> Spawn(BaseCharacter source) {
-            //Debug.Log(MyName + ".SummonEffect.Spawn()");
+            Debug.Log(MyName + ".SummonEffect.Spawn(): prefabObjects.count: " + prefabObjects.Count);
             foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in prefabObjects) {
+                Debug.Log(MyName + ".SummonEffect.Spawn(): looping through prefabObjects");
                 //GameObject spawnReference = Instantiate(summonObject, PlayerManager.MyInstance.MyAIUnitParent.transform, true);
                 tmpPair.Value.transform.parent = null;
                 //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
@@ -58,6 +59,11 @@ namespace AnyRPG {
 
             return prefabObjects;
         }
+
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+            // intentionally not calling base to avoid getting our pet destroyed
+        }
+
 
     }
 

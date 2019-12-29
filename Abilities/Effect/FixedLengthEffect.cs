@@ -23,6 +23,10 @@ namespace AnyRPG {
             base.BeginMonitoring(abilityEffectObjects, source, target, abilityEffectInput);
             //Debug.Log("FixedLengthEffect.BeginMonitoring(); source: " + source.name);
             //source.StartCoroutine(DestroyAbilityEffectObject(abilityEffectObject, source, target, defaultPrefabLifetime, abilityEffectInput));
+            CheckDestroyObjects(abilityEffectObjects, source, target, abilityEffectInput);
+        }
+
+        protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             source.MyCharacterAbilityManager.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
         }
 

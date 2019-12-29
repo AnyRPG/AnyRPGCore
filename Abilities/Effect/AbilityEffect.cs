@@ -170,11 +170,13 @@ namespace AnyRPG {
 
                 if (MyUseMeleeRange) {
                     if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
+                        //Debug.Log(MyName + ".AbilityEffect.CanUseOn(): OUT OF RANGE");
                         return false;
                     }
                 } else {
                     if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
                         CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range");
+                        //Debug.Log(MyName + ".AbilityEffect.CanUseOn(): OUT OF RANGE");
                         return false;
                     }
                 }
@@ -184,6 +186,7 @@ namespace AnyRPG {
 
                     CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
                     if (targetCharacterUnit == null) {
+                        Debug.Log(MyName + ".AbilityEffect.CanUseOn(): targetCharacterUnit is null, return false");
                         return false;
                     }
 
@@ -198,14 +201,14 @@ namespace AnyRPG {
                         return false;
                     }
 
-                    if (!canCastOnEnemy) {
+                    if (!canCastOnEnemy && !canCastOnSelf && !autoSelfCast) {
                         if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
-                            //Debug.Log("we cannot cast this on an enemy but the target was an enemy.  return false");
+                            Debug.Log("we cannot cast this on an enemy but the target was an enemy.  return false");
                             return false;
                         }
                     }
 
-                    if (!canCastOnFriendly) {
+                    if (!canCastOnFriendly && !canCastOnSelf && !autoSelfCast) {
                         if (target != sourceCharacter.MyCharacterUnit.gameObject && Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
                             //Debug.Log("we cannot cast this on a friendly target but the target was friendly.  return false");
                             return false;
@@ -221,6 +224,7 @@ namespace AnyRPG {
             }
 
             // nothing left to prevent us from casting
+            //Debug.Log(MyName + ".AbilityEffect.CanUseOn() return true");
             return true;
         }
 

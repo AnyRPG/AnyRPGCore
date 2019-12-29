@@ -94,7 +94,7 @@ namespace AnyRPG {
                         prefabParent = null;
                     }
                     if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
-                        //Debug.Log("PrefabSpawnLocation is Caster");
+                        //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                         //spawnLocation = source.GetComponent<Collider>().bounds.center;
                         spawnLocation = source.MyCharacterUnit.transform.position;
                         prefabParent = source.MyCharacterUnit.transform;
@@ -125,10 +125,15 @@ namespace AnyRPG {
                         float finalZ = (prefabParent == null ? spawnLocation.z + prefabProfile.MyPosition.z : prefabParent.TransformPoint(prefabProfile.MyPosition).z);
                         //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
                         Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
-                        //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + "; abilityEffectPrefab: " + abilityEffectPrefab);
+                        //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                         // CORRECT WAY BELOW
                         //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                         GameObject prefabObject = Instantiate(prefabProfile.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabProfile.MyRotation), prefabParent);
+                        if (prefabObject == null) {
+                            //Debug.Log(MyName + ".LengthEffect.Cast(): prefabObject = null");
+                        } else {
+                            //Debug.Log(MyName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
+                        }
                         prefabObjects[prefabProfile] = prefabObject;
                         //abilityEffectObject =
                     }

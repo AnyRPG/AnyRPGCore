@@ -13,8 +13,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> petEffectNames = new List<string>();
 
+        /*
         [SerializeField]
         private List<string> petEffectList = new List<string>();
+        */
 
         private List<AbilityEffect> realPetEffectList = new List<AbilityEffect>();
 
@@ -27,7 +29,7 @@ namespace AnyRPG {
         }
 
         public void CheckPetSpawn(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn()");
+            Debug.Log(MyName + ".PetEffect.CheckPetSpawn()");
             List<CharacterUnit> unitsToRemove = new List<CharacterUnit>();
             foreach (CharacterUnit characterUnit in petUnits) {
                 //if (characterUnit != null) {
@@ -50,19 +52,19 @@ namespace AnyRPG {
                         if (SystemResourceManager.MatchResource(petEffect.MyName, MyName)) {
                             Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                         } else {
-                            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
+                            Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                             castList.Add(petEffect);
                         }
                     //}
                 }
                 if (castList.Count > 0) {
-                    //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
+                    Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
                     Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
                     foreach (KeyValuePair<PrefabProfile, GameObject> tmpObject in rawObjectList) {
-                        //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): LOOPING THROUGH RAW OBJECT LIST ");
+                        Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): LOOPING THROUGH RAW OBJECT LIST ");
                         CharacterUnit _characterUnit = tmpObject.Value.GetComponent<CharacterUnit>();
                         if (_characterUnit != null) {
-                            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING PET TO UNIT LIST");
+                            Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING PET TO UNIT LIST");
                             petUnits.Add(_characterUnit);
                         }
                     }

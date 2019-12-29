@@ -19,8 +19,10 @@ namespace AnyRPG {
         [SerializeField]
         private string prefabProfileName;
 
-        [SerializeField]
-        private GameObject spawnPrefab;
+        private PrefabProfile prefabProfile;
+
+        //[SerializeField]
+        //private GameObject spawnPrefab;
 
         [SerializeField]
         private GameObject spawnReference;
@@ -268,11 +270,21 @@ namespace AnyRPG {
                 return;
             }
 
-            if (spawnReference == null && spawnPrefab != null) {
+            if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
                 //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + spawnPrefab.name);
-                spawnReference = Instantiate(spawnPrefab, gameObject.transform);
+                spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
+                spawnReference.transform.Rotate(prefabProfile.MyRotation);
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.Spawn(): Already spawned");
+                if (spawnReference != null) {
+                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): Already spawned");
+                }
+                if (prefabProfile == null) {
+                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile is null");
+                } else {
+                    if (prefabProfile.MyPrefab == null) {
+                        //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile.myprefab is null");
+                    }
+                }
             }
 
             // maybe some kind of check of inanimate units since these generally aren't on other units?
@@ -806,9 +818,9 @@ namespace AnyRPG {
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
-                    spawnPrefab = tmpPrefabProfile.MyPrefab;
+                    prefabProfile = tmpPrefabProfile;
                 } else {
-                    Debug.LogError(gameObject.name + ".Interactable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " WHILE INITIALIZING " + gameObject.name);
+                    Debug.LogError(gameObject.name + ".Interactable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);
                 }
             }
         }

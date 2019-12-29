@@ -254,6 +254,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            //Debug.Log(MyName + ".BaseAbility.CanCast(): FALSE");
             return false;
         }
 
@@ -351,7 +352,7 @@ namespace AnyRPG {
                         return false;
                     }
                     if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
-                        Debug.Log("This ability requires a dead target");
+                        //Debug.Log("This ability requires a dead target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
@@ -364,12 +365,15 @@ namespace AnyRPG {
 
             // correct match conditions.  if any of these are met, the target is already valid
             if (!canCastOnSelf && targetIsSelf) {
+                //Debug.Log(MyName + ": Can't cast on self. return false");
                 return false;
             }
             if (!canCastOnEnemy && targetIsEnemy) {
+                //Debug.Log(MyName + ": Can't cast on enemy. return false");
                 return false;
             }
-            if (!canCastOnFriendly && targetIsFriendly) {
+            if (!canCastOnFriendly && targetIsFriendly && targetIsSelf == false) {
+                //Debug.Log(MyName + ": Can't cast on friendly. return false");
                 return false;
             }
 
@@ -383,25 +387,26 @@ namespace AnyRPG {
             
             // range checks
             if (target != null) {
-                if (!(canCastOnSelf && targetIsSelf)) {
-                    // if none of those is true, then we are casting on ourselves, so don't need to do range check
-                    if (MyUseMeleeRange) {
-                        if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
-                            return false;
+                if (canCastOnSelf && targetIsSelf) {
+                    return true;
+                }
+                // if none of those is true, then we are casting on ourselves, so don't need to do range check
+                if (MyUseMeleeRange) {
+                    if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
+                        return false;
+                    }
+                } else {
+                    if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
+                        //Debug.Log(target.name + " is out of range");
+                        if (CombatLogUI.MyInstance != null && sourceCharacter != null && PlayerManager.MyInstance.MyCharacter != null && sourceCharacter == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
+                            CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
                         }
-                    } else {
-                        if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
-                            //Debug.Log(target.name + " is out of range");
-                            if (CombatLogUI.MyInstance != null && sourceCharacter != null && PlayerManager.MyInstance.MyCharacter != null && sourceCharacter == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
-                                CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
-                            }
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
 
-            Debug.Log(MyName + ": returning true");
+            //Debug.Log(MyName + ".BaseAbility.CanUseOn(): returning true");
             return true;
         }
 
@@ -447,25 +452,32 @@ namespace AnyRPG {
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
         public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
-            Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 
             if (sourceCharacter == null || sourceCharacter.MyCharacterUnit == null) {
-                Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
+                //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
                 return null;
             }
 
             // perform ability dependent checks
-            if (!CanUseOn(target, sourceCharacter) == true) {
-                Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false.  exiting");
+            if (CanUseOn(target, sourceCharacter) == false) {
+                //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
                     target = sourceCharacter.MyCharacterUnit.gameObject;
+                    //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;
                 } else {
+                    //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning null");
                     return null;
                 }
             } else {
+                //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning original target: " + (target == null ? "null" : target.name));
+                if (canCastOnSelf && autoSelfCast && target == null) {
+                    target = sourceCharacter.MyCharacterUnit.gameObject;
+                    return target;
+                }
                 return target;
             }
         }

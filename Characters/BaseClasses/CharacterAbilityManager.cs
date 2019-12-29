@@ -631,13 +631,16 @@ namespace AnyRPG {
             GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter as BaseCharacter, target);
 
             if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 return;
             }
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): WE ARE HERE!!!");
 
             if (usedAbility.MyCanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted
                 PerformAbility(usedAbility, finalTarget, GetGroundTarget());
             } else {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
                     //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
@@ -650,7 +653,7 @@ namespace AnyRPG {
                 } else {
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
-                    //Debug.Log("A cast was already in progress!");
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
                 }
             }
         }
@@ -694,6 +697,7 @@ namespace AnyRPG {
             }
 
             // default is true, nothing has stopped us so far
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): returning true");
             return true;
         }
 
@@ -785,7 +789,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
-            //Debug.Log("FixedLengthEffect.DestroyAbilityEffectObject(" + timer + ")");
+            //Debug.Log("CharacterAbilityManager.DestroyAbilityEffectObject(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
             float timeRemaining = timer;
 
             CharacterStats targetStats = null;
@@ -808,6 +812,12 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() nextTickTime: " + nextTickTime);
 
             while (timeRemaining > 0f) {
+                
+                if (targetStats == null || fixedLengthEffect == null) {
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.DestroyAbilityEffectObject: BREAKING!!!!!!!!!!!!!!!!!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.MyName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.name));
+                    break;
+                }
+                
                 if (fixedLengthEffect.MyPrefabSpawnLocation != PrefabSpawnLocation.Point && fixedLengthEffect.MyRequiresTarget == true && (target == null || (targetStats.IsAlive == true && fixedLengthEffect.MyRequireDeadTarget == true) || (targetStats.IsAlive == false && fixedLengthEffect.MyRequiresLiveTarget == true))) {
                     //Debug.Log("BREAKING!!!!!!!!!!!!!!!!!");
                     break;
@@ -821,7 +831,7 @@ namespace AnyRPG {
                 }
                 yield return null;
             }
-            //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
+            //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
             foreach (GameObject go in abilityEffectObjects.Values) {
                 Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
