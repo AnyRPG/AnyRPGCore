@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
 
-        protected Transform targetBone;
+        //protected Transform targetBone;
 
         // the holdable objects spawned during an ability cast and removed when the cast is complete
         protected List<GameObject> abilityObjects = new List<GameObject>();
@@ -189,7 +189,7 @@ namespace AnyRPG {
                             if (attachmentNode.MyHoldableObject != null && attachmentNode.MyHoldableObject.MyPrefab != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
                                 // attach a mesh to a bone for weapons
-                                targetBone = playerUnitObject.transform.FindChildByRecursive(attachmentNode.MyHoldableObject.MySheathedTargetBone);
+                                Transform targetBone = playerUnitObject.transform.FindChildByRecursive(attachmentNode.MyHoldableObject.MySheathedTargetBone);
                                 if (targetBone != null) {
                                     //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
                                     GameObject newEquipmentPrefab = Instantiate(attachmentNode.MyHoldableObject.MyPrefab, targetBone, false);
@@ -220,10 +220,17 @@ namespace AnyRPG {
                 if (holdableObject != null) {
 
                     if (holdableObject.MyPrefab != null) {
-                        targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+                        Transform targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+                        Vector3 usedForwardDirection = playerUnitObject.transform.forward;
+                        if (targetBone == null) {
+                            targetBone = playerUnitObject.transform;
+                        } else {
+                            usedForwardDirection = targetBone.transform.forward;
+                        }
                         if (targetBone != null) {
+                            Vector3 finalSpawnLocation = new Vector3(targetBone.TransformPoint(holdableObject.MyPosition).x, targetBone.TransformPoint(holdableObject.MyPosition).y, targetBone.TransformPoint(holdableObject.MyPosition).z);
                             //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                            GameObject abilityObject = Instantiate(holdableObject.MyPrefab, targetBone, false);
+                            GameObject abilityObject = Instantiate(holdableObject.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(holdableObject.MyRotation), targetBone);
                             abilityObject.transform.localScale = holdableObject.MyScale;
                             HoldObject(abilityObject, holdableObject, playerUnitObject);
                             abilityObjects.Add(abilityObject);
@@ -292,7 +299,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
                 return;
             }
-            targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
+            Transform targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MySheathedTargetBone);
             if (targetBone != null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
                 go.transform.parent = targetBone;
@@ -310,12 +317,16 @@ namespace AnyRPG {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
             }
-            targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
+            Transform targetBone = searchObject.transform.FindChildByRecursive(holdableObject.MyTargetBone);
             if (targetBone != null) {
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPhysicalPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyPhysicalRotation);
+                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyRotation);
                 go.transform.parent = targetBone;
                 go.transform.localPosition = holdableObject.MyPosition;
-                go.transform.localEulerAngles = holdableObject.MyRotation;
+                if (holdableObject.MyRotationIsGlobal) {
+                    go.transform.rotation = Quaternion.LookRotation(targetBone.transform.forward) * Quaternion.Euler(holdableObject.MyRotation);
+                } else {
+                    go.transform.localEulerAngles = holdableObject.MyRotation;
+                }
             }
         }
 

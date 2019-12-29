@@ -128,7 +128,11 @@ namespace AnyRPG {
                         //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                         // CORRECT WAY BELOW
                         //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
-                        GameObject prefabObject = Instantiate(prefabProfile.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabProfile.MyRotation), prefabParent);
+                        Vector3 usedForwardDirection = source.MyCharacterUnit.transform.forward;
+                        if (prefabParent != null) {
+                            usedForwardDirection = prefabParent.transform.forward;
+                        }
+                        GameObject prefabObject = Instantiate(prefabProfile.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(prefabProfile.MyRotation), prefabParent);
                         if (prefabObject == null) {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): prefabObject = null");
                         } else {

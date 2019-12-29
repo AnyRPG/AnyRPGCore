@@ -26,6 +26,12 @@ namespace AnyRPG {
         private Vector3 position = Vector3.zero;
 
         /// <summary>
+        /// should the rotation be local compared to it's parent or global (z forward, y up)
+        /// </summary>
+        [SerializeField]
+        private bool rotationIsGlobal = false;
+
+        /// <summary>
         /// The transform rotation of the physical prefab
         /// </summary>
         [FormerlySerializedAs("physicalRotation")]
@@ -74,6 +80,6 @@ namespace AnyRPG {
         public Vector3 MySheathedRotation { get => sheathedRotation; }
         public Vector3 MySheathedScale { get => sheathedScale; }
         public string MySheathedTargetBone { get => sheathedTargetBone; }
-
+        public bool MyRotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
     }
 }
