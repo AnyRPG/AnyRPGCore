@@ -43,6 +43,9 @@ namespace AnyRPG {
         private WeaponSkill realWeaponSkill;
 
         [SerializeField]
+        private string defaultHitAudioProfile = string.Empty;
+
+        //[SerializeField]
         private AudioClip defaultHitSoundEffect;
         /*
         public InstantEffectAbility OnHitAbility {
@@ -72,7 +75,7 @@ namespace AnyRPG {
         public bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
         public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
 
-        public float MyDamagePerSecond () {
+        public float MyDamagePerSecond() {
             if (!MyUseDamagePerSecond) {
                 return 0f;
             }
@@ -160,6 +163,16 @@ namespace AnyRPG {
                 AnimationProfile animationProfile = SystemAnimationProfileManager.MyInstance.GetResource(defaultAttackAnimationProfileName);
                 if (animationProfile != null) {
                     defaultAttackAnimationProfile = animationProfile;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
+                defaultHitSoundEffect = null;
+                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(defaultHitAudioProfile);
+                if (audioProfile != null && audioProfile.MyAudioClip != null) {
+                    defaultHitSoundEffect = audioProfile.MyAudioClip;
                 } else {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
