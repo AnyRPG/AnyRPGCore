@@ -15,7 +15,7 @@ namespace AnyRPG {
         /// <summary>
         /// The ability to cast in order to use this portal
         /// </summary>
-        [SerializeField]
+        //[SerializeField]
         private BaseAbility ability;
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private string questName;
 
-        [SerializeField]
+        //[SerializeField]
         private Quest questTemplate;
 
         private GameObject questObject;

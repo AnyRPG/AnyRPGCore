@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private string itemName;
 
-        [SerializeField]
+        //[SerializeField]
         private Item item;
 
         [SerializeField]
