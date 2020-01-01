@@ -42,8 +42,11 @@ namespace AnyRPG {
         [SerializeField]
         protected int maxRange;
 
-        // a material to temporarily assign to the target we hit
         [SerializeField]
+        private string effectMaterialName = string.Empty;
+
+        // a material to temporarily assign to the target we hit
+        //[SerializeField]
         private Material effectMaterial;
 
         // the duration of the material change
@@ -370,6 +373,16 @@ namespace AnyRPG {
                     onHitAudioProfile = audioProfile;
                 } else {
                     Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + onHitAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (effectMaterialName != null && effectMaterialName != string.Empty) {
+                effectMaterial = null;
+                MaterialProfile tmpMaterialProfile = SystemMaterialProfileManager.MyInstance.GetResource(effectMaterialName);
+                if (tmpMaterialProfile != null) {
+                    effectMaterial = tmpMaterialProfile.MyEffectMaterial;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 
