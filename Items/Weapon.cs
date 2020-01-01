@@ -171,10 +171,10 @@ namespace AnyRPG {
             if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
                 defaultHitSoundEffect = null;
                 AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(defaultHitAudioProfile);
-                if (audioProfile != null && audioProfile.MyAudioClip != null) {
+                if (audioProfile != null) {
                     defaultHitSoundEffect = audioProfile.MyAudioClip;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 
