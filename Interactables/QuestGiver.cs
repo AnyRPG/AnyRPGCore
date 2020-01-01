@@ -318,6 +318,12 @@ namespace AnyRPG {
             
             base.SetupScriptableObjects();
 
+            if (quests != null) {
+                foreach (QuestNode questNode in quests) {
+                    questNode.SetupScriptableObjects();
+                }
+            }
+
             questGiverProfiles = new List<QuestGiverProfile>();
             if (questGiverProfileNames != null) {
                 foreach (string questGiverProfileName in questGiverProfileNames) {
@@ -334,6 +340,7 @@ namespace AnyRPG {
                 if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
                     foreach (QuestNode questNode in questGiverProfile.MyQuests) {
                         quests.Add(questNode);
+                        
                     }
                 }
             }
