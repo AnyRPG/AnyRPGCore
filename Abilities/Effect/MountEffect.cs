@@ -68,7 +68,8 @@ namespace AnyRPG {
             GameObject abilityEffectObject = prefabObjects[prefabProfile];
 
             string originalPrefabSourceBone = prefabProfile.MyTargetBone;
-            Vector3 originalPrefabOffset = prefabProfile.MyPosition;
+            // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
+            Vector3 originalPrefabOffset = prefabProfile.MySheathedPosition;
 
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
