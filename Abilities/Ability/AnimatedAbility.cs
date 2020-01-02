@@ -62,7 +62,7 @@ namespace AnyRPG {
                 }
                 return true;
             } else {
-                Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
+                //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
             }
             return false;
         }

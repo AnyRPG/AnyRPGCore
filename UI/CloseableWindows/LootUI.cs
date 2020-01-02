@@ -110,7 +110,7 @@ namespace AnyRPG {
 
             if (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() == 0) {
                 if (InventoryManager.MyInstance.MyEmptySlotCount() == 0) {
-                    Debug.Log("No space left in inventory");
+                    //Debug.Log("No space left in inventory");
                 }
                 MessageFeedManager.MyInstance.WriteMessage("Inventory is full!");
             }
