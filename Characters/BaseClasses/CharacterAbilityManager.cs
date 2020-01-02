@@ -37,6 +37,8 @@ namespace AnyRPG {
         // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
         protected float initialGlobalCoolDown;
 
+        protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
+
         public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
 
         public float MyRemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
@@ -123,6 +125,16 @@ namespace AnyRPG {
         public virtual void OnDisable() {
             CleanupEventSubscriptions();
             CleanupCoroutines();
+            CleanupAbilityEffectGameObjects();
+        }
+
+        public virtual void CleanupAbilityEffectGameObjects() {
+            foreach (GameObject go in abilityEffectGameObjects) {
+                if (go != null) {
+                    Destroy(go);
+                }
+            }
+            abilityEffectGameObjects.Clear();
         }
 
         public virtual void CleanupCoroutines() {
@@ -785,6 +797,9 @@ namespace AnyRPG {
         }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
+            foreach (GameObject go in abilityEffectObjects.Values) {
+                abilityEffectGameObjects.Add(go);
+            }
             destroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
         }
 
@@ -834,6 +849,9 @@ namespace AnyRPG {
             //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
             foreach (GameObject go in abilityEffectObjects.Values) {
+                if (abilityEffectGameObjects.Contains(go)) {
+                    abilityEffectGameObjects.Remove(go);
+                }
                 Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
             }
             abilityEffectObjects.Clear();
