@@ -189,7 +189,7 @@ namespace AnyRPG {
 
                     CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
                     if (targetCharacterUnit == null) {
-                        Debug.Log(MyName + ".AbilityEffect.CanUseOn(): targetCharacterUnit is null, return false");
+                        //Debug.Log(MyName + ".AbilityEffect.CanUseOn(): targetCharacterUnit is null, return false");
                         return false;
                     }
 
@@ -206,7 +206,7 @@ namespace AnyRPG {
 
                     if (!canCastOnEnemy && !canCastOnSelf && !autoSelfCast) {
                         if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
-                            Debug.Log("we cannot cast this on an enemy but the target was an enemy.  return false");
+                            //Debug.Log("we cannot cast this on an enemy but the target was an enemy.  return false");
                             return false;
                         }
                     }
