@@ -383,7 +383,7 @@ namespace AnyRPG {
         }
 
         public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
-            Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
+            //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
             string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyName);
             if (statusEffects.ContainsKey(preparedString)) {
                 if (statusEffects[preparedString].MyMonitorCoroutine != null) {

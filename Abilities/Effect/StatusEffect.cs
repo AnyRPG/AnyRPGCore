@@ -193,7 +193,7 @@ namespace AnyRPG {
 
         // bypass the creation of the status effect and just make its visual prefab
         public void RawCast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
-            Debug.Log(MyName + ".StatusEffect.RawCast()");
+            //Debug.Log(MyName + ".StatusEffect.RawCast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 

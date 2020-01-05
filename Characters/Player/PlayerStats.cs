@@ -100,12 +100,12 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerUnitSpawn() {
-            Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
+            //Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
             MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
 
             //code to re-apply visual effects when the player loads into a new level
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
+                //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
                 statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterUnit.gameObject, MyBaseCharacter.MyCharacterUnit.gameObject, new AbilityEffectOutput());
             }
         }

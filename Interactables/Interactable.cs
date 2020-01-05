@@ -89,6 +89,7 @@ namespace AnyRPG {
         public Sprite MyIcon { get => interactableIcon; }
 
         public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
+        public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
