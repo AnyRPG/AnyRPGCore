@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
+            Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();

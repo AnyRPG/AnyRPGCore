@@ -28,6 +28,10 @@ namespace AnyRPG {
 
         protected bool orchestratorStartupComplete = false;
 
+        private CharacterUnit characterUnit;
+
+        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+
         /*
         public BaseCharacter MyCharacter {
             get => baseCharacter;
@@ -103,6 +107,7 @@ namespace AnyRPG {
             rigidBody = GetComponent<Rigidbody>();
             characterMotor = GetComponent<CharacterMotor>();
             characterAnimator = GetComponent<CharacterAnimator>();
+            characterUnit = GetComponent<CharacterUnit>();
             /*
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();

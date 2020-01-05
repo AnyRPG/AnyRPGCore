@@ -18,7 +18,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
-            //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
+            Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
 
@@ -133,6 +133,7 @@ namespace AnyRPG {
                     // initialize the mount animator
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = go.GetComponent<AnimatedUnit>();
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestrateStartup();
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterUnit = PlayerManager.MyInstance.MyCharacter.MyCharacterUnit;
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(go.transform);

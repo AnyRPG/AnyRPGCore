@@ -476,15 +476,6 @@ namespace AnyRPG {
             }
             if (canCast == true) {
                 // dismount if mounted
-                if (baseCharacter.MyCharacterUnit.MyMounted == true) {
-                    //List<StatusEff>
-                    foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                        if (statusEffectNode.MyStatusEffect is MountEffect) {
-                            statusEffectNode.CancelStatusEffect();
-                            break;
-                        }
-                    }
-                }
 
                 //Debug.Log("Ground Targetting: cancast is true");
                 if (!ability.MyCanSimultaneousCast) {
@@ -646,10 +637,23 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 return;
             }
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): WE ARE HERE!!!");
+
+            if (baseCharacter.MyCharacterUnit.MyMounted == true) {
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
+
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                    Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
+                    if (statusEffectNode.MyStatusEffect is MountEffect) {
+                        Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
+                        statusEffectNode.CancelStatusEffect();
+                        break;
+                    }
+                }
+            }
 
             if (usedAbility.MyCanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
                 PerformAbility(usedAbility, finalTarget, GetGroundTarget());
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
@@ -665,7 +669,7 @@ namespace AnyRPG {
                 } else {
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
-                    Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
                 }
             }
         }

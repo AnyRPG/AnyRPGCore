@@ -617,10 +617,13 @@ namespace AnyRPG {
             if (isTrigger) {
                 //CharacterUnit otherCharacterUnit = other.gameObject.GetComponent<CharacterUnit>();
                 // changed to player to ensure ai don't accidentally trigger interactions
-                PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
-                if (otherCharacterUnit != null) {
+
+                //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
+
+                AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
+                if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    (otherCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
                 }
             }
