@@ -71,6 +71,7 @@ namespace AnyRPG {
         }
 
         public void CreateLootTables() {
+            //Debug.Log(gameObject.name + ".LootableCharacter.CreateLootTables()");
             foreach (string lootTableName in lootTableNames) {
                 LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                 if (lootTable != null) {
@@ -194,10 +195,10 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
+            Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.MyCharacter.MyCharacterStats.IsAlive) {
-                //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
+                Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 List<LootDrop> drops = new List<LootDrop>();
                 foreach (GameObject interactable in GetLootableTargets()) {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();
@@ -218,13 +219,13 @@ namespace AnyRPG {
                 // don't need anymore because of spherecast, not interactables
 
                 if (drops.Count > 0) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
+                    Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     LootUI.MyInstance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.MyInstance.lootWindow.OpenWindow();
                     return true;
                 } else {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
+                    Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     return false;
                 }
             }

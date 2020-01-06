@@ -121,7 +121,18 @@ namespace AnyRPG {
             base.Start();
             InitializeNamePlate();
             CreateEventSubscriptions();
+            SetDefaultLayer();
             startHasRun = true;
+        }
+
+        protected virtual void SetDefaultLayer() {
+            if (SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != null && SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != string.Empty) {
+                int defaultLayer = LayerMask.NameToLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+                if (gameObject.layer != defaultLayer) {
+                    gameObject.layer = defaultLayer;
+                    Debug.Log(gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
+                }
+            }
         }
 
         public virtual void OrchestrateStartup() {

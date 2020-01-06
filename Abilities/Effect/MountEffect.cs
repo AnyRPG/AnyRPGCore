@@ -18,9 +18,10 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
-            Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
+            //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
+                PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
 
                 // we could skip this and just let the player fall through gravity
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
@@ -77,6 +78,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
+                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabProfile.MySheathedRotation;
                     ActivateMountedState();
                 }
             }

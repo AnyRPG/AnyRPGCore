@@ -20,6 +20,10 @@ namespace AnyRPG {
             playerUnitMovementController = GetComponent<PlayerUnitMovementController>();
         }
         */
+        protected override void SetDefaultLayer() {
+            // intentionally overwrite base class to avoid settting layer incorrectly on player
+        }
     }
+
 
 }

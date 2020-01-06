@@ -255,6 +255,10 @@ namespace AnyRPG {
         [SerializeField]
         private float intellectStatBudgetPerLevel = 5f;
 
+        // character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.
+        [SerializeField]
+        private string defaultCharacterUnitLayer = string.Empty;
+
         [Header("CHARACTER PANEL")]
 
         [SerializeField]
@@ -530,6 +534,7 @@ namespace AnyRPG {
         public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
         public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
         public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
+        public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
