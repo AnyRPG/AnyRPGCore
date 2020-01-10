@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UMA;
 using UMA.CharacterSystem;
 
@@ -13,7 +14,8 @@ namespace AnyRPG {
         public event System.Action OnReviveComplete = delegate { };
 
         [SerializeField]
-        protected AnimationProfile defaultAttackAnimationProfile;
+        [FormerlySerializedAs("defaultAttackAnimationProfile")]
+        protected AnimationProfile defaultAnimationProfile;
 
         //public AnimationClip replaceableAttackAnim;
         protected AnimationProfile currentAttackAnimationProfile;
@@ -114,8 +116,8 @@ namespace AnyRPG {
                     animatorController = SystemConfigurationManager.MyInstance.MyDefaultAnimatorController;
                     originalAnimatorController = animatorController;
                 }
-                if (defaultAttackAnimationProfile == null) {
-                    defaultAttackAnimationProfile = SystemConfigurationManager.MyInstance.MyDefaultAttackAnimationProfile;
+                if (defaultAnimationProfile == null) {
+                    defaultAnimationProfile = SystemConfigurationManager.MyInstance.MyDefaultAttackAnimationProfile;
                 }
             }
             componentReferencesInitialized = true;
@@ -204,7 +206,7 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
 
-            SetAnimationProfileOverride(defaultAttackAnimationProfile);
+            SetAnimationProfileOverride(defaultAnimationProfile);
 
             initialized = true;
         }
@@ -229,7 +231,7 @@ namespace AnyRPG {
 
         public void ResetAnimationProfile() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ResetAnimationProfile()");
-            currentAttackAnimationProfile = defaultAttackAnimationProfile;
+            currentAttackAnimationProfile = defaultAnimationProfile;
             // change back to the original animations
             SetAnimationClipOverrides();
         }
