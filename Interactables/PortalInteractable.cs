@@ -24,6 +24,8 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName;
 
+        [SerializeField]
+        private string locationTag;
 
         public IAbility MyAbility { get => ability; }
 
@@ -38,6 +40,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
+            if (locationTag != null && locationTag != string.Empty) {
+                LevelManager.MyInstance.MyOverrideSpawnLocationTag = locationTag;
+            }
             source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
         }

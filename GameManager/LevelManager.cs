@@ -36,6 +36,10 @@ namespace AnyRPG {
         [SerializeField]
         private string characterCreatorScene = "CharacterCreator";
 
+        private string defaultSpawnLocationTag = "DefaultSpawnLocation";
+
+        private string overrideSpawnLocationTag = string.Empty;
+
         // whether to start the game with the character creator or just go straight into the game as a soul
         [SerializeField]
         private bool loadCharacterCreator = true;
@@ -56,6 +60,7 @@ namespace AnyRPG {
         public Vector3 MySpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
         public Vector3 MySpawnLocationOverride { get => spawnLocationOverride; set => spawnLocationOverride = value; }
         public string MyReturnSceneName { get => returnSceneName; set => returnSceneName = value; }
+        public string MyOverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -92,11 +97,22 @@ namespace AnyRPG {
                     // return original value
                     return returnValue;
                 } else {
-                    //Debug.Log("Levelmanager.GetSpawnLocation(). SpawnLocationOverride is not set.");
-                    GameObject defaultspawnLocationMarker = GameObject.FindWithTag("DefaultSpawnLocation");
+                    string usedTag = defaultSpawnLocationTag;
+                    if (overrideSpawnLocationTag != null && overrideSpawnLocationTag != string.Empty) {
+                        usedTag = overrideSpawnLocationTag;
+                    }
+                    Debug.Log("Levelmanager.GetSpawnLocation(). usedTag: " + usedTag);
+                    GameObject defaultspawnLocationMarker = GameObject.FindWithTag(usedTag);
+                    overrideSpawnLocationTag = string.Empty;
                     if (defaultspawnLocationMarker != null) {
-                        //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged DefaultSpawnLocation. returning " + defaultspawnLocationMarker.transform.position);
+                        Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + usedTag + ". returning " + defaultspawnLocationMarker.transform.position);
                         return defaultspawnLocationMarker.transform.position;
+                    } else {
+                        defaultspawnLocationMarker = GameObject.FindWithTag(defaultSpawnLocationTag);
+                        if (defaultspawnLocationMarker != null) {
+                            Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                            return defaultspawnLocationMarker.transform.position;
+                        }
                     }
                     //Debug.Log("Levelmanager.GetSpawnLocation(). Could Not Find a tagged DefaultSpawnLocation.  returning scene node default" + activeSceneNode.MyDefaultSpawnPosition);
                     return activeSceneNode.MyDefaultSpawnPosition;
