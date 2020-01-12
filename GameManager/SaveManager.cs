@@ -164,6 +164,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.statusEffectSaveData == null || overWrite) {
                 anyRPGSaveData.statusEffectSaveData = new List<StatusEffectSaveData>();
             }
+            if (anyRPGSaveData.petSaveData == null || overWrite) {
+                anyRPGSaveData.petSaveData = new List<PetSaveData>();
+            }
             return anyRPGSaveData;
         }
 
@@ -334,6 +337,7 @@ namespace AnyRPG {
             SaveCurrencyData(anyRPGSaveData);
             SaveSceneNodeData(anyRPGSaveData);
             SaveStatusEffectData(anyRPGSaveData);
+            SavePetData(anyRPGSaveData);
 
             SaveWindowPositions();
 
@@ -518,6 +522,16 @@ namespace AnyRPG {
             }
         }
 
+        public void SavePetData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveAbilityData()");
+            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.MyUnitProfiles) {
+                PetSaveData saveData = new PetSaveData();
+                saveData.MyName = unitProfile.MyName;
+                anyRPGSaveData.petSaveData.Add(saveData);
+            }
+        }
+
+
         public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquipmentData()");
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
@@ -640,6 +654,16 @@ namespace AnyRPG {
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).LoadAbility(abilitySaveData.MyName);
+                }
+            }
+        }
+
+        public void LoadPetData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadAbilityData()");
+
+            foreach (PetSaveData petSaveData in anyRPGSaveData.petSaveData) {
+                if (petSaveData.MyName != string.Empty) {
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.AddPet(petSaveData.MyName);
                 }
             }
 
@@ -824,6 +848,8 @@ namespace AnyRPG {
             LoadCurrencyData(anyRPGSaveData);
 
             LoadStatusEffectData(anyRPGSaveData);
+
+            LoadPetData(anyRPGSaveData);
 
             // necessary?  should be handled by setcharacterclass call
             CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);

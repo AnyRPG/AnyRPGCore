@@ -40,6 +40,7 @@ namespace AnyRPG {
         public List<DialogSaveData> dialogSaveData;
         public List<SceneNodeSaveData> sceneNodeSaveData;
         public List<StatusEffectSaveData> statusEffectSaveData;
+        public List<PetSaveData> petSaveData;
     }
 
     [Serializable]
@@ -113,6 +114,13 @@ namespace AnyRPG {
 
     [Serializable]
     public struct AbilitySaveData {
+
+        public string MyName;
+
+    }
+
+    [Serializable]
+    public struct PetSaveData {
 
         public string MyName;
 

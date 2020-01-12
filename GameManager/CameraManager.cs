@@ -47,6 +47,9 @@ namespace AnyRPG {
         [SerializeField]
         private Camera unitPreviewCamera;
 
+        [SerializeField]
+        private Camera petPreviewCamera;
+
         private AnyRPGCameraController mainCameraController;
 
         protected bool eventSubscriptionsInitialized = false;
@@ -61,6 +64,7 @@ namespace AnyRPG {
         public Camera MyCharacterPreviewCamera { get => characterPreviewCamera; set => characterPreviewCamera = value; }
         public AnyRPGCameraController MyMainCameraController { get => mainCameraController; set => mainCameraController = value; }
         public Camera MyUnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
+        public Camera MyPetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
 
         private void Awake() {
             //Debug.Log("CameraManager.Awake()");

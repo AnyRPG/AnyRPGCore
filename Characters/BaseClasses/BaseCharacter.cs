@@ -35,6 +35,9 @@ namespace AnyRPG {
         protected CharacterSkillManager characterSkillManager = null;
 
         [SerializeField]
+        protected CharacterPetManager characterPetManager = null;
+
+        [SerializeField]
         protected BaseController characterController = null;
 
         // unit profile name
@@ -95,6 +98,8 @@ namespace AnyRPG {
         public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+        public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
+        public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -110,6 +115,7 @@ namespace AnyRPG {
             characterController = GetComponent<BaseController>();
             characterAbilityManager = GetComponent<CharacterAbilityManager>();
             characterSkillManager = GetComponent<CharacterSkillManager>();
+            characterPetManager = GetComponent<CharacterPetManager>();
 
             if (MyCharacterUnit == null) {
                 CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
@@ -174,6 +180,10 @@ namespace AnyRPG {
             if (characterAbilityManager != null) {
                 characterAbilityManager.LearnDefaultAutoAttackAbility();
             }
+            if (characterPetManager != null) {
+                characterPetManager.OrchestratorStart();
+            }
+
         }
 
         protected virtual void Start() {

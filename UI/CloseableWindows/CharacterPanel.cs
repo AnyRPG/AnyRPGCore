@@ -309,6 +309,11 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.reputationBookWindow.ToggleOpenClose();
         }
 
+        public void OpenPetWindow() {
+            //Debug.Log("CharacterPanel.OpenReputationWindow()");
+            SystemWindowManager.MyInstance.petSpawnWindow.ToggleOpenClose();
+        }
+
         public void OpenSkillsWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
             PopupWindowManager.MyInstance.skillBookWindow.ToggleOpenClose();

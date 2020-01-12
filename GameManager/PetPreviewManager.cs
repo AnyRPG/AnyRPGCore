@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitPreviewManager : MonoBehaviour {
+    public class PetPreviewManager : MonoBehaviour {
 
         #region Singleton
-        private static UnitPreviewManager instance;
+        private static PetPreviewManager instance;
 
-        public static UnitPreviewManager MyInstance {
+        public static PetPreviewManager MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<UnitPreviewManager>();
+                    instance = FindObjectOfType<PetPreviewManager>();
                 }
 
                 return instance;
@@ -29,13 +29,14 @@ namespace AnyRPG {
         private Vector3 previewSpawnLocation;
 
         [SerializeField]
-        private int previewLayer = 16;
-
+        private int previewLayer = 17;
 
         // the source we are going to clone from 
         private GameObject cloneSource;
 
         private bool targetInitialized = false;
+
+
 
         public GameObject MyPreviewUnit { get => previewUnit; set => previewUnit = value; }
 
@@ -48,7 +49,7 @@ namespace AnyRPG {
         public void HandleOpenWindow() {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
-           cloneSource = UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile.MyUnitPrefab;
+           cloneSource = PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile.MyUnitPrefab;
 
             if (cloneSource == null) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
