@@ -8,6 +8,7 @@ namespace AnyRPG {
     public abstract class BaseCharacter : MonoBehaviour {
 
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+        public event System.Action<ClassSpecialization, ClassSpecialization> OnSpecializationChange = delegate { };
 
         [SerializeField]
         protected string characterName;
@@ -20,7 +21,17 @@ namespace AnyRPG {
         [SerializeField]
         protected string characterClassName;
 
+        [SerializeField]
+        protected string unitTypeName;
+
+        protected UnitType unitType;
+
+        [SerializeField]
+        protected string classSpecializationName;
+
         protected CharacterClass characterClass;
+
+        protected ClassSpecialization classSpecialization;
 
         [SerializeField]
         protected CharacterStats characterStats = null;
@@ -96,10 +107,13 @@ namespace AnyRPG {
         }
 
         public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
+        public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
         public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
         public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
+        public string MyClassSpecializationName { get => classSpecializationName; set => classSpecializationName = value; }
+        public UnitType MyUnitType { get => unitType; set => unitType = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -210,6 +224,20 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
+            if (newClassSpecialization != null) {
+                ClassSpecialization oldClassSpecialization = classSpecialization;
+                classSpecialization = newClassSpecialization;
+
+                // resets character stats because classes and specializations can get bonuses
+                characterStats.SetLevel(characterStats.MyLevel);
+
+                OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+            }
+        }
+
+
         public virtual void SetCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
             if (newCharacterClass != null) {
@@ -236,6 +264,16 @@ namespace AnyRPG {
                     characterClass = tmpCharacterClass;
                 } else {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+            if (unitType == null && unitTypeName != null && unitTypeName != string.Empty) {
+                UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
+                if (tmpUnitType != null) {
+                    unitType = tmpUnitType;
+                    Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
 
             }

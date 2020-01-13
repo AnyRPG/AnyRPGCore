@@ -96,6 +96,10 @@ namespace AnyRPG {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
                 anyRPGSaveData.characterClass = string.Empty;
             }
+            if (anyRPGSaveData.classSpecialization == null) {
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
+                anyRPGSaveData.classSpecialization = string.Empty;
+            }
             if (anyRPGSaveData.unitProfileName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
                 anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName;
@@ -308,6 +312,9 @@ namespace AnyRPG {
             }
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterClass != null) {
                 anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName;
+            }
+            if (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization != null) {
+                anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName;
             }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
@@ -835,6 +842,8 @@ namespace AnyRPG {
 
             // testing - move here to prevent learning abilities and filling up bars
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass));
+            PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
+
 
             LoadSkillData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);
@@ -854,6 +863,9 @@ namespace AnyRPG {
             // necessary?  should be handled by setcharacterclass call
             CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
             PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplyClassTraits(characterClass);
+
+            ClassSpecialization classSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization);
+            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplySpecializationTraits(classSpecialization);
 
             // now that we have loaded the quest data, we can re-enable references
             SystemQuestManager.MyInstance.CreateEventSubscriptions();

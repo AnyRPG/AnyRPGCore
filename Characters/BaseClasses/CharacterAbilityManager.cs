@@ -89,6 +89,7 @@ namespace AnyRPG {
             }
             baseCharacter.MyCharacterCombat.OnKillEvent += ReceiveKillDetails;
             baseCharacter.OnClassChange += HandleClassChange;
+            baseCharacter.OnSpecializationChange += HandleSpecializationChange;
             SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
@@ -233,6 +234,13 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleSpecializationChange(ClassSpecialization newClassSpecialization, ClassSpecialization oldClassSpecialization) {
+            RemoveSpecializationTraits(oldClassSpecialization);
+            UnLearnSpecializationAbilities(oldClassSpecialization);
+            LearnSpecializationAbilities(newClassSpecialization);
+            ApplySpecializationTraits(newClassSpecialization);
+        }
+
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
             RemoveClassTraits(oldCharacterClass);
             UnLearnClassAbilities(oldCharacterClass);
@@ -244,6 +252,16 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
             if (newCharacterClass != null && newCharacterClass.MyTraitList != null && newCharacterClass.MyTraitList.Count > 0) {
                 foreach (AbilityEffect classTrait in newCharacterClass.MyTraitList) {
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
+                    ApplyStatusEffect(classTrait);
+                }
+            }
+        }
+
+        public void ApplySpecializationTraits(ClassSpecialization newClassSpecialization) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
+            if (newClassSpecialization != null && newClassSpecialization.MyTraitList != null && newClassSpecialization.MyTraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in newClassSpecialization.MyTraitList) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
                     ApplyStatusEffect(classTrait);
                 }
@@ -278,6 +296,16 @@ namespace AnyRPG {
             }
         }
 
+        public void RemoveSpecializationTraits(ClassSpecialization oldClassSpecialization) {
+            if (oldClassSpecialization != null && oldClassSpecialization.MyTraitList != null && oldClassSpecialization.MyTraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in oldClassSpecialization.MyTraitList) {
+                    if (baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyName))) {
+                        baseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyName)].CancelStatusEffect();
+                    }
+                }
+            }
+        }
+
         public void LearnClassAbilities(CharacterClass characterClass) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
             if (characterClass == null) {
@@ -294,6 +322,21 @@ namespace AnyRPG {
             }
         }
 
+        public void LearnSpecializationAbilities(ClassSpecialization classSpecialization) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
+            if (classSpecialization == null) {
+                return;
+            }
+            foreach (BaseAbility baseAbility in classSpecialization.MyAbilityList) {
+                //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
+                if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(baseAbility) == false) {
+                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
+                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility);
+                } else {
+                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
+                }
+            }
+        }
         public void UnLearnClassAbilities (CharacterClass characterClass) {
             if (characterClass == null) {
                 return;
@@ -303,6 +346,14 @@ namespace AnyRPG {
             }
         }
 
+        public void UnLearnSpecializationAbilities(ClassSpecialization classSpecialization) {
+            if (classSpecialization == null) {
+                return;
+            }
+            foreach (BaseAbility oldAbility in classSpecialization.MyAbilityList) {
+                UnlearnAbility(oldAbility);
+            }
+        }
 
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
             //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");

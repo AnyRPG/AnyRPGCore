@@ -214,6 +214,14 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
         }
 
+        public void SetPlayerCharacterSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
+            if (newClassSpecialization != null) {
+                MyCharacter.ChangeClassSpecialization(newClassSpecialization);
+            }
+            SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+        }
+
         public void SetPlayerFaction(Faction newFaction) {
             //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
             if (newFaction != null) {

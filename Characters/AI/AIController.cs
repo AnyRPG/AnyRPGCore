@@ -132,6 +132,10 @@ namespace AnyRPG {
                 masterUnit = source;
                 // done so pets of player unit wouldn't attempt to attack npcs questgivers etc
                 //masterUnit.MyCharacterController.OnSetTarget += SetTarget;
+                if (masterUnit == null) {
+                    Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
+                    return;
+                }
                 masterUnit.MyCharacterController.OnClearTarget += ClearTarget;
                 masterUnit.MyCharacterAbilityManager.OnAttack += OnMasterAttack;
                 masterUnit.MyCharacterCombat.OnDropCombat += OnMasterDropCombat;

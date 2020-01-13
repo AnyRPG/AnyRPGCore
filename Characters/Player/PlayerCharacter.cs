@@ -50,6 +50,14 @@ namespace AnyRPG {
             }
         }
 
+        public void ChangeClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            if (newClassSpecialization != null && newClassSpecialization != PlayerManager.MyInstance.MyCharacter.MyCharacterClass) {
+                SetClassSpecialization(newClassSpecialization);
+                SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+            }
+        }
+
         public void ChangeCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterClass != null && newCharacterClass != PlayerManager.MyInstance.MyCharacter.MyCharacterClass) {
