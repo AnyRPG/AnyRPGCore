@@ -82,6 +82,7 @@ namespace AnyRPG {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.ClearTarget()");
             target = null;
             followTransform = null;
+            CameraManager.MyInstance.MyUnitPreviewCamera.enabled = false;
         }
 
         public void SetTarget(Transform newTarget) {
@@ -97,7 +98,7 @@ namespace AnyRPG {
 
             target = newTarget;
             StartCoroutine(WaitForFollowTarget());
-
+            CameraManager.MyInstance.MyUnitPreviewCamera.enabled = true;
         }
 
         private void SetTargetPosition() {

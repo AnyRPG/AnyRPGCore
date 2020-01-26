@@ -70,11 +70,23 @@ namespace AnyRPG {
             //Debug.Log("CameraManager.Awake()");
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
+            DisablePreviewCameras();
+            DisableFocusCamera();
         }
 
         private void Start() {
             //Debug.Log("CameraManager.Start()");
             CreateEventSubscriptions();
+        }
+
+        private void DisablePreviewCameras() {
+            characterPreviewCamera.enabled = false;
+            unitPreviewCamera.enabled = false;
+            petPreviewCamera.enabled = false;
+        }
+
+        private void DisableFocusCamera() {
+            focusPortraitCamera.enabled = false;
         }
 
         private void CreateEventSubscriptions() {

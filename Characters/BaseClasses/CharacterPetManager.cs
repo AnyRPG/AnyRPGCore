@@ -35,7 +35,7 @@ namespace AnyRPG {
         }
 
         public void OrchestratorStart() {
-            Debug.Log(gameObject.name + "CharacterPetManager.OrchestratorStart()");
+            //Debug.Log(gameObject.name + "CharacterPetManager.OrchestratorStart()");
 
             GetComponentReferences();
             CreateEventSubscriptions();
@@ -72,7 +72,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetupScriptableObjects() {
-            Debug.Log(gameObject.name + ".CharacterPetManager.SetupScriptableObjects()");
+            //Debug.Log(gameObject.name + ".CharacterPetManager.SetupScriptableObjects()");
 
             if (unitProfileNames != null && unitProfileNames.Count > 0) {
                 foreach (string unitProfileName in unitProfileNames) {

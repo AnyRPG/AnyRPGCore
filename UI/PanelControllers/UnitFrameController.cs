@@ -37,6 +37,10 @@ namespace AnyRPG {
         [SerializeField]
         private Transform cameraTransform;
 
+        // replaces cameraTransform;
+        [SerializeField]
+        private Camera previewCamera;
+
         [SerializeField]
         private Texture portraitTexture;
 
@@ -73,6 +77,7 @@ namespace AnyRPG {
         public override void Awake() {
             //Debug.Log(gameObject.name + ": UnitFrameController.Awake()");
             InitializeController();
+            previewCamera.enabled = false;
         }
 
 
@@ -178,6 +183,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
+            previewCamera.enabled = true;
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
@@ -199,6 +205,7 @@ namespace AnyRPG {
             if (closeWindowOnClear) {
                 gameObject.SetActive(false);
             }
+            previewCamera.enabled = false;
         }
 
         private void InitializeStats() {

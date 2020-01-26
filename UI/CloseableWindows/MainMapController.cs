@@ -72,6 +72,7 @@ namespace AnyRPG {
             base.Awake();
             //instantiate singleton
             MainMapController tempcontroller = MyInstance;
+            CameraManager.MyInstance.MyMainMapCamera.enabled = false;
         }
 
         protected void Start() {
@@ -113,6 +114,7 @@ namespace AnyRPG {
             SetSceneBounds();
             UpdateCameraSize();
             UpdateCameraPosition();
+            CameraManager.MyInstance.MyMainMapCamera.Render();
         }
 
         private void SetSceneBounds() {
@@ -183,7 +185,7 @@ namespace AnyRPG {
             // TESTING DID PUTTING THE EVENT CLEANUP IN ONDESTROY FIX THIS SO THE NEXT LINE ISN'T NEEDED?
             // re-adding this back here.  Not sure why, but possible the level objects aren't rendered by the time this gets called in onlevelload.  Trying on every open window
             InitializeMap();
-            CameraManager.MyInstance.MyMainMapCamera.enabled = true;
+            //CameraManager.MyInstance.MyMainMapCamera.enabled = true;
             panelLayoutElement.preferredWidth = Screen.width - 50;
             panelLayoutElement.preferredHeight = Screen.height - 50;
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
