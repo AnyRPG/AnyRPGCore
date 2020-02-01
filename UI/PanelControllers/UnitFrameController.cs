@@ -66,6 +66,9 @@ namespace AnyRPG {
         [SerializeField]
         private StatusEffectPanelController statusEffectPanelController;
 
+        [SerializeField]
+        private bool realTimeCamera = false;
+
         private Transform followTransform;
 
         private bool controllerInitialized = false;
@@ -183,7 +186,17 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            previewCamera.enabled = true;
+            if (realTimeCamera == true) {
+                previewCamera.enabled = true;
+            } else {
+                //previewCamera.Render();
+                StartCoroutine(WaitForCamera());
+            }
+        }
+
+        private IEnumerator WaitForCamera() {
+            yield return null;
+            previewCamera.Render();
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
