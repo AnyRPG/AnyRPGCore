@@ -18,9 +18,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 
-        [SerializeField]
-        private INamePlateUnit namePlateUnit;
-
         private bool questGiverInitialized = false;
 
         public List<QuestNode> MyQuests { get => quests; }
@@ -31,7 +28,7 @@ namespace AnyRPG {
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".QuestGiver.Awake()");
             base.Awake();
-            namePlateUnit = GetComponent<INamePlateUnit>();
+            //namePlateUnit = GetComponent<INamePlateUnit>();
         }
 
         protected override void Start() {

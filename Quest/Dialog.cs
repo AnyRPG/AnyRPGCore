@@ -17,6 +17,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
+        // should this dialog open in a speech bubble and automatically progress
+        [SerializeField]
+        private bool automatic = false;
+
         /// <summary>
         /// Track whether this dialog has been turned in
         /// </summary>
@@ -48,6 +52,7 @@ namespace AnyRPG {
         }
 
         public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
+        public bool MyAutomatic { get => automatic; set => automatic = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

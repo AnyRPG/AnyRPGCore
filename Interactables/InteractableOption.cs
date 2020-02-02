@@ -22,7 +22,7 @@ namespace AnyRPG {
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         [SerializeField]
-        private INamePlateUnit namePlateUnit;
+        protected INamePlateUnit namePlateUnit;
 
         protected Interactable interactable;
 

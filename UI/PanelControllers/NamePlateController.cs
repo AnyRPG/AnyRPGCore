@@ -29,6 +29,12 @@ namespace AnyRPG {
         [SerializeField]
         private Image genericIndicatorImage;
 
+        [SerializeField]
+        private GameObject speechBubbleBackground;
+
+        [SerializeField]
+        private Text speechBubbleText;
+
         private INamePlateUnit namePlateUnit;
 
         private int healthSliderWidth;
@@ -50,6 +56,7 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
             CreateEventSubscriptions();
+            HideSpeechBubble();
         }
 
         private void CreateEventSubscriptions() {
@@ -403,6 +410,24 @@ namespace AnyRPG {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
             if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as INamePlateUnit)) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterController.SetTarget((namePlateUnit as MonoBehaviour).gameObject);
+            }
+        }
+
+        public void HideSpeechBubble() {
+            if (speechBubbleBackground != null) {
+                speechBubbleBackground.SetActive(false);
+            }
+        }
+
+        public void ShowSpeechBubble() {
+            if (speechBubbleBackground != null) {
+                speechBubbleBackground.SetActive(true);
+            }
+        }
+
+        public void SetSpeechText(string newSpeechText) {
+            if (speechBubbleText != null && newSpeechText != null) {
+                speechBubbleText.text = newSpeechText;
             }
         }
 

@@ -21,7 +21,11 @@ namespace AnyRPG {
         [SerializeField]
         private List<Dialog> dialogList = new List<Dialog>();
 
-        private int dialogIndex = -1;
+        private int dialogIndex = 0;
+
+        private float maxDialogTime = 300f;
+
+        private Coroutine dialogCoroutine = null;
 
         public int MyDialogIndex { get => dialogIndex; set => dialogIndex = value; }
         public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }
@@ -69,6 +73,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
             CleanupEventSubscriptions();
+            CleanupDialog();
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -128,13 +133,67 @@ namespace AnyRPG {
             if (currentList.Count == 0) {
                 return false;
             } else if (currentList.Count == 1) {
-                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(currentList[0], this.interactable);
-                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
-                (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                if (currentList[0].MyAutomatic) {
+                    if (dialogCoroutine == null) {
+                        dialogCoroutine = StartCoroutine(playDialog(currentList[0]));
+                    }
+                } else {
+                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(currentList[0], this.interactable);
+                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
+                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                }
             } else {
                 interactable.OpenInteractionWindow();
             }
             return true;
+        }
+
+        private void CleanupDialog() {
+            //nameplate
+            if (dialogCoroutine != null) {
+                StopCoroutine(dialogCoroutine);
+            }
+            dialogCoroutine = null;
+            if (namePlateUnit != null) {
+                namePlateUnit.MyNamePlate.HideSpeechBubble();
+            }
+        }
+
+        public IEnumerator playDialog(Dialog dialog) {
+            if (namePlateUnit != null) {
+                namePlateUnit.MyNamePlate.ShowSpeechBubble();
+            }
+            float elapsedTime = 0f;
+            DialogNode currentdialogNode = null;
+
+            while (dialog.TurnedIn == false) {
+                foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
+                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
+                        currentdialogNode = dialogNode;
+                        namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
+                        CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
+
+                        dialogNode.MyShown = true;
+                        dialogIndex++;
+                    }
+                }
+                if (dialogIndex >= dialog.MyDialogNodes.Count) {
+                    dialog.TurnedIn = true;
+                    HandleConfirmAction();
+                }
+                elapsedTime += Time.deltaTime;
+
+                // circuit breaker
+                if (elapsedTime >= maxDialogTime) {
+                    break;
+                }
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(currentdialogNode.MyShowTime);
+            if (namePlateUnit != null) {
+                namePlateUnit.MyNamePlate.HideSpeechBubble();
+            }
         }
 
         public override bool CanInteract(CharacterUnit source) {
@@ -196,6 +255,8 @@ namespace AnyRPG {
                 }
             }
         }
+
+
     }
 
 }
