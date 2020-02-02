@@ -154,7 +154,7 @@ namespace AnyRPG {
                 StopCoroutine(dialogCoroutine);
             }
             dialogCoroutine = null;
-            if (namePlateUnit != null) {
+            if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
                 namePlateUnit.MyNamePlate.HideSpeechBubble();
             }
         }

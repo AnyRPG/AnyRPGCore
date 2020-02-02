@@ -16,8 +16,8 @@ namespace AnyRPG {
         public void Enter(AIController aiController) {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.aiController = aiController;
-            if (!aiController.MyAiPatrol.PatrolComplete()) {
-                Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(false);
+            if (!aiController.MyAiPatrol.MyAutomaticPatrol.PatrolComplete()) {
+                Vector3 tmpDestination = aiController.MyAiPatrol.MyAutomaticPatrol.GetDestination(false);
                 if (tmpDestination != Vector3.zero) {
                     currentDestination = this.aiController.SetDestination(tmpDestination);
                 }
@@ -56,8 +56,8 @@ namespace AnyRPG {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
-                if (aiController.MyAiPatrol.PatrolComplete()) {
-                    if (aiController.MyAiPatrol.MyDespawnOnCompletion) {
+                if (aiController.MyAiPatrol.MyAutomaticPatrol.PatrolComplete()) {
+                    if (aiController.MyAiPatrol.MyAutomaticPatrol.MyDespawnOnCompletion) {
                         if (aiController.MyBaseCharacter.MyCharacterUnit != null) {
                             aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
                         }
@@ -86,7 +86,7 @@ namespace AnyRPG {
             }
 
             if (getNewDestination == true) {
-                Vector3 tmpDestination = aiController.MyAiPatrol.GetDestination(true);
+                Vector3 tmpDestination = aiController.MyAiPatrol.MyAutomaticPatrol.GetDestination(true);
                 if (tmpDestination == Vector3.zero) {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
                     return;
@@ -101,7 +101,7 @@ namespace AnyRPG {
 
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
 
-            float remainingPauseTime = aiController.MyAiPatrol.MyDestinationPauseTime;
+            float remainingPauseTime = aiController.MyAiPatrol.MyAutomaticPatrol.MyDestinationPauseTime;
             while (remainingPauseTime > 0f) {
                 remainingPauseTime -= Time.deltaTime;
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
