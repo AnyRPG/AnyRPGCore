@@ -159,6 +159,14 @@ namespace AnyRPG {
             }
         }
 
+        public void BeginDialog(string dialogName) {
+            // is there a better way avoid runtime lookups like requiring the dialog to already be available on the character?
+            Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+            if (tmpDialog != null) {
+                dialogCoroutine = StartCoroutine(playDialog(tmpDialog));
+            }
+        }
+
         public IEnumerator playDialog(Dialog dialog) {
             if (namePlateUnit != null) {
                 namePlateUnit.MyNamePlate.ShowSpeechBubble();

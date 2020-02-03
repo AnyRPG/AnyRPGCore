@@ -13,9 +13,22 @@ namespace AnyRPG {
 
         private PatrolProfile automaticPatrol = null;
 
+        private PatrolProfile currentPatrol = null;
+
         private CharacterUnit characterUnit;
 
         public PatrolProfile MyAutomaticPatrol { get => automaticPatrol; set => automaticPatrol = value; }
+
+        public PatrolProfile MyCurrentPatrol {
+            get {
+                if (currentPatrol == null) {
+                    return MyAutomaticPatrol;
+                } else {
+                    return currentPatrol;
+                }
+            }
+            set => automaticPatrol = value;
+        }
 
         protected void Awake() {
             //Debug.Log(gameObject.name + ".AIPatrol.Awake()");
@@ -27,6 +40,18 @@ namespace AnyRPG {
         void Start() {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);
 
+        }
+
+        public void BeginPatrol(string patrolName) {
+            PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+            if (tmpPatrolProfile != null) {
+                SetCurrentPatrol(tmpPatrolProfile);
+                (characterUnit.MyCharacter.MyCharacterController as AIController).ChangeState(new PatrolState());
+            }
+        }
+
+        public void SetCurrentPatrol(PatrolProfile newPatrolProfile) {
+            currentPatrol = newPatrolProfile;
         }
 
         private void FindAutomaticPatrol() {

@@ -38,6 +38,10 @@ namespace AnyRPG {
         [SerializeField]
         private float destinationPauseTime;
 
+        // zero will not override current movement speed, anything else will
+        [SerializeField]
+        private float movementSpeed = 0f;
+
         // the current count of destinations reached
         private int destinationRetrievedCount = 0;
 
@@ -56,6 +60,7 @@ namespace AnyRPG {
         public float MyDestinationPauseTime { get => destinationPauseTime; set => destinationPauseTime = value; }
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public bool MyAutoStart { get => autoStart; set => autoStart = value; }
+        public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
 
         void Start() {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);

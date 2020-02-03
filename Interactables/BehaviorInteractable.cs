@@ -1,0 +1,242 @@
+using AnyRPG;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class BehaviorInteractable : InteractableOption {
+
+        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+
+        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
+        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
+
+        private BoxCollider boxCollider;
+
+        [SerializeField]
+        private List<string> behaviorNames = new List<string>();
+
+        [SerializeField]
+        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
+
+        private int behaviorIndex = 0;
+
+        private float maxBehaviorTime = 300f;
+
+        private Coroutine behaviorCoroutine = null;
+
+        private bool suppressNameplateImage = false;
+
+        public int MyBehaviorIndex { get => behaviorIndex; set => behaviorIndex = value; }
+        public List<BehaviorProfile> MyDialogList { get => behaviorList; set => behaviorList = value; }
+
+
+        protected override void Awake() {
+            //Debug.Log("NameChangeInteractable.Awake()");
+            base.Awake();
+        }
+
+        protected override void Start() {
+            //Debug.Log("BehaviorInteractable.Start()");
+            base.Start();
+            boxCollider = GetComponent<BoxCollider>();
+            CreateEventSubscriptions();
+            Spawn();
+        }
+
+        private void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePrerequisiteUpdates;
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                //Debug.Log(gameObject.name + ".BehaviorInteractable.CreateEventSubscriptions(): player unit is already spawned.");
+                HandlePrerequisiteUpdates();
+            } else {
+                //Debug.Log(gameObject.name + ".BehaviorInteractable.CreateEventSubscriptions(): player unit is not yet spawned");
+            }
+            eventSubscriptionsInitialized = true;
+        }
+
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            base.CleanupEventSubscriptions();
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePrerequisiteUpdates;
+            }
+            eventSubscriptionsInitialized = false;
+        }
+
+        public override void OnDisable() {
+            //Debug.Log("PlayerManager.OnDisable()");
+            base.OnDisable();
+            CleanupEventSubscriptions();
+            CleanupDialog();
+        }
+
+        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
+            CleanupEventSubscriptions();
+        }
+
+
+        private void Spawn() {
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.Spawn()");
+            if (boxCollider != null) {
+                boxCollider.enabled = true;
+            }
+            //interactable.InitializeMaterials();
+            MiniMapStatusUpdateHandler(this);
+        }
+
+        private void DestroySpawn() {
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.DestroySpawn()");
+            boxCollider.enabled = false;
+            MiniMapStatusUpdateHandler(this);
+        }
+
+        public List<BehaviorProfile> GetCurrentOptionList() {
+            //Debug.Log("BehaviorInteractable.GetValidOptionList()");
+            List<BehaviorProfile> currentList = new List<BehaviorProfile>();
+            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+                if (behaviorProfile.MyPrerequisitesMet == true) {
+                    currentList.Add(behaviorProfile);
+                }
+            }
+            //Debug.Log("BehaviorInteractable.GetValidOptionList(): List Size: " + validList.Count);
+            return currentList;
+        }
+
+        public override bool Interact(CharacterUnit source) {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
+            List<BehaviorProfile> currentList = GetCurrentOptionList();
+            if (currentList.Count == 0) {
+                return false;
+            } else if (currentList.Count == 1) {
+                    if (behaviorCoroutine == null) {
+                        behaviorCoroutine = StartCoroutine(playBehavior(currentList[0]));
+                    }
+            } else {
+                interactable.OpenInteractionWindow();
+            }
+            return true;
+        }
+
+        private void CleanupDialog() {
+            //nameplate
+            if (behaviorCoroutine != null) {
+                StopCoroutine(behaviorCoroutine);
+            }
+            behaviorCoroutine = null;
+            if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
+                namePlateUnit.MyNamePlate.HideSpeechBubble();
+            }
+        }
+
+        public IEnumerator playBehavior(BehaviorProfile behaviorProfile) {
+            float elapsedTime = 0f;
+            BehaviorNode currentbehaviorNode = null;
+            suppressNameplateImage = true;
+            interactable.UpdateNamePlateImage();
+            while (behaviorIndex <= behaviorProfile.MyBehaviorNodes.Count) {
+                foreach (BehaviorNode behaviorNode in behaviorProfile.MyBehaviorNodes) {
+                    if (behaviorNode.MyStartTime <= elapsedTime && behaviorNode.MyCompleted == false) {
+                        currentbehaviorNode = behaviorNode;
+
+                        if (currentbehaviorNode.MyBehaviorActionNodes != null) {
+                            foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.MyBehaviorActionNodes) {
+                                if (behaviorActionNode.MyBehaviorMethod != null && behaviorActionNode.MyBehaviorMethod != string.Empty) {
+                                    gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, behaviorActionNode.MyBehaviorParameter, SendMessageOptions.DontRequireReceiver);
+                                }
+                            }
+                        }
+
+                        behaviorNode.MyCompleted = true;
+                        behaviorIndex++;
+                    }
+                }
+                elapsedTime += Time.deltaTime;
+
+                // circuit breaker
+                if (elapsedTime >= maxBehaviorTime) {
+                    break;
+                }
+                yield return null;
+            }
+            behaviorCoroutine = null;
+            suppressNameplateImage = false;
+            interactable.UpdateNamePlateImage();
+
+        }
+
+        public override bool CanInteract(CharacterUnit source) {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
+            if (!base.CanInteract(source)) {
+                return false;
+            }
+            if (GetCurrentOptionList().Count == 0 || suppressNameplateImage == true) {
+                return false;
+            }
+            return true;
+
+        }
+
+        /// <summary>
+        /// Pick an item up off the ground and put it in the inventory
+        /// </summary>
+
+        public override void StopInteract() {
+            base.StopInteract();
+            PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+        }
+
+        public override bool HasMiniMapText() {
+            return true;
+        }
+
+        public override bool SetMiniMapText(Text text) {
+            if (!base.SetMiniMapText(text)) {
+                text.text = "";
+                text.color = new Color32(0, 0, 0, 0);
+                return false;
+            }
+            text.text = "o";
+            text.fontSize = 50;
+            text.color = Color.white;
+            return true;
+        }
+
+        public override int GetCurrentOptionCount() {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount()");
+            if (behaviorCoroutine == null) {
+                return GetCurrentOptionList().Count;
+            } else {
+                return 0;
+            }
+        }
+
+        public override void HandlePrerequisiteUpdates() {
+            base.HandlePrerequisiteUpdates();
+            MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            behaviorList = new List<BehaviorProfile>();
+            if (behaviorNames != null) {
+                foreach (string behaviorName in behaviorNames) {
+                    BehaviorProfile tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                    if (tmpBehaviorProfile != null) {
+                        behaviorList.Add(tmpBehaviorProfile);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+}

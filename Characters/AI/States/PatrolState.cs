@@ -13,25 +13,40 @@ namespace AnyRPG {
 
         private Coroutine coroutine;
 
+        private float originalMovementSpeed = 0f;
+
         public void Enter(AIController aiController) {
-            //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
+            Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.aiController = aiController;
-            if (!aiController.MyAiPatrol.MyAutomaticPatrol.PatrolComplete()) {
-                Vector3 tmpDestination = aiController.MyAiPatrol.MyAutomaticPatrol.GetDestination(false);
+            if (!aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete()) {
+                originalMovementSpeed = this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed;
+                SetMovementSpeed();
+
+                // set destination
+                Vector3 tmpDestination = aiController.MyAiPatrol.MyCurrentPatrol.GetDestination(false);
                 if (tmpDestination != Vector3.zero) {
                     currentDestination = this.aiController.SetDestination(tmpDestination);
                 }
-                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             } else {
                 aiController.ChangeState(new IdleState());
             }
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() setting new Destination: " + newDestination);
         }
 
+        public void SetMovementSpeed() {
+            Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() movment speed: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed);
+            if (aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed == 0) {
+                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+            } else {
+                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed;
+            }
+        }
+
         public void Exit() {
             if (coroutine != null) {
                 aiController.StopCoroutine(coroutine);
             }
+            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = originalMovementSpeed;
         }
 
         public void Update() {
@@ -56,8 +71,8 @@ namespace AnyRPG {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
-                if (aiController.MyAiPatrol.MyAutomaticPatrol.PatrolComplete()) {
-                    if (aiController.MyAiPatrol.MyAutomaticPatrol.MyDespawnOnCompletion) {
+                if (aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete()) {
+                    if (aiController.MyAiPatrol.MyCurrentPatrol.MyDespawnOnCompletion) {
                         if (aiController.MyBaseCharacter.MyCharacterUnit != null) {
                             aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
                         }
@@ -86,7 +101,7 @@ namespace AnyRPG {
             }
 
             if (getNewDestination == true) {
-                Vector3 tmpDestination = aiController.MyAiPatrol.MyAutomaticPatrol.GetDestination(true);
+                Vector3 tmpDestination = aiController.MyAiPatrol.MyCurrentPatrol.GetDestination(true);
                 if (tmpDestination == Vector3.zero) {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
                     return;
@@ -94,14 +109,14 @@ namespace AnyRPG {
                 // destination is safe, set it
                 currentDestination = tmpDestination;
 
-                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                SetMovementSpeed();
                 coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
             }
         }
 
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
 
-            float remainingPauseTime = aiController.MyAiPatrol.MyAutomaticPatrol.MyDestinationPauseTime;
+            float remainingPauseTime = aiController.MyAiPatrol.MyCurrentPatrol.MyDestinationPauseTime;
             while (remainingPauseTime > 0f) {
                 remainingPauseTime -= Time.deltaTime;
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);

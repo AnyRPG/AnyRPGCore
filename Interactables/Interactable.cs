@@ -220,7 +220,7 @@ namespace AnyRPG {
 
         public void UpdateNamePlateImage() {
 
-            //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage()");
+            Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage()");
             if (PlayerManager.MyInstance.MyCharacter == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;

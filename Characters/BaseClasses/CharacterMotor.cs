@@ -19,7 +19,7 @@ namespace AnyRPG {
         protected AnimatedUnit animatedUnit;
 
         // default value meant to be overwritten by a controller (AI/player)
-        protected float movementSpeed = 1f;
+        protected float movementSpeed = 0f;
 
         private bool frozen = false;
 
@@ -62,13 +62,23 @@ namespace AnyRPG {
             animatedUnit = GetComponent<AnimatedUnit>();
         }
 
+        protected virtual void SetMovementSpeed() {
+            if (movementSpeed == 0) {
+                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
+            } else {
+                Debug.Log(gameObject.name + ".CharacterMotor.Update(): movementSpeed: " + movementSpeed);
+                animatedUnit.MyAgent.speed = movementSpeed;
+            }
+
+        }
+
         protected virtual void Update() {
             //Debug.Log(gameObject.name + ".CharacterMotor.Update(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending);
             if (frozen) {
                 return;
             }
             if (characterUnit != null && animatedUnit != null && animatedUnit.MyAgent != null && animatedUnit.MyAgent.isActiveAndEnabled) {
-                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
+                SetMovementSpeed();
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
                 // unused gravity stuff
@@ -118,7 +128,7 @@ namespace AnyRPG {
             }
             if (characterUnit != null && animatedUnit.MyAgent != null && animatedUnit.MyAgent.isActiveAndEnabled) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; ANIMATED UNIT IS NOT NULL, SETTING SPEED");
-                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
+                SetMovementSpeed();
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
                 // unused gravity stuff
