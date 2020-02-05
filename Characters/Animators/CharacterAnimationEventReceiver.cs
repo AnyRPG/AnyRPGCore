@@ -42,21 +42,21 @@ namespace AnyRPG {
         }
 
         public void AnimationPrefabCreate() {
-            Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreate()");
+            //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreate()");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
                 characterUnit.MyCharacter.MyCharacterAbilityManager.SpawnAbilityObjects();
             }
         }
 
         public void AnimationPrefabCreateByIndex(int animationIndex) {
-            Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreateByIndex(" + animationIndex + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreateByIndex(" + animationIndex + ")");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
                 characterUnit.MyCharacter.MyCharacterAbilityManager.SpawnAbilityObjects(animationIndex);
             }
         }
 
         public void AnimationPrefabDestroy() {
-            Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabDestroy()");
+            //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabDestroy()");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
                 characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
             }

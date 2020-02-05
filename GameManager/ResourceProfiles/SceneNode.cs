@@ -39,6 +39,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool cutsceneViewed;
 
+        private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
+
         public string MySceneName { get => resourceName; set => resourceName = value; }
         public Vector3 MyDefaultSpawnPosition { get => defaultSpawnPosition; set => defaultSpawnPosition = value; }
         public bool MySuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
@@ -47,6 +49,7 @@ namespace AnyRPG {
         public bool MyIsCutScene { get => isCutScene; set => isCutScene = value; }
         public AudioProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
         public AudioProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
+        public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

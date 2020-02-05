@@ -73,6 +73,11 @@ namespace AnyRPG {
                 return;
             }
             sceneNode.MyCutsceneViewed = sceneNodeSaveData.isCutSceneViewed;
+            if (sceneNodeSaveData.persistentObjects != null) {
+                foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNodeSaveData.persistentObjects) {
+                    sceneNode.MyPersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
+                }
+            }
         }
     }
 

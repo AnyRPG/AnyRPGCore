@@ -42,6 +42,9 @@ namespace AnyRPG {
         [SerializeField]
         private float movementSpeed = 0f;
 
+        [SerializeField]
+        private bool savePositionAtDestination = false;
+
         // the current count of destinations reached
         private int destinationRetrievedCount = 0;
 
@@ -61,6 +64,7 @@ namespace AnyRPG {
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public bool MyAutoStart { get => autoStart; set => autoStart = value; }
         public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+        public bool MySavePositionAtDestination { get => savePositionAtDestination; set => savePositionAtDestination = value; }
 
         void Start() {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);

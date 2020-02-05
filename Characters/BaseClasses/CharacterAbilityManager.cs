@@ -585,7 +585,7 @@ namespace AnyRPG {
         }
 
         public void SpawnAbilityObjects(int indexValue = -1) {
-            Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
             BaseAbility usedBaseAbility = null;
             if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
                 usedBaseAbility = MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility;

@@ -71,7 +71,22 @@ namespace AnyRPG {
 
         public string MyName;
         public bool isCutSceneViewed;
+
+        public List<PersistentObjectSaveData> persistentObjects;
     }
+
+    [Serializable]
+    public struct PersistentObjectSaveData {
+
+        public string UUID;
+        public float LocationX;
+        public float LocationY;
+        public float LocationZ;
+        public float DirectionX;
+        public float DirectionY;
+        public float DirectionZ;
+    }
+
 
     [Serializable]
     public struct DialogSaveData {

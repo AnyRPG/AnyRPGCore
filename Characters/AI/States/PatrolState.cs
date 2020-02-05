@@ -77,6 +77,7 @@ namespace AnyRPG {
                             aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
                         }
                     } else {
+                        TrySavePersistentData();
                         aiController.ChangeState(new IdleState());
                         return;
                     }
@@ -101,6 +102,7 @@ namespace AnyRPG {
             }
 
             if (getNewDestination == true) {
+                TrySavePersistentData();
                 Vector3 tmpDestination = aiController.MyAiPatrol.MyCurrentPatrol.GetDestination(true);
                 if (tmpDestination == Vector3.zero) {
                     //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
@@ -111,6 +113,16 @@ namespace AnyRPG {
 
                 SetMovementSpeed();
                 coroutine = (aiController as MonoBehaviour).StartCoroutine(PauseForNextDestination(currentDestination));
+            }
+        }
+
+        public void TrySavePersistentData() {
+            Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
+            if (aiController != null && aiController.MyAiPatrol != null && aiController.MyAiPatrol.MyCurrentPatrol != null && aiController.MyAiPatrol.MyCurrentPatrol.MySavePositionAtDestination) {
+                PersistentObject persistentObject = aiController.gameObject.GetComponent<PersistentObject>();
+                if (persistentObject != null) {
+                    persistentObject.SaveProperties();
+                }
             }
         }
 

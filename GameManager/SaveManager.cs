@@ -450,6 +450,11 @@ namespace AnyRPG {
                 SceneNodeSaveData sceneNodeSaveData = new SceneNodeSaveData();
                 sceneNodeSaveData.MyName = sceneNode.MyName;
                 sceneNodeSaveData.isCutSceneViewed = sceneNode.MyCutsceneViewed;
+                sceneNodeSaveData.persistentObjects = new List<PersistentObjectSaveData>();
+                foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNode.MyPersistentObjects.Values) {
+                    sceneNodeSaveData.persistentObjects.Add(persistentObjectSaveData);
+                }
+
                 anyRPGSaveData.sceneNodeSaveData.Add(sceneNodeSaveData);
             }
         }
