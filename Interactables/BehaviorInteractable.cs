@@ -173,7 +173,7 @@ namespace AnyRPG {
         }
 
         public override bool CanInteract(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
             if (!base.CanInteract(source)) {
                 return false;
             }
@@ -210,7 +210,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount()");
             if (behaviorCoroutine == null) {
                 return GetCurrentOptionList().Count;
             } else {

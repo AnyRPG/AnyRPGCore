@@ -66,7 +66,7 @@ namespace AnyRPG {
             if (movementSpeed == 0) {
                 animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
             } else {
-                Debug.Log(gameObject.name + ".CharacterMotor.Update(): movementSpeed: " + movementSpeed);
+                //Debug.Log(gameObject.name + ".CharacterMotor.Update(): movementSpeed: " + movementSpeed);
                 animatedUnit.MyAgent.speed = movementSpeed;
             }
 
@@ -442,14 +442,21 @@ namespace AnyRPG {
             transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, (rotationSpeed * Time.deltaTime) * rotationSpeed);
         }
 
+        public void BeginFaceSouthEast() {
+            Debug.Log(gameObject.name + ".CharacterMotor.BeginFaceSouthEast()");
+            //RotateToward((new Vector3(1, 0, -1)).normalized);
+            Rotate((new Vector3(1, 0, -1)).normalized);
+            //Rotate((new Vector3(-1, 0, 1)).normalized);
+        }
+
         public void RotateToward(Vector3 rotateDirection) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
+            Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
             if (frozen) {
                 return;
             }
             if (animatedUnit.MyAgent.enabled) {
                 //Debug.Log("nav mesh agent is enabled");
-                //Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
+                Debug.Log(gameObject.name + ".CharacterMotor.RotateToward(): " + rotateDirection);
                 ResetPath();
                 animatedUnit.MyAgent.updateRotation = true;
                 animatedUnit.MyAgent.velocity = rotateDirection;
@@ -460,7 +467,7 @@ namespace AnyRPG {
         }
 
         public void Rotate(Vector3 rotateDirection) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.Rotate(): " + rotateDirection);
+            Debug.Log(gameObject.name + ".CharacterMotor.Rotate(): " + rotateDirection);
             if (frozen) {
                 return;
             }

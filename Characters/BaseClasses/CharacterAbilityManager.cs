@@ -584,7 +584,8 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnAbilityObjects() {
+        public void SpawnAbilityObjects(int indexValue = -1) {
+            Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
             BaseAbility usedBaseAbility = null;
             if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
                 usedBaseAbility = MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
@@ -597,7 +598,13 @@ namespace AnyRPG {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.MyAnimatorCreatePrefabs) {
-                    baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjects);
+                    if (indexValue == -1) {
+                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjects);
+                    } else {
+                        List<PrefabProfile> passList = new List<PrefabProfile>();
+                        passList.Add(usedBaseAbility.MyHoldableObjects[indexValue - 1]);
+                        baseCharacter.MyCharacterEquipmentManager.SpawnAbilityObjects(passList);
+                    }
                 }
             }
 
@@ -626,6 +633,17 @@ namespace AnyRPG {
                 if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack) {
                     BeginAbility(baseAbility);
                 }
+            }
+        }
+
+        /// <summary>
+        /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
+        /// </summary>
+        /// <param name="abilityName"></param>
+        public void BeginAbility(string abilityName) {
+            BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+            if (baseAbility != null) {
+                BeginAbility(baseAbility);
             }
         }
 
