@@ -45,6 +45,7 @@ namespace AnyRPG {
         public void BeginPatrol(string patrolName) {
             PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
             if (tmpPatrolProfile != null) {
+                tmpPatrolProfile.MyCharacterUnit = characterUnit;
                 SetCurrentPatrol(tmpPatrolProfile);
                 (characterUnit.MyCharacter.MyCharacterController as AIController).ChangeState(new PatrolState());
             }

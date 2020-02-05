@@ -11,6 +11,10 @@ namespace AnyRPG {
         [SerializeField]
         private string profileName;
     */
+
+        [SerializeField]
+        private bool useRootMotion = false;
+
         [SerializeField]
         private bool suppressAdjustAnimatorSpeed = false;
 
@@ -171,6 +175,7 @@ namespace AnyRPG {
         public AnimationClip MyCombatFallClip { get => combatFallClip; set => combatFallClip = value; }
         public AnimationClip MyCombatLandClip { get => combatLandClip; set => combatLandClip = value; }
         public bool MySuppressAdjustAnimatorSpeed { get => suppressAdjustAnimatorSpeed; set => suppressAdjustAnimatorSpeed = value; }
+        public bool MyUseRootMotion { get => useRootMotion; set => useRootMotion = value; }
     }
 
 }

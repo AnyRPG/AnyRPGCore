@@ -21,6 +21,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool automatic = false;
 
+        // track whether it is completed to prevent it from repeating if it is automatic
+        private bool completed = false;
+
         /*
         /// <summary>
         /// Track whether this dialog has been turned in
@@ -55,6 +58,7 @@ namespace AnyRPG {
 
         public List<BehaviorNode> MyBehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
+        public bool MyCompleted { get => completed; set => completed = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

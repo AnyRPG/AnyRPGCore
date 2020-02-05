@@ -105,8 +105,8 @@ namespace AnyRPG {
         public bool PatrolComplete() {
             //Debug.Log("AIPatrol.PatrolComplete(): loopDestination: " + loopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + maxDestinations + "; destinationListCount: " + destinationList.Count);
 
-            if (randomDestinations && maxDestinations == 0) {
-                //Debug.Log("AIPatrol.PatrolComplete() randomDestinations && maxDestinations == 0; return false");
+            if (randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations)) {
+                //Debug.Log("AIPatrol.PatrolComplete() randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations); return false");
                 return false;
             }
 
@@ -123,7 +123,7 @@ namespace AnyRPG {
         }
 
         public Vector3 GetRandomDestination() {
-            //Debug.Log(gameObject.name + ".AIPatrol.GetRandomDestination()");
+            //Debug.Log(MyName + ".AIPatrol.GetRandomDestination()");
             if (destinationList.Count > 0) {
                 // get destination from list
                 int randomNumber = Random.Range(0, destinationList.Count);

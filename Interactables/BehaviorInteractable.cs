@@ -111,18 +111,23 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
             List<BehaviorProfile> currentList = GetCurrentOptionList();
             if (currentList.Count == 0) {
                 return false;
             } else if (currentList.Count == 1) {
-                    if (behaviorCoroutine == null) {
-                        behaviorCoroutine = StartCoroutine(playBehavior(currentList[0]));
-                    }
+                TryPlayBehavior(currentList[0]);
+                    
             } else {
                 interactable.OpenInteractionWindow();
             }
             return true;
+        }
+
+        private void TryPlayBehavior(BehaviorProfile behaviorProfile) {
+            if (behaviorCoroutine == null) {
+                behaviorCoroutine = StartCoroutine(playBehavior(behaviorProfile));
+            }
         }
 
         private void CleanupDialog() {
@@ -168,6 +173,7 @@ namespace AnyRPG {
             }
             behaviorCoroutine = null;
             suppressNameplateImage = false;
+            behaviorProfile.MyCompleted = true;
             interactable.UpdateNamePlateImage();
 
         }
@@ -221,6 +227,15 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+            PlayAutomaticBehaviors();
+        }
+
+        public void PlayAutomaticBehaviors() {
+            foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
+                if (behaviorProfile.MyAutomatic == true && behaviorProfile.MyCompleted == false) {
+                    TryPlayBehavior(behaviorProfile);
+                }
+            }
         }
 
         public override void SetupScriptableObjects() {
@@ -228,7 +243,7 @@ namespace AnyRPG {
             behaviorList = new List<BehaviorProfile>();
             if (behaviorNames != null) {
                 foreach (string behaviorName in behaviorNames) {
-                    BehaviorProfile tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                    BehaviorProfile tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
                     if (tmpBehaviorProfile != null) {
                         behaviorList.Add(tmpBehaviorProfile);
                     }

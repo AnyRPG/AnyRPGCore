@@ -863,7 +863,11 @@ namespace AnyRPG {
                 //lastAnimationLength = animationLength;
 
             }
-
+            if (baseAbility.MyAnimationProfile.MyUseRootMotion == true) {
+                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = true;
+            } else {
+                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
+            }
             SetCasting(true);
             // this should not be necessary since we track the length of animation through the casting time
             // regular hits and animated abilities are instant attack and so need to track their downtime through animation length
@@ -921,9 +925,12 @@ namespace AnyRPG {
         }
 
         public void ClearCasting() {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.ClearCasting()");
+
             //characterUnit.MyCharacter.MyCharacterAbilityManager.StopCasting();
-            // no need to do this here, as it is done in the stopcasting method now
+            characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
             SetCasting(false);
+
         }
 
         public virtual void ClearAnimationBlockers() {

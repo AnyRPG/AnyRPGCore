@@ -39,12 +39,16 @@ namespace AnyRPG {
         // debugging variable to see how long paths are remaining pending for
         private int pathPendingCount = 0;
 
+        
+        private bool useRootMotion = false;
+
         // properties
         public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
         public GameObject MyTarget { get => target; }
         public bool MyFrozen { get => frozen; set => frozen = value; }
         public float MyNavMeshDistancePadding { get => navMeshDistancePadding; }
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public bool MyUseRootMotion { get => useRootMotion; set => useRootMotion = value; }
 
         protected virtual void Awake() {
         }
@@ -559,6 +563,12 @@ namespace AnyRPG {
                 lastResetFrame = Time.frameCount;
                 //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): AFTER RESETPATH: current location: " + transform.position + "; NavMeshAgentDestination: " + animatedUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): after reset: navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending);
+            }
+        }
+
+        public void ReceiveAnimatorMovment(Vector3 movementDelta) {
+            if (MyUseRootMotion) {
+                transform.position += movementDelta;
             }
         }
     }

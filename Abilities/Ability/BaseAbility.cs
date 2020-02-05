@@ -211,6 +211,7 @@ namespace AnyRPG {
         public bool MyRequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
+        public AnimationProfile MyAnimationProfile { get => animationProfile; set => animationProfile = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

@@ -6,6 +6,8 @@ namespace AnyRPG {
         [SerializeField]
         private CharacterUnit characterUnit;
 
+        private Animator animator;
+
         private void Awake() {
             if (characterUnit == null) {
                 characterUnit = GetComponent<CharacterUnit>();
@@ -15,6 +17,9 @@ namespace AnyRPG {
             }
             if (characterUnit == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.Awake(): could not find character unit!");
+            }
+            if (animator == null) {
+                animator = GetComponent<Animator>();
             }
         }
 
@@ -54,6 +59,12 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabDestroy()");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
                 characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            }
+        }
+
+        public void OnAnimatorMove() {
+            if (animator != null && characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyAnimatedUnit != null && characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.ReceiveAnimatorMovment(animator.deltaPosition);
             }
         }
 
