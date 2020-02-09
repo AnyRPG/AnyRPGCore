@@ -230,7 +230,7 @@ namespace AnyRPG {
                     }
                     if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                         //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyDescription);
+                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyDialog);
                     }
                 } else {
                     CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);

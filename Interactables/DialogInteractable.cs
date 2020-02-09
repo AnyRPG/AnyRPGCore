@@ -198,6 +198,7 @@ namespace AnyRPG {
                     break;
                 }
                 yield return null;
+                dialogCoroutine = null;
             }
 
             yield return new WaitForSeconds(currentdialogNode.MyShowTime);

@@ -70,7 +70,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload() {
-            Debug.Log(gameObject.name + "PersistentObject.HandleLevelUnload()");
+            //Debug.Log(gameObject.name + "PersistentObject.HandleLevelUnload()");
             if (saveOnLevelUnload == true) {
                 SaveProperties();
             }
@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties() {
-            Debug.Log(gameObject.name + "PersistentObject.SaveProperties()");
+            //Debug.Log(gameObject.name + "PersistentObject.SaveProperties()");
             storedPosition = transform.position;
             storedForwardDirection = transform.forward;
             UUID uuid = GetComponent<UUID>();

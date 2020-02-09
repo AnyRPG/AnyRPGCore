@@ -39,6 +39,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool cutsceneViewed;
 
+        [SerializeField]
+        private string dialogName;
+
+        private Dialog dialog;
+
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string MySceneName { get => resourceName; set => resourceName = value; }
@@ -50,6 +55,7 @@ namespace AnyRPG {
         public AudioProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
         public AudioProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
+        public Dialog MyDialog { get => dialog; set => dialog = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -67,6 +73,15 @@ namespace AnyRPG {
             }/* else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
             }*/
+
+            if (dialogName != null && dialogName != string.Empty) {
+                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+                if (tmpDialog != null) {
+                    dialog = tmpDialog;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialog + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
         }
 
     }

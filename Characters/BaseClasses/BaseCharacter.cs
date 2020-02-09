@@ -274,7 +274,7 @@ namespace AnyRPG {
                 UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
                 if (tmpUnitType != null) {
                     unitType = tmpUnitType;
-                    Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
+                    //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
                 } else {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
