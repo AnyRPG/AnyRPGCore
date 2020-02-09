@@ -179,7 +179,9 @@ namespace AnyRPG {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
                         currentdialogNode = dialogNode;
                         namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
-                        CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
+                        if (CombatLogUI.MyInstance != null) {
+                            CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
+                        }
 
                         dialogNode.MyShown = true;
                         dialogIndex++;
@@ -204,9 +206,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".DialogInteractable.CanInteract()");
-            if (!base.CanInteract(source)) {
+            if (!base.CanInteract()) {
                 return false;
             }
             if (GetCurrentOptionList().Count == 0) {

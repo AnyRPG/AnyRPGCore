@@ -13,7 +13,7 @@ namespace AnyRPG {
         private Dialog prerequisiteDialog = null;
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("QuestPrerequisite.IsMet()");
+            Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
             Dialog _dialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
             if (_dialog != null) {
                 if (_dialog.TurnedIn == true) {

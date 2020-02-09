@@ -117,7 +117,7 @@ namespace AnyRPG {
         }
 
         public void TrySavePersistentData() {
-            Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
+            //Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
             if (aiController != null && aiController.MyAiPatrol != null && aiController.MyAiPatrol.MyCurrentPatrol != null && aiController.MyAiPatrol.MyCurrentPatrol.MySavePositionAtDestination) {
                 PersistentObject persistentObject = aiController.gameObject.GetComponent<PersistentObject>();
                 if (persistentObject != null) {
@@ -127,7 +127,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
-            Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + ")");
+            //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + ")");
 
             float remainingPauseTime = aiController.MyAiPatrol.MyCurrentPatrol.MyDestinationPauseTime;
             while (remainingPauseTime > 0f) {

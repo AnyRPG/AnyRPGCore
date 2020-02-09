@@ -67,6 +67,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool forceDespawnUnits = false;
 
+        [SerializeField]
+        private float despawnDelay = 0f;
+
         private Coroutine countDownRoutine = null;
 
         private Coroutine delayRoutine = null;
@@ -303,7 +306,7 @@ namespace AnyRPG {
         private void DestroySpawns() {
             //Debug.Log("UnitSpawnNode.DestroySpawn(): Destroying spawns");
             foreach (GameObject _gameObject in spawnReferences) {
-                Destroy(_gameObject);
+                Destroy(_gameObject, despawnDelay);
             }
             spawnReferences.Clear();
         }

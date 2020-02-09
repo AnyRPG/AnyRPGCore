@@ -14,7 +14,7 @@ namespace AnyRPG {
         bool MyPrerequisitesMet { get; }
         Sprite MyNamePlateImage { get; }
 
-        bool CanInteract(CharacterUnit source);
+        bool CanInteract();
         bool Interact(CharacterUnit source);
         void StopInteract();
         bool HasMiniMapText();

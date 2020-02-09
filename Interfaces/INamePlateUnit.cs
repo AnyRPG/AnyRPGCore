@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         event System.Action<IInteractable> MiniMapStatusUpdateHandler;
 
-        bool CanInteract(CharacterUnit source);
+        bool CanInteract();
         bool Interact(CharacterUnit source);
         bool HasHealth();
         void StopInteract();

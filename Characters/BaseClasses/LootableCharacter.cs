@@ -155,9 +155,9 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
-            if (base.CanInteract(source) == false) {
+            if (base.CanInteract() == false) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }

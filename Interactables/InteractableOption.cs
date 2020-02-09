@@ -79,7 +79,7 @@ namespace AnyRPG {
             componentReferencesInitialized = true;
         }
 
-        public virtual bool CanInteract(CharacterUnit source) {
+        public virtual bool CanInteract() {
             return MyPrerequisitesMet;
         }
 

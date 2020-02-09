@@ -18,7 +18,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> behaviorNames = new List<string>();
 
-        [SerializeField]
+        //[SerializeField]
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
         private int behaviorIndex = 0;
@@ -39,11 +39,12 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            //Debug.Log("BehaviorInteractable.Start()");
+            Debug.Log("BehaviorInteractable.Start()");
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
             CreateEventSubscriptions();
             Spawn();
+            HandlePrerequisiteUpdates();
         }
 
         private void CreateEventSubscriptions() {
@@ -125,6 +126,7 @@ namespace AnyRPG {
         }
 
         private void TryPlayBehavior(BehaviorProfile behaviorProfile) {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
             if (behaviorCoroutine == null) {
                 behaviorCoroutine = StartCoroutine(playBehavior(behaviorProfile));
             }
@@ -178,9 +180,9 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
-            if (!base.CanInteract(source)) {
+            if (!base.CanInteract()) {
                 return false;
             }
             if (GetCurrentOptionList().Count == 0 || suppressNameplateImage == true) {
@@ -225,12 +227,14 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
             PlayAutomaticBehaviors();
         }
 
         public void PlayAutomaticBehaviors() {
+            Debug.Log(gameObject.name + ".BehaviorInteractable.PlayAutomaticBehaviors()");
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
                 if (behaviorProfile.MyAutomatic == true && behaviorProfile.MyCompleted == false) {
                     TryPlayBehavior(behaviorProfile);

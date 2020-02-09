@@ -101,7 +101,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             return false;
         }
 

@@ -249,6 +249,9 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
+            if (SystemFactionManager.MyInstance == null) {
+                return;
+            }
             if (faction == null && factionName != null && factionName != string.Empty) {
                 Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
                 if (tmpFaction != null) {

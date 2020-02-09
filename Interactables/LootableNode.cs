@@ -166,8 +166,8 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public override bool CanInteract(CharacterUnit source) {
-            bool returnValue = base.CanInteract(source);
+        public override bool CanInteract() {
+            bool returnValue = base.CanInteract();
             if (returnValue == false) {
                 return false;
             }

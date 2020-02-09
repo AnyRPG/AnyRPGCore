@@ -117,7 +117,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }
-            List<IInteractable> currentInteractables = interactable.GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+            List<IInteractable> currentInteractables = interactable.GetCurrentInteractables();
             if (currentInteractables.Count == 0) {
                 // this could have been a refresh from while a quest was open overtop.  close it if there are no valid interactables
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
@@ -220,7 +220,7 @@ namespace AnyRPG {
             foreach (GameObject interactionPanelScript in interactionPanelScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
-                if (iPS.MyInteractableOption.CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+                if (iPS.MyInteractableOption.CanInteract()) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
                     iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
                     //optionOpened = true;

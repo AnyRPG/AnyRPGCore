@@ -101,7 +101,7 @@ namespace AnyRPG {
             return optionCount;
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
             bool returnValue = ((GetCurrentOptionCount() > 0 && MyPrerequisitesMet) ? true : false);
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
@@ -109,7 +109,7 @@ namespace AnyRPG {
         }
 
         public override bool CanShowMiniMapIcon() {
-            return CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+            return CanInteract();
         }
 
         public override void HandlePrerequisiteUpdates() {

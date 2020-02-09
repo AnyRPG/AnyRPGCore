@@ -21,6 +21,9 @@ namespace AnyRPG {
 
         private PrefabProfile prefabProfile;
 
+        [SerializeField]
+        private float spawnDelay = 0f;
+
         //[SerializeField]
         //private GameObject spawnPrefab;
 
@@ -94,7 +97,8 @@ namespace AnyRPG {
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
             if (SystemGameManager.MyInstance == null) {
-                //Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
+                Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
+                return;
             }
             InitializeComponents();
             SetupScriptableObjects();
@@ -206,11 +210,11 @@ namespace AnyRPG {
         public void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             InitializeComponents();
+            StartCoroutine(WaitForSpawn());
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
-            Spawn();
             InstantiateMiniMapIndicator();
             foreach (IInteractable _interactable in interactables) {
                 _interactable.HandlePrerequisiteUpdates();
@@ -218,10 +222,22 @@ namespace AnyRPG {
             UpdateNamePlateImage();
         }
 
+        private IEnumerator WaitForSpawn() {
+            if (GetCurrentInteractables().Count > 0) {
+                float accumulatedTime = 0f;
+                while (accumulatedTime < spawnDelay) {
+                    accumulatedTime += Time.deltaTime;
+                    yield return null;
+                }
+                Spawn();
+            }
+            yield return null;
+        }
+
         public void UpdateNamePlateImage() {
 
             //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage()");
-            if (PlayerManager.MyInstance.MyCharacter == null) {
+            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.MyCharacterUnit == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -229,12 +245,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.MyNamePlate != null ? namePlateUnit.MyNamePlate.name : "null"));
                 return;
             }
-            int currentInteractableCount = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count;
+            int currentInteractableCount = GetCurrentInteractables().Count;
             //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
 
             // determine if one of our current interactables is a questgiver
             bool questGiverCurrent = false;
-            foreach (InteractableOption interactableOption in GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            foreach (InteractableOption interactableOption in GetCurrentInteractables()) {
                 if (interactableOption is QuestGiver) {
                     questGiverCurrent = true;
                 }
@@ -249,10 +265,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
-                    if (GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)[0].MyNamePlateImage != null) {
+                    if (GetCurrentInteractables()[0].MyNamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)[0].MyNamePlateImage;
+                        namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].MyNamePlateImage;
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
@@ -266,10 +282,12 @@ namespace AnyRPG {
         public void Spawn() {
             //Debug.Log(gameObject.name + ".Interactable.Spawn()");
 
+            /*
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.Spawn(): No valid Interactables.  Not spawning.");
                 return;
             }
+            */
 
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
                 //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + spawnPrefab.name);
@@ -326,7 +344,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;
             }
-            if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
+
+            if (GetValidInteractables().Count == 0) {
+                //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
             }
@@ -390,7 +410,8 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                 return false;
             }
-            List<IInteractable> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+            List<IInteractable> validInteractables = GetValidInteractables();
+            //List<IInteractable> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
             int validInteractableCount = 0;
             if (validInteractables != null) {
                 validInteractableCount = validInteractables.Count;
@@ -410,7 +431,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + ")");
 
             // get a list of valid interactables to determine if there is an action we can treat as default
-            List<IInteractable> validInteractables = GetValidInteractables(source);
+            List<IInteractable> validInteractables = GetValidInteractables();
+            //List<IInteractable> validInteractables = GetValidInteractables(source);
             foreach (IInteractable validInteractable in validInteractables) {
                 //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
             }
@@ -447,14 +469,17 @@ namespace AnyRPG {
         */
 
 
-        public List<IInteractable> GetValidInteractables(CharacterUnit source) {
+        public List<IInteractable> GetValidInteractables() {
+            //public List<IInteractable> GetValidInteractables(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables()");
             InitializeComponents();
 
+            /*
             if (source == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): source is null.  returning null!");
                 return null;
             }
+            */
 
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
@@ -484,14 +509,16 @@ namespace AnyRPG {
             return validInteractables;
         }
 
-        public List<IInteractable> GetCurrentInteractables(CharacterUnit source) {
+        public List<IInteractable> GetCurrentInteractables() {
             //Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables()");
             InitializeComponents();
 
+            /*
             if (source == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): source is null.  returning null!");
                 return null;
             }
+            */
 
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
@@ -500,7 +527,7 @@ namespace AnyRPG {
 
             List<IInteractable> currentInteractables = new List<IInteractable>();
             foreach (IInteractable _interactable in interactables) {
-                if (_interactable.CanInteract(source) && (_interactable as MonoBehaviour).enabled == true) {
+                if (_interactable.CanInteract() && (_interactable as MonoBehaviour).enabled == true) {
                     //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                     currentInteractables.Add(_interactable);
                 } else {
@@ -543,7 +570,7 @@ namespace AnyRPG {
             // added pivot so the tooltip doesn't bounce around
             UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MyMouseOverWindow.transform.position, this);
 
-            if (GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
+            if (GetCurrentInteractables().Count == 0) {
                 //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No valid Interactables.  Not glowing.");
                 return;
@@ -672,7 +699,7 @@ namespace AnyRPG {
 
             // switched this to current interactables so that we don't see mouseover options that we can't current interact with
             //List<IInteractable> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
-            List<IInteractable> currentInteractables = GetCurrentInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+            List<IInteractable> currentInteractables = GetCurrentInteractables();
 
             // perform default interaction or open a window if there are multiple valid interactions
             List<string> returnStrings = new List<string>();

@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            Debug.Log(gameObject.name + "PersistentObject.LoadPersistentState()");
+            //Debug.Log(gameObject.name + "PersistentObject.LoadPersistentState()");
             UUID uuid = GetComponent<UUID>();
             if (uuid != null) {
                 if (LevelManager.MyInstance != null) {

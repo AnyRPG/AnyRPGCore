@@ -246,14 +246,16 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="targetCharacter"></param>
         /// <returns></returns>
-        public override bool CanInteract(CharacterUnit targetCharacter) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".CharacterUnit.CanInteract(" + targetCharacter.MyName + ")");
+            /*
             if (targetCharacter == null) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.CanInteract(): source is null!!");
                 // we must have moused over a healthbar before the player spawned
                 return false;
             }
-            if (Faction.RelationWith(targetCharacter.MyCharacter, MyBaseCharacter) <= -1 && baseCharacter.MyCharacterStats.IsAlive == true) {
+            */
+            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, MyBaseCharacter) <= -1 && baseCharacter.MyCharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }
@@ -263,7 +265,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".CharacterUnit.Interact(" + source.name + ")");
-            if (CanInteract(source)) {
+            if (CanInteract()) {
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
                 (source.MyCharacter.MyCharacterCombat as PlayerCombat).Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();

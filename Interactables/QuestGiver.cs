@@ -78,12 +78,12 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public override bool CanInteract(CharacterUnit source) {
+        public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
             if (Quest.GetCompleteQuests(MyQuests).Count + Quest.GetAvailableQuests(MyQuests).Count == 0) {
                 return false;
             }
-            return base.CanInteract(source);
+            return base.CanInteract();
 
         }
 
@@ -199,7 +199,7 @@ namespace AnyRPG {
                 return string.Empty;
             }
 
-            if (CanInteract(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) == false) {
+            if (CanInteract() == false) {
                 //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
             }
