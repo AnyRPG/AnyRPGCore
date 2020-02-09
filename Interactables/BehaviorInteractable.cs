@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            Debug.Log("BehaviorInteractable.Start()");
+            //Debug.Log("BehaviorInteractable.Start()");
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
             CreateEventSubscriptions();
@@ -126,7 +126,7 @@ namespace AnyRPG {
         }
 
         private void TryPlayBehavior(BehaviorProfile behaviorProfile) {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
             if (behaviorCoroutine == null) {
                 behaviorCoroutine = StartCoroutine(playBehavior(behaviorProfile));
             }
@@ -227,14 +227,14 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
             PlayAutomaticBehaviors();
         }
 
         public void PlayAutomaticBehaviors() {
-            Debug.Log(gameObject.name + ".BehaviorInteractable.PlayAutomaticBehaviors()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.PlayAutomaticBehaviors()");
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
                 if (behaviorProfile.MyAutomatic == true && behaviorProfile.MyCompleted == false) {
                     TryPlayBehavior(behaviorProfile);

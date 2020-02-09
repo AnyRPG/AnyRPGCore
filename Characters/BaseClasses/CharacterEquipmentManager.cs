@@ -245,7 +245,7 @@ namespace AnyRPG {
 
 
         public void DespawnAbilityObjects() {
-            Debug.Log(gameObject + ".CharacterEquipmentManager.DespawnAbilityObjects()");
+            //Debug.Log(gameObject + ".CharacterEquipmentManager.DespawnAbilityObjects()");
             if (abilityObjects == null || abilityObjects.Count == 0) {
                 return;
             }

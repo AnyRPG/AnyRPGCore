@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class Interactable : MonoBehaviour, IDescribable {
+    public class Interactable : Spawnable, IDescribable {
 
         // the physical interactable to spawn
         [SerializeField]
@@ -16,19 +16,6 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite interactableIcon;
 
-        [SerializeField]
-        private string prefabProfileName;
-
-        private PrefabProfile prefabProfile;
-
-        [SerializeField]
-        private float spawnDelay = 0f;
-
-        //[SerializeField]
-        //private GameObject spawnPrefab;
-
-        [SerializeField]
-        private GameObject spawnReference;
 
         public bool glowOnMouseOver = true;
         public float glowFlashSpeed = 1.5f;
@@ -55,6 +42,14 @@ namespace AnyRPG {
         [SerializeField]
         private Material temporaryMaterial = null;
 
+        // require a valid interactable option in addition to any preqrequisites in the spawnbable base class
+        [SerializeField]
+        private bool spawnRequiresValidOption = false;
+
+        // require no valid interactable options in addition to any preqrequisites in the spawnbable base class
+        [SerializeField]
+        private bool despawnRequiresNoValidOption = false;
+
         Renderer[] meshRenderers = null;
 
         private List<Shader> shaderList = new List<Shader>();
@@ -69,7 +64,6 @@ namespace AnyRPG {
         protected bool isInteracting = false;
         private bool isFlashing = false;
         //bool isFocus = false;
-        Transform player;
 
         //bool hasInteracted = false;
         bool hasMeshRenderer = false;
@@ -78,30 +72,19 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider;
 
-        private bool componentsInitialized = false;
-
-        protected bool eventSubscriptionsInitialized = false;
-
         private INamePlateUnit namePlateUnit = null;
 
         public bool IsInteracting { get => isInteracting; }
 
         public IInteractable[] MyInteractables { get => interactables; set => interactables = value; }
-        public GameObject MySpawnReference { get => spawnReference; set => spawnReference = value; }
 
         public Sprite MyIcon { get => interactableIcon; }
 
         public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
-        public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
-        protected virtual void Awake() {
+        protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
-            if (SystemGameManager.MyInstance == null) {
-                Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
-                return;
-            }
-            InitializeComponents();
-            SetupScriptableObjects();
+            base.Awake();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
@@ -113,60 +96,25 @@ namespace AnyRPG {
 
         }
 
-        public virtual void Start() {
+        public override void Start() {
             //Debug.Log(gameObject.name + ".Interactable.Start()");
-            InitializeComponents();
-            //interactionTransform = transform;
-            //InitializeMaterials();
-            CreateEventSubscriptions();
+            base.Start();
         }
 
-        public virtual void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".Interactable.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Interactable.Start(): Player Unit is spawned.  Handling immediate spawn!");
-                HandlePlayerUnitSpawn();
-            } else {
-                //Debug.Log(gameObject.name + ".Interactable.Start(): Player Unit is not spawned. Added Handle Spawn listener");
-            }
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
-            eventSubscriptionsInitialized = true;
-        }
-
-        private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            }
-            eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDisable() {
-            //Debug.Log(gameObject.name + ".Interactable.OnDisable()");
-            CleanupEverything();
-        }
-
-        public void CleanupEverything() {
+        public override void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
+            base.CleanupEverything();
             CleanupMiniMapIndicator();
-            CleanupEventSubscriptions();
             ClearFromPlayerRangeTable();
         }
 
-        public void InitializeComponents() {
+        public override void InitializeComponents() {
             //Debug.Log(gameObject.name + ".Interactable.InitializeComponents()");
 
             if (componentsInitialized == true) {
                 return;
             }
+            base.InitializeComponents();
             boxCollider = GetComponent<BoxCollider>();
             interactables = GetComponents<IInteractable>();
 
@@ -184,7 +132,6 @@ namespace AnyRPG {
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
             }
-            componentsInitialized = true;
         }
 
         private void Update() {
@@ -207,10 +154,29 @@ namespace AnyRPG {
             }
         }
 
-        public void HandlePrerequisiteUpdates() {
+        protected override bool CanSpawn() {
+            bool returnResult = base.CanSpawn();
+            if (returnResult == true && spawnRequiresValidOption) {
+                if (GetCurrentInteractables().Count == 0) {
+                    return false;
+                }
+            }
+            return returnResult;
+        }
+
+        protected override bool CanDespawn() {
+            bool returnResult = base.CanDespawn();
+            if (returnResult == true && despawnRequiresNoValidOption) {
+                if (GetCurrentInteractables().Count > 0) {
+                    return false;
+                }
+            }
+            return returnResult;
+        }
+
+        public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
-            InitializeComponents();
-            StartCoroutine(WaitForSpawn());
+            base.HandlePrerequisiteUpdates();
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
@@ -220,18 +186,6 @@ namespace AnyRPG {
                 _interactable.HandlePrerequisiteUpdates();
             }
             UpdateNamePlateImage();
-        }
-
-        private IEnumerator WaitForSpawn() {
-            if (GetCurrentInteractables().Count > 0) {
-                float accumulatedTime = 0f;
-                while (accumulatedTime < spawnDelay) {
-                    accumulatedTime += Time.deltaTime;
-                    yield return null;
-                }
-                Spawn();
-            }
-            yield return null;
         }
 
         public void UpdateNamePlateImage() {
@@ -279,37 +233,11 @@ namespace AnyRPG {
         }
 
 
-        public void Spawn() {
+        public override void Spawn() {
             //Debug.Log(gameObject.name + ".Interactable.Spawn()");
+            base.Spawn();
 
-            /*
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
-                //Debug.Log(gameObject.name + ".Interactable.Spawn(): No valid Interactables.  Not spawning.");
-                return;
-            }
-            */
-
-            if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
-                //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + spawnPrefab.name);
-                spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
-                spawnReference.transform.Rotate(prefabProfile.MyRotation);
-            } else {
-                if (spawnReference != null) {
-                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): Already spawned");
-                }
-                if (prefabProfile == null) {
-                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile is null");
-                } else {
-                    if (prefabProfile.MyPrefab == null) {
-                        //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile.myprefab is null");
-                    }
-                }
-            }
-
-            // maybe some kind of check of inanimate units since these generally aren't on other units?
             EnableInteraction();
-            //interactable.InitializeMaterials();
-            //MiniMapStatusUpdateHandler(this);
         }
 
         public void EnableInteraction() {
@@ -322,20 +250,13 @@ namespace AnyRPG {
             boxCollider.enabled = false;
         }
 
-        public void DestroySpawn() {
+        public override void DestroySpawn() {
             //Debug.Log(gameObject.name + ".Interactable.DestroySpawn()");
-            if (spawnReference != null) {
-                Destroy(spawnReference);
-                spawnReference = null;
-            }
+            base.DestroySpawn();
+
             originalMaterials.Clear();
             DisableInteraction();
             //MiniMapStatusUpdateHandler(this);
-        }
-
-        public virtual void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePlayerUnitSpawn()");
-            HandlePrerequisiteUpdates();
         }
 
         public bool InstantiateMiniMapIndicator() {
@@ -833,25 +754,16 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void OnDestroy() {
-            //Debug.Log(gameObject.name + ".Interactable.OnDestroy()");
-        }
 
-        public void SetupScriptableObjects() {
+        public override void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
+            base.SetupScriptableObjects();
+
             if (interactables != null) {
                 foreach (IInteractable interactable in interactables) {
                     if (interactable != null) {
                         interactable.SetupScriptableObjects();
                     }
-                }
-            }
-            if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
-                if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
-                    prefabProfile = tmpPrefabProfile;
-                } else {
-                    Debug.LogError(gameObject.name + ".Interactable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);
                 }
             }
         }
