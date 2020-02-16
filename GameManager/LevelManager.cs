@@ -101,16 +101,16 @@ namespace AnyRPG {
                     if (overrideSpawnLocationTag != null && overrideSpawnLocationTag != string.Empty) {
                         usedTag = overrideSpawnLocationTag;
                     }
-                    Debug.Log("Levelmanager.GetSpawnLocation(). usedTag: " + usedTag);
+                    //Debug.Log("Levelmanager.GetSpawnLocation(). usedTag: " + usedTag);
                     GameObject defaultspawnLocationMarker = GameObject.FindWithTag(usedTag);
                     overrideSpawnLocationTag = string.Empty;
                     if (defaultspawnLocationMarker != null) {
-                        Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + usedTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                        //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + usedTag + ". returning " + defaultspawnLocationMarker.transform.position);
                         return defaultspawnLocationMarker.transform.position;
                     } else {
                         defaultspawnLocationMarker = GameObject.FindWithTag(defaultSpawnLocationTag);
                         if (defaultspawnLocationMarker != null) {
-                            Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                            //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
                             return defaultspawnLocationMarker.transform.position;
                         }
                     }

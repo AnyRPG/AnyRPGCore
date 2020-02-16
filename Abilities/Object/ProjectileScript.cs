@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public void Initialize(float velocity, BaseCharacter source, GameObject target, Vector3 positionOffset, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + target.name + ", " + positionOffset + ")");
+            //Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
             this.source = source;
             this.velocity = velocity;
             this.target = target;
@@ -47,7 +47,12 @@ namespace AnyRPG {
             //Debug.Log("ProjectileScript.MoveTowardTarget()");
             if (initialized) {
                 UpdateTargetPosition();
-                transform.forward = (targetPosition - transform.position).normalized;
+                if (target != null) {
+                    transform.forward = (targetPosition - transform.position).normalized;
+                } else {
+                    //transform.forward = Vector3.down;
+                }
+
                 //Debug.Log("ProjectileScript.MoveTowardTarget(): transform.forward: " + transform.forward);
                 transform.position += (transform.forward * (Time.deltaTime * velocity));
             }
@@ -55,13 +60,20 @@ namespace AnyRPG {
 
         private void OnTriggerEnter(Collider other) {
             //Debug.Log("ProjectileScript.OnTriggerEnter(" + other.name + ")");
-            if (other.gameObject == target) {
+            if ((target != null && other.gameObject == target) || target == null) {
+                if (abilityEffectInput != null && abilityEffectInput.prefabLocation != null) {
+                    abilityEffectInput.prefabLocation = transform.position;
+                }
                 OnCollission(source, target, gameObject, abilityEffectInput);
             }
         }
 
         private void OnCollisionEnter(Collision collision) {
             //Debug.Log("ProjectileScript.OnCollissionEnter()");
+        }
+
+        private void OnDestroy() {
+            //Debug.Log("ProjectileScript.OnDestroy()");
         }
     }
 

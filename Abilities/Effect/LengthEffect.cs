@@ -12,6 +12,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> prefabNames = new List<string>();
 
+        // randomly select a prefab instead of spawning all of them
+        [SerializeField]
+        private bool randomPrefabs = false;
+
         private List<PrefabProfile> prefabProfileList = new List<PrefabProfile>();
 
         /*
@@ -37,12 +41,6 @@ namespace AnyRPG {
         [SerializeField]
         protected float prefabDestroyDelay = 0f;
 
-        /// <summary>
-        /// the reference to the gameobject spawned by this ability
-        /// </summary>
-        //protected GameObject abilityEffectObject = null;
-
-        protected Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
 
         // every <tickRate> seconds, the Tick() will occur
         [SerializeField]
@@ -84,11 +82,18 @@ namespace AnyRPG {
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
             if (prefabProfileList != null) {
-                foreach (PrefabProfile prefabProfile in prefabProfileList) {
+                List<PrefabProfile> usedPrefabProfileList = new List<PrefabProfile>();
+                if (randomPrefabs == false) {
+                    usedPrefabProfileList = prefabProfileList;
+                } else {
+                    //PrefabProfile copyProfile = prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count -1)];
+                    usedPrefabProfileList.Add(prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count - 1)]);
+                }
+                foreach (PrefabProfile prefabProfile in usedPrefabProfileList) {
                     Vector3 spawnLocation = Vector3.zero;
                     Transform prefabParent = null;
                     if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
-                        //Debug.Log(resourceName + ".AbilityEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+                        //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         //spawnLocation = source.GetComponent<Collider>().bounds.center;
                         spawnLocation = abilityEffectInput.prefabLocation;
                         prefabParent = null;
@@ -161,7 +166,7 @@ namespace AnyRPG {
         }
 
         protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.BeginMonitoring(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 

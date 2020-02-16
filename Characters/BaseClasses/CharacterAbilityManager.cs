@@ -880,12 +880,15 @@ namespace AnyRPG {
             //Debug.Log("CharacterAbilityManager.DestroyAbilityEffectObject(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
             float timeRemaining = timer;
 
+            bool nullTarget = false;
             CharacterStats targetStats = null;
             if (target != null) {
                 CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
                 if (_characterUnit != null) {
                     targetStats = _characterUnit.MyCharacter.MyCharacterStats;
                 }
+            } else {
+                nullTarget = true;
             }
 
             int milliseconds = (int)((fixedLengthEffect.MyTickRate - (int)fixedLengthEffect.MyTickRate) * 1000);
@@ -901,7 +904,7 @@ namespace AnyRPG {
 
             while (timeRemaining > 0f) {
                 
-                if (targetStats == null || fixedLengthEffect == null) {
+                if (nullTarget == false && (targetStats == null || fixedLengthEffect == null)) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.DestroyAbilityEffectObject: BREAKING!!!!!!!!!!!!!!!!!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.MyName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.name));
                     break;
                 }

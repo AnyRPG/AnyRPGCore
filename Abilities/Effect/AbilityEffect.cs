@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -56,7 +57,15 @@ namespace AnyRPG {
         [SerializeField]
         protected string onHitAudioProfileName;
 
-        protected AudioProfile onHitAudioProfile;
+        [SerializeField]
+        protected List<string> onHitAudioProfileNames = new List<string>();
+
+        // whether to play all audio profiles or just one random one
+        [SerializeField]
+        protected bool randomAudioProfiles = false;
+
+        //protected AudioProfile onHitAudioProfile;
+        protected List<AudioProfile> onHitAudioProfiles = new List<AudioProfile>();
 
         /*
         [SerializeField]
@@ -85,6 +94,14 @@ namespace AnyRPG {
         [SerializeField]
         protected float threatMultiplier = 1f;
 
+        /// <summary>
+        /// the reference to the gameobject spawned by this ability
+        /// </summary>
+        //protected GameObject abilityEffectObject = null;
+
+        protected Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
+
+
 
         public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
@@ -98,7 +115,7 @@ namespace AnyRPG {
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public BaseCharacter MySourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float MyThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
-        public AudioClip MyOnHitAudioClip { get => (onHitAudioProfile == null ? null : onHitAudioProfile.MyAudioClip ); }
+        //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
         public virtual void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
@@ -302,10 +319,30 @@ namespace AnyRPG {
         public virtual void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityHitEffects(source, target, abilityEffectInput);
-            if (MyOnHitAudioClip != null) {
-                AudioSource audioSource = target.GetComponent<AudioSource>();
+            if (onHitAudioProfiles != null) {
+                AudioSource audioSource = null;
+                if (target != null) {
+                    audioSource = target.GetComponent<AudioSource>();
+                } else {
+                    if (prefabObjects != null && prefabObjects.Count > 0) {
+                        //prefabObjects.First();
+                        audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
+                    }
+                }
                 if (audioSource != null) {
-                    audioSource.PlayOneShot(MyOnHitAudioClip);
+                    List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
+                    if (randomAudioProfiles == true) {
+                        usedAudioProfiles.Add(onHitAudioProfiles[UnityEngine.Random.Range(0, onHitAudioProfiles.Count - 1)]);
+                    } else {
+                        usedAudioProfiles = onHitAudioProfiles;
+                    }
+                    foreach (AudioProfile audioProfile in usedAudioProfiles) {
+                        if (audioProfile.MyAudioClip != null) {
+                            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+
+                            audioSource.PlayOneShot(audioProfile.MyAudioClip);
+                        }
+                    }
                 }
                 //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
             }
@@ -366,13 +403,18 @@ namespace AnyRPG {
                 }
             }
 
-            onHitAudioProfile = null;
+            onHitAudioProfiles = new List<AudioProfile>();
             if (onHitAudioProfileName != null && onHitAudioProfileName != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(onHitAudioProfileName);
-                if (audioProfile != null) {
-                    onHitAudioProfile = audioProfile;
-                } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + onHitAudioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                onHitAudioProfileNames.Add(onHitAudioProfileName);
+            }
+            if (onHitAudioProfileNames != null) {
+                foreach (string audioProfileName in onHitAudioProfileNames) {
+                    AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                    if (audioProfile != null) {
+                        onHitAudioProfiles.Add(audioProfile);
+                    } else {
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
                 }
             }
 
