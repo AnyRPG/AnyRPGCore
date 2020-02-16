@@ -410,10 +410,10 @@ namespace AnyRPG {
             return false;
         }
 
-        public void ActivateTargettingMode(Color groundTargetColor) {
+        public void ActivateTargettingMode(BaseAbility baseAbility) {
             //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
             targettingModeActive = true;
-            CastTargettingManager.MyInstance.EnableProjector(groundTargetColor);
+            CastTargettingManager.MyInstance.EnableProjector(baseAbility);
         }
 
         public bool WaitingForTarget() {
@@ -515,7 +515,7 @@ namespace AnyRPG {
             }
             if (ability.MyRequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
-                ActivateTargettingMode(ability.MyGroundTargetColor);
+                ActivateTargettingMode(ability as BaseAbility);
                 while (WaitingForTarget() == true) {
                     //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() waiting for target");
                     yield return null;
@@ -824,7 +824,12 @@ namespace AnyRPG {
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (MyBaseCharacter.MyCharacterController.MyApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
-                StopCasting();
+                if (currentCastAbility != null && currentCastAbility.MyRequiresGroundTarget == true && CastTargettingManager.MyInstance.ProjectorIsActive() == true) {
+                    // do nothing
+                    //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
+                } else {
+                    StopCasting();
+                }
             } else {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): velocity too low, doing nothing");
             }

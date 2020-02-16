@@ -80,7 +80,8 @@ namespace AnyRPG {
 
         public void SetCircleRadius(float newRadius) {
             //Debug.Log("CastTargettingController.SetCircleRadius()");
-            this.circleRadius = newRadius;
+            circleRadius = newRadius;
+            castTargettingProjector.orthographicSize = circleRadius;
         }
 
 

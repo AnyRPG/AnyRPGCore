@@ -101,13 +101,15 @@ namespace AnyRPG {
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnCenter = source.MyCharacterUnit.transform.position;
+                aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectInput.prefabLocation;
+                aoeSpawnCenter += aoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
-            aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
+            //aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
             Collider[] colliders = new Collider[0];
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
@@ -116,6 +118,7 @@ namespace AnyRPG {
                 colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeRadius, validMask);
             }
             if (useExtents) {
+                //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
                 colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.MyCharacterUnit.transform.rotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);

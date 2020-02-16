@@ -129,6 +129,10 @@ namespace AnyRPG {
         [SerializeField]
         protected Color groundTargetColor = new Color32(255, 255, 255, 255);
 
+        // how big should the projector be on the ground if this is ground targeted
+        [SerializeField]
+        protected float groundTargetRadius = 0f;
+
         // ignore requireTarget and canCast variables and use the check from the first ability effect instead
         [SerializeField]
         private bool useAbilityEffectTargetting = false;
@@ -212,6 +216,7 @@ namespace AnyRPG {
         public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
         public AnimationProfile MyAnimationProfile { get => animationProfile; set => animationProfile = value; }
+        public float MyGroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
