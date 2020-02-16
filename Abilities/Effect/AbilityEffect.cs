@@ -332,7 +332,7 @@ namespace AnyRPG {
                 if (audioSource != null) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
-                        usedAudioProfiles.Add(onHitAudioProfiles[UnityEngine.Random.Range(0, onHitAudioProfiles.Count - 1)]);
+                        usedAudioProfiles.Add(onHitAudioProfiles[UnityEngine.Random.Range(0, onHitAudioProfiles.Count)]);
                     } else {
                         usedAudioProfiles = onHitAudioProfiles;
                     }

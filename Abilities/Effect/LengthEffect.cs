@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,6 +57,17 @@ namespace AnyRPG {
 
         //[SerializeField]
         protected List<AbilityEffect> tickAbilityEffectList = new List<AbilityEffect>();
+
+        [SerializeField]
+        protected List<string> onTickAudioProfileNames = new List<string>();
+
+        // whether to play all audio profiles or just one random one
+        [SerializeField]
+        protected bool randomTickAudioProfiles = false;
+
+        //protected AudioProfile onHitAudioProfile;
+        protected List<AudioProfile> onTickAudioProfiles = new List<AudioProfile>();
+
 
         //private float nextTickTime;
         protected DateTime nextTickTime;
@@ -143,6 +155,7 @@ namespace AnyRPG {
                         } else {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
                         }
+                        prefabObject.transform.localScale = prefabProfile.MyScale;
                         prefabObjects[prefabProfile] = prefabObject;
                         //abilityEffectObject =
                     }
@@ -159,6 +172,34 @@ namespace AnyRPG {
 
         public virtual void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" + source.name + ", " + (target ? target.name : "null") + ")");
+            // play tick audio effects
+            if (onTickAudioProfiles != null) {
+                AudioSource audioSource = null;
+                if (target != null) {
+                    audioSource = target.GetComponent<AudioSource>();
+                } else {
+                    if (prefabObjects != null && prefabObjects.Count > 0) {
+                        //prefabObjects.First();
+                        audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
+                    }
+                }
+                if (audioSource != null) {
+                    List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
+                    if (randomTickAudioProfiles == true) {
+                        usedAudioProfiles.Add(onTickAudioProfiles[UnityEngine.Random.Range(0, onTickAudioProfiles.Count)]);
+                    } else {
+                        usedAudioProfiles = onTickAudioProfiles;
+                    }
+                    foreach (AudioProfile audioProfile in usedAudioProfiles) {
+                        if (audioProfile.MyAudioClip != null) {
+                            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+
+                            audioSource.PlayOneShot(audioProfile.MyAudioClip);
+                        }
+                    }
+                }
+                //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
+            }
         }
 
         public virtual void CastComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
@@ -238,6 +279,19 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            onTickAudioProfiles = new List<AudioProfile>();
+            if (onTickAudioProfileNames != null) {
+                foreach (string audioProfileName in onTickAudioProfileNames) {
+                    AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                    if (audioProfile != null) {
+                        onTickAudioProfiles.Add(audioProfile);
+                    } else {
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
 
         }
 

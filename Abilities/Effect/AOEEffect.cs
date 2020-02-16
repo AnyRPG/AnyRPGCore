@@ -48,6 +48,7 @@ namespace AnyRPG {
 
         public override void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityAffectInput) {
             //Debug.Log(resourceName + ".AOEEffect.CastTick(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            base.CastTick(source, target, abilityAffectInput);
             TargetAOETick(source, target, abilityAffectInput);
         }
 
