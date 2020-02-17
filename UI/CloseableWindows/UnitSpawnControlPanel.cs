@@ -73,7 +73,7 @@ namespace AnyRPG {
 
         private int extraLevels;
 
-        private int unitLevel;
+        private int unitLevel = 1;
 
         private int unitToughness;
 
@@ -291,7 +291,7 @@ namespace AnyRPG {
         }
 
         public void SetLevel(int dropdownIndex) {
-            //Debug.Log("CharacterCreatorPanel.SetEyebrows(" + dropdownIndex + "): " + eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text);
+            //Debug.Log("CharacterCreatorPanel.SetLevel(" + dropdownIndex + ")");
             unitLevel = levelDropdown.value + 1;
         }
 
