@@ -99,7 +99,7 @@ namespace AnyRPG {
                     usedPrefabProfileList = prefabProfileList;
                 } else {
                     //PrefabProfile copyProfile = prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count -1)];
-                    usedPrefabProfileList.Add(prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count - 1)]);
+                    usedPrefabProfileList.Add(prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count)]);
                 }
                 foreach (PrefabProfile prefabProfile in usedPrefabProfileList) {
                     Vector3 spawnLocation = Vector3.zero;
