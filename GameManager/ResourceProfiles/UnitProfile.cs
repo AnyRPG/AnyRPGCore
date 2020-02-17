@@ -15,7 +15,9 @@ namespace AnyRPG {
         private GameObject unitPrefab;
 
         [SerializeField]
-        private int defaultToughness = 1;
+        private string defaultToughness = string.Empty;
+
+        protected UnitToughness unitToughness;
 
         [SerializeField]
         private string defaultAutoAttackAbilityName;
@@ -35,7 +37,7 @@ namespace AnyRPG {
         private bool isPet = false;
 
         public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
-        public int MyDefaultToughness { get => defaultToughness; set => defaultToughness = value; }
+        public UnitToughness MyDefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility MyDefaultAutoAttackAbility { get => realDefaultAutoAttackAbility; set => realDefaultAutoAttackAbility = value; }
         public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool MyIsPet { get => isPet; set => isPet = value; }
@@ -48,6 +50,16 @@ namespace AnyRPG {
             }/* else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + defaultAutoAttackAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
             }*/
+
+            if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
+                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(defaultToughness);
+                if (tmpToughness != null) {
+                    unitToughness = tmpToughness;
+                } else {
+                    Debug.LogError("Unit Toughness: " + defaultToughness + " not found while initializing character stats.  Check Inspector!");
+                }
+            }
+
         }
     }
 

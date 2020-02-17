@@ -25,7 +25,9 @@ namespace AnyRPG {
 
         // a stat multiplier to make creatures more difficult
         [SerializeField]
-        protected int toughness;
+        protected string toughness;
+
+        protected UnitToughness unitToughness;
 
         // keep track of current level
         private int currentLevel;
@@ -45,6 +47,9 @@ namespace AnyRPG {
 
         protected Stat meleeDamageModifiers = new Stat();
         protected Stat armorModifiers = new Stat();
+
+        protected float healthMultiplier = 1f;
+        protected float manaMultiplier = 1f;
 
         protected Dictionary<StatBuffType, Stat> primaryStatModifiers = new Dictionary<StatBuffType, Stat>();
         //protected List<StatusEffect> statusEffects = new List<StatusEffect>();
@@ -75,12 +80,12 @@ namespace AnyRPG {
 
         public int MyLevel { get => currentLevel; }
         public int MyCurrentXP { get => currentXP; set => currentXP = value; }
-        public int MyMaxHealth { get => MyStamina * 10; }
-        public int MyMaxMana { get => MyIntellect * 10; }
+        public int MyMaxHealth { get => (int)(MyStamina * 10 * healthMultiplier); }
+        public int MyMaxMana { get => (int)(MyIntellect * 10 * manaMultiplier); }
 
         public Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get => primaryStatModifiers; }
         public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
-        public int MyToughness { get => toughness; set => toughness = value; }
+        public UnitToughness MyToughness { get => unitToughness; set => unitToughness = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
@@ -420,13 +425,25 @@ namespace AnyRPG {
         public virtual void SetLevel(int newLevel) {
             //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
             // arbitrary toughness cap of 5 for now.  add this as system configuration option later maybe
-            int usedToughNess = (int)Mathf.Clamp(toughness, 1, 5);
+            //int usedToughNess = (int)Mathf.Clamp((int)toughness, 1, 5);
+            float usedStaminaMultiplier = 1f;
+            float usedIntellectMultiplier = 1f;
+            float usedAgilityMultiplier = 1f;
+            float usedStrengthMultiplier = 1f;
             currentLevel = newLevel;
+            if (unitToughness != null) {
+                usedStaminaMultiplier = unitToughness.MyStaminaMultiplier;
+                usedIntellectMultiplier = unitToughness.MyIntellectMultiplier;
+                usedAgilityMultiplier = unitToughness.MyAgilityMultiplier;
+                usedStrengthMultiplier = unitToughness.MyStrengthMultiplier;
+                healthMultiplier = unitToughness.MyHealthMultiplier;
+                manaMultiplier = unitToughness.MyManaMultiplier;
+            }
 
-            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
-            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
-            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
-            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedToughNess);
+            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStaminaMultiplier);
+            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedIntellectMultiplier);
+            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStrengthMultiplier);
+            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedAgilityMultiplier);
 
             ResetHealth();
             ResetMana();
@@ -639,6 +656,18 @@ namespace AnyRPG {
             }
 
             statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
+        }
+
+        public void SetupScriptableObjects() {
+            if (unitToughness == null && toughness != null && toughness != string.Empty) {
+                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(toughness);
+                if (tmpToughness != null) {
+                    unitToughness = tmpToughness;
+                } else {
+                    Debug.LogError("Unit Toughness: " + toughness + " not found while initializing character stats.  Check Inspector!");
+                }
+            }
+
         }
     }
 

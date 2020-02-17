@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         private int unitLevel = 1;
 
-        private int unitToughness;
+        private UnitToughness unitToughness;
 
         public AnyRPGUnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public UnitSpawnButton MySelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
@@ -114,8 +114,15 @@ namespace AnyRPG {
             options.Clear();
 
             // TOUGHNESS
+            /*
             for (int i = 1; i <= 5; i++) {
                 options.Add(i.ToString());
+            }
+            */
+
+            options.Add("Default");
+            foreach (UnitToughness unitToughness in SystemUnitToughnessManager.MyInstance.GetResourceList()) {
+                options.Add(unitToughness.MyName);
             }
             toughnessDropdown.AddOptions(options);
             //toughnessDropdown.value = currentHairIndex;
@@ -131,7 +138,17 @@ namespace AnyRPG {
 
             ClearPreviewTarget();
             SetPreviewTarget();
-            toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
+            if (unitSpawnButton.MyUnitProfile.MyDefaultToughness != null) {
+                //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
+                int counter = 1;
+                foreach (Dropdown.OptionData data in toughnessDropdown.options) {
+                    if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyName) {
+                        toughnessDropdown.value = counter;
+                        break;
+                    }
+                    counter++;
+                }
+            }
         }
 
         public void ClearPreviewTarget() {
@@ -297,7 +314,14 @@ namespace AnyRPG {
 
         public void SetToughness(int dropdownIndex) {
             //Debug.Log("CharacterCreatorPanel.SetEyebrows(" + dropdownIndex + "): " + eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text);
-            unitToughness = toughnessDropdown.value + 1;
+            if (dropdownIndex == 0) {
+                unitToughness = null;
+            } else {
+                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(toughnessDropdown.options[toughnessDropdown.value].text);
+                if (tmpToughness != null) {
+                    unitToughness = tmpToughness;
+                }
+            }
         }
 
         public void SetExtraLevels(int dropdownIndex) {

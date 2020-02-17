@@ -220,7 +220,7 @@ namespace AnyRPG {
             return spawnLocation;
         }
 
-        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, int toughness) {
+        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness) {
             CommonSpawn(unitLevel, extraLevels, dynamicLevel, spawnPrefab, toughness);
         }
 
@@ -237,7 +237,7 @@ namespace AnyRPG {
             }
         }
 
-        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, int toughness = -1) {
+        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness = null) {
             //GetSpawnLocation();
             //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
             if (spawnPrefab == null || PlayerManager.MyInstance.MyCharacter == null) {
@@ -261,7 +261,7 @@ namespace AnyRPG {
             if (_characterUnit != null) {
                 _characterUnit.OnDespawn += HandleDespawn;
             }
-            if (toughness != -1) {
+            if (toughness != null) {
                 _characterUnit.MyCharacter.MyCharacterStats.MyToughness = toughness;
             }
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
