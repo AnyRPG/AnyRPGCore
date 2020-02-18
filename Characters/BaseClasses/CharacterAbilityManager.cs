@@ -129,6 +129,18 @@ namespace AnyRPG {
             CleanupAbilityEffectGameObjects();
         }
 
+        public virtual void LearnUnitProfileAbilities() {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnUnitProfileAbilities()");
+            if (baseCharacter != null && baseCharacter.MyUnitProfile != null) {
+                foreach (BaseAbility baseAbility in baseCharacter.MyUnitProfile.MyLearnedAbilities) {
+                    if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack == true) {
+                        UnLearnDefaultAutoAttackAbility();
+                    }
+                    LearnAbility(baseAbility);
+                }
+            }
+        }
+
         public virtual void CleanupAbilityEffectGameObjects() {
             foreach (GameObject go in abilityEffectGameObjects) {
                 if (go != null) {
@@ -455,10 +467,11 @@ namespace AnyRPG {
 
         public virtual void UpdateAbilityList(int newLevel) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
+            LearnUnitProfileAbilities();
         }
 
         public virtual bool LearnAbility(BaseAbility newAbility) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + abilityName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + ")");
             if (newAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
@@ -667,7 +680,7 @@ namespace AnyRPG {
             BeginAbilityCommon(ability, target);
         }
 
-        private void BeginAbilityCommon(IAbility ability, GameObject target) {
+        protected virtual void BeginAbilityCommon(IAbility ability, GameObject target) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyName);
             if (usedAbility == null) {
@@ -843,7 +856,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
                 StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
-                baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+                if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                    baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+                }
 
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");

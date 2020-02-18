@@ -178,8 +178,7 @@ namespace AnyRPG {
                 if (target != null) {
                     audioSource = target.GetComponent<AudioSource>();
                 } else {
-                    if (prefabObjects != null && prefabObjects.Count > 0) {
-                        //prefabObjects.First();
+                    if (prefabObjects != null && prefabObjects.Count > 0 && prefabObjects.First().Value != null) {
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
