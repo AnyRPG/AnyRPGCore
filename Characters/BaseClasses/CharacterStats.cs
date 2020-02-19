@@ -96,6 +96,7 @@ namespace AnyRPG {
                 // if it is not zero, we have probably been initialized some other way, and don't need to do this
                 SetLevel(level);
             }
+            TrySpawnDead();
         }
 
         public void OrchestratorStart() {
@@ -180,7 +181,9 @@ namespace AnyRPG {
                     returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
                 }
             }
-            returnValue += primaryStatModifiers[statBuffType].GetValue();
+            if (primaryStatModifiers.ContainsKey(statBuffType)) {
+                returnValue += primaryStatModifiers[statBuffType].GetValue();
+            }
             return returnValue;
         }
 
@@ -534,7 +537,7 @@ namespace AnyRPG {
         /// Set health to maximum
         /// </summary>
         public void ResetHealth() {
-            //Debug.Log(gameObject.name + ".CharacterStats.ResetHealth() : broadcasting OnHealthChanged");
+            Debug.Log(gameObject.name + ".CharacterStats.ResetHealth() : broadcasting OnHealthChanged");
             currentHealth = MyMaxHealth;
 
             // notify subscribers that our health has changed
@@ -551,6 +554,16 @@ namespace AnyRPG {
             OnManaChanged(MyMaxMana, currentMana);
         }
 
+        public virtual void TrySpawnDead() {
+            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+                isAlive = false;
+                currentHealth = 0;
+
+                // notify subscribers that our health has changed
+                OnHealthChanged(MyMaxHealth, currentHealth);
+            }
+        }
+
         public virtual void Die() {
             //Debug.Log(gameObject.name + ".CharacterStats.Die()");
             if (isAlive) {
@@ -563,6 +576,9 @@ namespace AnyRPG {
 
         public virtual void Revive() {
             //Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableAnimator();
+            }
             OnReviveBegin();
         }
 

@@ -55,6 +55,10 @@ namespace AnyRPG {
         [SerializeField]
         protected string unitProfileName;
 
+        // should this character start the game dead
+        [SerializeField]
+        protected bool spawnDead = false;
+
         // reference to actual unit profile
         protected UnitProfile unitProfile = null;
 
@@ -114,6 +118,7 @@ namespace AnyRPG {
         public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
         public string MyClassSpecializationName { get => classSpecializationName; set => classSpecializationName = value; }
         public UnitType MyUnitType { get => unitType; set => unitType = value; }
+        public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");

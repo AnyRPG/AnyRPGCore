@@ -183,6 +183,12 @@ namespace AnyRPG {
             }
         }
 
+        public void EnableAnimator() {
+            if (animator != null) {
+                animator.enabled = true;
+            }
+        }
+
         public virtual void InitializeAnimator() {
             //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator()");
             if (initialized) {
@@ -760,8 +766,9 @@ namespace AnyRPG {
                 }
             }
             if (currentAttackAnimationProfile.MyReviveClip != null) {
+                Debug.Log("CharacterAnimator.SetAnimationClipOverrides() Current Animation Profile Contains Revive Clip");
                 if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultReviveClip)) {
-                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultReviveClip] = currentAttackAnimationProfile.MyLevitatedClip;
+                    tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultReviveClip] = currentAttackAnimationProfile.MyReviveClip;
                 } else {
                     Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
                 }

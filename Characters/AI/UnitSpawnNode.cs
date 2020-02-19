@@ -266,6 +266,7 @@ namespace AnyRPG {
             }
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
             _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
+            _characterUnit.MyCharacter.MyCharacterStats.TrySpawnDead();
             spawnReferences.Add(spawnReference);
         }
 

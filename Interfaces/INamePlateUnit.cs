@@ -27,6 +27,8 @@ namespace AnyRPG {
         bool CanInteract();
         bool Interact(CharacterUnit source);
         bool HasHealth();
+        int CurrentHealth();
+        int MaxHealth();
         void StopInteract();
         bool HasMiniMapText();
         bool HasMiniMapIcon();

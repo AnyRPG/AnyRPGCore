@@ -45,6 +45,14 @@ namespace AnyRPG {
             return false;
         }
 
+        public int CurrentHealth() {
+            return 1;
+        }
+
+        public int MaxHealth() {
+            return 1;
+        }
+
         private void OnEnable() {
             //Debug.Log(gameObject.name + ": running OnEnable()");
             InitializeNamePlate();

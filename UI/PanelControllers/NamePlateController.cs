@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
+            Debug.Log("NamePlateController.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -216,6 +216,7 @@ namespace AnyRPG {
 
             if (namePlateUnit.HasHealth()) {
                 namePlateUnit.HealthBarNeedsUpdate += OnHealthChanged;
+                OnHealthChanged(namePlateUnit.MaxHealth(), namePlateUnit.CurrentHealth());
                 if (namePlateUnit is CharacterUnit) {
                     if ((namePlateUnit as CharacterUnit).MyBaseCharacter != null) {
                         if ((namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager != null) {

@@ -116,7 +116,11 @@ namespace AnyRPG {
             // ensure base.Start is run before change to IdleState
             base.Start();
 
-            ChangeState(new IdleState());
+            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+                ChangeState(new DeathState());
+            } else {
+                ChangeState(new IdleState());
+            }
 
             // detect if unit has spherecollider (non agro units don't need one)
             SphereCollider sphereCollider = baseCharacter.MyCharacterUnit.GetComponentInChildren<SphereCollider>();

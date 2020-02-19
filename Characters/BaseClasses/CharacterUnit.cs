@@ -86,6 +86,21 @@ namespace AnyRPG {
             return true;
         }
 
+        public int CurrentHealth() {
+            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+                return baseCharacter.MyCharacterStats.currentHealth;
+            }
+            return 1;
+        }
+
+        public int MaxHealth() {
+            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+                return baseCharacter.MyCharacterStats.MyMaxHealth;
+            }
+            return 1;
+        }
+
+
         public void HandleReviveComplete() {
             InitializeNamePlate();
 

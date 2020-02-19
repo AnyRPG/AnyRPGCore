@@ -64,7 +64,7 @@ public class NamePlateManager : MonoBehaviour {
     }
 
     public NamePlateController SpawnNamePlate(INamePlateUnit namePlateUnit) {
-        //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.MyDisplayName + ")");
+        Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.MyDisplayName + ")");
         NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateCanvas);
         namePlates.Add(namePlateUnit, namePlate);
         namePlate.SetNamePlateUnit(namePlateUnit);
