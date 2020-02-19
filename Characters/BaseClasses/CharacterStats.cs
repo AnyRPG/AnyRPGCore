@@ -65,7 +65,12 @@ namespace AnyRPG {
         public float MyArmor { get => armorModifiers.GetValue(); }
         public int MyBaseStamina { get => stamina; }
         //public int MyStamina { get => (int)((stamina + primaryStatModifiers[StatBuffType.Stamina].GetValue()) * primaryStatModifiers [StatBuffType.Stamina].GetMultiplyValue()); }
-        public int MyStamina { get => (int)((stamina + GetAddModifiers(StatBuffType.Stamina)) * GetMultiplyModifiers(StatBuffType.Stamina)); }
+        public int MyStamina {
+            get {
+                //Debug.Log("stamina: " + stamina + "; admodifiers: " + GetAddModifiers(StatBuffType.Stamina) + "; multiplymodifiers: " + GetMultiplyModifiers(StatBuffType.Stamina));
+                return (int)((stamina + GetAddModifiers(StatBuffType.Stamina)) * GetMultiplyModifiers(StatBuffType.Stamina));
+            }
+        }
         public int MyBaseStrength { get => strength; }
         public int MyStrength { get => (int)((strength + GetAddModifiers(StatBuffType.Strength)) * GetMultiplyModifiers(StatBuffType.Strength)); }
         public int MyBaseIntellect { get => intellect; }
@@ -188,6 +193,7 @@ namespace AnyRPG {
         }
 
         protected virtual float GetMultiplyModifiers(StatBuffType statBuffType) {
+            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.MyStatBuffTypes.Contains(statBuffType)) {
@@ -443,7 +449,9 @@ namespace AnyRPG {
                 manaMultiplier = unitToughness.MyManaMultiplier;
             }
 
+            //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + "): stamina before: " + stamina + "; currentlevel: " + currentLevel + "; usedstaminamultiplier: " + usedStaminaMultiplier);
             stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStaminaMultiplier);
+            //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + "): stamina after: " + stamina);
             intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedIntellectMultiplier);
             strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStrengthMultiplier);
             agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedAgilityMultiplier);
@@ -537,7 +545,7 @@ namespace AnyRPG {
         /// Set health to maximum
         /// </summary>
         public void ResetHealth() {
-            Debug.Log(gameObject.name + ".CharacterStats.ResetHealth() : broadcasting OnHealthChanged");
+            //Debug.Log(gameObject.name + ".CharacterStats.ResetHealth() : broadcasting OnHealthChanged; maxhealth: " + MyMaxHealth);
             currentHealth = MyMaxHealth;
 
             // notify subscribers that our health has changed
@@ -555,7 +563,9 @@ namespace AnyRPG {
         }
 
         public virtual void TrySpawnDead() {
+            //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead()");
             if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+                //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
                 currentHealth = 0;
 

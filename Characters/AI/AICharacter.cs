@@ -47,12 +47,13 @@ namespace AnyRPG {
 
         public override void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
+
+            // if this is run, or the getcomponents part anyway before the below block, then character unit will be set properly
+            base.OrchestratorStart();
+
             if (characterUnit != null) {
                 characterUnit.OrchestrateStartup();
             }
-
-            // if this is run, or the getcomponents part anyway before the above block, then character unit will be set properly
-            base.OrchestratorStart();
 
         }
 

@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            Debug.Log("NamePlateController.CreateEventSubscriptions()");
+            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }

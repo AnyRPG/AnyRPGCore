@@ -94,7 +94,9 @@ namespace AnyRPG {
         }
 
         public int MaxHealth() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth(): we had character stats; returning " + baseCharacter.MyCharacterStats.MyMaxHealth);
                 return baseCharacter.MyCharacterStats.MyMaxHealth;
             }
             return 1;

@@ -766,7 +766,7 @@ namespace AnyRPG {
                 }
             }
             if (currentAttackAnimationProfile.MyReviveClip != null) {
-                Debug.Log("CharacterAnimator.SetAnimationClipOverrides() Current Animation Profile Contains Revive Clip");
+                //Debug.Log("CharacterAnimator.SetAnimationClipOverrides() Current Animation Profile Contains Revive Clip");
                 if (overrideControllerClipList.Contains(SystemConfigurationManager.MyInstance.MyDefaultReviveClip)) {
                     tempOverrideController[SystemConfigurationManager.MyInstance.MyDefaultReviveClip] = currentAttackAnimationProfile.MyReviveClip;
                 } else {

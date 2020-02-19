@@ -8,7 +8,7 @@ namespace AnyRPG {
         private AIController aiController;
 
         public void Enter(AIController aiController) {
-            Debug.Log(aiController.gameObject.name + ".DeathState.Enter(): entered death state");
+            //Debug.Log(aiController.gameObject.name + ".DeathState.Enter(): entered death state");
             this.aiController = aiController;
             //this.aiController.MyBaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopNavAgent();
@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
-            Debug.Log(aiController.gameObject.name + ".DeathState.Exit(): entered death state");
+            //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StartNavAgent();
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = true;
             aiController.EnableAggro();
