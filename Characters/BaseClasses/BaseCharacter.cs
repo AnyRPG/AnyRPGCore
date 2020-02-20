@@ -205,6 +205,15 @@ namespace AnyRPG {
 
         }
 
+        public void OrchestratorFinish() {
+            if (characterStats != null) {
+                characterStats.OrchestratorFinish();
+            }
+            if (characterEquipmentManager != null) {
+                characterEquipmentManager.OrchestratorFinish();
+            }
+        }
+
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Start()");
         }

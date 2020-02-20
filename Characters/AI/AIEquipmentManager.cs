@@ -14,14 +14,17 @@ namespace AnyRPG {
             if (playerUnitObject == null) {
                 playerUnitObject = gameObject;
             }
+        }
 
-            // NPC case
+        public override void OrchestratorFinish() {
+            base.OrchestratorFinish();
             if (dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
                 if (dynamicCharacterAvatar != null) {
                     SubscribeToUMACreate();
                 }
             }
+
         }
 
         public void HandleCharacterCreated(UMAData umaData) {
@@ -33,6 +36,7 @@ namespace AnyRPG {
         public void SubscribeToUMACreate() {
 
             // is this stuff necessary on ai characters?
+
             baseCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             dynamicCharacterAvatar.Initialize();
             // is this stuff necessary end

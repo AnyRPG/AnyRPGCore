@@ -169,7 +169,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (!canCastOnSelf && target == sourceCharacter.MyCharacterUnit.gameObject) {
+            if (!canCastOnSelf && sourceCharacter != null && sourceCharacter.MyCharacterUnit && target == sourceCharacter.MyCharacterUnit.gameObject) {
                 //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
                 target = null;
             }

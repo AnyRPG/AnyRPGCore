@@ -168,7 +168,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator playDialog(Dialog dialog) {
-            if (namePlateUnit != null) {
+            if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
                 namePlateUnit.MyNamePlate.ShowSpeechBubble();
             }
             float elapsedTime = 0f;
@@ -201,8 +201,10 @@ namespace AnyRPG {
                 dialogCoroutine = null;
             }
 
-            yield return new WaitForSeconds(currentdialogNode.MyShowTime);
-            if (namePlateUnit != null) {
+            if (currentdialogNode != null) {
+                yield return new WaitForSeconds(currentdialogNode.MyShowTime);
+            }
+            if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
                 namePlateUnit.MyNamePlate.HideSpeechBubble();
             }
         }

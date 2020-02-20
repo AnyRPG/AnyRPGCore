@@ -6,7 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     public class AIStats : CharacterStats {
 
-        public override void CreateEventSubscriptions() {
+        public override void CreateLateSubscriptions() {
+            base.CreateEventSubscriptions();
             if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }

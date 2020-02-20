@@ -108,6 +108,11 @@ namespace AnyRPG {
             GetComponentReferences();
             SetPrimaryStatModifiers();
             CreateEventSubscriptions();
+            SetupScriptableObjects();
+        }
+
+        public void OrchestratorFinish() {
+            CreateLateSubscriptions();
         }
 
         public void GetComponentReferences() {
@@ -120,6 +125,10 @@ namespace AnyRPG {
             }
             primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HealthChangedNotificationHandler;
             primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += ManaChangedNotificationHandler;
+        }
+
+        public virtual void CreateLateSubscriptions() {
+
         }
 
         public virtual void CreateEventSubscriptions() {
@@ -585,7 +594,7 @@ namespace AnyRPG {
         }
 
         public virtual void Revive() {
-            //Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
             if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableAnimator();
             }
@@ -593,12 +602,13 @@ namespace AnyRPG {
         }
 
         public virtual void ReviveComplete() {
-            //Debug.Log(MyBaseCharacter.MyCharacterName + ": Recieved Revive Complete Signal. Resetting Character Stats.");
+            Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
             ReviveRaw();
             OnReviveComplete();
         }
 
         public virtual void ReviveRaw() {
+            Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
             isAlive = true;
             ClearInvalidStatusEffects();
             ResetHealth();

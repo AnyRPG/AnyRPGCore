@@ -30,6 +30,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AICharacter.Awake()");
             base.Awake();
             OrchestratorStart();
+            OrchestratorFinish();
         }
 
         public override void GetComponentReferences() {

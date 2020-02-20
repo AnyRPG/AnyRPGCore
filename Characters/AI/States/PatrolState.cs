@@ -16,7 +16,7 @@ namespace AnyRPG {
         private float originalMovementSpeed = 0f;
 
         public void Enter(AIController aiController) {
-            //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
+            Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.aiController = aiController;
             if (!aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete()) {
                 originalMovementSpeed = this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed;

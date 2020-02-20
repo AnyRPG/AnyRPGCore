@@ -34,6 +34,7 @@ namespace AnyRPG {
         /// Enable the collider attached to this script
         /// </summary>
         public void EnableAggro() {
+            Debug.Log("AggroRange.EnableAggro()");
             aggroCollider.enabled = true;
             aggroCollider.radius = aggroRadius;
         }
