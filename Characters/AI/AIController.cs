@@ -399,6 +399,39 @@ namespace AnyRPG {
             }
         }
 
+        public int GetMinAttackRange() {
+
+            if (MyCombatStrategy != null) {
+                // attempt to get a valid ability from combat strategy before defaulting to random attacks
+                return MyCombatStrategy.GetMinAttackRange(MyBaseCharacter as BaseCharacter);
+            } else {
+                // get random attack if no strategy exists
+                return (MyBaseCharacter.MyCharacterCombat as AICombat).GetMinAttackRange();
+            }
+        }
+
+
+        public bool HasMeleeAttack() {
+
+            if (MyCombatStrategy != null) {
+                // attempt to get a valid ability from combat strategy before defaulting to random attacks
+                BaseAbility meleeAbility = MyCombatStrategy.GetMeleeAbility(MyBaseCharacter as BaseCharacter);
+                if (meleeAbility != null) {
+                    return true;
+                }
+            } else {
+                // get random attack if no strategy exists
+                BaseAbility validAttackAbility = (MyBaseCharacter.MyCharacterCombat as AICombat).GetMeleeAbility();
+                if (validAttackAbility != null) {
+                    //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
         public bool CanGetValidAttack(bool beginAttack = false) {
 
             if (MyCombatStrategy != null) {

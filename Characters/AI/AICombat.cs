@@ -91,6 +91,50 @@ namespace AnyRPG {
             return null;
         }
 
+        public BaseAbility GetMeleeAbility() {
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
+
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+
+                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
+                    if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == true) {
+                        //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+                        //if (baseAbility.MyCanCastOnEnemy) {
+                        return baseAbility;
+                    }
+                    //}
+                }
+            }
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            return null;
+        }
+
+        public int GetMinAttackRange() {
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
+
+            int returnValue = 0;
+
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+
+                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
+                    if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == false && baseAbility.MyMaxRange > 0 && (returnValue == 0 || baseAbility.MyMaxRange < returnValue)) {
+                        //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
+                        returnValue = baseAbility.MyMaxRange;
+                    }
+                    //}
+                }
+            }
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            return returnValue;
+        }
+
+
     }
 
 }

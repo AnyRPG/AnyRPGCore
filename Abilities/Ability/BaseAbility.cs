@@ -329,6 +329,11 @@ namespace AnyRPG {
             bool targetIsSelf = false;
             CharacterUnit targetCharacterUnit = null;
 
+            // special case for ground targeted spells cast by AI since AI currently has to cast a ground targeted spell on its current target
+            if (requiresGroundTarget == true && maxRange > 0 && target != null && (sourceCharacter as AICharacter) is AICharacter && Vector3.Distance(sourceCharacter.transform.position, target.transform.position) > maxRange) {
+                return false;
+            }
+
             if (requiresTarget == false) {
                 //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
                 return true;

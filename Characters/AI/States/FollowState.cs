@@ -49,7 +49,9 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                     // if within agro distance but out of hitbox range, move toward target
-                    aiController.FollowTarget(aiController.MyTarget);
+                    if (aiController.HasMeleeAttack() || aiController.GetMinAttackRange() < aiController.MyDistanceToTarget) {
+                        aiController.FollowTarget(aiController.MyTarget);
+                    }
                 }
             } else {
                 // there is no target so start idling.  should we return to our start position instead?
