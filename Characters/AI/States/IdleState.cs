@@ -12,14 +12,18 @@ namespace AnyRPG {
             Debug.Log(aiController.gameObject.name + " entering Idle state");
             this.aiController = aiController;
             this.aiController.Reset();
-            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.enabled == true && aiController.MyAiPatrol.MyAutomaticPatrol != null && aiController.MyAiPatrol.MyAutomaticPatrol.PatrolComplete() == false) {
-                aiController.ChangeState(new PatrolState());
-                return;
-            }
+            TryToEnterPatrolState();
         }
 
         public void Exit() {
 
+        }
+
+        public void TryToEnterPatrolState() {
+            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.enabled == true && aiController.MyAiPatrol.MyCurrentPatrol != null) {
+                aiController.ChangeState(new PatrolState());
+                return;
+            }
         }
 
         public void Update() {
@@ -32,6 +36,7 @@ namespace AnyRPG {
                 aiController.ChangeState(new FollowState());
                 return;
             }
+            TryToEnterPatrolState();
         }
     }
 

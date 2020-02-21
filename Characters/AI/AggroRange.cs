@@ -25,7 +25,7 @@ namespace AnyRPG {
             // do this in start because our awake can run before the awake that sets this in the parent
             baseCharacter = GetComponentInParent<CharacterUnit>().MyCharacter;
             if (baseCharacter == null) {
-                Debug.Log("AggroRange.Start(): baseCharacter is null!");
+                //Debug.Log("AggroRange.Start(): baseCharacter is null!");
             }
             EnableAggro();
         }
@@ -34,7 +34,7 @@ namespace AnyRPG {
         /// Enable the collider attached to this script
         /// </summary>
         public void EnableAggro() {
-            Debug.Log("AggroRange.EnableAggro()");
+            //Debug.Log("AggroRange.EnableAggro()");
             aggroCollider.enabled = true;
             aggroCollider.radius = aggroRadius;
         }

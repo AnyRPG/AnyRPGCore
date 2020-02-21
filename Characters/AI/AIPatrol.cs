@@ -11,23 +11,19 @@ namespace AnyRPG {
 
         private List<PatrolProfile> patrolProfiles = new List<PatrolProfile>();
 
-        private PatrolProfile automaticPatrol = null;
+        //private PatrolProfile automaticPatrol = null;
 
         private PatrolProfile currentPatrol = null;
 
         private CharacterUnit characterUnit;
 
-        public PatrolProfile MyAutomaticPatrol { get => automaticPatrol; set => automaticPatrol = value; }
+        //public PatrolProfile MyAutomaticPatrol { get => automaticPatrol; set => automaticPatrol = value; }
 
         public PatrolProfile MyCurrentPatrol {
             get {
-                if (currentPatrol == null) {
-                    return MyAutomaticPatrol;
-                } else {
-                    return currentPatrol;
-                }
+                return currentPatrol;
             }
-            set => automaticPatrol = value;
+            set => currentPatrol = value;
         }
 
         protected void Awake() {
@@ -39,7 +35,6 @@ namespace AnyRPG {
 
         void Start() {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);
-
         }
 
         public void BeginPatrol(string patrolName) {
@@ -58,14 +53,12 @@ namespace AnyRPG {
         private void FindAutomaticPatrol() {
             foreach (PatrolProfile patrolProfile in patrolProfiles) {
                 if (patrolProfile.MyAutoStart == true) {
-                    automaticPatrol = patrolProfile;
-                    automaticPatrol.MyCharacterUnit = characterUnit;
+                    currentPatrol = patrolProfile;
+                    currentPatrol.MyCharacterUnit = characterUnit;
                     break;
                 }
             }
         }
-
-
 
         private void SetupScriptableObjects() {
             foreach (string patrolName in patrolNames) {

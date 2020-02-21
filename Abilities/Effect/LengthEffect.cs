@@ -145,7 +145,10 @@ namespace AnyRPG {
                         //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                         // CORRECT WAY BELOW
                         //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
-                        Vector3 usedForwardDirection = source.MyCharacterUnit.transform.forward;
+                        Vector3 usedForwardDirection = Vector3.forward;
+                        if (source != null && source.MyCharacterUnit != null) {
+                            usedForwardDirection = source.MyCharacterUnit.transform.forward;
+                        }
                         if (prefabParent != null) {
                             usedForwardDirection = prefabParent.transform.forward;
                         }
