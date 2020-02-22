@@ -56,6 +56,7 @@ namespace AnyRPG {
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter;
 
+        private bool isReviving = false;
         private bool isAlive = true;
         private int currentXP = 0;
 
@@ -91,6 +92,7 @@ namespace AnyRPG {
         public Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get => primaryStatModifiers; }
         public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
         public UnitToughness MyToughness { get => unitToughness; set => unitToughness = value; }
+        public bool MyIsReviving { get => isReviving; set => isReviving = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
@@ -595,9 +597,14 @@ namespace AnyRPG {
 
         public virtual void Revive() {
             Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            if (isReviving) {
+                Debug.Log(MyBaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
+                return;
+            }
             if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableAnimator();
             }
+            isReviving = true;
             OnReviveBegin();
         }
 
@@ -609,6 +616,7 @@ namespace AnyRPG {
 
         public virtual void ReviveRaw() {
             Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
+            isReviving = false;
             isAlive = true;
             ClearInvalidStatusEffects();
             ResetHealth();

@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
-            Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
+            //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StartNavAgent();
             this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = true;
             aiController.EnableAggro();
