@@ -9,7 +9,7 @@ namespace AnyRPG {
         private AIController aiController;
 
         public void Enter(AIController aiController) {
-            Debug.Log(aiController.gameObject.name + " entering Idle state");
+            //Debug.Log(aiController.gameObject.name + " entering Idle state");
             this.aiController = aiController;
             this.aiController.Reset();
             TryToEnterPatrolState();

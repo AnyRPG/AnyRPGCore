@@ -369,7 +369,7 @@ namespace AnyRPG {
         }
 
         public void EnableAggro() {
-            Debug.Log(gameObject.name + "AIController.EnableAggro()");
+            //Debug.Log(gameObject.name + "AIController.EnableAggro()");
             if (aggroRange != null) {
                 aggroRange.EnableAggro();
             }

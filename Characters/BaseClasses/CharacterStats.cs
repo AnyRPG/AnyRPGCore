@@ -596,9 +596,9 @@ namespace AnyRPG {
         }
 
         public virtual void Revive() {
-            Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            //Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
             if (isReviving) {
-                Debug.Log(MyBaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
+                //Debug.Log(MyBaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
                 return;
             }
             if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
@@ -609,13 +609,13 @@ namespace AnyRPG {
         }
 
         public virtual void ReviveComplete() {
-            Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
+            //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
             ReviveRaw();
             OnReviveComplete();
         }
 
         public virtual void ReviveRaw() {
-            Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
+            //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
             isReviving = false;
             isAlive = true;
             ClearInvalidStatusEffects();
