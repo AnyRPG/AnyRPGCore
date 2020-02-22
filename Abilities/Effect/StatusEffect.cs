@@ -61,6 +61,7 @@ namespace AnyRPG {
         [SerializeField]
         protected List<FactionDisposition> factionModifiers = new List<FactionDisposition>();
 
+        // freeze effect
         [SerializeField]
         protected bool disableAnimator = false;
 
@@ -69,6 +70,16 @@ namespace AnyRPG {
 
         [SerializeField]
         protected bool levitate = false;
+
+        // freeze effect
+        [SerializeField]
+        protected bool immuneDisableAnimator = false;
+
+        [SerializeField]
+        protected bool immuneStun = false;
+
+        [SerializeField]
+        protected bool immuneLevitate = false;
 
         // if true, the target will mirror all actions taken by the caster
         [SerializeField]
@@ -111,6 +122,9 @@ namespace AnyRPG {
         public float MyExtraCriticalStrikePercent { get => extraCriticalStrikePercent; set => extraCriticalStrikePercent = value; }
         public float MyOutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
         public float MyAccuracyMultiplier { get => accuracyMultiplier; set => accuracyMultiplier = value; }
+        public bool MyImmuneDisableAnimator { get => immuneDisableAnimator; set => immuneDisableAnimator = value; }
+        public bool MyImmuneStun { get => immuneStun; set => immuneStun = value; }
+        public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);

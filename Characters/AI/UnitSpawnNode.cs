@@ -261,9 +261,7 @@ namespace AnyRPG {
             if (_characterUnit != null) {
                 _characterUnit.OnDespawn += HandleDespawn;
             }
-            if (toughness != null) {
-                _characterUnit.MyCharacter.MyCharacterStats.MyToughness = toughness;
-            }
+            _characterUnit.MyCharacter.MyCharacterStats.MyToughness = toughness;
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
             _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
             _characterUnit.MyCharacter.MyCharacterStats.TrySpawnDead();

@@ -71,6 +71,13 @@ namespace AnyRPG {
             combatTextController.gameObject.SetActive(false);
         }
 
+        public void TrySpawnCombatText(BaseCharacter sourceCharacter, GameObject target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude) {
+            if (target == PlayerManager.MyInstance.MyPlayerUnitObject || sourceCharacter.MyCharacterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+                SpawnCombatText(target, damage, combatType, combatMagnitude);
+            }
+
+        }
+
         public void SpawnCombatText(GameObject target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude) {
             //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name + "; damage: " + damage + "; type: " + combatType);
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
@@ -83,6 +90,8 @@ namespace AnyRPG {
                 combatTextController.MyMainTarget = target;
                 if (combatType == CombatTextType.miss) {
                     combatTextController.MyDisplayText = "(Miss)";
+                } else if (combatType == CombatTextType.immune) {
+                    combatTextController.MyDisplayText = "(Immune)";
                 } else {
                     combatTextController.MyDisplayText = damage.ToString();
                 }

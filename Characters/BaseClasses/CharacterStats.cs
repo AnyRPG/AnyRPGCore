@@ -256,6 +256,37 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public virtual bool HasFreezeImmunity() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.MyImmuneDisableAnimator == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual bool HasStunImmunity() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.MyImmuneStun == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual bool HasLevitateImmunity() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.MyImmuneLevitate == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
         public virtual float GetThreatModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
@@ -317,6 +348,21 @@ namespace AnyRPG {
             if (target == null) {
                 //Debug.Log("CharacterStats.ApplyAbilityEffect() target is null");
                 // this is fine in characterTraits
+            }
+            // check for frozen
+            if (statusEffect.MyDisableAnimator == true && target.MyCharacter.MyCharacterStats.HasFreezeImmunity()) {
+                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                return null;
+            }
+            // check for stun
+            if (statusEffect.MyStun == true && target.MyCharacter.MyCharacterStats.HasStunImmunity()) {
+                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                return null;
+            }
+            // check for levitate
+            if (statusEffect.MyLevitate == true && target.MyCharacter.MyCharacterStats.HasLevitateImmunity()) {
+                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                return null;
             }
             //Debug.Log("CharacterStats.ApplyStatusEffect(" + statusEffect.ToString() + ", " + source.name + ", " + target.name + ")");
             //Debug.Log("statuseffects count: " + statusEffects.Count);

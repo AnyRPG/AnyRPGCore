@@ -137,6 +137,11 @@ namespace AnyRPG {
                     //preText += "";
                     //text.fontSize = text.fontSize * 2;
                     break;
+                case CombatTextType.immune:
+                    textColor = Color.white;
+                    //preText += "";
+                    //text.fontSize = text.fontSize * 2;
+                    break;
                 case CombatTextType.gainMana:
                     textColor = Color.blue;
                     preText += "+";
