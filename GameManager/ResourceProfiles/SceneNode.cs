@@ -39,6 +39,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool cutsceneViewed;
 
+        // only applies if this is a cutscene
+        [SerializeField]
+        private bool useDefaultFactionColors = false;
+
         [SerializeField]
         private string dialogName;
 
@@ -56,6 +60,7 @@ namespace AnyRPG {
         public AudioProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
         public Dialog MyDialog { get => dialog; set => dialog = value; }
+        public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

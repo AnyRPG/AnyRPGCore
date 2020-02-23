@@ -28,7 +28,7 @@ namespace AnyRPG {
             }
             // next check custom gained faction for either character
             if ((namePlateUnit is CharacterUnit) && PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is a character unit");
+                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
                 return GetFactionColor(PlayerManager.MyInstance.MyCharacter, (namePlateUnit as CharacterUnit).MyCharacter);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is NOT a character unit");
@@ -60,7 +60,12 @@ namespace AnyRPG {
             }
 
             float relationValue = Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, sourceFaction);
+            // override relationValue with default if player is not spawned
             return GetColorFromRelationValue(relationValue);
+        }
+
+        public Color GetFactionColor() {
+            return GetColorFromRelationValue(defaultDisposition);
         }
 
         public static Color GetColorFromRelationValue(float relationValue) {

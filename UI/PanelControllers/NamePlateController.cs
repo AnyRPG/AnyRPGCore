@@ -60,6 +60,7 @@ namespace AnyRPG {
 
         private int healthSliderWidth;
 
+        private SceneNode activeSceneNode = null;
 
         private bool isPlayerUnitNamePlate = false;
 
@@ -185,7 +186,13 @@ namespace AnyRPG {
                     // character names have special coloring. white if no faction, green if character, otherwise normal faction colors
                     if (namePlateUnit.MyFaction != null) {
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFactionName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate);
-                        Color textColor = Faction.GetFactionColor(namePlateUnit);
+                        Color textColor;
+                        if (activeSceneNode != null && activeSceneNode.MyUseDefaultFactionColors == true) {
+                            textColor = namePlateUnit.MyFaction.GetFactionColor();
+                        } else {
+                            textColor = Faction.GetFactionColor(namePlateUnit);
+                        }
+
                         string nameString = string.Empty;
                         string factionString = string.Empty;
                         if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerName") == 0) {
@@ -367,7 +374,7 @@ namespace AnyRPG {
 
         private void SetFactionColor() {
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor()");
-            SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+            activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && activeSceneNode != null && !activeSceneNode.MyIsCutScene) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
@@ -380,7 +387,11 @@ namespace AnyRPG {
             CheckForPlayerOwnerShip();
             if (namePlateUnit.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
-                MyHealthSlider.color = Faction.GetFactionColor(namePlateUnit);
+                if (activeSceneNode != null && activeSceneNode.MyUseDefaultFactionColors == true) {
+                    MyHealthSlider.color = namePlateUnit.MyFaction.GetFactionColor();
+                } else {
+                    MyHealthSlider.color = Faction.GetFactionColor(namePlateUnit);
+                }
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, set faction color: " + MyHealthSlider.color);
             }
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): setting character name");
