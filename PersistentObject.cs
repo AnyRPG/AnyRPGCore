@@ -103,7 +103,7 @@ namespace AnyRPG {
         }
 
         public PersistentObjectSaveData MakeSaveData() {
-            Debug.Log(gameObject.name + "PersistentObject.MakeSaveData()");
+            //Debug.Log(gameObject.name + "PersistentObject.MakeSaveData()");
             PersistentObjectSaveData returnValue = new PersistentObjectSaveData();
             returnValue.UUID = storedUUID;
             returnValue.LocationX = storedPosition.x;

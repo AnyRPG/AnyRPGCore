@@ -117,7 +117,7 @@ namespace AnyRPG {
 
             // handleZoom
             // added code at end to check if over nameplate and allow scrolling
-            if (InputManager.MyInstance.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (NamePlateCanvasController.MyInstance != null ? NamePlateCanvasController.MyInstance.MouseOverNamePlate() : false))) {
+            if (InputManager.MyInstance.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (NamePlateManager.MyInstance != null ? NamePlateManager.MyInstance.MouseOverNamePlate() : false))) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);

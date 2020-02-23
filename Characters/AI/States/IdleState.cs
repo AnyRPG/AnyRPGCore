@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
 
         public void TryToEnterPatrolState() {
-            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.enabled == true && aiController.MyAiPatrol.MyCurrentPatrol != null) {
+            if (aiController.MyAiPatrol != null && aiController.MyAiPatrol.enabled == true && aiController.MyAiPatrol.MyCurrentPatrol != null && aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete() == false) {
                 aiController.ChangeState(new PatrolState());
                 return;
             }

@@ -245,8 +245,8 @@ namespace AnyRPG {
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;
-            if (NamePlateCanvasController.MyInstance != null) {
-                mouseOverNamePlate = NamePlateCanvasController.MyInstance.MouseOverNamePlate();
+            if (NamePlateManager.MyInstance != null) {
+                mouseOverNamePlate = NamePlateManager.MyInstance.MouseOverNamePlate();
             }
 
             if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
@@ -275,7 +275,7 @@ namespace AnyRPG {
                 }
             } else {
                 disableMouseOver = true;
-                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateCanvasController.MyInstance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
+                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateManager.MyInstance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
             }
 
             if (disableMouseOver) {
@@ -312,13 +312,13 @@ namespace AnyRPG {
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateCanvasController.MyInstance.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
                 //Debug.Log("PlayerController.HandleLeftMouseClick(): clicked over UI and not nameplate.  exiting");
                 return;
             }
 
             //if (InputManager.MyInstance.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-            if (mouseOverInteractable == null && !NamePlateCanvasController.MyInstance.MouseOverNamePlate()) {
+            if (mouseOverInteractable == null && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
                 // Stop focusing any object
                 //RemoveFocus();
                 ClearTarget();

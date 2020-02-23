@@ -35,11 +35,32 @@ namespace AnyRPG {
         [SerializeField]
         private Text speechBubbleText;
 
+        [SerializeField]
+        private NamePlateCanvasController namePlateCanvasController;
+
+        [SerializeField]
+        private CanvasGroup namePlateCanvasGroup;
+
+        [SerializeField]
+        private CanvasGroup speechBubbleCanvasGroup;
+
+        [SerializeField]
+        private Transform namePlateContents;
+
+        [SerializeField]
+        private Transform speechBubbleContents;
+
+        [SerializeField]
+        private Canvas namePlateCanvas;
+
+        [SerializeField]
+        private Canvas speechBubbleCanvas;
+
         private INamePlateUnit namePlateUnit;
 
         private int healthSliderWidth;
 
-        private CanvasGroup canvasGroup;
+
         private bool isPlayerUnitNamePlate = false;
 
         private bool localComponentsInitialized = false;
@@ -52,6 +73,8 @@ namespace AnyRPG {
         public Text MyQuestIndicator { get => questIndicator; }
         public GameObject MyQuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
         public Image MyGenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
+        public NamePlateCanvasController MyNamePlateCanvasController { get => namePlateCanvasController; set => namePlateCanvasController = value; }
+        public Canvas MyNamePlateCanvas { get => namePlateCanvas; set => namePlateCanvas = value; }
 
         private void Start() {
             //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
@@ -97,10 +120,10 @@ namespace AnyRPG {
             //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.InitializeLocalComponents()");
             if (localComponentsInitialized == true) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.InitializeLocalComponents(): already done.  exiting!");
+
                 return;
             }
 
-            canvasGroup = GetComponent<CanvasGroup>();
             if (healthSlider != null) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.InitializeLocalComponents(): healthSlider != null");
             }
@@ -129,23 +152,24 @@ namespace AnyRPG {
             //Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned && ((namePlateUnit as CharacterUnit) == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
                 //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
-                canvasGroup.blocksRaycasts = false;
+                namePlateCanvasGroup.blocksRaycasts = false;
                 UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
                 isPlayerUnitNamePlate = true;
                 SystemEventManager.MyInstance.OnPlayerNameChanged += SetCharacterName;
             } else {
-                canvasGroup.blocksRaycasts = true;
+                namePlateCanvasGroup.blocksRaycasts = true;
             }
 
         }
 
         public void Highlight() {
             healthBar.GetComponent<Image>().color = Color.white;
-            transform.SetAsLastSibling();
+            namePlateCanvas.sortingOrder = 1;
         }
 
         public void UnHighlight() {
             healthBar.GetComponent<Image>().color = Color.black;
+            namePlateCanvas.sortingOrder = 0;
         }
 
         private void SetCharacterName() {
@@ -318,18 +342,22 @@ namespace AnyRPG {
                 }
                 if (renderNamePlate) {
                     //Debug.Log("renderNamePlate");
-                    transform.position = currentCamera.WorldToScreenPoint(namePlateUnit.MyNamePlateTransform.position + Vector3.up * positionOffset);
+                    Vector3 usedPosition = currentCamera.WorldToScreenPoint(namePlateUnit.MyNamePlateTransform.position + Vector3.up * positionOffset);
+                    namePlateContents.position = usedPosition;
+                    speechBubbleContents.position = usedPosition;
                     //Debug.Log(characterUnit.gameObject.name + ".distance to player: " + Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, characterUnit.transform.position)));
-                    canvasGroup.alpha = 1;
+                    namePlateCanvasGroup.alpha = 1;
+                    speechBubbleCanvasGroup.alpha = 1;
                     if (isPlayerUnitNamePlate) {
-                        canvasGroup.blocksRaycasts = false;
+                        namePlateCanvasGroup.blocksRaycasts = false;
                     } else {
-                        canvasGroup.blocksRaycasts = true;
+                        namePlateCanvasGroup.blocksRaycasts = true;
                     }
                 } else {
                     //Debug.Log("DONOTrenderNamePlate");
-                    canvasGroup.alpha = 0;
-                    canvasGroup.blocksRaycasts = false;
+                    speechBubbleCanvasGroup.alpha = 0;
+                    namePlateCanvasGroup.alpha = 0;
+                    namePlateCanvasGroup.blocksRaycasts = false;
                 }
                 //transform.position = Camera.main.WorldToScreenPoint(characterStats.transform.position);
             } else {

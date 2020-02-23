@@ -160,7 +160,7 @@ public class InputManager : MonoBehaviour {
             rightMouseButtonDown = true;
             rightMouseButtonDownPosition = Input.mousePosition;
             // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
-            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateCanvasController.MyInstance != null ? !NamePlateCanvasController.MyInstance.MouseOverNamePlate() : true)) {
+            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance != null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
                 rightMouseButtonClickedOverUI = true;
             }
         }
@@ -169,7 +169,7 @@ public class InputManager : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             leftMouseButtonDown = true;
             leftMouseButtonDownPosition = Input.mousePosition;
-            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateCanvasController.MyInstance!= null ? !NamePlateCanvasController.MyInstance.MouseOverNamePlate() : true)) {
+            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance!= null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
                 leftMouseButtonClickedOverUI = true;
             }
         }
@@ -177,7 +177,7 @@ public class InputManager : MonoBehaviour {
         if (Input.GetMouseButtonDown(2)) {
             middleMouseButtonDown = true;
             middleMouseButtonDownPosition = Input.mousePosition;
-            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateCanvasController.MyInstance != null ? !NamePlateCanvasController.MyInstance.MouseOverNamePlate() : true)) {
+            if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance != null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
                 middleMouseButtonClickedOverUI = true;
             }
         }
