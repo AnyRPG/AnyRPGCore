@@ -27,7 +27,7 @@ namespace AnyRPG {
 
             aiController.UpdateTarget();
 
-            if (aiController.MyTarget != null) {
+            if (aiController.MyTarget != null && aiController.AggroEnabled() == true) {
                 aiController.ChangeState(new FollowState());
             }
 

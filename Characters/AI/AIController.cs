@@ -41,7 +41,7 @@ namespace AnyRPG {
 
         private IState currentState;
 
-        private SphereCollider sphereCollider;
+        //private SphereCollider sphereCollider;
 
         public Vector3 MyStartPosition {
             get {
@@ -73,6 +73,12 @@ namespace AnyRPG {
             MyAggroRange = initialAggroRange;
 
             GetCombatStrategy();
+
+            if (aggroRange != null) {
+                //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
+                aggroRange.SetAgroRange(initialAggroRange);
+            }
+
         }
 
         public void GetCombatStrategy() {
@@ -122,11 +128,6 @@ namespace AnyRPG {
                 ChangeState(new IdleState());
             }
 
-            // detect if unit has spherecollider (non agro units don't need one)
-            SphereCollider sphereCollider = baseCharacter.MyCharacterUnit.GetComponentInChildren<SphereCollider>();
-            if (sphereCollider != null) {
-                sphereCollider.radius = initialAggroRange;
-            }
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
@@ -368,11 +369,24 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "AIController.DisableAggro(): AGGRORANGE IS NULL!");
         }
 
+        public void EnableAggro(string tmp) {
+            //Debug.Log(gameObject.name + "AIController.EnableAggro(string)");
+            // this one exists so we can receive events from the BehaviorInteractable which send a string parameter by default
+            EnableAggro();
+        }
+
         public void EnableAggro() {
             //Debug.Log(gameObject.name + "AIController.EnableAggro()");
             if (aggroRange != null) {
                 aggroRange.EnableAggro();
             }
+        }
+
+        public bool AggroEnabled() {
+            if (aggroRange != null) {
+                return aggroRange.AggroEnabled();
+            }
+            return false;
         }
 
         public override void OnDisable() {

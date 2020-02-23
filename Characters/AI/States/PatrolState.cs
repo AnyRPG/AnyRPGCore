@@ -58,7 +58,7 @@ namespace AnyRPG {
 
             aiController.UpdateTarget();
 
-            if (aiController.MyTarget != null) {
+            if (aiController.MyTarget != null && aiController.AggroEnabled() == true) {
                 aiController.MyLeashPosition = aiController.MyBaseCharacter.MyCharacterUnit.transform.position;
                 aiController.ChangeState(new FollowState());
             }

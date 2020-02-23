@@ -14,6 +14,9 @@ namespace AnyRPG {
         [SerializeField]
         private float aggroRadius = 20f;
 
+        [SerializeField]
+        private bool autoEnableAgro = true;
+
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         private void Awake() {
@@ -27,7 +30,15 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 //Debug.Log("AggroRange.Start(): baseCharacter is null!");
             }
-            EnableAggro();
+            StartEnableAggro();
+            //SetAgroRange(aggroRadius);
+        }
+
+        public void StartEnableAggro() {
+            //Debug.Log("AggroRange.StartEnableAggro()");
+            if (autoEnableAgro) {
+                EnableAggro();
+            }
         }
 
         /// <summary>
@@ -37,6 +48,16 @@ namespace AnyRPG {
             //Debug.Log("AggroRange.EnableAggro()");
             aggroCollider.enabled = true;
             aggroCollider.radius = aggroRadius;
+        }
+
+        public void SetAgroRange(float newRange) {
+            //Debug.Log("AggroRange.SetAgroRange(" + newRange + ")");
+            aggroRadius = newRange;
+            if (aggroCollider != null) {
+                aggroCollider.radius = aggroRadius;
+            } else {
+                //Debug.Log("AggroRange.SetAgroRange(" + newRange + "): NO REFERENCE TO AGGRO COLLIDER");
+            }
         }
 
         /// <summary>
@@ -62,6 +83,13 @@ namespace AnyRPG {
                     baseCharacter.MyCharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                 }
             }
+        }
+
+        public bool AggroEnabled() {
+            if (aggroCollider != null) {
+                return aggroCollider.enabled;
+            }
+            return false;
         }
 
     }
