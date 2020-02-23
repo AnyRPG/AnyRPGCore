@@ -651,6 +651,7 @@ namespace AnyRPG {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableAnimator();
             }
             isReviving = true;
+            baseCharacter.MyCharacterUnit.DisableCollider();
             OnReviveBegin();
         }
 
@@ -663,6 +664,7 @@ namespace AnyRPG {
         public virtual void ReviveRaw() {
             //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
             isReviving = false;
+            baseCharacter.MyCharacterUnit.EnableCollider();
             isAlive = true;
             ClearInvalidStatusEffects();
             ResetHealth();

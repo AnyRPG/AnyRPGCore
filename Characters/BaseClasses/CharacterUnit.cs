@@ -24,6 +24,8 @@ namespace AnyRPG {
 
         private NamePlateController namePlate;
 
+        private Collider capsuleCollider;
+
         /// <summary>
         /// a string that represents the location of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame
         /// </summary>
@@ -80,10 +82,24 @@ namespace AnyRPG {
         }
 
         public bool MyMounted { get => mounted; set => mounted = value; }
+        public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             return true;
+        }
+
+        public void EnableCollider() {
+            if (capsuleCollider != null) {
+                capsuleCollider.enabled = true;
+            }
+        }
+
+        public void DisableCollider() {
+            if (capsuleCollider != null) {
+                capsuleCollider.enabled = false;
+            }
+
         }
 
         public int CurrentHealth() {
@@ -242,6 +258,15 @@ namespace AnyRPG {
                 audioSource.outputAudioMixerGroup = AudioManager.MyInstance.MyEffectsAudioSource.outputAudioMixerGroup;
             }
             // ADD SOME CODE IN THE FUTURE TO AUTO-CONFIGURE THIS AUDIO SOURCE IN CASE IT HAS NOT BEEN ADDED TO THE UNIT PREFAB
+
+            capsuleCollider = GetComponent<Collider>();
+            /*
+            if (capsuleCollider != null) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): found collider");
+            } else {
+                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): DID NOT FIND collider");
+            }
+            */
         }
 
         public void InitializeNamePlate() {

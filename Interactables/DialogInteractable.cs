@@ -178,7 +178,9 @@ namespace AnyRPG {
                 foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
                         currentdialogNode = dialogNode;
-                        namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
+                        if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
+                            namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
+                        }
                         if (CombatLogUI.MyInstance != null) {
                             CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
                         }
