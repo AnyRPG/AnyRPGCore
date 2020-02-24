@@ -84,7 +84,7 @@ namespace AnyRPG {
                 if (tmpDialog != null) {
                     dialog = tmpDialog;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialog + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialogName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
         }

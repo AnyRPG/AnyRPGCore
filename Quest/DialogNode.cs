@@ -7,13 +7,6 @@ namespace AnyRPG {
     [System.Serializable]
     public class DialogNode {
 
-        [SerializeField]
-        [TextArea(10, 20)]
-        private string description;
-
-        [SerializeField]
-        private string nextOption;
-
         // time in seconds to show this text
         [SerializeField]
         private float startTime;
@@ -21,6 +14,13 @@ namespace AnyRPG {
         // the length of time the bubble should be shown for
         [SerializeField]
         private float showTime = 10f;
+
+        [SerializeField]
+        [TextArea(10, 20)]
+        private string description;
+
+        [SerializeField]
+        private string nextOption;
 
         // whether or not this node has been shown
         private bool shown;
