@@ -44,12 +44,16 @@ namespace AnyRPG {
             }
         }
 
-        public void AnimationFinished() {
-            //Debug.Log("AnyRPGCutsceneCameraController.AnimationFinished(): re-activating in game UI");
-            //UIManager.MyInstance.ActivateInGameUI();
+        public void EndCutScene() {
             if (UIManager.MyInstance != null && UIManager.MyInstance.MyCutSceneBarController != null) {
                 UIManager.MyInstance.MyCutSceneBarController.EndCutScene();
             }
+        }
+
+        public void AnimationFinished() {
+            //Debug.Log("AnyRPGCutsceneCameraController.AnimationFinished(): re-activating in game UI");
+            //UIManager.MyInstance.ActivateInGameUI();
+            EndCutScene();
         }
 
     }
