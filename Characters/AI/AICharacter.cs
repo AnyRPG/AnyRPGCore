@@ -76,7 +76,23 @@ namespace AnyRPG {
             }
         }
 
+        public void DespawnImmediate() {
+            Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
+            if (characterUnit != null) {
+                characterUnit.Despawn(0, false, true);
+            }
+        }
+
+
+        public void Despawn() {
+            Debug.Log(gameObject.name + ".AICharacter.Despawn()");
+            if (characterUnit != null) {
+                characterUnit.Despawn();
+            }
+        }
+
         public void TryToDespawn() {
+            Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
             if (preventAutoDespawn == true) {
                 return;
             }
@@ -84,9 +100,7 @@ namespace AnyRPG {
                 // lootable character handles its own despawn logic
                 return;
             }
-            if (characterUnit != null) {
-                characterUnit.Despawn();
-            }
+            Despawn();
         }
 
     }
