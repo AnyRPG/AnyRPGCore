@@ -37,7 +37,17 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);
         }
 
+        public void BeginPatrolByIndex(int patrolIndex) {
+            if (patrolIndex < 0 || patrolIndex >= patrolNames.Count) {
+                Debug.Log(gameObject.name + ".AIPatrol.BeginPatrolByIndex(" + patrolIndex + "): invalid index");
+                return;
+            }
+            string patrolName = patrolNames[patrolIndex];
+            BeginPatrol(patrolName);
+        }
+
         public void BeginPatrol(string patrolName) {
+            //Debug.Log(gameObject.name + ".AIPatrol.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
             PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
             if (tmpPatrolProfile != null) {
                 tmpPatrolProfile.MyCharacterUnit = characterUnit;
