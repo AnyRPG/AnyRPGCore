@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            //Debug.Log("BehaviorInteractable.Start()");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.Start()");
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
             CreateEventSubscriptions();
@@ -144,6 +144,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator playBehavior(BehaviorProfile behaviorProfile) {
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ")");
             float elapsedTime = 0f;
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
@@ -156,7 +157,12 @@ namespace AnyRPG {
                         if (currentbehaviorNode.MyBehaviorActionNodes != null) {
                             foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.MyBehaviorActionNodes) {
                                 if (behaviorActionNode.MyBehaviorMethod != null && behaviorActionNode.MyBehaviorMethod != string.Empty) {
-                                    gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, behaviorActionNode.MyBehaviorParameter, SendMessageOptions.DontRequireReceiver);
+                                    //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(): sending Message " + behaviorActionNode.MyBehaviorMethod + "(" + behaviorActionNode.MyBehaviorParameter + ")");
+                                    if (behaviorActionNode.MyBehaviorParameter != null && behaviorActionNode.MyBehaviorParameter != string.Empty) {
+                                        gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, behaviorActionNode.MyBehaviorParameter, SendMessageOptions.DontRequireReceiver);
+                                    } else {
+                                        gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, SendMessageOptions.DontRequireReceiver);
+                                    }
                                 }
                             }
                         }
