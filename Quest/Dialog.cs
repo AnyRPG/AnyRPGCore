@@ -18,6 +18,7 @@ namespace AnyRPG {
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         // should this dialog open in a speech bubble and automatically progress
+        // also used to allow cutscenes to send messages to the dialog to advance it
         [SerializeField]
         private bool automatic = false;
 

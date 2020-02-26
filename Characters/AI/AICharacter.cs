@@ -77,7 +77,7 @@ namespace AnyRPG {
         }
 
         public void DespawnImmediate() {
-            Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
+            //Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
             if (characterUnit != null) {
                 characterUnit.Despawn(0, false, true);
             }
@@ -85,14 +85,14 @@ namespace AnyRPG {
 
 
         public void Despawn() {
-            Debug.Log(gameObject.name + ".AICharacter.Despawn()");
+            //Debug.Log(gameObject.name + ".AICharacter.Despawn()");
             if (characterUnit != null) {
                 characterUnit.Despawn();
             }
         }
 
         public void TryToDespawn() {
-            Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
+            //Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
             if (preventAutoDespawn == true) {
                 return;
             }

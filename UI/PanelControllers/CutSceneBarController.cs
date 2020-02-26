@@ -117,10 +117,34 @@ namespace AnyRPG {
 
                 yield return null;
             }
-            dialogCoroutine = StartCoroutine(playDialog());
+            if (currentDialog.MyAutomatic == true) {
+                dialogCoroutine = StartCoroutine(playDialog());
+            } else {
+                ProcessDialogNode(currentDialog.MyDialogNodes[0]);
+                dialogIndex++;
+            }
         }
 
+        public void AdvanceDialog() {
+            //Debug.Log("CharacterAbilitymanager.AdvanceDialog()");
+            if (currentDialog.MyDialogNodes.Count > dialogIndex) {
+                ProcessDialogNode(currentDialog.MyDialogNodes[dialogIndex]);
+                dialogIndex++;
+            }
+        }
+
+        private void ProcessDialogNode(DialogNode currentdialogNode) {
+            //Debug.Log("CharacterAbilitymanager.ProcessDialogNode()");
+            captionText.text = currentdialogNode.MyDescription;
+            captionText.color = new Color32(255, 255, 255, 0);
+            dialogCoroutine = StartCoroutine(FadeInText());
+
+            currentdialogNode.MyShown = true;
+        }
+
+
         public IEnumerator playDialog() {
+            //Debug.Log("CharacterAbilitymanager.playDialog()");
             float elapsedTime = 0f;
             DialogNode currentdialogNode = null;
 
@@ -129,21 +153,15 @@ namespace AnyRPG {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
                         currentdialogNode = dialogNode;
 
-                        captionText.text = currentdialogNode.MyDescription;
-                        captionText.color = new Color32(255, 255, 255, 0);
-                        dialogCoroutine = StartCoroutine(LoadCutSceneText());
-
-                        if (CombatLogUI.MyInstance != null) {
-                            CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
-                        }
-
-                        dialogNode.MyShown = true;
+                        ProcessDialogNode(currentdialogNode);
                         dialogIndex++;
                     }
                 }
+                /*
                 if (dialogIndex >= currentDialog.MyDialogNodes.Count) {
                     currentDialog.TurnedIn = true;
                 }
+                */
                 elapsedTime += Time.deltaTime;
 
                 // circuit breaker
@@ -157,7 +175,7 @@ namespace AnyRPG {
             //yield return new WaitForSeconds(currentdialogNode.MyShowTime);
         }
 
-        public IEnumerator LoadCutSceneText() {
+        public IEnumerator FadeInText() {
             float currentTime = 0f;
             float alphaPerSecond = 255 / textFadeInTime;
             //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
@@ -171,6 +189,7 @@ namespace AnyRPG {
 
         public void OnDisable() {
             ClearCoRoutine();
+            dialogIndex = 0;
         }
     }
 
