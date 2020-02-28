@@ -44,6 +44,11 @@ namespace AnyRPG {
         private bool useDefaultFactionColors = false;
 
         [SerializeField]
+        private List<string> environmentStateNames = new List<string>();
+
+        private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
+
+        [SerializeField]
         private string dialogName;
 
         private Dialog dialog;
@@ -61,6 +66,7 @@ namespace AnyRPG {
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
         public Dialog MyDialog { get => dialog; set => dialog = value; }
         public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
+        public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -87,6 +93,18 @@ namespace AnyRPG {
                     Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialogName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
+
+            if (environmentStateNames != null) {
+                foreach (string environmentStateName in environmentStateNames) {
+                    EnvironmentStateProfile tmpProfile = SystemEnvironmentStateProfileManager.MyInstance.GetResource(environmentStateName);
+                    if (tmpProfile != null) {
+                        environmentStates.Add(tmpProfile);
+                    } else {
+                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find environment state : " + environmentStateName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
         }
 
     }
