@@ -49,6 +49,8 @@ namespace AnyRPG {
         private Vector3 spawnRotationOverride = Vector3.zero;
         private string returnSceneName = string.Empty;
 
+        private Coroutine loadCutSceneCoroutine = null;
+
         private bool levelManagerInitialized = false;
 
         [Header("LOADING SCREEN")]
@@ -240,18 +242,23 @@ namespace AnyRPG {
 
         public void LoadCutSceneWithDelay(string sceneName) {
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
-            StartCoroutine(LoadCutSceneDelay(sceneName));
+            if (loadCutSceneCoroutine == null) {
+                loadCutSceneCoroutine = StartCoroutine(LoadCutSceneDelay(sceneName));
+            }
         }
 
         private IEnumerator LoadCutSceneDelay(string sceneName) {
             yield return new WaitForSeconds(1);
             LoadCutScene(sceneName);
+            loadCutSceneCoroutine = null;
         }
 
         public void LoadCutScene(string sceneName) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
-            spawnRotationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward;
-            spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
+            if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
+                spawnRotationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward;
+                spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
+            }
             returnSceneName = GetActiveSceneNode().MyName;
             LoadLevel(sceneName);
         }
