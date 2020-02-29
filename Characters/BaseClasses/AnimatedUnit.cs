@@ -65,7 +65,9 @@ namespace AnyRPG {
             }
             GetComponentReferences();
             CreateEventSubscriptions();
-            characterMotor.OrchestrateStartup();
+            if (characterMotor != null) {
+                characterMotor.OrchestrateStartup();
+            }
             if (characterAnimator != null) {
                 characterAnimator.OrchestratorStart();
             }

@@ -195,7 +195,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
             target = null;
             // FIX ME (reenable possibly?)
-            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null) {
+            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
             }
         }
@@ -250,6 +250,10 @@ namespace AnyRPG {
         // leave this function here for debugging hitboxes
         void OnDrawGizmos() {
             if (Application.isPlaying) {
+                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>() == null) {
+                    return;
+                }
+
                 //Debug.Log(gameObject.name + ".BaseController.OnDrawGizmos(): hit box center is :" + GetHitBoxCenter());
                 Gizmos.color = Color.red;
                 //Draw a cube where the OverlapBox is (positioned where your GameObject is as well as a size)

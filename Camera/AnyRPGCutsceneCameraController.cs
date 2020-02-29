@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void AdvanceDialog() {
-            Debug.Log("AnyRPGCutsceneCameraController.AdvanceDialog()");
+            //Debug.Log("AnyRPGCutsceneCameraController.AdvanceDialog()");
             UIManager.MyInstance.MyCutSceneBarController.AdvanceDialog();
         }
 

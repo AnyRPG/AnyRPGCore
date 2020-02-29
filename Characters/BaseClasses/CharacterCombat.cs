@@ -299,7 +299,9 @@ namespace AnyRPG {
             //}
             lastCombatEvent = Time.time;
             // maybe do this in update?
-            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", true);
+            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", true);
+            }
             inCombat = true;
             OnEnterCombat();
             if (aggroTable.AddToAggroTable(target.MyCharacterUnit, 0)) {

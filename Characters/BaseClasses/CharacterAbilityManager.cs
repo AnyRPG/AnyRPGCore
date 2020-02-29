@@ -518,7 +518,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
             float startTime = Time.time;
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ") Enter Ienumerator with tag: " + startTime);
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
             if (ability.MyRequiresTarget == false || ability.MyCanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -743,7 +743,9 @@ namespace AnyRPG {
                     //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
                     // we need to do this because we are allowed to stop an outstanding auto-attack to start this cast
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                    if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                        MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
+                    }
 
                     // start the cast (or cast targetting projector)
                     currentCastCoroutine = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
@@ -863,7 +865,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
             }
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
+            if (MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
             }
             OnCastStop(MyBaseCharacter as BaseCharacter);

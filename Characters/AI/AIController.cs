@@ -349,7 +349,7 @@ namespace AnyRPG {
             MyAggroRange = initialAggroRange;
             if (baseCharacter != null) {
                 baseCharacter.MyCharacterStats.ResetHealth();
-                if (baseCharacter.MyAnimatedUnit != null) {
+                if (baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                     MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
                     MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.ResetPath();
                 } else {
