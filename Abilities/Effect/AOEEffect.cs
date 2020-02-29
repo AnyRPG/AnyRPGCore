@@ -26,6 +26,9 @@ namespace AnyRPG {
         [SerializeField]
         protected float maxTargets = 0;
 
+        [SerializeField]
+        protected bool preferClosestTargets = false;
+
         // delay between casting hit effect on each target
         [SerializeField]
         protected float interTargetDelay = 0f;
@@ -125,7 +128,7 @@ namespace AnyRPG {
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
             foreach (Collider collider in colliders) {
-                //Debug.Log("AOEEffect.Cast() hit: " + collider.gameObject.name + "; " + collider.gameObject.layer);
+                //Debug.Log(MyName + "AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                 bool canAdd = true;
                 foreach (AbilityEffect abilityEffect in abilityEffectList) {
                     if (abilityEffect.CanUseOn(collider.gameObject, source) == false) {
@@ -135,19 +138,31 @@ namespace AnyRPG {
                 //if (CanUseOn(collider.gameObject, source)) {
                 // next line was preventing aoe from hitting current target
                 //if (collider.gameObject != target && CanUseOn(collider.gameObject, source)) {
-                //Debug.Log("performing AOE ability: " + MyAbilityEffectName + " on " + collider.gameObject);
+                //Debug.Log(MyName + "performing AOE ability  on " + collider.gameObject);
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
                     validTargetNode.targetGameObject = collider.gameObject;
                     validTargetNode.abilityEffectInput = abilityEffectInput;
                     validTargets.Add(validTargetNode);
                 }
+                //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
                 if (maxTargets > 0) {
-                    //Debug.Log("AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
+                    //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
                     while (validTargets.Count > maxTargets) {
-                        int randomNumber = Random.Range(0, validTargets.Count);
+                        int removeNumber = 0;
+                        if (preferClosestTargets == true) {
+                            int counter = 0;
+                            foreach (AOETargetNode validTarget in validTargets) {
+                                if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.MyCharacterUnit.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.MyCharacterUnit.transform.position)) {
+                                    removeNumber = counter;
+                                }
+                                counter++;
+                            }
+                        } else {
+                            removeNumber = Random.Range(0, validTargets.Count);
+                        }
                         //Debug.Log("AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count + "; randomNumber: " + randomNumber);
-                        validTargets.RemoveAt(randomNumber);
+                        validTargets.RemoveAt(removeNumber);
                     }
                 }
                 //}
@@ -171,6 +186,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForHitDelay(BaseCharacter source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
+            //Debug.Log(MyName + ".AOEEffect.WaitForHitDelay(" + source.MyName + ", " + (target == null ? "null" : target.name) + ")");
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
                 accumulatedTime += Time.deltaTime;

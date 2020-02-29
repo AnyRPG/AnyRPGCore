@@ -11,6 +11,10 @@ namespace AnyRPG {
         [SerializeField]
         private float tickRate;
 
+        // do we cast an immediate tick at zero seconds
+        //[SerializeField]
+        //protected bool castZeroTick;
+
         private float nextTickTime = 0f;
 
         [SerializeField]
@@ -43,7 +47,7 @@ namespace AnyRPG {
         */
 
         public override bool CanUseOn(GameObject target, BaseCharacter source) {
-            //Debug.Log("ChanneledAbility.CanUseOn(" + target.name + ")");
+            //Debug.Log("ChanneledAbility.CanUseOn(" + (target == null ? "null" : target.name) + ")");
             if (!base.CanUseOn(target, source)) {
                 return false;
             }
@@ -58,7 +62,7 @@ namespace AnyRPG {
         }
 
         public override void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target) {
-            //Debug.Log("ChanneledAbility.OnCastTimeChanged(" + currentCastTime + ", " + source.name + ", " + target.name + ")");
+            //Debug.Log(MyName + "ChanneledAbility.OnCastTimeChanged(" + currentCastTime + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
             base.OnCastTimeChanged(currentCastTime, source, target);
             if (currentCastTime >= nextTickTime) {
                 PerformChanneledEffect(source, target);
@@ -67,7 +71,7 @@ namespace AnyRPG {
         }
 
         public virtual void PerformChanneledEffect(BaseCharacter source, GameObject target) {
-            //Debug.Log("BaseAbility.PerformAbilityEffect(" + abilityName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
 
