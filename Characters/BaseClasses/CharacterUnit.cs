@@ -44,6 +44,10 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 playerPreviewInitialOffset;
 
+        [SerializeField]
+        private bool suppressNamePlate = false;
+
+
         protected AudioSource audioSource;
 
         private Coroutine despawnCoroutine;
@@ -271,6 +275,9 @@ namespace AnyRPG {
 
         public void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
+            if (suppressNamePlate == true) {
+                return;
+            }
             if (baseCharacter != null) {
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this);
                 if (_namePlate != null) {
