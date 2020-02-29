@@ -46,6 +46,14 @@ namespace AnyRPG {
         }
         public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
 
+        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition) {
+            //Debug.Log(gameObject.name + ".ChanneledCylinderScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
+            MyStartObject = startObject;
+            MyStartPosition = startPosition;
+            MyEndObject = endObject;
+            MyEndPosition = endPosition;
+        }
+
         private void Update() {
             if (MyStartObject == null || MyEndObject == null) {
                 Destroy(gameObject);

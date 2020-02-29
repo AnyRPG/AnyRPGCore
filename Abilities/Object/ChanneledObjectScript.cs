@@ -78,6 +78,7 @@ namespace AnyRPG {
         [Tooltip("The animation mode for the lightning")]
         public LightningBoltAnimationMode AnimationMode = LightningBoltAnimationMode.PingPong;
 
+
         /// <summary>
         /// Assign your own random if you want to have the same lightning appearance
         /// </summary>
@@ -98,6 +99,14 @@ namespace AnyRPG {
         public Vector3 MyStartPosition { get => startPosition; set => startPosition = value; }
         public GameObject MyEndObject { get => endObject; set => endObject = value; }
         public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
+
+        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition) {
+            Debug.Log(gameObject.name + ".ChanneledObjectScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
+            MyStartObject = startObject;
+            MyStartPosition = startPosition;
+            MyEndObject = endObject;
+            MyEndPosition = endPosition;
+        }
 
         private void GetPerpendicularVector(ref Vector3 directionNormalized, out Vector3 side) {
             if (directionNormalized == Vector3.zero) {
