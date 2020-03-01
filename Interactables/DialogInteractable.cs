@@ -18,7 +18,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> dialogNames = new List<string>();
 
-        [SerializeField]
+        //[SerializeField]
         private List<Dialog> dialogList = new List<Dialog>();
 
         private int dialogIndex = 0;
@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         private Coroutine dialogCoroutine = null;
 
-        public int MyDialogIndex { get => dialogIndex; set => dialogIndex = value; }
+        public int MyDialogIndex { get => dialogIndex; }
         public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }
 
 
@@ -145,6 +145,7 @@ namespace AnyRPG {
             } else {
                 interactable.OpenInteractionWindow();
             }
+            base.Interact(source);
             return true;
         }
 
@@ -172,6 +173,7 @@ namespace AnyRPG {
                 namePlateUnit.MyNamePlate.ShowSpeechBubble();
             }
             float elapsedTime = 0f;
+            dialogIndex = 0;
             DialogNode currentdialogNode = null;
 
             while (dialog.TurnedIn == false) {
