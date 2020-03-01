@@ -99,6 +99,23 @@ namespace AnyRPG {
                 }
             }
 
+            // just in case one quest was complete but not turned in
+            //CheckCompletion();
+        }
+
+        public void AcceptQuest(QuestSaveData questSaveData) {
+            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
+
+            Quest quest = SystemQuestManager.MyInstance.GetResource(questSaveData.MyName);
+            if (quest == null) {
+                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
+                return;
+            }
+            if (!questSaveData.inLog) {
+                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
+                return;
+            }
+
             // change to new subscription method in quest to avoid duplicated out of date code not tracking newer objective types
             quest.AcceptQuest(false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0

@@ -570,6 +570,11 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
                 QuestLog.MyInstance.LoadQuest(questSaveData);
             }
+            foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
+                //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
+                QuestLog.MyInstance.AcceptQuest(questSaveData);
+            }
+
         }
 
         public void LoadDialogData(AnyRPGSaveData anyRPGSaveData) {
