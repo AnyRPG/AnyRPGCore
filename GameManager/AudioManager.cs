@@ -185,8 +185,12 @@ namespace AnyRPG {
         }
 
         public void PlayUIClickSound() {
+            //Debug.Log("AudioManager.PlayUIClickSound()");
             if (uiClickSound != null) {
+                //Debug.Log("AudioManager.PlayUIClickSound(): click sound is not null");
                 PlayEffect(uiClickSound);
+            } else {
+                //Debug.Log("AudioManager.PlayUIClickSound(): click sound is null");
             }
         }
 
