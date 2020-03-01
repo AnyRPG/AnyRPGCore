@@ -369,12 +369,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "AIController.DisableAggro(): AGGRORANGE IS NULL!");
         }
 
-        public void EnableAggro(string tmp) {
-            //Debug.Log(gameObject.name + "AIController.EnableAggro(string)");
-            // this one exists so we can receive events from the BehaviorInteractable which send a string parameter by default
-            EnableAggro();
-        }
-
         public void EnableAggro() {
             //Debug.Log(gameObject.name + "AIController.EnableAggro()");
             if (aggroRange != null) {
