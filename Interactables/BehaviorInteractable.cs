@@ -18,6 +18,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> behaviorNames = new List<string>();
 
+        // instantiate a new behavior profile or not when loading behavior profiles
+        [SerializeField]
+        private bool useBehaviorCopy = false;
+
         //[SerializeField]
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
@@ -29,7 +33,7 @@ namespace AnyRPG {
 
         private bool suppressNameplateImage = false;
 
-        public int MyBehaviorIndex { get => behaviorIndex; set => behaviorIndex = value; }
+        public int MyBehaviorIndex { get => behaviorIndex; }
         public List<BehaviorProfile> MyDialogList { get => behaviorList; set => behaviorList = value; }
 
 
@@ -100,10 +104,11 @@ namespace AnyRPG {
         }
 
         public List<BehaviorProfile> GetCurrentOptionList() {
-            //Debug.Log("BehaviorInteractable.GetValidOptionList()");
+            //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList) {
-                if (behaviorProfile.MyPrerequisitesMet == true) {
+                if (behaviorProfile.MyPrerequisitesMet == true && behaviorProfile.MyCompleted == false) {
+                    //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
                 }
             }
@@ -118,7 +123,7 @@ namespace AnyRPG {
                 return false;
             } else if (currentList.Count == 1) {
                 TryPlayBehavior(currentList[0]);
-                    
+                base.Interact(source);
             } else {
                 interactable.OpenInteractionWindow();
             }
@@ -146,10 +151,11 @@ namespace AnyRPG {
         public IEnumerator playBehavior(BehaviorProfile behaviorProfile) {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ")");
             float elapsedTime = 0f;
+            behaviorIndex = 0;
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
             interactable.UpdateNamePlateImage();
-            while (behaviorIndex <= behaviorProfile.MyBehaviorNodes.Count) {
+            while (behaviorIndex < behaviorProfile.MyBehaviorNodes.Count) {
                 foreach (BehaviorNode behaviorNode in behaviorProfile.MyBehaviorNodes) {
                     if (behaviorNode.MyStartTime <= elapsedTime && behaviorNode.MyCompleted == false) {
                         currentbehaviorNode = behaviorNode;
@@ -179,6 +185,7 @@ namespace AnyRPG {
                 }
                 yield return null;
             }
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ") : END LOOP");
             behaviorCoroutine = null;
             suppressNameplateImage = false;
             behaviorProfile.MyCompleted = true;
@@ -253,7 +260,12 @@ namespace AnyRPG {
             behaviorList = new List<BehaviorProfile>();
             if (behaviorNames != null) {
                 foreach (string behaviorName in behaviorNames) {
-                    BehaviorProfile tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                    BehaviorProfile tmpBehaviorProfile = null;
+                    if (useBehaviorCopy == true) {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                    } else {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                    }
                     if (tmpBehaviorProfile != null) {
                         behaviorList.Add(tmpBehaviorProfile);
                     }
