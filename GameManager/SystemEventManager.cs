@@ -23,6 +23,7 @@ namespace AnyRPG {
 
         public event System.Action OnPrerequisiteUpdated = delegate { };
         public event System.Action OnQuestStatusUpdated = delegate { };
+        public event System.Action OnAfterQuestStatusUpdated = delegate { };
         public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
         //public event System.Action<IAbility> OnAbilityCast = delegate { };
         public event System.Action<BaseAbility> OnAbilityUsed = delegate { };
@@ -222,6 +223,7 @@ namespace AnyRPG {
                 return;
             }
             OnQuestStatusUpdated();
+            OnAfterQuestStatusUpdated();
             // having these two separate seems to be ok for now.  the items that react to the first event do not react to the second, nor do they send prerequisiteupdates so no double calls should happen
             OnPrerequisiteUpdated();
         }

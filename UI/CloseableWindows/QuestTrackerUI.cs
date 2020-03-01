@@ -62,7 +62,7 @@ public class QuestTrackerUI : WindowContentController {
             return;
         }
         SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated += ShowQuests;
-        SystemEventManager.MyInstance.OnQuestStatusUpdated += ShowQuests;
+        SystemEventManager.MyInstance.OnAfterQuestStatusUpdated += ShowQuests;
         SystemEventManager.MyInstance.OnPlayerUnitSpawn += ShowQuests;
         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
             ShowQuests();
