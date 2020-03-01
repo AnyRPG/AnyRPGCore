@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public SceneNode GetActiveSceneNode() {
-            //Debug.Log("LevelManager.GetActiveSceneNode()");
+            //Debug.Log("LevelManager.GetActiveSceneNode(): return " + SceneManager.GetActiveScene().name);
             return SystemSceneNodeManager.MyInstance.GetResource(SceneManager.GetActiveScene().name);
         }
 
@@ -198,7 +198,8 @@ namespace AnyRPG {
             ActivateSceneCamera();
         }
 
-        private void PlayLevelSounds() {
+        public void PlayLevelSounds() {
+            //Debug.Log("Levelmanager.PlayLevelSounds()");
             SceneNode activeSceneNode = GetActiveSceneNode();
             if (activeSceneNode != null) {
                 if (activeSceneNode.MyAmbientMusicProfile != null && activeSceneNode.MyAmbientMusicProfile.MyAudioClip != null) {
@@ -207,8 +208,10 @@ namespace AnyRPG {
                     AudioManager.MyInstance.StopAmbientSound();
                 }
                 if (activeSceneNode.MyBackgroundMusicProfile != null && activeSceneNode.MyBackgroundMusicProfile.MyAudioClip != null) {
+                    //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
                     AudioManager.MyInstance.PlayMusic(activeSceneNode.MyBackgroundMusicProfile.MyAudioClip);
                 } else {
+                    //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
                     AudioManager.MyInstance.StopMusic();
                 }
             }

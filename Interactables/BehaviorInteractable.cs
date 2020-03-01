@@ -124,6 +124,7 @@ namespace AnyRPG {
             } else if (currentList.Count == 1) {
                 TryPlayBehavior(currentList[0]);
                 base.Interact(source);
+                interactable.CloseInteractionWindow();
             } else {
                 interactable.OpenInteractionWindow();
             }
@@ -271,6 +272,14 @@ namespace AnyRPG {
                     }
                 }
             }
+        }
+
+        public void StopBackgroundMusic() {
+            AudioManager.MyInstance.StopMusic();
+        }
+
+        public void StartBackgroundMusic() {
+            LevelManager.MyInstance.PlayLevelSounds();
         }
 
 
