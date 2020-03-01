@@ -58,7 +58,13 @@ namespace AnyRPG {
 
         public List<BehaviorNode> MyBehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
-        public bool MyCompleted { get => completed; set => completed = value; }
+        public bool MyCompleted {
+            get => completed;
+            set {
+                //Debug.Log(MyName + ".BehaviorProfile.MyCompleted = " + value + "; id: " + GetInstanceID());
+                completed = value;
+            } 
+        }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

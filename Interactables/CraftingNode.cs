@@ -39,6 +39,8 @@ namespace AnyRPG {
         public BaseAbility MyAbility { get => ability; }
 
         public override bool Interact(CharacterUnit source) {
+            base.Interact(source);
+
             CraftingUI.MyInstance.ViewRecipes(ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;

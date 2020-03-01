@@ -31,6 +31,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
+            base.Interact(source);
+
             PickUp();
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;

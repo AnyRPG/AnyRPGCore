@@ -20,6 +20,8 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             if (!chestWindow.IsOpen) {
+                base.Interact(source);
+
                 AddItems();
                 chestWindow.OnCloseWindowCallback += OnCloseWindow;
                 chestWindow.OpenWindow();

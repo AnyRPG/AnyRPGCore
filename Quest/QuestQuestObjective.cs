@@ -12,13 +12,15 @@ namespace AnyRPG {
         private Quest questObjective;
 
         public override void UpdateCompletionCount(bool printMessages = true) {
+            //Debug.Log("QuestQuestObjective.UpdateCompletionCount()");
             bool completeBefore = IsComplete;
             if (completeBefore) {
+                //Debug.Log("QuestQuestObjective.UpdateCompletionCount() : COMPLETEBEFORE = TRUE");
                 return;
             }
             if (SystemQuestManager.MyInstance != null) {
                 if (questObjective == null) {
-                    Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
+                    //Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
                     return;
                 }
                 if (questObjective.GetStatus() == "completed") {
@@ -36,6 +38,7 @@ namespace AnyRPG {
         }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+            //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
             SystemEventManager.MyInstance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);

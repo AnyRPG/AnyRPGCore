@@ -211,6 +211,7 @@ namespace AnyRPG {
 
             set {
                 turnedIn = value;
+                //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
             }
         }
@@ -307,22 +308,27 @@ namespace AnyRPG {
             string returnString = string.Empty;
 
             if (TurnedIn && !repeatableQuest) {
+                //Debug.Log(MyName + ".Quest.GetStatus(): returning completed");
                 return "completed";
             }
 
             if (QuestLog.MyInstance.HasQuest(MyName) && IsComplete) {
+                //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
             if (QuestLog.MyInstance.HasQuest(MyName)) {
+                //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
             if (!QuestLog.MyInstance.HasQuest(MyName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
+                //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
 
             // this quest prerequisites were not met
+            //Debug.Log(MyName + ".Quest.GetStatus(): returning unavailable");
             return "unavailable";
         }
 
@@ -350,6 +356,7 @@ namespace AnyRPG {
                 objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (QuestQuestObjective obj in MyQuestQuestObjectives) {
+                //Debug.Log("questquestobjective display");
                 objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (UseInteractableObjective obj in MyUseInteractableObjectives) {

@@ -59,6 +59,8 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized == true) {
                 return false;
             }
+            base.Interact(source);
+
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).Setup(MyClassSpecialization);
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;

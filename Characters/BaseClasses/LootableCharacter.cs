@@ -199,6 +199,8 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.MyCharacter.MyCharacterStats.IsAlive) {
                 Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
+                base.Interact(source);
+
                 List<LootDrop> drops = new List<LootDrop>();
                 foreach (GameObject interactable in GetLootableTargets()) {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();

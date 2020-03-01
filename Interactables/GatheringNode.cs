@@ -49,6 +49,8 @@ namespace AnyRPG {
                 return true;
             }
             int lootCount = 0;
+            base.Interact(source);
+
             foreach (LootTable lootTable in lootTables) {
                 if (lootTable.MyDroppedItems.Count > 0) {
                     lootCount += lootTable.MyDroppedItems.Count;

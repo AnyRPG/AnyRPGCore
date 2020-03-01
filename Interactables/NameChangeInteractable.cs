@@ -83,6 +83,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT REFERENCES WERE ALREADY INITIALIZED!!! RETURNING");
                 return false;
             }
+            base.Interact(source);
+
             SystemWindowManager.MyInstance.nameChangeWindow.OpenWindow();
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
