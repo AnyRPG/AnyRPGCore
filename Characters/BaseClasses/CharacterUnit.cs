@@ -47,6 +47,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressNamePlate = false;
 
+        // the transform to use for the nameplate anchor
+        [SerializeField]
+        private Transform namePlateTransform = null;
+
 
         protected AudioSource audioSource;
 
@@ -80,6 +84,9 @@ namespace AnyRPG {
             get {
                 if (mounted) {
                     return baseCharacter.MyAnimatedUnit.transform;
+                }
+                if (namePlateTransform != null) {
+                    return namePlateTransform;
                 }
                 return transform;
             }
@@ -279,7 +286,7 @@ namespace AnyRPG {
                 return;
             }
             if (baseCharacter != null) {
-                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this);
+                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this, (namePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;
                 }
@@ -315,6 +322,8 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".CharacterUnit.Interact(" + source.name + ")");
             if (CanInteract()) {
+                base.Interact(source);
+
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
                 (source.MyCharacter.MyCharacterCombat as PlayerCombat).Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();

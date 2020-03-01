@@ -29,6 +29,9 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 unitFrameCameraPositionOffset;
 
+        [SerializeField]
+        private Transform namePlateTransform;
+
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }
         public Faction MyFaction { get => null; }
@@ -37,6 +40,9 @@ namespace AnyRPG {
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         public Transform MyNamePlateTransform {
             get {
+                if (namePlateTransform != null) {
+                    return namePlateTransform;
+                }
                 return transform;
             }
         }
@@ -85,7 +91,7 @@ namespace AnyRPG {
 
             if (interactable.CanInteract()) {
                 //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): isStarted && interactable.CanInteract() == true");
-                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this);
+                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this, (namePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;
                 }

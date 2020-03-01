@@ -238,10 +238,13 @@ namespace AnyRPG {
             }
         }
 
-        public void SetNamePlateUnit(INamePlateUnit namePlateUnit) {
+        public void SetNamePlateUnit(INamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             this.namePlateUnit = namePlateUnit;
+            if (usePositionOffset == false) {
+                positionOffset = 0f;
+            }
 
             InitializeLocalComponents();
 

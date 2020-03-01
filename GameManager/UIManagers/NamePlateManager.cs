@@ -63,18 +63,18 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NamePlateController SpawnNamePlate(INamePlateUnit namePlateUnit) {
+        public NamePlateController SpawnNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.MyDisplayName + ")");
             NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
             namePlates.Add(namePlateUnit, namePlate);
-            namePlate.SetNamePlateUnit(namePlateUnit);
+            namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
             return namePlate;
         }
 
-        public NamePlateController AddNamePlate(INamePlateUnit namePlateUnit) {
+        public NamePlateController AddNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.MyDisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit) == false) {
-                NamePlateController namePlate = SpawnNamePlate(namePlateUnit);
+                NamePlateController namePlate = SpawnNamePlate(namePlateUnit, usePositionOffset);
                 namePlateUnit.NamePlateNeedsRemoval += RemoveNamePlate;
                 return namePlate;
             }
