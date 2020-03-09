@@ -51,6 +51,10 @@ namespace AnyRPG {
         [SerializeField]
         private string targetBone;
 
+        [SerializeField]
+        private string unsheathAudioProfileName = string.Empty;
+        private AudioProfile unsheathAudioProfile = null;
+
 
         [FormerlySerializedAs("sheathedPhysicalPosition")]
         [SerializeField]
@@ -70,6 +74,10 @@ namespace AnyRPG {
         [SerializeField]
         private string sheathedTargetBone;
 
+        [SerializeField]
+        private string sheathAudioProfileName = string.Empty;
+        private AudioProfile sheathAudioProfile = null;
+
         public GameObject MyPrefab { get => prefab; }
         public Vector3 MyPosition { get => position; }
         public Vector3 MyRotation { get => rotation; }
@@ -81,5 +89,29 @@ namespace AnyRPG {
         public Vector3 MySheathedScale { get => sheathedScale; }
         public string MySheathedTargetBone { get => sheathedTargetBone; }
         public bool MyRotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
+        public AudioProfile UnsheathAudioProfile { get => unsheathAudioProfile; set => unsheathAudioProfile = value; }
+        public AudioProfile SheathAudioProfile { get => sheathAudioProfile; set => sheathAudioProfile = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (sheathAudioProfileName != null && sheathAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(sheathAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    sheathAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("PrefabProfile.SetupScriptableObjects():UNABLE TO FIND AudioProfile " + sheathAudioProfile + " while initializing " + MyName + ". CHECK INSPECTOR!");
+                }
+            }
+
+            if (unsheathAudioProfileName != null && unsheathAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(unsheathAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    unsheathAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("PrefabProfile.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + unsheathAudioProfile + " while initializing " + MyName + ". CHECK INSPECTOR!");
+                }
+            }
+        }
     }
 }

@@ -157,7 +157,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.Spawn()");
 
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
-                //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + spawnPrefab.name);
+                //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + prefabProfile.MyName);
                 spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
                 spawnReference.transform.Rotate(prefabProfile.MyRotation);
             } else {

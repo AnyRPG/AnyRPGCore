@@ -8,6 +8,12 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        [SerializeField]
+        private float movementSpeed = 0.05f;
+
+        [SerializeField]
+        private float rotationSpeed = 10f;
+        
         // by default it is considered closed when not using the sheathed position
         private bool objectOpen = false;
 
@@ -37,31 +43,40 @@ namespace AnyRPG {
             // loop through the animatedobjects prefabobjects
             // check their state (open / closed)
             if (interactable.MyPrefabProfile == null) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): prefabprofile was null");
+                Debug.Log(gameObject.name + ".AnimatedObject.Interact(): prefabprofile was null");
                 return false;
             }
             if (objectOpen) {
-                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MyRotation));
+                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MyRotation, interactable.MyPrefabProfile.MyPosition, interactable.MyPrefabProfile.UnsheathAudioProfile));
             } else {
-                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MySheathedRotation));
+                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MySheathedRotation, interactable.MyPrefabProfile.MySheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 
             return false;
         }
 
-        private IEnumerator animateObject(Vector3 newAngle) {
-            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ")");
+        private IEnumerator animateObject(Vector3 newAngle, Vector3 newPosition, AudioProfile audioProfile) {
             Quaternion originalRotation = interactable.MySpawnReference.transform.localRotation;
-            while (!(interactable.MySpawnReference.transform.localEulerAngles == newAngle)) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles);
+            Vector3 originalPosition = interactable.MySpawnReference.transform.localPosition;
+            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
+
+            AudioSource audioSource = interactable.MySpawnReference.GetComponent<AudioSource>();
+            if (audioSource != null && audioProfile != null && audioProfile.MyAudioClip != null) {
+                audioSource.PlayOneShot(audioProfile.MyAudioClip);
+            }
+
+            while (interactable.MySpawnReference.transform.localEulerAngles != newAngle || interactable.MySpawnReference.transform.localPosition != newPosition) {
+                //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition);
                 //Quaternion newRotation = Quaternion.Lerp(originalRotation, Quaternion.Euler(newAngle), 0.01f);
-                Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(newAngle), 10f);
+                Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(newAngle), rotationSpeed);
+                Vector3 newLocation = Vector3.MoveTowards(interactable.MySpawnReference.transform.localPosition, newPosition, movementSpeed);
+                interactable.MySpawnReference.transform.localPosition = newLocation;
                 interactable.MySpawnReference.transform.localRotation = newRotation;
                 yield return null;
             }
             objectOpen = !objectOpen;
-            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + "): done rotation");
+            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition + "; COMPLETE ANIMATION");
             coroutine = null;
         }
 

@@ -23,6 +23,9 @@ namespace AnyRPG {
         public float glowMaxIntensity = 6f;
         private Color glowColor = Color.yellow;
 
+        [SerializeField]
+        private bool notInteractable = false;
+
         // automatically triggered by walking into it
         public bool isTrigger = false;
 
@@ -81,6 +84,7 @@ namespace AnyRPG {
         public Sprite MyIcon { get => interactableIcon; }
 
         public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
+        public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
@@ -327,6 +331,9 @@ namespace AnyRPG {
         }
 
         public bool CanInteract() {
+            if (notInteractable == true) {
+                return false;
+            }
             //Debug.Log(gameObject.name + ".Interactable.CanInteract()");
             if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                 return false;
@@ -350,6 +357,9 @@ namespace AnyRPG {
         /// <returns></returns>
         public virtual bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + ")");
+            if (notInteractable == true) {
+                return false;
+            }
 
             // get a list of valid interactables to determine if there is an action we can treat as default
             List<IInteractable> validInteractables = GetValidInteractables();
@@ -391,6 +401,11 @@ namespace AnyRPG {
 
 
         public List<IInteractable> GetValidInteractables() {
+
+            if (notInteractable == true) {
+                return null;
+            }
+
             //public List<IInteractable> GetValidInteractables(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables()");
             InitializeComponents();
@@ -432,6 +447,11 @@ namespace AnyRPG {
 
         public List<IInteractable> GetCurrentInteractables() {
             //Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables()");
+
+            if (notInteractable == true) {
+                return null;
+            }
+
             InitializeComponents();
 
             /*
@@ -461,6 +481,10 @@ namespace AnyRPG {
         public void OnMouseHover() {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseHover()");
             // rename from onMouseOver to OnMouseHover to avoid unity senting it mouse events.
+            if (notInteractable == true) {
+                return;
+            }
+
             if (PlayerManager.MyInstance == null) {
                 return;
             }
@@ -517,6 +541,11 @@ namespace AnyRPG {
         public void OnMouseOut() {
             // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
             //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
+
+            if (notInteractable == true) {
+                return;
+            }
+
             if (PlayerManager.MyInstance == null) {
                 return;
             }
@@ -563,6 +592,11 @@ namespace AnyRPG {
 
         public void OnTriggerEnter(Collider other) {
             //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter()");
+
+            if (notInteractable == true) {
+                return;
+            }
+
             if (isTrigger) {
                 //CharacterUnit otherCharacterUnit = other.gameObject.GetComponent<CharacterUnit>();
                 // changed to player to ensure ai don't accidentally trigger interactions
