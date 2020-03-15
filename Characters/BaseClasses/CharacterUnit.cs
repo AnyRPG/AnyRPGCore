@@ -51,9 +51,6 @@ namespace AnyRPG {
         [SerializeField]
         private Transform namePlateTransform = null;
 
-
-        protected AudioSource audioSource;
-
         private Coroutine despawnCoroutine;
 
         private bool startHasRun = false;
@@ -79,7 +76,6 @@ namespace AnyRPG {
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
         public BaseCharacter MyBaseCharacter { get => MyCharacter; }
-        public AudioSource MyAudioSource { get => audioSource; set => audioSource = value; }
         public Transform MyNamePlateTransform {
             get {
                 if (mounted) {
@@ -258,7 +254,6 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
-            audioSource = GetComponent<AudioSource>();
             if (audioSource == null) {
                 Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): AUDIOSOURCE WAS NULL. ADDING ONE, BUT AN AUDIO SOURCE SHOULD BE MANUALLY ADDED.  CHECK INSPECTOR.");
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();

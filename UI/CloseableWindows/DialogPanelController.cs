@@ -137,6 +137,10 @@ namespace AnyRPG {
                 nodeText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.MyDialogNodes[dialogIndex].MyDescription);
                 CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
             }
+            if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.MyAudioClips != null && MyDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
+                AudioManager.MyInstance.PlayEffect(MyDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+            }
+
             if (buttonText != null) {
                 buttonText.text = MyDialog.MyDialogNodes[dialogIndex].MyNextOption;
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is not null, rebuilding layout");

@@ -120,7 +120,7 @@ namespace AnyRPG {
             if (currentDialog.MyAutomatic == true) {
                 dialogCoroutine = StartCoroutine(playDialog());
             } else {
-                ProcessDialogNode(currentDialog.MyDialogNodes[0]);
+                ProcessDialogNode(dialogIndex);
                 dialogIndex++;
             }
         }
@@ -128,18 +128,24 @@ namespace AnyRPG {
         public void AdvanceDialog() {
             //Debug.Log("CharacterAbilitymanager.AdvanceDialog()");
             if (currentDialog.MyDialogNodes.Count > dialogIndex) {
-                ProcessDialogNode(currentDialog.MyDialogNodes[dialogIndex]);
+                ProcessDialogNode(dialogIndex);
                 dialogIndex++;
             }
         }
 
-        private void ProcessDialogNode(DialogNode currentdialogNode) {
+        private void ProcessDialogNode(int dialogIndex) {
             //Debug.Log("CharacterAbilitymanager.ProcessDialogNode()");
-            captionText.text = currentdialogNode.MyDescription;
+            DialogNode currentDialogNode = currentDialog.MyDialogNodes[dialogIndex];
+            captionText.text = currentDialogNode.MyDescription;
             captionText.color = new Color32(255, 255, 255, 0);
             dialogCoroutine = StartCoroutine(FadeInText());
 
-            currentdialogNode.MyShown = true;
+            if (AudioManager.MyInstance != null && currentDialog.MyAudioProfile != null && currentDialog.MyAudioProfile.MyAudioClips != null && currentDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
+                AudioManager.MyInstance.PlayEffect(currentDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+            }
+
+
+            currentDialogNode.MyShown = true;
         }
 
 
@@ -153,7 +159,7 @@ namespace AnyRPG {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
                         currentdialogNode = dialogNode;
 
-                        ProcessDialogNode(currentdialogNode);
+                        ProcessDialogNode(dialogIndex);
                         dialogIndex++;
                     }
                 }

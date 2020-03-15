@@ -12,6 +12,11 @@ namespace AnyRPG {
     public class Dialog : DescribableResource {
 
         [SerializeField]
+        private string audioProfileName = string.Empty;
+
+        private AudioProfile audioProfile;
+
+        [SerializeField]
         private List<DialogNode> dialogNodes = new List<DialogNode>();
 
         [SerializeField]
@@ -54,14 +59,24 @@ namespace AnyRPG {
 
         public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
+        public AudioProfile MyAudioProfile { get => audioProfile; set => audioProfile = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
+
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.SetupScriptableObjects();
                     }
+                }
+            }
+            if (audioProfileName != null && audioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                if (tmpAudioProfile != null) {
+                    audioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("Dialog.SetupScriptableObjects(): COULD NOT FIND audioProfile " + audioProfileName + " WHILE INITIALIZING " + MyName);
                 }
             }
         }

@@ -29,6 +29,8 @@ namespace AnyRPG {
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
 
+        protected AudioSource audioSource = null;
+
         public virtual string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
@@ -49,6 +51,7 @@ namespace AnyRPG {
         public virtual Sprite MyNamePlateImage { get => namePlateImage; }
 
         public string MyName { get => (MyInteractionPanelTitle != null && MyInteractionPanelTitle != string.Empty ? MyInteractionPanelTitle : (interactable != null ? interactable.MyName : "interactable is null!")); }
+        public AudioSource MyAudioSource { get => audioSource; set => audioSource = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".InteractableOption.Awake(). Setting interactable");
@@ -71,6 +74,7 @@ namespace AnyRPG {
                 return;
             }
             interactable = GetComponent<Interactable>();
+            audioSource = GetComponent<AudioSource>();
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences(): " + interactable is null);
             }

@@ -183,6 +183,9 @@ namespace AnyRPG {
                         if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
                             namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
                         }
+                        if (audioSource != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.MyAudioClips != null && dialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
+                            audioSource.PlayOneShot(dialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+                        }
                         if (CombatLogUI.MyInstance != null) {
                             CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
                         }
