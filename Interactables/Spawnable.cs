@@ -49,41 +49,41 @@ namespace AnyRPG {
         }
 
         protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".Interactable.Awake()");
+            //Debug.Log(gameObject.name + ".Spawnable.Awake()");
             if (SystemGameManager.MyInstance == null) {
-                Debug.LogError(gameObject.name + "Interactable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
+                Debug.LogError(gameObject.name + "Spawnable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
                 return;
             }
             InitializeComponents();
             SetupScriptableObjects();
-        }
-
-        public virtual void Start() {
-            //Debug.Log(gameObject.name + ".Interactable.Start()");
-            InitializeComponents();
-            //interactionTransform = transform;
-            //InitializeMaterials();
             CreateEventSubscriptions();
         }
 
+        public virtual void Start() {
+            //Debug.Log(gameObject.name + ".Spawnable.Start()");
+            InitializeComponents();
+            //interactionTransform = transform;
+            //InitializeMaterials();
+        }
+
         public virtual void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".Interactable.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Interactable.Start(): Player Unit is spawned.  Handling immediate spawn!");
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
                 HandlePlayerUnitSpawn();
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.Start(): Player Unit is not spawned. Added Handle Spawn listener");
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
             SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            //Debug.Log(gameObject.name + "Spawnable.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -95,17 +95,17 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log(gameObject.name + ".Interactable.OnDisable()");
+            //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
             CleanupEverything();
         }
 
         public virtual void CleanupEverything() {
-            //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
+            //Debug.Log(gameObject.name + ".Spawnable.CleanupEverything()");
             CleanupEventSubscriptions();
         }
 
         public virtual void InitializeComponents() {
-            //Debug.Log(gameObject.name + ".Interactable.InitializeComponents()");
+            //Debug.Log(gameObject.name + ".Spawnable.InitializeComponents()");
 
             if (componentsInitialized == true) {
                 return;
@@ -115,7 +115,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".Spawnable.HandlePrerequisiteUpdates()");
             InitializeComponents();
             if (CanSpawn()) {
                 StartSpawn();
@@ -154,21 +154,21 @@ namespace AnyRPG {
 
 
         public virtual void Spawn() {
-            //Debug.Log(gameObject.name + ".Interactable.Spawn()");
+            //Debug.Log(gameObject.name + ".Spawnable.Spawn()");
 
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
-                //Debug.Log(gameObject.name + ".Interactable.Spawn(): Spawning " + prefabProfile.MyName);
+                //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
                 spawnReference.transform.Rotate(prefabProfile.MyRotation);
             } else {
                 if (spawnReference != null) {
-                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): Already spawned");
+                    //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Already spawned");
                 }
                 if (prefabProfile == null) {
-                    //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile is null");
+                    //Debug.Log(gameObject.name + ".Spawnable.Spawn(): PrefabProfile is null");
                 } else {
                     if (prefabProfile.MyPrefab == null) {
-                        //Debug.Log(gameObject.name + ".Interactable.Spawn(): PrefabProfile.myprefab is null");
+                        //Debug.Log(gameObject.name + ".Spawnable.Spawn(): PrefabProfile.myprefab is null");
                     }
                 }
             }
@@ -176,7 +176,7 @@ namespace AnyRPG {
         }
 
         public virtual void DestroySpawn() {
-            //Debug.Log(gameObject.name + ".Interactable.DestroySpawn()");
+            //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
             if (spawnReference != null) {
                 Destroy(spawnReference);
                 spawnReference = null;
@@ -184,24 +184,24 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePlayerUnitSpawn()");
+            //Debug.Log(gameObject.name + ".Spawnable.HandlePlayerUnitSpawn()");
             HandlePrerequisiteUpdates();
         }
 
 
 
         protected virtual void OnDestroy() {
-            //Debug.Log(gameObject.name + ".Interactable.OnDestroy()");
+            //Debug.Log(gameObject.name + ".Spawnable.OnDestroy()");
         }
 
         public virtual void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
+            //Debug.Log(gameObject.name + ".Spawnable.SetupScriptableObjects()");
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
                     prefabProfile = tmpPrefabProfile;
                 } else {
-                    Debug.LogError(gameObject.name + ".Interactable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);
+                    Debug.LogError(gameObject.name + ".Spawnable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);
                 }
             }
         }

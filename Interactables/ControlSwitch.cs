@@ -9,8 +9,7 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        InteractableOption controlObject = null;
-
+        List<InteractableOption> controlObjects = new List<InteractableOption>();
 
         /*
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyAnimatedObjectInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyAnimatedObjectInteractionPanelImage : base.MyIcon); }
@@ -25,14 +24,16 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
-            if (controlObject == null) {
+            if (controlObjects == null || controlObjects.Count == 0) {
                 //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): coroutine is not null, exiting");
                 return false;
             }
             base.Interact(source);
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
 
-            controlObject.Interact(source);
+            foreach (InteractableOption interactableOption in controlObjects) {
+                interactableOption.Interact(source);
+            }
 
             return false;
         }

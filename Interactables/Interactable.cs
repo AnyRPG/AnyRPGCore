@@ -270,7 +270,8 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (GetValidInteractables().Count == 0) {
+            List<IInteractable> validInteractables = GetValidInteractables();
+            if (validInteractables == null || validInteractables.Count == 0) {
                 //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
@@ -364,6 +365,9 @@ namespace AnyRPG {
             // get a list of valid interactables to determine if there is an action we can treat as default
             List<IInteractable> validInteractables = GetValidInteractables();
             //List<IInteractable> validInteractables = GetValidInteractables(source);
+            if (validInteractables == null) {
+                return false;
+            }
             foreach (IInteractable validInteractable in validInteractables) {
                 //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
             }
