@@ -34,6 +34,7 @@ namespace AnyRPG {
         public CloseableWindow petSpawnWindow;
         public CloseableWindow playMenuWindow;
         public CloseableWindow settingsMenuWindow;
+        public CloseableWindow creditsWindow;
         public CloseableWindow exitMenuWindow;
         public CloseableWindow deleteGameMenuWindow;
         public CloseableWindow copyGameMenuWindow;
@@ -85,6 +86,7 @@ namespace AnyRPG {
 
             if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
                 settingsMenuWindow.CloseWindow();
+                creditsWindow.CloseWindow();
                 exitMenuWindow.CloseWindow();
                 playMenuWindow.CloseWindow();
                 deleteGameMenuWindow.CloseWindow();
@@ -108,6 +110,7 @@ namespace AnyRPG {
             mainMenuWindow.CloseWindow();
             inGameMainMenuWindow.CloseWindow();
             settingsMenuWindow.CloseWindow();
+            creditsWindow.CloseWindow();
             exitMenuWindow.CloseWindow();
             playMenuWindow.CloseWindow();
             deleteGameMenuWindow.CloseWindow();
