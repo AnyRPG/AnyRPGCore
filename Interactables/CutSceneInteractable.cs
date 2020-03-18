@@ -14,7 +14,9 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
-        private string CutSceneName;
+        private string cutsceneName = string.Empty;
+
+        private Cutscene cutscene = null;
 
 
         protected override void Awake() {
@@ -50,7 +52,16 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            LevelManager.MyInstance.LoadCutSceneWithDelay(CutSceneName);
+            if (cutscene != null) {
+                if (cutscene.MyLoadScene != null) {
+                    LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
+                } else {
+                    UIManager.MyInstance.MyCutSceneBarController.StartCutScene(cutscene);
+                    if (cutscene.MyTimelineName != null && cutscene.MyTimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.MyTimelineName)) {
+                        SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.MyTimelineName].Play();
+                    }
+                }
+            }
             // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
@@ -90,6 +101,20 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (cutsceneName != null && cutsceneName != string.Empty) {
+                Cutscene tmpCutscene = SystemCutsceneManager.MyInstance.GetResource(cutsceneName);
+                if (tmpCutscene != null) {
+                    cutscene = tmpCutscene;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + cutsceneName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
         }
 
     }

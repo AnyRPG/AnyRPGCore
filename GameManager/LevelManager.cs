@@ -222,8 +222,8 @@ namespace AnyRPG {
 
             if (GetActiveSceneNode() != null) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): GetActiveSceneNode is not null");
-                if (GetActiveSceneNode().MySuppressMainCamera == true || GetActiveSceneNode().MyIsCutScene == true) {
-                    if (GetActiveSceneNode().MyIsCutScene == false && GetActiveSceneNode().MyCutsceneViewed) {
+                if (GetActiveSceneNode().MyAutoPlayCutscene != null) {
+                    if (GetActiveSceneNode().MyAutoPlayCutscene.MyViewed == true) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
                         CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);
                         return;
@@ -233,42 +233,42 @@ namespace AnyRPG {
                     if (AnyRPGCutsceneCameraController.MyInstance != null) {
                         AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(true);
                     }
-                    if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
+                    //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                         //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyDialog);
-                    }
+                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyAutoPlayCutscene);
+                    //}
                 } else {
                     CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);
                 }
             }
         }
 
-        public void LoadCutSceneWithDelay(string sceneName) {
+        public void LoadCutSceneWithDelay(Cutscene cutscene) {
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
             if (loadCutSceneCoroutine == null) {
-                loadCutSceneCoroutine = StartCoroutine(LoadCutSceneDelay(sceneName));
+                loadCutSceneCoroutine = StartCoroutine(LoadCutSceneDelay(cutscene));
             }
         }
 
-        private IEnumerator LoadCutSceneDelay(string sceneName) {
+        private IEnumerator LoadCutSceneDelay(Cutscene cutscene) {
             yield return new WaitForSeconds(1);
-            LoadCutScene(sceneName);
+            LoadCutScene(cutscene);
             loadCutSceneCoroutine = null;
         }
 
-        public void LoadCutScene(string sceneName) {
+        public void LoadCutScene(Cutscene cutscene) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
             if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                 spawnRotationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward;
                 spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
             }
             returnSceneName = GetActiveSceneNode().MyName;
-            LoadLevel(sceneName);
+            LoadLevel(cutscene.MyLoadScene.MyName);
         }
 
-        public void ReturnFromCutScene() {
+        public void EndCutscene(Cutscene cutscene) {
             //Debug.Log("LevelManager.ReturnFromCutScene()");
-            if (GetActiveSceneNode().MyIsCutScene == true) {
+            if (cutscene.MyUnloadSceneOnEnd == true) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
                 LoadLevel(returnSceneName);
             } else {
@@ -281,7 +281,9 @@ namespace AnyRPG {
                 UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);
                 UIManager.MyInstance.MyCombatTextCanvas.SetActive(true);
 
-                PlayerManager.MyInstance.SpawnPlayerUnit();
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                    PlayerManager.MyInstance.SpawnPlayerUnit();
+                }
             }
 
         }

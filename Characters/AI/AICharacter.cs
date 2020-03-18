@@ -27,7 +27,7 @@ namespace AnyRPG {
         public LootableCharacter MyLootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".AICharacter.Awake()");
+            Debug.Log(gameObject.name + ".AICharacter.Awake()");
             base.Awake();
             OrchestratorStart();
             OrchestratorFinish();

@@ -40,6 +40,7 @@ namespace AnyRPG {
         public List<CurrencySaveData> currencySaveData;
         public List<DialogSaveData> dialogSaveData;
         public List<SceneNodeSaveData> sceneNodeSaveData;
+        public List<CutsceneSaveData> cutsceneSaveData;
         public List<StatusEffectSaveData> statusEffectSaveData;
         public List<PetSaveData> petSaveData;
     }
@@ -73,6 +74,13 @@ namespace AnyRPG {
         public bool isCutSceneViewed;
 
         public List<PersistentObjectSaveData> persistentObjects;
+    }
+
+    [Serializable]
+    public struct CutsceneSaveData {
+
+        public string MyName;
+        public bool isCutSceneViewed;
     }
 
     [Serializable]

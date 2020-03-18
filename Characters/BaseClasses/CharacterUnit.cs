@@ -182,7 +182,11 @@ namespace AnyRPG {
             if (animatedUnit != null) {
                 animatedUnit.OrchestrateStartup();
             }
+            if (interactable != null) {
+                interactable.OrchestratorStart();
+            }
             InitializeNamePlate();
+
         }
 
         public void CreateEventSubscriptions() {

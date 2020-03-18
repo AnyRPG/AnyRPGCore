@@ -56,6 +56,12 @@ namespace AnyRPG {
             }
             InitializeComponents();
             SetupScriptableObjects();
+            if (GetComponent<CharacterUnit>() == null) {
+                OrchestratorStart();
+            }
+        }
+
+        public virtual void OrchestratorStart() {
             CreateEventSubscriptions();
         }
 

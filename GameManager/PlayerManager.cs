@@ -263,7 +263,7 @@ namespace AnyRPG {
             if (activeSceneNode != null) {
                 //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
                 // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
-                if (activeSceneNode.MyIsCutScene || (activeSceneNode.MySuppressCharacterSpawn && !activeSceneNode.MyCutsceneViewed)) {
+                if ((activeSceneNode.MyAutoPlayCutscene != null && activeSceneNode.MyAutoPlayCutscene.MyViewed == false) || activeSceneNode.MySuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
                     loadCharacter = false;
                     CameraManager.MyInstance.MyMainCamera.gameObject.SetActive(false);

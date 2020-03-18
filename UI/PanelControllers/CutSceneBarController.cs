@@ -45,6 +45,10 @@ namespace AnyRPG {
 
         private Dialog currentDialog = null;
 
+        private Cutscene currentCutscene = null;
+
+        public Cutscene MyCurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
+
         public void ClearCoRoutine() {
             if (dialogCoroutine != null) {
                 StopCoroutine(dialogCoroutine);
@@ -65,9 +69,10 @@ namespace AnyRPG {
         }
         */
 
-        public void StartCutScene(Dialog newDialog) {
+        public void StartCutScene(Cutscene cutscene) {
             //Debug.Log("CutSceneBarController.StartCutScene(" + caption + ")");
-            currentDialog = newDialog;
+            currentCutscene = cutscene;
+            currentDialog = cutscene.MyDialog;
             captionText.color = new Color32(255, 255, 255, 0);
             gameObject.SetActive(true);
             topBarLayoutElement.preferredHeight = 0;
@@ -78,6 +83,9 @@ namespace AnyRPG {
             topBar.gameObject.SetActive(true);
             bottomBar.gameObject.SetActive(true);
             captionBar.gameObject.SetActive(true);
+            if (CameraManager.MyInstance.MyMainCameraGameObject.activeSelf == true) {
+                CameraManager.MyInstance.MyMainCameraGameObject.SetActive(false);
+            }
             UIManager.MyInstance.ActivatePlayerUI();
             UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(false);
             UIManager.MyInstance.MyPopupWindowContainer.SetActive(false);
@@ -100,8 +108,12 @@ namespace AnyRPG {
             */
             ClearCoRoutine();
             gameObject.SetActive(false);
-            LevelManager.MyInstance.GetActiveSceneNode().MyCutsceneViewed = true;
-            LevelManager.MyInstance.ReturnFromCutScene();
+            currentCutscene.MyViewed = true;
+            // if this is not a cutscene that should return, then do not, else do
+            //if (currentCutscene.MyUnloadSceneOnEnd) {
+                LevelManager.MyInstance.EndCutscene(currentCutscene);
+            //}
+            currentCutscene = null;
         }
 
         public IEnumerator LoadCutSceneBars(int barHeight) {
@@ -117,11 +129,13 @@ namespace AnyRPG {
 
                 yield return null;
             }
-            if (currentDialog.MyAutomatic == true) {
-                dialogCoroutine = StartCoroutine(playDialog());
-            } else {
-                ProcessDialogNode(dialogIndex);
-                dialogIndex++;
+            if (currentDialog != null) {
+                if (currentDialog.MyAutomatic == true) {
+                    dialogCoroutine = StartCoroutine(playDialog());
+                } else {
+                    ProcessDialogNode(dialogIndex);
+                    dialogIndex++;
+                }
             }
         }
 

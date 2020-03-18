@@ -68,6 +68,7 @@ namespace AnyRPG {
 
         protected CharacterUnit characterUnit = null;
         protected AnimatedUnit animatedUnit = null;
+        protected Interactable interactable = null;
 
         public CharacterStats MyCharacterStats { get => characterStats; }
         public CharacterCombat MyCharacterCombat { get => characterCombat; }

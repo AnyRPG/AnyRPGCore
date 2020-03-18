@@ -31,27 +31,14 @@ namespace AnyRPG {
         private bool suppressMainCamera;
 
         [SerializeField]
-        private bool isCutScene;
+        private string autoPlayCutsceneName = string.Empty;
 
-        [SerializeField]
-        private bool allowCutSceneNamePlates;
-
-        [SerializeField]
-        private bool cutsceneViewed;
-
-        // only applies if this is a cutscene
-        [SerializeField]
-        private bool useDefaultFactionColors = false;
+        private Cutscene autoPlayCutscene = null;
 
         [SerializeField]
         private List<string> environmentStateNames = new List<string>();
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
-
-        [SerializeField]
-        private string dialogName;
-
-        private Dialog dialog;
 
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
@@ -59,14 +46,11 @@ namespace AnyRPG {
         public Vector3 MyDefaultSpawnPosition { get => defaultSpawnPosition; set => defaultSpawnPosition = value; }
         public bool MySuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
         public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
-        public bool MyCutsceneViewed { get => cutsceneViewed; set => cutsceneViewed = value; }
-        public bool MyIsCutScene { get => isCutScene; set => isCutScene = value; }
         public AudioProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
         public AudioProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
-        public Dialog MyDialog { get => dialog; set => dialog = value; }
-        public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
         public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
+        public Cutscene MyAutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -91,12 +75,12 @@ namespace AnyRPG {
                 }
             }
 
-            if (dialogName != null && dialogName != string.Empty) {
-                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
-                if (tmpDialog != null) {
-                    dialog = tmpDialog;
+            if (autoPlayCutsceneName != null && autoPlayCutsceneName != string.Empty) {
+                Cutscene tmpCutscene = SystemCutsceneManager.MyInstance.GetResource(autoPlayCutsceneName);
+                if (tmpCutscene != null) {
+                    autoPlayCutscene = tmpCutscene;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialogName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + autoPlayCutsceneName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 
