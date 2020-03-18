@@ -20,6 +20,9 @@ namespace AnyRPG {
 
 
         public void OnDisable() {
+            if (SystemPlayableDirectorManager.MyInstance == null || playableDirector == null) {
+                return;
+            }
             if (SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
                 SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
             }
