@@ -21,3 +21,7 @@ http://www.anyrpg.org/downloads/
 ## YouTube Channel
 
 https://www.youtube.com/channel/UC-SiqAyRXR6eijPggFhFG2g
+
+## Discord Server
+
+https://discord.gg/huSAuqk
