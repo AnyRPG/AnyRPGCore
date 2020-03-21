@@ -263,6 +263,7 @@ namespace AnyRPG {
                 spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
             }
             returnSceneName = GetActiveSceneNode().MyName;
+            UIManager.MyInstance.MyCutSceneBarController.AssignCutScene(cutscene);
             LoadLevel(cutscene.MyLoadScene.MyName);
         }
 

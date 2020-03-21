@@ -69,6 +69,11 @@ namespace AnyRPG {
         }
         */
 
+            // this method exists to ensure that a cutscene can be considered active even if it loads late in the scene load order
+        public void AssignCutScene(Cutscene cutscene) {
+            currentCutscene = cutscene;
+        }
+
         public void StartCutScene(Cutscene cutscene) {
             //Debug.Log("CutSceneBarController.StartCutScene(" + caption + ")");
             currentCutscene = cutscene;
@@ -111,7 +116,7 @@ namespace AnyRPG {
             currentCutscene.MyViewed = true;
             // if this is not a cutscene that should return, then do not, else do
             //if (currentCutscene.MyUnloadSceneOnEnd) {
-                LevelManager.MyInstance.EndCutscene(currentCutscene);
+            LevelManager.MyInstance.EndCutscene(currentCutscene);
             //}
             currentCutscene = null;
         }
