@@ -28,10 +28,14 @@ namespace AnyRPG {
         private float defaultMusicVolume = 1.0f;
         private float defaultAmbientVolume = 1.0f;
         private float defaultEffectsVolume = 1.0f;
+        private float defaultUIVolume = 1.0f;
+        private float defaultVoiceVolume = 1.0f;
 
         private string masterVolume = "MasterVolume";
         private string musicVolume = "MusicVolume";
         private string effectsVolume = "EffectsVolume";
+        private string uiVolume = "UIVolume";
+        private string voiceVolume = "VoiceVolume";
         private string ambientVolume = "AmbientVolume";
 
         [SerializeField]
@@ -42,6 +46,12 @@ namespace AnyRPG {
 
         [SerializeField]
         private AudioSource ambientAudioSource;
+
+        [SerializeField]
+        private AudioSource uiAudioSource;
+
+        [SerializeField]
+        private AudioSource voiceAudioSource;
 
         [SerializeField]
         private AudioClip uiClickSound;
@@ -58,6 +68,11 @@ namespace AnyRPG {
         public AudioSource MyMusicAudioSource { get => musicAudioSource; set => musicAudioSource = value; }
         public AudioSource MyEffectsAudioSource { get => effectsAudioSource; set => effectsAudioSource = value; }
         public AudioSource MyAmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
+        public AudioSource MyUiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
+        public AudioClip UiClickSound { get => uiClickSound; set => uiClickSound = value; }
+        public AudioSource MyVoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
+        public string MyUiVolume { get => uiVolume; set => uiVolume = value; }
+        public string MyVoiceVolume { get => voiceVolume; set => voiceVolume = value; }
 
         private void Awake() {
             //Debug.Log("AudioManager.Awake()");
@@ -98,6 +113,16 @@ namespace AnyRPG {
                 SetVolume(MyEffectsVolume, PlayerPrefs.GetFloat(MyEffectsVolume));
             } else {
                 SetMusicVolume(defaultEffectsVolume);
+            }
+            if (PlayerPrefs.HasKey(MyUiVolume) == true) {
+                SetVolume(MyUiVolume, PlayerPrefs.GetFloat(MyUiVolume));
+            } else {
+                SetMusicVolume(defaultUIVolume);
+            }
+            if (PlayerPrefs.HasKey(MyVoiceVolume) == true) {
+                SetVolume(MyVoiceVolume, PlayerPrefs.GetFloat(MyVoiceVolume));
+            } else {
+                SetMusicVolume(defaultVoiceVolume);
             }
         }
 
@@ -142,6 +167,18 @@ namespace AnyRPG {
             audioMixer.SetFloat(MyEffectsVolume, GetLogVolume(volume));
         }
 
+        public void SetUIVolume(float volume) {
+            //Debug.Log("AudioManager.SetEffectsVolume(" + volume + ")");
+            PlayerPrefs.SetFloat(MyUiVolume, volume);
+            audioMixer.SetFloat(MyUiVolume, GetLogVolume(volume));
+        }
+
+        public void SetVoiceVolume(float volume) {
+            //Debug.Log("AudioManager.SetEffectsVolume(" + volume + ")");
+            PlayerPrefs.SetFloat(MyVoiceVolume, volume);
+            audioMixer.SetFloat(MyVoiceVolume, GetLogVolume(volume));
+        }
+
         public float GetVolume(string volumeType) {
             //Debug.Log("AudioManager.GetVolume()");
             float returnValue = 0f;
@@ -178,9 +215,25 @@ namespace AnyRPG {
             effectsAudioSource.PlayOneShot(audioClip);
         }
 
+        public void PlayUI(AudioClip audioClip) {
+            if (audioClip == null) {
+                return;
+            }
+            InitializeVolume();
+            uiAudioSource.PlayOneShot(audioClip);
+        }
+
+        public void PlayVoice(AudioClip audioClip) {
+            if (audioClip == null) {
+                return;
+            }
+            InitializeVolume();
+            voiceAudioSource.PlayOneShot(audioClip);
+        }
+
         public void PlayUIHoverSound() {
             if (uiClickSound != null) {
-                PlayEffect(uiClickSound);
+                PlayUI(uiClickSound);
             }
         }
 
@@ -188,7 +241,7 @@ namespace AnyRPG {
             //Debug.Log("AudioManager.PlayUIClickSound()");
             if (uiClickSound != null) {
                 //Debug.Log("AudioManager.PlayUIClickSound(): click sound is not null");
-                PlayEffect(uiClickSound);
+                PlayUI(uiClickSound);
             } else {
                 //Debug.Log("AudioManager.PlayUIClickSound(): click sound is null");
             }
@@ -220,6 +273,12 @@ namespace AnyRPG {
 
         public void StopEffects() {
             effectsAudioSource.Stop();
+        }
+        public void StopUI() {
+            uiAudioSource.Stop();
+        }
+        public void StopVoice() {
+            voiceAudioSource.Stop();
         }
 
     }

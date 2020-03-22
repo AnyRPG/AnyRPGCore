@@ -160,7 +160,7 @@ namespace AnyRPG {
             dialogCoroutine = StartCoroutine(FadeInText());
 
             if (AudioManager.MyInstance != null && currentDialog.MyAudioProfile != null && currentDialog.MyAudioProfile.MyAudioClips != null && currentDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayEffect(currentDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+                AudioManager.MyInstance.PlayVoice(currentDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
             }
 
 

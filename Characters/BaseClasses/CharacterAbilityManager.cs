@@ -559,8 +559,8 @@ namespace AnyRPG {
                 if (ability.MyCastingAudioClip != null) {
                     //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
                     //baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(ability.MyCastingAudioClip);
-                    baseCharacter.MyCharacterUnit.MyAudioSource.clip = ability.MyCastingAudioClip;
-                    baseCharacter.MyCharacterUnit.MyAudioSource.Play();
+                    //baseCharacter.MyCharacterUnit.MyUnitAudio.MyEffectSource.clip = ability.MyCastingAudioClip;
+                    baseCharacter.MyCharacterUnit.MyUnitAudio.PlayEffect(ability.MyCastingAudioClip);
                 }
                 while (currentCastTime < ability.MyAbilityCastingTime) {
                     currentCastTime += Time.deltaTime;
@@ -626,8 +626,8 @@ namespace AnyRPG {
         public void EndCastCleanup() {
             currentCastCoroutine = null;
             currentCastAbility = null;
-            if (baseCharacter.MyCharacterUnit.MyAudioSource != null) {
-                baseCharacter.MyCharacterUnit.MyAudioSource.Stop();
+            if (baseCharacter.MyCharacterUnit.MyUnitAudio != null) {
+                baseCharacter.MyCharacterUnit.MyUnitAudio.StopEffect();
             }
         }
 
@@ -961,7 +961,7 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 if (currentCastAbility.MyAnimationHitAudioClip != null) {
                     //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
-                    baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(currentCastAbility.MyAnimationHitAudioClip);
+                    baseCharacter.MyCharacterUnit.MyUnitAudio.PlayEffect(currentCastAbility.MyAnimationHitAudioClip);
                 }
 
             }

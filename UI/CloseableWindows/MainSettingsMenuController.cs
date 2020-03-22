@@ -29,6 +29,8 @@ namespace AnyRPG {
         public Slider musicSlider;
         public Slider effectsSlider;
         public Slider ambientSlider;
+        public Slider uiSlider;
+        public Slider voiceSlider;
         public Slider mouseLookSpeedSlider;
         public Slider mouseTurnSpeedSlider;
         public Slider keyboardTurnSpeedSlider;
@@ -696,6 +698,8 @@ namespace AnyRPG {
             musicSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyMusicVolume);
             ambientSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyAmbientVolume);
             effectsSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyEffectsVolume);
+            uiSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyUiVolume);
+            voiceSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyVoiceVolume);
         }
 
         private void LoadDifficultySettings() {
@@ -722,6 +726,14 @@ namespace AnyRPG {
 
         public void EffectsSlider() {
             AudioManager.MyInstance.SetEffectsVolume(effectsSlider.value);
+        }
+
+        public void UISlider() {
+            AudioManager.MyInstance.SetUIVolume(uiSlider.value);
+        }
+
+        public void VoiceSlider() {
+            AudioManager.MyInstance.SetVoiceVolume(voiceSlider.value);
         }
 
         public void MouseLookSpeedSlider() {

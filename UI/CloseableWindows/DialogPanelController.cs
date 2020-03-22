@@ -138,7 +138,7 @@ namespace AnyRPG {
                 CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
             }
             if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.MyAudioClips != null && MyDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayEffect(MyDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+                AudioManager.MyInstance.PlayVoice(MyDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {

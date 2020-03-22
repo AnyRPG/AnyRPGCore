@@ -258,7 +258,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
-            if (audioSource == null) {
+            if (unitAudio == null) {
                 Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): AUDIOSOURCE WAS NULL. ADDING ONE, BUT AN AUDIO SOURCE SHOULD BE MANUALLY ADDED.  CHECK INSPECTOR.");
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();
                 audioSource.spatialBlend = 1f;
