@@ -26,6 +26,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool notInteractable = false;
 
+        // if true, we can trigger interaction on anything that has a collider, not just players
+        [SerializeField]
+        private bool interactWithAny = false;
+
+        // interact on trigger exit, not just on trigger enter
+        [SerializeField]
+        private bool interactOnExit = false;
+
         // automatically triggered by walking into it
         public bool isTrigger = false;
 
@@ -85,6 +93,7 @@ namespace AnyRPG {
 
         public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
+        public BoxCollider MyBoxCollider { get => boxCollider;}
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
@@ -612,8 +621,33 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
                     (otherCharacterUnit.MyCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
                 }
             }
+        }
+
+        public void OnTriggerExit(Collider other) {
+            if (notInteractable == true) {
+                return;
+            }
+
+            if (isTrigger == true && interactOnExit == true) {
+                //CharacterUnit otherCharacterUnit = other.gameObject.GetComponent<CharacterUnit>();
+                // changed to player to ensure ai don't accidentally trigger interactions
+
+                //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
+
+                AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
+                if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
+                    //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
+                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    //Interact(otherCharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                }
+            }
+
         }
 
         public void ClearFromPlayerRangeTable() {
