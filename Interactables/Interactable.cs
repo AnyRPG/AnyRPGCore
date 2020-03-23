@@ -100,7 +100,11 @@ namespace AnyRPG {
             base.Awake();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
-                temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
+                if (SystemConfigurationManager.MyInstance == null) {
+                    Debug.LogError(gameObject.name + ".Interactable.Awake(); SystemConfigurationManager.MyInstance is null.  Is the GameManager in the scene?");
+                } else {
+                    temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
+                }
             }
             if (temporaryMaterial == null) {
                 //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");

@@ -55,7 +55,11 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError(gameObject.name + ".PersistentObject.CreateEventSubscriptions: Could not find SystemEventManager.  Is GameManager in the scene?");
+            } else {
+                SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            }
             eventSubscriptionsInitialized = true;
         }
 
