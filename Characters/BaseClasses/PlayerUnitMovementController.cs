@@ -794,15 +794,39 @@ namespace AnyRPG {
             foreach (ContactPoint contactPoint in contactPoints) {
                 if (((1 << collision.gameObject.layer) & groundMask) != 0) {
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + transform.position);
-                    float hitAngle = Vector3.Angle(contactPoint.normal, transform.forward);
+                    //float hitAngle = Vector3.Angle(contactPoint.normal, transform.forward);
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; normal: " + contactPoint.normal + "; angle: " + hitAngle);
                     Vector3 relativePoint = transform.InverseTransformPoint(contactPoint.point);
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint);
                     if (relativePoint.z > 0 && relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player!");
+                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player at world point: " + contactPoint.point);
+                        // get direction to contact point
+                        Vector3 direction = contactPoint.point - transform.position;
+                        // extend contact point
+                        direction *= 1.1f;
+                        // shoot raycast downward from new point to detect stairs
+
+                        Vector3 raycastPoint = transform.position + direction;
+                        raycastPoint = new Vector3(raycastPoint.x, transform.position.y + stepHeight + 1f, raycastPoint.z);
+                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
+                        Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 1f, raycastPoint.z), Color.green);
+                        RaycastHit stairHitInfo;
+                        if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 1f, groundMask)) {
+                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
+                            // we hit something that is low enough to step on
+                            //nearFrontObstacle = true;
+                            if (!forwardContactPoints.Contains(contactPoint)) {
+                                forwardContactPoints.Add(contactPoint);
+                            }
+                        } else {
+                            //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): we did not hit anything below the step height");
+                        }
+
+                        /*
                         if (!forwardContactPoints.Contains(contactPoint)) {
                             forwardContactPoints.Add(contactPoint);
                         }
+                        */
                     } else if (relativePoint.z < 0 && relativePoint.y < stepHeight) {
                         //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is behind the player!");
                         if (!backwardContactPoints.Contains(contactPoint)) {
