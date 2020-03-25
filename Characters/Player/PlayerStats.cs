@@ -101,7 +101,9 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitSpawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            }
 
             //code to re-apply visual effects when the player loads into a new level
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
@@ -112,7 +114,9 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitDespawn()");
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
+            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
+            }
         }
 
         public override void GainLevel() {

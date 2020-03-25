@@ -430,6 +430,20 @@ namespace AnyRPG {
 
         }
 
+        public virtual int GetEquipmentSetCount(EquipmentSet equipmentSet) {
+            int equipmentCount = 0;
+
+            if (equipmentSet != null) {
+                foreach (Equipment tmpEquipment in MyCurrentEquipment.Values) {
+                    if (tmpEquipment != null && tmpEquipment.MyEquipmentSet != null && tmpEquipment.MyEquipmentSet == equipmentSet) {
+                        equipmentCount++;
+                    }
+                }
+            }
+
+            return equipmentCount;
+        }
+
         public virtual EquipmentSlotProfile FindEquipmentSlotForEquipment(Equipment equipment) {
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] == equipment) {

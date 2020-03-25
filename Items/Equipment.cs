@@ -93,6 +93,11 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> learnedAbilityNames;
 
+        [SerializeField]
+        private string equipmentSetName = string.Empty;
+
+        private EquipmentSet equipmentSet = null;
+
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
 
@@ -195,6 +200,7 @@ namespace AnyRPG {
         public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public UMATextRecipe MyUMARecipe { get => UMARecipe; set => UMARecipe = value; }
+        public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -272,6 +278,31 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.MyName));
             }
 
+            if (equipmentSet != null) {
+                int equipmentCount = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyName, equipmentCount, equipmentSet.MyEquipmentList.Count));
+                foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
+                    string colorName = "grey";
+                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(equipment.MyName)) {
+                        colorName = "yellow";
+                    }
+                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.MyName));
+                }
+                abilitiesList.Add(string.Format(""));
+                for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
+                    if (equipmentSet.MyTraitList[i] != null) {
+                        string colorName = "grey";
+                        if (equipmentCount > i) {
+                            colorName = "green";
+                        }
+                        abilitiesList.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.MyTraitList[i].GetSummary()));
+                    }
+                }
+                if (equipmentSet.MyTraitList.Count > 0) {
+                    abilitiesList.Add(string.Format(""));
+                }
+            }
+
             return base.GetSummary() + "\n" + string.Join("\n", abilitiesList);
         }
 
@@ -311,7 +342,18 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + MyName + ".  CHECK INSPECTOR");
             }
-            
+
+            equipmentSet = null;
+            if (equipmentSetName != null && equipmentSetName != string.Empty) {
+                EquipmentSet tmpEquipmentSet = SystemEquipmentSetManager.MyInstance.GetResource(equipmentSetName);
+                if (tmpEquipmentSet != null) {
+                    equipmentSet = tmpEquipmentSet;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+
             if (holdableObjectList != null) {
                 foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {

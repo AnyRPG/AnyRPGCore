@@ -121,18 +121,20 @@ namespace AnyRPG {
         }
 
         public override void HandleCharacterUnitSpawn() {
-            PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
-            //CharacterMotor characterMotor = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor;
-            if (movementController != null) {
-                //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
-                movementController.OnMovement += HandleManualMovement;
+            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null) {
+                PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
+                //CharacterMotor characterMotor = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor;
+                if (movementController != null) {
+                    //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
+                    movementController.OnMovement += HandleManualMovement;
+                }
             }
             base.HandleCharacterUnitSpawn();
 
         }
 
         public override void HandleCharacterUnitDespawn() {
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null) {
 
                 PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
                 if (movementController != null) {

@@ -210,6 +210,7 @@ namespace AnyRPG {
                     UnlearnAbility(baseAbility);
                 }
             }
+            UpdateEquipmentTraits(oldItem);
 
             if (newItem != null) {
                 if (newItem.MyOnEquipAbility != null) {
@@ -225,7 +226,43 @@ namespace AnyRPG {
                 }
             }
             LearnDefaultAutoAttackAbility();
+
+            // after equipment change, check all equipment sets and bonuses
+            UpdateEquipmentTraits(newItem);
         }
+
+        public virtual void UpdateEquipmentTraits(Equipment equipment) {
+
+            if (equipment == null || equipment.MyEquipmentSet == null) {
+                // nothing to do
+                return;
+            }
+
+            int equipmentCount = 0;
+
+            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+                equipmentCount = baseCharacter.MyCharacterEquipmentManager.GetEquipmentSetCount(equipment.MyEquipmentSet);
+            }
+
+            for (int i = 0; i < equipment.MyEquipmentSet.MyTraitList.Count; i++) {
+                StatusEffect statusEffect = equipment.MyEquipmentSet.MyTraitList[i];
+                if (statusEffect != null) {
+                    if (equipmentCount > i) {
+                        // we are allowed to have this buff
+                        if (!baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyName))) {
+                            ApplyStatusEffect(statusEffect);
+                        }
+                    } else {
+                        // we are not allowed to have this buff
+                        if (baseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyName))) {
+                            baseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
+                        }
+                    }
+                }
+            }
+
+        }
+
 
         public virtual void UnLearnDefaultAutoAttackAbility() {
             if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null) {
@@ -453,7 +490,7 @@ namespace AnyRPG {
         public virtual void HandleCharacterUnitSpawn() {
             //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn()");
 
-            if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                 //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): CharacterMotor is not null");
                 MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.OnMovement += HandleManualMovement;
             } else {

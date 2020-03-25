@@ -368,10 +368,14 @@ namespace AnyRPG {
                 }
             }
             */
-            descriptionFinal = string.Join("\n", effectStrings);
+            descriptionFinal = string.Empty;
+            if (effectStrings.Count > 0) {
+                descriptionFinal = "\n" + string.Join("\n", effectStrings);
+            }
             string durationLabel = string.Empty;
             string statusText = string.Empty;
             float printedDuration;
+            string durationString = string.Empty;
 
             if (limitedDuration == true && classTrait == false) {
                 if (remainingDuration != 0f) {
@@ -400,8 +404,11 @@ namespace AnyRPG {
                         statusText += "s";
                     }
                 }
+                if (durationLabel != string.Empty) {
+                    durationString = "\n" + durationLabel + statusText;
+                }
             }
-            return base.GetSummary() + string.Format("\n{0}\n{1}{2}", descriptionFinal, durationLabel, statusText);
+            return base.GetSummary() + string.Format("{0}{1}", descriptionFinal, durationString);
         }
 
         public void ApplyControlEffects(BaseCharacter targetCharacter) {
