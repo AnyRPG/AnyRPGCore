@@ -93,8 +93,12 @@ namespace AnyRPG {
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
             GetComponentReferences();
+        }
+
+        public void OrchestratorFinish() {
             CreateEventSubscriptions();
             InitializeAnimator();
+
         }
 
         public virtual void GetComponentReferences() {

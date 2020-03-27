@@ -364,7 +364,8 @@ namespace AnyRPG {
             MyCharacter.MyCharacterUnit.GetComponentReferences();
 
             MyCharacter.MyAnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
-            MyCharacter.MyCharacterUnit.OrchestrateStartup();
+            MyCharacter.MyCharacterUnit.OrchestratorStart();
+            MyCharacter.MyCharacterUnit.OrchestratorFinish();
 
             // should we also do characterUnit here instead of down in InitializeUMA?
             // should we do the full orchestration here instead of just getting components?
@@ -478,6 +479,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
 
             MyCharacter.OrchestratorStart();
+            MyCharacter.OrchestratorFinish();
 
             MyCharacter.Initialize(defaultPlayerName, initialLevel);
             playerConnectionSpawned = true;

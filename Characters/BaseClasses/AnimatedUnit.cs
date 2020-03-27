@@ -54,24 +54,35 @@ namespace AnyRPG {
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".AnimatedUnit.Start()");
             if (GetComponent<CharacterUnit>() != null) {
-                OrchestrateStartup();
+                OrchestratorStart();
+                OrchestratorFinish();
             }
         }
 
-        public virtual void OrchestrateStartup() {
+        public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStartup()");
             if (orchestratorStartupComplete == true) {
                 return;
             }
             GetComponentReferences();
-            CreateEventSubscriptions();
             if (characterMotor != null) {
-                characterMotor.OrchestrateStartup();
+                characterMotor.OrchestratorStart();
             }
             if (characterAnimator != null) {
                 characterAnimator.OrchestratorStart();
             }
             orchestratorStartupComplete = true;
+        }
+
+        public virtual void OrchestratorFinish() {
+            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStartup()");
+            CreateEventSubscriptions();
+            if (characterMotor != null) {
+                characterMotor.OrchestratorFinish();
+            }
+            if (characterAnimator != null) {
+                characterAnimator.OrchestratorFinish();
+            }
         }
 
         public virtual void CreateEventSubscriptions() {

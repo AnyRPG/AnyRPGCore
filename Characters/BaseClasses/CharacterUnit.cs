@@ -18,6 +18,8 @@ namespace AnyRPG {
 
         //[SerializeField]
         private BaseCharacter baseCharacter = null;
+        private AnimatedUnit animatedUnit = null;
+
 
         [SerializeField]
         protected float despawnDelay = 20f;
@@ -175,19 +177,29 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void OrchestrateStartup() {
+        public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStartup()");
             GetComponentReferences();
-            AnimatedUnit animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit != null) {
-                animatedUnit.OrchestrateStartup();
+                animatedUnit.OrchestratorStart();
             }
             if (interactable != null) {
                 interactable.OrchestratorStart();
             }
+        }
+
+        public virtual void OrchestratorFinish() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorFinish()");
+            if (animatedUnit != null) {
+                animatedUnit.OrchestratorFinish();
+            }
+            if (interactable != null) {
+                interactable.OrchestratorFinish();
+            }
             InitializeNamePlate();
 
         }
+
 
         public void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): CREATE EVENT SUBSCRIPTIONS");
@@ -258,6 +270,9 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
+
+            animatedUnit = GetComponent<AnimatedUnit>();
+
             if (unitAudio == null) {
                 Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): AUDIOSOURCE WAS NULL. ADDING ONE, BUT AN AUDIO SOURCE SHOULD BE MANUALLY ADDED.  CHECK INSPECTOR.");
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();

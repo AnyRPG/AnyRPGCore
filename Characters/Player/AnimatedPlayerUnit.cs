@@ -18,10 +18,10 @@ namespace AnyRPG {
             base.Awake();
         }
 
-        public override void OrchestrateStartup() {
+        public override void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStartup()");
-            base.OrchestrateStartup();
-            playerUnitMovementController.OrchestrateStartup();
+            base.OrchestratorStart();
+            playerUnitMovementController.OrchestratorStart();
         }
 
         public override void CreateEventSubscriptions() {

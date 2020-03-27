@@ -57,8 +57,12 @@ namespace AnyRPG {
             // meant to be overwritten
         }
 
-        public virtual void OrchestrateStartup() {
+        public virtual void OrchestratorStart() {
             GetComponentReferences();
+        }
+
+        public virtual void OrchestratorFinish() {
+
         }
 
         protected virtual void GetComponentReferences() {

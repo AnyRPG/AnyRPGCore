@@ -122,7 +122,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OrchestrateStartup() {
+        public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
             GetComponentReferences();
             ConfigureStateMachine();

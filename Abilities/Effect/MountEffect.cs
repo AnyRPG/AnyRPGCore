@@ -134,7 +134,8 @@ namespace AnyRPG {
 
                     // initialize the mount animator
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit = go.GetComponent<AnimatedUnit>();
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestrateStartup();
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestratorStart();
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.OrchestratorFinish();
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterUnit = PlayerManager.MyInstance.MyCharacter.MyCharacterUnit;
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
@@ -160,7 +161,8 @@ namespace AnyRPG {
 
             // is this stuff necessary on ai characters?
             AnimatedUnit animatedUnit = dynamicCharacterAvatar.gameObject.GetComponent<AnimatedUnit>();
-            animatedUnit.OrchestrateStartup();
+            animatedUnit.OrchestratorStart();
+            animatedUnit.OrchestratorFinish();
             if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
                 animatedUnit.MyCharacterAnimator.InitializeAnimator();
             } else {

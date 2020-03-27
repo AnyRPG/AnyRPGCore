@@ -366,6 +366,8 @@ namespace AnyRPG {
                 UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipe != null) {
                     UMARecipe = umaRecipeProfile.MyUMARecipe;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
 

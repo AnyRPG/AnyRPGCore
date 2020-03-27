@@ -53,9 +53,19 @@ namespace AnyRPG {
             base.OrchestratorStart();
 
             if (characterUnit != null) {
-                characterUnit.OrchestrateStartup();
+                characterUnit.OrchestratorStart();
             }
+        }
 
+        public override void OrchestratorFinish() {
+            //Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
+
+            // if this is run, or the getcomponents part anyway before the below block, then character unit will be set properly
+            base.OrchestratorFinish();
+
+            if (characterUnit != null) {
+                characterUnit.OrchestratorFinish();
+            }
         }
 
         protected override void Start() {

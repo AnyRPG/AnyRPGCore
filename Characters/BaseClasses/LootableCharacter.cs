@@ -280,7 +280,10 @@ namespace AnyRPG {
         }
 
         public override int GetValidOptionCount() {
-            return (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false ? 1 : 0);
+            //if (MyCharacterUnit != null && MyCharacterUnit.MyCharacter != null && MyCharacterUnit.MyCharacter.MyCharacterStats != null) {
+                return (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false ? 1 : 0);
+            //}
+            //return 0;
         }
 
         public override int GetCurrentOptionCount() {

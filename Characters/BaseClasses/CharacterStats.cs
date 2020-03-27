@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         // a stat multiplier to make creatures more difficult
         [SerializeField]
-        protected string toughness;
+        protected string toughness = string.Empty;
 
         protected UnitToughness unitToughness;
 
@@ -756,7 +756,7 @@ namespace AnyRPG {
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {
-                    Debug.LogError("Unit Toughness: " + toughness + " not found while initializing character stats.  Check Inspector!");
+                    Debug.LogError(gameObject.name + "; Unit Toughness: " + toughness + " not found while initializing character stats.  Check Inspector!");
                 }
             }
 

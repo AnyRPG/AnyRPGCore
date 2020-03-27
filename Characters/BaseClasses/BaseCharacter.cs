@@ -206,7 +206,7 @@ namespace AnyRPG {
 
         }
 
-        public void OrchestratorFinish() {
+        public virtual void OrchestratorFinish() {
             if (characterStats != null) {
                 characterStats.OrchestratorFinish();
             }
