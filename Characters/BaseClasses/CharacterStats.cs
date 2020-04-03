@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         // starting level
         [SerializeField]
-        private int level;
+        private int level = 0;
 
         // a stat multiplier to make creatures more difficult
         [SerializeField]

@@ -21,10 +21,10 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private NamePlateController namePlatePrefab;
+        private NamePlateController namePlatePrefab = null;
 
         [SerializeField]
-        private Transform namePlateContainer;
+        private Transform namePlateContainer = null;
 
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline

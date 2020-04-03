@@ -28,9 +28,9 @@ namespace AnyRPG {
         /// The ability to cast in order to mine this node
         /// </summary>
         [SerializeField]
-        private string abilityName;
+        private string abilityName = string.Empty;
 
-        private GatherAbility realAbility;
+        private GatherAbility realAbility = null;
 
         public GatherAbility MyAbility { get => realAbility; }
 

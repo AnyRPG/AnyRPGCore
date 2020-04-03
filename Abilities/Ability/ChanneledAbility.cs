@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class ChanneledAbility : InstantEffectAbility {
         // every x seconds, apply ability effects
         [SerializeField]
-        private float tickRate;
+        private float tickRate = 1f;
 
         // do we cast an immediate tick at zero seconds
         //[SerializeField]

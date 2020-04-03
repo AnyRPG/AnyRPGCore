@@ -8,23 +8,23 @@ namespace AnyRPG {
     public class CastBarController : DraggableWindow {
 
         [SerializeField]
-        private GameObject castBackground;
+        private GameObject castBackground = null;
 
         [SerializeField]
-        private Image castSlider;
+        private Image castSlider = null;
 
         [SerializeField]
-        private Text castText;
+        private Text castText = null;
 
         [SerializeField]
-        private Image castIcon;
+        private Image castIcon = null;
 
         [SerializeField]
-        private GameObject followGameObject;
+        private GameObject followGameObject = null;
 
-        private float originalCastSliderWidth;
+        private float originalCastSliderWidth = 0f;
 
-        private Transform followTransform;
+        //private Transform followTransform = null;
 
         private bool controllerInitialized = false;
         private bool targetInitialized = false;

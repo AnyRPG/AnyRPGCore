@@ -23,7 +23,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
     private QuestGiver questGiver;
 
     [SerializeField]
-    private Text text;
+    private Text text = null;
 
     private bool markedComplete = false;
 

@@ -13,11 +13,11 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
-        private GameObject spawnPrefab;
+        private GameObject spawnPrefab = null;
 
-        private GameObject spawnReference;
+        private GameObject spawnReference = null;
 
-        private Collider boxCollider;
+        private Collider boxCollider = null;
 
         protected override void Awake() {
             //Debug.Log("Portal.Awake()");

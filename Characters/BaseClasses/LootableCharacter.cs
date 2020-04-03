@@ -33,12 +33,17 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
-            characterUnit = GetComponent<CharacterUnit>();
         }
 
         protected override void Start() {
             base.Start();
             CreateEventSubscriptions();
+        }
+
+        public override void GetComponentReferences() {
+            Debug.Log(gameObject.name + ".LootableCharacter.GetComponentReferences()");
+            base.GetComponentReferences();
+            characterUnit = GetComponent<CharacterUnit>();
         }
 
         private void CreateEventSubscriptions() {
@@ -280,6 +285,7 @@ namespace AnyRPG {
         }
 
         public override int GetValidOptionCount() {
+            // this was commented out.  putting it back in because bunnies are 
             //if (MyCharacterUnit != null && MyCharacterUnit.MyCharacter != null && MyCharacterUnit.MyCharacter.MyCharacterStats != null) {
                 return (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false ? 1 : 0);
             //}

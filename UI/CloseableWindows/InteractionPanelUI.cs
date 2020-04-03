@@ -23,27 +23,27 @@ namespace AnyRPG {
 
         #endregion
 
-        private Interactable interactable;
+        private Interactable interactable = null;
 
         [SerializeField]
-        private GameObject interactableButtonPrefab;
+        private GameObject interactableButtonPrefab = null;
 
         [SerializeField]
-        private Transform interactableButtonParent;
+        private Transform interactableButtonParent = null;
 
         [SerializeField]
-        private GameObject questPrefab;
+        private GameObject questPrefab = null;
 
         private List<InteractionPanelQuestScript> questScripts = new List<InteractionPanelQuestScript>();
 
-        [SerializeField]
-        private GameObject availableArea;
+        //[SerializeField]
+        //private GameObject availableArea = null;
 
         [SerializeField]
-        private GameObject availableQuestArea;
+        private GameObject availableQuestArea = null;
 
         [SerializeField]
-        private GameObject completeQuestArea;
+        private GameObject completeQuestArea = null;
 
         private List<GameObject> interactionPanelScripts = new List<GameObject>();
 

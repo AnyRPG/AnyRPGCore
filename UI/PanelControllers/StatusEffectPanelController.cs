@@ -7,13 +7,13 @@ namespace AnyRPG {
 public class StatusEffectPanelController : DraggableWindow
 {
     [SerializeField]
-    private GameObject statusNodePrefab;
+    private GameObject statusNodePrefab = null;
 
     // how many effects can be shown before not showing anymore.  needed for small controllers like the ones on nameplates
     [SerializeField]
     private int effectLimit = 0;
 
-    private CharacterUnit targetCharacterUnit;
+    private CharacterUnit targetCharacterUnit = null;
 
     private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 

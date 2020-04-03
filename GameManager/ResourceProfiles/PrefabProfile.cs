@@ -16,7 +16,7 @@ namespace AnyRPG {
         /// 
         [FormerlySerializedAs("physicalPrefab")]
         [SerializeField]
-        private GameObject prefab;
+        private GameObject prefab = null;
 
         /// <summary>
         /// The transform position of the physical prefab in relation to the target bone
@@ -49,7 +49,7 @@ namespace AnyRPG {
         /// The bone on the character model to attach the physical prefab to
         /// </summary>
         [SerializeField]
-        private string targetBone;
+        private string targetBone = string.Empty;
 
         [SerializeField]
         private string unsheathAudioProfileName = string.Empty;
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
 
         [SerializeField]
-        private string sheathedTargetBone;
+        private string sheathedTargetBone = string.Empty;
 
         [SerializeField]
         private string sheathAudioProfileName = string.Empty;

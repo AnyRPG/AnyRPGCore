@@ -12,15 +12,15 @@ namespace AnyRPG {
     public class UnitProfile : DescribableResource {
 
         [SerializeField]
-        private GameObject unitPrefab;
+        private GameObject unitPrefab = null;
 
         [SerializeField]
         private string defaultToughness = string.Empty;
 
-        protected UnitToughness unitToughness;
+        protected UnitToughness unitToughness = null;
 
         [SerializeField]
-        private string defaultAutoAttackAbilityName;
+        private string defaultAutoAttackAbilityName = string.Empty;
 
         /*
         [SerializeField]
@@ -30,14 +30,14 @@ namespace AnyRPG {
         private BaseAbility realDefaultAutoAttackAbility = null;
 
         [SerializeField]
-        private bool isUMAUnit;
+        private bool isUMAUnit = false;
 
         // this unit can be charmed and made into a pet
         [SerializeField]
         private bool isPet = false;
 
         [SerializeField]
-        private List<string> learnedAbilityNames;
+        private List<string> learnedAbilityNames = new List<string>();
 
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();

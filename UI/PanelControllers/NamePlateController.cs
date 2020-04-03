@@ -9,54 +9,54 @@ namespace AnyRPG {
     public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
         [SerializeField]
-        private Image healthSlider;
+        private Image healthSlider = null;
 
         [SerializeField]
-        private GameObject healthBar;
+        private GameObject healthBar = null;
 
         [SerializeField]
-        private Text characterName;
+        private Text characterName = null;
 
         [SerializeField]
-        private Text questIndicator;
+        private Text questIndicator = null;
 
         [SerializeField]
-        private GameObject questIndicatorBackground;
+        private GameObject questIndicatorBackground = null;
 
         [SerializeField]
         private float positionOffset;
 
         [SerializeField]
-        private Image genericIndicatorImage;
+        private Image genericIndicatorImage = null;
 
         [SerializeField]
-        private GameObject speechBubbleBackground;
+        private GameObject speechBubbleBackground = null;
 
         [SerializeField]
-        private Text speechBubbleText;
+        private Text speechBubbleText = null;
 
         [SerializeField]
-        private NamePlateCanvasController namePlateCanvasController;
+        private NamePlateCanvasController namePlateCanvasController = null;
 
         [SerializeField]
-        private CanvasGroup namePlateCanvasGroup;
+        private CanvasGroup namePlateCanvasGroup = null;
 
         [SerializeField]
-        private CanvasGroup speechBubbleCanvasGroup;
+        private CanvasGroup speechBubbleCanvasGroup = null;
 
         [SerializeField]
-        private Transform namePlateContents;
+        private Transform namePlateContents = null;
 
         [SerializeField]
-        private Transform speechBubbleContents;
+        private Transform speechBubbleContents = null;
 
         [SerializeField]
-        private Canvas namePlateCanvas;
+        private Canvas namePlateCanvas = null;
 
         [SerializeField]
-        private Canvas speechBubbleCanvas;
+        private Canvas speechBubbleCanvas = null;
 
-        private INamePlateUnit namePlateUnit;
+        private INamePlateUnit namePlateUnit = null;
 
         private int healthSliderWidth;
 
@@ -74,6 +74,7 @@ namespace AnyRPG {
         public Image MyGenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
         public NamePlateCanvasController MyNamePlateCanvasController { get => namePlateCanvasController; set => namePlateCanvasController = value; }
         public Canvas MyNamePlateCanvas { get => namePlateCanvas; set => namePlateCanvas = value; }
+        public Canvas MySpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
         private void Start() {
             //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));

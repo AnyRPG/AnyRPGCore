@@ -8,12 +8,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text title;
+        private Text title = null;
 
-        private LootUI lootWindow;
+        private LootUI lootWindow = null;
 
         public Image MyIcon { get => icon; }
         public Text MyTitle { get => title; }

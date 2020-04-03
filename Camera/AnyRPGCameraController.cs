@@ -42,7 +42,7 @@ namespace AnyRPG {
         private float currentYDegrees = 0f;
         private float currentXDegrees = 0f;
 
-        private bool hasMoved = false;
+        //private bool hasMoved = false;
         // keep track if we are panning or zooming this frame
         private bool cameraPan = false;
         private bool cameraZoom = false;
@@ -101,11 +101,13 @@ namespace AnyRPG {
             cameraZoom = false;
 
             // keep track of the player's current and previous position
+            /*
             if (lastPlayerPosition == target.position) {
                 hasMoved = false;
             } else {
                 hasMoved = true;
             }
+            */
             lastPlayerPosition = target.position;
             SetTargetPosition();
 

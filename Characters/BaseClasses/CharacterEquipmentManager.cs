@@ -40,7 +40,7 @@ namespace AnyRPG {
         }
 
         public void OrchestratorStart() {
-            CreateComponentReferences();
+            GetComponentReferences();
             CreateEventSubscriptions();
         }
 
@@ -48,7 +48,7 @@ namespace AnyRPG {
             // overwrite me
         }
 
-        public virtual void CreateComponentReferences() {
+        public virtual void GetComponentReferences() {
             baseCharacter = GetComponent<BaseCharacter>();
         }
 

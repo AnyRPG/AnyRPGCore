@@ -30,7 +30,7 @@ namespace AnyRPG {
         // the source we are going to clone from 
         private GameObject cloneSource;
 
-        private bool targetInitialized = false;
+        //private bool targetInitialized = false;
 
         public GameObject MyPreviewUnit { get => previewUnit; set => previewUnit = value; }
 
@@ -112,7 +112,7 @@ namespace AnyRPG {
             //Debug.Log("WaitForCamera(): got camera");
 
             CharacterPanel.MyInstance.MyPreviewCameraController.InitializeCamera(previewUnit.transform);
-            targetInitialized = true;
+            //targetInitialized = true;
 
         }
 

@@ -9,15 +9,15 @@ namespace AnyRPG {
 
         // a unique string that represents the dictionary key for this keybind throughout the game
         [SerializeField]
-        private string keyBindID;
+        private string keyBindID = string.Empty;
 
         [SerializeField]
-        private Text slotLabel;
+        private Text slotLabel = null;
 
         [SerializeField]
-        private Text buttonLabel;
+        private Text buttonLabel = null;
 
-        private KeyBindNode keyBindNode;
+        private KeyBindNode keyBindNode = null;
 
         public void Initialize(KeyBindNode keyBindNode) {
             this.keyBindNode = keyBindNode;

@@ -12,24 +12,24 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text title;
+        private Text title = null;
 
         [SerializeField]
-        private Text price;
+        private Text price = null;
 
         [SerializeField]
-        private Text descriptionText;
+        private Text descriptionText = null;
 
         [SerializeField]
-        private Outline qualityColorOutline;
+        private Outline qualityColorOutline = null;
 
         [SerializeField]
-        private Text quantity;
+        private Text quantity = null;
 
         [SerializeField]
-        private CurrencyBarController currencyBarController;
+        private CurrencyBarController currencyBarController = null;
 
-        private VendorItem vendorItem;
+        private VendorItem vendorItem = null;
 
         private bool buyBackButton;
 

@@ -35,7 +35,7 @@ namespace AnyRPG {
         // the source we are going to clone from 
         private GameObject cloneSource;
 
-        private bool targetInitialized = false;
+        //private bool targetInitialized = false;
 
         public GameObject MyPreviewUnit { get => previewUnit; set => previewUnit = value; }
 

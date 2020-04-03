@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class LevelPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private int requiredLevel;
+        private int requiredLevel = 1;
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("LevelPrerequisite.IsMet()");

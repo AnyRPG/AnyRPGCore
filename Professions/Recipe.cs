@@ -11,16 +11,16 @@ namespace AnyRPG {
         private List<CraftingMaterial> craftingMaterials = new List<CraftingMaterial>();
 
         [SerializeField]
-        private string itemOutputName;
+        private string itemOutputName = string.Empty;
 
         //[SerializeField]
         private Item output;
 
         [SerializeField]
-        private int outputCount;
+        private int outputCount = 0;
 
         [SerializeField]
-        private string craftAbilityName;
+        private string craftAbilityName = string.Empty;
 
         //[SerializeField]
         private CraftAbility craftAbility;

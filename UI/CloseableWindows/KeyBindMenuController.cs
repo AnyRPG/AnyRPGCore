@@ -8,18 +8,18 @@ namespace AnyRPG {
 public class KeyBindMenuController : WindowContentController {
 
     [SerializeField]
-    private GameObject otherKeyParent;
+    private GameObject otherKeyParent = null;
 
     [SerializeField]
-    private GameObject actionKeyParent;
+    private GameObject actionKeyParent = null;
 
     [SerializeField]
-    private GameObject systemKeyParent;
+    private GameObject systemKeyParent = null;
 
     [SerializeField]
-    private GameObject keyBindButtonPrefab;
+    private GameObject keyBindButtonPrefab = null;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindow;
+    //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
     private void Start() {
         //Debug.Log("KeyBindMenuController.Start()");

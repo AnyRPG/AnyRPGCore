@@ -7,10 +7,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CombatTextController : MonoBehaviour {
         [SerializeField]
-        private Text text;
+        private Text text = null;
 
         [SerializeField]
-        private Image image;
+        private Image image = null;
 
         [SerializeField]
         private float xUIOffset = 50f;
@@ -23,7 +23,7 @@ namespace AnyRPG {
         private float movementSpeed = 1.0f;
 
         [SerializeField]
-        private float fadeTime;
+        private float fadeTime = 3f;
 
         [SerializeField]
         private int defaultFontSize = 30;

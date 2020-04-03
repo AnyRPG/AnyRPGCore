@@ -8,16 +8,16 @@ namespace AnyRPG {
     public class VendorItem {
 
         [SerializeField]
-        private string itemName;
+        private string itemName = string.Empty;
 
         //[SerializeField]
         private Item item;
 
         [SerializeField]
-        private int quantity;
+        private int quantity = 1;
 
         [SerializeField]
-        private bool unlimited;
+        private bool unlimited = false;
 
         public Item MyItem {
             get {

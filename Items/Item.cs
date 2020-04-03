@@ -16,15 +16,15 @@ namespace AnyRPG {
         /// Size of the stack, less than 2 is not stackable
         /// </summary>
         [SerializeField]
-        private int stackSize;
+        private int stackSize = 1;
 
         [SerializeField]
-        protected string itemQuality;
+        protected string itemQuality = string.Empty;
 
-        protected ItemQuality realItemQuality;
+        protected ItemQuality realItemQuality = null;
 
         [SerializeField]
-        private bool dynamicLevel;
+        private bool dynamicLevel = false;
 
         [SerializeField]
         private int itemLevel = 1;
@@ -41,13 +41,13 @@ namespace AnyRPG {
         //public CharacterButton MyCharacterButton { get; set; }
 
         [SerializeField]
-        private string currencyName;
+        private string currencyName = string.Empty;
 
         //[SerializeField]
-        private Currency currency;
+        private Currency currency = null;
 
         [SerializeField]
-        private int price;
+        private int price = 0;
 
         [SerializeField]
         private List<string> characterClassRequirementList = new List<string>();

@@ -8,9 +8,9 @@ namespace AnyRPG {
     public class AbilityPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private string prerequisiteName;
+        private string prerequisiteName = string.Empty;
 
-        private BaseAbility prerequisiteAbility;
+        private BaseAbility prerequisiteAbility = null;
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("AbilityPrerequisite.IsMet()");

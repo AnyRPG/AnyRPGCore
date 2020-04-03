@@ -24,7 +24,7 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private LootButton[] lootButtons;
+        private List<LootButton> lootButtons = new List<LootButton>();
 
         private List<List<LootDrop>> pages = new List<List<LootDrop>>();
 
@@ -98,7 +98,7 @@ namespace AnyRPG {
             // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
             int maximumLoopCount = droppedLoot.Count;
             int currentLoopCount = 0;
-            while (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && lootButtons.Length > 0) {
+            while (pages.Count > 0 && InventoryManager.MyInstance.MyEmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && lootButtons.Count > 0) {
                 foreach (LootButton lootButton in lootButtons) {
                     //Debug.Log("LootUI.TakeAllLoot(): droppedItems.Count: " + droppedLoot.Count);
                     if (lootButton.gameObject.activeSelf == true) {

@@ -12,16 +12,16 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
     public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
-    private CurrencyButton[] currencyButtons;
+    private List<CurrencyButton> currencyButtons = new List<CurrencyButton>();
 
     private List<List<CurrencyNode>> pages = new List<List<CurrencyNode>>();
 
     private int pageSize = 10;
 
-    private int pageIndex;
+    private int pageIndex = 0;
 
     [SerializeField]
-    private Image backGroundImage;
+    private Image backGroundImage = null;
 
     public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 

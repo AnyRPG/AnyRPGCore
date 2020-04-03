@@ -9,19 +9,19 @@ namespace AnyRPG {
 public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler {
 
     [SerializeField]
-    private Transform moveableTransform;
+    private Transform moveableTransform = null;
 
     [SerializeField]
-    private string dragString;
+    private string dragString = string.Empty;
 
     [SerializeField]
-    private Text dragText;
+    private Text dragText = null;
 
     [SerializeField]
     protected bool alwaysDraggable = false;
 
     [SerializeField]
-    protected bool neverDraggable;
+    protected bool neverDraggable = false;
 
     private Vector2 startMousePosition, startWindowPosition;
 

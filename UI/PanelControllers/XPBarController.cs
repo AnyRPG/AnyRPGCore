@@ -9,15 +9,15 @@ namespace AnyRPG {
     public class XPBarController : DraggableWindow {
 
         [SerializeField]
-        private Image xpSlider;
+        private Image xpSlider = null;
+
+        //[SerializeField]
+        //private GameObject xpBarBackGround = null;
 
         [SerializeField]
-        private GameObject xpBarBackGround;
+        private Text xpText = null;
 
-        [SerializeField]
-        private Text xpText;
-
-        private float originalXPSliderWidth;
+        private float originalXPSliderWidth = 0f;
 
         protected bool eventSubscriptionsInitialized = false;
 

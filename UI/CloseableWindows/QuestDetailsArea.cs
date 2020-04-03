@@ -9,37 +9,37 @@ namespace AnyRPG {
 public class QuestDetailsArea : MonoBehaviour {
 
     [SerializeField]
-    private Text questDescription;
+    private Text questDescription = null;
 
     [SerializeField]
-    private Text experienceReward;
+    private Text experienceReward = null;
 
     [SerializeField]
-    private GameObject itemsHeading;
+    private GameObject itemsHeading = null;
 
     [SerializeField]
-    private GameObject itemIconsArea;
+    private GameObject itemIconsArea = null;
 
     [SerializeField]
-    private GameObject factionsHeading;
+    private GameObject factionsHeading = null;
 
     [SerializeField]
-    private GameObject factionIconsArea;
+    private GameObject factionIconsArea = null;
 
     [SerializeField]
-    private GameObject abilitiesHeading;
+    private GameObject abilitiesHeading = null;
 
     [SerializeField]
-    private GameObject abilityIconsArea;
+    private GameObject abilityIconsArea = null;
 
     [SerializeField]
-    private GameObject skillHeading;
+    private GameObject skillHeading = null;
 
     [SerializeField]
-    private GameObject skillIconsArea;
+    private GameObject skillIconsArea = null;
 
     [SerializeField]
-    private GameObject rewardIconPrefab;
+    private GameObject rewardIconPrefab = null;
 
     private Quest quest = null;
 

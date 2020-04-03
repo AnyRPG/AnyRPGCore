@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         // the faction that this interactable option offers
         [SerializeField]
-        private string factionName;
+        private string factionName = string.Empty;
 
         private Faction faction;
 

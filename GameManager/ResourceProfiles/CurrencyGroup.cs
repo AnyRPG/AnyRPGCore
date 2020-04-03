@@ -13,10 +13,10 @@ namespace AnyRPG {
 
         // the smallest currency in this group
         [SerializeField]
-        private string baseCurrencyName;
+        private string baseCurrencyName = string.Empty;
 
         [SerializeField]
-        private Currency baseCurrency;
+        private Currency baseCurrency = null;
 
         [SerializeField]
         private List<CurrencyGroupRate> currencyGroupRates = new List<CurrencyGroupRate>();
@@ -70,14 +70,14 @@ namespace AnyRPG {
     public class CurrencyGroupRate {
 
         [SerializeField]
-        private string currencyName;
+        private string currencyName = string.Empty;
 
         [SerializeField]
-        private Currency currency;
+        private Currency currency = null;
 
         // the number of base currency needed to make one of this currency
         [SerializeField]
-        private int baseMultiple;
+        private int baseMultiple = 10;
 
         public Currency MyCurrency { get => currency; set => currency = value; }
         public int MyBaseMultiple { get => baseMultiple; set => baseMultiple = value; }

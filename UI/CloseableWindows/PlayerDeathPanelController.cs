@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerDeathPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow;
+        //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         public void RespawnPlayer() {
             SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseWindow();

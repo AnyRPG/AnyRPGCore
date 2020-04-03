@@ -32,11 +32,11 @@ namespace AnyRPG {
 
         // used when the destination list is empty and a random destination needs to be chosen
         [SerializeField]
-        private float maxDistanceFromSpawnPoint;
+        private float maxDistanceFromSpawnPoint = 1f;
 
         // how long to pause at each destination before going to the next one
         [SerializeField]
-        private float destinationPauseTime;
+        private float destinationPauseTime = 0f;
 
         // zero will not override current movement speed, anything else will
         [SerializeField]

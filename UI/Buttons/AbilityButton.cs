@@ -9,16 +9,16 @@ namespace AnyRPG {
     public class AbilityButton : TransparencyButton, IPointerClickHandler {
 
         [SerializeField]
-        private BaseAbility ability;
+        private BaseAbility ability = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text spellName;
+        private Text spellName = null;
 
         [SerializeField]
-        private Text description;
+        private Text description = null;
 
         public void AddAbility(IAbility ability) {
             this.ability = ability as BaseAbility;

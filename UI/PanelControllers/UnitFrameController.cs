@@ -10,42 +10,42 @@ namespace AnyRPG {
         // objects in the player stats window
 
         [SerializeField]
-        private Text unitNameText;
+        private Text unitNameText = null;
 
         [SerializeField]
-        private Text unitLevelText;
+        private Text unitLevelText = null;
 
         [SerializeField]
-        private Image unitNameBackground;
+        private Image unitNameBackground = null;
 
         [SerializeField]
-        private Image healthSlider;
+        private Image healthSlider = null;
 
         [SerializeField]
-        private Text healthText;
+        private Text healthText = null;
 
         [SerializeField]
-        private Image manaSlider;
+        private Image manaSlider = null;
 
         [SerializeField]
-        private Text manaText;
+        private Text manaText = null;
 
         [SerializeField]
-        private CastBarController castBarController;
+        private CastBarController castBarController = null;
 
         // the next 2 things need to be updated to focus on the right character
         [SerializeField]
-        private Transform cameraTransform;
+        private Transform cameraTransform = null;
 
         // replaces cameraTransform;
         [SerializeField]
-        private Camera previewCamera;
+        private Camera previewCamera = null;
 
         [SerializeField]
-        private Texture portraitTexture;
+        private Texture portraitTexture = null;
 
         [SerializeField]
-        private RawImage portraitImage;
+        private RawImage portraitImage = null;
 
         [SerializeField]
         private Vector3 cameraLookOffsetDefault = new Vector3(0, 1.6f, 0);
@@ -57,19 +57,19 @@ namespace AnyRPG {
 
         private Vector3 cameraPositionOffset = Vector3.zero;
 
-        private float originalHealthSliderWidth;
-        private float originalManaSliderWidth;
+        private float originalHealthSliderWidth = 0f;
+        private float originalManaSliderWidth = 0f;
 
         [SerializeField]
-        private GameObject followGameObject;
+        private GameObject followGameObject = null;
 
         [SerializeField]
-        private StatusEffectPanelController statusEffectPanelController;
+        private StatusEffectPanelController statusEffectPanelController = null;
 
         [SerializeField]
         private bool realTimeCamera = false;
 
-        private Transform followTransform;
+        private Transform followTransform = null;
 
         private bool controllerInitialized = false;
         private bool targetInitialized = false;

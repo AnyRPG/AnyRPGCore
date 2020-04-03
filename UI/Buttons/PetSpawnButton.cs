@@ -8,13 +8,13 @@ namespace AnyRPG {
     public class PetSpawnButton : HighlightButton {
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text unitName;
+        private Text unitName = null;
 
         [SerializeField]
-        private Text description;
+        private Text description = null;
 
         //[SerializeField]
         private UnitProfile unitProfile;

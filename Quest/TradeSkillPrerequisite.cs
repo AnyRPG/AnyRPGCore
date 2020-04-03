@@ -8,9 +8,9 @@ namespace AnyRPG {
     public class TradeSkillPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private string prerequisiteName;
+        private string prerequisiteName = string.Empty;
 
-        private Skill prerequisiteSkill;
+        private Skill prerequisiteSkill = null;
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("TradeSkillPrerequisite.IsMet()");

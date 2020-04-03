@@ -14,20 +14,20 @@ namespace AnyRPG {
         public IUseable MyUseable { get; set; }
 
         [SerializeField]
-        private Text stackSizeText;
+        private Text stackSizeText = null;
 
         [SerializeField]
-        private Text keyBindText;
+        private Text keyBindText = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Image coolDownIcon;
+        private Image coolDownIcon = null;
 
-        private float remainingCooldown;
+        private float remainingCooldown = 0f;
 
-        private int count;
+        private int count = 0;
 
         private bool initialized = false;
 

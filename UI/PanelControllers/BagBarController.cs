@@ -8,13 +8,13 @@ namespace AnyRPG {
 public class BagBarController : MonoBehaviour {
 
     [SerializeField]
-    private GameObject BagButtonPrefab;
+    private GameObject BagButtonPrefab = null;
 
     [SerializeField]
-    private List<BagButton> bagButtons;
+    private List<BagButton> bagButtons = new List<BagButton>();
 
     [SerializeField]
-    protected Image backGroundImage;
+    protected Image backGroundImage = null;
 
     private bool localComponentsGotten = false;
 

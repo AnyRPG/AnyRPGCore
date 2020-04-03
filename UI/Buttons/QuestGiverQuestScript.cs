@@ -12,7 +12,7 @@ public class QuestGiverQuestScript : MonoBehaviour
     public Quest MyQuest { get; set; }
 
     [SerializeField]
-    private Text text;
+    private Text text = null;
 
     private bool markedComplete = false;
 

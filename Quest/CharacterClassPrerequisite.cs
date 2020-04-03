@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class CharacterClassPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private string requiredCharacterClass;
+        private string requiredCharacterClass = string.Empty;
 
         private CharacterClass prerequisiteCharacterClass = null;
 

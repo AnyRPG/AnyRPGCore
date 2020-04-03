@@ -12,22 +12,22 @@ namespace AnyRPG {
         /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
         /// </summary>
         [SerializeField]
-        private string equipmentSlotProfileName;
+        private string equipmentSlotProfileName = string.Empty;
 
         private EquipmentSlotProfile equipmentSlotProfile = null;
 
         /// <summary>
         /// A reference to the equipment that sits on this slot
         /// </summary>
-        private Equipment equippedEquipment;
+        private Equipment equippedEquipment = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Image backGroundImage;
+        private Image backGroundImage = null;
 
-        private Image emptySlotImage;
+        private Image emptySlotImage = null;
 
         private Color emptyBackGroundColor;
 

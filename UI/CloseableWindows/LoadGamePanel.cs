@@ -33,16 +33,16 @@ namespace AnyRPG {
         private LoadGameButton selectedLoadGameButton;
 
         [SerializeField]
-        private AnyRPGCharacterPreviewCameraController previewCameraController;
+        private AnyRPGCharacterPreviewCameraController previewCameraController = null;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement;
+        private LayoutElement panelLayoutElement = null;
 
         [SerializeField]
-        private GameObject buttonPrefab;
+        private GameObject buttonPrefab = null;
 
         [SerializeField]
-        private GameObject buttonArea;
+        private GameObject buttonArea = null;
 
         private List<LoadGameButton> loadGameButtons = new List<LoadGameButton>();
 

@@ -20,8 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool unloadSceneOnEnd = false;
 
-        [SerializeField]
-        private bool allowCutSceneNamePlates = false;
+        //[SerializeField]
+        //private bool allowCutSceneNamePlates = false;
 
         [SerializeField]
         private bool viewed = false;

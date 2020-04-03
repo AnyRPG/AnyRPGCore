@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         // the armor class required to wear this item
         [SerializeField]
-        private string armorClassName;
+        private string armorClassName = string.Empty;
 
         private ArmorClass armorClass = null;
 

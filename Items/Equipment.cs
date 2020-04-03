@@ -27,71 +27,71 @@ namespace AnyRPG {
         private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
 
         [SerializeField]
-        protected bool useArmorModifier;
+        protected bool useArmorModifier = false;
 
         [SerializeField]
-        protected bool useManualArmor;
+        protected bool useManualArmor = false;
 
         // should the manual value be per level instead of a total
         [SerializeField]
-        protected bool manualValueIsScale;
+        protected bool manualValueIsScale = false;
 
         [SerializeField]
-        protected float armorModifier;
+        protected float armorModifier = 0f;
 
         [SerializeField]
-        protected bool useDamageModifier;
+        protected bool useDamageModifier = false;
 
         [SerializeField]
-        protected bool useManualDamage;
+        protected bool useManualDamage = false;
 
         [SerializeField]
-        private int damageModifier;
+        private int damageModifier = 0;
 
         [SerializeField]
-        private bool useIntellectModifier;
+        private bool useIntellectModifier = false;
 
         [SerializeField]
-        protected bool useManualIntellect;
+        protected bool useManualIntellect = false;
 
         [SerializeField]
-        private int intellectModifier;
+        private int intellectModifier = 0;
 
         [SerializeField]
-        private bool useStaminaModifier;
+        private bool useStaminaModifier = false;
 
         [SerializeField]
-        protected bool useManualStamina;
+        protected bool useManualStamina = false;
 
         [SerializeField]
-        private int staminaModifier;
+        private int staminaModifier = 0;
 
         [SerializeField]
-        private bool useStrengthModifier;
+        private bool useStrengthModifier = false;
 
         [SerializeField]
-        protected bool useManualStrength;
+        protected bool useManualStrength = false;
 
         [SerializeField]
-        private int strengthModifier;
+        private int strengthModifier = 0;
 
         [SerializeField]
-        private bool useAgilityModifier;
+        private bool useAgilityModifier = false;
 
         [SerializeField]
-        protected bool useManualAgility;
+        protected bool useManualAgility = false;
 
         [SerializeField]
-        private int agilityModifier;
+        private int agilityModifier = 0;
 
         [SerializeField]
-        private string onEquipAbilityName;
+        private string onEquipAbilityName = string.Empty;
 
         //[SerializeField]
         private BaseAbility onEquipAbility;
 
         [SerializeField]
-        private List<string> learnedAbilityNames;
+        private List<string> learnedAbilityNames = new List<string>();
 
         [SerializeField]
         private string equipmentSetName = string.Empty;

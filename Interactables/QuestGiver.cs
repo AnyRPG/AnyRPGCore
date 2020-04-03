@@ -26,7 +26,7 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage : base.MyNamePlateImage); }
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".QuestGiver.Awake()");
+            Debug.Log(gameObject.name + ".QuestGiver.Awake()");
             base.Awake();
             //namePlateUnit = GetComponent<INamePlateUnit>();
         }
@@ -44,13 +44,13 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
+            Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
+                Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
                 HandlePlayerUnitSpawn();
             }
 
@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public override void CleanupEventSubscriptions() {
-            //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
+            Debug.Log("QuestGiver.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
@@ -169,7 +169,7 @@ namespace AnyRPG {
         }
 
         public void UpdateQuestStatus() {
-            //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus()");
+            Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus()");
             if (PlayerManager.MyInstance.MyCharacter == null) {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
@@ -292,6 +292,8 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
+            Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
+
             base.HandlePrerequisiteUpdates();
             UpdateQuestStatus();
             MiniMapStatusUpdateHandler(this);

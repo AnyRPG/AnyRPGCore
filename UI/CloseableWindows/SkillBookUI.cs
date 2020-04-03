@@ -12,13 +12,13 @@ namespace AnyRPG {
         public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private SkillButton[] skillButtons;
+        private List<SkillButton> skillButtons = new List<SkillButton>();
 
         private List<List<Skill>> pages = new List<List<Skill>>();
 
         private int pageSize = 10;
 
-        private int pageIndex;
+        private int pageIndex = 0;
 
         private void Start() {
             //Debug.Log("SkillBookUI.Start()");

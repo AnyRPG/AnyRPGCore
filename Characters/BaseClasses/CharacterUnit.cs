@@ -35,16 +35,16 @@ namespace AnyRPG {
         private string unitFrameTarget = string.Empty;
 
         [SerializeField]
-        private Vector3 unitFrameCameraLookOffset;
+        private Vector3 unitFrameCameraLookOffset = Vector3.zero;
 
         [SerializeField]
-        private Vector3 unitFrameCameraPositionOffset;
+        private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
         [SerializeField]
         private string playerPreviewTarget = string.Empty;
 
         [SerializeField]
-        private Vector3 playerPreviewInitialOffset;
+        private Vector3 playerPreviewInitialOffset = Vector3.zero;
 
         [SerializeField]
         private bool suppressNamePlate = false;
@@ -53,7 +53,7 @@ namespace AnyRPG {
         [SerializeField]
         private Transform namePlateTransform = null;
 
-        private Coroutine despawnCoroutine;
+        private Coroutine despawnCoroutine = null;
 
         private bool startHasRun = false;
 
@@ -177,25 +177,31 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStartup()");
-            GetComponentReferences();
+        public override void OrchestratorStart() {
+            Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStart()");
+            base.OrchestratorStart();
             if (animatedUnit != null) {
                 animatedUnit.OrchestratorStart();
             }
+            // commented because this is handled when aicharacter calls interactable start
+            /*
             if (interactable != null) {
                 interactable.OrchestratorStart();
             }
+            */
         }
 
-        public virtual void OrchestratorFinish() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorFinish()");
+        public override void OrchestratorFinish() {
+            Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorFinish()");
+            base.OrchestratorFinish();
             if (animatedUnit != null) {
                 animatedUnit.OrchestratorFinish();
             }
+            /*
             if (interactable != null) {
                 interactable.OrchestratorFinish();
             }
+            */
             InitializeNamePlate();
 
         }
@@ -256,7 +262,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences()");
+            Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences()");
             if (componentReferencesInitialized) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
                 return;
@@ -265,9 +271,9 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();
                 if (baseCharacter == null) {
-                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null and is still null");
+                    Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null and is still null");
                 } else {
-                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
+                    Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
 

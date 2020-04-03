@@ -9,10 +9,10 @@ namespace AnyRPG {
 public class DescribableCraftingInputIcon : DescribableIcon
 {
     [SerializeField]
-    private Text description;
+    private Text description = null;
 
     [SerializeField]
-    private GameObject materialSlot;
+    private GameObject materialSlot = null;
 
     public GameObject MyMaterialSlot { get => materialSlot; }
 

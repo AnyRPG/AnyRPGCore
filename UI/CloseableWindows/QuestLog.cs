@@ -27,7 +27,7 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private int maxCount;
+        private int maxCount = 0;
 
         private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 

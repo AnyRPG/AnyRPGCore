@@ -12,25 +12,25 @@ namespace AnyRPG {
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
         [SerializeField]
-        private VendorButton[] vendorButtons;
+        private List<VendorButton> vendorButtons = new List<VendorButton>();
 
         [SerializeField]
-        private Dropdown dropdown;
+        private Dropdown dropdown = null;
 
         [SerializeField]
-        private CurrencyBarController currencyBarController;
+        private CurrencyBarController currencyBarController = null;
 
         private List<List<VendorItem>> pages = new List<List<VendorItem>>();
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        private int pageIndex;
+        private int pageIndex = 0;
 
-        private int dropDownIndex;
+        private int dropDownIndex = 0;
 
         protected bool eventSubscriptionsInitialized = false;
 
-        VendorCollection buyBackCollection;
+        VendorCollection buyBackCollection = null;
 
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();

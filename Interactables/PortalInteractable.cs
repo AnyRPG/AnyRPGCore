@@ -16,16 +16,16 @@ namespace AnyRPG {
         /// The ability to cast in order to use this portal
         /// </summary>
         //[SerializeField]
-        private BaseAbility ability;
+        private BaseAbility ability = null;
 
         /// <summary>
         /// The ability to cast in order to use this portal
         /// </summary>
         [SerializeField]
-        private string abilityName;
+        private string abilityName = string.Empty;
 
         [SerializeField]
-        private string locationTag;
+        private string locationTag = string.Empty;
 
         public IAbility MyAbility { get => ability; }
 

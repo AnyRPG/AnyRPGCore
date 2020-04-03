@@ -32,26 +32,26 @@ namespace AnyRPG {
         private LayerMask defaultGroundMask;
 
         [SerializeField]
-        private GameObject playerConnectionParent;
+        private GameObject playerConnectionParent = null;
 
         [SerializeField]
-        private GameObject playerConnectionPrefab;
+        private GameObject playerConnectionPrefab = null;
 
         [SerializeField]
-        private GameObject playerUnitParent;
+        private GameObject playerUnitParent = null;
 
         [SerializeField]
-        private GameObject aiUnitParent;
+        private GameObject aiUnitParent = null;
 
         [SerializeField]
-        private GameObject effectPrefabParent;
+        private GameObject effectPrefabParent = null;
 
         // the default non UMA player unit prefab
         [SerializeField]
-        private string defaultPlayerUnitProfileName;
+        private string defaultPlayerUnitProfileName = string.Empty;
 
         [SerializeField]
-        private string defaultCharacterCreatorUnitProfileName;
+        private string defaultCharacterCreatorUnitProfileName = string.Empty;
 
         [SerializeField]
         private string defaultPlayerName = "Player";
@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         // players with no faction will get this one by default
         [SerializeField]
-        private Faction defaultFaction;
+        private Faction defaultFaction = null;
 
         [SerializeField]
         private bool autoDetectNavMeshes = false;

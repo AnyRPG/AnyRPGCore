@@ -28,10 +28,10 @@ public class MessageFeedManager : MonoBehaviour {
     #endregion
 
     [SerializeField]
-    private GameObject messagePrefab;
+    private GameObject messagePrefab = null;
 
     [SerializeField]
-    private GameObject messageFeedGameObject;
+    private GameObject messageFeedGameObject = null;
 
     public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
 

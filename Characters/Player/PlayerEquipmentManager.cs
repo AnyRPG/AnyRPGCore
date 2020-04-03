@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public override void HandleCharacterUnitSpawn() {
-            CreateComponentReferences();
+            GetComponentReferences();
             base.HandleCharacterUnitSpawn();
         }
 
@@ -58,9 +58,9 @@ namespace AnyRPG {
             UnSubscribeFromCombatEvents();
         }
 
-        public override void CreateComponentReferences() {
+        public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".PlayerEquipmentManager.CreateComponentReferences()");
-            base.CreateComponentReferences();
+            base.GetComponentReferences();
             /*
             if (componentReferencesInitialized) {
                 return;

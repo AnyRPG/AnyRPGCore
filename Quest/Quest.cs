@@ -50,7 +50,7 @@ namespace AnyRPG {
 
         // levels above the normal level for this mob
         [SerializeField]
-        private int extraLevels;
+        private int extraLevels = 0;
 
 
         /// <summary>

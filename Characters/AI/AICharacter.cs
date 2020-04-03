@@ -27,34 +27,46 @@ namespace AnyRPG {
         public LootableCharacter MyLootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".AICharacter.Awake()");
+            Debug.Log(gameObject.name + ".AICharacter.Awake()");
             base.Awake();
             OrchestratorStart();
             OrchestratorFinish();
         }
 
         public override void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".AICharacter.GetComponentReferences()");
+            Debug.Log(gameObject.name + ".AICharacter.GetComponentReferences()");
             base.GetComponentReferences();
             characterController = GetComponent<AIController>();
             characterStats = GetComponent<AIStats>();
+            if (characterStats == null) {
+                Debug.Log(gameObject.name + ".AICharacter.GetComponentReferences(): characterStats is null!");
+            } else {
+                Debug.Log(gameObject.name + ".AICharacter.GetComponentReferences(): got reference to characterStats!");
+            }
             characterCombat = GetComponent<AICombat>();
             lootableCharacter = GetComponent<LootableCharacter>();
             animatedUnit = GetComponent<AnimatedUnit>();
             if (animatedUnit == null) {
                 animatedUnit = gameObject.AddComponent<AnimatedUnit>();
             }
+            interactable = GetComponent<Interactable>();
         }
 
         public override void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
+            Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
 
             // if this is run, or the getcomponents part anyway before the below block, then character unit will be set properly
             base.OrchestratorStart();
 
+            if (interactable != null) {
+                interactable.OrchestratorStart();
+            }
+            // commented because interactable will call characterUnit because it is an interactableOption
+            /*
             if (characterUnit != null) {
                 characterUnit.OrchestratorStart();
             }
+            */
         }
 
         public override void OrchestratorFinish() {

@@ -55,11 +55,20 @@ namespace AnyRPG {
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".InteractableOption.Awake(). Setting interactable");
-            GetComponentReferences();
+            //GetComponentReferences();
         }
 
         protected virtual void Start() {
             // overwrite me
+        }
+
+        public virtual void OrchestratorStart() {
+            SetupScriptableObjects();
+            GetComponentReferences();
+        }
+
+        public virtual void OrchestratorFinish() {
+
         }
 
 

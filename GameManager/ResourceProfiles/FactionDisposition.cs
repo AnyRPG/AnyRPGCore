@@ -9,11 +9,11 @@ namespace AnyRPG {
 
         //public Faction faction;
         [SerializeField]
-        private string factionName;
+        private string factionName = string.Empty;
 
-        private Faction faction;
+        private Faction faction = null;
 
-        public float disposition;
+        public float disposition = 0f;
 
         public Faction MyFaction { get => faction; set => faction = value; }
 

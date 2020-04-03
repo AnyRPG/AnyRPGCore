@@ -24,87 +24,87 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private GameObject inGameUI;
+        private GameObject inGameUI = null;
 
         [SerializeField]
-        private GameObject playerUI;
+        private GameObject playerUI = null;
 
         [SerializeField]
-        private GameObject systemMenuUI;
+        private GameObject systemMenuUI = null;
 
         [SerializeField]
-        private GameObject loadingCanvas;
+        private GameObject loadingCanvas = null;
 
         [SerializeField]
-        private GameObject inventoryCanvas;
+        private GameObject inventoryCanvas = null;
 
         [SerializeField]
-        private GameObject miniMapCanvasParent;
+        private GameObject miniMapCanvasParent = null;
 
         [SerializeField]
-        private GameObject cutSceneBarsCanvas;
+        private GameObject cutSceneBarsCanvas = null;
 
         [SerializeField]
-        private GameObject bottomPanel;
+        private GameObject bottomPanel = null;
 
         [SerializeField]
-        private GameObject sidePanel;
+        private GameObject sidePanel = null;
 
         [SerializeField]
-        private GameObject mouseOverWindow;
+        private GameObject mouseOverWindow = null;
 
         [SerializeField]
-        private GameObject playerInterface;
+        private GameObject playerInterface = null;
 
         [SerializeField]
-        private GameObject popupWindowContainer;
+        private GameObject popupWindowContainer = null;
 
         [SerializeField]
-        private GameObject popupPanelContainer;
+        private GameObject popupPanelContainer = null;
 
         [SerializeField]
-        private GameObject combatTextCanvas;
+        private GameObject combatTextCanvas = null;
 
         [SerializeField]
-        private UnitFrameController playerUnitFrameController;
+        private UnitFrameController playerUnitFrameController = null;
 
         [SerializeField]
-        private UnitFrameController focusUnitFrameController;
+        private UnitFrameController focusUnitFrameController = null;
 
         [SerializeField]
-        private MiniMapController miniMapController;
+        private MiniMapController miniMapController = null;
 
         [SerializeField]
-        private CutSceneBarController cutSceneBarController;
+        private CutSceneBarController cutSceneBarController = null;
 
         [SerializeField]
-        private XPBarController xpBarController;
+        private XPBarController xpBarController = null;
 
         [SerializeField]
-        private StatusEffectPanelController statusEffectPanelController;
+        private StatusEffectPanelController statusEffectPanelController = null;
 
         [SerializeField]
-        private CastBarController floatingCastBarController;
+        private CastBarController floatingCastBarController = null;
 
         [SerializeField]
-        private CloseableWindow questTrackerWindow;
+        private CloseableWindow questTrackerWindow = null;
 
         [SerializeField]
-        private CloseableWindow combatLogWindow;
+        private CloseableWindow combatLogWindow = null;
 
         [SerializeField]
-        private ActionBarManager actionBarManager;
+        private ActionBarManager actionBarManager = null;
 
         [SerializeField]
-        private GameObject toolTip;
+        private GameObject toolTip = null;
 
-        private Text toolTipText;
-
-        [SerializeField]
-        private CurrencyBarController toolTipCurrencyBarController;
+        private Text toolTipText = null;
 
         [SerializeField]
-        private RectTransform tooltipRect;
+        private CurrencyBarController toolTipCurrencyBarController = null;
+
+        [SerializeField]
+        private RectTransform tooltipRect = null;
 
         // objects in the mouseover window
         private Text mouseOverText;

@@ -23,10 +23,10 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private CastTargettingController castTargettingController;
+        private CastTargettingController castTargettingController = null;
 
         [SerializeField]
-        private Vector3 offset;
+        private Vector3 offset = Vector3.zero;
 
         private Color circleColor;
 

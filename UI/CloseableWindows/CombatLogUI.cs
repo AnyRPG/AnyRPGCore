@@ -23,56 +23,56 @@ namespace AnyRPG {
 
         #endregion
 
-        [SerializeField]
-        private GameObject textPrefab;
+        //[SerializeField]
+        //private GameObject textPrefab = null;
 
         [SerializeField]
-        private GameObject chatArea;
+        private GameObject chatArea = null;
 
         [SerializeField]
-        private GameObject chatContentArea;
+        private GameObject chatContentArea = null;
 
         [SerializeField]
-        private RectTransform chatRectTranform;
+        private RectTransform chatRectTranform = null;
+
+        //[SerializeField]
+        //private Scrollbar chatScrollBar = null;
 
         [SerializeField]
-        private Scrollbar chatScrollBar;
+        private HighlightButton chatHighlightButton = null;
 
         [SerializeField]
-        private HighlightButton chatHighlightButton;
+        private GameObject combatArea = null;
 
         [SerializeField]
-        private GameObject combatArea;
+        private GameObject combatContentArea = null;
 
         [SerializeField]
-        private GameObject combatContentArea;
+        private RectTransform combatRectTransform = null;
+
+        //[SerializeField]
+        //private Scrollbar combatScrollBar = null;
 
         [SerializeField]
-        private RectTransform combatRectTransform;
+        private HighlightButton combatHighlightButton = null;
 
         [SerializeField]
-        private Scrollbar combatScrollBar;
+        private GameObject systemArea = null;
 
         [SerializeField]
-        private HighlightButton combatHighlightButton;
+        private GameObject systemContentArea = null;
 
         [SerializeField]
-        private GameObject systemArea;
+        private RectTransform systemRectTransform = null;
+
+        //[SerializeField]
+        //private Scrollbar systemScrollBar = null;
+
+        //[SerializeField]
+        //private Button systemButton = null;
 
         [SerializeField]
-        private GameObject systemContentArea;
-
-        [SerializeField]
-        private RectTransform systemRectTransform;
-
-        [SerializeField]
-        private Scrollbar systemScrollBar;
-
-        [SerializeField]
-        private Button systemButton;
-
-        [SerializeField]
-        private HighlightButton systemHighlightButton;
+        private HighlightButton systemHighlightButton = null;
 
         private string welcomeString = "Welcome to";
         private string completeWelcomeString = string.Empty;

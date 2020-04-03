@@ -8,12 +8,12 @@ namespace AnyRPG {
     public class AttachmentNode {
 
         [SerializeField]
-        private string equipmentSlotProfileName;
+        private string equipmentSlotProfileName = string.Empty;
 
         private EquipmentSlotProfile equipmentSlotProfile = null;
 
         [SerializeField]
-        private string holdableObjectName;
+        private string holdableObjectName = string.Empty;
 
         private PrefabProfile holdableObject = null;
 

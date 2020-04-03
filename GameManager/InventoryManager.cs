@@ -28,43 +28,43 @@ namespace AnyRPG {
         private List<BagNode> bagNodes = new List<BagNode>();
 
         [SerializeField]
-        private GameObject inventoryContainer;
+        private GameObject inventoryContainer = null;
 
         [SerializeField]
-        private string defaultBackpackItemName;
+        private string defaultBackpackItemName = null;
 
         [SerializeField]
-        private string defaultBankBagItemName;
+        private string defaultBankBagItemName = null;
 
         // if false, default backpack goes in bank
         [SerializeField]
         private bool equipDefaultBackPack = true;
 
         [SerializeField]
-        private GameObject windowPrefab;
+        private GameObject windowPrefab = null;
 
         [SerializeField]
-        private GameObject bagPrefab;
+        private GameObject bagPrefab = null;
 
         [SerializeField]
-        private GameObject bankBagPrefab;
+        private GameObject bankBagPrefab = null;
 
         [SerializeField]
-        private BagBarController bagBarController;
+        private BagBarController bagBarController = null;
 
         [SerializeField]
         private Sprite defaultBackPackImage = null;
 
         // have trouble stopping grid from expanding windows, making holders instead
         [SerializeField]
-        private List<GameObject> inventoryWindowHolders;
+        private List<GameObject> inventoryWindowHolders = new List<GameObject>();
 
-        protected CanvasGroup canvasGroup;
+        protected CanvasGroup canvasGroup = null;
 
-        private bool debugMode = false;
+        //private bool debugMode = false;
 
         // whether bag positions have been loaded
-        bool bagWindowPositionsSet = false;
+        //bool bagWindowPositionsSet = false;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -150,7 +150,7 @@ namespace AnyRPG {
                     //Debug.Log("Got a bank node, not removing!");
                 }
             }
-            bagWindowPositionsSet = false;
+            //bagWindowPositionsSet = false;
             Close();
             //MyBagNodes.Clear();
         }

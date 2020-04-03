@@ -9,16 +9,16 @@ namespace AnyRPG {
     public class FactionButton : TransparencyButton {
 
         [SerializeField]
-        private Faction faction;
+        private Faction faction = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text factionName;
+        private Text factionName = null;
 
         [SerializeField]
-        private Text description;
+        private Text description = null;
 
         public void AddFaction(Faction newFaction) {
             this.faction = newFaction;

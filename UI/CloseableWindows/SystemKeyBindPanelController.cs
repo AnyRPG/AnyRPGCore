@@ -1,104 +1,107 @@
 using AnyRPG;
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-public class SystemKeyBindPanelController : WindowContentController {
+    public class SystemKeyBindPanelController : WindowContentController {
 
-    [SerializeField]
-    private GameObject movementKeyParent;
+        //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
-    [SerializeField]
-    private GameObject actionBarsKeyParent;
+        [SerializeField]
+        private GameObject movementKeyParent = null;
 
-    [SerializeField]
-    private GameObject systemKeyParent;
+        [SerializeField]
+        private GameObject actionBarsKeyParent = null;
 
-    [SerializeField]
-    private GameObject keyBindButtonPrefab;
+        [SerializeField]
+        private GameObject systemKeyParent = null;
 
-    [Header("Panels")]
-    [Tooltip("The UI Sub-Panel under KEY BINDINGS for MOVEMENT")]
-    public GameObject PanelMovement;
-    [Tooltip("The UI Sub-Panel under KEY BINDINGS for COMBAT")]
-    public GameObject PanelCombat;
-    [Tooltip("The UI Sub-Panel under KEY BINDINGS for GENERAL")]
-    public GameObject PanelGeneral;
+        [SerializeField]
+        private GameObject keyBindButtonPrefab = null;
 
-    [Header("Buttons")]
-    public HighlightButton movementButton;
-    public HighlightButton actionBarsButton;
-    public HighlightButton systemButton;
+        [Header("Panels")]
+        [Tooltip("The UI Sub-Panel under KEY BINDINGS for MOVEMENT")]
+        public GameObject PanelMovement = null;
 
-    public override event Action<ICloseableWindowContents> OnOpenWindow;
+        [Tooltip("The UI Sub-Panel under KEY BINDINGS for COMBAT")]
+        public GameObject PanelCombat = null;
 
-    private void Start() {
-        //Debug.Log("KeyBindMenuController.Start()");
-        InitializeKeys();
-    }
+        [Tooltip("The UI Sub-Panel under KEY BINDINGS for GENERAL")]
+        public GameObject PanelGeneral = null;
 
-    public void OnEnable() {
-        ToggleMovementPanel();
-    }
+        [Header("Buttons")]
+        public HighlightButton movementButton = null;
+        public HighlightButton actionBarsButton = null;
+        public HighlightButton systemButton = null;
 
-    private void InitializeKeys() {
-        //Debug.Log("KeyBindMenuController.InitializeKeys()");
-        foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
-            Transform nodeParent = null;
-            if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
-                nodeParent = actionBarsKeyParent.transform;
-            } else if (keyBindNode.MyKeyBindType == KeyBindType.Normal) {
-                nodeParent = movementKeyParent.transform;
-            } else if (keyBindNode.MyKeyBindType == KeyBindType.Constant || keyBindNode.MyKeyBindType == KeyBindType.System) {
-                nodeParent = systemKeyParent.transform;
-            }
-            KeyBindSlotScript keyBindSlotScript = Instantiate(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
-            keyBindSlotScript.Initialize(keyBindNode);
-            keyBindNode.SetSlotScript(keyBindSlotScript);
+
+        private void Start() {
+            //Debug.Log("KeyBindMenuController.Start()");
+            InitializeKeys();
         }
+
+        public void OnEnable() {
+            ToggleMovementPanel();
+        }
+
+        private void InitializeKeys() {
+            //Debug.Log("KeyBindMenuController.InitializeKeys()");
+            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+                Transform nodeParent = null;
+                if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
+                    nodeParent = actionBarsKeyParent.transform;
+                } else if (keyBindNode.MyKeyBindType == KeyBindType.Normal) {
+                    nodeParent = movementKeyParent.transform;
+                } else if (keyBindNode.MyKeyBindType == KeyBindType.Constant || keyBindNode.MyKeyBindType == KeyBindType.System) {
+                    nodeParent = systemKeyParent.transform;
+                }
+                KeyBindSlotScript keyBindSlotScript = Instantiate(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+                keyBindSlotScript.Initialize(keyBindNode);
+                keyBindNode.SetSlotScript(keyBindSlotScript);
+            }
+        }
+
+        public void ResetPanels() {
+            // turn off all panels
+            PanelMovement.gameObject.SetActive(false);
+            PanelCombat.gameObject.SetActive(false);
+            PanelGeneral.gameObject.SetActive(false);
+
+        }
+
+        public void ResetButtons() {
+            movementButton.DeSelect();
+            actionBarsButton.DeSelect();
+            systemButton.DeSelect();
+        }
+
+        public void ToggleMovementPanel() {
+            ResetPanels();
+            PanelMovement.gameObject.SetActive(true);
+
+            ResetButtons();
+            movementButton.Select();
+        }
+
+        public void ToggleActionBarsPanel() {
+            ResetPanels();
+            PanelCombat.gameObject.SetActive(true);
+
+            ResetButtons();
+            actionBarsButton.Select();
+        }
+
+        public void ToggleSystemPanel() {
+            ResetPanels();
+            PanelGeneral.gameObject.SetActive(true);
+
+            ResetButtons();
+            systemButton.Select();
+        }
+
+
     }
-
-    public void ResetPanels() {
-        // turn off all panels
-        PanelMovement.gameObject.SetActive(false);
-        PanelCombat.gameObject.SetActive(false);
-        PanelGeneral.gameObject.SetActive(false);
-
-    }
-
-    public void ResetButtons() {
-        movementButton.DeSelect();
-        actionBarsButton.DeSelect();
-        systemButton.DeSelect();
-    }
-
-    public void ToggleMovementPanel() {
-        ResetPanels();
-        PanelMovement.gameObject.SetActive(true);
-
-        ResetButtons();
-        movementButton.Select();
-    }
-
-    public void ToggleActionBarsPanel() {
-        ResetPanels();
-        PanelCombat.gameObject.SetActive(true);
-
-        ResetButtons();
-        actionBarsButton.Select();
-    }
-
-    public void ToggleSystemPanel() {
-        ResetPanels();
-        PanelGeneral.gameObject.SetActive(true);
-
-        ResetButtons();
-        systemButton.Select();
-    }
-
-
-}
 
 }

@@ -12,16 +12,16 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
     public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
-    private FactionButton[] factionButtons;
+    private List<FactionButton> factionButtons = new List<FactionButton>();
 
     private List<List<FactionDisposition>> pages = new List<List<FactionDisposition>>();
 
     private int pageSize = 10;
 
-    private int pageIndex;
+    private int pageIndex = 0;
 
     [SerializeField]
-    private Image backGroundImage;
+    private Image backGroundImage = null;
 
     public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 

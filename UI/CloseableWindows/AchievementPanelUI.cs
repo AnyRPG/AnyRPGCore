@@ -12,7 +12,7 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
     public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
-    private AchievementButton[] resourceButtons;
+    private List<AchievementButton> resourceButtons = new List<AchievementButton>();
 
     private List<List<Quest>> pages = new List<List<Quest>>();
 

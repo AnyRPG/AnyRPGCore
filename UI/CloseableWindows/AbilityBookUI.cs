@@ -12,7 +12,7 @@ namespace AnyRPG {
         public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private AbilityButton[] abilityButtons;
+        private List<AbilityButton> abilityButtons = new List<AbilityButton>();
 
         private List<List<IAbility>> pages = new List<List<IAbility>>();
 

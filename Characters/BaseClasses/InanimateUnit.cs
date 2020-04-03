@@ -21,16 +21,16 @@ namespace AnyRPG {
         private NamePlateController namePlate;
 
         [SerializeField]
-        private string unitFrameTarget;
+        private string unitFrameTarget = string.Empty;
 
         [SerializeField]
-        private Vector3 unitFrameCameraLookOffset;
+        private Vector3 unitFrameCameraLookOffset = Vector3.zero;
 
         [SerializeField]
-        private Vector3 unitFrameCameraPositionOffset;
+        private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
         [SerializeField]
-        private Transform namePlateTransform;
+        private Transform namePlateTransform = null;
 
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }
@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         private void OnEnable() {
             //Debug.Log(gameObject.name + ": running OnEnable()");
-            InitializeNamePlate();
+            //InitializeNamePlate();
         }
 
         public override void OnDisable() {
@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         public void InitializeNamePlate() {
-            //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
+            Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
 
             if (interactable.CanInteract()) {
                 //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): isStarted && interactable.CanInteract() == true");

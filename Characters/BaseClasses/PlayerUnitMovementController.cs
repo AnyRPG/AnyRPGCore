@@ -45,8 +45,8 @@ namespace AnyRPG {
 
         //Air control.
         public float inAirSpeed = 6f;
-        private float acquiringGroundDistance = 0.11f;
-        private float maintainingGroundDistance = 0.5f;
+        //private float acquiringGroundDistance = 0.11f;
+        //private float maintainingGroundDistance = 0.5f;
 
         public float stepHeight = 0.5f;
         public float maxGroundAngle = 120;

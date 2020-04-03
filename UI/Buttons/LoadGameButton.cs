@@ -7,17 +7,17 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LoadGameButton : HighlightButton {
 
-        [SerializeField]
-        private Faction faction;
+        //[SerializeField]
+        //private Faction faction = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text playerName;
+        private Text playerName = null;
 
         [SerializeField]
-        private Text description;
+        private Text description = null;
 
         [SerializeField]
         private AnyRPGSaveData mySaveData;

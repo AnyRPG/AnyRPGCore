@@ -9,25 +9,25 @@ namespace AnyRPG {
     public class CutSceneBarController : MonoBehaviour {
 
         [SerializeField]
-        private GameObject topBar;
+        private GameObject topBar = null;
 
         [SerializeField]
-        private GameObject bottomBar;
+        private GameObject bottomBar = null;
 
         [SerializeField]
-        private GameObject captionBar;
+        private GameObject captionBar = null;
 
         [SerializeField]
-        private LayoutElement topBarLayoutElement;
+        private LayoutElement topBarLayoutElement = null;
 
         [SerializeField]
-        private LayoutElement bottomBarLayoutElement;
+        private LayoutElement bottomBarLayoutElement = null;
 
         [SerializeField]
-        private LayoutElement captionBarLayoutElement;
+        private LayoutElement captionBarLayoutElement = null;
 
         [SerializeField]
-        private Text captionText;
+        private Text captionText = null;
 
         private int cutSceneBarHeight = 100;
 
@@ -39,9 +39,9 @@ namespace AnyRPG {
 
         private float maxDialogTime = 300f;
 
-        private Coroutine dialogCoroutine;
-        private Coroutine fadeCoroutine;
-        private Coroutine barsCoroutine;
+        private Coroutine dialogCoroutine = null;
+        private Coroutine fadeCoroutine = null;
+        private Coroutine barsCoroutine = null;
 
         private Dialog currentDialog = null;
 

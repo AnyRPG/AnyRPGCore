@@ -10,13 +10,13 @@ namespace AnyRPG {
 public class OnOffTextButton : MonoBehaviour {
 
     [SerializeField]
-    private Text text;
+    private Text text = null;
 
-    [SerializeField]
-    private GameObject hightlightImage;
+    //[SerializeField]
+    //private GameObject hightlightImage = null;
 
-    [SerializeField]
-    private bool useHighlightColor;
+    //[SerializeField]
+    //private bool useHighlightColor = false;
 
     [SerializeField]
     private Color highlightColor = Color.blue;

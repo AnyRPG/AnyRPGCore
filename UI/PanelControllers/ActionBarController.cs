@@ -11,7 +11,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<ActionButton> actionButtons = new List<ActionButton>();
 
-        private bool initialized = false;
+        //private bool initialized = false;
 
         public List<ActionButton> MyActionButtons { get => actionButtons; set => actionButtons = value; }
 

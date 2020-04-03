@@ -20,14 +20,14 @@ namespace AnyRPG {
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         [SerializeField]
-        private GameObject spawnPrefab;
+        private GameObject spawnPrefab = null;
 
         [SerializeField]
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
 
-        private GameObject spawnReference;
+        private GameObject spawnReference = null;
 
-        private Collider boxCollider;
+        private Collider boxCollider = null;
 
         protected override void Awake() {
             //Debug.Log("Portal.Awake()");

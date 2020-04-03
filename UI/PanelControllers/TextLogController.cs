@@ -8,10 +8,10 @@ namespace AnyRPG {
     public class TextLogController : MonoBehaviour {
 
         [SerializeField]
-        private Text text;
+        private Text text = null;
 
-        [SerializeField]
-        private int defaultFontSize = 18;
+        //[SerializeField]
+        //private int defaultFontSize = 18;
 
         //private string displayText;
         //private Color textColor;

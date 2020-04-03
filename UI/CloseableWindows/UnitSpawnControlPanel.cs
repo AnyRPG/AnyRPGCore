@@ -33,34 +33,34 @@ namespace AnyRPG {
         private UnitSpawnButton selectedUnitSpawnButton;
 
         [SerializeField]
-        private GameObject buttonPrefab;
+        private GameObject buttonPrefab = null;
 
         [SerializeField]
-        private GameObject buttonArea;
+        private GameObject buttonArea = null;
 
         [SerializeField]
-        private GameObject levelOptionsArea;
+        private GameObject levelOptionsArea = null;
 
         [SerializeField]
-        private GameObject extraLevelsOptionsArea;
+        private GameObject extraLevelsOptionsArea = null;
 
         [SerializeField]
-        private Dropdown levelTypeDropdown;
+        private Dropdown levelTypeDropdown = null;
 
         [SerializeField]
-        private Dropdown levelDropdown;
+        private Dropdown levelDropdown = null;
 
         [SerializeField]
-        private Dropdown extraLevelsDropdown;
+        private Dropdown extraLevelsDropdown = null;
 
         [SerializeField]
-        private Dropdown toughnessDropdown;
+        private Dropdown toughnessDropdown = null;
 
         [SerializeField]
         private AnyRPGUnitPreviewCameraController previewCameraController;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement;
+        private LayoutElement panelLayoutElement = null;
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 

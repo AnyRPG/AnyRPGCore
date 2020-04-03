@@ -32,16 +32,16 @@ namespace AnyRPG {
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
         [SerializeField]
-        private Text statsDescription;
+        private Text statsDescription = null;
 
         [SerializeField]
         private AnyRPGCharacterPreviewCameraController previewCameraController;
 
         [SerializeField]
-        private Color emptySlotColor;
+        private Color emptySlotColor = new Color32(0, 0, 0, 0);
 
         [SerializeField]
-        private Color fullSlotColor;
+        private Color fullSlotColor = new Color32(255, 255, 255, 255);
 
         protected bool eventSubscriptionsInitialized = false;
 

@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public float MyAggroRange { get; set; }
 
-        private bool isDead = false;
+        //private bool isDead = false;
 
         [SerializeField]
         private float evadeSpeed = 5f;
@@ -28,16 +28,16 @@ namespace AnyRPG {
         /// A reference to the agro range script 
         /// </summary>
         [SerializeField]
-        private AggroRange aggroRange;
+        private AggroRange aggroRange = null;
 
         [SerializeField]
-        private string combatStrategyName;
+        private string combatStrategyName = string.Empty;
 
         private CombatStrategy combatStrategy;
 
-        private Vector3 startPosition;
+        private Vector3 startPosition = Vector3.zero;
 
-        private float distanceToTarget;
+        private float distanceToTarget = 0f;
 
         private IState currentState;
 

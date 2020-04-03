@@ -30,34 +30,34 @@ namespace AnyRPG {
     private Transform cameraTransform;
     */
 
-        [SerializeField]
-        private float cameraOffsetYDefault = 25f;
+        //[SerializeField]
+        //private float cameraOffsetYDefault = 25f;
+
+        //[SerializeField]
+        //private float cameraSizeDefault = 500f;
+
+        //[SerializeField]
+        //private float minZoom = 5f;
+
+        //[SerializeField]
+        //private float maxZoom = 25f;
+
+        //[SerializeField]
+        //private float zoomSpeed = 4f;
 
         [SerializeField]
-        private float cameraSizeDefault = 500f;
+        private LayoutElement panelLayoutElement = null;
 
         [SerializeField]
-        private float minZoom = 5f;
+        private LayoutElement graphicLayoutElement = null;
 
         [SerializeField]
-        private float maxZoom = 25f;
+        private RectTransform mainMapBackground = null;
 
-        [SerializeField]
-        private float zoomSpeed = 4f;
-
-        [SerializeField]
-        private LayoutElement panelLayoutElement;
-
-        [SerializeField]
-        private LayoutElement graphicLayoutElement;
-
-        [SerializeField]
-        private RectTransform mainMapBackground;
-
-        private float cameraOffsetY = 0f;
+        //private float cameraOffsetY = 0f;
         private float cameraSize = 0f;
 
-        private bool initialized = false;
+        //private bool initialized = false;
 
         private Renderer[] renderers;
         private Bounds sceneBounds;
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow;
+        //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         public override void Awake() {
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");

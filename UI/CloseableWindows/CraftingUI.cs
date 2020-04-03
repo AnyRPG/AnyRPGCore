@@ -24,44 +24,56 @@ namespace AnyRPG {
         #endregion
 
         // holds all the recipes
-        private CraftAbility craftAbility;
+        private CraftAbility craftAbility = null;
 
         [SerializeField]
-        private GameObject craftButton, craftAllButton, lessButton, moreButton, cancelButton;
+        private GameObject craftButton = null;
 
         [SerializeField]
-        private Text craftAmountText;
+        private GameObject craftAllButton = null;
 
         [SerializeField]
-        private GameObject recipePrefab;
+        private GameObject lessButton = null;
 
         [SerializeField]
-        private Transform recipeParent;
+        private GameObject moreButton = null;
+
+        //[SerializeField]
+        //private GameObject cancelButton = null;
 
         [SerializeField]
-        private GameObject availableArea;
+        private Text craftAmountText = null;
 
         [SerializeField]
-        private GameObject hiddenHeading;
+        private GameObject recipePrefab = null;
 
         [SerializeField]
-        private GameObject hiddenArea;
+        private Transform recipeParent = null;
+
+        //[SerializeField]
+        //private GameObject availableArea = null;
+
+        //[SerializeField]
+        //private GameObject hiddenHeading = null;
+
+        //[SerializeField]
+        //private GameObject hiddenArea = null;
+
+        //[SerializeField]
+        //private GameObject recipeDetailsArea = null;
 
         [SerializeField]
-        private GameObject recipeDetailsArea;
+        private Text recipeDescription = null;
 
         [SerializeField]
-        private Text recipeDescription;
-
-        [SerializeField]
-        private GameObject materialsHeading;
+        private GameObject materialsHeading = null;
 
 
         [SerializeField]
-        private DescribableCraftingOutputIcon outputIcon;
+        private DescribableCraftingOutputIcon outputIcon = null;
 
         [SerializeField]
-        private DescribableCraftingInputIcon[] inputIcons;
+        private List<DescribableCraftingInputIcon> inputIcons = new List<DescribableCraftingInputIcon>();
 
         // the number of items to craft
         private int craftAmount = 1;

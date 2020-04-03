@@ -26,13 +26,13 @@ public class MiniMapController : DraggableWindow {
     // objects in the player stats window
 
     [SerializeField]
-    private Text zoneNameText;
+    private Text zoneNameText = null;
 
     [SerializeField]
-    private Transform cameraTransform;
+    private Transform cameraTransform = null;
 
     [SerializeField]
-    private GameObject miniMapIndicatorPrefab;
+    private GameObject miniMapIndicatorPrefab = null;
 
     [SerializeField]
     private float cameraOffsetYDefault = 5f;
@@ -50,17 +50,17 @@ public class MiniMapController : DraggableWindow {
     private float zoomSpeed = 4f;
 
     [SerializeField]
-    private GameObject followGameObject;
+    private GameObject followGameObject = null;
 
     private float cameraOffsetZ = 0f;
     private float cameraOffsetY = 0f;
     private float cameraSize = 0f;
 
-    private Transform followTransform;
+    private Transform followTransform = null;
 
     private bool initialized = false;
 
-    private RectTransform rectTransform;
+    private RectTransform rectTransform = null;
     private Vector3[] worldCorners = new Vector3[4];
 
     public GameObject MyMiniMapIndicatorPrefab { get => miniMapIndicatorPrefab; set => miniMapIndicatorPrefab = value; }

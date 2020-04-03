@@ -26,49 +26,49 @@ namespace AnyRPG {
         private IQuestGiver questGiver;
 
         [SerializeField]
-        private GameObject acceptButton;
+        private GameObject acceptButton = null;
 
         [SerializeField]
-        private GameObject completeButton;
+        private GameObject completeButton = null;
 
         [SerializeField]
-        private GameObject leftPane;
+        private GameObject leftPane = null;
+
+        //[SerializeField]
+        //private GameObject questPrefab = null;
+
+        //[SerializeField]
+        //private Transform questParent = null;
+
+        //[SerializeField]
+        //private Text questDescription = null;
+
+        //[SerializeField]
+        //private GameObject availableHeading = null;
+
+        //[SerializeField]
+        //private GameObject availableArea = null;
+
+        //[SerializeField]
+        //private GameObject inProgressHeading = null;
+
+        //[SerializeField]
+        //private GameObject inProgressArea = null;
+
+        //[SerializeField]
+        //private GameObject completeHeading = null;
+
+        //[SerializeField]
+        //private GameObject completeArea = null;
+
+        //[SerializeField]
+        //private GameObject hiddenHeading = null;
+
+        //[SerializeField]
+        //private GameObject hiddenArea = null;
 
         [SerializeField]
-        private GameObject questPrefab;
-
-        [SerializeField]
-        private Transform questParent;
-
-        [SerializeField]
-        private Text questDescription;
-
-        [SerializeField]
-        private GameObject availableHeading;
-
-        [SerializeField]
-        private GameObject availableArea;
-
-        [SerializeField]
-        private GameObject inProgressHeading;
-
-        [SerializeField]
-        private GameObject inProgressArea;
-
-        [SerializeField]
-        private GameObject completeHeading;
-
-        [SerializeField]
-        private GameObject completeArea;
-
-        [SerializeField]
-        private GameObject hiddenHeading;
-
-        [SerializeField]
-        private GameObject hiddenArea;
-
-        [SerializeField]
-        private QuestDetailsArea questDetailsArea;
+        private QuestDetailsArea questDetailsArea = null;
 
         private Interactable interactable;
 
@@ -389,7 +389,7 @@ namespace AnyRPG {
         }
 
         public void CompleteQuest() {
-            //Debug.Log("QuestGiverUI.CompleteQuest()");
+            Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!currentQuest.IsComplete) {
                 return;
             }
@@ -488,6 +488,7 @@ namespace AnyRPG {
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
             if (questGiver != null) {
                 // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
+                Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
                 questGiver.UpdateQuestStatus();
                 MyQuestGiver.HandleCompleteQuest();
             }

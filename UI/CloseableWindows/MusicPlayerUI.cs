@@ -23,31 +23,31 @@ namespace AnyRPG {
 
         #endregion
 
-        private MusicPlayer musicPlayer;
+        private MusicPlayer musicPlayer = null;
 
         [SerializeField]
-        private Button playButton, pauseButton, stopButton;
+        private Button playButton = null;
 
         [SerializeField]
-        private GameObject highlightButtonPrefab;
+        private Button pauseButton = null;
 
         [SerializeField]
-        private Transform highlightButtonParent;
+        private Button stopButton = null;
 
         [SerializeField]
-        private Text musicDescription;
+        private GameObject highlightButtonPrefab = null;
+
+        //[SerializeField]
+        //private Transform highlightButtonParent = null;
 
         [SerializeField]
-        private GameObject availableHeading;
+        private Text musicDescription = null;
+
+        //[SerializeField]
+        //private GameObject availableHeading = null;
 
         [SerializeField]
-        private GameObject availableArea;
-
-        [SerializeField]
-        private GameObject learnedHeading;
-
-        [SerializeField]
-        private GameObject learnedArea;
+        private GameObject availableArea = null;
 
         //private List<GameObject> Skills = new List<GameObject>();
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();

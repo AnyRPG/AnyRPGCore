@@ -288,32 +288,32 @@ namespace AnyRPG {
         [Header("SYSTEM ABILITIES")]
 
         [SerializeField]
-        private string levelUpAbilityName;
+        private string levelUpAbilityName = string.Empty;
 
-        private BaseAbility levelUpAbility;
-
-        [SerializeField]
-        private string deathAbilityName;
-
-        private BaseAbility deathAbility;
+        private BaseAbility levelUpAbility = null;
 
         [SerializeField]
-        private string lootSparkleAbilityName;
+        private string deathAbilityName = string.Empty;
 
-        private BaseAbility lootSparkleAbility;
-
-        [SerializeField]
-        private string doWhiteDamageAbilityName;
-
-        private BaseAbility doWhiteDamageAbility;
+        private BaseAbility deathAbility = null;
 
         [SerializeField]
-        private string takeDamageAbilityName;
+        private string lootSparkleAbilityName = string.Empty;
 
-        private BaseAbility takeDamageAbility;
+        private BaseAbility lootSparkleAbility = null;
 
         [SerializeField]
-        private AudioClip defaultHitSoundEffect;
+        private string doWhiteDamageAbilityName = string.Empty;
+
+        private BaseAbility doWhiteDamageAbility = null;
+
+        [SerializeField]
+        private string takeDamageAbilityName = string.Empty;
+
+        private BaseAbility takeDamageAbility = null;
+
+        [SerializeField]
+        private AudioClip defaultHitSoundEffect = null;
 
         [Header("INTERACTABLE CONFIGURATION")]
 
@@ -322,99 +322,99 @@ namespace AnyRPG {
 
         // an image to use if there is more than 1 valid interactable option
         [SerializeField]
-        private Sprite multipleInteractionNamePlateImage;
+        private Sprite multipleInteractionNamePlateImage = null;
 
         // a separate image if only crafting is available, but more than 1 craft skill can be shown
         [SerializeField]
-        private Sprite multipleCraftNamePlateImage;
+        private Sprite multipleCraftNamePlateImage = null;
 
         [SerializeField]
-        private Sprite bankInteractionPanelImage;
+        private Sprite bankInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite bankNamePlateImage;
+        private Sprite bankNamePlateImage = null;
 
         [SerializeField]
-        private Sprite questGiverInteractionPanelImage;
+        private Sprite questGiverInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite questGiverNamePlateImage;
+        private Sprite questGiverNamePlateImage = null;
 
         [SerializeField]
-        private Sprite dialogInteractionPanelImage;
+        private Sprite dialogInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite dialogNamePlateImage;
+        private Sprite dialogNamePlateImage = null;
 
         [SerializeField]
-        private Sprite nameChangeInteractionPanelImage;
+        private Sprite nameChangeInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite nameChangeNamePlateImage;
+        private Sprite nameChangeNamePlateImage = null;
 
         [SerializeField]
-        private Sprite cutSceneInteractionPanelImage;
+        private Sprite cutSceneInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite cutSceneNamePlateImage;
+        private Sprite cutSceneNamePlateImage = null;
 
         [SerializeField]
-        private Sprite lootableCharacterInteractionPanelImage;
+        private Sprite lootableCharacterInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite lootableCharacterNamePlateImage;
+        private Sprite lootableCharacterNamePlateImage = null;
 
         [SerializeField]
-        private Sprite characterCreatorInteractionPanelImage;
+        private Sprite characterCreatorInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite characterCreatorNamePlateImage;
+        private Sprite characterCreatorNamePlateImage = null;
 
         [SerializeField]
-        private Sprite unitSpawnControllerInteractionPanelImage;
+        private Sprite unitSpawnControllerInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite unitSpawnControllerNamePlateImage;
+        private Sprite unitSpawnControllerNamePlateImage = null;
 
         [SerializeField]
-        private Sprite factionChangeInteractionPanelImage;
+        private Sprite factionChangeInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite factionChangeNamePlateImage;
+        private Sprite factionChangeNamePlateImage = null;
 
         [SerializeField]
-        private Sprite classChangeInteractionPanelImage;
+        private Sprite classChangeInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite classChangeNamePlateImage;
+        private Sprite classChangeNamePlateImage = null;
 
         [SerializeField]
-        private Sprite vendorInteractionPanelImage;
+        private Sprite vendorInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite vendorNamePlateImage;
+        private Sprite vendorNamePlateImage = null;
 
         [SerializeField]
-        private Sprite portalInteractionPanelImage;
+        private Sprite portalInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite portalNamePlateImage;
+        private Sprite portalNamePlateImage = null;
 
         [SerializeField]
-        private Sprite skillTrainerInteractionPanelImage;
+        private Sprite skillTrainerInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite skillTrainerNamePlateImage;
+        private Sprite skillTrainerNamePlateImage = null;
 
         [SerializeField]
-        private Sprite musicPlayerInteractionPanelImage;
+        private Sprite musicPlayerInteractionPanelImage = null;
 
         [SerializeField]
-        private Sprite musicPlayerNamePlateImage;
+        private Sprite musicPlayerNamePlateImage = null;
 
         // the default amount of time before a unit despawns after killed and looted
         [SerializeField]
-        private float defaultDespawnTimer;
+        private float defaultDespawnTimer = 0f;
 
         protected bool eventSubscriptionsInitialized = false;
 

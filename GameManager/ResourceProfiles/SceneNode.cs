@@ -15,7 +15,7 @@ namespace AnyRPG {
         private Vector3 defaultSpawnPosition = Vector3.zero;
 
         [SerializeField]
-        private string ambientMusicProfile;
+        private string ambientMusicProfile = string.Empty;
 
         private AudioProfile realAmbientMusicProfile;
 
@@ -25,10 +25,10 @@ namespace AnyRPG {
         private AudioProfile realBackgroundMusicProfile;
 
         [SerializeField]
-        private bool suppressCharacterSpawn;
+        private bool suppressCharacterSpawn = false;
 
         [SerializeField]
-        private bool suppressMainCamera;
+        private bool suppressMainCamera = false;
 
         [SerializeField]
         private string autoPlayCutsceneName = string.Empty;

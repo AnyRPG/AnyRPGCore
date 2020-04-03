@@ -12,10 +12,10 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private Text characterNameText;
+        private Text characterNameText = null;
 
         [SerializeField]
-        private Text nodeText;
+        private Text nodeText = null;
 
         /*
         [SerializeField]
@@ -23,25 +23,25 @@ namespace AnyRPG {
         */
 
         [SerializeField]
-        private Text buttonText;
+        private Text buttonText = null;
 
         [SerializeField]
-        private GameObject viewQuestButton;
+        private GameObject viewQuestButton = null;
 
         [SerializeField]
         private GameObject acceptQuestButton = null;
 
         [SerializeField]
-        private GameObject continueButton;
+        private GameObject continueButton = null;
 
         [SerializeField]
         int dialogFontSize = 30;
 
-        private Interactable interactable;
+        private Interactable interactable = null;
 
-        private Dialog dialog;
+        private Dialog dialog = null;
 
-        private Quest quest;
+        private Quest quest = null;
 
         public Dialog MyDialog { get => dialog; set => dialog = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }

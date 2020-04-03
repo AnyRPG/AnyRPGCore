@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class DialogPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private string prerequisiteName;
+        private string prerequisiteName = string.Empty;
 
         private Dialog prerequisiteDialog = null;
 

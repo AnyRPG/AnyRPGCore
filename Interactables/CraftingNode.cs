@@ -9,8 +9,19 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        // crafting nodes are special.  The image is based on what ability it supports
+        /// <summary>
+        /// The ability to cast in order to mine this node
+        /// </summary>
+        //[SerializeField]
+        private BaseAbility ability;
 
+        /// <summary>
+        /// The ability to cast in order to mine this node
+        /// </summary>
+        [SerializeField]
+        private string abilityName = string.Empty;
+
+        // crafting nodes are special.  The image is based on what ability it supports
         public override Sprite MyIcon {
             get {
                 return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyIcon);
@@ -22,20 +33,8 @@ namespace AnyRPG {
                 return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
             }
         }
+
         public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyName : base.MyInteractionPanelTitle); }
-
-        /// <summary>
-        /// The ability to cast in order to mine this node
-        /// </summary>
-        //[SerializeField]
-        private BaseAbility ability;
-
-        /// <summary>
-        /// The ability to cast in order to mine this node
-        /// </summary>
-        [SerializeField]
-        private string abilityName;
-
         public BaseAbility MyAbility { get => ability; }
 
         public override bool Interact(CharacterUnit source) {
@@ -75,6 +74,7 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects() {
+            Debug.Log(gameObject.name + "CraftingNode.SetupScriptableObjects()");
             base.SetupScriptableObjects();
             if (abilityName != null && abilityName != string.Empty) {
                 BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);

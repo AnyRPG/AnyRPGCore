@@ -8,9 +8,9 @@ namespace AnyRPG {
     public class QuestPrerequisite : IPrerequisite {
 
         [SerializeField]
-        private string prerequisiteName;
+        private string prerequisiteName = string.Empty;
 
-        private Quest prerequisiteQuest;
+        private Quest prerequisiteQuest = null;
 
         // does the quest need to be complete, or just in progress for this prerequisite to be met
         [SerializeField]
@@ -22,7 +22,7 @@ namespace AnyRPG {
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("QuestPrerequisite.IsMet()");
             if (prerequisiteQuest == null) {
-                Debug.Log("QuestPrerequisite.IsMet(): PREREQUISITE IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
+                Debug.Log("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
                 return false;
             }
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
@@ -48,7 +48,7 @@ namespace AnyRPG {
                     Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): Could not find quest : " + prerequisiteName + " while inititalizing a quest prerequisite.  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): Could not find quest : " + prerequisiteName + " while inititalizing a quest prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): prerequisiteName was empty while inititalizing a quest prerequisite.  CHECK INSPECTOR");
             }
         }
 

@@ -9,13 +9,13 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SystemVideoPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow;
+        //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         [SerializeField]
-        private Dropdown resolutionDropDown;
+        private Dropdown resolutionDropDown = null;
 
-        [SerializeField]
-        private Dropdown qualityDropDown;
+        //[SerializeField]
+        //private Dropdown qualityDropDown = null;
 
         private Resolution[] resolutions;
 

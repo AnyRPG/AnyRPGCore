@@ -9,14 +9,14 @@ namespace AnyRPG {
     public class CastTargettingController : MonoBehaviour {
 
         [SerializeField]
-        private Projector castTargettingProjector;
+        private Projector castTargettingProjector = null;
 
         [SerializeField]
-        private Vector3 offset;
+        private Vector3 offset = Vector3.zero;
 
         private Color circleColor;
 
-        private float circleRadius;
+        private float circleRadius = 0f;
 
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
 

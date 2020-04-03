@@ -8,13 +8,13 @@ namespace AnyRPG {
     public class CraftingMaterial {
 
         [SerializeField]
-        private string itemName;
+        private string itemName = string.Empty;
 
         //[SerializeField]
         private Item item;
 
         [SerializeField]
-        private int count;
+        private int count = 1;
 
         public Item MyItem { get => item; }
         public int MyCount { get => count; }

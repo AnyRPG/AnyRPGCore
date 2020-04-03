@@ -8,19 +8,19 @@ namespace AnyRPG {
     public class SystemBarController : MonoBehaviour {
 
         [SerializeField]
-        private SystemPanelButton mainMenuButton;
+        private SystemPanelButton mainMenuButton = null;
 
         [SerializeField]
-        private SystemPanelButton abilityBookButton;
+        private SystemPanelButton abilityBookButton = null;
 
         [SerializeField]
-        private SystemPanelButton questLogButton;
+        private SystemPanelButton questLogButton = null;
 
         [SerializeField]
-        private SystemPanelButton characterButton;
+        private SystemPanelButton characterButton = null;
 
         [SerializeField]
-        private SystemPanelButton mapButton;
+        private SystemPanelButton mapButton = null;
 
         private void Awake() {
             //Debug.Log("BagBarController.Awake()");

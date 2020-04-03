@@ -11,10 +11,10 @@ namespace AnyRPG {
 
         // the physical interactable to spawn
         [SerializeField]
-        private string interactableName;
+        private string interactableName = string.Empty;
 
         [SerializeField]
-        private Sprite interactableIcon;
+        private Sprite interactableIcon = null;
 
 
         public bool glowOnMouseOver = true;
@@ -42,8 +42,8 @@ namespace AnyRPG {
         //private Transform avatar;
 
         private IInteractable[] interactables;
-        private Component meshRenderer;
-        private GameObject avatar;
+        //private Component meshRenderer;
+        //private GameObject avatar = null;
         //private Material[] materialList = new Material[0];
 
         public Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
@@ -96,7 +96,7 @@ namespace AnyRPG {
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".Interactable.Awake()");
+            Debug.Log(gameObject.name + ".Interactable.Awake()");
             base.Awake();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
@@ -110,7 +110,6 @@ namespace AnyRPG {
                 //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
                 glowOnMouseOver = false;
             }
-
         }
 
         public override void Start() {
@@ -125,13 +124,36 @@ namespace AnyRPG {
             ClearFromPlayerRangeTable();
         }
 
-        public override void InitializeComponents() {
+
+
+        public override void OrchestratorStart() {
+            Debug.Log(gameObject.name + ".Interactable.OrchestratorStart()");
+            base.OrchestratorStart();
+
+            foreach (IInteractable interactable in interactables) {
+                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
+                interactable.OrchestratorStart();
+            }
+
+        }
+
+        public override void OrchestratorFinish() {
+            Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
+            base.OrchestratorFinish();
+            foreach (IInteractable interactable in interactables) {
+                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
+                interactable.OrchestratorFinish();
+            }
+
+        }
+
+        public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".Interactable.InitializeComponents()");
 
             if (componentsInitialized == true) {
                 return;
             }
-            base.InitializeComponents();
+            base.GetComponentReferences();
             boxCollider = GetComponent<BoxCollider>();
             interactables = GetComponents<IInteractable>();
 
@@ -146,9 +168,6 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeComponents(): namePlateUnit is null");
             }
 
-            foreach (IInteractable interactable in interactables) {
-                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
-            }
         }
 
         private void Update() {
@@ -425,7 +444,7 @@ namespace AnyRPG {
 
             //public List<IInteractable> GetValidInteractables(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables()");
-            InitializeComponents();
+            //GetComponentReferences();
 
             /*
             if (source == null) {
@@ -469,7 +488,7 @@ namespace AnyRPG {
                 return null;
             }
 
-            InitializeComponents();
+            //GetComponentReferences();
 
             /*
             if (source == null) {
@@ -809,12 +828,14 @@ namespace AnyRPG {
         public void InitializeMaterialsOld() {
             //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsOld()");
             //avatar = transform.GetChild(0);
+            /*
             if (meshRenderer != null) {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeMaterials(). MeshRenderer was not null");
                 hasMeshRenderer = true;
                 avatar = meshRenderer.transform.gameObject;
                 temporaryMaterials = avatar.GetComponent<Renderer>().materials;
             }
+            */
             for (int i = 0; i < temporaryMaterials.Length; i++) {
                 //Debug.Log(gameObject.name + " shader: " + materialList[i].shader);
                 shaderList.Add(temporaryMaterials[i].shader);

@@ -33,22 +33,22 @@ namespace AnyRPG {
         private PetSpawnButton selectedPetSpawnButton;
 
         [SerializeField]
-        private GameObject buttonPrefab;
+        private GameObject buttonPrefab = null;
 
         [SerializeField]
-        private GameObject buttonArea;
+        private GameObject buttonArea = null;
 
         [SerializeField]
-        private PetPreviewCameraController previewCameraController;
+        private PetPreviewCameraController previewCameraController = null;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement;
+        private LayoutElement panelLayoutElement = null;
 
         [SerializeField]
-        private Button spawnButton;
+        private Button spawnButton = null;
 
         [SerializeField]
-        private Button despawnButton;
+        private Button despawnButton = null;
 
         [SerializeField]
         private Text classText = null;

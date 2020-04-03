@@ -14,7 +14,7 @@ namespace AnyRPG {
         private bool endQuest = true;
 
         [SerializeField]
-        private string questName;
+        private string questName = string.Empty;
 
         //[SerializeField]
         private Quest questTemplate;

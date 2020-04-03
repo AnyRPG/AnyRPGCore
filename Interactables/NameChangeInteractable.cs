@@ -13,11 +13,11 @@ namespace AnyRPG {
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.MyNamePlateImage); }
 
         [SerializeField]
-        private GameObject spawnPrefab;
+        private GameObject spawnPrefab = null;
 
-        private GameObject spawnReference;
+        private GameObject spawnReference = null;
 
-        private BoxCollider boxCollider;
+        private BoxCollider boxCollider = null;
 
         protected override void Awake() {
             //Debug.Log("NameChangeInteractable.Awake()");

@@ -26,6 +26,8 @@ namespace AnyRPG {
         int GetCurrentOptionCount();
         void HandlePrerequisiteUpdates();
         void SetupScriptableObjects();
+        void OrchestratorStart();
+        void OrchestratorFinish();
     }
 
 }

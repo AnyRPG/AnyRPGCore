@@ -11,10 +11,10 @@ public class InteractionPanelScript : MonoBehaviour {
 
 
     [SerializeField]
-    private Text text;
+    private Text text = null;
 
     [SerializeField]
-    private Image icon;
+    private Image icon = null;
 
     public Text MyText {
         get {

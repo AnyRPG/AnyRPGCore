@@ -26,16 +26,16 @@ public class QuestTrackerUI : WindowContentController {
     #endregion
 
     [SerializeField]
-    private GameObject questPrefab;
+    private GameObject questPrefab = null;
 
     [SerializeField]
-    private Transform questParent;
+    private Transform questParent = null;
+
+    //[SerializeField]
+    //private GameObject inProgressHeading = null;
 
     [SerializeField]
-    private GameObject inProgressHeading;
-
-    [SerializeField]
-    private GameObject inProgressArea;
+    private GameObject inProgressArea = null;
 
     // delete me
     //private List<QuestNode> questNodes = new List<QuestNode>();

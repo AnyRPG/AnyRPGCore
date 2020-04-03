@@ -21,29 +21,29 @@ namespace AnyRPG {
         private bool dynamicLevel = true;
 
         [SerializeField]
-        private int unitLevel;
+        private int unitLevel = 1;
 
         // levels above the normal level for this mob
         [SerializeField]
-        private int extraLevels;
+        private int extraLevels = 0;
 
         // spawn time for regular mob spawns
         [SerializeField]
-        private int spawnTimer;
+        private int spawnTimer = 0;
 
         // an additional delay to add to the timer.  meant to allow an offset for multiple spawners of the same type
         [SerializeField]
-        private int spawnDelay;
+        private int spawnDelay = 0;
 
-        private int defaultSpawnDelay = 0;
+        //private int defaultSpawnDelay = 0;
 
         // a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units
         [SerializeField]
-        private int DespawnTimer;
+        private int DespawnTimer = 0;
 
         // set to -1 to do infinite spawns ;>
         [SerializeField]
-        private int maxUnits;
+        private int maxUnits = 1;
 
         // to allow for unit spawn control panels to use this node
         [SerializeField]
@@ -53,8 +53,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool triggerBased = false;
 
-        [SerializeField]
-        private bool areaBased = false;
+        //[SerializeField]
+        //private bool areaBased = false;
 
         // in area mode, the number of mobs per square meter to spawn
         [SerializeField]

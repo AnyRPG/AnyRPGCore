@@ -10,16 +10,16 @@ namespace AnyRPG {
 public class SoundMenuController : WindowContentController {
 
     [SerializeField]
-    private Slider masterVolumeSlider;
+    private Slider masterVolumeSlider = null;
 
-    [SerializeField]
-    private Slider musicVolumeSlider;
+    //[SerializeField]
+    //private Slider musicVolumeSlider = null;
 
-    [SerializeField]
-    private Slider effectsVolumeSlider;
+    //[SerializeField]
+    //private Slider effectsVolumeSlider = null;
 
-    [SerializeField]
-    private Slider ambientVolumeSlider;
+    //[SerializeField]
+    //private Slider ambientVolumeSlider = null;
 
     private void Start() {
         //Debug.Log("SoundMenuController.Start()");

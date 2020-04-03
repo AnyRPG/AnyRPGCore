@@ -11,12 +11,12 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private CloseableWindow chestWindow;
+        private CloseableWindow chestWindow = null;
 
         private List<Item> items = new List<Item>();
 
         [SerializeField]
-        private BagPanel bag;
+        private BagPanel bag = null;
 
         public override bool Interact(CharacterUnit source) {
             if (!chestWindow.IsOpen) {

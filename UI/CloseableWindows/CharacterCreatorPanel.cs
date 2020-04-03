@@ -31,70 +31,70 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private HighlightButton appearanceButton;
+        private HighlightButton appearanceButton = null;
 
         [SerializeField]
-        private HighlightButton colorsButton;
+        private HighlightButton colorsButton = null;
 
         [SerializeField]
-        private HighlightButton hairColorsButton;
+        private HighlightButton hairColorsButton = null;
 
         [SerializeField]
-        private HighlightButton skinColorsButton;
+        private HighlightButton skinColorsButton = null;
 
         [SerializeField]
-        private HighlightButton eyesColorsButton;
+        private HighlightButton eyesColorsButton = null;
 
         [SerializeField]
-        private HighlightButton sexButton;
+        private HighlightButton sexButton = null;
 
         [SerializeField]
-        private HighlightButton maleButton;
+        private HighlightButton maleButton = null;
 
         [SerializeField]
-        private HighlightButton femaleButton;
+        private HighlightButton femaleButton = null;
 
         [SerializeField]
-        private GameObject appearanceOptionsArea;
+        private GameObject appearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject hairAppearanceOptionsArea;
+        private GameObject hairAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject eyebrowsAppearanceOptionsArea;
+        private GameObject eyebrowsAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject beardAppearanceOptionsArea;
+        private GameObject beardAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject colorsOptionsArea;
+        private GameObject colorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject hairColorsOptionsArea;
+        private GameObject hairColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject skinColorsOptionsArea;
+        private GameObject skinColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject eyesColorsOptionsArea;
+        private GameObject eyesColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject sexOptionsArea;
+        private GameObject sexOptionsArea = null;
 
         [SerializeField]
-        private Dropdown hairAppearanceDropdown;
+        private Dropdown hairAppearanceDropdown = null;
 
         [SerializeField]
-        private Dropdown eyebrowsAppearanceDropdown;
+        private Dropdown eyebrowsAppearanceDropdown = null;
 
         [SerializeField]
-        private Dropdown beardAppearanceDropdown;
+        private Dropdown beardAppearanceDropdown = null;
 
         [SerializeField]
-        private AnyRPGCharacterPreviewCameraController previewCameraController;
+        private AnyRPGCharacterPreviewCameraController previewCameraController = null;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement;
+        private LayoutElement panelLayoutElement = null;
 
         public GameObject ColorPrefab;
 

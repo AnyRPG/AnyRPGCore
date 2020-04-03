@@ -8,13 +8,13 @@ namespace AnyRPG {
     public class Loot {
 
         [SerializeField]
-        private string itemName;
+        private string itemName = string.Empty;
 
         //[SerializeField]
         private Item item;
 
         [SerializeField]
-        private float dropChance;
+        private float dropChance = 0f;
 
         [SerializeField]
         private int minDrops = 1;

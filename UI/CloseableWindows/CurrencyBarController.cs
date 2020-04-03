@@ -7,14 +7,14 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CurrencyBarController : MonoBehaviour {
 
-        [SerializeField]
-        private GameObject currencyAmountPrefab;
+        //[SerializeField]
+        //private GameObject currencyAmountPrefab = null;
+
+        //[SerializeField]
+        //private GameObject currencyAmountParent = null;
 
         [SerializeField]
-        private GameObject currencyAmountParent;
-
-        [SerializeField]
-        private Text priceText;
+        private Text priceText = null;
 
         protected bool eventSubscriptionsInitialized = false;
 

@@ -25,7 +25,7 @@ namespace AnyRPG {
         }
         #endregion
 
-        private UMAData umaSaveData = null;
+        //private UMAData umaSaveData = null;
         private string recipeString = string.Empty;
         private string jsonSavePath = string.Empty;
 
@@ -346,6 +346,7 @@ namespace AnyRPG {
             SaveEquipmentData(anyRPGSaveData);
             SaveCurrencyData(anyRPGSaveData);
             SaveSceneNodeData(anyRPGSaveData);
+            SaveCutsceneData(anyRPGSaveData);
             SaveStatusEffectData(anyRPGSaveData);
             SavePetData(anyRPGSaveData);
 

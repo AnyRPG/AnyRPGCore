@@ -8,10 +8,10 @@ namespace AnyRPG {
     public class MainMenuManager : MonoBehaviour {
 
         [SerializeField]
-        private Text gameNameText;
+        private Text gameNameText = null;
 
         [SerializeField]
-        private Text gameVersionText;
+        private Text gameVersionText = null;
 
         private void Awake() {
             CheckMissingInspectorValues();

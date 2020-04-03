@@ -7,15 +7,15 @@ namespace AnyRPG {
     public class AreaEffectScript : MonoBehaviour {
 
         [SerializeField]
-        private SphereCollider sphereCollider;
+        private SphereCollider sphereCollider = null;
 
-        private CharacterUnit source;
+        private CharacterUnit source = null;
 
-        private GameObject target;
+        private GameObject target = null;
 
-        private bool initialized = false;
+        //private bool initialized = false;
 
-        private float radius = 0.5f;
+        //private float radius = 0.5f;
 
         /*
         private void Update() {
@@ -27,7 +27,7 @@ namespace AnyRPG {
             this.source = source;
             this.target = target;
             sphereCollider.radius = radius;
-            initialized = true;
+            //initialized = true;
         }
 
     }

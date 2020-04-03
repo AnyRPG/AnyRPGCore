@@ -7,10 +7,10 @@ namespace AnyRPG {
     public class CameraShader : MonoBehaviour {
 
         [SerializeField]
-        private Shader miniMapShader;
+        private Shader miniMapShader = null;
 
         [SerializeField]
-        private Shader overlayShader;
+        private Shader overlayShader = null;
 
         [SerializeField]
         private bool limitFrameRates = false;

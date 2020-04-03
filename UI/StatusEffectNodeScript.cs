@@ -9,26 +9,26 @@ namespace AnyRPG {
 public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
 
     [SerializeField]
-    private Image icon;
+    private Image icon = null;
 
     [SerializeField]
-    private Image coolDownIcon;
+    private Image coolDownIcon = null;
 
     [SerializeField]
-    private bool useTimerText;
+    private bool useTimerText = false;
 
     [SerializeField]
-    private Text timer;
+    private Text timer = null;
 
     [SerializeField]
-    private bool useStackText;
+    private bool useStackText = false;
 
     [SerializeField]
-    private Text stackCount;
+    private Text stackCount = null;
 
-    private StatusEffectNode statusEffectNode;
+    private StatusEffectNode statusEffectNode = null;
 
-    private CharacterUnit target;
+    private CharacterUnit target = null;
 
     public Text MyTimer { get => timer; }
     public Text MyStackCount { get => stackCount; set => stackCount = value; }

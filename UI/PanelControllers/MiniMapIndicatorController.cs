@@ -9,21 +9,21 @@ namespace AnyRPG {
 public class MiniMapIndicatorController : MonoBehaviour {
 
     [SerializeField]
-    private GameObject miniMapTextLayerPrefab;
+    private GameObject miniMapTextLayerPrefab = null;
 
     [SerializeField]
-    private GameObject miniMapImageLayerPrefab;
+    private GameObject miniMapImageLayerPrefab = null;
 
     [SerializeField]
-    private Transform contentParent;
+    private Transform contentParent = null;
 
-    private Interactable interactable;
+    private Interactable interactable = null;
 
-    private Canvas canvas;
+    private Canvas canvas = null;
 
-    private RectTransform rectTransform;
+    private RectTransform rectTransform = null;
 
-    private Vector2 uiOffset;
+    private Vector2 uiOffset = Vector2.zero;
 
     private Dictionary<IInteractable, GameObject> miniMapLayers = new Dictionary<IInteractable, GameObject>();
 

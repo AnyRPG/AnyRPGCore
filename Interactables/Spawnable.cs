@@ -49,21 +49,24 @@ namespace AnyRPG {
         }
 
         protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".Spawnable.Awake()");
+            Debug.Log(gameObject.name + ".Spawnable.Awake()");
             if (SystemGameManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + "Spawnable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
                 return;
             }
-            InitializeComponents();
             SetupScriptableObjects();
             if (GetComponent<CharacterUnit>() == null) {
-                OrchestratorStart();
-                OrchestratorFinish();
+                OrchestrateStartup();
             }
         }
 
+        public virtual void OrchestrateStartup() {
+            OrchestratorStart();
+            OrchestratorFinish();
+        }
+
         public virtual void OrchestratorStart() {
-            // nothing for now
+            GetComponentReferences();
         }
 
         public virtual void OrchestratorFinish() {
@@ -72,13 +75,13 @@ namespace AnyRPG {
 
         public virtual void Start() {
             //Debug.Log(gameObject.name + ".Spawnable.Start()");
-            InitializeComponents();
+            //InitializeComponents();
             //interactionTransform = transform;
             //InitializeMaterials();
         }
 
         public virtual void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
+            Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -115,7 +118,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public virtual void InitializeComponents() {
+        public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".Spawnable.InitializeComponents()");
 
             if (componentsInitialized == true) {
@@ -127,7 +130,7 @@ namespace AnyRPG {
 
         public virtual void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Spawnable.HandlePrerequisiteUpdates()");
-            InitializeComponents();
+            //InitializeComponents();
             if (CanSpawn()) {
                 StartSpawn();
             }

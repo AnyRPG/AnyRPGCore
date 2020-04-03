@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         // the class that this interactable option offers
         [SerializeField]
-        private string className;
+        private string className = string.Empty;
 
         private CharacterClass characterClass;
 

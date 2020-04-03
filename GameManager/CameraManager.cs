@@ -21,34 +21,34 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private Camera mainCamera;
+        private Camera mainCamera = null;
 
         [SerializeField]
-        private GameObject mainCameraGameObject;
+        private GameObject mainCameraGameObject = null;
 
         [SerializeField]
-        private Camera miniMapCamera;
+        private Camera miniMapCamera = null;
 
         [SerializeField]
-        private Camera mainMapCamera;
+        private Camera mainMapCamera = null;
 
         [SerializeField]
-        private Camera characterPortraitCamera;
+        private Camera characterPortraitCamera = null;
 
         [SerializeField]
-        private Camera focusPortraitCamera;
+        private Camera focusPortraitCamera = null;
 
         [SerializeField]
-        private Camera characterCreatorCamera;
+        private Camera characterCreatorCamera = null;
 
         [SerializeField]
-        private Camera characterPreviewCamera;
+        private Camera characterPreviewCamera = null;
 
         [SerializeField]
-        private Camera unitPreviewCamera;
+        private Camera unitPreviewCamera = null;
 
         [SerializeField]
-        private Camera petPreviewCamera;
+        private Camera petPreviewCamera = null;
 
         private AnyRPGCameraController mainCameraController;
 

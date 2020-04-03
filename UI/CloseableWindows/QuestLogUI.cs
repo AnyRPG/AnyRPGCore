@@ -30,30 +30,33 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
         [SerializeField]
-        private GameObject abandonButton, trackButton;
+        private GameObject abandonButton = null;
+
+        //[SerializeField]
+        //private GameObject trackButton = null;
 
         [SerializeField]
-        private GameObject questPrefab;
+        private GameObject questPrefab = null;
 
         [SerializeField]
-        private Transform questParent;
+        private Transform questParent = null;
 
         [SerializeField]
-        private Text questCount;
+        private Text questCount = null;
 
         [SerializeField]
-        private int maxCount;
+        private int maxCount = 25;
 
         [SerializeField]
-        private QuestDetailsArea questDetailsArea;
+        private QuestDetailsArea questDetailsArea = null;
 
         private List<QuestScript> questScripts = new List<QuestScript>();
 
-        private QuestScript selectedQuestScript;
+        private QuestScript selectedQuestScript = null;
 
-        private string currentQuestName = null;
+        //private string currentQuestName = null;
 
-        private Quest currentQuest;
+        private Quest currentQuest = null;
 
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 

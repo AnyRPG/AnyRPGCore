@@ -9,16 +9,16 @@ namespace AnyRPG {
     public class SystemPanelButton : MonoBehaviour, IDescribable, IPointerEnterHandler, IPointerExitHandler {
 
         [SerializeField]
-        private Sprite icon;
+        private Sprite icon = null;
 
         [SerializeField]
-        private string optionName;
+        private string optionName = string.Empty;
 
         [SerializeField]
-        private string description;
+        private string description = string.Empty;
 
         [SerializeField]
-        private Image menuImage;
+        private Image menuImage = null;
 
         public Sprite MyIcon {
             get => icon;

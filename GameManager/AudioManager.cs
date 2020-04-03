@@ -22,7 +22,7 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private AudioMixer audioMixer;
+        private AudioMixer audioMixer = null;
 
         private float defaultMasterVolume = 1.0f;
         private float defaultMusicVolume = 1.0f;
@@ -39,22 +39,22 @@ namespace AnyRPG {
         private string ambientVolume = "AmbientVolume";
 
         [SerializeField]
-        private AudioSource musicAudioSource;
+        private AudioSource musicAudioSource = null;
 
         [SerializeField]
-        private AudioSource effectsAudioSource;
+        private AudioSource effectsAudioSource = null;
 
         [SerializeField]
-        private AudioSource ambientAudioSource;
+        private AudioSource ambientAudioSource = null;
 
         [SerializeField]
-        private AudioSource uiAudioSource;
+        private AudioSource uiAudioSource = null;
 
         [SerializeField]
-        private AudioSource voiceAudioSource;
+        private AudioSource voiceAudioSource = null;
 
         [SerializeField]
-        private AudioClip uiClickSound;
+        private AudioClip uiClickSound = null;
 
         private bool audioInitialized = false;
 

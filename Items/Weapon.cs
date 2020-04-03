@@ -11,16 +11,16 @@ namespace AnyRPG {
         protected bool useDamagePerSecond = true;
 
         [SerializeField]
-        protected bool useManualDamagePerSecond;
+        protected bool useManualDamagePerSecond = false;
 
         [SerializeField]
-        protected float damagePerSecond;
+        protected float damagePerSecond = 0f;
 
         [SerializeField]
-        protected string defaultAttackAnimationProfileName;
+        protected string defaultAttackAnimationProfileName = string.Empty;
 
         //[SerializeField]
-        protected AnimationProfile defaultAttackAnimationProfile;
+        protected AnimationProfile defaultAttackAnimationProfile = null;
 
         /*
         /// <summary>
@@ -31,14 +31,14 @@ namespace AnyRPG {
         */
 
         [SerializeField]
-        private string onHitEffectName;
+        private string onHitEffectName = string.Empty;
 
         //[SerializeField]
         private AbilityEffect onHitEffect;
 
         // the skill required to use this weapon
         [SerializeField]
-        private string weaponSkill;
+        private string weaponSkill = string.Empty;
 
         private WeaponSkill realWeaponSkill;
 

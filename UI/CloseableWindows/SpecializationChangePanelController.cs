@@ -12,22 +12,22 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private GameObject rewardIconPrefab;
+        private GameObject rewardIconPrefab = null;
 
         [SerializeField]
-        private ClassSpecializationButton classSpecializationButton;
+        private ClassSpecializationButton classSpecializationButton = null;
 
         [SerializeField]
-        private GameObject abilitiesArea;
+        private GameObject abilitiesArea = null;
 
         [SerializeField]
-        private GameObject abilityIconsArea;
+        private GameObject abilityIconsArea = null;
 
         [SerializeField]
-        private GameObject traitsArea;
+        private GameObject traitsArea = null;
 
         [SerializeField]
-        private GameObject traitIconsArea;
+        private GameObject traitIconsArea = null;
 
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 

@@ -9,16 +9,16 @@ namespace AnyRPG {
     public class ClassSpecializationButton : TransparencyButton {
 
         [SerializeField]
-        private ClassSpecialization classSpecialization;
+        private ClassSpecialization classSpecialization = null;
 
         [SerializeField]
-        private Image icon;
+        private Image icon = null;
 
         [SerializeField]
-        private Text classSpecializationName;
+        private Text classSpecializationName = null;
 
         [SerializeField]
-        private Text description;
+        private Text description = null;
 
         public void AddClassSpecialization(ClassSpecialization newClassSpecialization) {
             classSpecialization = newClassSpecialization;

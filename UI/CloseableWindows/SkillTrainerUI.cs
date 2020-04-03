@@ -23,34 +23,37 @@ namespace AnyRPG {
 
         #endregion
 
-        private SkillTrainer skillTrainer;
+        private SkillTrainer skillTrainer = null;
 
         [SerializeField]
-        private GameObject learnButton, unlearnButton;
+        private GameObject learnButton = null;
 
         [SerializeField]
-        private GameObject skillPrefab;
+        private GameObject unlearnButton = null;
 
         [SerializeField]
-        private Transform skillParent;
+        private GameObject skillPrefab = null;
+
+        //[SerializeField]
+        //private Transform skillParent = null;
 
         [SerializeField]
-        private Text skillDescription;
+        private Text skillDescription = null;
+
+        //[SerializeField]
+        //private GameObject availableHeading = null;
 
         [SerializeField]
-        private GameObject availableHeading;
+        private GameObject availableArea = null;
+
+        //[SerializeField]
+        //private GameObject learnedHeading = null;
+
+        //[SerializeField]
+        //private GameObject learnedArea = null;
 
         [SerializeField]
-        private GameObject availableArea;
-
-        [SerializeField]
-        private GameObject learnedHeading;
-
-        [SerializeField]
-        private GameObject learnedArea;
-
-        [SerializeField]
-        private DescribableIcon[] rewardButtons;
+        private List<DescribableIcon> rewardButtons = new List<DescribableIcon>();
 
         //private List<GameObject> Skills = new List<GameObject>();
         private List<Skill> skills = new List<Skill>();
