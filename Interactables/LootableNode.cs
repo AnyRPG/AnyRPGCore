@@ -20,6 +20,8 @@ namespace AnyRPG {
 
         protected float currentTimer = 0f;
 
+        protected bool lootDropped = false;
+
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
@@ -33,6 +35,7 @@ namespace AnyRPG {
             }
             base.Interact(source);
 
+            DropLoot();
             PickUp();
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
@@ -52,16 +55,21 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
-        public void PickUp() {
-            //Debug.Log("GatheringNode.Pickup()");
+
+        public virtual void DropLoot() {
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in lootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
             }
             LootUI.MyInstance.CreatePages(lootDrops);
+            lootDropped = true;
+        }
+
+        /// <summary>
+        /// Pick an item up off the ground and put it in the inventory
+        /// </summary>
+        public void PickUp() {
+            //Debug.Log("GatheringNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
             CreateEventSubscriptions();
             PopupWindowManager.MyInstance.lootWindow.OpenWindow();
@@ -124,6 +132,7 @@ namespace AnyRPG {
                 lootCount += lootTable.MyDroppedItems.Count;
             }
             if (lootCount == 0) {
+                lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
                 (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
                 interactable.DestroySpawn();

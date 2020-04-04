@@ -48,6 +48,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
+            // base.Interact() will drop loot automatically so we will intentionally not call it because the loot drop in this class is activated by the gatherability
+            /*
             int lootCount = 0;
             base.Interact(source);
 
@@ -56,7 +58,9 @@ namespace AnyRPG {
                     lootCount += lootTable.MyDroppedItems.Count;
                 }
             }
-            if (lootCount > 0) {
+            */
+            //if (lootCount > 0) {
+            if (lootDropped == true) {
                 PickUp();
             } else {
                 source.GetComponent<CharacterUnit>().MyCharacter.MyCharacterAbilityManager.BeginAbility(MyAbility, gameObject);
@@ -64,6 +68,11 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
             //return PickUp();
+        }
+
+        public override void DropLoot() {
+            base.DropLoot();
+            PickUp();
         }
 
         public override int GetCurrentOptionCount() {
