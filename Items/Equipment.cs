@@ -20,6 +20,9 @@ namespace AnyRPG {
         [SerializeField]
         private UMA.UMATextRecipe UMARecipe = null;
 
+        [SerializeField]
+        private List<UMA.UMATextRecipe> UMARecipes = new List<UMATextRecipe>();
+
         // The next 5 fiels are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
         // However, this will likely not happen and these should probably just be moved to weapon.
 
@@ -152,7 +155,7 @@ namespace AnyRPG {
                     ));
         }
         public virtual int MyStaminaModifier(int currentLevel, BaseCharacter baseCharacter) {
-                if (!useStaminaModifier) {
+                if (!useStaminaModifier || baseCharacter == null) {
                     return 0;
                 }
                 if (useManualStamina) {
@@ -201,6 +204,7 @@ namespace AnyRPG {
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public UMATextRecipe MyUMARecipe { get => UMARecipe; set => UMARecipe = value; }
         public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
+        public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -364,8 +368,8 @@ namespace AnyRPG {
 
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
                 UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
-                if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipe != null) {
-                    UMARecipe = umaRecipeProfile.MyUMARecipe;
+                if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
+                    UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }

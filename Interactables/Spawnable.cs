@@ -49,13 +49,13 @@ namespace AnyRPG {
         }
 
         protected virtual void Awake() {
-            Debug.Log(gameObject.name + ".Spawnable.Awake()");
+            //Debug.Log(gameObject.name + ".Spawnable.Awake()");
             if (SystemGameManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + "Spawnable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
                 return;
             }
-            SetupScriptableObjects();
             if (GetComponent<CharacterUnit>() == null) {
+                SetupScriptableObjects();
                 OrchestrateStartup();
             }
         }
@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public virtual void CreateEventSubscriptions() {
-            Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }

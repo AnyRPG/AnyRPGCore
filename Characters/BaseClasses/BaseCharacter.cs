@@ -122,12 +122,12 @@ namespace AnyRPG {
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
 
         protected virtual void Awake() {
-            Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
             SetupScriptableObjects();
         }
 
         public virtual void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
             characterStats = GetComponent<CharacterStats>();
             characterCombat = GetComponent<CharacterCombat>();
@@ -170,7 +170,7 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorStart() {
-            Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
 
             GetUnitProfile();
 
@@ -178,7 +178,7 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorStartCommon() {
-            Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStartCommon()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStartCommon()");
             GetComponentReferences();
             if (characterStats != null) {
                 characterStats.OrchestratorStart();

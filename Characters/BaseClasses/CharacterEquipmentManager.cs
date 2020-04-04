@@ -135,11 +135,15 @@ namespace AnyRPG {
                 return;
             }
 
-            if (newItem.MyUMARecipe != null && dynamicCharacterAvatar != null) {
+            if (newItem.MyUMARecipes != null && dynamicCharacterAvatar != null) {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.MyName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
-                dynamicCharacterAvatar.SetSlot(newItem.MyUMARecipe.wardrobeSlot, newItem.MyUMARecipe.name);
+                foreach (UMATextRecipe uMARecipe in newItem.MyUMARecipes) {
+                    if (uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                        dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
+                    }
+                }
                 dynamicCharacterAvatar.BuildCharacter();
             } else {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe() No UMA recipe to handle");
@@ -487,11 +491,15 @@ namespace AnyRPG {
                 }
                 Equipment oldItem = currentEquipment[equipmentSlot];
 
-                if (oldItem.MyUMARecipe != null && dynamicCharacterAvatar != null) {
+                if (oldItem.MyUMARecipes != null && dynamicCharacterAvatar != null) {
                     // Clear the item from the UMA slot on the UMA character
                     //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                     //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
-                    dynamicCharacterAvatar.ClearSlot(oldItem.MyUMARecipe.wardrobeSlot);
+                    foreach (UMATextRecipe uMARecipe in oldItem.MyUMARecipes) {
+                        if (uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                            dynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
+                        }
+                    }
                     dynamicCharacterAvatar.BuildCharacter();
                 }
 

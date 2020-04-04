@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         public void InitializeNamePlate() {
-            Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
+            //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
 
             if (interactable.CanInteract()) {
                 //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): isStarted && interactable.CanInteract() == true");

@@ -133,7 +133,7 @@ namespace AnyRPG {
                     foreach (QuestNode questNode in (_interactable as QuestGiver).MyQuests) {
                         Quest quest = questNode.MyQuest;
                         if (quest != null) {
-                            //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest);
+                            //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest.MyName);
                             string displayText = string.Empty;
                             string questStatus = quest.GetStatus();
                             if (questStatus == "complete" && questNode.MyEndQuest == true) {

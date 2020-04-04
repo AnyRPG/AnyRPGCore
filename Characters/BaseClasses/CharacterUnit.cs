@@ -178,7 +178,7 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
-            Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStart()");
+            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStart()");
             base.OrchestratorStart();
             if (animatedUnit != null) {
                 animatedUnit.OrchestratorStart();
@@ -192,7 +192,7 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorFinish() {
-            Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorFinish()");
+            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorFinish()");
             base.OrchestratorFinish();
             if (animatedUnit != null) {
                 animatedUnit.OrchestratorFinish();
@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences()");
             if (componentReferencesInitialized) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
                 return;
@@ -271,9 +271,9 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();
                 if (baseCharacter == null) {
-                    Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null and is still null");
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null and is still null");
                 } else {
-                    Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): baseCharacter was null but is now initialized to: " + baseCharacter.MyCharacterName);
                 }
             }
 

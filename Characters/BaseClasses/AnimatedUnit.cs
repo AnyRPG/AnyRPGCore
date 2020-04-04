@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            Debug.Log(gameObject.name + ".AnimatedUnit.Start()");
+            //Debug.Log(gameObject.name + ".AnimatedUnit.Start()");
             if (GetComponent<CharacterUnit>() != null) {
                 OrchestratorStart();
                 OrchestratorFinish();
@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorStart() {
-            Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStart()");
+            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStart()");
             if (orchestratorStartupComplete == true) {
                 return;
             }
@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
 
         public virtual void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".AnimatedUnit.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".AnimatedUnit.GetComponentReferences()");
             if (componentReferencesInitialized) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
                 return;

@@ -96,7 +96,7 @@ namespace AnyRPG {
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
         protected override void Awake() {
-            Debug.Log(gameObject.name + ".Interactable.Awake()");
+            //Debug.Log(gameObject.name + ".Interactable.Awake()");
             base.Awake();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
@@ -127,7 +127,7 @@ namespace AnyRPG {
 
 
         public override void OrchestratorStart() {
-            Debug.Log(gameObject.name + ".Interactable.OrchestratorStart()");
+            //Debug.Log(gameObject.name + ".Interactable.OrchestratorStart()");
             base.OrchestratorStart();
 
             foreach (IInteractable interactable in interactables) {
@@ -138,7 +138,7 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorFinish() {
-            Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
+            //Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
             base.OrchestratorFinish();
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
@@ -856,6 +856,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
             base.SetupScriptableObjects();
 
+            // this next bit should not be necessary since each interactable option can setup scriptable objects in its orchestratorstart method
+            /*
             if (interactables != null) {
                 foreach (IInteractable interactable in interactables) {
                     if (interactable != null) {
@@ -863,6 +865,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
         }
 
 

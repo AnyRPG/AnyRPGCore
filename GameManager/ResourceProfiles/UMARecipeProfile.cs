@@ -13,6 +13,10 @@ namespace AnyRPG {
         [SerializeField]
         private UMA.UMATextRecipe uMARecipe = null;
 
+        [SerializeField]
+        private List<UMA.UMATextRecipe> uMARecipes = new List<UMATextRecipe>();
+
         public UMATextRecipe MyUMARecipe { get => uMARecipe; set => uMARecipe = value; }
+        public List<UMATextRecipe> MyUMARecipes { get => uMARecipes; set => uMARecipes = value; }
     }
 }
