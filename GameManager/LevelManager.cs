@@ -74,7 +74,7 @@ namespace AnyRPG {
             if (levelManagerInitialized == true) {
                 return;
             }
-            DontDestroyOnLoad(this.gameObject);
+            //DontDestroyOnLoad(this.gameObject);
             //Debug.Log("LevelManager.InitializeLevelManager(): setting scenemanager onloadlevel");
             SceneManager.sceneLoaded += OnLoadLevel;
             levelManagerInitialized = true;

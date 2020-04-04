@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".LootableCharacter.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".LootableCharacter.GetComponentReferences()");
             base.GetComponentReferences();
             characterUnit = GetComponent<CharacterUnit>();
         }

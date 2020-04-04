@@ -31,6 +31,17 @@ namespace AnyRPG {
 
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
+            SetupPermanentObjects();
+        }
+
+        private void SetupPermanentObjects() {
+            DontDestroyOnLoad(this.gameObject);
+            GameObject umaDCS = GameObject.Find("UMA_DCS");
+            if (umaDCS == null) {
+                Debug.LogError("SystemGameManager.SetupPermanentObjects(): AnyRPG requires uma.  Ensure that the UMA_DCS prefab is in your loading scene.");
+            } else {
+                DontDestroyOnLoad(umaDCS);
+            }
         }
 
         private void Start() {
