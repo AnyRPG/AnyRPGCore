@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UMA;
 using UMA.CharacterSystem;
@@ -66,146 +67,9 @@ namespace AnyRPG {
 
         [Header("ANIMATION")]
 
+        // this should contain references to all the default animations that are on the default animation controller for mapping overrides
         [SerializeField]
-        private string defaultAttackClip;
-
-        [SerializeField]
-        private string defaultCastClip;
-
-        [SerializeField]
-        private string defaultMoveForwardClip;
-
-        [SerializeField]
-        private string defaultMoveForwardFastClip;
-
-        [SerializeField]
-        private string defaultCombatMoveForwardClip;
-
-        [SerializeField]
-        private string defaultCombatMoveForwardFastClip;
-
-        [SerializeField]
-        private string defaultMoveBackClip;
-
-        [SerializeField]
-        private string defaultMoveBackFastClip;
-
-        [SerializeField]
-        private string defaultCombatMoveBackClip;
-
-        [SerializeField]
-        private string defaultCombatMoveBackFastClip;
-
-        [SerializeField]
-        private string defaultJumpClip;
-
-        [SerializeField]
-        private string defaultCombatJumpClip;
-
-        [SerializeField]
-        private string defaultIdleClip;
-
-        [SerializeField]
-        private string defaultCombatIdleClip;
-
-        [SerializeField]
-        private string defaultLandClip;
-
-        [SerializeField]
-        private string defaultCombatLandClip;
-
-        [SerializeField]
-        private string defaultFallClip;
-
-        [SerializeField]
-        private string defaultCombatFallClip;
-
-        [SerializeField]
-        private string defaultStrafeLeftClip;
-
-        [SerializeField]
-        private string defaultJogStrafeLeftClip;
-
-        [SerializeField]
-        private string defaultStrafeRightClip;
-
-        [SerializeField]
-        private string defaultJogStrafeRightClip;
-
-        [SerializeField]
-        private string defaultStrafeForwardRightClip;
-
-        [SerializeField]
-        private string defaultJogStrafeForwardRightClip;
-
-        [SerializeField]
-        private string defaultStrafeForwardLeftClip;
-
-        [SerializeField]
-        private string defaultJogStrafeForwardLeftClip;
-
-        [SerializeField]
-        private string defaultStrafeBackLeftClip;
-
-        [SerializeField]
-        private string defaultJogStrafeBackLeftClip;
-
-        [SerializeField]
-        private string defaultStrafeBackRightClip;
-
-        [SerializeField]
-        private string defaultJogStrafeBackRightClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeLeftClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeLeftClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeRightClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeRightClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeForwardRightClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeForwardRightClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeForwardLeftClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeForwardLeftClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeBackLeftClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeBackLeftClip;
-
-        [SerializeField]
-        private string defaultCombatStrafeBackRightClip;
-
-        [SerializeField]
-        private string defaultCombatJogStrafeBackRightClip;
-
-        [SerializeField]
-        private string defaultStunnedClip;
-
-        [SerializeField]
-        private string defaultCombatStunnedClip;
-
-        [SerializeField]
-        private string defaultDeathClip;
-
-        [SerializeField]
-        private string defaultLevitatedClip;
-
-        [SerializeField]
-        private string defaultReviveClip;
+        private AnimationProfile systemAnimationProfile;
 
 
         [Header("SYSTEM BAR")]
@@ -228,8 +92,9 @@ namespace AnyRPG {
 
         [Header("CHARACTER CONFIGURATION")]
 
+        [FormerlySerializedAs("defaultAttackAnimationProfile")]
         [SerializeField]
-        private AnimationProfile defaultAttackAnimationProfile;
+        private AnimationProfile defaultAnimationProfile;
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
@@ -472,59 +337,12 @@ namespace AnyRPG {
         public Sprite MyMusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
         public Sprite MyMusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
         public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
-        public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
+        public AnimationProfile MyDefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
         public Color MyDefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color MyDefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
-        public string MyDefaultAttackClip { get => defaultAttackClip; set => defaultAttackClip = value; }
-        public string MyDefaultCastClip { get => defaultCastClip; set => defaultCastClip = value; }
-        public string MyDefaultReviveClip { get => defaultReviveClip; set => defaultReviveClip = value; }
         public Color MyDefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
         public List<string> MyLoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
-        public string MyDefaultMoveForwardClip { get => defaultMoveForwardClip; set => defaultMoveForwardClip = value; }
-        public string MyDefaultMoveForwardFastClip { get => defaultMoveForwardFastClip; set => defaultMoveForwardFastClip = value; }
-        public string MyDefaultCombatMoveForwardClip { get => defaultCombatMoveForwardClip; set => defaultCombatMoveForwardClip = value; }
-        public string MyDefaultCombatMoveForwardFastClip { get => defaultCombatMoveForwardFastClip; set => defaultCombatMoveForwardFastClip = value; }
-        public string MyDefaultMoveBackClip { get => defaultMoveBackClip; set => defaultMoveBackClip = value; }
-        public string MyDefaultMoveBackFastClip { get => defaultMoveBackFastClip; set => defaultMoveBackFastClip = value; }
-        public string MyDefaultCombatMoveBackClip { get => defaultCombatMoveBackClip; set => defaultCombatMoveBackClip = value; }
-        public string MyDefaultCombatMoveBackFastClip { get => defaultCombatMoveBackFastClip; set => defaultCombatMoveBackFastClip = value; }
-        public string MyDefaultJumpClip { get => defaultJumpClip; set => defaultJumpClip = value; }
-        public string MyDefaultCombatJumpClip { get => defaultCombatJumpClip; set => defaultCombatJumpClip = value; }
-        public string MyDefaultIdleClip { get => defaultIdleClip; set => defaultIdleClip = value; }
-        public string MyDefaultCombatIdleClip { get => defaultCombatIdleClip; set => defaultCombatIdleClip = value; }
-        public string MyDefaultLandClip { get => defaultLandClip; set => defaultLandClip = value; }
-        public string MyDefaultCombatLandClip { get => defaultCombatLandClip; set => defaultCombatLandClip = value; }
-        public string MyDefaultFallClip { get => defaultFallClip; set => defaultFallClip = value; }
-        public string MyDefaultCombatFallClip { get => defaultCombatFallClip; set => defaultCombatFallClip = value; }
-        public string MyDefaultStrafeLeftClip { get => defaultStrafeLeftClip; set => defaultStrafeLeftClip = value; }
-        public string MyDefaultJogStrafeLeftClip { get => defaultJogStrafeLeftClip; set => defaultJogStrafeLeftClip = value; }
-        public string MyDefaultStrafeRightClip { get => defaultStrafeRightClip; set => defaultStrafeRightClip = value; }
-        public string MyDefaultJogStrafeRightClip { get => defaultJogStrafeRightClip; set => defaultJogStrafeRightClip = value; }
-        public string MyDefaultStrafeForwardRightClip { get => defaultStrafeForwardRightClip; set => defaultStrafeForwardRightClip = value; }
-        public string MyDefaultJogStrafeForwardRightClip { get => defaultJogStrafeForwardRightClip; set => defaultJogStrafeForwardRightClip = value; }
-        public string MyDefaultStrafeForwardLeftClip { get => defaultStrafeForwardLeftClip; set => defaultStrafeForwardLeftClip = value; }
-        public string MyDefaultJogStrafeForwardLeftClip { get => defaultJogStrafeForwardLeftClip; set => defaultJogStrafeForwardLeftClip = value; }
-        public string MyDefaultStrafeBackLeftClip { get => defaultStrafeBackLeftClip; set => defaultStrafeBackLeftClip = value; }
-        public string MyDefaultJogStrafeBackLeftClip { get => defaultJogStrafeBackLeftClip; set => defaultJogStrafeBackLeftClip = value; }
-        public string MyDefaultStrafeBackRightClip { get => defaultStrafeBackRightClip; set => defaultStrafeBackRightClip = value; }
-        public string MyDefaultJogStrafeBackRightClip { get => defaultJogStrafeBackRightClip; set => defaultJogStrafeBackRightClip = value; }
-        public string MyDefaultCombatStrafeLeftClip { get => defaultCombatStrafeLeftClip; set => defaultCombatStrafeLeftClip = value; }
-        public string MyDefaultCombatJogStrafeLeftClip { get => defaultCombatJogStrafeLeftClip; set => defaultCombatJogStrafeLeftClip = value; }
-        public string MyDefaultCombatStrafeRightClip { get => defaultCombatStrafeRightClip; set => defaultCombatStrafeRightClip = value; }
-        public string MyDefaultCombatJogStrafeRightClip { get => defaultCombatJogStrafeRightClip; set => defaultCombatJogStrafeRightClip = value; }
-        public string MyDefaultCombatStrafeForwardRightClip { get => defaultCombatStrafeForwardRightClip; set => defaultCombatStrafeForwardRightClip = value; }
-        public string MyDefaultCombatJogStrafeForwardRightClip { get => defaultCombatJogStrafeForwardRightClip; set => defaultCombatJogStrafeForwardRightClip = value; }
-        public string MyDefaultCombatStrafeForwardLeftClip { get => defaultCombatStrafeForwardLeftClip; set => defaultCombatStrafeForwardLeftClip = value; }
-        public string MyDefaultCombatJogStrafeForwardLeftClip { get => defaultCombatJogStrafeForwardLeftClip; set => defaultCombatJogStrafeForwardLeftClip = value; }
-        public string MyDefaultCombatStrafeBackLeftClip { get => defaultCombatStrafeBackLeftClip; set => defaultCombatStrafeBackLeftClip = value; }
-        public string MyDefaultCombatJogStrafeBackLeftClip { get => defaultCombatJogStrafeBackLeftClip; set => defaultCombatJogStrafeBackLeftClip = value; }
-        public string MyDefaultCombatStrafeBackRightClip { get => defaultCombatStrafeBackRightClip; set => defaultCombatStrafeBackRightClip = value; }
-        public string MyDefaultCombatJogStrafeBackRightClip { get => defaultCombatJogStrafeBackRightClip; set => defaultCombatJogStrafeBackRightClip = value; }
-        public string MyDefaultStunnedClip { get => defaultStunnedClip; set => defaultStunnedClip = value; }
-        public string MyDefaultCombatStunnedClip { get => defaultCombatStunnedClip; set => defaultCombatStunnedClip = value; }
-        public string MyDefaultDeathClip { get => defaultDeathClip; set => defaultDeathClip = value; }
-        public string MyDefaultLevitatedClip { get => defaultLevitatedClip; set => defaultLevitatedClip = value; }
         public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
         public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
         public CurrencyGroup MyDefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
@@ -535,6 +353,7 @@ namespace AnyRPG {
         public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
         public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
         public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
+        public AnimationProfile MySystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -616,8 +435,8 @@ namespace AnyRPG {
                 return;
             }
             
-            if (defaultAttackAnimationProfile == null) {
-                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT ATTACK ANIMATION PROFILE SET.  CHECK INSPECTOR");
+            if (defaultAnimationProfile == null) {
+                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT ANIMATION PROFILE SET.  CHECK INSPECTOR");
                 return;
             }
         }

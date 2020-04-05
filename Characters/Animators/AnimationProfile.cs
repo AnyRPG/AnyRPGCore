@@ -2,6 +2,7 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Animation Profile", menuName = "AnyRPG/Animation/Profile")]
@@ -18,11 +19,16 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressAdjustAnimatorSpeed = false;
 
+        [FormerlySerializedAs("animationClips")]
         [SerializeField]
-        private List<AnimationClip> animationClips = new List<AnimationClip>();
+        private List<AnimationClip> attackClips = new List<AnimationClip>();
 
         [SerializeField]
-        private AnimationClip[] takeDamageClips;
+        private List<AnimationClip> castClips = new List<AnimationClip>();
+
+        [SerializeField]
+        private List<AnimationClip> takeDamageClips = new List<AnimationClip>();
+
         [SerializeField]
         private AnimationClip jumpClip;
         [SerializeField]
@@ -123,8 +129,9 @@ namespace AnyRPG {
         private AnimationClip levitatedClip;
 
         //public string MyProfileName { get => profileName; set => profileName = value; }
-        public List<AnimationClip> MyAnimationClips { get => animationClips; set => animationClips = value; }
-        public AnimationClip[] MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
+        public List<AnimationClip> MyAttackClips { get => attackClips; set => attackClips = value; }
+        public List<AnimationClip> MyCastClips { get => attackClips; set => attackClips = value; }
+        public List<AnimationClip> MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
         public AnimationClip MyJumpClip { get => jumpClip; set => jumpClip = value; }
         public AnimationClip MyFallClip { get => fallClip; set => fallClip = value; }
         public AnimationClip MyLandClip { get => landClip; set => landClip = value; }
@@ -145,7 +152,7 @@ namespace AnyRPG {
         public AnimationClip MyDeathClip { get => deathClip; set => deathClip = value; }
         public AnimationClip MyReviveClip { get => reviveClip; set => reviveClip = value; }
         public AnimationClip MyStunnedClip { get => stunnedClip; set => stunnedClip = value; }
-        public AnimationClip MyLevitatedClip { get => stunnedClip; set => stunnedClip = value; }
+        public AnimationClip MyLevitatedClip { get => levitatedClip; set => levitatedClip = value; }
         public AnimationClip MyJogStrafeLeftClip { get => jogStrafeLeftClip; set => jogStrafeLeftClip = value; }
         public AnimationClip MyJogStrafeRightClip { get => jogStrafeRightClip; set => jogStrafeRightClip = value; }
         public AnimationClip MyJogStrafeForwardLeftClip { get => jogStrafeForwardLeftClip; set => jogStrafeForwardLeftClip = value; }

@@ -73,7 +73,7 @@ namespace AnyRPG {
         */
 
         //public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
-        public AnimationClip MyCastingAnimationClip { get => (animationProfile != null && animationProfile.MyAnimationClips != null && animationProfile.MyAnimationClips.Count > 0 ? animationProfile.MyAnimationClips[0] : null); }
+        public AnimationClip MyCastingAnimationClip { get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null); }
 
         [SerializeField]
         protected int requiredLevel = 1;
@@ -208,7 +208,7 @@ namespace AnyRPG {
         public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
         public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> MyAnimationClips { get => (animationProfile != null ? animationProfile.MyAnimationClips : null); }
+        public List<AnimationClip> MyAnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
         public int MyMaxRange { get => maxRange; set => maxRange = value; }
         public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }

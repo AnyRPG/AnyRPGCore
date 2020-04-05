@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects() {
-            Debug.Log(gameObject.name + "CraftingNode.SetupScriptableObjects()");
+            //Debug.Log(gameObject.name + "CraftingNode.SetupScriptableObjects()");
             base.SetupScriptableObjects();
             if (abilityName != null && abilityName != string.Empty) {
                 BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
