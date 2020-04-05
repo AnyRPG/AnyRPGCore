@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         public bool MyPrerequisitesMet {
             get {
-                //Debug.Log(gameObject.name + ".InteractableOption.MyPrerequisitesMet");
+                //Debug.Log(gameObject.name + ".Spawnable.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -218,6 +218,15 @@ namespace AnyRPG {
                     Debug.LogError(gameObject.name + ".Spawnable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);
                 }
             }
+
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                    }
+                }
+            }
+
         }
 
 
