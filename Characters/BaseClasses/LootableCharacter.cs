@@ -46,14 +46,14 @@ namespace AnyRPG {
             characterUnit = GetComponent<CharacterUnit>();
         }
 
-        private void CreateEventSubscriptions() {
+        public override void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            base.CreateEventSubscriptions();
             characterUnit.MyCharacter.MyCharacterStats.BeforeDie += HandleDeath;
             characterUnit.MyCharacter.MyCharacterStats.OnReviveComplete += HandleRevive;
-            eventSubscriptionsInitialized = true;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -200,10 +200,10 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
+            //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.MyCharacter.MyCharacterStats.IsAlive) {
-                Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
+                //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source);
 
                 List<LootDrop> drops = new List<LootDrop>();
@@ -226,13 +226,13 @@ namespace AnyRPG {
                 // don't need anymore because of spherecast, not interactables
 
                 if (drops.Count > 0) {
-                    Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
+                    //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     LootUI.MyInstance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.MyInstance.lootWindow.OpenWindow();
                     return true;
                 } else {
-                    Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
+                    //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     return false;
                 }
             }

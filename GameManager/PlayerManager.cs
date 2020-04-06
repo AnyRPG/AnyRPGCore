@@ -211,7 +211,6 @@ namespace AnyRPG {
             if (newCharacterClass != null) {
                 MyCharacter.ChangeCharacterClass(newCharacterClass);
             }
-            SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
         }
 
         public void SetPlayerCharacterSpecialization(ClassSpecialization newClassSpecialization) {
@@ -219,7 +218,6 @@ namespace AnyRPG {
             if (newClassSpecialization != null) {
                 MyCharacter.ChangeClassSpecialization(newClassSpecialization);
             }
-            SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
         }
 
         public void SetPlayerFaction(Faction newFaction) {
@@ -227,7 +225,7 @@ namespace AnyRPG {
             if (newFaction != null) {
                 MyCharacter.JoinFaction(newFaction);
             }
-            SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+            SystemEventManager.MyInstance.NotifyOnReputationChange();
         }
 
         public void SetUMAPrefab() {

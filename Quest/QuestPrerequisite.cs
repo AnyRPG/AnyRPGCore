@@ -7,8 +7,14 @@ namespace AnyRPG {
     [System.Serializable]
     public class QuestPrerequisite : IPrerequisite {
 
+        public event System.Action OnStatusUpdated = delegate { };
+
+
         [SerializeField]
         private string prerequisiteName = string.Empty;
+
+        private bool prerequisiteMet = false;
+
 
         private Quest prerequisiteQuest = null;
 
@@ -19,22 +25,35 @@ namespace AnyRPG {
         [SerializeField]
         private bool requireTurnedIn = true;
 
-        public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("QuestPrerequisite.IsMet()");
+        public void HandleQuestStatusUpdated() {
+            UpdateStatus();
+        }
+
+        public void UpdateStatus() {
+            bool originalResult = prerequisiteMet;
             if (prerequisiteQuest == null) {
                 Debug.Log("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
-                return false;
+                return;
             }
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
-                return true;
+                prerequisiteMet = true;
+            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
+                prerequisiteMet = true;
+            } else if (!requireTurnedIn && !requireComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
+                prerequisiteMet = true;
+            } else {
+                prerequisiteMet = false;
             }
-            if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
-                return true;
+            if (prerequisiteMet != originalResult) {
+                OnStatusUpdated();
             }
-            if (!requireTurnedIn && !requireComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
-                return true;
-            }
-            return false;
+        }
+
+
+
+        public virtual bool IsMet(BaseCharacter baseCharacter) {
+            //Debug.Log("QuestPrerequisite.IsMet()");
+            return prerequisiteMet;
         }
 
         public void SetupScriptableObjects() {
@@ -50,6 +69,11 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): prerequisiteName was empty while inititalizing a quest prerequisite.  CHECK INSPECTOR");
             }
+            prerequisiteQuest.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+        }
+
+        public void CleanupScriptableObjects() {
+            prerequisiteQuest.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
         }
 
     }

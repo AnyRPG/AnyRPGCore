@@ -44,18 +44,12 @@ namespace AnyRPG {
             Spawn();
         }
 
-        private void CreateEventSubscriptions() {
+        public override void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePrerequisiteUpdates;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".DialogInteractable.CreateEventSubscriptions(): player unit is already spawned.");
-                HandlePrerequisiteUpdates();
-            } else {
-                //Debug.Log(gameObject.name + ".DialogInteractable.CreateEventSubscriptions(): player unit is not yet spawned");
-            }
+            base.CreateEventSubscriptions();
             eventSubscriptionsInitialized = true;
         }
 

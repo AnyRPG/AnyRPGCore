@@ -52,6 +52,7 @@ namespace AnyRPG {
                 yield return new WaitForSeconds(1);
             }
             interactable.Spawn();
+            // ENABLE MINIMAP ICON AFTER SPAWN
             HandlePrerequisiteUpdates();
         }
 
@@ -72,6 +73,7 @@ namespace AnyRPG {
             //Debug.Log("GatheringNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
             CreateEventSubscriptions();
+            LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
             PopupWindowManager.MyInstance.lootWindow.OpenWindow();
         }
 
@@ -79,13 +81,14 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void CreateEventSubscriptions() {
+        public override void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
-            LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
+            //LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
             eventSubscriptionsInitialized = true;
         }
 

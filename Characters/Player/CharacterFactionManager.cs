@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         // adds to existing amount or sets to amount if not existing
-        public virtual void AddReputation(Faction faction, int reputationAmount) {
+        public virtual void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
             //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + ")");
             //bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in MyDispositionDictionary) {
@@ -64,7 +64,9 @@ namespace AnyRPG {
             _factionDisposition.MyFaction = faction;
             _factionDisposition.disposition = Faction.RelationWith(baseCharacter, faction) + (float)reputationAmount;
             MyDispositionDictionary.Add(_factionDisposition);
-            OnReputationChange();
+            if (notify) {
+                OnReputationChange();
+            }
         }
 
         public bool HasReputationModifier(Faction faction) {

@@ -7,28 +7,47 @@ namespace AnyRPG {
     [System.Serializable]
     public class LevelPrerequisite : IPrerequisite {
 
+        public event System.Action OnStatusUpdated = delegate { };
+
         [SerializeField]
         private int requiredLevel = 1;
 
+        //private PrerequisiteConditions prerequisiteConditions = null;
+
+        private bool prerequisiteMet = false;
+
+        public void UpdateStatus() {
+            bool originalResult = prerequisiteMet;
+            bool checkResult = (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel >= requiredLevel);
+            if (checkResult != originalResult) {
+                prerequisiteMet = checkResult;
+                OnStatusUpdated();
+            }
+        }
+
+
+        public void HandleLevelChanged(int newLevel) {
+            UpdateStatus();
+        }
+
+
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("LevelPrerequisite.IsMet()");
-            if (baseCharacter == null) {
-                //Debug.Log("LevelPrerequisite.IsMet(): baseCharacter is null!!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterStats == null) {
-                //Debug.Log("LevelPrerequisite.IsMet(): baseCharacter.MyCharacterStats is null!!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterStats.MyLevel >= requiredLevel) {
-                return true;
-            }
-            return false;
+            
+            return prerequisiteMet;
         }
 
         public void SetupScriptableObjects() {
-
+            //this.prerequisiteConditions = prerequisiteConditions;
+            SystemEventManager.MyInstance.OnLevelChanged += HandleLevelChanged;
         }
+
+        public void CleanupScriptableObjects() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnLevelChanged -= HandleLevelChanged;
+            }
+        }
+
     }
 
 }

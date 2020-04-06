@@ -51,30 +51,6 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        private void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePrerequisiteUpdates;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".BehaviorInteractable.CreateEventSubscriptions(): player unit is already spawned.");
-                HandlePrerequisiteUpdates();
-            } else {
-                //Debug.Log(gameObject.name + ".BehaviorInteractable.CreateEventSubscriptions(): player unit is not yet spawned");
-            }
-            eventSubscriptionsInitialized = true;
-        }
-
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePrerequisiteUpdates;
-            }
-            eventSubscriptionsInitialized = false;
-        }
-
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
@@ -269,8 +245,16 @@ namespace AnyRPG {
                     }
                     if (tmpBehaviorProfile != null) {
                         behaviorList.Add(tmpBehaviorProfile);
+                        tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
                     }
                 }
+            }
+        }
+
+        public override void CleanupScriptableObjects() {
+            base.CleanupScriptableObjects();
+            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+                behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
             }
         }
 
@@ -280,6 +264,13 @@ namespace AnyRPG {
 
         public void StartBackgroundMusic() {
             LevelManager.MyInstance.PlayLevelSounds();
+        }
+
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+                behaviorProfile.UpdatePrerequisites();
+            }
         }
 
 

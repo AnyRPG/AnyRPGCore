@@ -10,7 +10,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     //[System.Serializable]
     [CreateAssetMenu(fileName = "New Quest", menuName = "AnyRPG/Quests/Quest")]
-    public class Quest : DescribableResource {
+    public class Quest : DescribableResource, IPrerequisiteOwner {
+
+        public event System.Action OnQuestStatusUpdated = delegate { };
+
 
         [SerializeField]
         private bool isAchievement = false;
@@ -208,11 +211,14 @@ namespace AnyRPG {
             get {
                 return turnedIn;
             }
+        }
 
-            set {
-                turnedIn = value;
-                //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
+        public void SetTurnedIn(bool turnedIn, bool notify = true) {
+            this.turnedIn = turnedIn;
+            //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
+            if (notify) {
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
+                OnQuestStatusUpdated();
             }
         }
 
@@ -253,6 +259,7 @@ namespace AnyRPG {
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
             SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
+            OnQuestStatusUpdated();
         }
 
         public void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
@@ -275,6 +282,7 @@ namespace AnyRPG {
             markedComplete = true;
             if (notifyOnUpdate == true) {
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
+                OnQuestStatusUpdated();
             }
         }
 
@@ -411,6 +419,7 @@ namespace AnyRPG {
             if (!markedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
+                OnQuestStatusUpdated();
             }
         }
 
@@ -490,6 +499,13 @@ namespace AnyRPG {
                 }
             }
             return returnList;
+        }
+
+        // force prerequisite status update outside normal event notification
+        public void UpdatePrerequisites() {
+            foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
+                conditions.UpdatePrerequisites();
+            }
         }
 
         public override void SetupScriptableObjects() {
@@ -572,10 +588,20 @@ namespace AnyRPG {
             }
             //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.SetupScriptableObjects();
+                conditions.SetupScriptableObjects(this);
             }
 
         }
 
+        public override void CleanupScriptableObjects() {
+            base.CleanupScriptableObjects();
+            foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
+                conditions.CleanupScriptableObjects();
+            }
+        }
+
+        public void HandlePrerequisiteUpdates() {
+            OnQuestStatusUpdated();
+        }
     }
 }

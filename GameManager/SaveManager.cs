@@ -677,7 +677,7 @@ namespace AnyRPG {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.MyFaction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition);
+                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition, false);
                 //counter++;
             }
         }
@@ -875,7 +875,7 @@ namespace AnyRPG {
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
 
             // testing - move here to prevent learning abilities and filling up bars
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass));
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
             PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
 

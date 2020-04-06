@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
         #endregion
 
-        public event System.Action OnPrerequisiteUpdated = delegate { };
+        //public event System.Action OnPrerequisiteUpdated = delegate { };
         public event System.Action OnQuestStatusUpdated = delegate { };
         public event System.Action OnAfterQuestStatusUpdated = delegate { };
         public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
@@ -31,6 +31,8 @@ namespace AnyRPG {
         public event System.Action<Skill> OnSkillListChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action OnReputationChange = delegate { };
+        public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+
         public event System.Action<string> OnInteractionStarted = delegate { };
         public event System.Action<InteractableOption> OnInteractionWithOptionStarted = delegate { };
         public event System.Action<Interactable> OnInteractionCompleted = delegate { };
@@ -106,6 +108,10 @@ namespace AnyRPG {
             OnEquipmentChanged(newEquipment, oldEquipment);
         }
 
+        public void NotifyOnClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            OnClassChange(newCharacterClass, oldCharacterClass);
+        }
+
         /*
         public void NotifyOnEquipmentRefresh(Equipment newEquipment) {
             OnEquipmentRefresh(newEquipment);
@@ -179,7 +185,7 @@ namespace AnyRPG {
 
         public void NotifyOnDialogCompleted(Dialog dialog) {
             OnDialogCompleted(dialog);
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
 
         }
 
@@ -203,17 +209,12 @@ namespace AnyRPG {
         public void NotifyOnReputationChange() {
             //Debug.Log("SystemEventManager.NotifyOnReputationChange()");
             OnReputationChange();
-            OnPrerequisiteUpdated();
-        }
-
-        public void NotifyOnPrerequisiteUpdated() {
-            //Debug.Log("SystemEventManager.NotifyPrerequisiteUpdated");
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnLevelChanged(int newLevel) {
             OnLevelChanged(newLevel);
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnQuestStatusUpdated() {
@@ -225,13 +226,13 @@ namespace AnyRPG {
             OnQuestStatusUpdated();
             OnAfterQuestStatusUpdated();
             // having these two separate seems to be ok for now.  the items that react to the first event do not react to the second, nor do they send prerequisiteupdates so no double calls should happen
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnAbilityListChanged(BaseAbility newAbility) {
             //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
             OnAbilityListChanged(newAbility);
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnAbilityUsed(BaseAbility ability) {
@@ -241,7 +242,7 @@ namespace AnyRPG {
 
         public void NotifyOnSkillListChanged(Skill skill) {
             OnSkillListChanged(skill);
-            OnPrerequisiteUpdated();
+            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnItemCountChanged(Item item) {

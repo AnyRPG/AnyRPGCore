@@ -33,9 +33,9 @@ namespace AnyRPG {
 
         protected override void Start() {
             //Debug.Log(gameObject.name + ".QuestGiver.Start()");
-            base.Start();
-
             InitializeQuestGiver();
+
+            base.Start();
 
             CreateEventSubscriptions();
 
@@ -43,26 +43,17 @@ namespace AnyRPG {
             UpdateQuestStatus();
         }
 
-        private void CreateEventSubscriptions() {
+        public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
-                HandlePlayerUnitSpawn();
-            }
-
+            base.CreateEventSubscriptions();
             namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
-            eventSubscriptionsInitialized = true;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            }
             if (namePlateUnit != null) {
                 namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
             }
@@ -111,11 +102,14 @@ namespace AnyRPG {
             questGiverInitialized = true;
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public override void HandlePlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
+            base.HandlePlayerUnitSpawn();
             InitializeQuestGiver();
-
-            HandlePrerequisiteUpdates();
+            foreach (QuestNode questNode in quests) {
+                questNode.MyQuest.UpdatePrerequisites();
+            }
+            //HandlePrerequisiteUpdates();
         }
 
         public void InitWindow(ICloseableWindowContents questGiverUI) {
@@ -340,11 +334,18 @@ namespace AnyRPG {
                     foreach (QuestNode questNode in questGiverProfile.MyQuests) {
                         //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
                         quests.Add(questNode);
-                        
+                        questNode.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
                     }
                 }
             }
 
+        }
+
+        public override void CleanupScriptableObjects() {
+            base.CleanupScriptableObjects();
+            foreach (QuestNode questNode in quests) {
+                questNode.MyQuest.OnQuestStatusUpdated -= HandlePrerequisiteUpdates;
+            }
         }
     }
 

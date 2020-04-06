@@ -207,13 +207,14 @@ namespace AnyRPG {
         }
 
 
-        public void CreateEventSubscriptions() {
+        public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): CREATE EVENT SUBSCRIPTIONS");
 
             if (eventSubscriptionsInitialized) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): ALREADY SUBSCRIBED, EXIT");
                 return;
             }
+            base.CreateEventSubscriptions();
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += HandleDie;
                 //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): subscribing to HEALTH BAR NEEDS UPDATE");

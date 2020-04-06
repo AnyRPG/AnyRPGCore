@@ -9,7 +9,10 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
     //[System.Serializable]
     [CreateAssetMenu(fileName = "New Dialog", menuName = "AnyRPG/Dialog/Dialog")]
-    public class Dialog : DescribableResource {
+    public class Dialog : DescribableResource, IPrerequisiteOwner {
+
+        public event System.Action OnDialogCompleted = delegate { };
+
 
         [SerializeField]
         private string audioProfileName = string.Empty;
@@ -41,6 +44,7 @@ namespace AnyRPG {
                 turnedIn = value;
                 if (turnedIn == true) {
                     SystemEventManager.MyInstance.NotifyOnDialogCompleted(this);
+                    OnDialogCompleted();
                 }
             }
         }
@@ -57,6 +61,8 @@ namespace AnyRPG {
             }
         }
 
+
+
         public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
         public AudioProfile MyAudioProfile { get => audioProfile; set => audioProfile = value; }
@@ -67,7 +73,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
                 }
             }
@@ -79,6 +85,21 @@ namespace AnyRPG {
                     Debug.LogError("Dialog.SetupScriptableObjects(): COULD NOT FIND audioProfile " + audioProfileName + " WHILE INITIALIZING " + MyName);
                 }
             }
+        }
+
+        public override void CleanupScriptableObjects() {
+            base.CleanupScriptableObjects();
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+        }
+
+        public void HandlePrerequisiteUpdates() {
+            
         }
     }
 }

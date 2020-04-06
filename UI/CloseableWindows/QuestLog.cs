@@ -46,7 +46,8 @@ namespace AnyRPG {
             }
             if (!questSaveData.inLog) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
-                quest.TurnedIn = questSaveData.turnedIn;
+                //quest.TurnedIn = questSaveData.turnedIn;
+                quest.SetTurnedIn(questSaveData.turnedIn, false);
                 return;
             }
 
@@ -163,7 +164,7 @@ namespace AnyRPG {
             //Debug.Log("QuestLog.TurnInQuest()");
             // REMOVE FIRST SO WHEN TURNEDIN TRIGGERS STATUSUPDATED CALL, QUEST DOES NOT EXIST IN LOG SO SUBSCRIBERS GET CORRECT STATUS
             RemoveQuest(oldQuest);
-            oldQuest.TurnedIn = true;
+            oldQuest.SetTurnedIn(true);
             oldQuest.OnAbandonQuest();
             // moved here from questgiverUI
         }

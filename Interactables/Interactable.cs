@@ -9,6 +9,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class Interactable : Spawnable, IDescribable {
 
+        public event System.Action OnPrerequisiteUpdates = delegate { };
+
         // the physical interactable to spawn
         [SerializeField]
         private string interactableName = string.Empty;
@@ -218,10 +220,14 @@ namespace AnyRPG {
                 return;
             }
             InstantiateMiniMapIndicator();
+            /*
             foreach (IInteractable _interactable in interactables) {
                 _interactable.HandlePrerequisiteUpdates();
             }
+            */
             UpdateNamePlateImage();
+
+            OnPrerequisiteUpdates();
         }
 
         public void UpdateNamePlateImage() {

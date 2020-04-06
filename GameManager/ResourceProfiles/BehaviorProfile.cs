@@ -9,7 +9,10 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
     //[System.Serializable]
     [CreateAssetMenu(fileName = "New Behavior Profile", menuName = "AnyRPG/BehaviorProfile")]
-    public class BehaviorProfile : DescribableResource {
+    public class BehaviorProfile : DescribableResource, IPrerequisiteOwner {
+
+        public event System.Action OnPrerequisiteUpdates = delegate { };
+
 
         [SerializeField]
         private List<BehaviorNode> behaviorNodes = new List<BehaviorNode>();
@@ -23,26 +26,6 @@ namespace AnyRPG {
 
         // track whether it is completed to prevent it from repeating if it is automatic
         private bool completed = false;
-
-        /*
-        /// <summary>
-        /// Track whether this dialog has been turned in
-        /// </summary>
-        private bool turnedIn = false;
-
-        public bool TurnedIn {
-            get {
-                return turnedIn;
-            }
-
-            set {
-                turnedIn = value;
-                if (turnedIn == true) {
-                    SystemEventManager.MyInstance.NotifyOnDialogCompleted(this);
-                }
-            }
-        }
-        */
 
         public bool MyPrerequisitesMet {
             get {
@@ -66,15 +49,42 @@ namespace AnyRPG {
             } 
         }
 
+        public void HandlePrerequisiteUpdates() {
+            // call back to owner
+            OnPrerequisiteUpdates();
+        }
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
                 }
             }
+        }
+
+        public override void CleanupScriptableObjects() {
+            base.CleanupScriptableObjects();
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+        }
+
+        public void UpdatePrerequisites() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+
         }
     }
 }

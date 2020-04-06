@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class Loot {
+    public class Loot : IPrerequisiteOwner {
 
         [SerializeField]
         private string itemName = string.Empty;
@@ -56,12 +56,25 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
                 }
             }
         }
 
+        public void CleanupScriptableObjects() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+        }
+
+        public void HandlePrerequisiteUpdates() {
+            // do nothing
+        }
     }
 
 }

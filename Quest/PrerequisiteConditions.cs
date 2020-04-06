@@ -37,8 +37,20 @@ namespace AnyRPG {
         [SerializeField]
         private List<FactionDisposition> factionDispositionPrerequisites = new List<FactionDisposition>();
 
+        [SerializeField]
+        private List<FactionPrerequisite> factionPrerequisites = new List<FactionPrerequisite>();
+
+        private IPrerequisiteOwner prerequisiteOwner = null;
+
         public bool MyReverseMatch {
             get => reverseMatch;
+        }
+
+        public void HandlePrerequisiteUpdates() {
+            if (IsMet() && prerequisiteOwner != null) {
+                // do callback to the owning object
+                prerequisiteOwner.HandlePrerequisiteUpdates();
+            }
         }
 
         public virtual bool IsMet() {
@@ -163,10 +175,27 @@ namespace AnyRPG {
                 returnValue = true;
             }
             tempCount = 0;
+            /*
             foreach (FactionDisposition factionDisposition in factionDispositionPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
                 bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.MyFaction) >= factionDisposition.disposition);
+                if (requireAny && checkResult == true) {
+                    returnValue = true;
+                    break;
+                }
+                if (!checkResult && requireAny == false) {
+                    falseCount++;
+                    break;
+                } else if (checkResult && requireAny == false) {
+                    tempCount++;
+                }
+            }
+            */
+            foreach (FactionPrerequisite factionPrerequisite in factionPrerequisites) {
+                //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
+                prerequisiteCount++;
+                bool checkResult = factionPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -192,27 +221,97 @@ namespace AnyRPG {
             return reverseMatch ? !returnValue : returnValue;
         }
 
-        public void SetupScriptableObjects() {
+        // force prerequisite status update outside normal event notification
+        public void UpdatePrerequisites() {
+            foreach (IPrerequisite prerequisite in levelPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in characterClassPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in questPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in dialogPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in abilityPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+            foreach (IPrerequisite prerequisite in factionPrerequisites) {
+                prerequisite.UpdateStatus();
+            }
+        }
+
+        public void SetupScriptableObjects(IPrerequisiteOwner prerequisiteOwner) {
+            this.prerequisiteOwner = prerequisiteOwner;
+
             foreach (IPrerequisite prerequisite in levelPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in characterClassPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in questPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in dialogPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in abilityPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
+            foreach (IPrerequisite prerequisite in factionPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
+            }
+            /*
             foreach (FactionDisposition prerequisite in factionDispositionPrerequisites) {
                 prerequisite.SetupScriptableObjects();
+            }
+            */
+        }
+
+        public void CleanupScriptableObjects() {
+            foreach (IPrerequisite prerequisite in levelPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in characterClassPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in questPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in dialogPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in abilityPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in factionPrerequisites) {
+                prerequisite.CleanupScriptableObjects();
+                prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
             }
         }
 

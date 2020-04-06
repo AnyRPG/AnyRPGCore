@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class DialogPrerequisite : IPrerequisite {
+    public class FactionPrerequisite : IPrerequisite {
+
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -13,24 +14,26 @@ namespace AnyRPG {
         [SerializeField]
         private string prerequisiteName = string.Empty;
 
+        [SerializeField]
+        private float prerequisiteDisposition = 0f;
+
+
         private bool prerequisiteMet = false;
 
 
-        private Dialog prerequisiteDialog = null;
+        private Faction prerequisiteFaction = null;
+
+        public void HandleReputationChange() {
+            UpdateStatus();
+        }
 
         public void UpdateStatus() {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (prerequisiteDialog.TurnedIn == true);
+            bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, prerequisiteFaction) >= prerequisiteDisposition);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 OnStatusUpdated();
             }
-        }
-
-
-        public void HandleDialogCompleted() {
-            prerequisiteMet = true;
-            OnStatusUpdated();
         }
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
@@ -48,17 +51,18 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            prerequisiteDialog = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                prerequisiteFaction = SystemFactionManager.MyInstance.GetResource(prerequisiteName);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }
-            prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;
+            SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
         }
 
         public void CleanupScriptableObjects() {
-            prerequisiteDialog.OnDialogCompleted -= HandleDialogCompleted;
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
+            }
         }
     }
 

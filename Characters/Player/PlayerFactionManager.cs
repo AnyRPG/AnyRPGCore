@@ -6,9 +6,11 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerFactionManager : CharacterFactionManager {
 
-        public override void AddReputation(Faction faction, int reputationAmount) {
+        public override void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
             base.AddReputation(faction, reputationAmount);
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            if (notify) {
+                SystemEventManager.MyInstance.NotifyOnReputationChange();
+            }
         }
 
         public override void SetReputation(Faction newFaction) {

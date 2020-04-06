@@ -7,29 +7,32 @@ namespace AnyRPG {
     [System.Serializable]
     public class TradeSkillPrerequisite : IPrerequisite {
 
+        public event System.Action OnStatusUpdated = delegate { };
+
         [SerializeField]
         private string prerequisiteName = string.Empty;
 
+        private bool prerequisiteMet = false;
+
         private Skill prerequisiteSkill = null;
+
+        public void UpdateStatus() {
+            bool originalResult = prerequisiteMet;
+            bool checkResult = PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(prerequisiteSkill);
+            if (checkResult != originalResult) {
+                prerequisiteMet = checkResult;
+                OnStatusUpdated();
+            }
+        }
+
+        public void HandleSkillListChanged(Skill newSkill) {
+            UpdateStatus();
+        }
+
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("TradeSkillPrerequisite.IsMet()");
-            if (baseCharacter == null) {
-                //Debug.Log("TradeSkillPrerequisite.IsMet(): baseCharacter is null!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterSkillManager == null) {
-                //Debug.Log("TradeSkillPrerequisite.IsMet(): baseCharacter.MyCharacterSkillManager is null!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterSkillManager.MySkillList.Count == 0) {
-                //Debug.Log("TradeSkillPrerequisite.IsMet(): baseCharacter.MyCharacterSkillManager.MySkillList is null!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterSkillManager.HasSkill(prerequisiteSkill)) {
-                return true;
-            }
-            return false;
+            return prerequisiteMet;
         }
 
         public void SetupScriptableObjects() {
@@ -41,6 +44,13 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
                 }
+            }
+            SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
+        }
+
+        public void CleanupScriptableObjects() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class Spawnable : MonoBehaviour {
+    public class Spawnable : MonoBehaviour, IPrerequisiteOwner {
 
         [SerializeField]
         protected string prefabProfileName;
@@ -92,7 +92,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
+            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
 
@@ -102,7 +102,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
+                //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
             eventSubscriptionsInitialized = false;
@@ -116,6 +116,7 @@ namespace AnyRPG {
         public virtual void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Spawnable.CleanupEverything()");
             CleanupEventSubscriptions();
+            CleanupScriptableObjects();
         }
 
         public virtual void GetComponentReferences() {
@@ -199,7 +200,15 @@ namespace AnyRPG {
 
         public virtual void HandlePlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.HandlePlayerUnitSpawn()");
-            HandlePrerequisiteUpdates();
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                    }
+                }
+            }
+
+            //HandlePrerequisiteUpdates();
         }
 
 
@@ -222,7 +231,18 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                    }
+                }
+            }
+
+        }
+
+        public virtual void CleanupScriptableObjects() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
                     }
                 }
             }

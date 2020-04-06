@@ -31,15 +31,19 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetCharacterClass(CharacterClass newCharacterClass) {
+        public override void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.SetCharacterFaction(" + newFaction + ")");
 
-            base.SetCharacterClass(newCharacterClass);
+            CharacterClass oldCharacterClass = characterClass;
+            base.SetCharacterClass(newCharacterClass, notify);
             if (newCharacterClass == null) {
                 // don't print messages for no reason
                 return;
             }
-            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.MyName);
+            if (notify) {
+                SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+                MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.MyName);
+            }
         }
 
         public void JoinFaction(Faction newFaction) {
@@ -54,7 +58,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newClassSpecialization != null && newClassSpecialization != PlayerManager.MyInstance.MyCharacter.MyCharacterClass) {
                 SetClassSpecialization(newClassSpecialization);
-                SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
             }
         }
 
@@ -62,7 +65,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterClass != null && newCharacterClass != PlayerManager.MyInstance.MyCharacter.MyCharacterClass) {
                 SetCharacterClass(newCharacterClass);
-                SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
             }
         }
 

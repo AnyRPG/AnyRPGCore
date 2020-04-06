@@ -51,7 +51,18 @@ namespace AnyRPG {
 
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
-        public Interactable MyInteractable { get => interactable; set => interactable = value; }
+        public Interactable MyInteractable {
+            get => interactable;
+            set {
+                if (interactable != null) {
+                    interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
+                }
+                interactable = value;
+                if (interactable != null) {
+                    interactable.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+                }
+            }
+        }
 
         private void Start() {
             CreateEventSubscriptions();
@@ -67,7 +78,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
             eventSubscriptionsInitialized = true;
         }
 
@@ -76,7 +87,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
+            //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
             eventSubscriptionsInitialized = false;
         }
 
@@ -92,6 +103,10 @@ namespace AnyRPG {
 
         public void CheckPrerequisites(Quest quest) {
             //Debug.Log("InteractionPanelUI.CheckPrerequisites(quest)");
+            CheckPrerequisites();
+        }
+
+        public void HandlePrerequisiteUpdates() {
             CheckPrerequisites();
         }
 
@@ -242,7 +257,7 @@ namespace AnyRPG {
 
         public void ShowInteractables(Interactable interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
-            this.interactable = interactable;
+            MyInteractable = interactable;
             ShowInteractablesCommon(this.interactable);
         }
 
@@ -268,7 +283,7 @@ namespace AnyRPG {
             //ClearButtons();
             base.RecieveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
-            interactable = null;
+            MyInteractable = null;
         }
 
         public override void ReceiveOpenWindowNotification() {

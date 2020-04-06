@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public abstract class InteractableOption : MonoBehaviour, IInteractable {
+    public abstract class InteractableOption : MonoBehaviour, IInteractable, IPrerequisiteOwner {
 
         public abstract event System.Action<IInteractable> MiniMapStatusUpdateHandler;
 
@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         protected virtual void Start() {
-            // overwrite me
+            CreateEventSubscriptions();
         }
 
         public virtual void OrchestratorStart() {
@@ -69,6 +69,18 @@ namespace AnyRPG {
 
         public virtual void OrchestratorFinish() {
 
+        }
+
+        public virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
+                HandlePlayerUnitSpawn();
+            }
+            eventSubscriptionsInitialized = true;
         }
 
 
@@ -145,11 +157,28 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             CleanupEventSubscriptions();
+            CleanupScriptableObjects();
         }
 
         public virtual void CleanupEventSubscriptions() {
-
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            }
+            eventSubscriptionsInitialized = false;
         }
+
+        public virtual void HandlePlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                    }
+                }
+            }
+            //HandlePrerequisiteUpdates();
+        }
+
 
         public virtual int GetValidOptionCount() {
             // overwrite me if this type of interactable option has a list of options instead of just one
@@ -163,7 +192,9 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            // overwrite me
+            if (interactable != null) {
+                interactable.HandlePrerequisiteUpdates();
+            }
         }
 
         public virtual void SetupScriptableObjects() {
@@ -171,10 +202,21 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects();
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
                 }
             }
+        }
+
+        public virtual void CleanupScriptableObjects() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+
         }
 
 

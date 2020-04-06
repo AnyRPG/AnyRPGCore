@@ -253,13 +253,15 @@ namespace AnyRPG {
         }
 
 
-        public virtual void SetCharacterClass(CharacterClass newCharacterClass) {
+        public virtual void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
             if (newCharacterClass != null) {
                 CharacterClass oldCharacterClass = characterClass;
                 characterClass = newCharacterClass;
                 characterStats.SetLevel(characterStats.MyLevel);
-                OnClassChange(newCharacterClass, oldCharacterClass);
+                if (notify) {
+                    OnClassChange(newCharacterClass, oldCharacterClass);
+                }
             }
         }
 

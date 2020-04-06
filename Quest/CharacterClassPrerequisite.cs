@@ -7,25 +7,34 @@ namespace AnyRPG {
     [System.Serializable]
     public class CharacterClassPrerequisite : IPrerequisite {
 
+        public event System.Action OnStatusUpdated = delegate { };
+
         [SerializeField]
         private string requiredCharacterClass = string.Empty;
 
+
+        private bool prerequisiteMet = false;
+
         private CharacterClass prerequisiteCharacterClass = null;
+
+        public void UpdateStatus() {
+            bool originalResult = prerequisiteMet;
+            bool checkResult = (PlayerManager.MyInstance.MyCharacter.MyCharacterClass == prerequisiteCharacterClass);
+            if (checkResult != originalResult) {
+                prerequisiteMet = checkResult;
+                OnStatusUpdated();
+            }
+        }
+
+
+        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            UpdateStatus();
+        }
+
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("LevelPrerequisite.IsMet()");
-            if (baseCharacter == null) {
-                //Debug.Log("LevelPrerequisite.IsMet(): baseCharacter is null!!");
-                return false;
-            }
-            if (baseCharacter.MyCharacterStats == null) {
-                //Debug.Log("LevelPrerequisite.IsMet(): baseCharacter.MyCharacterStats is null!!");
-                return false;
-            }
-            if (prerequisiteCharacterClass == baseCharacter.MyCharacterClass) {
-                return true;
-            }
-            return false;
+            return prerequisiteMet;
         }
 
         public void SetupScriptableObjects() {
@@ -35,8 +44,15 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
             }
+
+            SystemEventManager.MyInstance.OnClassChange += HandleClassChange;
         }
 
+        public void CleanupScriptableObjects() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnClassChange -= HandleClassChange;
+            }
+        }
     }
 
 }

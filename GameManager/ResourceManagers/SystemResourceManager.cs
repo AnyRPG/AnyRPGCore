@@ -46,6 +46,7 @@ namespace AnyRPG {
         public virtual void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
+            CleanupScriptableObjects();
         }
 
         public void ReloadResourceList() {
@@ -113,6 +114,12 @@ namespace AnyRPG {
         public virtual void SetupScriptableObjects() {
             foreach (UnityEngine.Object listItem in resourceList.Values) {
                 (listItem as ResourceProfile).SetupScriptableObjects();
+            }
+        }
+
+        public virtual void CleanupScriptableObjects() {
+            foreach (UnityEngine.Object listItem in resourceList.Values) {
+                (listItem as ResourceProfile).CleanupScriptableObjects();
             }
         }
 

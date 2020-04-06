@@ -40,6 +40,10 @@ namespace AnyRPG {
             */
         }
 
+        public virtual void CleanupScriptableObjects() {
+
+        }
+
 
     }
 
