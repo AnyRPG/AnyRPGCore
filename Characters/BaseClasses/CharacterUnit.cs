@@ -382,7 +382,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
             //gameObject.SetActive(false);
             // TEST ADDING A MANDATORY DELAY
-            if (despawnCoroutine == null) {
+            if (despawnCoroutine == null && gameObject.activeSelf == true) {
                 StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
             }
             // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
