@@ -32,12 +32,17 @@ namespace AnyRPG {
 
         public bool MyPrerequisitesMet {
             get {
+                //Debug.Log(itemName + ".MyPrerequisitesMet");
+
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                    // realtime check for loot
+                    prerequisiteCondition.UpdatePrerequisites();
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
                     }
                 }
                 // there are no prerequisites, or all prerequisites are complete
+                //Debug.Log(itemName + ".MyPrerequisitesMet: nothing false");
                 return true;
             }
         }
@@ -49,7 +54,7 @@ namespace AnyRPG {
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + itemName + " while inititalizing a loot.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a loot.  CHECK INSPECTOR");
                 }
             }
 

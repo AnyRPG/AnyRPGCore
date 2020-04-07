@@ -17,8 +17,10 @@ namespace AnyRPG {
         private Skill prerequisiteSkill = null;
 
         public void UpdateStatus() {
+            //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): " + (prerequisiteSkill != null ? prerequisiteSkill.MyName : "null") + "; originalResult: " + prerequisiteMet);
             bool originalResult = prerequisiteMet;
             bool checkResult = PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(prerequisiteSkill);
+            //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): checkResult: " + checkResult);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 OnStatusUpdated();

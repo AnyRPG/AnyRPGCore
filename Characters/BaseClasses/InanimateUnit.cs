@@ -76,8 +76,8 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
-            base.Start();
             //Debug.Log(gameObject.name + ".InanimateUnit.Start()");
+            base.Start();
             InitializeNamePlate();
         }
 

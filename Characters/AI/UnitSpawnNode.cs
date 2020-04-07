@@ -139,12 +139,14 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
-            if (prerequisiteConditions != null) {
+            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites();
                     }
                 }
+            } else {
+                HandlePrerequisiteUpdates();
             }
             //HandlePrerequisiteUpdates();
         }

@@ -200,12 +200,14 @@ namespace AnyRPG {
 
         public virtual void HandlePlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.HandlePlayerUnitSpawn()");
-            if (prerequisiteConditions != null) {
+            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites();
                     }
                 }
+            } else {
+                HandlePrerequisiteUpdates();
             }
 
             //HandlePrerequisiteUpdates();

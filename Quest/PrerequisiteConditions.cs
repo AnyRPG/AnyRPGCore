@@ -35,9 +35,6 @@ namespace AnyRPG {
         private List<AbilityPrerequisite> abilityPrerequisites = new List<AbilityPrerequisite>();
 
         [SerializeField]
-        private List<FactionDisposition> factionDispositionPrerequisites = new List<FactionDisposition>();
-
-        [SerializeField]
         private List<FactionPrerequisite> factionPrerequisites = new List<FactionPrerequisite>();
 
         private IPrerequisiteOwner prerequisiteOwner = null;
@@ -47,8 +44,10 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
+            //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates()");
             if (IsMet() && prerequisiteOwner != null) {
                 // do callback to the owning object
+                //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates()");
                 prerequisiteOwner.HandlePrerequisiteUpdates();
             }
         }
@@ -74,7 +73,7 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == levelPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == levelPrerequisites.Count && requireAny == false) {
                 returnValue = true;
             }
             tempCount = 0;
@@ -93,7 +92,7 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == characterClassPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == characterClassPrerequisites.Count && requireAny == false) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking character Class prerequisite: setting return value true");
                 returnValue = true;
             }
@@ -113,7 +112,7 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == tradeSkillPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == tradeSkillPrerequisites.Count && requireAny == false) {
                 returnValue = true;
             }
             tempCount = 0;
@@ -132,7 +131,8 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == abilityPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == abilityPrerequisites.Count && requireAny == false) {
+                //Debug.Log("PrerequisiteConditions.IsMet(): checking ability prerequisite: setting returnvalue true");
                 returnValue = true;
             }
             tempCount = 0;
@@ -151,7 +151,7 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == questPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == questPrerequisites.Count && requireAny == false) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite: setting return value true");
                 returnValue = true;
             }
@@ -171,27 +171,10 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == dialogPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == dialogPrerequisites.Count && requireAny == false) {
                 returnValue = true;
             }
             tempCount = 0;
-            /*
-            foreach (FactionDisposition factionDisposition in factionDispositionPrerequisites) {
-                //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
-                prerequisiteCount++;
-                bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, factionDisposition.MyFaction) >= factionDisposition.disposition);
-                if (requireAny && checkResult == true) {
-                    returnValue = true;
-                    break;
-                }
-                if (!checkResult && requireAny == false) {
-                    falseCount++;
-                    break;
-                } else if (checkResult && requireAny == false) {
-                    tempCount++;
-                }
-            }
-            */
             foreach (FactionPrerequisite factionPrerequisite in factionPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
@@ -207,7 +190,7 @@ namespace AnyRPG {
                     tempCount++;
                 }
             }
-            if (tempCount > 0 && tempCount == factionDispositionPrerequisites.Count & requireAny == false) {
+            if (tempCount > 0 && tempCount == factionPrerequisites.Count && requireAny == false) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking faction : setting return value true");
                 returnValue = true;
             }

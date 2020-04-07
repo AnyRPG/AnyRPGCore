@@ -71,19 +71,6 @@ namespace AnyRPG {
 
         }
 
-        public virtual void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".QuestGiver.Awake(): player unit is already spawned.");
-                HandlePlayerUnitSpawn();
-            }
-            eventSubscriptionsInitialized = true;
-        }
-
-
         public virtual void HandleConfirmAction() {
             SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
         }
@@ -160,6 +147,19 @@ namespace AnyRPG {
             CleanupScriptableObjects();
         }
 
+        public virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
+            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
+                HandlePlayerUnitSpawn();
+            }
+            eventSubscriptionsInitialized = true;
+        }
+
         public virtual void CleanupEventSubscriptions() {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
@@ -168,13 +168,15 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
-            if (prerequisiteConditions != null) {
+            //Debug.Log(gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
+            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites();
                     }
                 }
+            } else {
+                HandlePrerequisiteUpdates();
             }
             //HandlePrerequisiteUpdates();
         }
@@ -192,8 +194,11 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
+            //Debug.Log(gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates()");
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
+            } else {
+                //Debug.Log(gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates(): interactable was null");
             }
         }
 
