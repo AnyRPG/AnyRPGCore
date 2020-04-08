@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private Text nodeText = null;
+
+        [SerializeField]
+        private TextMeshProUGUI dialogText = null;
 
         /*
         [SerializeField]
@@ -105,7 +109,8 @@ namespace AnyRPG {
         public void DisplayQuestText() {
             //Debug.Log("DialogPanelController.DisplayQuestText()");
             if (MyQuest != null) {
-                nodeText.text = MyQuest.GetObjectiveDescription();
+                //nodeText.text = MyQuest.GetObjectiveDescription();
+                dialogText.text = MyQuest.GetObjectiveDescription();
             }
         }
 
@@ -133,10 +138,15 @@ namespace AnyRPG {
             if (characterNameText != null) {
                 characterNameText.text = MyInteractable.GetComponent<INamePlateUnit>().MyDisplayName;
             }
+            /*
             if (nodeText != null) {
                 nodeText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.MyDialogNodes[dialogIndex].MyDescription);
-                CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
             }
+            */
+            if (dialogText != null) {
+                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.MyDialogNodes[dialogIndex].MyDescription);
+            }
+            CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
             if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.MyAudioClips != null && MyDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
                 AudioManager.MyInstance.PlayVoice(MyDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
             }

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,11 +14,17 @@ namespace AnyRPG {
         [SerializeField]
         private Image icon = null;
 
-        [SerializeField]
-        private Text playerName = null;
+        //[SerializeField]
+        //private Text playerName = null;
 
         [SerializeField]
-        private Text description = null;
+        private TextMeshProUGUI playerName = null;
+
+        //[SerializeField]
+        //private Text description = null;
+
+        [SerializeField]
+        private TextMeshProUGUI description = null;
 
         [SerializeField]
         private AnyRPGSaveData mySaveData;
