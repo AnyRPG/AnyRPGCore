@@ -114,7 +114,7 @@ namespace AnyRPG {
                 return;
             }
             if (followTransform == null) {
-                //Debug.Log("UnitFrameController.Update(). Follow transform is null.  Exiting.");
+                //Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null.  Exiting.");
                 ClearTarget();
                 return;
             }
@@ -272,6 +272,9 @@ namespace AnyRPG {
             if (unitFrameTarget != string.Empty) {
                 if (followGameObject != null) {
                     targetBone = followGameObject.transform.FindChildByRecursive(unitFrameTarget);
+                    if (targetBone == null) {
+                        Debug.LogWarning(gameObject.name + ".UnitFrameController.GetFollowTarget(): Could not find targetBone: " + unitFrameTarget);
+                    }
                 }
             }
             this.followTransform = targetBone;

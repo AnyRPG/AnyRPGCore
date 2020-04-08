@@ -1,15 +1,13 @@
-using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
     public class AnyRPGCharacterPreviewCameraController : MonoBehaviour {
         // public variables
         public event System.Action OnTargetReady = delegate { };
+
 
         [SerializeField]
         private Transform target = null;
@@ -69,6 +67,13 @@ namespace AnyRPG {
 
         private bool mouseOutsideWindow = true;
 
+        // reference to the dynamic character avatar on the mount, if it exists
+        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
+
+        // keep reference to bone we should be searching for on uma create
+        private string initialTargetString = string.Empty;
+
+
         public Transform MyTarget { get => target; set => target = value; }
 
         private void Awake() {
@@ -82,6 +87,8 @@ namespace AnyRPG {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.ClearTarget()");
             target = null;
             followTransform = null;
+            dynamicCharacterAvatar = null;
+            initialTargetString = string.Empty;
             CameraManager.MyInstance.MyCharacterPreviewCamera.enabled = false;
         }
 
@@ -97,7 +104,7 @@ namespace AnyRPG {
             //Debug.Log("Awake(): currentZoomDistance: " + currentZoomDistance);
 
             target = newTarget;
-            StartCoroutine(WaitForFollowTarget());
+            FindFollowTarget();
             CameraManager.MyInstance.MyCharacterPreviewCamera.enabled = true;
         }
 
@@ -273,42 +280,91 @@ namespace AnyRPG {
             //Debug.Log("Camera offset is " + cameraOffsetVector);
         }
 
-        private IEnumerator WaitForFollowTarget() {
-            //Debug.Log("WaitForFollowTarget()");
+        public void HandleCharacterCreated(UMAData umaData) {
+            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            UnsubscribeFromUMACreate();
+            if (initialTargetString != string.Empty) {
+                Transform targetBone = target.transform.FindChildByRecursive(initialTargetString);
+                if (targetBone == null) {
+                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.HandleCharacterCreated(): UMA is ready and could not find target bone: " + initialTargetString);
+                } else {
+                    followTransform = targetBone;
+                    HandleTargetAvailable();
+                    return;
+                }
+            }
+            followTransform = target.transform;
+            HandleTargetAvailable();
+
+        }
+
+        public void UnsubscribeFromUMACreate() {
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+            }
+        }
+
+        public void SubscribeToUMACreate() {
+
+            // is this stuff necessary on ai characters?
+            
+            AnimatedUnit animatedUnit = dynamicCharacterAvatar.gameObject.GetComponent<AnimatedUnit>();
+            animatedUnit.OrchestratorStart();
+            animatedUnit.OrchestratorFinish();
+            if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
+                animatedUnit.MyCharacterAnimator.InitializeAnimator();
+            } else {
+
+            }
+            dynamicCharacterAvatar.Initialize();
+            
+            // is this stuff necessary end
+
+            UMAData umaData = dynamicCharacterAvatar.umaData;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
+        }
+
+        private void FindFollowTarget() {
+            //Debug.Log("CharacterPreviewCameraController.FindFollowTarget()");
             if (target == null) {
                 //Debug.Log("WaitForFollowTarget(): target is null!!!!");
             }
-            Transform targetBone = target.transform;
-            string initialTargetString = string.Empty;
+            Transform targetBone = null;
             Vector3 unitTargetOffset = initialTargetOffset;
 
-            if (target.GetComponent<CharacterUnit>() == null) {
+            CharacterUnit targetCharacterUnit = null;
+            targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit == null) {
                 //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>() is null!!!!");
             } else {
                 //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>(): " + target.GetComponent<CharacterUnit>().MyDisplayName);
-                initialTargetString = target.GetComponent<CharacterUnit>().MyUnitFrameTarget;
-                if (target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget != string.Empty) {
-                    targetBone = target.transform.FindChildByRecursive(target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
+                initialTargetString = targetCharacterUnit.MyPlayerPreviewTarget;
+                if (initialTargetString != string.Empty) {
+                    targetBone = target.transform.FindChildByRecursive(initialTargetString);
                 }
-                unitTargetOffset = target.GetComponent<CharacterUnit>().MyPlayerPreviewInitialOffset;
+                unitTargetOffset = targetCharacterUnit.MyPlayerPreviewInitialOffset;
+            }
+            currentTargetOffset = unitTargetOffset;
+
+            if (targetBone == null) {
+                // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
+                dynamicCharacterAvatar = target.GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
+                    SubscribeToUMACreate();
+                } else {
+                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
+                    followTransform = target.transform;
+                    HandleTargetAvailable();
+                }
+            } else {
+                followTransform = targetBone;
+                HandleTargetAvailable();
             }
 
-            if (initialTargetString != string.Empty) {
-                //Debug.Log("WaitForFollowTarget(): searching for unitFrameTarget: " + initialTargetString);
-                while (target.transform.FindChildByRecursive(initialTargetString) == null) {
-                    //targetBone = target.transform.Find(initialTargetString);
-                    //if (targetBone == null) {
-                    yield return null;
-                    /*} else {
-                        Debug.Log("WaitForFollowTarget(): found unitFrameTarget: " + initialTargetString);
-                        break;
-                    }*/
-                }
-                currentTargetOffset = unitTargetOffset;
-            } else {
-                currentTargetOffset = unitTargetOffset;
-            }
-            followTransform = targetBone;
+        }
+
+        public void HandleTargetAvailable() {
+            //Debug.Log("AnyRPGCharacterPreviewCameraController.HandleTargetAvailable()");
             targetInitialized = true;
             JumpToFollowSpot();
             OnTargetReady();

@@ -274,7 +274,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForFollowTarget() {
-            //Debug.Log("WaitForFollowTarget()");
+            Debug.Log("PetPreviewCamerController.WaitForFollowTarget()");
             if (target == null) {
                 //Debug.Log("WaitForFollowTarget(): target is null!!!!");
             }
@@ -307,6 +307,11 @@ namespace AnyRPG {
                 currentTargetOffset = unitTargetOffset;
             } else {
                 currentTargetOffset = unitTargetOffset;
+            }
+            if (targetBone == null) {
+                Debug.LogWarning("Could not find target bone: " + target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
+            } else {
+                Debug.Log("targetBone is " + targetBone.name);
             }
             followTransform = targetBone;
             targetInitialized = true;

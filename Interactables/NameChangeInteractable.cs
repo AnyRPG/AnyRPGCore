@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
+            Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
             if (eventSubscriptionsInitialized == true) {
                 //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT REFERENCES WERE ALREADY INITIALIZED!!! RETURNING");
                 return false;
