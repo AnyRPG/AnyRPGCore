@@ -69,22 +69,25 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions(windowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+        public void CleanupWindowEventSubscriptions() {
             if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.musicPlayerWindow != null && PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents != null) {
                 PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
                 PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
+            base.CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
             base.OnDisable();
-            CleanupEventSubscriptions();
         }
 
         public override void HandlePrerequisiteUpdates() {

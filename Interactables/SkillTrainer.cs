@@ -67,22 +67,25 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions(windowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+        public void CleanupWindowEventSubscriptions() {
             if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.skillTrainerWindow != null && PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents != null) {
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
+            base.CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
             base.OnDisable();
-            CleanupEventSubscriptions();
         }
 
         public override int GetValidOptionCount() {

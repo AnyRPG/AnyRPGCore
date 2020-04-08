@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override void CreateEventSubscriptions() {
@@ -92,16 +92,20 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = true;
         }
 
+        public void CleanupWindowEventSubscriptions() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
+                LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
+            }
+        }
+
         public override void CleanupEventSubscriptions() {
             //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
-                LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
-            }
-            eventSubscriptionsInitialized = false;
+            base.CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public void CreateLootTables() {

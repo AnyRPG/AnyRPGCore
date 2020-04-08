@@ -29,9 +29,10 @@ namespace AnyRPG {
             base.Start();
         }
 
+        /*
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override void CleanupEventSubscriptions() {
@@ -44,8 +45,9 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventSubscriptions();
+            //CleanupEventSubscriptions();
         }
+        */
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);

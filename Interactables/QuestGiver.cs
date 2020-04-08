@@ -52,16 +52,20 @@ namespace AnyRPG {
             namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
         }
 
+        public void CleanupWindowEventSubscriptions() {
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null && PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents != null) {
+                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
+            }
+        }
+
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
             if (namePlateUnit != null) {
                 namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
             }
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null && PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
-            }
-            eventSubscriptionsInitialized = false;
+            base.CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override void OnDisable() {
@@ -149,8 +153,7 @@ namespace AnyRPG {
         }
 
         public void CloseWindowHandler(ICloseableWindowContents questGiverUI) {
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
+            CleanupWindowEventSubscriptions();
         }
 
         public override void StopInteract() {
@@ -158,8 +161,7 @@ namespace AnyRPG {
             base.StopInteract();
             //vendorUI.ClearPages();
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
+            CleanupWindowEventSubscriptions();
         }
 
         public void UpdateQuestStatus() {

@@ -15,6 +15,8 @@ namespace AnyRPG {
 
         private ClassSpecialization classSpecialization;
 
+        private bool windowEventSubscriptionsInitialized = false;
+
         public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage : base.MyIcon); }
@@ -33,17 +35,21 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
+        public void CleanupWindowEventSubscriptions() {
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.specializationChangeWindow != null && PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            }
+            windowEventSubscriptionsInitialized = false;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.specializationChangeWindow != null && PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            eventSubscriptionsInitialized = false;
+            CleanupWindowEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {
@@ -51,12 +57,12 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (eventSubscriptionsInitialized == true) {
+            if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }
             base.Interact(source);
@@ -64,7 +70,7 @@ namespace AnyRPG {
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).Setup(MyClassSpecialization);
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            eventSubscriptionsInitialized = true;
+            windowEventSubscriptionsInitialized = true;
             return true;
         }
 

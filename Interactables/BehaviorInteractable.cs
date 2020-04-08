@@ -58,11 +58,12 @@ namespace AnyRPG {
             CleanupDialog();
         }
 
+        /*
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
             CleanupEventSubscriptions();
         }
-
+        */
 
         private void Spawn() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.Spawn()");

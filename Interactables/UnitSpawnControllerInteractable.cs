@@ -65,15 +65,19 @@ namespace AnyRPG {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
-        public override void CleanupEventSubscriptions() {
-            base.CleanupEventSubscriptions();
+        public void CleanupWindowEventSubscriptions() {
             if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.unitSpawnWindow != null && SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents != null) {
                 (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
                 (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
+        }
+
+        public override void CleanupEventSubscriptions() {
+            base.CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override bool Interact(CharacterUnit source) {

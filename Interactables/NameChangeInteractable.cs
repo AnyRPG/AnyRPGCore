@@ -19,6 +19,9 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider = null;
 
+        private bool windowEventSubscriptionsInitialized = false;
+
+
         protected override void Awake() {
             //Debug.Log("NameChangeInteractable.Awake()");
             base.Awake();
@@ -33,18 +36,21 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
+        public void CleanupWindowEventSubscriptions() {
+            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.nameChangeWindow != null && SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents != null) {
+                (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            }
+            windowEventSubscriptionsInitialized = false;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.nameChangeWindow != null && SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents != null) {
-                (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            eventSubscriptionsInitialized = false;
-
+            CleanupWindowEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {
@@ -52,7 +58,7 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         private void Spawn() {
@@ -78,9 +84,9 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
-            if (eventSubscriptionsInitialized == true) {
-                //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT REFERENCES WERE ALREADY INITIALIZED!!! RETURNING");
+            //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
+            if (windowEventSubscriptionsInitialized == true) {
+                //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT SUBSCRIPTIONS WERE ALREADY INITIALIZED!!! RETURNING");
                 return false;
             }
             base.Interact(source);
@@ -88,7 +94,7 @@ namespace AnyRPG {
             SystemWindowManager.MyInstance.nameChangeWindow.OpenWindow();
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
             (SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            eventSubscriptionsInitialized = true;
+            windowEventSubscriptionsInitialized = true;
             return true;
         }
 

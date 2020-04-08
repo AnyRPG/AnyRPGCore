@@ -15,6 +15,9 @@ namespace AnyRPG {
 
         private CharacterClass characterClass;
 
+        private bool windowEventSubscriptionsInitialized = false;
+
+
         public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage : base.MyIcon); }
@@ -33,17 +36,21 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
+        public void CleanupWindowEventSubscriptions() {
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.classChangeWindow != null && PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            }
+            windowEventSubscriptionsInitialized = false;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.classChangeWindow != null && PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            eventSubscriptionsInitialized = false;
+            CleanupWindowEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {
@@ -51,12 +58,12 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (eventSubscriptionsInitialized == true) {
+            if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }
             base.Interact(source);
@@ -64,7 +71,7 @@ namespace AnyRPG {
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(MyCharacterClass);
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            eventSubscriptionsInitialized = true;
+            windowEventSubscriptionsInitialized = true;
             return true;
         }
 
@@ -95,7 +102,6 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             base.OnDisable();
-            CleanupEventSubscriptions();
         }
 
         public override int GetCurrentOptionCount() {

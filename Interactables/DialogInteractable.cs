@@ -50,17 +50,12 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            eventSubscriptionsInitialized = true;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePrerequisiteUpdates;
-            }
             CleanupConfirm();
-            eventSubscriptionsInitialized = false;
         }
 
         public override void OnDisable() {
@@ -70,10 +65,12 @@ namespace AnyRPG {
             CleanupDialog();
         }
 
+        /*
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
             CleanupEventSubscriptions();
         }
+        */
 
         public override void HandleConfirmAction() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");

@@ -81,10 +81,12 @@ namespace AnyRPG {
             InitializeNamePlate();
         }
 
+        /*
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".InanimateUnit.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
         }
+        */
 
         public void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");

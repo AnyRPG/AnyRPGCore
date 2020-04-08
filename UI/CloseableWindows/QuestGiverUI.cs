@@ -389,7 +389,7 @@ namespace AnyRPG {
         }
 
         public void CompleteQuest() {
-            Debug.Log("QuestGiverUI.CompleteQuest()");
+            //Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!currentQuest.IsComplete) {
                 return;
             }
@@ -488,7 +488,7 @@ namespace AnyRPG {
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
             if (questGiver != null) {
                 // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
-                Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
+                //Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
                 questGiver.UpdateQuestStatus();
                 MyQuestGiver.HandleCompleteQuest();
             }

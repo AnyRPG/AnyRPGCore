@@ -15,6 +15,8 @@ namespace AnyRPG {
 
         private Faction faction;
 
+        private bool windowEventSubscriptionsInitialized = false;
+
         public Faction MyFaction { get => faction; set => faction = value; }
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage : base.MyIcon); }
@@ -33,17 +35,20 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+        }
+
+        public void CleanupWindowEventSubscriptions() {
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.factionChangeWindow != null && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            }
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.factionChangeWindow != null && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            eventSubscriptionsInitialized = false;
+            CleanupWindowEventSubscriptions();
         }
 
         public override void HandleConfirmAction() {
@@ -51,19 +56,19 @@ namespace AnyRPG {
             base.HandleConfirmAction();
 
             // just to be safe
-            CleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
         }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.Interact()");
-            if (eventSubscriptionsInitialized == true) {
+            if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }
             base.Interact(source);
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).Setup(MyFaction);
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            eventSubscriptionsInitialized = true;
+            windowEventSubscriptionsInitialized = true;
             return true;
         }
 
