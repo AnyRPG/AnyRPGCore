@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ namespace AnyRPG {
         //private GameObject currencyAmountParent = null;
 
         [SerializeField]
-        private Text priceText = null;
+        private TextMeshProUGUI priceText = null;
 
         protected bool eventSubscriptionsInitialized = false;
 

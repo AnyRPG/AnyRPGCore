@@ -95,6 +95,8 @@ namespace AnyRPG {
         public void CleanupWindowEventSubscriptions() {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
+            }
+            if (LootUI.MyInstance != null) {
                 LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
             }
         }

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,16 +13,16 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text title = null;
+        private TextMeshProUGUI title = null;
 
         [SerializeField]
-        private Text price = null;
+        private TextMeshProUGUI price = null;
 
         [SerializeField]
-        private Text descriptionText = null;
+        private TextMeshProUGUI descriptionText = null;
 
-        [SerializeField]
-        private Outline qualityColorOutline = null;
+        //[SerializeField]
+        //private Outline qualityColorOutline = null;
 
         [SerializeField]
         private Text quantity = null;
@@ -45,7 +46,8 @@ namespace AnyRPG {
                 title.text = string.Format("{0}", vendorItem.MyItem.MyName);
 
                 if (vendorItem.MyItem.MyItemQuality != null) {
-                    qualityColorOutline.effectColor = vendorItem.MyItem.MyItemQuality.MyQualityColor;
+                    //qualityColorOutline.effectColor = vendorItem.MyItem.MyItemQuality.MyQualityColor;
+                    title.outlineColor = vendorItem.MyItem.MyItemQuality.MyQualityColor;
                 }
 
                 if (!vendorItem.Unlimited) {

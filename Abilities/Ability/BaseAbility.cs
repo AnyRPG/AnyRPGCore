@@ -10,7 +10,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
     public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility {
 
-        //public event System.Action<IAbility> OnAbilityCast = delegate { };
+        public event System.Action OnAbilityLearn = delegate { };
+        public event System.Action OnAbilityUsed = delegate { };
 
         // ability cannot be cast in combat if true
         [SerializeField]
@@ -522,6 +523,15 @@ namespace AnyRPG {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
         }
+
+        public void NotifyOnLearn() {
+            OnAbilityLearn();
+        }
+
+        public void NotifyOnAbilityUsed() {
+            OnAbilityUsed();
+        }
+
 
         /*
         public virtual void HandleCastStop(BaseCharacter source) {

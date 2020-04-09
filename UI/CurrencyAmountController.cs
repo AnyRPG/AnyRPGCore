@@ -1,6 +1,7 @@
 using AnyRPG;
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 using UMA.CharacterSystem;
 using UMA;
 using UMA.CharacterSystem.Examples;
@@ -13,10 +14,10 @@ namespace AnyRPG {
         private DescribableIcon currencyIcon;
 
         [SerializeField]
-        private Text amountText;
+        private TextMeshProUGUI amountText;
 
         public DescribableIcon MyCurrencyIcon { get => currencyIcon; set => currencyIcon = value; }
-        public Text MyAmountText { get => amountText; set => amountText = value; }
+        public TextMeshProUGUI MyAmountText { get => amountText; set => amountText = value; }
     }
 
 

@@ -1,13 +1,17 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
     public class CombatTextController : MonoBehaviour {
+        //[SerializeField]
+        //private Text tmpProtext = null;
+
         [SerializeField]
-        private Text text = null;
+        private TextMeshProUGUI tmpProtext = null;
 
         [SerializeField]
         private Image image = null;
@@ -68,7 +72,7 @@ namespace AnyRPG {
             targetPos = Camera.main.WorldToScreenPoint(mainTarget.transform.position);
             //alpha = text.color.a;
             alpha = 1f;
-            text.fontSize = defaultFontSize;
+            tmpProtext.fontSize = defaultFontSize;
             fadeOutTimer = fadeTime;
             fadeRate = 1.0f / fadeTime;
 
@@ -92,7 +96,7 @@ namespace AnyRPG {
                         textColor = Color.yellow;
                         preText += "+";
                         postText += " XP";
-                        text.fontSize = text.fontSize * 2;
+                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
                         break;
                     case CombatTextType.gainBuff:
                         textColor = Color.cyan;
@@ -107,7 +111,7 @@ namespace AnyRPG {
                     case CombatTextType.ability:
                         textColor = Color.magenta;
                         preText += "-";
-                        text.fontSize = text.fontSize * 2;
+                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
                         break;
                     default:
                         break;
@@ -119,7 +123,7 @@ namespace AnyRPG {
                         break;
                     case CombatTextType.ability:
                         textColor = Color.yellow;
-                        text.fontSize = text.fontSize * 2;
+                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
                         break;
                     default:
                         break;
@@ -130,7 +134,7 @@ namespace AnyRPG {
                 case CombatTextType.gainHealth:
                     textColor = Color.green;
                     preText += "+";
-                    text.fontSize = text.fontSize * 2;
+                    tmpProtext.fontSize = tmpProtext.fontSize * 2;
                     break;
                 case CombatTextType.miss:
                     textColor = Color.white;
@@ -145,17 +149,17 @@ namespace AnyRPG {
                 case CombatTextType.gainMana:
                     textColor = Color.blue;
                     preText += "+";
-                    text.fontSize = text.fontSize * 2;
+                    tmpProtext.fontSize = tmpProtext.fontSize * 2;
                     break;
                 default:
                     break;
             }
 
-            text.color = textColor;
+            tmpProtext.color = textColor;
             string finalString = preText + displayText + postText;
-            text.text = finalString;
+            tmpProtext.text = finalString;
             if (MyCombatMagnitude == CombatMagnitude.critical) {
-                text.fontSize = text.fontSize * 2;
+                tmpProtext.fontSize = tmpProtext.fontSize * 2;
             }
             RunCombatTextUpdate();
         }
@@ -176,9 +180,9 @@ namespace AnyRPG {
                 alpha -= fadeRate * Time.fixedDeltaTime;
 
                 // fade text
-                Color tmp = text.color;
+                Color tmp = tmpProtext.color;
                 tmp.a = alpha;
-                text.color = tmp;
+                tmpProtext.color = tmp;
 
                 // fade image
                 if (image.sprite != null) {

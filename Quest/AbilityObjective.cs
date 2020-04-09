@@ -16,11 +16,8 @@ namespace AnyRPG {
         private BaseAbility baseAbility;
 
         // for learning
-        public void UpdateCompletionCount(BaseAbility baseAbility) {
-            if (!SystemResourceManager.MatchResource(baseAbility.MyName, MyType)) {
-                // some other ability than this one was used.  no need to check.
-                return;
-            }
+        public void UpdateCompletionCount() {
+            Debug.Log("AbilityObjective.UpdateCompletionCount(" + (baseAbility == null ? "null" : baseAbility.MyName) + ")");
             bool completeBefore = IsComplete;
             if (completeBefore) {
                 return;
@@ -36,9 +33,8 @@ namespace AnyRPG {
         }
 
         // for casting
-        public void UpdateCastCount(BaseAbility baseAbility) {
+        public void UpdateCastCount() {
             bool completeBefore = IsComplete;
-            if (baseAbility == this.baseAbility) {
                 MyCurrentAmount++;
                 quest.CheckCompletion();
                 if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement) {
@@ -47,7 +43,6 @@ namespace AnyRPG {
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
                     MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", MyCurrentAmount, baseAbility.MyName));
                 }
-            }
         }
 
         public override void UpdateCompletionCount(bool printMessages = true) {
@@ -75,18 +70,18 @@ namespace AnyRPG {
             //Debug.Log("AbilityObjective.OnAcceptQuest(): " + MyType);
             base.OnAcceptQuest(quest, printMessages);
             if (requireUse == true) {
-                SystemEventManager.MyInstance.OnAbilityUsed += UpdateCastCount;
+                baseAbility.OnAbilityUsed += UpdateCastCount;
             } else {
-                SystemEventManager.MyInstance.OnAbilityListChanged += UpdateCompletionCount;
+                baseAbility.OnAbilityLearn += UpdateCompletionCount;
                 UpdateCompletionCount(printMessages);
             }
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemEventManager.MyInstance.OnAbilityListChanged -= UpdateCompletionCount;
+            baseAbility.OnAbilityLearn -= UpdateCompletionCount;
             if (requireUse == true) {
-                SystemEventManager.MyInstance.OnAbilityUsed -= UpdateCastCount;
+                baseAbility.OnAbilityUsed -= UpdateCastCount;
             }
         }
 

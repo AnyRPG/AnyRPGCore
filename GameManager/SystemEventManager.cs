@@ -229,11 +229,13 @@ namespace AnyRPG {
             //OnPrerequisiteUpdated();
         }
 
+        
         public void NotifyOnAbilityListChanged(BaseAbility newAbility) {
             //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
             OnAbilityListChanged(newAbility);
             //OnPrerequisiteUpdated();
         }
+        
 
         public void NotifyOnAbilityUsed(BaseAbility ability) {
             //Debug.Log("SystemEventManager.NotifyAbilityused(" + ability.MyName + ")");

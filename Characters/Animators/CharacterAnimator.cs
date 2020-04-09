@@ -282,7 +282,9 @@ namespace AnyRPG {
                 // can't do anything since we don't have any clips
                 return;
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardClip.name)
+                && overrideController[systemAnimations.MyMoveForwardClip.name] != currentAnimationProfile.MyMoveForwardClip
+                && overrideController[systemAnimations.MyMoveForwardClip.name] != defaultAnimationProfile.MyMoveForwardClip) {
                 if (currentAnimationProfile.MyMoveForwardClip != null) {
                     overrideController[systemAnimations.MyMoveForwardClip.name] = currentAnimationProfile.MyMoveForwardClip;
                     currentAnimations.MyMoveForwardClip = currentAnimationProfile.MyMoveForwardClip;
@@ -298,10 +300,10 @@ namespace AnyRPG {
                     baseWalkAnimationSpeed = currentAnimations.MyMoveForwardClip.averageSpeed.z;
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardClip.name)
+                && overrideController[systemAnimations.MyCombatMoveForwardClip.name] != currentAnimationProfile.MyCombatMoveForwardClip
+                && overrideController[systemAnimations.MyCombatMoveForwardClip.name] != defaultAnimationProfile.MyCombatMoveForwardClip) {
                 if (currentAnimationProfile.MyCombatMoveForwardClip != null) {
                     overrideController[systemAnimations.MyCombatMoveForwardClip.name] = currentAnimationProfile.MyCombatMoveForwardClip;
                     currentAnimations.MyCombatMoveForwardClip = currentAnimationProfile.MyCombatMoveForwardClip;
@@ -317,16 +319,16 @@ namespace AnyRPG {
                     baseCombatWalkAnimationSpeed = currentAnimations.MyCombatMoveForwardClip.averageSpeed.z;
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardFastClip.name)) {
-                if (currentAnimationProfile.MyMoveForwardFastClip != null) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardFastClip.name)
+                && overrideController[systemAnimations.MyMoveForwardFastClip.name] != currentAnimationProfile.MyMoveForwardFastClip
+                && overrideController[systemAnimations.MyMoveForwardFastClip.name] != defaultAnimationProfile.MyMoveForwardFastClip) {
+                if (currentAnimationProfile.MyMoveForwardFastClip != null && overrideController[systemAnimations.MyMoveForwardFastClip.name] != currentAnimationProfile.MyMoveForwardFastClip) {
                     overrideController[systemAnimations.MyMoveForwardFastClip.name] = currentAnimationProfile.MyMoveForwardFastClip;
                     currentAnimations.MyMoveForwardFastClip = currentAnimationProfile.MyMoveForwardFastClip;
                 } else {
-                    if (defaultAnimationProfile.MyMoveForwardFastClip != null) {
+                    if (defaultAnimationProfile.MyMoveForwardFastClip != null && overrideController[systemAnimations.MyMoveForwardFastClip.name] != defaultAnimationProfile.MyMoveForwardFastClip) {
                         overrideController[systemAnimations.MyMoveForwardFastClip.name] = defaultAnimationProfile.MyMoveForwardFastClip;
                         currentAnimations.MyMoveForwardFastClip = defaultAnimationProfile.MyMoveForwardFastClip;
                     }
@@ -336,11 +338,11 @@ namespace AnyRPG {
                     baseRunAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveForwardFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardFastClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardFastClip.name)
+                && overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] != currentAnimationProfile.MyCombatMoveForwardFastClip
+                && overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] != defaultAnimationProfile.MyCombatMoveForwardFastClip) {
                 if (currentAnimationProfile.MyCombatMoveForwardFastClip != null) {
                     overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] = currentAnimationProfile.MyCombatMoveForwardFastClip;
                     currentAnimations.MyCombatMoveForwardFastClip = currentAnimationProfile.MyCombatMoveForwardFastClip;
@@ -355,10 +357,11 @@ namespace AnyRPG {
                     baseCombatRunAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveForwardFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager: " + systemAnimations.MyCombatMoveForwardFastClip);
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackClip.name)
+                && overrideController[systemAnimations.MyMoveBackClip.name] != currentAnimationProfile.MyMoveBackClip
+                && overrideController[systemAnimations.MyMoveBackClip.name] != defaultAnimationProfile.MyMoveBackClip) {
                 if (currentAnimationProfile.MyMoveBackClip != null) {
                     overrideController[systemAnimations.MyMoveBackClip.name] = currentAnimationProfile.MyMoveBackClip;
                     currentAnimations.MyMoveBackClip = currentAnimationProfile.MyMoveBackClip;
@@ -373,11 +376,11 @@ namespace AnyRPG {
                     baseWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveBackClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackClip.name)
+                && overrideController[systemAnimations.MyCombatMoveBackClip.name] != currentAnimationProfile.MyCombatMoveBackClip
+                && overrideController[systemAnimations.MyCombatMoveBackClip.name] != defaultAnimationProfile.MyCombatMoveBackClip) {
                 if (currentAnimationProfile.MyCombatMoveBackClip != null) {
                     overrideController[systemAnimations.MyCombatMoveBackClip.name] = currentAnimationProfile.MyCombatMoveBackClip;
                     currentAnimations.MyCombatMoveBackClip = currentAnimationProfile.MyCombatMoveBackClip;
@@ -392,10 +395,11 @@ namespace AnyRPG {
                     baseCombatWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveBackClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackFastClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackFastClip.name)
+                && overrideController[systemAnimations.MyMoveBackFastClip.name] != currentAnimationProfile.MyMoveBackFastClip
+                && overrideController[systemAnimations.MyMoveBackFastClip.name] != defaultAnimationProfile.MyMoveBackFastClip) {
                 if (currentAnimationProfile.MyMoveBackFastClip != null) {
                     overrideController[systemAnimations.MyMoveBackFastClip.name] = currentAnimationProfile.MyMoveBackFastClip;
                     currentAnimations.MyMoveBackFastClip = currentAnimationProfile.MyMoveBackFastClip;
@@ -410,11 +414,11 @@ namespace AnyRPG {
                     baseRunBackAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveBackFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackFastClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackFastClip.name)
+                && overrideController[systemAnimations.MyCombatMoveBackFastClip.name] != currentAnimationProfile.MyCombatMoveBackFastClip
+                && overrideController[systemAnimations.MyCombatMoveBackFastClip.name] != defaultAnimationProfile.MyCombatMoveBackFastClip) {
                 if (currentAnimationProfile.MyCombatMoveBackFastClip != null) {
                     overrideController[systemAnimations.MyCombatMoveBackFastClip.name] = currentAnimationProfile.MyCombatMoveBackFastClip;
                     currentAnimations.MyCombatMoveBackFastClip = currentAnimationProfile.MyCombatMoveBackFastClip;
@@ -429,12 +433,11 @@ namespace AnyRPG {
                     baseCombatRunBackAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveBackFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-
-            if (overrideControllerClipList.Contains(systemAnimations.MyJumpClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJumpClip.name)
+                && overrideController[systemAnimations.MyJumpClip.name] != currentAnimationProfile.MyJumpClip
+                && overrideController[systemAnimations.MyJumpClip.name] != defaultAnimationProfile.MyJumpClip) {
                 if (currentAnimationProfile.MyJumpClip != null) {
                     overrideController[systemAnimations.MyJumpClip.name] = currentAnimationProfile.MyJumpClip;
                     currentAnimations.MyJumpClip = currentAnimationProfile.MyJumpClip;
@@ -444,10 +447,11 @@ namespace AnyRPG {
                         currentAnimations.MyJumpClip = defaultAnimationProfile.MyJumpClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJumpClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJumpClip.name)
+                && overrideController[systemAnimations.MyCombatJumpClip.name] != currentAnimationProfile.MyCombatJumpClip
+                && overrideController[systemAnimations.MyCombatJumpClip.name] != defaultAnimationProfile.MyCombatJumpClip) {
                 if (currentAnimationProfile.MyCombatJumpClip != null) {
                     overrideController[systemAnimations.MyCombatJumpClip.name] = currentAnimationProfile.MyCombatJumpClip;
                     currentAnimations.MyCombatJumpClip = currentAnimationProfile.MyCombatJumpClip;
@@ -457,10 +461,11 @@ namespace AnyRPG {
                         currentAnimations.MyCombatJumpClip = defaultAnimationProfile.MyCombatJumpClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyIdleClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyIdleClip.name)
+                && overrideController[systemAnimations.MyIdleClip.name] != currentAnimationProfile.MyIdleClip
+                && overrideController[systemAnimations.MyIdleClip.name] != defaultAnimationProfile.MyIdleClip) {
                 if (currentAnimationProfile.MyIdleClip != null) {
                     overrideController[systemAnimations.MyIdleClip.name] = currentAnimationProfile.MyIdleClip;
                     currentAnimations.MyIdleClip = currentAnimationProfile.MyIdleClip;
@@ -470,10 +475,11 @@ namespace AnyRPG {
                         currentAnimations.MyIdleClip = defaultAnimationProfile.MyIdleClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatIdleClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatIdleClip.name)
+                && overrideController[systemAnimations.MyCombatIdleClip.name] != currentAnimationProfile.MyCombatIdleClip
+                && overrideController[systemAnimations.MyCombatIdleClip.name] != defaultAnimationProfile.MyCombatIdleClip) {
                 if (currentAnimationProfile.MyCombatIdleClip != null) {
                     overrideController[systemAnimations.MyCombatIdleClip.name] = currentAnimationProfile.MyCombatIdleClip;
                     currentAnimations.MyCombatIdleClip = currentAnimationProfile.MyCombatIdleClip;
@@ -483,10 +489,11 @@ namespace AnyRPG {
                         currentAnimations.MyCombatIdleClip = defaultAnimationProfile.MyCombatIdleClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager: " + currentAnimations.MyCombatIdleClip);
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyLandClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyLandClip.name)
+                && overrideController[systemAnimations.MyLandClip.name] != currentAnimationProfile.MyLandClip
+                && overrideController[systemAnimations.MyLandClip.name] != defaultAnimationProfile.MyLandClip) {
                 if (currentAnimationProfile.MyLandClip != null) {
                     overrideController[systemAnimations.MyLandClip.name] = currentAnimationProfile.MyLandClip;
                     currentAnimations.MyLandClip = currentAnimationProfile.MyLandClip;
@@ -496,10 +503,11 @@ namespace AnyRPG {
                         currentAnimations.MyLandClip = defaultAnimationProfile.MyLandClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatLandClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatLandClip.name)
+                && overrideController[systemAnimations.MyCombatLandClip.name] != currentAnimationProfile.MyCombatLandClip
+                && overrideController[systemAnimations.MyCombatLandClip.name] != defaultAnimationProfile.MyCombatLandClip) {
                 if (currentAnimationProfile.MyCombatLandClip != null) {
                     overrideController[systemAnimations.MyCombatLandClip.name] = currentAnimationProfile.MyCombatLandClip;
                     currentAnimations.MyCombatLandClip = currentAnimationProfile.MyCombatLandClip;
@@ -509,10 +517,11 @@ namespace AnyRPG {
                         currentAnimations.MyCombatLandClip = defaultAnimationProfile.MyCombatLandClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyFallClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyFallClip.name)
+                && overrideController[systemAnimations.MyFallClip.name] != currentAnimationProfile.MyFallClip
+                && overrideController[systemAnimations.MyFallClip.name] != defaultAnimationProfile.MyFallClip) {
                 if (currentAnimationProfile.MyFallClip != null) {
                     overrideController[systemAnimations.MyFallClip.name] = currentAnimationProfile.MyFallClip;
                     currentAnimations.MyFallClip = currentAnimationProfile.MyFallClip;
@@ -522,10 +531,11 @@ namespace AnyRPG {
                         currentAnimations.MyFallClip = defaultAnimationProfile.MyFallClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatFallClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatFallClip.name)
+                && overrideController[systemAnimations.MyCombatFallClip.name] != currentAnimationProfile.MyCombatFallClip
+                && overrideController[systemAnimations.MyCombatFallClip.name] != defaultAnimationProfile.MyCombatFallClip) {
                 if (currentAnimationProfile.MyCombatFallClip != null) {
                     overrideController[systemAnimations.MyCombatFallClip.name] = currentAnimationProfile.MyCombatFallClip;
                     currentAnimations.MyCombatFallClip = currentAnimationProfile.MyCombatFallClip;
@@ -535,10 +545,11 @@ namespace AnyRPG {
                         currentAnimations.MyCombatFallClip = defaultAnimationProfile.MyCombatFallClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeLeftClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeLeftClip.name)
+                && overrideController[systemAnimations.MyStrafeLeftClip.name] != currentAnimationProfile.MyStrafeLeftClip
+                && overrideController[systemAnimations.MyStrafeLeftClip.name] != defaultAnimationProfile.MyStrafeLeftClip) {
                 if (currentAnimationProfile.MyStrafeLeftClip != null) {
                     overrideController[systemAnimations.MyStrafeLeftClip.name] = currentAnimationProfile.MyStrafeLeftClip;
                     currentAnimations.MyStrafeLeftClip = currentAnimationProfile.MyStrafeLeftClip;
@@ -553,11 +564,11 @@ namespace AnyRPG {
                     baseWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeLeftClip.name)
+                && overrideController[systemAnimations.MyJogStrafeLeftClip.name] != currentAnimationProfile.MyJogStrafeLeftClip
+                && overrideController[systemAnimations.MyJogStrafeLeftClip.name] != defaultAnimationProfile.MyJogStrafeLeftClip) {
                 if (currentAnimationProfile.MyJogStrafeLeftClip != null) {
                     overrideController[systemAnimations.MyJogStrafeLeftClip.name] = currentAnimationProfile.MyJogStrafeLeftClip;
                     currentAnimations.MyJogStrafeLeftClip = currentAnimationProfile.MyJogStrafeLeftClip;
@@ -572,11 +583,11 @@ namespace AnyRPG {
                     baseJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeRightClip.name)
+                && overrideController[systemAnimations.MyStrafeRightClip.name] != currentAnimationProfile.MyStrafeRightClip
+                && overrideController[systemAnimations.MyStrafeRightClip.name] != defaultAnimationProfile.MyStrafeRightClip) {
                 if (currentAnimationProfile.MyStrafeRightClip != null) {
                     overrideController[systemAnimations.MyStrafeRightClip.name] = currentAnimationProfile.MyStrafeRightClip;
                     currentAnimations.MyStrafeRightClip = currentAnimationProfile.MyStrafeRightClip;
@@ -591,11 +602,11 @@ namespace AnyRPG {
                     baseWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeRightClip.name)
+                && overrideController[systemAnimations.MyJogStrafeRightClip.name] != currentAnimationProfile.MyJogStrafeRightClip
+                && overrideController[systemAnimations.MyJogStrafeRightClip.name] != defaultAnimationProfile.MyJogStrafeRightClip) {
                 if (currentAnimationProfile.MyJogStrafeRightClip != null) {
                     overrideController[systemAnimations.MyJogStrafeRightClip.name] = currentAnimationProfile.MyJogStrafeRightClip;
                     currentAnimations.MyJogStrafeRightClip = currentAnimationProfile.MyJogStrafeRightClip;
@@ -610,11 +621,11 @@ namespace AnyRPG {
                     baseJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardRightClip.name)
+                && overrideController[systemAnimations.MyStrafeForwardRightClip.name] != currentAnimationProfile.MyStrafeForwardRightClip
+                && overrideController[systemAnimations.MyStrafeForwardRightClip.name] != defaultAnimationProfile.MyStrafeForwardRightClip) {
                 if (currentAnimationProfile.MyStrafeForwardRightClip != null) {
                     overrideController[systemAnimations.MyStrafeForwardRightClip.name] = currentAnimationProfile.MyStrafeForwardRightClip;
                     currentAnimations.MyStrafeForwardRightClip = currentAnimationProfile.MyStrafeForwardRightClip;
@@ -629,11 +640,11 @@ namespace AnyRPG {
                     baseWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardRightClip.name)
+                && overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] != currentAnimationProfile.MyJogStrafeForwardRightClip
+                && overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] != defaultAnimationProfile.MyJogStrafeForwardRightClip) {
                 if (currentAnimationProfile.MyJogStrafeForwardRightClip != null) {
                     overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] = currentAnimationProfile.MyJogStrafeForwardRightClip;
                     currentAnimations.MyJogStrafeForwardRightClip = currentAnimationProfile.MyJogStrafeForwardRightClip;
@@ -648,11 +659,11 @@ namespace AnyRPG {
                     baseJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardLeftClip.name)
+                && overrideController[systemAnimations.MyStrafeForwardLeftClip.name] != currentAnimationProfile.MyStrafeForwardLeftClip
+                && overrideController[systemAnimations.MyStrafeForwardLeftClip.name] != defaultAnimationProfile.MyStrafeForwardLeftClip) {
                 if (currentAnimationProfile.MyStrafeForwardLeftClip != null) {
                     overrideController[systemAnimations.MyStrafeForwardLeftClip.name] = currentAnimationProfile.MyStrafeForwardLeftClip;
                     currentAnimations.MyStrafeForwardLeftClip = currentAnimationProfile.MyStrafeForwardLeftClip;
@@ -667,11 +678,11 @@ namespace AnyRPG {
                     baseWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardLeftClip.name)
+                && overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] != currentAnimationProfile.MyJogStrafeForwardLeftClip
+                && overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] != defaultAnimationProfile.MyJogStrafeForwardLeftClip) {
                 if (currentAnimationProfile.MyJogStrafeForwardLeftClip != null) {
                     overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] = currentAnimationProfile.MyJogStrafeForwardLeftClip;
                     currentAnimations.MyJogStrafeForwardLeftClip = currentAnimationProfile.MyJogStrafeForwardLeftClip;
@@ -686,11 +697,11 @@ namespace AnyRPG {
                     baseJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackLeftClip.name)
+                && overrideController[systemAnimations.MyStrafeBackLeftClip.name] != currentAnimationProfile.MyStrafeBackLeftClip
+                && overrideController[systemAnimations.MyStrafeBackLeftClip.name] != defaultAnimationProfile.MyStrafeBackLeftClip) {
                 if (currentAnimationProfile.MyStrafeBackLeftClip != null) {
                     overrideController[systemAnimations.MyStrafeBackLeftClip.name] = currentAnimationProfile.MyStrafeBackLeftClip;
                     currentAnimations.MyStrafeBackLeftClip = currentAnimationProfile.MyStrafeBackLeftClip;
@@ -705,11 +716,11 @@ namespace AnyRPG {
                     baseWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackLeftClip.name)
+                && overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] != currentAnimationProfile.MyJogStrafeBackLeftClip
+                && overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] != defaultAnimationProfile.MyJogStrafeBackLeftClip) {
                 if (currentAnimationProfile.MyJogStrafeBackLeftClip != null) {
                     overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] = currentAnimationProfile.MyJogStrafeBackLeftClip;
                     currentAnimations.MyJogStrafeBackLeftClip = currentAnimationProfile.MyJogStrafeBackLeftClip;
@@ -724,11 +735,11 @@ namespace AnyRPG {
                     baseJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackRightClip.name)
+                && overrideController[systemAnimations.MyStrafeBackRightClip.name] != currentAnimationProfile.MyStrafeBackRightClip
+                && overrideController[systemAnimations.MyStrafeBackRightClip.name] != defaultAnimationProfile.MyStrafeBackRightClip) {
                 if (currentAnimationProfile.MyStrafeBackRightClip != null) {
                     overrideController[systemAnimations.MyStrafeBackRightClip.name] = currentAnimationProfile.MyStrafeBackRightClip;
                     currentAnimations.MyStrafeBackRightClip = currentAnimationProfile.MyStrafeBackRightClip;
@@ -743,11 +754,11 @@ namespace AnyRPG {
                     baseWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackRightClip.name)
+                && overrideController[systemAnimations.MyJogStrafeBackRightClip.name] != currentAnimationProfile.MyJogStrafeBackRightClip
+                && overrideController[systemAnimations.MyJogStrafeBackRightClip.name] != defaultAnimationProfile.MyJogStrafeBackRightClip) {
                 if (currentAnimationProfile.MyJogStrafeBackRightClip != null) {
                     overrideController[systemAnimations.MyJogStrafeBackRightClip.name] = currentAnimationProfile.MyJogStrafeBackRightClip;
                     currentAnimations.MyJogStrafeBackRightClip = currentAnimationProfile.MyJogStrafeBackRightClip;
@@ -762,11 +773,11 @@ namespace AnyRPG {
                     baseJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeLeftClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeLeftClip.name] != currentAnimationProfile.MyCombatStrafeLeftClip
+                && overrideController[systemAnimations.MyCombatStrafeLeftClip.name] != defaultAnimationProfile.MyCombatStrafeLeftClip) {
                 if (currentAnimationProfile.MyCombatStrafeLeftClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeLeftClip.name] = currentAnimationProfile.MyCombatStrafeLeftClip;
                     currentAnimations.MyCombatStrafeLeftClip = currentAnimationProfile.MyCombatStrafeLeftClip;
@@ -781,11 +792,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeLeftClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeLeftClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeLeftClip
+                && overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeLeftClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeLeftClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeLeftClip;
                     currentAnimations.MyCombatJogStrafeLeftClip = currentAnimationProfile.MyCombatJogStrafeLeftClip;
@@ -800,11 +811,11 @@ namespace AnyRPG {
                     baseCombatJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager: " + currentAnimations.MyCombatJogStrafeLeftClip);
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeRightClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeRightClip.name] != currentAnimationProfile.MyCombatStrafeRightClip
+                && overrideController[systemAnimations.MyCombatStrafeRightClip.name] != defaultAnimationProfile.MyCombatStrafeRightClip) {
                 if (currentAnimationProfile.MyCombatStrafeRightClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeRightClip.name] = currentAnimationProfile.MyCombatStrafeRightClip;
                     currentAnimations.MyCombatStrafeRightClip = currentAnimationProfile.MyCombatStrafeRightClip;
@@ -819,11 +830,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeRightClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeRightClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] != currentAnimationProfile.MyCombatJogStrafeRightClip
+                && overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeRightClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeRightClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] = currentAnimationProfile.MyCombatJogStrafeRightClip;
                     currentAnimations.MyCombatJogStrafeRightClip = currentAnimationProfile.MyCombatJogStrafeRightClip;
@@ -838,10 +849,11 @@ namespace AnyRPG {
                     baseCombatJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardRightClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardRightClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] != currentAnimationProfile.MyCombatStrafeForwardRightClip
+                && overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] != defaultAnimationProfile.MyCombatStrafeForwardRightClip) {
                 if (currentAnimationProfile.MyCombatStrafeForwardRightClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] = currentAnimationProfile.MyCombatStrafeForwardRightClip;
                     currentAnimations.MyCombatStrafeForwardRightClip = currentAnimationProfile.MyCombatStrafeForwardRightClip;
@@ -856,10 +868,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardRightClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardRightClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] != currentAnimationProfile.MyCombatJogStrafeForwardRightClip
+                && overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeForwardRightClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeForwardRightClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] = currentAnimationProfile.MyCombatJogStrafeForwardRightClip;
                     currentAnimations.MyCombatJogStrafeForwardRightClip = currentAnimationProfile.MyCombatJogStrafeForwardRightClip;
@@ -874,10 +887,11 @@ namespace AnyRPG {
                     baseCombatJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardLeftClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardLeftClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] != currentAnimationProfile.MyCombatStrafeForwardLeftClip
+                && overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] != defaultAnimationProfile.MyCombatStrafeForwardLeftClip) {
                 if (currentAnimationProfile.MyCombatStrafeForwardLeftClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] = currentAnimationProfile.MyCombatStrafeForwardLeftClip;
                     currentAnimations.MyCombatStrafeForwardLeftClip = currentAnimationProfile.MyCombatStrafeForwardLeftClip;
@@ -892,10 +906,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardLeftClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardLeftClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeForwardLeftClip
+                && overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeForwardLeftClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeForwardLeftClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeForwardLeftClip;
                     currentAnimations.MyCombatJogStrafeForwardLeftClip = currentAnimationProfile.MyCombatJogStrafeForwardLeftClip;
@@ -910,10 +925,11 @@ namespace AnyRPG {
                     baseCombatJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackLeftClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackLeftClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] != currentAnimationProfile.MyCombatStrafeBackLeftClip
+                && overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] != defaultAnimationProfile.MyCombatStrafeBackLeftClip) {
                 if (currentAnimationProfile.MyCombatStrafeBackLeftClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] = currentAnimationProfile.MyCombatStrafeBackLeftClip;
                     currentAnimations.MyCombatStrafeBackLeftClip = currentAnimationProfile.MyCombatStrafeBackLeftClip;
@@ -928,10 +944,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackLeftClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackLeftClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeBackLeftClip
+                && overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeBackLeftClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeBackLeftClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeBackLeftClip;
                     currentAnimations.MyCombatJogStrafeBackLeftClip = currentAnimationProfile.MyCombatJogStrafeBackLeftClip;
@@ -946,10 +963,11 @@ namespace AnyRPG {
                     baseCombatJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackRightClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackRightClip.name)
+                && overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] != currentAnimationProfile.MyCombatStrafeBackRightClip
+                && overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] != defaultAnimationProfile.MyCombatStrafeBackRightClip) {
                 if (currentAnimationProfile.MyCombatStrafeBackRightClip != null) {
                     overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] = currentAnimationProfile.MyCombatStrafeBackRightClip;
                     currentAnimations.MyCombatStrafeBackRightClip = currentAnimationProfile.MyCombatStrafeBackRightClip;
@@ -964,10 +982,11 @@ namespace AnyRPG {
                     baseCombatWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackRightClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackRightClip.name)
+                && overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] != currentAnimationProfile.MyCombatJogStrafeBackRightClip
+                && overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeBackRightClip) {
                 if (currentAnimationProfile.MyCombatJogStrafeBackRightClip != null) {
                     overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] = currentAnimationProfile.MyCombatJogStrafeBackRightClip;
                     currentAnimations.MyCombatJogStrafeBackRightClip = currentAnimationProfile.MyCombatJogStrafeBackRightClip;
@@ -982,11 +1001,12 @@ namespace AnyRPG {
                     baseCombatJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
+
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): Death is not null.");
-            if (overrideControllerClipList.Contains(systemAnimations.MyDeathClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyDeathClip.name)
+                && overrideController[systemAnimations.MyDeathClip.name] != currentAnimationProfile.MyDeathClip
+                && overrideController[systemAnimations.MyDeathClip.name] != defaultAnimationProfile.MyDeathClip) {
                 if (currentAnimationProfile.MyDeathClip != null) {
                     overrideController[systemAnimations.MyDeathClip.name] = currentAnimationProfile.MyDeathClip;
                     currentAnimations.MyDeathClip = currentAnimationProfile.MyDeathClip;
@@ -996,10 +1016,11 @@ namespace AnyRPG {
                         currentAnimations.MyDeathClip = defaultAnimationProfile.MyDeathClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyStunnedClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyStunnedClip.name)
+                && overrideController[systemAnimations.MyStunnedClip.name] != currentAnimationProfile.MyStunnedClip
+                && overrideController[systemAnimations.MyStunnedClip.name] != defaultAnimationProfile.MyStunnedClip) {
                 if (currentAnimationProfile.MyStunnedClip != null) {
                     overrideController[systemAnimations.MyStunnedClip.name] = currentAnimationProfile.MyStunnedClip;
                     currentAnimations.MyStunnedClip = currentAnimationProfile.MyStunnedClip;
@@ -1009,10 +1030,11 @@ namespace AnyRPG {
                         currentAnimations.MyStunnedClip = defaultAnimationProfile.MyStunnedClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
-            if (overrideControllerClipList.Contains(systemAnimations.MyLevitatedClip.name)) {
+
+            if (overrideControllerClipList.Contains(systemAnimations.MyLevitatedClip.name)
+                && overrideController[systemAnimations.MyLevitatedClip.name] != currentAnimationProfile.MyLevitatedClip
+                && overrideController[systemAnimations.MyLevitatedClip.name] != defaultAnimationProfile.MyLevitatedClip) {
                 if (currentAnimationProfile.MyLevitatedClip != null) {
                     overrideController[systemAnimations.MyLevitatedClip.name] = currentAnimationProfile.MyLevitatedClip;
                     currentAnimations.MyLevitatedClip = currentAnimationProfile.MyLevitatedClip;
@@ -1022,11 +1044,12 @@ namespace AnyRPG {
                         currentAnimations.MyLevitatedClip = defaultAnimationProfile.MyLevitatedClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager: " + currentAnimations.MyLevitatedClip);
             }
+
             //Debug.Log("CharacterAnimator.SetAnimationClipOverrides() Current Animation Profile Contains Revive Clip");
-            if (overrideControllerClipList.Contains(systemAnimations.MyReviveClip.name)) {
+            if (overrideControllerClipList.Contains(systemAnimations.MyReviveClip.name)
+                && overrideController[systemAnimations.MyReviveClip.name] != currentAnimationProfile.MyReviveClip
+                && overrideController[systemAnimations.MyReviveClip.name] != defaultAnimationProfile.MyReviveClip) {
                 if (currentAnimationProfile.MyReviveClip != null) {
                     overrideController[systemAnimations.MyReviveClip.name] = currentAnimationProfile.MyReviveClip;
                     currentAnimations.MyReviveClip = currentAnimationProfile.MyReviveClip;
@@ -1036,8 +1059,6 @@ namespace AnyRPG {
                         currentAnimations.MyReviveClip = defaultAnimationProfile.MyReviveClip;
                     }
                 }
-            } else {
-                Debug.LogError("Could not find a default clip from the SystemConfigurationManager");
             }
 
             //overrideController = tempOverrideController;

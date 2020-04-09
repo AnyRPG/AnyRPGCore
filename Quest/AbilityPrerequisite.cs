@@ -17,12 +17,12 @@ namespace AnyRPG {
 
         private BaseAbility prerequisiteAbility = null;
 
-        public void HandleAbilityListChanged(BaseAbility newAbility) {
-            if (newAbility == prerequisiteAbility) {
-                prerequisiteMet = true;
+        public void HandleAbilityListChanged() {
+            Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
+            bool originalResult = prerequisiteMet;
+            prerequisiteMet = true;
+            if (prerequisiteMet != originalResult) {
                 OnStatusUpdated();
-            } else {
-                //prerequisiteMet = false;
             }
         }
 
@@ -44,15 +44,17 @@ namespace AnyRPG {
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
                 prerequisiteAbility = SystemAbilityManager.MyInstance.GetResource(prerequisiteName);
+                if (prerequisiteAbility != null) {
+                    prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
+                }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
             }
-            SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
+            if (prerequisiteAbility != null) {
+                prerequisiteAbility.OnAbilityLearn -= HandleAbilityListChanged;
             }
         }
 

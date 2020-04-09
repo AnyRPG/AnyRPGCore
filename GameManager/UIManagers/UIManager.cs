@@ -337,7 +337,7 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChanged(BaseAbility newAbility) {
-            //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility) + ")");
+            //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility.MyName) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {
                 if (newAbility.MyAutoAddToBars == true) {

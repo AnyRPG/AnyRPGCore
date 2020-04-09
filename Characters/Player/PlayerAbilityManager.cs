@@ -56,6 +56,7 @@ namespace AnyRPG {
             if (returnValue) {
                 //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue is true");
                 SystemEventManager.MyInstance.NotifyOnAbilityListChanged(newAbility);
+                newAbility.NotifyOnLearn();
             } else {
                 //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
@@ -103,6 +104,7 @@ namespace AnyRPG {
             // DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
             OnPerformAbility(ability);
             SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
+            (ability as BaseAbility).NotifyOnAbilityUsed();
         }
 
         public override void NotifyAttemptPerformAbility(IAbility ability) {

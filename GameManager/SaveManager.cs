@@ -190,7 +190,9 @@ namespace AnyRPG {
 
         public void SaveUMASettings(Equipment oldItem, Equipment newItem) {
             //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
-            SaveUMASettings();
+            if ((oldItem != null && oldItem.MyUMARecipes.Count > 0) || (newItem != null && newItem.MyUMARecipes.Count > 0)) {
+                SaveUMASettings();
+            }
         }
 
 

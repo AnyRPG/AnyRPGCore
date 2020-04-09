@@ -135,7 +135,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (newItem.MyUMARecipes != null && dynamicCharacterAvatar != null) {
+            if (newItem.MyUMARecipes != null && newItem.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.MyName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
@@ -491,7 +491,7 @@ namespace AnyRPG {
                 }
                 Equipment oldItem = currentEquipment[equipmentSlot];
 
-                if (oldItem.MyUMARecipes != null && dynamicCharacterAvatar != null) {
+                if (oldItem.MyUMARecipes != null && oldItem.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
                     // Clear the item from the UMA slot on the UMA character
                     //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                     //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
