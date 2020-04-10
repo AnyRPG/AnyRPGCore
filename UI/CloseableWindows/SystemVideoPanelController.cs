@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -12,10 +13,7 @@ namespace AnyRPG {
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         [SerializeField]
-        private Dropdown resolutionDropDown = null;
-
-        //[SerializeField]
-        //private Dropdown qualityDropDown = null;
+        private TMP_Dropdown resolutionDropDown = null;
 
         private Resolution[] resolutions;
 

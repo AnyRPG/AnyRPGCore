@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ namespace AnyRPG {
         void StopInteract();
         bool HasMiniMapText();
         bool HasMiniMapIcon();
-        bool SetMiniMapText(Text text);
+        bool SetMiniMapText(TextMeshProUGUI text);
         void SetMiniMapIcon(Image icon);
 
     }

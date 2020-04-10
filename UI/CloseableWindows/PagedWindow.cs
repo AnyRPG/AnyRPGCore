@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -8,7 +9,7 @@ using UnityEngine.EventSystems;
 namespace AnyRPG {
     public class PagedWindow : CloseableWindow, IScrollHandler {
         [SerializeField]
-        private Text pageNumber = null;
+        private TextMeshProUGUI pageNumber = null;
 
         [SerializeField]
         private GameObject previousBtn = null;

@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ namespace AnyRPG {
 public class OnOffTextButton : MonoBehaviour {
 
     [SerializeField]
-    private Text text = null;
+    private TextMeshProUGUI text = null;
 
     //[SerializeField]
     //private GameObject hightlightImage = null;
@@ -24,7 +25,7 @@ public class OnOffTextButton : MonoBehaviour {
     [SerializeField]
     private Color baseColor = Color.gray;
 
-    public Text MyText { get => text; }
+    public TextMeshProUGUI MyText { get => text; }
 
     public void Select() {
         //Debug.Log(gameObject.name + ".HightlightButton.Select()");

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,10 +16,10 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text characterClassName = null;
+        private TextMeshProUGUI characterClassName = null;
 
         [SerializeField]
-        private Text description = null;
+        private TextMeshProUGUI description = null;
 
         public void AddCharacterClass(CharacterClass newCharacterClass) {
             characterClass = newCharacterClass;

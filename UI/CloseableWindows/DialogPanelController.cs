@@ -13,7 +13,7 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private Text characterNameText = null;
+        private TextMeshProUGUI characterNameText = null;
 
         [SerializeField]
         private TextMeshProUGUI dialogText = null;
@@ -24,7 +24,7 @@ namespace AnyRPG {
         */
 
         [SerializeField]
-        private Text buttonText = null;
+        private TextMeshProUGUI buttonText = null;
 
         [SerializeField]
         private GameObject viewQuestButton = null;

@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +12,12 @@ public class InteractionPanelScript : MonoBehaviour {
 
 
     [SerializeField]
-    private Text text = null;
+    private TextMeshProUGUI text = null;
 
     [SerializeField]
     private Image icon = null;
 
-    public Text MyText {
+    public TextMeshProUGUI MyText {
         get {
             return text;
         }

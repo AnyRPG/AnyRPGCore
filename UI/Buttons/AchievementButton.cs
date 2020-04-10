@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,10 +16,10 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text resourceNameField = null;
+        private TextMeshProUGUI resourceNameField = null;
 
         [SerializeField]
-        private Text descriptionField = null;
+        private TextMeshProUGUI descriptionField = null;
 
         public void AddResource(Quest quest) {
             this.rawResource = quest;

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace AnyRPG {
     public class TextLogController : MonoBehaviour {
 
         [SerializeField]
-        private Text text = null;
+        private TextMeshProUGUI text = null;
 
         //[SerializeField]
         //private int defaultFontSize = 18;

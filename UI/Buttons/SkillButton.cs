@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,10 +18,10 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text skillNameText = null;
+        private TextMeshProUGUI skillNameText = null;
 
         [SerializeField]
-        private Text description = null;
+        private TextMeshProUGUI description = null;
 
         public void AddSkill(Skill newSkill) {
             //Debug.Log("SkillButton.AddSkill(" + (skillName != null && skillName != string.Empty ? skillName : "null") + ")");

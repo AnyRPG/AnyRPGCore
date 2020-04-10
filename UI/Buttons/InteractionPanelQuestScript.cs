@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,11 +24,11 @@ public class InteractionPanelQuestScript : MonoBehaviour {
     private QuestGiver questGiver;
 
     [SerializeField]
-    private Text text = null;
+    private TextMeshProUGUI text = null;
 
     private bool markedComplete = false;
 
-    public Text MyText {
+    public TextMeshProUGUI MyText {
         get {
             return text;
         }

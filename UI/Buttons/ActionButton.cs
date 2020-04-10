@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,10 +15,10 @@ namespace AnyRPG {
         public IUseable MyUseable { get; set; }
 
         [SerializeField]
-        private Text stackSizeText = null;
+        private TextMeshProUGUI stackSizeText = null;
 
         [SerializeField]
-        private Text keyBindText = null;
+        private TextMeshProUGUI keyBindText = null;
 
         [SerializeField]
         private Image icon = null;
@@ -42,8 +43,8 @@ namespace AnyRPG {
 
         public Image MyIcon { get => icon; set => icon = value; }
         public int MyCount { get => count; }
-        public Text MyStackSizeText { get => stackSizeText; }
-        public Text MyKeyBindText { get => keyBindText; }
+        public TextMeshProUGUI MyStackSizeText { get => stackSizeText; }
+        public TextMeshProUGUI MyKeyBindText { get => keyBindText; }
         public Coroutine MyAutoAttackCoRoutine { get => autoAttackCoRoutine; set => autoAttackCoRoutine = value; }
         public Coroutine MyAbilityCoRoutine { get => abilityCoRoutine; set => abilityCoRoutine = value; }
 

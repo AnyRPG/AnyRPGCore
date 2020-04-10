@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,7 +43,7 @@ namespace AnyRPG {
         //private GameObject cancelButton = null;
 
         [SerializeField]
-        private Text craftAmountText = null;
+        private TextMeshProUGUI craftAmountText = null;
 
         [SerializeField]
         private GameObject recipePrefab = null;
@@ -63,7 +64,7 @@ namespace AnyRPG {
         //private GameObject recipeDetailsArea = null;
 
         [SerializeField]
-        private Text recipeDescription = null;
+        private TextMeshProUGUI recipeDescription = null;
 
         [SerializeField]
         private GameObject materialsHeading = null;

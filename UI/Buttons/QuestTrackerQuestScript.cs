@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,11 +13,11 @@ public class QuestTrackerQuestScript : MonoBehaviour
     public Quest MyQuest { get; set; }
 
     [SerializeField]
-    private Text text = null;
+    private TextMeshProUGUI text = null;
 
     //private bool markedComplete = false;
 
-    public Text MyText {
+    public TextMeshProUGUI MyText {
         get {
             return text;
         }

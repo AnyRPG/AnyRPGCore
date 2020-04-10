@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,7 +39,7 @@ namespace AnyRPG {
         //private Transform skillParent = null;
 
         [SerializeField]
-        private Text skillDescription = null;
+        private TextMeshProUGUI skillDescription = null;
 
         //[SerializeField]
         //private GameObject availableHeading = null;

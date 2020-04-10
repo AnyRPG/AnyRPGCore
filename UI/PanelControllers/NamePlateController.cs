@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -15,10 +16,10 @@ namespace AnyRPG {
         private GameObject healthBar = null;
 
         [SerializeField]
-        private Text characterName = null;
+        private TextMeshProUGUI characterName = null;
 
         [SerializeField]
-        private Text questIndicator = null;
+        private TextMeshProUGUI questIndicator = null;
 
         [SerializeField]
         private GameObject questIndicatorBackground = null;
@@ -33,7 +34,7 @@ namespace AnyRPG {
         private GameObject speechBubbleBackground = null;
 
         [SerializeField]
-        private Text speechBubbleText = null;
+        private TextMeshProUGUI speechBubbleText = null;
 
         [SerializeField]
         private NamePlateCanvasController namePlateCanvasController = null;
@@ -68,8 +69,8 @@ namespace AnyRPG {
 
         public Image MyHealthSlider { get => healthSlider; }
         public GameObject MyHealthBar { get => healthBar; }
-        public Text MyCharacterName { get => characterName; set => characterName = value; }
-        public Text MyQuestIndicator { get => questIndicator; }
+        public TextMeshProUGUI MyCharacterName { get => characterName; set => characterName = value; }
+        public TextMeshProUGUI MyQuestIndicator { get => questIndicator; }
         public GameObject MyQuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
         public Image MyGenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
         public NamePlateCanvasController MyNamePlateCanvasController { get => namePlateCanvasController; set => namePlateCanvasController = value; }

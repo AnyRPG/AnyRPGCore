@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -103,7 +104,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override bool SetMiniMapText(Text text) {
+        public override bool SetMiniMapText(TextMeshProUGUI text) {
             //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";

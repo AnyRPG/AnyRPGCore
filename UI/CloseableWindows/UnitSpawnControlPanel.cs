@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UMA;
@@ -45,16 +46,16 @@ namespace AnyRPG {
         private GameObject extraLevelsOptionsArea = null;
 
         [SerializeField]
-        private Dropdown levelTypeDropdown = null;
+        private TMP_Dropdown levelTypeDropdown = null;
 
         [SerializeField]
-        private Dropdown levelDropdown = null;
+        private TMP_Dropdown levelDropdown = null;
 
         [SerializeField]
-        private Dropdown extraLevelsDropdown = null;
+        private TMP_Dropdown extraLevelsDropdown = null;
 
         [SerializeField]
-        private Dropdown toughnessDropdown = null;
+        private TMP_Dropdown toughnessDropdown = null;
 
         [SerializeField]
         private AnyRPGUnitPreviewCameraController previewCameraController;
@@ -141,7 +142,7 @@ namespace AnyRPG {
             if (unitSpawnButton.MyUnitProfile.MyDefaultToughness != null) {
                 //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
                 int counter = 1;
-                foreach (Dropdown.OptionData data in toughnessDropdown.options) {
+                foreach (TMP_Dropdown.OptionData data in toughnessDropdown.options) {
                     if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyName) {
                         toughnessDropdown.value = counter;
                         break;

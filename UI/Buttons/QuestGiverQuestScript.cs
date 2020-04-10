@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ public class QuestGiverQuestScript : MonoBehaviour
     public Quest MyQuest { get; set; }
 
     [SerializeField]
-    private Text text = null;
+    private TextMeshProUGUI text = null;
 
     private bool markedComplete = false;
 
@@ -22,7 +23,7 @@ public class QuestGiverQuestScript : MonoBehaviour
     [SerializeField]
     private Color baseColor = new Color32(0, 0, 0, 0);
 
-    public Text MyText {
+    public TextMeshProUGUI MyText {
         get {
             return text;
         }

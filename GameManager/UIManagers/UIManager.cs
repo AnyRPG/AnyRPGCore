@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -98,7 +99,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject toolTip = null;
 
-        private Text toolTipText = null;
+        private TextMeshProUGUI toolTipText = null;
 
         [SerializeField]
         private CurrencyBarController toolTipCurrencyBarController = null;
@@ -107,7 +108,7 @@ namespace AnyRPG {
         private RectTransform tooltipRect = null;
 
         // objects in the mouseover window
-        private Text mouseOverText;
+        private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
 
         // is a window currently being dragged.  used to suppres camera turn and pan
@@ -157,10 +158,10 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 HandlePlayerUnitSpawn();
             }
-            toolTipText = toolTip.GetComponentInChildren<Text>();
+            toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
 
             // get references to all the items in the mouseover window we will need to update
-            mouseOverText = mouseOverWindow.transform.GetComponentInChildren<Text>();
+            mouseOverText = mouseOverWindow.transform.GetComponentInChildren<TextMeshProUGUI>();
 
             DeActivateMouseOverWindow();
         }

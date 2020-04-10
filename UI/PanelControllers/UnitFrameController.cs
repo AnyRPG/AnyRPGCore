@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +11,10 @@ namespace AnyRPG {
         // objects in the player stats window
 
         [SerializeField]
-        private Text unitNameText = null;
+        private TextMeshProUGUI unitNameText = null;
 
         [SerializeField]
-        private Text unitLevelText = null;
+        private TextMeshProUGUI unitLevelText = null;
 
         [SerializeField]
         private Image unitNameBackground = null;
@@ -22,13 +23,13 @@ namespace AnyRPG {
         private Image healthSlider = null;
 
         [SerializeField]
-        private Text healthText = null;
+        private TextMeshProUGUI healthText = null;
 
         [SerializeField]
         private Image manaSlider = null;
 
         [SerializeField]
-        private Text manaText = null;
+        private TextMeshProUGUI manaText = null;
 
         [SerializeField]
         private CastBarController castBarController = null;

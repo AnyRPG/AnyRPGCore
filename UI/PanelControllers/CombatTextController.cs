@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CombatTextController : MonoBehaviour {
         //[SerializeField]
-        //private Text tmpProtext = null;
+        //private TextMeshProUGUI tmpProtext = null;
 
         [SerializeField]
         private TextMeshProUGUI tmpProtext = null;

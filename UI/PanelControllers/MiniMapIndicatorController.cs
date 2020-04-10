@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -98,7 +99,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
             } else if (_interactable.HasMiniMapText()) {
                 //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.Start(): interactable has minimaptext");
                 GameObject go = Instantiate(miniMapTextLayerPrefab, contentParent);
-                Text _text = go.GetComponent<Text>();
+                TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                 _interactable.SetMiniMapText(_text);
                 miniMapLayers.Add(_interactable, go);
             }
@@ -143,7 +144,7 @@ public class MiniMapIndicatorController : MonoBehaviour {
             _interactable.SetMiniMapIcon(miniMapLayers[_interactable].GetComponent<Image>());
             } else if (_interactable.HasMiniMapText()) {
             //Debug.Log(_interactable.MyName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate() : hastext");
-            _interactable.SetMiniMapText(miniMapLayers[_interactable].GetComponent<Text>());
+            _interactable.SetMiniMapText(miniMapLayers[_interactable].GetComponent<TextMeshProUGUI>());
             }
         //}
     }

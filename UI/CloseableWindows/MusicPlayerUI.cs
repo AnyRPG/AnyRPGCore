@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,7 +42,7 @@ namespace AnyRPG {
         //private Transform highlightButtonParent = null;
 
         [SerializeField]
-        private Text musicDescription = null;
+        private TextMeshProUGUI musicDescription = null;
 
         //[SerializeField]
         //private GameObject availableHeading = null;

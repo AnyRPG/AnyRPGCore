@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +9,10 @@ namespace AnyRPG {
     public class MainMenuManager : MonoBehaviour {
 
         [SerializeField]
-        private Text gameNameText = null;
+        private TextMeshProUGUI gameNameText = null;
 
         [SerializeField]
-        private Text gameVersionText = null;
+        private TextMeshProUGUI gameVersionText = null;
 
         private void Awake() {
             CheckMissingInspectorValues();

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -114,7 +115,7 @@ namespace AnyRPG {
             return (MyNamePlateImage != null);
         }
 
-        public virtual bool SetMiniMapText(Text text) {
+        public virtual bool SetMiniMapText(TextMeshProUGUI text) {
             return (GetCurrentOptionCount() > 0);
         }
 

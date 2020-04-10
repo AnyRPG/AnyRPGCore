@@ -99,7 +99,9 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelLoad -= InitializeMap;
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnLevelLoad -= InitializeMap;
+            }
             eventSubscriptionsInitialized = false;
         }
 

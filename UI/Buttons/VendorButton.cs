@@ -25,7 +25,7 @@ namespace AnyRPG {
         //private Outline qualityColorOutline = null;
 
         [SerializeField]
-        private Text quantity = null;
+        private TextMeshProUGUI quantity = null;
 
         [SerializeField]
         private CurrencyBarController currencyBarController = null;

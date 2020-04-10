@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UMA.CharacterSystem;
@@ -32,7 +33,7 @@ namespace AnyRPG {
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
         [SerializeField]
-        private Text statsDescription = null;
+        private TextMeshProUGUI statsDescription = null;
 
         [SerializeField]
         private AnyRPGCharacterPreviewCameraController previewCameraController;

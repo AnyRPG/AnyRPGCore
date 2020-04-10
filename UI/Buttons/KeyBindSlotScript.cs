@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,10 +13,10 @@ namespace AnyRPG {
         private string keyBindID = string.Empty;
 
         [SerializeField]
-        private Text slotLabel = null;
+        private TextMeshProUGUI slotLabel = null;
 
         [SerializeField]
-        private Text buttonLabel = null;
+        private TextMeshProUGUI buttonLabel = null;
 
         private KeyBindNode keyBindNode = null;
 

@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -242,7 +243,7 @@ namespace AnyRPG {
             return indicatorType;
         }
 
-        private void SetIndicatorText(string indicatorType, Text text) {
+        private void SetIndicatorText(string indicatorType, TextMeshProUGUI text) {
             //Debug.Log(gameObject.name + ".QuestGiver.SetIndicatorText(" + indicatorType + ")");
             if (indicatorType == "complete") {
                 text.text = "?";
@@ -264,7 +265,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override bool SetMiniMapText(Text text) {
+        public override bool SetMiniMapText(TextMeshProUGUI text) {
             //Debug.Log(gameObject.name + ".QuestGiver.SetMiniMapText()");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";

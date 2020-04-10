@@ -2,6 +2,7 @@ using AnyRPG;
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 using UMA;
 using UMA.Examples;
 using UMA.CharacterSystem;
@@ -98,7 +99,7 @@ public class AnyRPGCharacterCreator : MonoBehaviour {
             DNAHandler ch = go.GetComponent<DNAHandler>();
             ch.Setup(Avatar, ds.Value, WardrobePanel);
 
-            Text txt = go.GetComponentInChildren<Text>();
+            TextMeshProUGUI txt = go.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = ds.Value.Name;
             go.transform.SetParent(SlotPanel.transform);
         }
@@ -125,7 +126,7 @@ public class AnyRPGCharacterCreator : MonoBehaviour {
 
             ch.Setup(Avatar, ocd.name, WardrobePanel, currColors);
 
-            Text txt = go.GetComponentInChildren<Text>();
+            TextMeshProUGUI txt = go.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = ocd.name;
             go.transform.SetParent(SlotPanel.transform);
         }
@@ -143,7 +144,7 @@ public class AnyRPGCharacterCreator : MonoBehaviour {
             GameObject go = GameObject.Instantiate(SlotPrefab);
             SlotHandler sh = go.GetComponent<SlotHandler>();
             sh.Setup(Avatar, s, WardrobePanel);
-            Text txt = go.GetComponentInChildren<Text>();
+            TextMeshProUGUI txt = go.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = s;
             go.transform.SetParent(SlotPanel.transform);
         }

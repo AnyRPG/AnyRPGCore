@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private string dragString = string.Empty;
 
     [SerializeField]
-    private Text dragText = null;
+    private TextMeshProUGUI dragText = null;
 
     [SerializeField]
     protected bool alwaysDraggable = false;

@@ -15,13 +15,13 @@ namespace AnyRPG {
         private Image icon = null;
 
         //[SerializeField]
-        //private Text playerName = null;
+        //private TextMeshProUGUI playerName = null;
 
         [SerializeField]
         private TextMeshProUGUI playerName = null;
 
         //[SerializeField]
-        //private Text description = null;
+        //private TextMeshProUGUI description = null;
 
         [SerializeField]
         private TextMeshProUGUI description = null;

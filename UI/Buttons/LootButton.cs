@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,12 +12,12 @@ namespace AnyRPG {
         private Image icon = null;
 
         [SerializeField]
-        private Text title = null;
+        private TextMeshProUGUI title = null;
 
         private LootUI lootWindow = null;
 
         public Image MyIcon { get => icon; }
-        public Text MyTitle { get => title; }
+        public TextMeshProUGUI MyTitle { get => title; }
 
         public Item MyLoot { get; set; }
 

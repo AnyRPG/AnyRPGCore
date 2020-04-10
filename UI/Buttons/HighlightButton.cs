@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ namespace AnyRPG {
     public class HighlightButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
 
         [SerializeField]
-        protected Text text;
+        protected TextMeshProUGUI text;
 
         [SerializeField]
         protected Image highlightImage;
@@ -37,7 +38,7 @@ namespace AnyRPG {
         [SerializeField]
         protected bool CapitalizeText = false;
 
-        public Text MyText { get => text; }
+        public TextMeshProUGUI MyText { get => text; }
 
         public void Awake() {
             //Debug.Log(gameObject.name + ".HightlightButton.Awake()");

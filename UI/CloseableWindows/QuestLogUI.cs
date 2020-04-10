@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,7 +43,7 @@ namespace AnyRPG {
         private Transform questParent = null;
 
         [SerializeField]
-        private Text questCount = null;
+        private TextMeshProUGUI questCount = null;
 
         [SerializeField]
         private int maxCount = 25;

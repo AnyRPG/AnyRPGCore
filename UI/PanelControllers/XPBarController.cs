@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace AnyRPG {
         //private GameObject xpBarBackGround = null;
 
         [SerializeField]
-        private Text xpText = null;
+        private TextMeshProUGUI xpText = null;
 
         private float originalXPSliderWidth = 0f;
 

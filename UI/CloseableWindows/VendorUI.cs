@@ -2,6 +2,7 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace AnyRPG {
         private List<VendorButton> vendorButtons = new List<VendorButton>();
 
         [SerializeField]
-        private Dropdown dropdown = null;
+        private TMP_Dropdown dropdown = null;
 
         [SerializeField]
         private CurrencyBarController currencyBarController = null;

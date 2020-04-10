@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace AnyRPG {
 public class DescribableCraftingInputIcon : DescribableIcon
 {
     [SerializeField]
-    private Text description = null;
+    private TextMeshProUGUI description = null;
 
     [SerializeField]
     private GameObject materialSlot = null;

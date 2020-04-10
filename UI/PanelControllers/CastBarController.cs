@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ namespace AnyRPG {
         private Image castSlider = null;
 
         [SerializeField]
-        private Text castText = null;
+        private TextMeshProUGUI castText = null;
 
         [SerializeField]
         private Image castIcon = null;

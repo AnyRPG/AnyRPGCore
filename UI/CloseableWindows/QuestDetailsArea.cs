@@ -2,6 +2,7 @@ using AnyRPG;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,10 @@ namespace AnyRPG {
 public class QuestDetailsArea : MonoBehaviour {
 
     [SerializeField]
-    private Text questDescription = null;
+    private TextMeshProUGUI questDescription = null;
 
     [SerializeField]
-    private Text experienceReward = null;
+    private TextMeshProUGUI experienceReward = null;
 
     [SerializeField]
     private GameObject itemsHeading = null;

@@ -1,11 +1,11 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 namespace AnyRPG {
     public class LevelManager : MonoBehaviour {
@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         [Header("LOADING SCREEN")]
         public Slider loadBar;
-        public Text finishedLoadingText;
+        public TextMeshProUGUI finishedLoadingText;
 
         public bool MyNavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         public string MyDefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }

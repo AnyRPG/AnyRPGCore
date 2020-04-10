@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UMA;
@@ -51,7 +52,7 @@ namespace AnyRPG {
         private Button despawnButton = null;
 
         [SerializeField]
-        private Text classText = null;
+        private TextMeshProUGUI classText = null;
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 

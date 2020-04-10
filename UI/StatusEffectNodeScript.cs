@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,20 +19,20 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
     private bool useTimerText = false;
 
     [SerializeField]
-    private Text timer = null;
+    private TextMeshProUGUI timer = null;
 
     [SerializeField]
     private bool useStackText = false;
 
     [SerializeField]
-    private Text stackCount = null;
+    private TextMeshProUGUI stackCount = null;
 
     private StatusEffectNode statusEffectNode = null;
 
     private CharacterUnit target = null;
 
-    public Text MyTimer { get => timer; }
-    public Text MyStackCount { get => stackCount; set => stackCount = value; }
+    public TextMeshProUGUI MyTimer { get => timer; }
+    public TextMeshProUGUI MyStackCount { get => stackCount; set => stackCount = value; }
     public Image MyIcon { get => icon; set => icon = value; }
     public bool MyUseTimerText { get => useTimerText; set => useTimerText = value; }
     public bool MyUseStackText { get => useStackText; set => useStackText = value; }

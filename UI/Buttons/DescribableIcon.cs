@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ namespace AnyRPG {
         private IDescribable describable = null;
 
         [SerializeField]
-        protected Text stackSize;
+        protected TextMeshProUGUI stackSize;
 
         protected int count;
 
@@ -31,7 +32,7 @@ namespace AnyRPG {
             }
         }
 
-        public Text MyStackSizeText {
+        public TextMeshProUGUI MyStackSizeText {
             get {
                 return stackSize;
             }

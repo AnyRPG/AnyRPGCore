@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ namespace AnyRPG {
         protected string windowTitle;
 
         [SerializeField]
-        protected Text windowText;
+        protected TextMeshProUGUI windowText;
 
         // for controlling background color
         [SerializeField]

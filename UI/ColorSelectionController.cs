@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 using UMA.CharacterSystem;
 using UMA;
 using UMA.CharacterSystem.Examples;
@@ -47,7 +48,7 @@ public class ColorSelectionController : MonoBehaviour {
         ch.SetupRemover(Avatar, ColorName);
         Image i = go.GetComponent<Image>();
         i.color = Color.white;
-        Text t = go.GetComponentInChildren<Text>();
+        TextMeshProUGUI t = go.GetComponentInChildren<TextMeshProUGUI>();
         t.text = "<default>";
         go.transform.SetParent(ColorPanel.transform);
     }

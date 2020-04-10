@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,7 @@ namespace AnyRPG {
         private LayoutElement captionBarLayoutElement = null;
 
         [SerializeField]
-        private Text captionText = null;
+        private TextMeshProUGUI captionText = null;
 
         private int cutSceneBarHeight = 100;
 

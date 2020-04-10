@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UMA;
@@ -82,13 +83,14 @@ namespace AnyRPG {
         private GameObject sexOptionsArea = null;
 
         [SerializeField]
-        private Dropdown hairAppearanceDropdown = null;
+        private TMP_Dropdown hairAppearanceDropdown = null;
 
         [SerializeField]
-        private Dropdown eyebrowsAppearanceDropdown = null;
+        private TMP_Dropdown eyebrowsAppearanceDropdown = null;
 
         [SerializeField]
-        private Dropdown beardAppearanceDropdown = null;
+        private TMP_Dropdown beardAppearanceDropdown = null;
+
 
         [SerializeField]
         private AnyRPGCharacterPreviewCameraController previewCameraController = null;
