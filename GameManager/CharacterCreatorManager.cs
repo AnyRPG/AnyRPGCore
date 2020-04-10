@@ -73,7 +73,7 @@ namespace AnyRPG {
 
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): spawning preview unit");
             previewUnit = Instantiate(cloneSource, transform.position, Quaternion.identity, transform);
-            UIManager.MyInstance.SetLayerRecursive(previewUnit, 12);
+            UIManager.MyInstance.SetLayerRecursive(previewUnit, LayerMask.NameToLayer("PlayerPreview"));
 
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
             if (previewUnit.GetComponent<PlayerUnitMovementController>() != null) {

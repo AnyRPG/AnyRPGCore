@@ -148,6 +148,9 @@ namespace AnyRPG {
             //spawn correct preview unit
             CharacterCreatorManager.MyInstance.HandleOpenWindow(unitProfile);
 
+            // testing avoid naked spawn
+            LoadUMARecipe();
+
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
@@ -158,6 +161,20 @@ namespace AnyRPG {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
                 }
             }
+        }
+
+        public void LoadUMARecipe() {
+            umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            if (umaAvatar == null) {
+                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
+            } else {
+                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
+            }
+
+            // update character creator avatar to whatever recipe the actual character currently has, if any
+            // disabled for now.  recipe should be already in recipestring anyway
+            //SaveManager.MyInstance.SaveUMASettings();
+            SaveManager.MyInstance.LoadUMASettings(umaAvatar, false);
         }
 
         public void TargetReadyCallback() {
@@ -173,6 +190,8 @@ namespace AnyRPG {
                 }
             }
 
+            // testing do this earlier
+            /*
             // get reference to avatar
             umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
@@ -185,6 +204,7 @@ namespace AnyRPG {
             // disabled for now.  recipe should be already in recipestring anyway
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(umaAvatar);
+            */
 
             CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (previewUnitEquipmentManager != null) {
@@ -201,7 +221,7 @@ namespace AnyRPG {
 
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = 12;
+            CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = LayerMask.NameToLayer("PlayerPreview");
             foreach (Transform childTransform in CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponentsInChildren<Transform>(true)) {
                 childTransform.gameObject.layer = 12;
             }

@@ -231,17 +231,17 @@ namespace AnyRPG {
             LoadUMASettings(recipeString, PlayerManager.MyInstance.MyAvatar);
         }
 
-        public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar) {
+        public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
             //Debug.Log("Savemanager.LoadUMASettings(DynamicCharacterAvatar)");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
             }
-            LoadUMASettings(recipeString, _dynamicCharacterAvatar);
+            LoadUMASettings(recipeString, _dynamicCharacterAvatar, rebuild);
         }
 
 
-        public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar) {
+        public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
             //Debug.Log("Savemanager.LoadUMASettings(string, DynamicCharacterAvatar)");
             if (_recipeString == null || _recipeString == string.Empty || _dynamicCharacterAvatar == null) {
                 //Debug.Log("Savemanager.LoadUMASettings(): _recipeString is empty. exiting!");
@@ -251,7 +251,9 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadUMASettings(): " + recipeString);
             _dynamicCharacterAvatar.SetLoadString(_recipeString);
             _dynamicCharacterAvatar.LoadFromRecipeString(_recipeString);
-            _dynamicCharacterAvatar.BuildCharacter();
+            if (rebuild) {
+                _dynamicCharacterAvatar.BuildCharacter();
+            }
         }
 
         /*
