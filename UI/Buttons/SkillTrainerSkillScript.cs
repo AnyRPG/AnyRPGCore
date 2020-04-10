@@ -27,7 +27,6 @@ namespace AnyRPG {
             base.Select();
             SkillTrainerUI.MyInstance.MySelectedSkillTrainerSkillScript = this;
 
-            //GetComponent<Text>().color = Color.red;
             SkillTrainerUI.MyInstance.ShowDescription(skill);
 
         }

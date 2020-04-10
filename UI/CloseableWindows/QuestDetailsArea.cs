@@ -149,9 +149,9 @@ public class QuestDetailsArea : MonoBehaviour {
         if (quest.MyItemRewards.Count > 0) {
             itemsHeading.gameObject.SetActive(true);
             if (quest.MyMaxItemRewards > 0) {
-                itemsHeading.GetComponent<Text>().text = "Choose " + quest.MyMaxItemRewards + " Item Rewards:";
+                itemsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxItemRewards + " Item Rewards:";
             } else {
-                itemsHeading.GetComponent<Text>().text = "Item Rewards:";
+                itemsHeading.GetComponent<TextMeshProUGUI>().text = "Item Rewards:";
             }
         }
         for (int i = 0; i < quest.MyItemRewards.Count; i++) {
@@ -166,12 +166,12 @@ public class QuestDetailsArea : MonoBehaviour {
         if (quest.MyAbilityRewards.Count > 0) {
             abilitiesHeading.gameObject.SetActive(true);
             if (quest.MyMaxAbilityRewards > 0) {
-                abilitiesHeading.GetComponent<Text>().text = "Choose " + quest.MyMaxAbilityRewards + " Ability Rewards:";
+                abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxAbilityRewards + " Ability Rewards:";
             } else {
-                abilitiesHeading.GetComponent<Text>().text = "Ability Rewards:";
+                abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "Ability Rewards:";
             }
         } else {
-            abilitiesHeading.GetComponent<Text>().text = "";
+            abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "";
         }
         for (int i = 0; i < quest.MyAbilityRewards.Count; i++) {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
@@ -185,12 +185,12 @@ public class QuestDetailsArea : MonoBehaviour {
         if (quest.MyFactionRewards.Count > 0) {
             factionsHeading.gameObject.SetActive(true);
             if (quest.MyMaxFactionRewards > 0) {
-                factionsHeading.GetComponent<Text>().text = "Choose " + quest.MyMaxFactionRewards + " Reputation Rewards:";
+                factionsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxFactionRewards + " Reputation Rewards:";
             } else {
-                factionsHeading.GetComponent<Text>().text = "Reputation Rewards:";
+                factionsHeading.GetComponent<TextMeshProUGUI>().text = "Reputation Rewards:";
             }
         } else {
-            factionsHeading.GetComponent<Text>().text = "";
+            factionsHeading.GetComponent<TextMeshProUGUI>().text = "";
         }
         for (int i = 0; i < quest.MyFactionRewards.Count; i++) {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, factionIconsArea.transform).GetComponent<RewardButton>();
@@ -204,12 +204,12 @@ public class QuestDetailsArea : MonoBehaviour {
         if (quest.MySkillRewards.Count > 0) {
             skillHeading.gameObject.SetActive(true);
             if (quest.MyMaxSkillRewards > 0) {
-                skillHeading.GetComponent<Text>().text = "Choose " + quest.MyMaxSkillRewards + " Skill Rewards:";
+                skillHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxSkillRewards + " Skill Rewards:";
             } else {
-                skillHeading.GetComponent<Text>().text = "Skill Rewards:";
+                skillHeading.GetComponent<TextMeshProUGUI>().text = "Skill Rewards:";
             }
         } else {
-            skillHeading.GetComponent<Text>().text = "";
+            skillHeading.GetComponent<TextMeshProUGUI>().text = "";
         }
         for (int i = 0; i < quest.MySkillRewards.Count; i++) {
             RewardButton rewardIcon = Instantiate(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();

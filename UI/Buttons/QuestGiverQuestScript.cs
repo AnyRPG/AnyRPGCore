@@ -38,7 +38,6 @@ public class QuestGiverQuestScript : MonoBehaviour
 
         //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": setting color: " + highlightColor);
         GetComponent<Image>().color = highlightColor;
-        //GetComponent<Text>().color = Color.red;
     }
 
 
@@ -56,7 +55,6 @@ public class QuestGiverQuestScript : MonoBehaviour
     public void DeSelect() {
         //Debug.Log("QuestGiverQuestScript.DeSelect(): " + MyQuest.MyTitle + ": setting color: " + baseColor);
         GetComponent<Image>().color = baseColor;
-        //GetComponent<Text>().color = Color.white;
         QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript = null;
     }
 

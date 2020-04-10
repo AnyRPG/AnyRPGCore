@@ -25,7 +25,6 @@ namespace AnyRPG {
             base.Select();
             MusicPlayerUI.MyInstance.MySelectedMusicPlayerHighlightButton = this;
 
-            //GetComponent<Text>().color = Color.red;
             MusicPlayerUI.MyInstance.ShowDescription(musicProfile);
 
         }

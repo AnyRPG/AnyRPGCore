@@ -27,7 +27,6 @@ namespace AnyRPG {
             base.Select();
             CraftingUI.MyInstance.MySelectedRecipeScript = this;
 
-            //GetComponent<Text>().color = Color.red;
             CraftingUI.MyInstance.ShowDescription(MyRecipe);
 
         }

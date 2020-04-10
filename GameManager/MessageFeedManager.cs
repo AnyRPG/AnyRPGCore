@@ -1,6 +1,7 @@
 using AnyRPG;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,7 +42,7 @@ public class MessageFeedManager : MonoBehaviour {
             return;
         }
         GameObject go = Instantiate(messagePrefab, messageFeedGameObject.transform);
-        go.GetComponent<Text>().text = message;
+        go.GetComponent<TextMeshProUGUI>().text = message;
         //uncomment the next line to make the messages spawn at the top instead of the bottom
         //go.transform.SetAsFirstSibling();
         Destroy(go, 2);

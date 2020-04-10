@@ -248,7 +248,6 @@ namespace AnyRPG {
             //GameObject go = Instantiate(textPrefab, combatContentArea.transform);
             //combatMessageList.Add(go);
             TextLogController textLogController = GetTextLogController(ref combatLogControllers, ref usedCombatLogControllers);
-            //go.GetComponent<Text>().text = newMessage;
             textLogController.InitializeTextLogController(newMessage);
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(combatRectTransform);
@@ -261,7 +260,6 @@ namespace AnyRPG {
             //systemMessageList.Add(go);
             TextLogController textLogController = GetTextLogController(ref systemLogControllers, ref usedSystemLogControllers);
 
-            //go.GetComponent<Text>().text = newMessage;
             textLogController.InitializeTextLogController(newMessage);
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(systemRectTransform);
