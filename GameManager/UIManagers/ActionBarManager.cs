@@ -15,6 +15,11 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        private Coroutine targetRangeRoutine = null;
+
+        // the action bar target for range checks
+        private GameObject target = null;
+
         public ActionButton MyFromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> MyActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
 
@@ -34,6 +39,8 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+                SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearActionBars;
                 SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChange;
             }
@@ -46,6 +53,8 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearActionBars;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChange;
             }
@@ -55,6 +64,101 @@ namespace AnyRPG {
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
+        }
+
+        public void HandlePlayerUnitSpawn() {
+            //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
+            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget += HandleClearTarget;
+        }
+
+        public void HandlePlayerUnitDespawn() {
+            //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
+            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget -= HandleClearTarget;
+        }
+
+        public void HandleSetTarget(GameObject target) {
+            //Debug.Log("ActionBarmanager.HandleSetTarget()");
+            this.target = target;
+            if (targetRangeRoutine == null) {
+                targetRangeRoutine = StartCoroutine(UpdateTargetRange());
+            }
+        }
+
+        public void HandleClearTarget() {
+            //Debug.Log("ActionBarmanager.HandleClearTarget()");
+            if (targetRangeRoutine != null) {
+                StopCoroutine(targetRangeRoutine);
+                targetRangeRoutine = null;
+            }
+            ResetRangeColors();
+            target = null;
+        }
+
+        public bool HasTarget() {
+            return (target != null);
+        }
+
+        public void ResetRangeColors() {
+            //Debug.Log("ActionBarmanager.ResetRangeColors()");
+            foreach (ActionBarController actionBarController in actionBarControllers) {
+                foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
+                    if (actionButton.MyKeyBindText.color != Color.white) {
+                        actionButton.MyKeyBindText.color = Color.white;
+                    }
+                }
+            }
+        }
+
+        public IEnumerator UpdateTargetRange() {
+            //Debug.Log("ActionBarmanager.UpdateTargetRange()");
+            float distanceToTarget = 0f;
+            bool inRange = false;
+            while (HasTarget()) {
+                distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.transform.position, target.transform.position);
+                //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
+                foreach (ActionBarController actionBarController in actionBarControllers) {
+                    foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
+                        if ((actionButton.MyUseable as BaseAbility) is BaseAbility) {
+                            BaseAbility baseAbility = actionButton.MyUseable as BaseAbility;
+                            if (baseAbility.MyUseMeleeRange == true) {
+                                if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyHitBox < distanceToTarget) {
+                                    // red text
+                                    inRange = false;
+                                } else {
+                                    // white text
+                                    inRange = true;
+                                }
+                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): melee " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                            } else {
+                                if (baseAbility.MyMaxRange < distanceToTarget) {
+                                    // set text color to red
+                                    inRange = false;
+                                } else {
+                                    // set the text color to white
+                                    inRange = true;
+                                }
+                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                            }
+                            if (inRange) {
+                                if (actionButton.MyKeyBindText.color != Color.white) {
+                                    actionButton.MyKeyBindText.color = Color.white;
+                                    //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white for ability " + baseAbility.MyName);
+                                }
+                            } else {
+                                if (actionButton.MyKeyBindText.color != Color.red) {
+                                    actionButton.MyKeyBindText.color = Color.red;
+                                    //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to red for ability " + baseAbility.MyName);
+                                }
+                            }
+                        }
+                    }
+                }
+                yield return null;
+            }
+            targetRangeRoutine = null;
+            //Debug.Log("ActionBarmanager.UpdateTargetRange(): exiting coroutine");
         }
 
         public List<ActionButton> GetActionButtons() {

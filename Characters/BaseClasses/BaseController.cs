@@ -215,7 +215,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        private Vector3 GetHitBoxSize() {
+        public Vector3 GetHitBoxSize() {
             if (baseCharacter == null) {
                 return Vector3.zero;
             }

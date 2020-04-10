@@ -244,7 +244,9 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\n<color=#ffff00ff>{3}</color>{4}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, description, addString);
+            string abilityRange = (useMeleeRange == true ? "melee" : MyMaxRange + " meters");
+
+            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
         }
 
         public bool CanCast(BaseCharacter sourceCharacter) {
