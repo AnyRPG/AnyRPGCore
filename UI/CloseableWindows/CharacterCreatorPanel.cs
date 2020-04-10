@@ -169,6 +169,9 @@ namespace AnyRPG {
             //spawn correct preview unit
             CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile);
 
+            // testing do this earlier
+            LoadUMARecipe();
+
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
@@ -181,10 +184,27 @@ namespace AnyRPG {
             }
         }
 
+        public void LoadUMARecipe() {
+            // get reference to avatar
+            umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            if (umaAvatar == null) {
+                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
+            } else {
+                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
+            }
+
+            // update character creator avatar to whatever recipe the actual character currently has, if any
+            // disabled for now.  recipe should be already in recipestring anyway
+            //SaveManager.MyInstance.SaveUMASettings();
+            SaveManager.MyInstance.LoadUMASettings(umaAvatar, false);
+
+        }
+
         public void TargetReadyCallback() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
+            /*
             // get reference to avatar
             umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
@@ -197,6 +217,7 @@ namespace AnyRPG {
             // disabled for now.  recipe should be already in recipestring anyway
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(umaAvatar);
+            */
 
             //CloseAppearanceOptionsArea();
             //CloseColorsOptionsArea();

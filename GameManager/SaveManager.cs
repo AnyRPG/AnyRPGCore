@@ -222,13 +222,13 @@ namespace AnyRPG {
             recipeString = string.Empty;
         }
 
-        public void LoadUMASettings() {
+        public void LoadUMASettings(bool rebuild = true) {
             //Debug.Log("Savemanager.LoadUMASettings()");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
             }
-            LoadUMASettings(recipeString, PlayerManager.MyInstance.MyAvatar);
+            LoadUMASettings(recipeString, PlayerManager.MyInstance.MyAvatar, rebuild);
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {

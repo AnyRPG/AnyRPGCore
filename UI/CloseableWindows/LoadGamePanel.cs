@@ -223,7 +223,7 @@ namespace AnyRPG {
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
             CharacterCreatorManager.MyInstance.MyPreviewUnit.layer = LayerMask.NameToLayer("PlayerPreview");
             foreach (Transform childTransform in CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = 12;
+                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.MyPreviewUnit.layer;
             }
 
             // new code for weapons

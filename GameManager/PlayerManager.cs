@@ -404,7 +404,9 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.HandleUMACreated()");
 
             // update the UMA armor models and stuff
-            SaveManager.MyInstance.LoadUMASettings();
+            // testing do this earlier
+            //SaveManager.MyInstance.LoadUMASettings();
+
             HandlePlayerUnitSpawn();
         }
 
@@ -432,6 +434,8 @@ namespace AnyRPG {
                 return;
             }
 
+            // try this earlier
+            SaveManager.MyInstance.LoadUMASettings(false);
 
             // initialize the animator so our avatar initialization has an animator.
             MyCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
