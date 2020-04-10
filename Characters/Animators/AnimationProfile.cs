@@ -130,7 +130,7 @@ namespace AnyRPG {
 
         //public string MyProfileName { get => profileName; set => profileName = value; }
         public List<AnimationClip> MyAttackClips { get => attackClips; set => attackClips = value; }
-        public List<AnimationClip> MyCastClips { get => attackClips; set => attackClips = value; }
+        public List<AnimationClip> MyCastClips { get => castClips; set => castClips = value; }
         public List<AnimationClip> MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
         public AnimationClip MyJumpClip { get => jumpClip; set => jumpClip = value; }
         public AnimationClip MyFallClip { get => fallClip; set => fallClip = value; }
