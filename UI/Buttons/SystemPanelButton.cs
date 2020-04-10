@@ -36,7 +36,8 @@ namespace AnyRPG {
         }
 
         public string GetDescription() {
-            return string.Format("<color=cyan>{0}</color>\n{1}", optionName, GetSummary());
+            // cyan
+            return string.Format("<color=#00FFFF>{0}</color>\n{1}", optionName, GetSummary());
         }
 
         public string GetSummary() {

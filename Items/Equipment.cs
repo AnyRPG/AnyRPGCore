@@ -286,7 +286,7 @@ namespace AnyRPG {
                 int equipmentCount = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
-                    string colorName = "grey";
+                    string colorName = "#888888";
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(equipment.MyName)) {
                         colorName = "yellow";
                     }
@@ -295,7 +295,7 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format(""));
                 for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
                     if (equipmentSet.MyTraitList[i] != null) {
-                        string colorName = "grey";
+                        string colorName = "#888888";
                         if (equipmentCount > i) {
                             colorName = "green";
                         }

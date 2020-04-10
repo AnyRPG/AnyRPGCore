@@ -129,7 +129,8 @@ namespace AnyRPG {
             if (MyBagNode.MyBag != null) {
                 return MyBagNode.MyBag.GetDescription();
             }
-            return string.Format("<color=cyan>Empty Bag Slot</color>\n{0}", GetSummary());
+            // cyan
+            return string.Format("<color=#00FFFF>Empty Bag Slot</color>\n{0}", GetSummary());
         }
 
         public string GetSummary() {

@@ -201,7 +201,8 @@ namespace AnyRPG {
             if (equippedEquipment != null) {
                 return equippedEquipment.GetDescription();
             }
-            return string.Format("<color=cyan>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlotProfile.MyName, GetSummary());
+            // cyan
+            return string.Format("<color=#00FFFF>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlotProfile.MyName, GetSummary());
         }
 
         public string GetSummary() {
