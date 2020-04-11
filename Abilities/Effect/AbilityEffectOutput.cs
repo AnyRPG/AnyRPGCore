@@ -13,6 +13,9 @@ namespace AnyRPG {
         public float castTimeMultipler = 1f;
         public float spellDamageMultiplier = 1f;
 
+        // was this damage caused by a reflect?  Needed to stop infinite reflect loops
+        public bool refectDamage = false;
+
         public Vector3 prefabLocation = Vector3.zero;
     }
 

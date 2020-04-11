@@ -328,6 +328,7 @@ namespace AnyRPG {
 
 
         public virtual void PerformAbilityReflectEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+            effectOutput.refectDamage = true;
             PerformAbilityEffects(source, target, effectOutput, reflectAbilityEffectList);
         }
 

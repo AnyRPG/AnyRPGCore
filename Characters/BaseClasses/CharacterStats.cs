@@ -43,7 +43,8 @@ namespace AnyRPG {
         public int currentHealth { get; private set; }
         public int currentMana { get; private set; }
 
-        private float hitBox = 1.5f;
+        // hitbox is now a function of character unit collider height
+        //private float hitBox = 1.5f;
 
         protected Stat meleeDamageModifiers = new Stat();
         protected Stat armorModifiers = new Stat();
@@ -80,7 +81,7 @@ namespace AnyRPG {
         public float MyMovementSpeed { get => (runSpeed + GetAddModifiers(StatBuffType.MovementSpeed)) * GetMultiplyModifiers(StatBuffType.MovementSpeed); }
         public int MyBaseAgility { get => agility; }
         public int MyAgility { get => (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility)); }
-        public float MyHitBox { get => hitBox; }
+        //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 

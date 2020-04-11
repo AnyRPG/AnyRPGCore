@@ -29,6 +29,8 @@ namespace AnyRPG {
 
         private Collider capsuleCollider;
 
+        private float hitBoxSize = 1.5f;
+
         /// <summary>
         /// a string that represents the location of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame
         /// </summary>
@@ -93,6 +95,7 @@ namespace AnyRPG {
 
         public bool MyMounted { get => mounted; set => mounted = value; }
         public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
+        public float MyHitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
@@ -293,13 +296,12 @@ namespace AnyRPG {
             // ADD SOME CODE IN THE FUTURE TO AUTO-CONFIGURE THIS AUDIO SOURCE IN CASE IT HAS NOT BEEN ADDED TO THE UNIT PREFAB
 
             capsuleCollider = GetComponent<Collider>();
-            /*
             if (capsuleCollider != null) {
+                hitBoxSize = capsuleCollider.bounds.extents.y * 1.5f;
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): found collider");
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): DID NOT FIND collider");
             }
-            */
         }
 
         public void InitializeNamePlate() {

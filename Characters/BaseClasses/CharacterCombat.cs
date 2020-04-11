@@ -182,15 +182,19 @@ namespace AnyRPG {
             MyWaitingForAutoAttack = newValue;
         }
 
-        public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
             AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
             abilityAffectInput.healthAmount = damage;
-            foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                //Debug.Log("Casting Reflection On Take Damage");
-                // this could maybe be done better through an event subscription
-                if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
-                    statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter as BaseCharacter, target.MyCharacterUnit.gameObject, abilityAffectInput);
+
+            // prevent infinite reflect loops
+            if (reflectDamage != false) {
+                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                    //Debug.Log("Casting Reflection On Take Damage");
+                    // this could maybe be done better through an event subscription
+                    if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
+                        statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter as BaseCharacter, target.MyCharacterUnit.gameObject, abilityAffectInput);
+                    }
                 }
             }
 
@@ -404,16 +408,16 @@ namespace AnyRPG {
             attackCooldown = attackSpeed;
         }
 
-        private void TakeDamageCommon(int damage, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        private void TakeDamageCommon(int damage, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
 
             damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetIncomingDamageModifiers());
 
-            ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect);
+            ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect, reflectDamage);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
             baseCharacter.MyCharacterStats.ReduceHealth(damage);
         }
 
-        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.MyCharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
@@ -434,7 +438,7 @@ namespace AnyRPG {
                 // MAY WANT TO CHANGE THIS IF DODGE MECHANICS ARE A IMPORTANT PART OF GAMEPLAY
 
                 if (canPerformAbility) {
-                    TakeDamageCommon(damage, sourceCharacter, combatMagnitude, abilityEffect);
+                    TakeDamageCommon(damage, sourceCharacter, combatMagnitude, abilityEffect, reflectDamage);
                     return true;
                 }
             } else {

@@ -168,12 +168,12 @@ namespace AnyRPG {
 
                     // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
                     // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
-                    if (Vector3.Distance(target.transform.position, transform.position) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 2)) {
+                    if (Vector3.Distance(target.transform.position, transform.position) > (characterUnit.MyHitBoxSize * 2)) {
                         // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): More than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position));
 
                         // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox * 1.5) && animatedUnit.MyAgent.pathPending == false) {
+                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyHitBoxSize * 1.5) && animatedUnit.MyAgent.pathPending == false) {
                             // the target has moved more than 1 hitbox from our destination position, re-adjust heading
                             //Debug.Log(gameObject.name + ": FixedUpdate() destinationPosition: " + destinationPosition + " distance: " + Vector3.Distance(target.transform.position, destinationPosition) + ". Issuing MoveToPoint()");
                             if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
@@ -193,7 +193,7 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position) + ". Issuing MoveToPoint (maybe)");
 
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + target.transform.position + "; destination: " + destinationPosition);
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyCharacter.MyCharacterStats.MyHitBox / 2) && animatedUnit.MyAgent.pathPending == false) {
+                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyHitBoxSize / 2) && animatedUnit.MyAgent.pathPending == false) {
                             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; animatedUnit.MyAgent.destination: " + animatedUnit.MyAgent.destination + "; pathpending: " + animatedUnit.MyAgent.pathPending + " ISSUING MOVETOPOINT!");
                             if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
                                 // prevent anything from resetting movement twice in the same frame

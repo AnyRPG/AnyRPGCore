@@ -123,7 +123,7 @@ namespace AnyRPG {
                         if ((actionButton.MyUseable as BaseAbility) is BaseAbility) {
                             BaseAbility baseAbility = actionButton.MyUseable as BaseAbility;
                             if (baseAbility.MyUseMeleeRange == true) {
-                                if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyHitBox < distanceToTarget) {
+                                if (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyHitBoxSize < distanceToTarget) {
                                     // red text
                                     inRange = false;
                                 } else {

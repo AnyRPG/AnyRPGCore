@@ -73,7 +73,9 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
-            prerequisiteQuest.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            if (prerequisiteQuest != null) {
+                prerequisiteQuest.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            }
         }
 
     }

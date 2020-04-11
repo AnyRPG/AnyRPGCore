@@ -152,12 +152,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
             // added damageTaken bool to prevent blood effects from showing if you ran out of range of the attack while it was in progress
-            bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect);
+            bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
             if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
                 MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyTakeDamageAbility, MyBaseCharacter.MyCharacterUnit.gameObject);
             }

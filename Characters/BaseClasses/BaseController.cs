@@ -210,7 +210,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            Vector3 returnValue = baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.MyCharacterUnit.transform.forward * (baseCharacter.MyCharacterStats.MyHitBox / 2f));
+            Vector3 returnValue = baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.MyCharacterUnit.transform.forward * (baseCharacter.MyCharacterUnit.MyHitBoxSize / 2f));
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
@@ -224,7 +224,7 @@ namespace AnyRPG {
             }
             // testing disable size multiplier and just put it straight into the hitbox.  it is messing with character motor because we stop moving toward a character that is 0.5 units outside of the hitbox
             //return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
-            return new Vector3(baseCharacter.MyCharacterStats.MyHitBox, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * baseCharacter.MyCharacterStats.MyHitBox, baseCharacter.MyCharacterStats.MyHitBox);
+            return new Vector3(baseCharacter.MyCharacterUnit.MyHitBoxSize, baseCharacter.MyCharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.MyCharacterUnit.MyHitBoxSize);
         }
 
         public bool IsTargetInHitBox(GameObject newTarget) {
