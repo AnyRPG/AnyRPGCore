@@ -20,7 +20,11 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private Dictionary<Color, Material> colorDictionary = new Dictionary<Color, Material>();
+        //private Dictionary<Color, Material> colorDictionary = new Dictionary<Color, Material>();
+
+        private Dictionary<string, Material> colorDictionary = new Dictionary<string, Material>();
+
+        private Dictionary<string, Material> colorOverrideDictionary = new Dictionary<string, Material>();
 
         private Color circleColor;
 
@@ -43,11 +47,10 @@ namespace AnyRPG {
                 }
             }
             */
-            colorDictionary[Color.red] = SystemConfigurationManager.MyInstance.MyRedFocusProjector;
-            colorDictionary[Color.green] = SystemConfigurationManager.MyInstance.MyGreenFocusProjector;
-            colorDictionary[Color.gray] = SystemConfigurationManager.MyInstance.MyGrayFocusProjector;
-            colorDictionary[Color.yellow] = SystemConfigurationManager.MyInstance.MyYellowFocusProjector;
-            colorDictionary[new Color32(255, 125, 0, 255)] = SystemConfigurationManager.MyInstance.MyOrangeFocusProjector;
+            foreach (ProjectorColorMapNode colorMapNode in SystemConfigurationManager.MyInstance.MyFocusProjectorColorMap) {
+                colorDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor)] = colorMapNode.MyProjectorMaterial;
+                //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
+            }
             CreateEventSubscriptions();
         }
 
@@ -97,6 +100,14 @@ namespace AnyRPG {
             }
             this.target = target;
             gameObject.SetActive(true);
+            colorOverrideDictionary.Clear();
+            if (characterUnit.MyCharacter.MyCharacterStats.MyToughness != null && characterUnit.MyCharacter.MyCharacterStats.MyToughness.MyFocusProjectorOverrideMap != null) {
+                foreach (ProjectorColorMapNode colorMapNode in characterUnit.MyCharacter.MyCharacterStats.MyToughness.MyFocusProjectorOverrideMap) {
+                    colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor)] = colorMapNode.MyProjectorMaterial;
+                    //Debug.Log("FocusTargettingController.SetupController(): added override " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
+                }
+            }
+
             if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
                 //SetCircleColor(Color.gray);
                 SetMaterial(Color.gray);
@@ -112,12 +123,20 @@ namespace AnyRPG {
 
         public void SetMaterial(Color materialColor) {
             //Debug.Log("FocusTargettingController.SetMaterial(" + (materialColor == null ? "null" : materialColor.ToString()) + ")");
-            if (colorDictionary.ContainsKey(materialColor)) {
-                targetingProjector.material = colorDictionary[materialColor];
-                //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color");
+            foreach (string tmpColor in colorDictionary.Keys) {
+                //Debug.Log("Dictionary contains key: " + tmpColor.ToString());
+            }
+            if (colorOverrideDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor))) {
+                targetingProjector.material = colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)];
+                //Debug.Log("FocusTargettingController.SetMaterial(): override dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
             } else {
-                targetingProjector.material = SystemConfigurationManager.MyInstance.MyGrayFocusProjector;
-                //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color, setting to gray");
+                if (colorDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor))) {
+                    targetingProjector.material = colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)];
+                    //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
+                } else {
+                    targetingProjector.material = SystemConfigurationManager.MyInstance.MyDefaultCastingLightProjector;
+                    //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color " + ColorUtility.ToHtmlStringRGBA(materialColor) + ", setting to default casting projector");
+                }
             }
         }
 
@@ -158,7 +177,7 @@ namespace AnyRPG {
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 1, target.transform.position.z);
             this.transform.forward = target.transform.forward;
             transform.Rotate(new Vector3(90f, 0f, 0f));
-            if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[Color.gray]) {
+            if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[ColorUtility.ToHtmlStringRGBA(Color.gray)]) {
                 //SetCircleColor(Color.gray);
                 SetMaterial(Color.gray);
             }

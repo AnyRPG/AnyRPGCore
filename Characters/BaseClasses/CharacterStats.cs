@@ -752,9 +752,11 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".CharacterStats.SetupScriptableObjects(): looking for unit toughness");
             if (unitToughness == null && toughness != null && toughness != string.Empty) {
                 UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(toughness);
                 if (tmpToughness != null) {
+                    //Debug.Log(gameObject.name + ".CharacterStats.SetupScriptableObjects(): looking for unit toughness: found unit toughness");
                     unitToughness = tmpToughness;
                 } else {
                     Debug.LogError(gameObject.name + "; Unit Toughness: " + toughness + " not found while initializing character stats.  Check Inspector!");

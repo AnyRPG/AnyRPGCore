@@ -13,6 +13,10 @@ namespace AnyRPG {
     public class UnitToughness : DescribableResource {
 
         [SerializeField]
+        private List<ProjectorColorMapNode> focusProjectorOverrideMap = new List<ProjectorColorMapNode>();
+
+
+        [SerializeField]
         private float healthMultiplier = 1f;
 
         [SerializeField]
@@ -36,6 +40,7 @@ namespace AnyRPG {
         public float MyStaminaMultiplier { get => staminaMultiplier; set => staminaMultiplier = value; }
         public float MyStrengthMultiplier { get => strengthMultiplier; set => strengthMultiplier = value; }
         public float MyAgilityMultiplier { get => agilityMultiplier; set => agilityMultiplier = value; }
+        public List<ProjectorColorMapNode> MyFocusProjectorOverrideMap { get => focusProjectorOverrideMap; set => focusProjectorOverrideMap = value; }
     }
 
 }
