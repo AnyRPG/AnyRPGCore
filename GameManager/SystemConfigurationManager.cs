@@ -48,7 +48,19 @@ namespace AnyRPG {
         private Material defaultCastingLightProjector;
 
         [SerializeField]
-        private Material defaultFocusLightProjector;
+        private Material grayFocusProjector;
+
+        [SerializeField]
+        private Material greenFocusProjector;
+
+        [SerializeField]
+        private Material orangeFocusProjector;
+
+        [SerializeField]
+        private Material redFocusProjector;
+
+        [SerializeField]
+        private Material yellowFocusProjector;
 
         // default UI color for static elements that have no additional transparency applied to them
         [SerializeField]
@@ -357,7 +369,11 @@ namespace AnyRPG {
         public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
         public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
         public AnimationProfile MySystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
-        public Material MyDefaultFocusLightProjector { get => defaultFocusLightProjector; set => defaultFocusLightProjector = value; }
+        public Material MyRedFocusProjector { get => redFocusProjector; set => redFocusProjector = value; }
+        public Material MyGrayFocusProjector { get => grayFocusProjector; set => grayFocusProjector = value; }
+        public Material MyGreenFocusProjector { get => greenFocusProjector; set => greenFocusProjector = value; }
+        public Material MyOrangeFocusProjector { get => orangeFocusProjector; set => orangeFocusProjector = value; }
+        public Material MyYellowFocusProjector { get => yellowFocusProjector; set => yellowFocusProjector = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
