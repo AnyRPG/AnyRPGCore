@@ -145,7 +145,7 @@ namespace AnyRPG {
                 //bagNode.MyBag = null;
                 if (bagNode.MyIsBankNode == false) {
                     //Debug.Log("Got a bag node, removing!");
-                    RemoveBag(bagNode.MyBag);
+                    RemoveBag(bagNode.MyBag, true);
                 } else {
                     //Debug.Log("Got a bank node, not removing!");
                 }
@@ -380,7 +380,7 @@ namespace AnyRPG {
         /// Removes the bag from the inventory
         /// </summary>
         /// <param name="bag"></param>
-        public void RemoveBag(Bag bag) {
+        public void RemoveBag(Bag bag, bool clearOnly = false) {
             //Debug.Log("InventoryManager.RemoveBag()");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag == bag) {
@@ -398,9 +398,11 @@ namespace AnyRPG {
                     // null the bag so the items won't get added back, as we are trying to empty it so we can remove it
                     bagNode.MyBag = null;
 
-                    // bag is now gone, can add items back to inventory and they won't go back in that bag
-                    foreach (Item item in itemsToAddBack) {
-                        AddItem(item);
+                    if (!clearOnly) {
+                        // bag is now gone, can add items back to inventory and they won't go back in that bag
+                        foreach (Item item in itemsToAddBack) {
+                            AddItem(item);
+                        }
                     }
 
                     // destroy the bagpanel gameobject before setting its reference to null

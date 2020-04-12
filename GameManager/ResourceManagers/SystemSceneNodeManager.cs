@@ -74,7 +74,9 @@ namespace AnyRPG {
             }
             if (sceneNodeSaveData.persistentObjects != null) {
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNodeSaveData.persistentObjects) {
-                    sceneNode.MyPersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
+                    if (sceneNode.MyPersistentObjects.ContainsKey(persistentObjectSaveData.UUID) == false) {
+                        sceneNode.MyPersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
+                    }
                 }
             }
         }

@@ -9,6 +9,14 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New StatusEffect",menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect {
 
+        [SerializeField]
+        private StatusEffectAlignment statusEffectAlignment = StatusEffectAlignment.None;
+
+        [SerializeField]
+        private string statusEffectTypeName = string.Empty;
+
+        private StatusEffectType statusEffectType = null;
+        
         // automatically cast on the character, active at all times, and do not appear on the status bar
         [SerializeField]
         protected bool classTrait;
@@ -125,6 +133,7 @@ namespace AnyRPG {
         public bool MyImmuneDisableAnimator { get => immuneDisableAnimator; set => immuneDisableAnimator = value; }
         public bool MyImmuneStun { get => immuneStun; set => immuneStun = value; }
         public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
+        public StatusEffectType MyStatusEffectType { get => statusEffectType; set => statusEffectType = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
@@ -469,6 +478,16 @@ namespace AnyRPG {
                 }
             }
 
+            if (statusEffectTypeName != null && statusEffectTypeName != string.Empty) {
+                StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.MyInstance.GetResource(statusEffectTypeName);
+                if (tmpStatusEffectType != null) {
+                    statusEffectType = tmpStatusEffectType;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectTypeName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+
             if (factionModifiers != null) {
                 foreach (FactionDisposition factionDisposition in factionModifiers) {
                     if (factionDisposition != null) {
@@ -483,4 +502,6 @@ namespace AnyRPG {
     }
 
     public enum StatBuffType { Stamina, Strength, Intellect, Agility, MovementSpeed }
+
+    public enum StatusEffectAlignment { None, Beneficial, Harmful }
 }

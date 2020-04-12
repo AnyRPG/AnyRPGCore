@@ -70,6 +70,12 @@ namespace AnyRPG {
         [SerializeField]
         private float despawnDelay = 0f;
 
+        [SerializeField]
+        private string defaultToughness = string.Empty;
+
+        protected UnitToughness unitToughness = null;
+
+
         private Coroutine countDownRoutine = null;
 
         private Coroutine delayRoutine = null;
@@ -258,7 +264,7 @@ namespace AnyRPG {
             if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
                 if (unitProfiles[spawnIndex].MyUnitPrefab != null) {
-                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].MyUnitPrefab);
+                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].MyUnitPrefab, unitToughness);
                 }
             }
         }
@@ -400,6 +406,16 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
+                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(defaultToughness);
+                if (tmpToughness != null) {
+                    unitToughness = tmpToughness;
+                } else {
+                    Debug.LogError("Unit Toughness: " + defaultToughness + " not found while initializing Unit Profiles.  Check Inspector!");
+                }
+            }
+
         }
 
         public void CleanupScriptableObjects() {
