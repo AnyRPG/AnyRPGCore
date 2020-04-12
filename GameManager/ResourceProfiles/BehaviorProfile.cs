@@ -76,11 +76,11 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdatePrerequisites() {
+        public void UpdatePrerequisites(bool notify = true) {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                        tmpPrerequisiteConditions.UpdatePrerequisites(notify);
                     }
                 }
             }

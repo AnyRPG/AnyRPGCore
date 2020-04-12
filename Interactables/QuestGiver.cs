@@ -112,9 +112,27 @@ namespace AnyRPG {
             base.HandlePlayerUnitSpawn();
             InitializeQuestGiver();
             foreach (QuestNode questNode in quests) {
-                questNode.MyQuest.UpdatePrerequisites();
+                //if (questNode.MyQuest.TurnedIn != true) {
+                    questNode.MyQuest.UpdatePrerequisites(false);
+                //}
             }
-            //HandlePrerequisiteUpdates();
+
+            UpdateQuestStatus();
+            MiniMapStatusUpdateHandler(this);
+
+            /*
+            bool statusChanged = false;
+            foreach (QuestNode questNode in quests) {
+                if (questNode.MyQuest.TurnedIn != true) {
+                    if (questNode.MyQuest.MyPrerequisitesMet) {
+                        statusChanged = true;
+                    }
+                }
+            }
+            if (statusChanged) {
+                HandlePrerequisiteUpdates();
+            }
+            */
         }
 
         public void InitWindow(ICloseableWindowContents questGiverUI) {
@@ -295,6 +313,7 @@ namespace AnyRPG {
             UpdateQuestStatus();
             MiniMapStatusUpdateHandler(this);
         }
+
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in quests) {

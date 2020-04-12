@@ -142,7 +142,10 @@ namespace AnyRPG {
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
+                    }
+                    if (MyPrerequisitesMet) {
+                        HandlePrerequisiteUpdates();
                     }
                 }
             } else {

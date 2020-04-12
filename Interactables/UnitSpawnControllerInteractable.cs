@@ -127,6 +127,12 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            MiniMapStatusUpdateHandler(this);
+        }
+
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             unitProfileList = new List<UnitProfile>();

@@ -13,6 +13,6 @@ namespace AnyRPG {
 
         void SetupScriptableObjects();
         void CleanupScriptableObjects();
-        void UpdateStatus();
+        void UpdateStatus(bool notify);
     }
 }

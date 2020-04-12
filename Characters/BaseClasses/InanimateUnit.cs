@@ -135,7 +135,15 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
+            MiniMapStatusUpdateHandler(this);
+            InitializeNamePlate();
+        }
+
+        public override void HandlePlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
             InitializeNamePlate();
         }

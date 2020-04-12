@@ -64,6 +64,7 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ".InteractableOption.OrchestratorStart()");
             SetupScriptableObjects();
             GetComponentReferences();
         }
@@ -153,17 +154,19 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            if (SystemEventManager.MyInstance != null) {
+                //SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            }
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
-                HandlePlayerUnitSpawn();
+                //HandlePlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
         }
 
         public virtual void CleanupEventSubscriptions() {
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                //SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
             eventSubscriptionsInitialized = false;
         }
@@ -173,11 +176,16 @@ namespace AnyRPG {
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
                 }
+                /*
+                if (MyPrerequisitesMet) {
+                    HandlePrerequisiteUpdates();
+                }
+                */
             } else {
-                HandlePrerequisiteUpdates();
+                //HandlePrerequisiteUpdates();
             }
             //HandlePrerequisiteUpdates();
         }

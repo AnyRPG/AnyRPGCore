@@ -29,13 +29,15 @@ namespace AnyRPG {
             UpdateStatus();
         }
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
+            //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName);
             bool originalResult = prerequisiteMet;
             if (prerequisiteQuest == null) {
-                Debug.Log("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
+                Debug.LogError("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
                 return;
             }
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
+                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true");
                 prerequisiteMet = true;
             } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
                 prerequisiteMet = true;
@@ -44,7 +46,7 @@ namespace AnyRPG {
             } else {
                 prerequisiteMet = false;
             }
-            if (prerequisiteMet != originalResult) {
+            if (prerequisiteMet != originalResult && notify == true) {
                 OnStatusUpdated();
             }
         }
@@ -52,7 +54,7 @@ namespace AnyRPG {
 
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("QuestPrerequisite.IsMet()");
+            //Debug.Log("QuestPrerequisite.IsMet(): " + prerequisiteQuest.MyName + " returning " + prerequisiteMet);
             return prerequisiteMet;
         }
 

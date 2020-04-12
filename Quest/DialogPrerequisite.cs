@@ -18,12 +18,14 @@ namespace AnyRPG {
 
         private Dialog prerequisiteDialog = null;
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             bool checkResult = (prerequisiteDialog.TurnedIn == true);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
-                OnStatusUpdated();
+                if (notify == true) {
+                    OnStatusUpdated();
+                }
             }
         }
 

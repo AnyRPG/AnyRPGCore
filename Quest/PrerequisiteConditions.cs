@@ -205,27 +205,27 @@ namespace AnyRPG {
         }
 
         // force prerequisite status update outside normal event notification
-        public void UpdatePrerequisites() {
+        public void UpdatePrerequisites(bool notify = true) {
             foreach (IPrerequisite prerequisite in levelPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in characterClassPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in questPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in dialogPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in abilityPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
             foreach (IPrerequisite prerequisite in factionPrerequisites) {
-                prerequisite.UpdateStatus();
+                prerequisite.UpdateStatus(notify);
             }
         }
 

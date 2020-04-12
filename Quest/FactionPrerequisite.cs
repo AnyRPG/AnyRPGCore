@@ -27,12 +27,14 @@ namespace AnyRPG {
             UpdateStatus();
         }
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, prerequisiteFaction) >= prerequisiteDisposition);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
-                OnStatusUpdated();
+                if (notify == true) {
+                    OnStatusUpdated();
+                }
             }
         }
 

@@ -29,6 +29,7 @@ namespace AnyRPG {
         void SetupScriptableObjects();
         void OrchestratorStart();
         void OrchestratorFinish();
+        void HandlePlayerUnitSpawn();
     }
 
 }

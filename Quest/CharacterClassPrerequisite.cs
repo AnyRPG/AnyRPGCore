@@ -17,12 +17,14 @@ namespace AnyRPG {
 
         private CharacterClass prerequisiteCharacterClass = null;
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             bool checkResult = (PlayerManager.MyInstance.MyCharacter.MyCharacterClass == prerequisiteCharacterClass);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
-                OnStatusUpdated();
+                if (notify == true) {
+                    OnStatusUpdated();
+                }
             }
         }
 

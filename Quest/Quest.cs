@@ -502,9 +502,9 @@ namespace AnyRPG {
         }
 
         // force prerequisite status update outside normal event notification
-        public void UpdatePrerequisites() {
+        public void UpdatePrerequisites(bool notify = true) {
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.UpdatePrerequisites();
+                conditions.UpdatePrerequisites(notify);
             }
         }
 

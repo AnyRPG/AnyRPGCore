@@ -26,11 +26,13 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             prerequisiteMet = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(prerequisiteAbility);
             if (prerequisiteMet != originalResult) {
-                OnStatusUpdated();
+                if (notify == true) {
+                    OnStatusUpdated();
+                }
             }
         }
 

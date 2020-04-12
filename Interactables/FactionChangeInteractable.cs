@@ -113,6 +113,12 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            MiniMapStatusUpdateHandler(this);
+        }
+
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (faction == null && factionName != null && factionName != string.Empty) {

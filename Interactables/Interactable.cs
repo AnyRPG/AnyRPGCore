@@ -212,6 +212,35 @@ namespace AnyRPG {
             return returnResult;
         }
 
+        public override bool UpdateOnPlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".Interactable.UpdateOnPlayerUnitSpawn()");
+
+            foreach (IInteractable _interactable in interactables) {
+                _interactable.HandlePlayerUnitSpawn();
+            }
+            bool preRequisitesUpdated = false;
+            foreach (IInteractable _interactable in interactables) {
+                if (_interactable.MyPrerequisitesMet == true) {
+                    preRequisitesUpdated = true;
+                }
+            }
+
+            // calling this last intentionally because it can call handleprerequisiteupdates before we have set our prerequisite values properly
+            bool updated = base.UpdateOnPlayerUnitSpawn();
+
+            if (updated) {
+                return true;
+            }
+
+            // calling this because our base will not have inititalized its prerequisites earlier
+            if (preRequisitesUpdated) {
+                HandlePrerequisiteUpdates();
+                return true;
+            }
+
+            return false;
+        }
+
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
@@ -242,7 +271,7 @@ namespace AnyRPG {
                 return;
             }
             int currentInteractableCount = GetCurrentInteractables().Count;
-            //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
+            //Debug.Log(gameObject.name + ".Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
 
             // determine if one of our current interactables is a questgiver
             bool questGiverCurrent = false;
@@ -256,7 +285,7 @@ namespace AnyRPG {
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
                 namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
-                //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): interactable count is zero or questgiver is true");
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
@@ -370,6 +399,7 @@ namespace AnyRPG {
         }
 
         public bool CanInteract() {
+            //Debug.Log(gameObject.name + ".Interactable.CanInteract()");
             if (notInteractable == true) {
                 return false;
             }

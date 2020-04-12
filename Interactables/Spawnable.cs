@@ -199,18 +199,28 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".Spawnable.HandlePlayerUnitSpawn()");
+            UpdateOnPlayerUnitSpawn();
+        }
+
+        public virtual bool UpdateOnPlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".Spawnable.UpdateOnPlayerUnitSpawn()");
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.UpdatePrerequisites();
+                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
+                }
+                if (MyPrerequisitesMet) {
+                    HandlePrerequisiteUpdates();
+                    return true;
                 }
             } else {
                 HandlePrerequisiteUpdates();
+                return true;
             }
-
+            return false;
             //HandlePrerequisiteUpdates();
+
         }
 
 

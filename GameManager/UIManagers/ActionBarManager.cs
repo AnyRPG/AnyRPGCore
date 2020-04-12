@@ -116,6 +116,9 @@ namespace AnyRPG {
             float distanceToTarget = 0f;
             bool inRange = false;
             while (HasTarget()) {
+                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit == null) {
+                    break;
+                }
                 distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.transform.position, target.transform.position);
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionBarController actionBarController in actionBarControllers) {

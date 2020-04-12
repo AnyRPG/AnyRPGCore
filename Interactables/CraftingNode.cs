@@ -75,6 +75,12 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            MiniMapStatusUpdateHandler(this);
+        }
+
+
         public override void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + "CraftingNode.SetupScriptableObjects()");
             base.SetupScriptableObjects();

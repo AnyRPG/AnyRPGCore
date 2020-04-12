@@ -16,12 +16,14 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
-        public void UpdateStatus() {
+        public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             bool checkResult = (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel >= requiredLevel);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
-                OnStatusUpdated();
+                if (notify == true) {
+                    OnStatusUpdated();
+                }
             }
         }
 

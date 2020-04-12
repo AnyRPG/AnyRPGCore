@@ -75,6 +75,12 @@ namespace AnyRPG {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
+
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            MiniMapStatusUpdateHandler(this);
+        }
+
     }
 
 }

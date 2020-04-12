@@ -225,6 +225,16 @@ namespace AnyRPG {
             PlayAutomaticBehaviors();
         }
 
+        public override void HandlePlayerUnitSpawn() {
+            base.HandlePlayerUnitSpawn();
+            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+                behaviorProfile.UpdatePrerequisites(false);
+            }
+            MiniMapStatusUpdateHandler(this);
+            PlayAutomaticBehaviors();
+        }
+
+
         public void PlayAutomaticBehaviors() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.PlayAutomaticBehaviors()");
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
@@ -268,12 +278,6 @@ namespace AnyRPG {
             LevelManager.MyInstance.PlayLevelSounds();
         }
 
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
-                behaviorProfile.UpdatePrerequisites();
-            }
-        }
 
 
     }
