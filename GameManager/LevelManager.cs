@@ -63,6 +63,9 @@ namespace AnyRPG {
         public Vector3 MySpawnLocationOverride { get => spawnLocationOverride; set => spawnLocationOverride = value; }
         public string MyReturnSceneName { get => returnSceneName; set => returnSceneName = value; }
         public string MyOverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
+        public string MyInitializationScene { get => initializationScene; set => initializationScene = value; }
+        public string MyMainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
+        public string MyCharacterCreatorScene { get => characterCreatorScene; set => characterCreatorScene = value; }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -225,11 +228,11 @@ namespace AnyRPG {
                 if (GetActiveSceneNode().MyAutoPlayCutscene != null) {
                     if (GetActiveSceneNode().MyAutoPlayCutscene.MyViewed == true) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
-                        CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);
+                        CameraManager.MyInstance.ActivateMainCamera();
                         return;
                     }
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
-                    CameraManager.MyInstance.MyMainCameraGameObject.SetActive(false);
+                    CameraManager.MyInstance.DeactivateMainCamera();
                     if (AnyRPGCutsceneCameraController.MyInstance != null) {
                         AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(true);
                     }
@@ -238,10 +241,11 @@ namespace AnyRPG {
                         UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyAutoPlayCutscene);
                     //}
                 } else {
-                    CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);
+                    CameraManager.MyInstance.ActivateMainCamera();
                 }
             }
         }
+
 
         public void LoadCutSceneWithDelay(Cutscene cutscene) {
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
@@ -276,7 +280,7 @@ namespace AnyRPG {
                 if (AnyRPGCutsceneCameraController.MyInstance != null) {
                     AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(false);
                 }
-                CameraManager.MyInstance.MyMainCameraGameObject.SetActive(true);
+                CameraManager.MyInstance.ActivateMainCamera();
                 UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(true);
                 UIManager.MyInstance.MyPopupWindowContainer.SetActive(true);
                 UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);

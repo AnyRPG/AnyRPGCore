@@ -42,6 +42,14 @@ namespace AnyRPG {
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
 
+        [Header("CONTROLLER")]
+
+        [SerializeField]
+        private bool useThirdPartyMovementControl = false;
+
+        [SerializeField]
+        private bool useThirdPartyCameraControl = false;
+
         [Header("UI")]
 
         [SerializeField]
@@ -67,6 +75,7 @@ namespace AnyRPG {
 
         [SerializeField]
         private CurrencyGroup defaultCurrencyGroup;
+
 
         [Header("ANIMATION")]
 
@@ -358,6 +367,8 @@ namespace AnyRPG {
         public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
         public AnimationProfile MySystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
         public List<ProjectorColorMapNode> MyFocusProjectorColorMap { get => focusProjectorColorMap; set => focusProjectorColorMap = value; }
+        public bool MyUseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
+        public bool MyUseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

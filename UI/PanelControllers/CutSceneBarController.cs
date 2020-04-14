@@ -89,9 +89,9 @@ namespace AnyRPG {
             topBar.gameObject.SetActive(true);
             bottomBar.gameObject.SetActive(true);
             captionBar.gameObject.SetActive(true);
-            if (CameraManager.MyInstance.MyMainCameraGameObject.activeSelf == true) {
-                CameraManager.MyInstance.MyMainCameraGameObject.SetActive(false);
-            }
+            //if (CameraManager.MyInstance.MyMainCameraGameObject.activeSelf == true) {
+                CameraManager.MyInstance.DeactivateMainCamera();
+            //}
             UIManager.MyInstance.ActivatePlayerUI();
             UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(false);
             UIManager.MyInstance.MyPopupWindowContainer.SetActive(false);

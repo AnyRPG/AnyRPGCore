@@ -237,7 +237,7 @@ namespace AnyRPG {
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
 
-            Ray ray = CameraManager.MyInstance.MyMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -327,7 +327,7 @@ namespace AnyRPG {
             }
             //}
 
-            Ray ray = CameraManager.MyInstance.MyMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
                 if ((MyBaseCharacter.MyCharacterAbilityManager as PlayerAbilityManager).WaitingForTarget()) {

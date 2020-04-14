@@ -338,7 +338,7 @@ namespace AnyRPG {
                 if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null) {
                     currentCamera = AnyRPGCutsceneCameraController.MyInstance.GetComponent<Camera>();
                 } else {
-                    currentCamera = CameraManager.MyInstance.MyMainCamera;
+                    currentCamera = CameraManager.MyInstance.MyActiveMainCamera;
                 }
                 Vector3 relativePosition = currentCamera.WorldToViewportPoint(namePlateUnit.MyNamePlateTransform.position);
                 //Debug.Log("NamePlateController.LateUpdate(): the relative position of the character(" + (namePlateUnit as MonoBehaviour).gameObject.name + ") is " + relativePosition);

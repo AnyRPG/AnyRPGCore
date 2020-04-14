@@ -50,6 +50,14 @@ namespace AnyRPG {
         [SerializeField]
         private Camera petPreviewCamera = null;
 
+        [SerializeField]
+        private GameObject thirdPartyCameraGameObject = null;
+
+        [SerializeField]
+        private Camera thirdPartyCamera = null;
+
+
+
         private AnyRPGCameraController mainCameraController;
 
         protected bool eventSubscriptionsInitialized = false;
@@ -65,12 +73,29 @@ namespace AnyRPG {
         public AnyRPGCameraController MyMainCameraController { get => mainCameraController; set => mainCameraController = value; }
         public Camera MyUnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
         public Camera MyPetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
+        public GameObject MyThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
+
+        public Camera MyActiveMainCamera {
+            get {
+                if (MyMainCameraGameObject != null && MyMainCameraGameObject.activeSelf == true && MyMainCamera != null) {
+                    return MyMainCamera;
+                }
+                if (MyThirdPartyCamera != null && MyThirdPartyCamera.activeSelf == true && thirdPartyCamera != null) {
+                    return thirdPartyCamera;
+                }
+                return null;
+            }
+        }
+
+
 
         private void Awake() {
             //Debug.Log("CameraManager.Awake()");
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
+
             DisablePreviewCameras();
+            DisableThirdPartyCamera();
             DisableFocusCamera();
         }
 
@@ -79,10 +104,54 @@ namespace AnyRPG {
             CreateEventSubscriptions();
         }
 
+        public void ActivateMainCamera() {
+            if (SystemConfigurationManager.MyInstance == null) {
+                // can't get camera settings, so just return
+                return;
+            }
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            if (activeSceneName == LevelManager.MyInstance.MyMainMenuScene || activeSceneName == LevelManager.MyInstance.MyInitializationScene || activeSceneName == LevelManager.MyInstance.MyCharacterCreatorScene || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
+                MyMainCameraGameObject.SetActive(true);
+                return;
+            }
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+                EnableThirdPartyCamera();
+                return;
+            }
+
+            // fallback in case no camera found
+            MyMainCameraGameObject.SetActive(true);
+        }
+
+        public void DeactivateMainCamera() {
+            MyMainCameraGameObject.SetActive(false);
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+                DisableThirdPartyCamera();
+            }
+        }
+
+        public void EnableThirdPartyCamera() {
+            if (thirdPartyCameraGameObject != null) {
+                thirdPartyCameraGameObject.SetActive(true);
+            }
+        }
+
+        public void DisableThirdPartyCamera() {
+            if (thirdPartyCameraGameObject != null) {
+                thirdPartyCameraGameObject.SetActive(false);
+            }
+        }
+
         private void DisablePreviewCameras() {
-            characterPreviewCamera.enabled = false;
-            unitPreviewCamera.enabled = false;
-            petPreviewCamera.enabled = false;
+            if (characterPreviewCamera != null) {
+                unitPreviewCamera.enabled = false;
+            }
+            if (unitPreviewCamera != null) {
+                unitPreviewCamera.enabled = false;
+            }
+            if (petPreviewCamera != null) {
+                petPreviewCamera.enabled = false;
+            }
         }
 
         private void DisableFocusCamera() {

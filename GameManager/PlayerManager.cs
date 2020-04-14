@@ -264,14 +264,14 @@ namespace AnyRPG {
                 if ((activeSceneNode.MyAutoPlayCutscene != null && activeSceneNode.MyAutoPlayCutscene.MyViewed == false) || activeSceneNode.MySuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
                     loadCharacter = false;
-                    CameraManager.MyInstance.MyMainCamera.gameObject.SetActive(false);
+                    CameraManager.MyInstance.DeactivateMainCamera();
                     //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(true);
                 }
             }
             if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
                 //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
-                CameraManager.MyInstance.MyMainCamera.gameObject.SetActive(true);
+                CameraManager.MyInstance.ActivateMainCamera();
                 CameraManager.MyInstance.MyMainCameraController.SetTargetPositionRaw(spawnLocation, MyPlayerUnitObject.transform.forward);
             }
         }

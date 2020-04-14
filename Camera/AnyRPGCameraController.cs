@@ -97,6 +97,11 @@ namespace AnyRPG {
                 // camera has nothing to follow so don't calculate movement
                 return;
             }
+
+            if (SystemConfigurationManager.MyInstance != null && SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+                return;
+            }
+
             cameraPan = false;
             cameraZoom = false;
 
