@@ -132,6 +132,9 @@ namespace AnyRPG {
 
         public void EnableThirdPartyCamera() {
             if (thirdPartyCameraGameObject != null) {
+                if (mainCameraGameObject != null) {
+                    MyMainCameraGameObject.SetActive(false);
+                }
                 thirdPartyCameraGameObject.SetActive(true);
             }
         }

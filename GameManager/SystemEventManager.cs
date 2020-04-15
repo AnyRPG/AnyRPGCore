@@ -14,12 +14,22 @@ namespace AnyRPG {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemEventManager>();
+                    instance.Init();
                 }
 
                 return instance;
             }
         }
+
+        void Init() {
+            if (singleEventDictionary == null) {
+                singleEventDictionary = new Dictionary<string, Action<string, EventParam>>();
+            }
+        }
         #endregion
+
+        private Dictionary<string, Action<string, EventParam>> singleEventDictionary;
+
 
         //public event System.Action OnPrerequisiteUpdated = delegate { };
         public event System.Action OnQuestStatusUpdated = delegate { };
@@ -80,6 +90,41 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("SystemGameManager.Start()");
+        }
+
+        public static void StartListening(string eventName, Action<string, EventParam> listener) {
+            Action<string, EventParam> thisEvent;
+            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+                //Add more event to the existing one
+                thisEvent += listener;
+
+                //Update the Dictionary
+                instance.singleEventDictionary[eventName] = thisEvent;
+            } else {
+                //Add event to the Dictionary for the first time
+                thisEvent += listener;
+                instance.singleEventDictionary.Add(eventName, thisEvent);
+            }
+        }
+
+        public static void StopListening(string eventName, Action<string, EventParam> listener) {
+            if (instance == null) return;
+            Action<string, EventParam> thisEvent;
+            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+                //Remove event from the existing one
+                thisEvent -= listener;
+
+                //Update the Dictionary
+                instance.singleEventDictionary[eventName] = thisEvent;
+            }
+        }
+
+        public static void TriggerEvent(string eventName, EventParam eventParam) {
+            Action<string, EventParam> thisEvent = null;
+            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+                thisEvent.Invoke(eventName, eventParam);
+                // OR USE  instance.eventDictionary[eventName](eventParam);
+            }
         }
 
         public void NotifyOnCurrencyChange() {
@@ -257,5 +302,17 @@ namespace AnyRPG {
         */
 
     }
+
+    //[System.Serializable]
+    public struct EventParam {
+        //public EventParamType parameterType;
+        public string StringParam;
+        public int IntParam;
+        public float FloatParam;
+        public bool BoolParam;
+    }
+
+
+    public enum EventParamType { noneType, stringType, intType, floatType, boolType }
 
 }

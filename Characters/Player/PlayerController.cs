@@ -345,7 +345,9 @@ namespace AnyRPG {
                 return;
             }
             if (InteractionSucceeded()) {
-                MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+                if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+                }
             }
         }
 
@@ -496,7 +498,7 @@ namespace AnyRPG {
                 //Debug.Log("We were able to interact with the target");
                 // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
                 StopInteract();
-            } else {
+            } else if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
                 if ((MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);

@@ -553,6 +553,11 @@ namespace AnyRPG {
         public void OnMouseHover() {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseHover()");
             // rename from onMouseOver to OnMouseHover to avoid unity senting it mouse events.
+            if (!isActiveAndEnabled) {
+                // this interactable is inactive, there is no reason to do anything
+                return;
+            }
+
             if (notInteractable == true) {
                 return;
             }
