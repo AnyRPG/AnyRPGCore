@@ -14,7 +14,9 @@ namespace AnyRPG {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemEventManager>();
-                    instance.Init();
+                    if (instance != null) {
+                        instance.Init();
+                    }
                 }
 
                 return instance;
@@ -303,16 +305,12 @@ namespace AnyRPG {
 
     }
 
-    //[System.Serializable]
+    [System.Serializable]
     public struct EventParam {
-        //public EventParamType parameterType;
         public string StringParam;
         public int IntParam;
         public float FloatParam;
         public bool BoolParam;
     }
-
-
-    public enum EventParamType { noneType, stringType, intType, floatType, boolType }
 
 }
