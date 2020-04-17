@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -37,6 +38,17 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
             OnCloseWindow(this);
         }
+
+        public void HandlePointerClick() {
+            EventParam eventParam = new EventParam();
+            SystemEventManager.TriggerEvent("OnDisableMovement", eventParam);
+        }
+
+        public void HandleEndEdit() {
+            EventParam eventParam = new EventParam();
+            SystemEventManager.TriggerEvent("OnEnableMovement", eventParam);
+        }
+
     }
 
 }
