@@ -62,6 +62,7 @@ namespace AnyRPG {
             }
         }
 
+        // for root motion
         public void OnAnimatorMove() {
             if (animator != null && characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyAnimatedUnit != null && characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
                 characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.ReceiveAnimatorMovment(animator.deltaPosition);

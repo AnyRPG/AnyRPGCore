@@ -26,9 +26,12 @@ namespace AnyRPG {
         [SerializeField]
         protected RuntimeAnimatorController animatorController;
 
-        private RuntimeAnimatorController originalAnimatorController;
+        protected RuntimeAnimatorController originalAnimatorController;
+        protected RuntimeAnimatorController thirdPartyAnimatorController;
 
         public AnimatorOverrideController overrideController;
+        //protected AnimatorOverrideController defaultOverrideController;
+        protected AnimatorOverrideController thirdPartyOverrideController;
 
         protected CharacterUnit characterUnit;
 
@@ -208,6 +211,11 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             } else {
+                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+                    thirdPartyAnimatorController = animator.runtimeAnimatorController;
+                    thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
+                    Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
+                }
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
@@ -216,7 +224,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.InitializeAnimator() animatorController is null");
                 } else {
                     overrideController = new AnimatorOverrideController(animatorController);
-                    SetOverrideController(overrideController);
+                    //SetOverrideController(overrideController);
+                    SetCorrectOverrideController();
                 }
             }
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
@@ -226,10 +235,20 @@ namespace AnyRPG {
             initialized = true;
         }
 
+        public virtual void SetCorrectOverrideController() {
+            Debug.Log(gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
+            SetOverrideController(overrideController);
+        }
+
+        public virtual void SetDefaultOverrideController() {
+            Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            SetOverrideController(overrideController);
+        }
+
         public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
 
-            //if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+            if (animator.runtimeAnimatorController != animatorOverrideController) {
                 animator.runtimeAnimatorController = animatorOverrideController;
 
                 // set animator on UMA if one exists
@@ -237,7 +256,9 @@ namespace AnyRPG {
                 if (myAvatar != null) {
                     myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
                 }
-            //}
+                //animator.updateMode = AnimatorUpdateMode.
+                
+            }
         }
 
         public void SetAnimationProfileOverride(AnimationProfile animationProfile) {
@@ -1162,9 +1183,9 @@ namespace AnyRPG {
 
             }
             if (baseAbility.MyAnimationProfile.MyUseRootMotion == true) {
-                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = true;
+                characterUnit.SetUseRootMotion(true);
             } else {
-                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
+                characterUnit.SetUseRootMotion(false);
             }
             SetCasting(true);
             // this should not be necessary since we track the length of animation through the casting time
@@ -1314,17 +1335,25 @@ namespace AnyRPG {
         }
 
         public virtual void SetCasting(bool varValue) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
+            Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
             }
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
                 characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting = varValue;
             }
+            EventParam eventParam = new EventParam();
+            if (varValue == true) {
+                SetDefaultOverrideController();
+                SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
+            }
             animator.SetBool("Casting", varValue);
             if (varValue == true) {
                 SetTrigger("CastingTrigger");
                 characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
+            } else {
+                SetCorrectOverrideController();
+                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
             }
         }
 
@@ -1361,6 +1390,7 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
+            
             animator.SetBool("Moving", varValue);
             if (varValue) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetMoving()");

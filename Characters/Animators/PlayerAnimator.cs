@@ -22,11 +22,33 @@ namespace AnyRPG {
             */
         }
 
+
+        public override void SetCorrectOverrideController() {
+            Debug.Log(gameObject.name + ".PlayerAnimator.SetCorrectOverrideController()");
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+                base.SetOverrideController(thirdPartyOverrideController);
+                return;
+            }
+            base.SetCorrectOverrideController();
+        }
+
+        /*
+        public override void SetDefaultOverrideController() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+                base.SetOverrideController(thirdPartyOverrideController);
+                return;
+            }
+            base.SetDefaultOverrideController();
+        }
+        */
+        
+            /*
         public override void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
                 base.SetOverrideController(animatorOverrideController);
             }
         }
+        */
 
         // for debugging
         /*

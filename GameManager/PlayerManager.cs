@@ -67,6 +67,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoSpawnPlayerOnLevelLoad = false;
 
+        [SerializeField]
+        private RaceData race;
+
         // reference to the default profile
         private UnitProfile defaultPlayerUnitProfile;
 
