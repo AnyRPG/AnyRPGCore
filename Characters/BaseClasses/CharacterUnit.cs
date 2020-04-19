@@ -102,6 +102,12 @@ namespace AnyRPG {
             return true;
         }
 
+        public void SetUseRootMotion(bool useRootMotion) {
+            if (MyCharacter != null && MyCharacter.MyAnimatedUnit != null && MyCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
+            }
+        }
+
         public void EnableCollider() {
             if (capsuleCollider != null) {
                 capsuleCollider.enabled = true;

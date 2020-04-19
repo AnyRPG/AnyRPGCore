@@ -1,5 +1,7 @@
 using AnyRPG;
 using System.Collections;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -75,7 +77,21 @@ namespace AnyRPG {
             previewUnit = Instantiate(cloneSource, transform.position, Quaternion.identity, transform);
             UIManager.MyInstance.SetLayerRecursive(previewUnit, LayerMask.NameToLayer("PlayerPreview"));
 
+            // disable all monobehaviors
+            //List<MonoBehaviour> monoBehaviours = new List<MonoBehaviour>();
+            MonoBehaviour[] monoBehaviours = previewUnit.GetComponents<MonoBehaviour>();
+
+            // loop through monobehaviors and disable them
+
+
+            foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
+                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): disable monobehavior: " + monoBehaviour.GetType().Name);
+                monoBehaviour.enabled = false;
+            }
+
+
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
+            /*
             if (previewUnit.GetComponent<PlayerUnitMovementController>() != null) {
                 previewUnit.GetComponent<PlayerUnitMovementController>().enabled = false;
             }
@@ -85,6 +101,19 @@ namespace AnyRPG {
             if (previewUnit.GetComponent<AnyRPGCharacterController>() != null) {
                 previewUnit.GetComponent<AnyRPGCharacterController>().enabled = false;
             }
+            */
+
+            // re-enable behaviors needed for character animation
+            if (previewUnit.GetComponent<DynamicCharacterAvatar>() != null) {
+                previewUnit.GetComponent<DynamicCharacterAvatar>().enabled = true;
+            }
+            if (previewUnit.GetComponent<CharacterAnimator>() != null) {
+                previewUnit.GetComponent<CharacterAnimator>().enabled = true;
+            }
+            if (previewUnit.GetComponent<AnimatedUnit>() != null) {
+                previewUnit.GetComponent<AnimatedUnit>().enabled = true;
+            }
+
             if (previewUnit.GetComponent<Rigidbody>() != null) {
                 previewUnit.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 previewUnit.GetComponent<Rigidbody>().isKinematic = true;

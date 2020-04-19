@@ -69,7 +69,7 @@ namespace AnyRPG {
 
                 //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
                 Type type = Type.GetType(propertyResponseNode.MyScriptName);
-                Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
+                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
 
                 Component component = GetComponent(Type.GetType(propertyResponseNode.MyScriptName));
                 if (component != null) {
@@ -128,12 +128,15 @@ namespace AnyRPG {
         }
 
         public void OnDestroy() {
+            //Debug.Log(gameObject.name + "ObjectMessageController.OnDestroy()");
             CleanupMessageResponses();
         }
 
         private void CleanupMessageResponses() {
+            //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses()");
             foreach (ObjectMessageNode objectMessageNode in messageTemplate.MyEventList) {
-                messageDictionary[objectMessageNode.MyEventName] = objectMessageNode;
+                //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
+                messageDictionary.Remove(objectMessageNode.MyEventName);
                 SystemEventManager.StopListening(objectMessageNode.MyEventName, CallbackFunction);
             }
         }

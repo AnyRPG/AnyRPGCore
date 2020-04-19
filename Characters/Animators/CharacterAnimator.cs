@@ -226,16 +226,18 @@ namespace AnyRPG {
             initialized = true;
         }
 
-        public void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
+        public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
 
-            animator.runtimeAnimatorController = animatorOverrideController;
+            //if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+                animator.runtimeAnimatorController = animatorOverrideController;
 
-            // set animator on UMA if one exists
-            DynamicCharacterAvatar myAvatar = GetComponent<DynamicCharacterAvatar>();
-            if (myAvatar != null) {
-                myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
-            }
+                // set animator on UMA if one exists
+                DynamicCharacterAvatar myAvatar = GetComponent<DynamicCharacterAvatar>();
+                if (myAvatar != null) {
+                    myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
+                }
+            //}
         }
 
         public void SetAnimationProfileOverride(AnimationProfile animationProfile) {
@@ -1224,7 +1226,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearCasting()");
 
             //characterUnit.MyCharacter.MyCharacterAbilityManager.StopCasting();
-            characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
+            if (characterUnit != null) {
+                characterUnit.SetUseRootMotion(false);
+            }
             SetCasting(false);
 
         }

@@ -96,35 +96,41 @@ namespace AnyRPG {
 
         public static void StartListening(string eventName, Action<string, EventParam> listener) {
             Action<string, EventParam> thisEvent;
-            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 //Add more event to the existing one
                 thisEvent += listener;
 
                 //Update the Dictionary
-                instance.singleEventDictionary[eventName] = thisEvent;
+                MyInstance.singleEventDictionary[eventName] = thisEvent;
             } else {
                 //Add event to the Dictionary for the first time
                 thisEvent += listener;
-                instance.singleEventDictionary.Add(eventName, thisEvent);
+                MyInstance.singleEventDictionary.Add(eventName, thisEvent);
             }
         }
 
         public static void StopListening(string eventName, Action<string, EventParam> listener) {
-            if (instance == null) return;
+            if (MyInstance == null) return;
             Action<string, EventParam> thisEvent;
-            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+                //Debug.Log("SystemEventManager.StopListening(" + eventName + ")");
+
                 //Remove event from the existing one
                 thisEvent -= listener;
 
                 //Update the Dictionary
-                instance.singleEventDictionary[eventName] = thisEvent;
+                MyInstance.singleEventDictionary[eventName] = thisEvent;
             }
         }
 
         public static void TriggerEvent(string eventName, EventParam eventParam) {
             Action<string, EventParam> thisEvent = null;
-            if (instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
-                thisEvent.Invoke(eventName, eventParam);
+            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+                if (thisEvent != null) {
+                    thisEvent.Invoke(eventName, eventParam);
+                } else {
+                    //Debug.Log("SystemEventManager.TriggerEvent(" + eventName + "): event was null");
+                }
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
         }

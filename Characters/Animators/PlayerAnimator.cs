@@ -22,6 +22,12 @@ namespace AnyRPG {
             */
         }
 
+        public override void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+                base.SetOverrideController(animatorOverrideController);
+            }
+        }
+
         // for debugging
         /*
         public override void InitializeAnimator() {

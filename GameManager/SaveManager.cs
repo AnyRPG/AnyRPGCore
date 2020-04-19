@@ -250,10 +250,12 @@ namespace AnyRPG {
             _dynamicCharacterAvatar.ClearSlots();
             //Debug.Log("Savemanager.LoadUMASettings(): " + recipeString);
             _dynamicCharacterAvatar.SetLoadString(_recipeString);
-            _dynamicCharacterAvatar.LoadFromRecipeString(_recipeString);
+            //_dynamicCharacterAvatar.LoadFromRecipeString(_recipeString, DynamicCharacterAvatar.LoadOptions.);
+            /*
             if (rebuild) {
                 _dynamicCharacterAvatar.BuildCharacter();
             }
+            */
         }
 
         /*

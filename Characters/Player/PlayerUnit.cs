@@ -5,6 +5,16 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class PlayerUnit : CharacterUnit {
+
+        protected override void Start() {
+            base.Start();
+            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterStats != null) {
+                EventParam eventParam = new EventParam();
+                eventParam.FloatParam = MyBaseCharacter.MyCharacterStats.MyMovementSpeed;
+                SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
+            }
+        }
+
         /*
         PlayerUnitMovementController playerUnitMovementController;
 

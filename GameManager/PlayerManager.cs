@@ -369,15 +369,21 @@ namespace AnyRPG {
             // should we do the full orchestration here instead of just getting components?
             //MyCharacter.MyAnimatedUnit.GetComponentReferences();
 
+            NavMeshAgent navMeshAgent = playerUnitObject.GetComponent<NavMeshAgent>();
+
             if (LevelManager.MyInstance.MyNavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                playerUnitObject.GetComponent<NavMeshAgent>().enabled = true;
+                if (navMeshAgent != null) {
+                    navMeshAgent.enabled = true;
+                }
                 if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
                     (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
                 }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
-                playerUnitObject.GetComponent<NavMeshAgent>().enabled = false;
+                if (navMeshAgent != null) {
+                    navMeshAgent.enabled = false;
+                }
                 if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
                     (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
                 }
