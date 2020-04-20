@@ -1,4 +1,6 @@
 using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -54,6 +56,9 @@ namespace AnyRPG {
         private string defaultCharacterCreatorUnitProfileName = string.Empty;
 
         [SerializeField]
+        private List<string> defaultUMARaceProfiles = new List<string>();
+
+        [SerializeField]
         private string defaultPlayerName = "Player";
         private string currentPlayerName = string.Empty;
 
@@ -66,9 +71,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private bool autoSpawnPlayerOnLevelLoad = false;
-
-        [SerializeField]
-        private RaceData race;
 
         // reference to the default profile
         private UnitProfile defaultPlayerUnitProfile;
@@ -139,13 +141,37 @@ namespace AnyRPG {
 
         public void OrchestratorStart() {
             PerformRequiredPropertyChecks();
-            GetUnitProfileReferences();
+            SetupScriptableObjects();
             CreateEventSubscriptions();
         }
 
-        public void GetUnitProfileReferences() {
-            defaultPlayerUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultPlayerUnitProfileName);
-            defaultCharacterCreatorUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
+        public void SetupScriptableObjects() {
+
+            // get default player unit profile
+            if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultPlayerUnitProfileName);
+                if (tmpUnitProfile != null) {
+                    defaultPlayerUnitProfile = tmpUnitProfile;
+                } else {
+                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                }
+            } else {
+                Debug.LogError("PlayerManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+            }
+
+            // get default player unit profile
+            if (defaultCharacterCreatorUnitProfileName != null && defaultCharacterCreatorUnitProfileName != string.Empty) {
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
+                if (tmpUnitProfile != null) {
+                    defaultCharacterCreatorUnitProfile = tmpUnitProfile;
+                } else {
+                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                }
+            } else {
+                Debug.LogError("PlayerManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+            }
+
+            //defaultCharacterCreatorUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
         }
 
         private void Start() {
@@ -162,7 +188,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnLevelLoad += OnLevelLoad;
             SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
             SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
-            SystemEventManager.MyInstance.OnPlayerDeath += HandlePlayerDeath;
+            SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = true;
         }
 
@@ -176,7 +202,7 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnLevelLoad -= OnLevelLoad;
                 SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
                 SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
-                SystemEventManager.MyInstance.OnPlayerDeath -= HandlePlayerDeath;
+                SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
             }
             eventSubscriptionsInitialized = false;
         }
@@ -228,7 +254,7 @@ namespace AnyRPG {
             if (newFaction != null) {
                 MyCharacter.JoinFaction(newFaction);
             }
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
         }
 
         public void SetUMAPrefab() {
@@ -320,7 +346,7 @@ namespace AnyRPG {
             playerUnitSpawned = false;
         }
 
-        public void HandlePlayerDeath() {
+        public void HandlePlayerDeath(string eventName, EventParam eventParam) {
             //Debug.Log("PlayerManager.KillPlayer()");
             PlayDeathEffect();
         }

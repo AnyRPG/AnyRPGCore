@@ -42,6 +42,8 @@ namespace AnyRPG {
 
         private void ProcessEvent(ObjectMessageNode objectMessageNode, EventParam eventParam) {
             //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent()");
+
+            // message responses
             foreach (MessageResponseNode messageResponseNode in objectMessageNode.MyMessageResponses) {
                 EventParam usedEventParam = eventParam;
                 if (messageResponseNode.MyUseCustomParam == true) {
@@ -61,6 +63,7 @@ namespace AnyRPG {
                 }
             }
 
+            // property responses
             foreach (PropertyResponseNode propertyResponseNode in objectMessageNode.MyPropertyResponses) {
                 EventParam usedEventParam = eventParam;
                 if (propertyResponseNode.MyUseCustomParam == true) {
@@ -121,6 +124,25 @@ namespace AnyRPG {
                     } else if (propertyResponseNode.MyParameter == EventParamType.stringType) {
                         usedFieldType.SetValue(usedFieldObject, usedEventParam.StringParam);
                         //gameObject.SendMessage(propertyResponseNode.MyFunctionName, usedEventParam.StringParam, SendMessageOptions.DontRequireReceiver);
+                    }
+                }
+            }
+
+            // component responses
+            foreach (ComponentResponseNode componentResponseNode in objectMessageNode.MyComponentResponses) {
+
+                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
+                Type type = Type.GetType(componentResponseNode.MyScriptName);
+                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
+
+                Component component = GetComponent(Type.GetType(componentResponseNode.MyScriptName));
+                if (component != null) {
+                    if (componentResponseNode.MyComponentAction == ComponentAction.Enable) {
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; enabling " + component.name);
+                        (component as MonoBehaviour).enabled = true;
+                    } else {
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; disabling " + component.name);
+                        (component as MonoBehaviour).enabled = false;
                     }
                 }
             }

@@ -90,7 +90,7 @@ namespace AnyRPG {
             }
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventSubscriptions;
             //Debug.Log("NamePlateController.CreateEventSubscriptions()");
-            SystemEventManager.MyInstance.OnReputationChange += SetFactionColor;
+            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.MyInstance.OnPlayerUnitSpawn += SetFactionColor;
             //if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 SetFactionColor();
@@ -104,7 +104,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.MyInstance.OnPlayerUnitSpawn -= SetFactionColor;
-            SystemEventManager.MyInstance.OnReputationChange -= SetFactionColor;
+            SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventSubscriptions;
             SystemEventManager.MyInstance.OnPlayerNameChanged -= SetCharacterName;
 
@@ -114,6 +114,10 @@ namespace AnyRPG {
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
+        }
+
+        public void HandleReputationChange(string eventName, EventParam eventParam) {
+            SetFactionColor();
         }
 
 

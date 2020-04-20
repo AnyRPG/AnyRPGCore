@@ -26,8 +26,10 @@ namespace AnyRPG {
         [SerializeField]
         protected RuntimeAnimatorController animatorController;
 
-        protected RuntimeAnimatorController originalAnimatorController;
+        [SerializeField]
         protected RuntimeAnimatorController thirdPartyAnimatorController;
+
+        protected RuntimeAnimatorController originalAnimatorController;
 
         public AnimatorOverrideController overrideController;
         //protected AnimatorOverrideController defaultOverrideController;
@@ -211,11 +213,17 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             } else {
+                /*
                 if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                     thirdPartyAnimatorController = animator.runtimeAnimatorController;
-                    thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
-                    Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
+                    if (thirdPartyAnimatorController != null) {
+                        thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
+                        Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
+                    } else {
+                        Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
+                    }
                 }
+                */
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
@@ -225,7 +233,7 @@ namespace AnyRPG {
                 } else {
                     overrideController = new AnimatorOverrideController(animatorController);
                     //SetOverrideController(overrideController);
-                    SetCorrectOverrideController();
+                    SetCorrectOverrideController(false);
                 }
             }
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
@@ -235,17 +243,17 @@ namespace AnyRPG {
             initialized = true;
         }
 
-        public virtual void SetCorrectOverrideController() {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
-            SetOverrideController(overrideController);
+        public virtual void SetCorrectOverrideController(bool runUpdate = true) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
+            SetOverrideController(overrideController, runUpdate);
         }
 
-        public virtual void SetDefaultOverrideController() {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
-            SetOverrideController(overrideController);
+        public virtual void SetDefaultOverrideController(bool runUpdate = true) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            SetOverrideController(overrideController, runUpdate);
         }
 
-        public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController) {
+        public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
 
             if (animator.runtimeAnimatorController != animatorOverrideController) {
@@ -257,7 +265,9 @@ namespace AnyRPG {
                     myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
                 }
                 //animator.updateMode = AnimatorUpdateMode.
-                
+                if (runUpdate) {
+                    animator.Update(0f);
+                }
             }
         }
 
@@ -1147,7 +1157,9 @@ namespace AnyRPG {
                 speedNormalizedAnimationLength = characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers() * animationLength;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
             }
-            animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers());
+            if (ParameterExists("AnimationSpeed")) {
+                animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers());
+            }
 
             // wait for the animation to play before allowing the character to attack again
             attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).MyIsAutoAttack, !(baseAbility as AnimatedAbility).MyIsAutoAttack, false));
@@ -1187,7 +1199,11 @@ namespace AnyRPG {
             } else {
                 characterUnit.SetUseRootMotion(false);
             }
-            SetCasting(true);
+            if (baseAbility.MyAbilityCastingTime > 0f) {
+                SetCasting(true);
+            } else {
+                Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() ability was instant cast, not setting casting variable");
+            }
             // this should not be necessary since we track the length of animation through the casting time
             // regular hits and animated abilities are instant attack and so need to track their downtime through animation length
             // attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, false, false, true));
@@ -1270,23 +1286,40 @@ namespace AnyRPG {
                 attackCoroutine = null;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
-            if (animator != null) {
+            if (animator != null && ParameterExists("AnimationSpeed")) {
                 animator.SetFloat("AnimationSpeed", 1);
             }
         }
 
-        private void HandleDeath(CharacterStats characterStats) {
+        private bool ParameterExists(string parameterName) {
+            if (animator != null) {
+                AnimatorControllerParameter[] animatorControllerParameters = animator.parameters;
+                foreach (AnimatorControllerParameter animatorControllerParameter in animatorControllerParameters) {
+                    if (animatorControllerParameter.name == parameterName) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public virtual void HandleDeath(CharacterStats characterStats) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
             if (currentAbility != null && currentAbility is AnimatedAbility) {
                 (currentAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             }
+
             // add these to prevent characters from dying floating or upright
             HandleUnLevitated();
             HandleUnStunned();
-            animator.SetFloat("AnimationSpeed", 1);
+
+            if (ParameterExists("AnimationSpeed")) {
+                animator.SetFloat("AnimationSpeed", 1);
+            }
 
             SetAttacking(false);
             SetCasting(false);
+
             SetTrigger("DeathTrigger");
             SetBool("IsDead", true);
         }
@@ -1301,11 +1334,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "Setting waitingforhits to false after countdown down");
             SetBool("IsDead", false);
             OnReviveComplete();
+            SetCorrectOverrideController();
             resurrectionCoroutine = null;
         }
 
-
-        private void HandleRevive() {
+        public virtual void HandleRevive() {
             SetTrigger("ReviveTrigger");
             // add 1 to account for the transition
             if (SystemConfigurationManager.MyInstance != null) {
@@ -1314,55 +1347,52 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleLevitated() {
+        public virtual void HandleLevitated() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
             SetTrigger("LevitateTrigger");
             SetBool("Levitated", true);
         }
-        public void HandleUnLevitated() {
+        public virtual void HandleUnLevitated() {
             SetBool("Levitated", false);
         }
 
-        public void HandleStunned() {
+        public virtual void HandleStunned() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleStunned()");
             SetTrigger("StunTrigger");
             SetBool("Stunned", true);
         }
 
-        public void HandleUnStunned() {
+        public virtual void HandleUnStunned() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleUnStunned()");
             SetBool("Stunned", false);
         }
 
         public virtual void SetCasting(bool varValue) {
-            Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
             }
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
                 characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting = varValue;
             }
-            EventParam eventParam = new EventParam();
-            if (varValue == true) {
-                SetDefaultOverrideController();
-                SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
+            if (ParameterExists("Casting")) {
+                animator.SetBool("Casting", varValue);
             }
-            animator.SetBool("Casting", varValue);
+
             if (varValue == true) {
                 SetTrigger("CastingTrigger");
                 characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
-            } else {
-                SetCorrectOverrideController();
-                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
             }
         }
 
-        public void SetAttacking(bool varValue) {
+        public virtual void SetAttacking(bool varValue) {
             //Debug.Log(gameObject.name + ".SetAttacking(" + varValue + ")");
             if (animator == null) {
                 return;
             }
-            animator.SetBool("Attacking", varValue);
+            if (ParameterExists("Attacking")) {
+                animator.SetBool("Attacking", varValue);
+            }
             if (varValue == true) {
                 float animationSpeed = 1f;
                 if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
@@ -1373,10 +1403,25 @@ namespace AnyRPG {
                 SetTrigger("AttackTrigger");
                 characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
             } else {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to 1 after attack");
-
                 //animator.SetFloat("AnimationSpeed", 1f);
             }
+        }
+
+        public virtual void SetRiding(bool varValue) {
+            Debug.Log(gameObject.name + ".SetRiding(" + varValue + ")");
+            if (animator == null) {
+                return;
+            }
+
+            if (ParameterExists("Riding")) {
+                animator.SetBool("Riding", varValue);
+            }
+            if (varValue == true) {
+                SetTrigger("RidingTrigger");
+            } else {
+                //animator.SetFloat("AnimationSpeed", 1f);
+            }
+
         }
 
         public void SetStrafing(bool varValue) {
@@ -1570,7 +1615,9 @@ namespace AnyRPG {
         public void SetBool(string varName, bool varValue) {
 
             if (animator != null) {
-                animator.SetBool(varName, varValue);
+                if (ParameterExists(varName)) {
+                    animator.SetBool(varName, varValue);
+                }
             }
         }
 
@@ -1593,7 +1640,9 @@ namespace AnyRPG {
         public void SetTrigger(string varName) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetTrigger(" + varName + ")");
             if (animator != null) {
-                animator.SetTrigger(varName);
+                if (ParameterExists(varName)) {
+                    animator.SetTrigger(varName);
+                }
             }
         }
 

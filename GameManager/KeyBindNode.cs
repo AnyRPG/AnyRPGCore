@@ -89,6 +89,10 @@ namespace AnyRPG {
             this.shift = shift;
             this.MyKeyCode = keyCode;
         }
+
+        public void RegisterKeyPress() {
+            OnKeyPressedHandler();
+        }
     }
 
 }

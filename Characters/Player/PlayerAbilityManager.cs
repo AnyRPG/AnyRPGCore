@@ -23,6 +23,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
                 HandleCharacterUnitSpawn();
             }
+            if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
+                KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler += OnEscapeKeyPressedHandler;
+            }
+
         }
 
         public override void CleanupEventSubscriptions() {
@@ -36,7 +40,22 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandleCharacterUnitDespawn;
             }
+            // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
+            if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
+                KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler -= OnEscapeKeyPressedHandler;
+            }
+
         }
+
+        /// <summary>
+        /// Stop casting if the escape key is pressed
+        /// </summary>
+        public void OnEscapeKeyPressedHandler() {
+            //Debug.Log("Received Escape Key Pressed Handler");
+            baseCharacter.MyCharacterAbilityManager.StopCasting();
+
+        }
+
 
         public override void OnDisable() {
             base.OnDisable();
@@ -99,7 +118,7 @@ namespace AnyRPG {
         }
 
         public override void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + ")");
             base.PerformAbility(ability, target, groundTarget);
             // DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
             OnPerformAbility(ability);

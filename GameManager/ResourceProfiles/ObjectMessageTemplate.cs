@@ -31,9 +31,13 @@ namespace AnyRPG {
         [SerializeField]
         private List<PropertyResponseNode> propertyResponses = new List<PropertyResponseNode>();
 
+        [SerializeField]
+        private List<ComponentResponseNode> componentResponses = new List<ComponentResponseNode>();
+
         public string MyEventName { get => eventName; set => eventName = value; }
         public List<MessageResponseNode> MyMessageResponses { get => messageResponses; set => messageResponses = value; }
         public List<PropertyResponseNode> MyPropertyResponses { get => propertyResponses; set => propertyResponses = value; }
+        public List<ComponentResponseNode> MyComponentResponses { get => componentResponses; set => componentResponses = value; }
     }
 
     [System.Serializable]
@@ -89,7 +93,25 @@ namespace AnyRPG {
         public string MySubPropertyName { get => subPropertyName; set => subPropertyName = value; }
     }
 
+    [System.Serializable]
+    public class ComponentResponseNode {
+
+        // the monobehavior script to access
+        [SerializeField]
+        private string scriptName = string.Empty;
+
+        // the public property on the script to change
+        [SerializeField]
+        private ComponentAction componentAction = ComponentAction.Disable;
+
+
+        public string MyScriptName { get => scriptName; set => scriptName = value; }
+        public ComponentAction MyComponentAction { get => componentAction; set => componentAction = value; }
+    }
+
 
     public enum EventParamType { noneType, stringType, intType, floatType, boolType }
+
+    public enum ComponentAction { Enable, Disable }
 
 }

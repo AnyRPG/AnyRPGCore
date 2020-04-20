@@ -602,7 +602,7 @@ namespace AnyRPG {
                 showPlayerNameButton.DeSelect();
             }
             // not really reputation, but it will trigger the right check
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
         }
 
         public void ToggleShowPlayerFactionButton() {
@@ -619,7 +619,7 @@ namespace AnyRPG {
                 showPlayerFactionButton.DeSelect();
             }
             // not really reputation, but it will trigger the right check
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
         }
 
         public void ToggleHideFullHealthBarButton() {
@@ -634,7 +634,7 @@ namespace AnyRPG {
                 hideFullHealthBarButton.DeSelect();
             }
             // not really reputation, but it will trigger the right check
-            SystemEventManager.MyInstance.NotifyOnReputationChange();
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
         }
 
         public void ToggleLockUIButton() {

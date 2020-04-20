@@ -47,6 +47,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
 
+        [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat")]
+        [SerializeField]
+        private bool allowAutoAttack = true;
+
         [SerializeField]
         private bool useThirdPartyCameraControl = false;
 
@@ -369,6 +373,7 @@ namespace AnyRPG {
         public List<ProjectorColorMapNode> MyFocusProjectorColorMap { get => focusProjectorColorMap; set => focusProjectorColorMap = value; }
         public bool MyUseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
         public bool MyUseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
+        public bool MyAllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

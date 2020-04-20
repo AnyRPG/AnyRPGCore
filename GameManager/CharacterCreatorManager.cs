@@ -67,6 +67,10 @@ namespace AnyRPG {
                 cloneSource = PlayerManager.MyInstance.MyDefaultNonUMAPlayerUnitPrefab;
             }
             */
+            if (unitProfile == null) {
+                Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
+                return;
+            }
             cloneSource = unitProfile.MyUnitPrefab;
 
             if (cloneSource == null) {

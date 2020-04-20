@@ -20,6 +20,7 @@ namespace AnyRPG {
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         private void Awake() {
+            SetLayer();
             aggroCollider = GetComponent<SphereCollider>();
             DisableAggro();
         }
@@ -32,6 +33,10 @@ namespace AnyRPG {
             }
             StartEnableAggro();
             //SetAgroRange(aggroRadius);
+        }
+
+        public void SetLayer() {
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
         public void StartEnableAggro() {

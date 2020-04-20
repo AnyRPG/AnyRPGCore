@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         private Faction prerequisiteFaction = null;
 
-        public void HandleReputationChange() {
+        public void HandleReputationChange(string eventName, EventParam eventParam) {
             UpdateStatus();
         }
 
@@ -58,12 +58,14 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }
-            SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
+            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
+            //SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
         }
 
         public void CleanupScriptableObjects() {
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
+                SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
+                //SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
             }
         }
     }

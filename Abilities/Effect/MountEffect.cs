@@ -21,7 +21,9 @@ namespace AnyRPG {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
-                PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
+
+                //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
+                PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabObjects.Values.ElementAt(0).transform.localEulerAngles;
 
                 // we could skip this and just let the player fall through gravity
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
@@ -101,10 +103,12 @@ namespace AnyRPG {
 
                     // set player unit to normal state
                     PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyMounted = false;
-
-                    (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
-
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                    if ((PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController) {
+                        (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
+                    }
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetRiding(false);
+                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                    CameraManager.MyInstance.ActivateMainCamera();
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.transform);
 
 
@@ -119,13 +123,16 @@ namespace AnyRPG {
                 PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
                 if (playerUnitMovementController != null) {
                     // disable movement and input on player unit
-                    (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
+                    if ((PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController) {
+                        (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
+                    }
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
                     //Debug.Log("MountEffect.ActivateMountedState()Setting Animator Values");
                     // set player animator to riding state
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", true);
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetRiding(true);
+                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", true);
+                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
 
                     // set player unit to riding state
                     PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyMounted = true;
@@ -139,6 +146,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterUnit = PlayerManager.MyInstance.MyCharacter.MyCharacterUnit;
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                    CameraManager.MyInstance.SwitchToMainCamera();
                     CameraManager.MyInstance.MyMainCameraController.InitializeCamera(go.transform);
                 }
             }

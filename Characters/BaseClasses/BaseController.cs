@@ -41,7 +41,7 @@ namespace AnyRPG {
                 if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.MyCharacterController != null) {
                     return MyMasterUnit.MyCharacterController.MyMovementSpeed;
                 }
-                return (walking == false ? baseCharacter.MyCharacterStats.MyMovementSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed);
+                return (walking == false ? baseCharacter.MyCharacterStats.MyRunSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed);
             }
         }
         public bool MyUnderControl { get => underControl; set => underControl = value; }

@@ -72,7 +72,25 @@ namespace AnyRPG {
         public override void Die() {
             base.Die();
             // Kill the player
-            SystemEventManager.MyInstance.NotifyOnPlayerDeath();
+            SystemEventManager.TriggerEvent("OnPlayerDeath", new EventParam());
+        }
+
+        public override void CalculateRunSpeed() {
+            float oldRunSpeed = currentRunSpeed;
+            float oldSprintSpeed = currentSprintSpeed;
+            base.CalculateRunSpeed();
+            if (currentRunSpeed != oldRunSpeed) {
+                EventParam eventParam = new EventParam();
+                eventParam.FloatParam = currentRunSpeed;
+                SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
+                eventParam.FloatParam = currentSprintSpeed;
+                SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+            }
+            if (currentSprintSpeed != oldSprintSpeed) {
+                EventParam eventParam = new EventParam();
+                eventParam.FloatParam = currentSprintSpeed;
+                SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+            }
         }
 
 

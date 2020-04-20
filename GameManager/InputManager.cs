@@ -53,7 +53,16 @@ namespace AnyRPG {
             }
 
             RegisterMouseActions();
+            RegisterKeyPresses();
 
+        }
+
+        public void RegisterKeyPresses() {
+            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+                if (KeyBindWasPressed(keyBindNode.MyKeyBindID)) {
+                    keyBindNode.RegisterKeyPress();
+                }
+            }
         }
 
         public bool KeyBindWasPressed(string keyBindID) {

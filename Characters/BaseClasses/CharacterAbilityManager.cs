@@ -679,6 +679,7 @@ namespace AnyRPG {
 
         public void AttemptAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
+
             foreach (BaseAbility baseAbility in MyAbilityList.Values) {
                 if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).MyIsAutoAttack) {
                     BeginAbility(baseAbility);

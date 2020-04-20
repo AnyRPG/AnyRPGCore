@@ -27,6 +27,9 @@ namespace AnyRPG {
         [SerializeField]
         protected string toughness = string.Empty;
 
+        [SerializeField]
+        protected float sprintSpeedModifier = 1.5f;
+
         protected UnitToughness unitToughness;
 
         // keep track of current level
@@ -36,9 +39,16 @@ namespace AnyRPG {
         private int intellect;
         private int strength;
         private int agility;
+        protected int currentStamina;
+        protected int currentIntellect;
+        protected int currentStrength;
+        protected int currentAgility;
 
         protected float walkSpeed = 1f;
         protected float runSpeed = 7f;
+
+        protected float currentRunSpeed = 0f;
+        protected float currentSprintSpeed = 0f;
 
         public int currentHealth { get; private set; }
         public int currentMana { get; private set; }
@@ -66,21 +76,17 @@ namespace AnyRPG {
         public float MyPhysicalDamage { get => meleeDamageModifiers.GetValue(); }
         public float MyArmor { get => armorModifiers.GetValue(); }
         public int MyBaseStamina { get => stamina; }
-        //public int MyStamina { get => (int)((stamina + primaryStatModifiers[StatBuffType.Stamina].GetValue()) * primaryStatModifiers [StatBuffType.Stamina].GetMultiplyValue()); }
-        public int MyStamina {
-            get {
-                //Debug.Log("stamina: " + stamina + "; admodifiers: " + GetAddModifiers(StatBuffType.Stamina) + "; multiplymodifiers: " + GetMultiplyModifiers(StatBuffType.Stamina));
-                return (int)((stamina + GetAddModifiers(StatBuffType.Stamina)) * GetMultiplyModifiers(StatBuffType.Stamina));
-            }
-        }
+        public int MyStamina { get => currentStamina; }
         public int MyBaseStrength { get => strength; }
-        public int MyStrength { get => (int)((strength + GetAddModifiers(StatBuffType.Strength)) * GetMultiplyModifiers(StatBuffType.Strength)); }
+        public int MyStrength { get => currentStrength; }
         public int MyBaseIntellect { get => intellect; }
-        public int MyIntellect { get => (int)((intellect + GetAddModifiers(StatBuffType.Intellect)) * GetMultiplyModifiers(StatBuffType.Intellect)); }
+        public int MyIntellect { get => currentIntellect; }
         public float MyWalkSpeed { get => walkSpeed; }
-        public float MyMovementSpeed { get => (runSpeed + GetAddModifiers(StatBuffType.MovementSpeed)) * GetMultiplyModifiers(StatBuffType.MovementSpeed); }
+        public float MyRunSpeed { get => currentRunSpeed; }
+        public float MySprintSpeed { get => currentSprintSpeed; }
         public int MyBaseAgility { get => agility; }
-        public int MyAgility { get => (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility)); }
+        //public int MyAgility { get => (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility)); }
+        public int MyAgility { get => currentAgility; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
@@ -103,6 +109,8 @@ namespace AnyRPG {
             if (currentLevel == 0) {
                 // if it is not zero, we have probably been initialized some other way, and don't need to do this
                 SetLevel(level);
+            } else {
+                CalculatePrimaryStats();
             }
             TrySpawnDead();
         }
@@ -118,6 +126,14 @@ namespace AnyRPG {
             CreateLateSubscriptions();
         }
 
+        public void CalculatePrimaryStats() {
+            CalculateRunSpeed();
+            CalculateAgility();
+            CalculateStamina();
+            CalculateStrength();
+            CalculateIntellect();
+        }
+
         public void GetComponentReferences() {
             baseCharacter = GetComponent<BaseCharacter>();
         }
@@ -126,8 +142,11 @@ namespace AnyRPG {
             foreach (StatBuffType statBuffType in Enum.GetValues(typeof(StatBuffType))) {
                 primaryStatModifiers.Add(statBuffType, new Stat());
             }
-            primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HealthChangedNotificationHandler;
-            primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += ManaChangedNotificationHandler;
+            primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HandleStaminaUpdate;
+            primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += HandleIntellectUpdate;
+            primaryStatModifiers[StatBuffType.Strength].OnModifierUpdate += HandleStrengthUpdate;
+            primaryStatModifiers[StatBuffType.Agility].OnModifierUpdate += HandleAgilityUpdate;
+            primaryStatModifiers[StatBuffType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
 
         public virtual void CreateLateSubscriptions() {
@@ -162,6 +181,39 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.OnDestroy()");
 
             //ClearStatusEffects();
+        }
+
+        public virtual void CalculateStrength() {
+            currentStrength = (int)((strength + GetAddModifiers(StatBuffType.Strength)) * GetMultiplyModifiers(StatBuffType.Strength));
+        }
+
+        public virtual void CalculateStamina() {
+            currentStamina = (int)((stamina + GetAddModifiers(StatBuffType.Stamina)) * GetMultiplyModifiers(StatBuffType.Stamina));
+        }
+
+        public virtual void CalculateAgility() {
+            currentAgility = (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility));
+        }
+
+        public virtual void CalculateIntellect() {
+            currentIntellect = (int)((intellect + GetAddModifiers(StatBuffType.Intellect)) * GetMultiplyModifiers(StatBuffType.Intellect));
+        }
+
+        public virtual void CalculateRunSpeed() {
+            currentRunSpeed = (runSpeed + GetAddModifiers(StatBuffType.MovementSpeed)) * GetMultiplyModifiers(StatBuffType.MovementSpeed);
+            currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
+        }
+
+        public virtual void HandleMovementSpeedUpdate() {
+            CalculateRunSpeed();
+        }
+
+        public virtual void HandleStrengthUpdate() {
+            CalculateStrength();
+        }
+
+        public virtual void HandleAgilityUpdate() {
+            CalculateAgility();
         }
 
         void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
@@ -434,13 +486,14 @@ namespace AnyRPG {
             }
             if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.MovementSpeed)) {
                 //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
+                CalculateRunSpeed();
                 StatChangedNotificationHandler();
             }
 
             if (statusEffect.MyFactionModifiers.Count > 0) {
                 //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING REPUTATION CHANGED");
                 if (SystemEventManager.MyInstance != null) {
-                    SystemEventManager.MyInstance.NotifyOnReputationChange();
+                    SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
                 }
             }
         }
@@ -514,6 +567,8 @@ namespace AnyRPG {
             strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStrengthMultiplier);
             agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedAgilityMultiplier);
 
+            CalculatePrimaryStats();
+
             ResetHealth();
             ResetMana();
         }
@@ -585,9 +640,19 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleIntellectUpdate() {
+            CalculateIntellect();
+            ManaChangedNotificationHandler();
+        }
+
         public void ManaChangedNotificationHandler() {
             currentMana = Mathf.Clamp(currentMana, 0, MyMaxMana);
             OnManaChanged(MyMaxMana, currentMana);
+        }
+
+        public void HandleStaminaUpdate() {
+            CalculateStamina();
+            HealthChangedNotificationHandler();
         }
 
         public void HealthChangedNotificationHandler() {

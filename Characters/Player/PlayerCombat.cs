@@ -34,10 +34,12 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
+            /*
             // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
             if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
                 KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler -= OnEscapeKeyPressedHandler;
             }
+            */
 
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnHealthChanged -= AttemptRegen;
@@ -123,7 +125,9 @@ namespace AnyRPG {
                 swingTarget = characterTarget;
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                baseCharacter.MyCharacterAbilityManager.AttemptAutoAttack();
+                if (WaitingForAction() == false) {
+                    baseCharacter.MyCharacterAbilityManager.AttemptAutoAttack();
+                }
             }
         }
 
@@ -164,6 +168,7 @@ namespace AnyRPG {
             return damageTaken;
         }
 
+        /*
         /// <summary>
         /// Stop casting if the escape key is pressed
         /// </summary>
@@ -172,6 +177,7 @@ namespace AnyRPG {
             baseCharacter.MyCharacterAbilityManager.StopCasting();
 
         }
+        */
 
         public override void OnKillConfirmed(BaseCharacter sourceCharacter, float creditPercent) {
             //Debug.Log("PlayerCombat.OnKillConfirmed()");

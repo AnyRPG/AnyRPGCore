@@ -87,8 +87,6 @@ namespace AnyRPG {
             }
         }
 
-
-
         private void Awake() {
             //Debug.Log("CameraManager.Awake()");
             // attach camera to player
@@ -120,6 +118,13 @@ namespace AnyRPG {
             }
 
             // fallback in case no camera found
+            MyMainCameraGameObject.SetActive(true);
+        }
+
+        public void SwitchToMainCamera() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+                DisableThirdPartyCamera();
+            }
             MyMainCameraGameObject.SetActive(true);
         }
 

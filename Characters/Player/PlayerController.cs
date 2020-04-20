@@ -673,9 +673,11 @@ namespace AnyRPG {
         //Keep character from moving.
         public void LockMovement() {
             canMove = false;
-            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetMoving(false);
-            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableRootMotion();
-            (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+            if (baseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetMoving(false);
+                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableRootMotion();
+                (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+            }
         }
 
         public void UnlockMovement() {

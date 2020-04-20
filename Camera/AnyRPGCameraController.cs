@@ -98,9 +98,11 @@ namespace AnyRPG {
                 return;
             }
 
+            /*
             if (SystemConfigurationManager.MyInstance != null && SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
                 return;
             }
+            */
 
             cameraPan = false;
             cameraZoom = false;

@@ -42,7 +42,6 @@ namespace AnyRPG {
         public event System.Action<BaseAbility> OnAbilityListChanged = delegate { };
         public event System.Action<Skill> OnSkillListChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
-        public event System.Action OnReputationChange = delegate { };
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
 
         public event System.Action<string> OnInteractionStarted = delegate { };
@@ -56,7 +55,6 @@ namespace AnyRPG {
         public event System.Action OnDeleteSaveData = delegate { };
         public event System.Action<BaseCharacter, CharacterUnit, int, string> OnTakeDamage = delegate { };
         public event System.Action OnXPGained = delegate { };
-        public event System.Action OnPlayerDeath = delegate { };
 
         // Player Manager
         public event System.Action OnPlayerConnectionSpawn = delegate { };
@@ -137,10 +135,6 @@ namespace AnyRPG {
 
         public void NotifyOnCurrencyChange() {
             OnCurrencyChange();
-        }
-
-        public void NotifyOnPlayerDeath() {
-            OnPlayerDeath();
         }
 
         public void NotifyOnInventoryTransparencyUpdate() {
@@ -257,12 +251,6 @@ namespace AnyRPG {
 
         public void NotifyOnInteractionWithOptionCompleted(InteractableOption interactableOption) {
             OnInteractionWithOptionCompleted(interactableOption);
-        }
-
-        public void NotifyOnReputationChange() {
-            //Debug.Log("SystemEventManager.NotifyOnReputationChange()");
-            OnReputationChange();
-            //OnPrerequisiteUpdated();
         }
 
         public void NotifyOnLevelChanged(int newLevel) {

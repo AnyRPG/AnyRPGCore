@@ -154,6 +154,14 @@ namespace AnyRPG {
             }
         }
 
+        public bool WaitingForAction() {
+            if (baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || baseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.MyCharacterAbilityManager.MyIsCasting) {
+                // can't auto-attack during auto-attack, animated attack, or cast
+                return true;
+            }
+            return false;
+        }
+
         public IEnumerator outOfCombatRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning");
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.IsAlive == true) {
@@ -273,7 +281,9 @@ namespace AnyRPG {
 
         public void ActivateAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
-            autoAttackActive = true;
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true) {
+                autoAttackActive = true;
+            }
         }
 
         public void DeActivateAutoAttack() {
