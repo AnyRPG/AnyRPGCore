@@ -34,7 +34,7 @@ namespace AnyRPG {
 
 
         public override void InitializeAnimator() {
-            Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
+            //Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
             if (initialized) {
                 return;
             }
@@ -49,9 +49,9 @@ namespace AnyRPG {
                     }
                     if (thirdPartyAnimatorController != null) {
                         thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
-                        Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
+                        //Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
                     } else {
-                        Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
+                        //Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
                     }
 
                 }
@@ -65,43 +65,51 @@ namespace AnyRPG {
         }
         */
 
-        public override void SetCasting(bool varValue) {
+        public override void SetCasting(bool varValue, bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".PlayerAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
             }
 
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
             if (varValue == true) {
-                SetDefaultOverrideController();
+                if (swapAnimator == true) {
+                    SetDefaultOverrideController();
+                }
                 SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
             }
 
             base.SetCasting(varValue);
 
             if (varValue == false) {
-                SetCorrectOverrideController();
-                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
+                if (swapAnimator) {
+                    SetCorrectOverrideController();
+                    SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
+                }
             }
 
         }
 
-        public override void SetAttacking(bool varValue) {
+        public override void SetAttacking(bool varValue, bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".SetAttacking(" + varValue + ")");
             if (animator == null) {
                 return;
             }
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
             if (varValue == true) {
-                SetDefaultOverrideController();
+                if (swapAnimator) {
+                    SetDefaultOverrideController();
+                }
                 SystemEventManager.TriggerEvent("OnStartAttacking", eventParam);
             }
 
             base.SetAttacking(varValue);
 
             if (varValue == false) {
-                SetCorrectOverrideController();
-                SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
+                if (swapAnimator) {
+                    SetCorrectOverrideController();
+                    SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
+                }
             }
 
         }
@@ -111,7 +119,7 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
             if (varValue == true) {
                 SetDefaultOverrideController();
                 SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
@@ -132,9 +140,11 @@ namespace AnyRPG {
             base.HandleLevitated();
         }
 
-        public override void HandleUnLevitated() {
-            base.HandleUnLevitated();
-            SetCorrectOverrideController();
+        public override void HandleUnLevitated(bool swapAnimator = true) {
+            base.HandleUnLevitated(swapAnimator);
+            if (swapAnimator) {
+                SetCorrectOverrideController();
+            }
         }
 
         public override void HandleStunned() {
@@ -143,10 +153,12 @@ namespace AnyRPG {
             base.HandleStunned();
         }
 
-        public override void HandleUnStunned() {
+        public override void HandleUnStunned(bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleUnStunned()");
-            SetBool("Stunned", false);
-            SetCorrectOverrideController();
+            base.HandleUnStunned(swapAnimator);
+            if (swapAnimator) {
+                SetCorrectOverrideController();
+            }
         }
 
         public override void HandleRevive() {
@@ -155,7 +167,9 @@ namespace AnyRPG {
         }
 
         public override void HandleDeath(CharacterStats characterStats) {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.HandleDeath()");
             SetDefaultOverrideController();
+            SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
             base.HandleDeath(characterStats);
         }
 

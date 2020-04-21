@@ -1202,7 +1202,7 @@ namespace AnyRPG {
             if (baseAbility.MyAbilityCastingTime > 0f) {
                 SetCasting(true);
             } else {
-                Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() ability was instant cast, not setting casting variable");
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() ability was instant cast, not setting casting variable");
             }
             // this should not be necessary since we track the length of animation through the casting time
             // regular hits and animated abilities are instant attack and so need to track their downtime through animation length
@@ -1310,15 +1310,15 @@ namespace AnyRPG {
             }
 
             // add these to prevent characters from dying floating or upright
-            HandleUnLevitated();
-            HandleUnStunned();
+            HandleUnLevitated(false);
+            HandleUnStunned(false);
 
             if (ParameterExists("AnimationSpeed")) {
                 animator.SetFloat("AnimationSpeed", 1);
             }
 
-            SetAttacking(false);
-            SetCasting(false);
+            SetAttacking(false, false);
+            SetCasting(false, false);
 
             SetTrigger("DeathTrigger");
             SetBool("IsDead", true);
@@ -1352,7 +1352,7 @@ namespace AnyRPG {
             SetTrigger("LevitateTrigger");
             SetBool("Levitated", true);
         }
-        public virtual void HandleUnLevitated() {
+        public virtual void HandleUnLevitated(bool swapAnimator = true) {
             SetBool("Levitated", false);
         }
 
@@ -1362,12 +1362,12 @@ namespace AnyRPG {
             SetBool("Stunned", true);
         }
 
-        public virtual void HandleUnStunned() {
+        public virtual void HandleUnStunned(bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleUnStunned()");
             SetBool("Stunned", false);
         }
 
-        public virtual void SetCasting(bool varValue) {
+        public virtual void SetCasting(bool varValue, bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
@@ -1385,7 +1385,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void SetAttacking(bool varValue) {
+        public virtual void SetAttacking(bool varValue, bool swapAnimator = true) {
             //Debug.Log(gameObject.name + ".SetAttacking(" + varValue + ")");
             if (animator == null) {
                 return;
@@ -1435,8 +1435,9 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            
-            animator.SetBool("Moving", varValue);
+            if (ParameterExists("Moving")) {
+                animator.SetBool("Moving", varValue);
+            }
             if (varValue) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetMoving()");
             }
