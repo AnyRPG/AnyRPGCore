@@ -116,7 +116,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandleReputationChange(string eventName, EventParam eventParam) {
+        public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
             SetFactionColor();
         }
 

@@ -54,12 +54,12 @@ namespace AnyRPG {
         private bool useCustomParam = false;
 
         [SerializeField]
-        private EventParam customParameters = new EventParam();
+        private EventParamProperties customParameters = new EventParamProperties();
 
         public EventParamType MyParameter { get => parameter; set => parameter = value; }
         public bool MyUseCustomParam { get => useCustomParam; set => useCustomParam = value; }
         public string MyFunctionName { get => functionName; set => functionName = value; }
-        public EventParam MyCustomParameters { get => customParameters; set => customParameters = value; }
+        public EventParamProperties MyCustomParameters { get => customParameters; set => customParameters = value; }
     }
 
     [System.Serializable]
@@ -82,12 +82,16 @@ namespace AnyRPG {
         [SerializeField]
         private bool useCustomParam = false;
 
+        
         [SerializeField]
-        private EventParam customParameters = new EventParam();
+        private EventParamProperties customParameters = new EventParamProperties();
+
+        //[SerializeField]
+        //private List<EventParam> customParameterList = new List<EventParam>();
 
         public EventParamType MyParameter { get => parameter; set => parameter = value; }
         public bool MyUseCustomParam { get => useCustomParam; set => useCustomParam = value; }
-        public EventParam MyCustomParameters { get => customParameters; set => customParameters = value; }
+        public EventParamProperties MyCustomParameters { get => customParameters; set => customParameters = value; }
         public string MyScriptName { get => scriptName; set => scriptName = value; }
         public string MyPropertyName { get => propertyName; set => propertyName = value; }
         public string MySubPropertyName { get => subPropertyName; set => subPropertyName = value; }
@@ -109,8 +113,41 @@ namespace AnyRPG {
         public ComponentAction MyComponentAction { get => componentAction; set => componentAction = value; }
     }
 
+    [System.Serializable]
+    public class ObjectConfigurationNode {
 
-    public enum EventParamType { noneType, stringType, intType, floatType, boolType }
+        [SerializeField]
+        private string objectName = string.Empty;
+
+        [SerializeField]
+        private List<SimpleParamNode> simpleParams = new List<SimpleParamNode>();
+
+        public string MyObjectName { get => objectName; set => objectName = value; }
+        public List<SimpleParamNode> MySimpleParams { get => simpleParams; set => simpleParams = value; }
+    }
+
+    [System.Serializable]
+    public class SimpleParamNode {
+
+        [SerializeField]
+        private SimpleParamType paramType = SimpleParamType.intType;
+
+        [SerializeField]
+        private bool useCustomParam = false;
+
+        [SerializeField]
+        private EventParam simpleParams = new EventParam();
+
+        public SimpleParamType MyParamType { get => paramType; set => paramType = value; }
+        public bool MyUseCustomParam { get => useCustomParam; set => useCustomParam = value; }
+        public EventParam MySimpleParams { get => simpleParams; set => simpleParams = value; }
+    }
+
+
+
+    public enum EventParamType { noneType, stringType, intType, floatType, boolType, objectType }
+
+    public enum SimpleParamType { stringType, intType, floatType, boolType }
 
     public enum ComponentAction { Enable, Disable }
 

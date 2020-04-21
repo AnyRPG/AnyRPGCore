@@ -115,7 +115,7 @@ namespace AnyRPG {
             rightMouseButtonUp = false;
             middleMouseButtonUp = false;
             mouseScrolled = false;
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
 
 
             // track left mouse button up and down events to determine difference in click vs drag

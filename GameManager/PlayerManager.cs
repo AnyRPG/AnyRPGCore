@@ -254,7 +254,7 @@ namespace AnyRPG {
             if (newFaction != null) {
                 MyCharacter.JoinFaction(newFaction);
             }
-            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
         public void SetUMAPrefab() {
@@ -346,7 +346,7 @@ namespace AnyRPG {
             playerUnitSpawned = false;
         }
 
-        public void HandlePlayerDeath(string eventName, EventParam eventParam) {
+        public void HandlePlayerDeath(string eventName, EventParamProperties eventParam) {
             //Debug.Log("PlayerManager.KillPlayer()");
             PlayDeathEffect();
         }

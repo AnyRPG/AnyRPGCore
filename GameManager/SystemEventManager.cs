@@ -25,12 +25,12 @@ namespace AnyRPG {
 
         void Init() {
             if (singleEventDictionary == null) {
-                singleEventDictionary = new Dictionary<string, Action<string, EventParam>>();
+                singleEventDictionary = new Dictionary<string, Action<string, EventParamProperties>>();
             }
         }
         #endregion
 
-        private Dictionary<string, Action<string, EventParam>> singleEventDictionary;
+        private Dictionary<string, Action<string, EventParamProperties>> singleEventDictionary;
 
 
         //public event System.Action OnPrerequisiteUpdated = delegate { };
@@ -92,8 +92,8 @@ namespace AnyRPG {
             //Debug.Log("SystemGameManager.Start()");
         }
 
-        public static void StartListening(string eventName, Action<string, EventParam> listener) {
-            Action<string, EventParam> thisEvent;
+        public static void StartListening(string eventName, Action<string, EventParamProperties> listener) {
+            Action<string, EventParamProperties> thisEvent;
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 //Add more event to the existing one
                 thisEvent += listener;
@@ -107,9 +107,9 @@ namespace AnyRPG {
             }
         }
 
-        public static void StopListening(string eventName, Action<string, EventParam> listener) {
+        public static void StopListening(string eventName, Action<string, EventParamProperties> listener) {
             if (MyInstance == null) return;
-            Action<string, EventParam> thisEvent;
+            Action<string, EventParamProperties> thisEvent;
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 //Debug.Log("SystemEventManager.StopListening(" + eventName + ")");
 
@@ -121,8 +121,8 @@ namespace AnyRPG {
             }
         }
 
-        public static void TriggerEvent(string eventName, EventParam eventParam) {
-            Action<string, EventParam> thisEvent = null;
+        public static void TriggerEvent(string eventName, EventParamProperties eventParam) {
+            Action<string, EventParamProperties> thisEvent = null;
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 if (thisEvent != null) {
                     thisEvent.Invoke(eventName, eventParam);
@@ -300,11 +300,23 @@ namespace AnyRPG {
     }
 
     [System.Serializable]
-    public struct EventParam {
-        public string StringParam;
-        public int IntParam;
-        public float FloatParam;
-        public bool BoolParam;
+    public class CustomParam {
+        public EventParam eventParams = new EventParam();
+        public ObjectConfigurationNode objectParam = new ObjectConfigurationNode();
+    }
+
+    [System.Serializable]
+    public class EventParam {
+        public string StringParam = string.Empty;
+        public int IntParam = 0;
+        public float FloatParam = 0f;
+        public bool BoolParam = false;
+    }
+
+    [System.Serializable]
+    public class EventParamProperties {
+        public EventParam simpleParams = new EventParam();
+        public ObjectConfigurationNode objectParam = new ObjectConfigurationNode();
     }
 
 }

@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         private Faction prerequisiteFaction = null;
 
-        public void HandleReputationChange(string eventName, EventParam eventParam) {
+        public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
             UpdateStatus();
         }
 

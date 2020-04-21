@@ -676,7 +676,9 @@ namespace AnyRPG {
             if (baseCharacter.MyAnimatedUnit != null) {
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetMoving(false);
                 baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableRootMotion();
-                (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+                if ((baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+                }
             }
         }
 

@@ -493,7 +493,7 @@ namespace AnyRPG {
             if (statusEffect.MyFactionModifiers.Count > 0) {
                 //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING REPUTATION CHANGED");
                 if (SystemEventManager.MyInstance != null) {
-                    SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
+                    SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
                 }
             }
         }

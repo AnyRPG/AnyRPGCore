@@ -9,13 +9,13 @@ namespace AnyRPG {
         public override void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
             base.AddReputation(faction, reputationAmount);
             if (notify) {
-                SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
+                SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
             }
         }
 
         public override void SetReputation(Faction newFaction) {
             base.SetReputation(newFaction);
-            SystemEventManager.TriggerEvent("OnReputationChange", new EventParam());
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
     }

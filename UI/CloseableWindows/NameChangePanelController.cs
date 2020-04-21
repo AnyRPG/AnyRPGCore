@@ -40,12 +40,12 @@ namespace AnyRPG {
         }
 
         public void HandlePointerClick() {
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnDisableMovement", eventParam);
         }
 
         public void HandleEndEdit() {
-            EventParam eventParam = new EventParam();
+            EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEnableMovement", eventParam);
         }
 

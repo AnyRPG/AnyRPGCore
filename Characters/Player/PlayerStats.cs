@@ -72,7 +72,7 @@ namespace AnyRPG {
         public override void Die() {
             base.Die();
             // Kill the player
-            SystemEventManager.TriggerEvent("OnPlayerDeath", new EventParam());
+            SystemEventManager.TriggerEvent("OnPlayerDeath", new EventParamProperties());
         }
 
         public override void CalculateRunSpeed() {
@@ -80,15 +80,15 @@ namespace AnyRPG {
             float oldSprintSpeed = currentSprintSpeed;
             base.CalculateRunSpeed();
             if (currentRunSpeed != oldRunSpeed) {
-                EventParam eventParam = new EventParam();
-                eventParam.FloatParam = currentRunSpeed;
+                EventParamProperties eventParam = new EventParamProperties();
+                eventParam.simpleParams.FloatParam = currentRunSpeed;
                 SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
-                eventParam.FloatParam = currentSprintSpeed;
+                eventParam.simpleParams.FloatParam = currentSprintSpeed;
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
             }
             if (currentSprintSpeed != oldSprintSpeed) {
-                EventParam eventParam = new EventParam();
-                eventParam.FloatParam = currentSprintSpeed;
+                EventParamProperties eventParam = new EventParamProperties();
+                eventParam.simpleParams.FloatParam = currentSprintSpeed;
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
             }
         }
