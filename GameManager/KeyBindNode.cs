@@ -11,6 +11,8 @@ namespace AnyRPG {
         private string keyBindID;
 
         private KeyCode keyCode;
+        private KeyCode joystickKeyCode;
+        private KeyCode mobileKeyCode;
 
         private bool control = false;
 
@@ -25,13 +27,15 @@ namespace AnyRPG {
 
         private ActionButton actionButton = null;
 
-        public KeyBindNode(string keyBindID, KeyCode keyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
-            //Debug.Log("KeyBindNode(" + keyBindID + ", " + control + ")");
+        public KeyBindNode(string keyBindID, KeyCode keyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
+            //Debug.Log("KeyBindNode(" + keyBindID + ")");
             this.keyBindID = keyBindID;
             this.label = label;
             this.keyBindType = keyBindType;
             this.control = control;
             this.shift = shift;
+            this.joystickKeyCode = joystickKeyCode;
+            this.mobileKeyCode = mobileKeyCode;
             this.MyKeyCode = keyCode;
         }
 
@@ -45,6 +49,38 @@ namespace AnyRPG {
                 if (MyActionButton != null) {
                     MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
                 }
+                if (MyKeyBindSlotScript != null) {
+                    MyKeyBindSlotScript.Initialize(this);
+                }
+            }
+        }
+
+        public KeyCode MyJoystickKeyCode {
+            get => joystickKeyCode;
+            set {
+                //Debug.Log("KeyBindNode.SetMyKeyCode");
+                joystickKeyCode = value;
+                /*
+                if (MyActionButton != null) {
+                    MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
+                }
+                */
+                if (MyKeyBindSlotScript != null) {
+                    MyKeyBindSlotScript.Initialize(this);
+                }
+            }
+        }
+
+        public KeyCode MyMobileKeyCode {
+            get => mobileKeyCode;
+            set {
+                //Debug.Log("KeyBindNode.SetMyKeyCode");
+                mobileKeyCode = value;
+                /*
+                if (MyActionButton != null) {
+                    MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
+                }
+                */
                 if (MyKeyBindSlotScript != null) {
                     MyKeyBindSlotScript.Initialize(this);
                 }
@@ -83,16 +119,51 @@ namespace AnyRPG {
             this.keyBindSlotScript = keyBindSlotScript;
         }
 
+        public void UpdateKeyCode(InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
+            //Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
+            if (inputDeviceType == InputDeviceType.Keyboard) {
+                this.MyKeyCode = keyCode;
+                this.control = control;
+                this.shift = shift;
+            } else if (inputDeviceType == InputDeviceType.Joystick) {
+                this.MyJoystickKeyCode = keyCode;
+            } else if (inputDeviceType == InputDeviceType.Mobile) {
+                this.MyMobileKeyCode = keyCode;
+            }
+            SendKeyBindEvent();
+        }
+
+        public void SendKeyBindEvent() {
+            EventParamProperties eventParamProperties = new EventParamProperties();
+            SimpleParamNode simpleParamNode = new SimpleParamNode();
+            simpleParamNode.MyParamType = SimpleParamType.stringType;
+            simpleParamNode.MySimpleParams.StringParam = this.keyCode.ToString();
+            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
+            simpleParamNode = new SimpleParamNode();
+            simpleParamNode.MyParamType = SimpleParamType.stringType;
+            simpleParamNode.MySimpleParams.StringParam = this.joystickKeyCode.ToString();
+            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
+            simpleParamNode = new SimpleParamNode();
+            simpleParamNode.MyParamType = SimpleParamType.stringType;
+            simpleParamNode.MySimpleParams.StringParam = this.mobileKeyCode.ToString();
+            eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
+            SystemEventManager.TriggerEvent("OnBindKey" + keyBindID, eventParamProperties);
+        }
+
+        /*
         public void UpdateKeyCode(KeyCode keyCode, bool control, bool shift) {
             //Debug.Log("KeyBindNode.UpdateKeyCode(" + keyCode + ", " + control + ", " + shift + ")");
             this.control = control;
             this.shift = shift;
             this.MyKeyCode = keyCode;
         }
+        */
 
         public void RegisterKeyPress() {
             OnKeyPressedHandler();
         }
     }
+
+    public enum InputDeviceType { Keyboard, Joystick, Mobile }
 
 }

@@ -149,6 +149,11 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.NotifyOnLevelChanged(newLevel);
         }
 
+        public override void ReviveComplete() {
+            base.ReviveComplete();
+            SystemEventManager.TriggerEvent("OnReviveComplete", new EventParamProperties());
+        }
+
     }
 
 }

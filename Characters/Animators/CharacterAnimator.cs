@@ -44,6 +44,8 @@ namespace AnyRPG {
         private AnimationProfile currentAnimations = null;
         private AnimationProfile systemAnimations = null;
 
+        protected bool eventSubscriptionsInitialized = false;
+
         // in combat animations
         private float baseWalkAnimationSpeed = 1f;
         private float baseRunAnimationSpeed = 3.4f;
@@ -139,6 +141,9 @@ namespace AnyRPG {
         }
 
         public virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
             //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions()");
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to HandleDeath");
@@ -156,6 +161,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): characterUnit.mycharacter is null");
                 }
             }
+            eventSubscriptionsInitialized = true;
         }
 
         public virtual void CleanupEventSubscriptions() {
@@ -169,8 +175,14 @@ namespace AnyRPG {
             }
         }
 
-        public void OnDisable() {
+        public void OnDestroy() {
+            // move here from ondisable to prevent from not receiving revive signals properly
+            //Debug.Log(gameObject.name + ".CharacterAnimator.OnDestroy()");
             CleanupEventSubscriptions();
+        }
+
+        public void OnDisable() {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.OnDisable()");
             CleanupCoroutines();
         }
 
@@ -253,8 +265,14 @@ namespace AnyRPG {
             SetOverrideController(overrideController, runUpdate);
         }
 
+
         public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            if (animator == null) {
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(): animator is null");
+            } else if (animator.runtimeAnimatorController == null) {
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(): animator.runtimeanimatorcontroller is null");
+            }
 
             if (animator.runtimeAnimatorController != animatorOverrideController) {
                 animator.runtimeAnimatorController = animatorOverrideController;

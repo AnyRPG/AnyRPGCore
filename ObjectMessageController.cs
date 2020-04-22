@@ -132,7 +132,7 @@ namespace AnyRPG {
                         } else {
                             usedObjectTypeName = eventParam.objectParam.MyObjectName;
                         }
-                        Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
 
 
                         // set object type
@@ -141,6 +141,8 @@ namespace AnyRPG {
 
                         // get parameter counts and lists
                         List<SimpleParamNode> paramNodes;
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): event parameter count : " + eventParam.objectParam.MySimpleParams.Count);
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): response parameter count : " + propertyResponseNode.MyCustomParameters.objectParam.MySimpleParams.Count);
                         if (propertyResponseNode.MyUseCustomParam == false) {
                             // get parameters from input
                             numParameters = eventParam.objectParam.MySimpleParams.Count;
@@ -153,7 +155,7 @@ namespace AnyRPG {
                         Type[] parameterTypes = new Type[numParameters];
                         object[] parameterValues = new object[numParameters];
 
-                        Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
+                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
 
                         // set parameter types and values
                         int index = 0;

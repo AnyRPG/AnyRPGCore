@@ -27,6 +27,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         protected bool orchestratorStartupComplete = false;
+        protected bool orchestratorFinishComplete = false;
 
         private CharacterUnit characterUnit;
 
@@ -75,6 +76,9 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorFinish() {
+            if (orchestratorFinishComplete) {
+                return;
+            }
             //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStartup()");
             CreateEventSubscriptions();
             if (characterMotor != null) {
@@ -83,6 +87,7 @@ namespace AnyRPG {
             if (characterAnimator != null) {
                 characterAnimator.OrchestratorFinish();
             }
+            orchestratorFinishComplete = true;
         }
 
         public virtual void CreateEventSubscriptions() {

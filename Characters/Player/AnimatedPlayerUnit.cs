@@ -20,6 +20,9 @@ namespace AnyRPG {
 
         public override void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStartup()");
+            if (orchestratorStartupComplete) {
+                return;
+            }
             base.OrchestratorStart();
             if (playerUnitMovementController != null) {
                 playerUnitMovementController.OrchestratorStart();

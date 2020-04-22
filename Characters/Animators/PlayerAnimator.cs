@@ -8,22 +8,27 @@ namespace AnyRPG {
 
         public override void CreateEventSubscriptions() {
             // called from base.start
+            //Debug.Log(gameObject.name + ".PlayerAnimator.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized == true) {
+                return;
+            }
             base.CreateEventSubscriptions();
-            //SystemEventManager.MyInstance.OnEquipmentRefresh += PerformEquipmentChange;
+            SystemEventManager.StartListening("OnReviveComplete", HandleReviveComplete);
         }
 
         public override void CleanupEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.CleanupEventSubscriptions()");
             // called from base.onDisable
             base.CleanupEventSubscriptions();
-            /*
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnEquipmentRefresh -= PerformEquipmentChange;
-            }
-            */
+            SystemEventManager.StopListening("OnReviveComplete", HandleReviveComplete);
+        }
+
+        public void HandleReviveComplete(string eventName, EventParamProperties eventParamProperties) {
+            SetCorrectOverrideController();
         }
 
 
-        public override void SetCorrectOverrideController(bool runUpdate = true) {
+    public override void SetCorrectOverrideController(bool runUpdate = true) {
             //Debug.Log(gameObject.name + ".PlayerAnimator.SetCorrectOverrideController()");
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                 base.SetOverrideController(thirdPartyOverrideController, runUpdate);

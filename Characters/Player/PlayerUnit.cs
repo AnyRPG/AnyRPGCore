@@ -19,6 +19,9 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
             }
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
+                KeyBindManager.MyInstance.SendKeyBindEvents();
+            }
         }
 
         /*
