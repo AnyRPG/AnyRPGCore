@@ -286,7 +286,7 @@ namespace AnyRPG {
             }
 
             if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
-                sourceCharacter.MyCharacterAbilityManager.BeginAbilityCoolDown(this);
+                BeginAbilityCoolDown(sourceCharacter);
             }
 
             ProcessAbilityPrefabs(sourceCharacter);
@@ -295,6 +295,10 @@ namespace AnyRPG {
             return true;
             // notify subscribers
             //OnAbilityCast(this);
+        }
+
+        public virtual void BeginAbilityCoolDown(BaseCharacter sourceCharacter, float animationLength = -1f) {
+            sourceCharacter.MyCharacterAbilityManager.BeginAbilityCoolDown(this, animationLength);
         }
 
         public virtual void ProcessGCDAuto(BaseCharacter sourceCharacter) {

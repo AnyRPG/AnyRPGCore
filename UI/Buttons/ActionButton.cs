@@ -145,7 +145,8 @@ namespace AnyRPG {
             // clear reference to any existing useable on this button.
             if (MyUseable != null && MyUseable is BaseAbility) {
                 //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
-                if (MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility -= OnAttemptUseableUse;
                 } else {
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
@@ -171,7 +172,8 @@ namespace AnyRPG {
                 //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
                 //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
                 //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
-                if (MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                    // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility += OnAttemptUseableUse;
                 } else {
                     (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
@@ -203,7 +205,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
             if (MyUseable is IAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
                         autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
@@ -222,7 +224,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
             if (MyUseable is IAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
                         autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
@@ -237,7 +239,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator MonitorAutoAttack(IAbility ability) {
-            //Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
+            Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             yield return null;
 
@@ -258,11 +260,13 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             while (MyUseable != null && (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName))) {
+                /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
                 } else {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown;
                 }
+                */
                 //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
                 UpdateVisual();
                 yield return null;
@@ -331,9 +335,15 @@ namespace AnyRPG {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Values) {
                         if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
-                            MyIcon.sprite = equipment.MyIcon;
+                            if (MyIcon.sprite != equipment.MyIcon) {
+                                MyIcon.sprite = equipment.MyIcon;
+                                break;
+                            }
                         }
                     }
+                }
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+
                     /*
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
                         if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
@@ -398,7 +408,17 @@ namespace AnyRPG {
                         coolDownIcon.fillClockwise = false;
                     }
                     //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
-                    float fillAmount = Mathf.Max(this.remainingCooldown, PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown) / (this.remainingCooldown > PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown ? (MyUseable as BaseAbility).abilityCoolDown : PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyInitialGlobalCoolDown);
+                    float abilityCoolDown = 0f;
+                    float initialCoolDown = 0f;
+                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName)) {
+                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyRemainingCoolDown;
+                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyInitialCoolDown;
+                    } else {
+                        initialCoolDown = (MyUseable as BaseAbility).abilityCoolDown;
+                    }
+                    //float globalCoolDown
+                    float fillAmount = Mathf.Max(abilityCoolDown, PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown) /
+                        (abilityCoolDown > PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyInitialGlobalCoolDown);
                     //Debug.Log("Setting fill amount to: " + fillAmount);
                     coolDownIcon.fillAmount = fillAmount;
                 } else {

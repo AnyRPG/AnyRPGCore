@@ -55,7 +55,7 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
 
     public void HandleRightClick() {
         //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
-        if (statusEffectNode != null) {
+        if (statusEffectNode != null && statusEffectNode.MyStatusEffect.MyStatusEffectAlignment != StatusEffectAlignment.Harmful) {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
             statusEffectNode.CancelStatusEffect();
         }

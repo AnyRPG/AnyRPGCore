@@ -1120,40 +1120,12 @@ namespace AnyRPG {
 
         }
 
-        /*
-        // regular melee auto-attack
-        protected virtual void HandleAttack(BaseCharacter targetCharacterUnit) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAttack()");
-            if (animator == null) {
-                return;
-            }
-
-            characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
-
-            // pick a random attack animation
-            int attackIndex = UnityEngine.Random.Range(0, currentAttackAnimationProfile.MyProfileNodes.Length);
-            //Debug.Log(gameObject.name + ".CharacterAnimator: OnAttack(): attack index set to: " + attackIndex);
-
-            if (SystemConfigurationManager.MyInstance != null) {
-                // override the default attack animation
-                overrideController[SystemConfigurationManager.MyInstance.MyDefaultAttackClip] = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip;
-            }
-
-            float animationLength = currentAttackAnimationProfile.MyProfileNodes[attackIndex].animationClip.length;
-            // start a coroutine to unlock the auto-attack blocker boolean when the animation completes
-            attackCoroutine = StartCoroutine(WaitForAnimation(null, animationLength, true, false, false));
-
-            // tell the animator to play the animation
-            SetAttacking(true);
-        }
-        */
-
         // special melee attack
-        public virtual void HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
+        public virtual float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
             if (animator == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
-                return;
+                return 0f;
             }
             characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
 
@@ -1187,6 +1159,8 @@ namespace AnyRPG {
 
             // tell the animator to play the animation
             SetAttacking(true);
+
+            return speedNormalizedAnimationLength;
         }
 
         // non melee ability (spell) cast

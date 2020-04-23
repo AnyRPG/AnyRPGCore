@@ -134,6 +134,7 @@ namespace AnyRPG {
         public bool MyImmuneStun { get => immuneStun; set => immuneStun = value; }
         public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
         public StatusEffectType MyStatusEffectType { get => statusEffectType; set => statusEffectType = value; }
+        public StatusEffectAlignment MyStatusEffectAlignment { get => statusEffectAlignment; set => statusEffectAlignment = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);

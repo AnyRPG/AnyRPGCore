@@ -174,19 +174,41 @@ namespace AnyRPG {
 
         }
 
-        public void BeginAbilityCoolDown(BaseAbility baseAbility) {
-            float abilityCoolDown = baseAbility.abilityCoolDown;
+        public void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
+
+            float abilityCoolDown = 0f;
+
+            if (coolDownLength == -1f) {
+                abilityCoolDown = baseAbility.abilityCoolDown;
+            } else {
+                abilityCoolDown = coolDownLength;
+            }
+            /*
             if (abilityCoolDown == 0f) {
                 // no point making a cooldown if it is zero length
                 return;
             }
+            */
             AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
             abilityCoolDownNode.MyAbilityName = baseAbility.MyName;
-            abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+
+            // need to account for auto-attack
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).MyIsAutoAttack == true) {
+                abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+            } else {
+                abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+            }
+
+            if (abilityCoolDownNode.MyRemainingCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false) {
+                // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown abilities
+                abilityCoolDownNode.MyRemainingCoolDown = Mathf.Clamp(abilityCoolDownNode.MyRemainingCoolDown, 1, Mathf.Infinity);
+            }
+            abilityCoolDownNode.MyInitialCoolDown = abilityCoolDownNode.MyRemainingCoolDown;
 
             if (!abilityCoolDownDictionary.ContainsKey(baseAbility.MyName)) {
                 abilityCoolDownDictionary[baseAbility.MyName] = abilityCoolDownNode;
             }
+
 
             // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
             Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyName));

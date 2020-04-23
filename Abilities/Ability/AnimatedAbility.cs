@@ -49,13 +49,14 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, MyAnimationClips.Count);
                     if (MyAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
+                        float animationLength = sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
 
                         // unblock 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
-                        if (!isAutoAttack) {
+                        if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
                             //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
-                            ProcessGCDManual(sourceCharacter, MyAnimationClips[attackIndex].length);
+                            ProcessGCDManual(sourceCharacter, Mathf.Min(animationLength, abilityCoolDown));
+                            base.BeginAbilityCoolDown(sourceCharacter, Mathf.Max(animationLength, abilityCoolDown));
                         }
                     }
 
@@ -65,6 +66,11 @@ namespace AnyRPG {
                 //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
             }
             return false;
+        }
+
+        public override void BeginAbilityCoolDown(BaseCharacter sourceCharacter, float animationLength = -1) {
+            // intentionally do nothing, we will call this method manually here and pass in a time
+            //base.BeginAbilityCoolDown(sourceCharacter);
         }
 
         public override void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
