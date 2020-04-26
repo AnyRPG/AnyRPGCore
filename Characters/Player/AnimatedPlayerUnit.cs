@@ -19,7 +19,7 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStartup()");
+            Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorStart()");
             if (orchestratorStartupComplete) {
                 return;
             }
@@ -27,6 +27,11 @@ namespace AnyRPG {
             if (playerUnitMovementController != null) {
                 playerUnitMovementController.OrchestratorStart();
             }
+        }
+
+        public override void OrchestratorFinish() {
+            Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorFinish()");
+            base.OrchestratorFinish();
         }
 
         public override void CreateEventSubscriptions() {

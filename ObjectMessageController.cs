@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 
 
@@ -17,20 +19,139 @@ namespace AnyRPG {
         // Start is called before the first frame update
         void Awake() {
             //Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
-            InitializeMessageResponses();
+            InitializeEventResponses();
         }
 
-        private void InitializeMessageResponses() {
+        private void InitializeEventResponses() {
             //Debug.Log(gameObject.name + ".ObjectMessageController.InitializeMessageResponses()");
             if (messageTemplate == null) {
                 return;
             }
 
-            foreach (ObjectMessageNode objectMessageNode in messageTemplate.MyEventList) {
+            InitializeSystemEventResponses();
+
+            InitializeLocalEventResponses();
+
+        }
+
+        public void InitializeSystemEventResponses() {
+            // system event responses
+            foreach (ObjectMessageNode objectMessageNode in messageTemplate.MySystemEventList) {
                 messageDictionary[objectMessageNode.MyEventName] = objectMessageNode;
                 //Debug.Log(gameObject.name + ".ObjectMessageController.InitializeMessageResponses(): listening to: " + objectMessageNode.MyEventName);
                 SystemEventManager.StartListening(objectMessageNode.MyEventName, CallbackFunction);
             }
+        }
+
+        public void InitializeLocalEventResponses() {
+            // local event responses
+
+            foreach (LocalEventNode localEventNode in messageTemplate.MyLocalEventList) {
+
+                ObjectMessageController objectMessageController = this;
+                // get the type of the script that has the event that we want to subscribe to
+                Type scriptType = Type.GetType(localEventNode.MyScriptName);
+
+                if (scriptType != null) {
+                    Debug.Log("Got type " + scriptType.Name);
+                }
+
+                // get a reference to the script
+                Component component = GetComponent(scriptType);
+
+                if (component != null) {
+                    Debug.Log("Got component " + component.name);
+                }
+
+                // get a reference to the event
+                Debug.Log("Attempting to get event " + localEventNode.MyEventName);
+                EventInfo localEventInfo = scriptType.GetEvent(localEventNode.MyEventName);
+                if (localEventInfo == null) {
+                    Debug.Log("Could not get event " + localEventNode.MyEventName);
+                }
+
+                // get a reference to the event type
+                Type tDelegate = localEventInfo.EventHandlerType;
+
+                // ensure the return type of the event is void
+                Type returnType = tDelegate.GetMethod("Invoke").ReturnType;
+                if (returnType != typeof(void))
+                    throw new ApplicationException("Delegate has a return type.");
+
+
+                // make a list of parameters with the first parameter being this object type
+                // the rest are the actual parameters the event will be sending back to us
+                // we are going to ignore them for now, but still need to receive them
+                Type[] parameterTypeArray = GetDelegateParameterTypes(tDelegate);
+                Type[] typeArray = new Type[parameterTypeArray.Length + 1];
+                typeArray[0] = typeof(ObjectMessageController);
+                Array.Copy(parameterTypeArray, 0, typeArray, 1, parameterTypeArray.Length);
+
+                // construct a dynamic function with no name and attack it to the current class
+                DynamicMethod handler =
+                    new DynamicMethod("",
+                                      null,
+                                      typeArray,
+                                      typeof(ObjectMessageController));
+
+                // create a generator to generate the function body
+                ILGenerator ilgen = handler.GetILGenerator();
+
+                // get a reference to the method we will be calling from our dynamic function to process this event
+                Type[] processLocalEventParameters = { typeof(string) };
+                MethodInfo processLocalEvent =
+                    typeof(ObjectMessageController).GetMethod("ProcessLocalEvent", processLocalEventParameters);
+
+                // because we bind with 'this' in CreateDelegate we have a 'magical' first parameter that is actually this instance
+                // i say 'magical' because the event we are subscribing to does not emit that paramter, but we still receive it
+                // lets put it on the stack, so when we call ProcessLocalEvent, we will also magically call this instances copy of it
+                // once again i say 'magically' because that method does not actually accept an instance parameter, only a string
+                ilgen.Emit(OpCodes.Ldarg_0);
+
+                // now we can put the string parameter on the stack
+                ilgen.Emit(OpCodes.Ldstr, localEventNode.MyEventName);
+
+                // call the ProcessLocalEvent function with the 2 parameters we just placed on the stack
+                ilgen.Emit(OpCodes.Call, processLocalEvent);
+
+                // there are no parameters left because we just sent them to the event.  we can safely return now
+                ilgen.Emit(OpCodes.Ret);
+
+                // create a delegate that matches the event signature of the event we need to subscribe to and bind to this instance
+                Delegate dEmitted = handler.CreateDelegate(tDelegate, this);
+
+                // get a areference to the delegate add method
+                MethodInfo addHandler = localEventInfo.GetAddMethod();
+
+                // subscribe our dynamic method to the event
+                addHandler.Invoke(component, new System.Object[] { dEmitted });
+            }
+        }
+
+        public void ProcessLocalEvent(string eventName) {
+            Debug.Log("eventName was: " + eventName);
+            
+            if (this == null) {
+                Debug.Log("ProcessLocalEvent(): this is NULL");
+            } else {
+                Debug.Log("ProcessLocalEvent(): gameobject is " + (this.gameObject == null ? "null" : this.gameObject.name));
+            }
+        }
+
+        private Type[] GetDelegateParameterTypes(Type d) {
+            if (d.BaseType != typeof(MulticastDelegate))
+                throw new ApplicationException("Not a delegate.");
+
+            MethodInfo invoke = d.GetMethod("Invoke");
+            if (invoke == null)
+                throw new ApplicationException("Not a delegate.");
+
+            ParameterInfo[] parameters = invoke.GetParameters();
+            Type[] typeParameters = new Type[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++) {
+                typeParameters[i] = parameters[i].ParameterType;
+            }
+            return typeParameters;
         }
 
         public void CallbackFunction(string eventName, EventParamProperties eventParam) {
@@ -247,7 +368,7 @@ namespace AnyRPG {
 
         private void CleanupMessageResponses() {
             //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses()");
-            foreach (ObjectMessageNode objectMessageNode in messageTemplate.MyEventList) {
+            foreach (ObjectMessageNode objectMessageNode in messageTemplate.MySystemEventList) {
                 //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
                 messageDictionary.Remove(objectMessageNode.MyEventName);
                 SystemEventManager.StopListening(objectMessageNode.MyEventName, CallbackFunction);

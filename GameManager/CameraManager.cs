@@ -103,6 +103,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMainCamera() {
+            Debug.Log("CameraManager.ActivateMainCamera()");
             if (SystemConfigurationManager.MyInstance == null) {
                 // can't get camera settings, so just return
                 return;
@@ -122,6 +123,7 @@ namespace AnyRPG {
         }
 
         public void SwitchToMainCamera() {
+            Debug.Log("CameraManager.SwitchToMainCamera()");
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
@@ -129,13 +131,29 @@ namespace AnyRPG {
         }
 
         public void DeactivateMainCamera() {
+            Debug.Log("CameraManager.DeactivateMainCamera()");
             MyMainCameraGameObject.SetActive(false);
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
         }
 
+        public void EnableCutsceneCamera() {
+            Debug.Log("CameraManager.EnableCutsceneCamera()");
+            if (AnyRPGCutsceneCameraController.MyInstance != null) {
+                AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(true);
+            }
+        }
+
+        public void DisableCutsceneCamera() {
+            Debug.Log("CameraManager.DisableCutsceneCamera()");
+            if (AnyRPGCutsceneCameraController.MyInstance != null) {
+                AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(false);
+            }
+        }
+
         public void EnableThirdPartyCamera() {
+            Debug.Log("CameraManager.EnableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
                 if (mainCameraGameObject != null) {
                     MyMainCameraGameObject.SetActive(false);
@@ -145,6 +163,7 @@ namespace AnyRPG {
         }
 
         public void DisableThirdPartyCamera() {
+            Debug.Log("CameraManager.DisableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
                 thirdPartyCameraGameObject.SetActive(false);
             }

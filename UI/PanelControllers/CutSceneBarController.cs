@@ -76,7 +76,11 @@ namespace AnyRPG {
         }
 
         public void StartCutScene(Cutscene cutscene) {
-            //Debug.Log("CutSceneBarController.StartCutScene(" + caption + ")");
+            Debug.Log("CutSceneBarController.StartCutScene()");
+
+            CameraManager.MyInstance.DeactivateMainCamera();
+            CameraManager.MyInstance.EnableCutsceneCamera();
+
             currentCutscene = cutscene;
             currentDialog = cutscene.MyDialog;
             captionText.color = new Color32(255, 255, 255, 0);
@@ -89,9 +93,7 @@ namespace AnyRPG {
             topBar.gameObject.SetActive(true);
             bottomBar.gameObject.SetActive(true);
             captionBar.gameObject.SetActive(true);
-            //if (CameraManager.MyInstance.MyMainCameraGameObject.activeSelf == true) {
-                CameraManager.MyInstance.DeactivateMainCamera();
-            //}
+
             UIManager.MyInstance.ActivatePlayerUI();
             UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(false);
             UIManager.MyInstance.MyPopupWindowContainer.SetActive(false);
@@ -102,6 +104,7 @@ namespace AnyRPG {
         }
 
         public void EndCutScene() {
+            Debug.Log("CutSceneBarController.EndCutScene()");
             topBar.gameObject.SetActive(false);
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);

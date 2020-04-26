@@ -6,6 +6,11 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerAnimator : CharacterAnimator {
 
+        public override void OrchestratorStart() {
+            Debug.Log(gameObject.name + ".PlayerAnimator.OrchestratorStart()");
+            base.OrchestratorStart();
+        }
+
         public override void CreateEventSubscriptions() {
             // called from base.start
             //Debug.Log(gameObject.name + ".PlayerAnimator.CreateEventSubscriptions()");
@@ -29,7 +34,7 @@ namespace AnyRPG {
 
 
     public override void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log(gameObject.name + ".PlayerAnimator.SetCorrectOverrideController()");
+            Debug.Log(gameObject.name + ".PlayerAnimator.SetCorrectOverrideController()");
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                 base.SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
@@ -37,30 +42,34 @@ namespace AnyRPG {
             base.SetCorrectOverrideController(runUpdate);
         }
 
+        public override void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
+            Debug.Log(gameObject.name + ".PlayerAnimator.SetCorrectOverrideController(" + runUpdate + ")");
+            base.SetOverrideController(animatorOverrideController, runUpdate);
+        }
+
 
         public override void InitializeAnimator() {
-            //Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
+            Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator()");
             if (initialized) {
+                Debug.Log(gameObject.name + ".PlayerAnimator.InitializeAnimator(): already initialized.  returning");
                 return;
             }
-            base.InitializeAnimator();
             if (animator == null) {
-                //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
+                Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
-            } else {
-                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
-                    if (thirdPartyAnimatorController == null) {
-                        thirdPartyAnimatorController = animator.runtimeAnimatorController;
-                    }
-                    if (thirdPartyAnimatorController != null) {
-                        thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
-                        //Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
-                    } else {
-                        //Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
-                    }
-
+            }
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+                if (thirdPartyAnimatorController == null) {
+                    thirdPartyAnimatorController = animator.runtimeAnimatorController;
+                }
+                if (thirdPartyAnimatorController != null) {
+                    thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
+                    Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): got third party override: " + thirdPartyAnimatorController.name);
+                } else {
+                    Debug.Log(gameObject.name + ": PlayerAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
                 }
             }
+            base.InitializeAnimator();
         }
 
         /*

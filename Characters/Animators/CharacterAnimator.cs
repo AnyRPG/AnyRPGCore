@@ -100,7 +100,7 @@ namespace AnyRPG {
         }
         public float MyLastAnimationLength { get => lastAnimationLength; set => lastAnimationLength = value; }
 
-        public void OrchestratorStart() {
+        public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
             systemAnimations = SystemConfigurationManager.MyInstance.MySystemAnimationProfile;
             currentAnimations = Instantiate(SystemConfigurationManager.MyInstance.MySystemAnimationProfile);
@@ -110,7 +110,6 @@ namespace AnyRPG {
         public void OrchestratorFinish() {
             CreateEventSubscriptions();
             InitializeAnimator();
-
         }
 
         public virtual void GetComponentReferences() {
@@ -136,6 +135,9 @@ namespace AnyRPG {
                     defaultAnimationProfile = SystemConfigurationManager.MyInstance.MyDefaultAnimationProfile;
                 }
             }
+            // testing move here
+            animator = GetComponentInChildren<Animator>();
+
             componentReferencesInitialized = true;
 
         }
@@ -220,22 +222,10 @@ namespace AnyRPG {
             if (initialized) {
                 return;
             }
-            animator = GetComponentInChildren<Animator>();
             if (animator == null) {
-                //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
+                Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             } else {
-                /*
-                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
-                    thirdPartyAnimatorController = animator.runtimeAnimatorController;
-                    if (thirdPartyAnimatorController != null) {
-                        thirdPartyOverrideController = new AnimatorOverrideController(thirdPartyAnimatorController);
-                        Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): got third party animator: " + thirdPartyAnimatorController.name);
-                    } else {
-                        Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): third party animator was null but use third party movement control was true");
-                    }
-                }
-                */
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);
             }
             if (overrideController == null) {
@@ -267,14 +257,17 @@ namespace AnyRPG {
 
 
         public virtual void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(" + runUpdate + ")");
+            if (animatorOverrideController == null) {
+                Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(): animatorOverrideController is null!");
+            }
             if (animator == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(): animator is null");
             } else if (animator.runtimeAnimatorController == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController(): animator.runtimeanimatorcontroller is null");
             }
 
-            if (animator.runtimeAnimatorController != animatorOverrideController) {
+            if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
                 animator.runtimeAnimatorController = animatorOverrideController;
 
                 // set animator on UMA if one exists

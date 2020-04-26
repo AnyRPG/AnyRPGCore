@@ -11,12 +11,48 @@ namespace AnyRPG {
     [System.Serializable]
     public class ObjectMessageTemplate : DescribableResource {
 
+        [FormerlySerializedAs("eventList")]
+        [SerializeField]
+        private List<ObjectMessageNode> systemEventList = new List<ObjectMessageNode>();
 
         [SerializeField]
-        private List<ObjectMessageNode> eventList = new List<ObjectMessageNode>();
+        private List<LocalEventNode> localEventList = new List<LocalEventNode>();
 
-        public List<ObjectMessageNode> MyEventList { get => eventList; set => eventList = value; }
+        public List<ObjectMessageNode> MySystemEventList { get => systemEventList; set => systemEventList = value; }
+        public List<LocalEventNode> MyLocalEventList { get => localEventList; set => localEventList = value; }
     }
+
+    [System.Serializable]
+    public class LocalEventNode {
+
+        [SerializeField]
+        private string eventName = string.Empty;
+
+        // the monobehavior script to access
+        [SerializeField]
+        private string scriptName = string.Empty;
+
+        [Tooltip("Set this to any positive number above zero to limit the number of times this event response will be processed.")]
+        [SerializeField]
+        private int responseLimit = 0;
+
+        [FormerlySerializedAs("responses")]
+        [SerializeField]
+        private List<MessageResponseNode> messageResponses = new List<MessageResponseNode>();
+
+        [SerializeField]
+        private List<PropertyResponseNode> propertyResponses = new List<PropertyResponseNode>();
+
+        [SerializeField]
+        private List<ComponentResponseNode> componentResponses = new List<ComponentResponseNode>();
+
+        public string MyEventName { get => eventName; set => eventName = value; }
+        public List<MessageResponseNode> MyMessageResponses { get => messageResponses; set => messageResponses = value; }
+        public List<PropertyResponseNode> MyPropertyResponses { get => propertyResponses; set => propertyResponses = value; }
+        public List<ComponentResponseNode> MyComponentResponses { get => componentResponses; set => componentResponses = value; }
+        public string MyScriptName { get => scriptName; set => scriptName = value; }
+    }
+
 
     [System.Serializable]
     public class ObjectMessageNode {
@@ -24,7 +60,6 @@ namespace AnyRPG {
         [SerializeField]
         private string eventName = string.Empty;
 
-        [FormerlySerializedAs("responses")]
         [SerializeField]
         private List<MessageResponseNode> messageResponses = new List<MessageResponseNode>();
 

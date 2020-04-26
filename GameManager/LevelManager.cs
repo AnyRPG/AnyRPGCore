@@ -232,10 +232,6 @@ namespace AnyRPG {
                         return;
                     }
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
-                    CameraManager.MyInstance.DeactivateMainCamera();
-                    if (AnyRPGCutsceneCameraController.MyInstance != null) {
-                        AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(true);
-                    }
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                         //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
                         UIManager.MyInstance.MyCutSceneBarController.StartCutScene(GetActiveSceneNode().MyAutoPlayCutscene);
@@ -272,15 +268,13 @@ namespace AnyRPG {
         }
 
         public void EndCutscene(Cutscene cutscene) {
-            //Debug.Log("LevelManager.ReturnFromCutScene()");
+            Debug.Log("LevelManager.EndCutscene()");
             if (cutscene.MyUnloadSceneOnEnd == true) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
                 LoadLevel(returnSceneName);
             } else {
-                if (AnyRPGCutsceneCameraController.MyInstance != null) {
-                    AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(false);
-                }
-                CameraManager.MyInstance.ActivateMainCamera();
+
+                //CameraManager.MyInstance.ActivateMainCamera();
                 UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(true);
                 UIManager.MyInstance.MyPopupWindowContainer.SetActive(true);
                 UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);
@@ -289,6 +283,10 @@ namespace AnyRPG {
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                     PlayerManager.MyInstance.SpawnPlayerUnit();
                 }
+
+                // test moving down here
+                CameraManager.MyInstance.DisableCutsceneCamera();
+                CameraManager.MyInstance.ActivateMainCamera();
             }
 
         }

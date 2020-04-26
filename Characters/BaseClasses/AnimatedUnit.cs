@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStart()");
+            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestratorStart()");
             if (orchestratorStartupComplete == true) {
                 return;
             }
@@ -76,10 +76,10 @@ namespace AnyRPG {
         }
 
         public virtual void OrchestratorFinish() {
+            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestratorFinish()");
             if (orchestratorFinishComplete) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".AnimatedUnit.OrchestrateStartup()");
             CreateEventSubscriptions();
             if (characterMotor != null) {
                 characterMotor.OrchestratorFinish();

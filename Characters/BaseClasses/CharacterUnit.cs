@@ -188,7 +188,7 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestrateStart()");
+            //Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorStart()");
             base.OrchestratorStart();
             if (animatedUnit != null) {
                 animatedUnit.OrchestratorStart();

@@ -26,7 +26,7 @@ namespace AnyRPG {
         [SerializeField]
         private Image coolDownIcon = null;
 
-        private float remainingCooldown = 0f;
+        //private float remainingCooldown = 0f;
 
         private int count = 0;
 

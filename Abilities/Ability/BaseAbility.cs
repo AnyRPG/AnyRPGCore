@@ -306,7 +306,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessGCDManual(BaseCharacter sourceCharacter, float usedCoolDown = 0f) {
-            if (MyCanSimultaneousCast == false && MyIgnoreGlobalCoolDown != true && MyAbilityCastingTime == 0f) {
+            if (MyCanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && MyAbilityCastingTime == 0f) {
                 sourceCharacter.MyCharacterAbilityManager.InitiateGlobalCooldown(usedCoolDown);
             } else {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
