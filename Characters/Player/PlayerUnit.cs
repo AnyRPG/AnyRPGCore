@@ -44,12 +44,12 @@ namespace AnyRPG {
         }
 
         public override void OrchestratorStart() {
-            Debug.Log(gameObject.name + ".PlayerUnit.OrchestratorStart()");
+            //Debug.Log(gameObject.name + ".PlayerUnit.OrchestratorStart()");
             base.OrchestratorStart();
         }
 
         public override void OrchestratorFinish() {
-            Debug.Log(gameObject.name + ".PlayerUnit.OrchestratorFinish()");
+            //Debug.Log(gameObject.name + ".PlayerUnit.OrchestratorFinish()");
             base.OrchestratorFinish();
         }
     }

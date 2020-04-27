@@ -76,7 +76,7 @@ namespace AnyRPG {
         }
 
         public void StartCutScene(Cutscene cutscene) {
-            Debug.Log("CutSceneBarController.StartCutScene()");
+            //Debug.Log("CutSceneBarController.StartCutScene()");
 
             CameraManager.MyInstance.DeactivateMainCamera();
             CameraManager.MyInstance.EnableCutsceneCamera();
@@ -104,7 +104,7 @@ namespace AnyRPG {
         }
 
         public void EndCutScene() {
-            Debug.Log("CutSceneBarController.EndCutScene()");
+            //Debug.Log("CutSceneBarController.EndCutScene()");
             topBar.gameObject.SetActive(false);
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);

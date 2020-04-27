@@ -333,7 +333,7 @@ namespace AnyRPG {
         }
 
         public void DespawnPlayerUnit() {
-            Debug.Log("PlayerManager.DespawnPlayerUnit()");
+            //Debug.Log("PlayerManager.DespawnPlayerUnit()");
             if (!playerUnitSpawned) {
                 //Debug.Log("Player Unit is not spawned.  Nothing to despawn.  returning");
                 return;
@@ -364,10 +364,10 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
-            Debug.Log("PlayerManager.SpawnPlayerUnit(" + spawnLocation + ")");
+            //Debug.Log("PlayerManager.SpawnPlayerUnit(" + spawnLocation + ")");
 
             if (playerUnitObject != null) {
-                Debug.Log("PlayerManager.SpawnPlayerUnit(): Player Unit already exists");
+                //Debug.Log("PlayerManager.SpawnPlayerUnit(): Player Unit already exists");
                 return;
             }
 
@@ -425,7 +425,7 @@ namespace AnyRPG {
         }
 
         public Vector3 SpawnPlayerUnit() {
-            Debug.Log("PlayerManager.SpawnPlayerUnit()");
+            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
             Vector3 spawnLocation = LevelManager.MyInstance.GetSpawnLocation();
             SpawnPlayerUnit(spawnLocation);
             return spawnLocation;
