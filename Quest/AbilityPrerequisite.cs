@@ -18,7 +18,7 @@ namespace AnyRPG {
         private BaseAbility prerequisiteAbility = null;
 
         public void HandleAbilityListChanged() {
-            Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
+            //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
             bool originalResult = prerequisiteMet;
             prerequisiteMet = true;
             if (prerequisiteMet != originalResult) {

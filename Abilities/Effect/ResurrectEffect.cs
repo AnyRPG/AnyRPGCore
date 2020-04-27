@@ -21,6 +21,10 @@ namespace AnyRPG {
         }
 
         private void ResurrectTarget(GameObject target) {
+            if (target == null) {
+                // our target despawned in the middle of the cast
+                return;
+            }
             CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
             if (characterUnit == null) {
                 //Debug.Log("CharacterUnit is null? target despawn during cast?");
