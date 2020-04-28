@@ -20,10 +20,10 @@ public class DescribableCraftingInputIcon : DescribableIcon
     public override void UpdateVisual() {
         //Debug.Log("DescribableCraftingInputIcon.UpdateVisual()");
         base.UpdateVisual();
-        description.text = MyDescribable.MyName;
+        description.text = Describable.MyName;
         
         //if (count > 1) {
-            stackSize.text = InventoryManager.MyInstance.GetItemCount(MyDescribable.MyName) + " / " + count.ToString();
+            stackSize.text = InventoryManager.MyInstance.GetItemCount(Describable.MyName) + " / " + count.ToString();
         //} else {
             //stackSize.text = "";
         //}

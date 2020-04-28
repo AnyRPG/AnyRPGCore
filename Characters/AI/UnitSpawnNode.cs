@@ -330,8 +330,8 @@ namespace AnyRPG {
             float currentDelayTimer = spawnDelay;
             while (currentDelayTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
-                currentDelayTimer -= 1;
                 yield return new WaitForSeconds(1);
+                currentDelayTimer -= 1;
             }
             // clearing the coroutine so the next round can start
             delayRoutine = null;
@@ -351,8 +351,8 @@ namespace AnyRPG {
             float currentTimer = countdownTime;
             while (currentTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
-                currentTimer -= 1;
                 yield return new WaitForSeconds(1);
+                currentTimer -= 1;
             }
             //clearing the coroutine so the next timer will be allowed to start
             countDownRoutine = null;

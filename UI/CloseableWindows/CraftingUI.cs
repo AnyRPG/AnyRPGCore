@@ -95,6 +95,8 @@ namespace AnyRPG {
 
         public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
 
+        private Coroutine waitCoroutine = null;
+
         private void Start() {
             DeactivateButtons();
         }
@@ -332,7 +334,7 @@ namespace AnyRPG {
                 if (craftingQueue.Count > 0) {
                     //Debug.Log("CraftingUI.CraftNextItem(): count: " + craftingQueue.Count);
                     // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+                    //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
 
                     PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(craftAbility);
                 }
@@ -340,6 +342,21 @@ namespace AnyRPG {
                 // empty the queue to prevent repeated loop trying to craft something you don't have materials for
                 craftingQueue.Clear();
             }
+        }
+
+        public void CraftNextItemWait() {
+            //Debug.Log("CraftingUI.CraftNextItemWait()");
+            // add delay to avoid issues with cast in progress from current crafting item
+            if (waitCoroutine == null) {
+                waitCoroutine = StartCoroutine(CraftNextItemDelay());
+            }
+        }
+
+        private IEnumerator CraftNextItemDelay() {
+            //Debug.Log("CraftingUI.CraftNextItemDelay()");
+            yield return null;
+            waitCoroutine = null;
+            CraftNextItem();
         }
 
         public void UpdateCraftAmountArea() {

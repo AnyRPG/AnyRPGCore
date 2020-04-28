@@ -49,8 +49,8 @@ namespace AnyRPG {
             currentTimer = spawnTimer;
             while (currentTimer > 0) {
                 //Debug.Log("Spawn Timer: " + currentTimer);
-                currentTimer -= 1;
                 yield return new WaitForSeconds(1);
+                currentTimer -= 1;
             }
             interactable.Spawn();
             // ENABLE MINIMAP ICON AFTER SPAWN

@@ -51,7 +51,7 @@ namespace AnyRPG {
                 rewardIcon.SetDescribable(faction.MyLearnedAbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
                 if (faction.MyLearnedAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                    rewardIcon.MyStackSizeText.text = "Level\n" + faction.MyLearnedAbilityList[i].MyRequiredLevel;
+                    rewardIcon.StackSizeText.text = "Level\n" + faction.MyLearnedAbilityList[i].MyRequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
             }

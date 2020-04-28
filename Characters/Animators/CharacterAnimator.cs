@@ -1208,8 +1208,8 @@ namespace AnyRPG {
             while (remainingTime > 0f && (characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting)) {
                 //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): remainingTime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): animationSpeed: " + animator.GetFloat("AnimationSpeed"));
-                remainingTime -= Time.deltaTime;
                 yield return null;
+                remainingTime -= Time.deltaTime;
             }
             //Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
             attackCoroutine = null;
@@ -1313,8 +1313,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + attackLength + ")");
             float remainingTime = animationLength;
             while (remainingTime > 0f) {
-                remainingTime -= Time.deltaTime;
                 yield return null;
+                remainingTime -= Time.deltaTime;
             }
             //Debug.Log(gameObject.name + "Setting waitingforhits to false after countdown down");
             SetBool("IsDead", false);

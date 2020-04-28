@@ -189,8 +189,8 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AOEEffect.WaitForHitDelay(" + source.MyName + ", " + (target == null ? "null" : target.name) + ")");
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
-                accumulatedTime += Time.deltaTime;
                 yield return null;
+                accumulatedTime += Time.deltaTime;
             }
             PerformAbilityHit(source, target, modifiedOutput);
         }
@@ -204,8 +204,8 @@ namespace AnyRPG {
         private IEnumerator WaitForTickDelay(BaseCharacter source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
-                accumulatedTime += Time.deltaTime;
                 yield return null;
+                accumulatedTime += Time.deltaTime;
             }
             PerformAbilityTick(source, target, modifiedOutput);
         }
@@ -219,8 +219,8 @@ namespace AnyRPG {
         private IEnumerator WaitForCompleteDelay(BaseCharacter source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
-                accumulatedTime += Time.deltaTime;
                 yield return null;
+                accumulatedTime += Time.deltaTime;
             }
             PerformAbilityComplete(source, target, modifiedOutput);
         }

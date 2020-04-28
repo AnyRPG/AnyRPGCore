@@ -69,6 +69,52 @@ namespace AnyRPG {
             }
         }
 
+        public override bool PerformCombatCheck(IAbility ability) {
+            bool returnResult = base.PerformCombatCheck(ability);
+            if (!returnResult) {
+                CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.MyName + " can only be cast while out of combat");
+                //Debug.Log("The ability " + ability.MyName + " can only be cast while out of combat");
+            }
+            return returnResult;
+        }
+
+        public override bool PerformCooldownCheck(IAbility ability) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): current GCD: " + MyRemainingGlobalCoolDown);
+            bool returnResult = base.PerformCooldownCheck(ability);
+            if (!returnResult) {
+                //CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.MyName + " is still on cooldown or there is an active global cooldown");
+                //Debug.Log("The ability " + ability.MyName + " is still on cooldown or there is an active global cooldown");
+                //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
+                // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
+                /*
+                if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
+                    Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
+                }
+                */
+            }
+            return returnResult;
+        }
+
+        public override bool PerformLearnedCheck(IAbility ability) {
+            bool returnResult = base.PerformLearnedCheck(ability);
+            if (!returnResult) {
+                CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.MyName + " yet");
+                //Debug.Log("You have not learned the ability " + ability.MyName + " yet");
+                //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
+            }
+            return returnResult;
+        }
+
+        public override bool PerformManaCheck(IAbility ability) {
+            bool returnResult = base.PerformManaCheck(ability);
+            if (!returnResult) {
+                CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+                //Debug.Log("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
+            }
+            return returnResult;
+        }
+
         public override bool LearnAbility(BaseAbility newAbility) {
             //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
             bool returnValue = base.LearnAbility(newAbility);
@@ -80,6 +126,11 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility() returnvalue was false");
             }
             return returnValue;
+        }
+
+        public override void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1) {
+            //Debug.Log("PlayerAbilityManager.BeginAbilityCoolDown(" + baseAbility.MyName + ", " + coolDownLength + ")");
+            base.BeginAbilityCoolDown(baseAbility, coolDownLength);
         }
 
         public void LoadAbility(string abilityName) {
@@ -163,6 +214,11 @@ namespace AnyRPG {
                 }
             }
             base.HandleCharacterUnitDespawn();
+        }
+
+        protected override void BeginAbilityCommon(IAbility ability, GameObject target) {
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
+            base.BeginAbilityCommon(ability, target);
         }
 
     }

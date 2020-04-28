@@ -43,7 +43,7 @@ namespace AnyRPG {
 
         public Image MyIcon { get => icon; set => icon = value; }
         public int MyCount { get => count; }
-        public TextMeshProUGUI MyStackSizeText { get => stackSizeText; }
+        public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI MyKeyBindText { get => keyBindText; }
         public Coroutine MyAutoAttackCoRoutine { get => autoAttackCoRoutine; set => autoAttackCoRoutine = value; }
         public Coroutine MyAbilityCoRoutine { get => abilityCoRoutine; set => abilityCoRoutine = value; }

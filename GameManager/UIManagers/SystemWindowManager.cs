@@ -127,8 +127,8 @@ namespace AnyRPG {
         public IEnumerator PerformDeathWindowDelay() {
             float timeCount = 0f;
             while (timeCount < 2f) {
-                timeCount += Time.deltaTime;
                 yield return null;
+                timeCount += Time.deltaTime;
             }
             playerOptionsMenuWindow.OpenWindow();
         }

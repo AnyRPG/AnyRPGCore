@@ -124,7 +124,7 @@ public class QuestDetailsArea : MonoBehaviour {
 
         if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(rewardButton.MyDescribable as BaseAbility)) {
+            if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
                 rewardButton.Unselect();
             }
         }

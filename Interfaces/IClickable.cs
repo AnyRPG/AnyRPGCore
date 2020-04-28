@@ -16,7 +16,7 @@ public interface IClickable {
         get;
     }
 
-    TextMeshProUGUI MyStackSizeText {
+    TextMeshProUGUI StackSizeText {
         get;
     }
 }

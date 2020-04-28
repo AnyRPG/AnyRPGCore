@@ -12,7 +12,7 @@ namespace AnyRPG {
             //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
             bool returnResult = base.Cast(source, target, groundTarget);
             if (returnResult == true) {
-                CraftingUI.MyInstance.CraftNextItem();
+                CraftingUI.MyInstance.CraftNextItemWait();
             }
             return returnResult;
         }

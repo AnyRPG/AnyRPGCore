@@ -63,7 +63,7 @@ namespace AnyRPG {
                     rewardIcon.SetDescribable(classSpecialization.MyTraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if ((classSpecialization.MyTraitList[i] as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                        rewardIcon.MyStackSizeText.text = "Level\n" + (classSpecialization.MyTraitList[i] as StatusEffect).MyRequiredLevel;
+                        rewardIcon.StackSizeText.text = "Level\n" + (classSpecialization.MyTraitList[i] as StatusEffect).MyRequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
@@ -86,7 +86,7 @@ namespace AnyRPG {
                     rewardIcon.SetDescribable(classSpecialization.MyAbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (classSpecialization.MyAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
-                        rewardIcon.MyStackSizeText.text = "Level\n" + classSpecialization.MyAbilityList[i].MyRequiredLevel;
+                        rewardIcon.StackSizeText.text = "Level\n" + classSpecialization.MyAbilityList[i].MyRequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }

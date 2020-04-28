@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DescribableIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
-        private IDescribable describable = null;
+        protected IDescribable describable = null;
 
         [SerializeField]
         protected TextMeshProUGUI stackSize;
@@ -32,13 +32,13 @@ namespace AnyRPG {
             }
         }
 
-        public TextMeshProUGUI MyStackSizeText {
+        public TextMeshProUGUI StackSizeText {
             get {
                 return stackSize;
             }
         }
 
-        public IDescribable MyDescribable { get => describable; set => describable = value; }
+        public IDescribable Describable { get => describable; set => describable = value; }
 
         [SerializeField]
         protected Image icon;
@@ -70,7 +70,7 @@ namespace AnyRPG {
 
         protected virtual void SetDescribableCommon(IDescribable describable) {
             //Debug.Log("DescribableIcon.SetDescribableCommon(" + (describable == null ? "null" : describable.MyName) + ")");
-            this.MyDescribable = describable;
+            this.Describable = describable;
             UpdateVisual();
             
             //Debug.Log("Mouse Position: " + Input.mousePosition);
@@ -111,20 +111,20 @@ namespace AnyRPG {
         /// </summary>
         public virtual void UpdateVisual() {
             //Debug.Log("DescribableIcon.UpdateVisual()");
-            if (MyDescribable == null) {
+            if (Describable == null) {
                 //Debug.Log("DescribableIcon.UpdateVisual(): MyDescribable is null!");
             }
             if (MyIcon == null) {
                 //Debug.Log("DescribableIcon.UpdateVisual(): MyIcon is null!");
             }
-            if (MyDescribable != null && MyIcon != null) {
-                if (MyIcon.sprite != MyDescribable.MyIcon) {
+            if (Describable != null && MyIcon != null) {
+                if (MyIcon.sprite != Describable.MyIcon) {
                     //Debug.Log("DescribableIcon.UpdateVisual(): Updating Icon for : " + MyDescribable.MyName);
                     MyIcon.sprite = null;
-                    MyIcon.sprite = MyDescribable.MyIcon;
+                    MyIcon.sprite = Describable.MyIcon;
                     MyIcon.color = Color.white;
                 }
-            } else if (MyDescribable == null && MyIcon != null) {
+            } else if (Describable == null && MyIcon != null) {
                 MyIcon.sprite = null;
                 MyIcon.color = new Color32(0, 0, 0, 0);
             }
@@ -142,15 +142,15 @@ namespace AnyRPG {
             //Debug.Log("DescribableIcon.OnPointerEnter()");
             IDescribable tmp = null;
 
-            if (MyDescribable != null && MyDescribable is IDescribable) {
-                tmp = (IDescribable)MyDescribable;
+            if (Describable != null && Describable is IDescribable) {
+                tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
                 //UIManager.MyInstance.ShowToolTip(transform.position);
             } else {
-                if (MyDescribable == null) {
+                if (Describable == null) {
                     //Debug.Log("DescribableIcon.OnPointerEnter(): describable is null");
                 }
-                if (!(MyDescribable is IDescribable)) {
+                if (!(Describable is IDescribable)) {
                     //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not IDescribable");
                 }
             }

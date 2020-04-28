@@ -54,7 +54,7 @@ namespace AnyRPG {
                         // unblock 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
-                            //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationClips[attackIndex].length);
+                            //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationLength);
                             ProcessGCDManual(sourceCharacter, Mathf.Min(animationLength, abilityCoolDown));
                             base.BeginAbilityCoolDown(sourceCharacter, Mathf.Max(animationLength, abilityCoolDown));
                         }

@@ -428,8 +428,8 @@ namespace AnyRPG {
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
                     //Debug.Log("rewardButton.MyDescribable: " + rewardButton.MyDescribable.MyName);
-                    if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        Item newItem = SystemItemManager.MyInstance.GetNewResource(rewardButton.MyDescribable.MyName);
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                        Item newItem = SystemItemManager.MyInstance.GetNewResource(rewardButton.Describable.MyName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             InventoryManager.MyInstance.AddItem(newItem);
@@ -449,8 +449,8 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
-                    if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation((rewardButton.MyDescribable as FactionNode).faction, (rewardButton.MyDescribable as FactionNode).reputationAmount);
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
                     }
                 }
             }
@@ -459,8 +459,8 @@ namespace AnyRPG {
             if (currentQuest.MyAbilityRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
-                    if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(rewardButton.MyDescribable as BaseAbility);
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
                     }
                 }
             }
@@ -469,8 +469,8 @@ namespace AnyRPG {
             if (currentQuest.MySkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
-                    if (rewardButton.MyDescribable != null && rewardButton.MyDescribable.MyName != null && rewardButton.MyDescribable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(rewardButton.MyDescribable as Skill);
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                        PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
                     }
                 }
             }

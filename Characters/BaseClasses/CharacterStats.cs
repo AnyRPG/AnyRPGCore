@@ -794,6 +794,7 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
             while ((statusEffect.MyLimitedDuration == false || statusEffect.MyClassTrait == true || statusEffect.GetRemainingDuration() >= 0) && target != null) {
+                yield return null;
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
                 statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);
 
@@ -806,7 +807,6 @@ namespace AnyRPG {
                     }
                 }
                 statusEffect.UpdateStatusNode();
-                yield return null;
             }
             if (target != null) {
                 if (source != null & target.MyCharacterUnit != null) {

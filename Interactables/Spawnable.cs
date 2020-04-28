@@ -161,8 +161,8 @@ namespace AnyRPG {
         private IEnumerator WaitForSpawn() {
             float accumulatedTime = 0f;
             while (accumulatedTime < spawnDelay) {
-                accumulatedTime += Time.deltaTime;
                 yield return null;
+                accumulatedTime += Time.deltaTime;
             }
             Spawn();
         }

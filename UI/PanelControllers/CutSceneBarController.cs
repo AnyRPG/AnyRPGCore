@@ -131,12 +131,12 @@ namespace AnyRPG {
             float barHeightPerSecond = barHeight / barFadeInTime;
             //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
             while (currentTime < barFadeInTime) {
+                yield return null;
                 currentTime += Time.deltaTime;
                 float newHeight = currentTime * barHeightPerSecond;
                 topBarLayoutElement.preferredHeight = newHeight;
                 bottomBarLayoutElement.preferredHeight = newHeight;
 
-                yield return null;
             }
             if (currentDialog != null) {
                 if (currentDialog.MyAutomatic == true) {
@@ -209,10 +209,10 @@ namespace AnyRPG {
             float alphaPerSecond = 255 / textFadeInTime;
             //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
             while (currentTime < textFadeInTime) {
+                yield return null;
                 currentTime += Time.deltaTime;
                 captionText.color = new Color32(255, 255, 255, (byte)Mathf.Clamp((int)(currentTime * alphaPerSecond), 0, 255));
 
-                yield return null;
             }
         }
 

@@ -131,9 +131,9 @@ namespace AnyRPG {
 
             float remainingPauseTime = aiController.MyAiPatrol.MyCurrentPatrol.MyDestinationPauseTime;
             while (remainingPauseTime > 0f) {
+                yield return null;
                 remainingPauseTime -= Time.deltaTime;
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
-                yield return null;
             }
             currentDestination = this.aiController.SetDestination(nextDestination);
         }

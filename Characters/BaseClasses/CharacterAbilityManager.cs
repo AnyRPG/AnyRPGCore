@@ -174,7 +174,7 @@ namespace AnyRPG {
 
         }
 
-        public void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
+        public virtual void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
 
             float abilityCoolDown = 0f;
 
@@ -189,6 +189,17 @@ namespace AnyRPG {
                 return;
             }
             */
+
+            if (abilityCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false && baseAbility.MyAbilityCastingTime == 0f) {
+                // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown instant cast abilities
+                abilityCoolDown = Mathf.Clamp(abilityCoolDown, 1, Mathf.Infinity);
+            }
+
+            if (abilityCoolDown == 0f) {
+                // if the ability CoolDown is still zero (this was an ability with a cast time that doesn't need a cooldown), don't start cooldown coroutine
+                return;
+            }
+
             AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
             abilityCoolDownNode.MyAbilityName = baseAbility.MyName;
 
@@ -199,16 +210,11 @@ namespace AnyRPG {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
             }
 
-            if (abilityCoolDownNode.MyRemainingCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false) {
-                // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown abilities
-                abilityCoolDownNode.MyRemainingCoolDown = Mathf.Clamp(abilityCoolDownNode.MyRemainingCoolDown, 1, Mathf.Infinity);
-            }
             abilityCoolDownNode.MyInitialCoolDown = abilityCoolDownNode.MyRemainingCoolDown;
 
             if (!abilityCoolDownDictionary.ContainsKey(baseAbility.MyName)) {
                 abilityCoolDownDictionary[baseAbility.MyName] = abilityCoolDownNode;
             }
-
 
             // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
             Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyName));
@@ -432,9 +438,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
 
             while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
+                yield return null;
                 abilityCoolDownDictionary[abilityName].MyRemainingCoolDown -= Time.deltaTime;
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
-                yield return null;
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
                 //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
@@ -622,6 +628,7 @@ namespace AnyRPG {
                     baseCharacter.MyCharacterUnit.MyUnitAudio.PlayEffect(ability.MyCastingAudioClip);
                 }
                 while (currentCastTime < ability.MyAbilityCastingTime) {
+                    yield return null;
                     currentCastTime += Time.deltaTime;
 
                     // call this first because it updates the cast bar
@@ -630,8 +637,6 @@ namespace AnyRPG {
 
                     // now call the ability on casttime changed (really only here for channeled stuff to do damage)
                     ability.OnCastTimeChanged(currentCastTime, baseCharacter as BaseCharacter, target);
-
-                    yield return null;
                 }
                 /*
                 if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
@@ -823,41 +828,61 @@ namespace AnyRPG {
         }
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
-        public bool CanCastAbility(IAbility ability) {
+        public virtual bool CanCastAbility(IAbility ability) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + ")");
 
-            string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
-
             // check if the ability is learned yet
-            if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
-                //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
+            if (!PerformLearnedCheck(ability)) {
                 return false;
             }
 
             // check if the ability is on cooldown
-            if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
-                //CombatLogUI.MyInstance.WriteCombatMessage(ability.MyName + " is on cooldown: " + SystemAbilityManager.MyInstance.GetResource(ability.MyName).MyRemainingCoolDown);
-                // write some common notify method here that only has content in it in playerabilitymanager to show messages so don't get spammed with npc messages
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): gcd: " + MyRemainingGlobalCoolDown + "; key in dictionary: " + abilityCoolDownDictionary.ContainsKey(ability.MyName));
-                //if (abilityCoolDownDictionary.ContainsKey(ability.MyName)) {
-                    //Debug.Log(abilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown);
-                //}
+            if (!PerformCooldownCheck(ability)) {
                 return false;
             }
 
             // check if we have enough mana
-            if (MyBaseCharacter.MyCharacterStats.currentMana < ability.MyAbilityManaCost) {
-                //CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
-                //Debug.Log("not enough mana");
+            if (!PerformManaCheck(ability)) {
                 return false;
             }
 
-            if (ability.MyRequireOutOfCombat == true && MyBaseCharacter.MyCharacterCombat.GetInCombat() == true) {
+            if (!PerformCombatCheck(ability)) {
                 return false;
             }
 
             // default is true, nothing has stopped us so far
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): returning true");
+            return true;
+        }
+
+        public virtual bool PerformLearnedCheck(IAbility ability) {
+
+            string keyName = SystemResourceManager.prepareStringForMatch(ability.MyName);
+
+            if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool PerformCooldownCheck(IAbility ability) {
+            if (abilityCoolDownDictionary.ContainsKey(ability.MyName) || (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool PerformCombatCheck(IAbility ability) {
+            if (ability.MyRequireOutOfCombat == true && MyBaseCharacter.MyCharacterCombat.GetInCombat() == true) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool PerformManaCheck(IAbility ability) {
+            if (MyBaseCharacter.MyCharacterStats.currentMana < ability.MyAbilityManaCost) {
+                return false;
+            }
             return true;
         }
 
@@ -944,8 +969,8 @@ namespace AnyRPG {
             //Debug.Log("ChanelledEffect.PerformAbilityEffectDelay()");
             float timeRemaining = channeledEffect.effectDelay;
             while (timeRemaining > 0f) {
-                timeRemaining -= Time.deltaTime;
                 yield return null;
+                timeRemaining -= Time.deltaTime;
             }
             channeledEffect.PerformAbilityHit(source, target, abilityEffectInput);
             abilityHitDelayCoroutine = null;
@@ -985,7 +1010,8 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() nextTickTime: " + nextTickTime);
 
             while (timeRemaining > 0f) {
-                
+                yield return null;
+
                 if (nullTarget == false && (targetStats == null || fixedLengthEffect == null)) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.DestroyAbilityEffectObject: BREAKING!!!!!!!!!!!!!!!!!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.MyName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.name));
                     break;
@@ -1002,7 +1028,6 @@ namespace AnyRPG {
                         fixedLengthEffect.MyNextTickTime += tickRateTimeSpan;
                     }
                 }
-                yield return null;
             }
             //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
@@ -1028,7 +1053,7 @@ namespace AnyRPG {
         }
 
         public void InitiateGlobalCooldown(float coolDownToUse = 0f) {
-            //Debug.Log(gameObject.name + ".PlayerAbilitymanager.InitiateGlobalCooldown(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.InitiateGlobalCooldown(" + coolDownToUse + ")");
             if (globalCoolDownCoroutine == null) {
                 // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
                 globalCoolDownCoroutine = StartCoroutine(BeginGlobalCoolDown(coolDownToUse));
@@ -1039,15 +1064,16 @@ namespace AnyRPG {
         }
 
         public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown()");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown(" + coolDownTime + ")");
             // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
             // the current longest animated attack is ground slam at around 4 seconds
             remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
             initialGlobalCoolDown = remainingGlobalCoolDown;
             while (remainingGlobalCoolDown > 0f) {
-                remainingGlobalCoolDown -= Time.deltaTime;
-                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
                 yield return null;
+                remainingGlobalCoolDown -= Time.deltaTime;
+                // we want to end immediately if the time is up or the cooldown coroutine will not be nullifed until the next frame
+                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
             }
             globalCoolDownCoroutine = null;
         }

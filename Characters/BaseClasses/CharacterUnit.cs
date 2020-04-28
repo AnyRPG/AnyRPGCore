@@ -407,8 +407,8 @@ namespace AnyRPG {
             }
             float totalDelay = despawnDelay + this.despawnDelay + extraTime;
             while (totalDelay > 0f) {
-                totalDelay -= Time.deltaTime;
                 yield return null;
+                totalDelay -= Time.deltaTime;
             }
 
             if (baseCharacter.MyCharacterStats.IsAlive == false || forceDespawn == true) {
