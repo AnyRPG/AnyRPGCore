@@ -127,8 +127,8 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePetSpawn(GameObject go) {
+            //Debug.Log(gameObject.name + ".CharacterPetManager.HandlePetSpawn()");
             go.transform.parent = null;
-            //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
             //Vector3 newSpawnLocation = GetSpawnLocation();
             Vector3 newSpawnLocation = baseCharacter.MyCharacterUnit.transform.position;
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
@@ -147,6 +147,7 @@ namespace AnyRPG {
             */
             //int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
             int _unitLevel = baseCharacter.MyCharacterStats.MyLevel;
+            //Debug.Log(gameObject.name + ".CharacterPetManager.HandlePetSpawn(): level: " + _unitLevel);
             _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
             (_characterUnit.MyCharacter.MyCharacterStats as AIStats).ApplyControlEffects(baseCharacter);
         }

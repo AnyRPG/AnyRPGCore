@@ -52,6 +52,7 @@ namespace AnyRPG {
                 //vendorWindow.MyVendorUI.CreatePages(items);
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventSubscriptions;
+                SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
                 PopupWindowManager.MyInstance.skillTrainerWindow.OpenWindow();
                 return true;
             }
@@ -74,6 +75,7 @@ namespace AnyRPG {
             if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.skillTrainerWindow != null && PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents != null) {
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
                 PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
+                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
 
@@ -86,6 +88,13 @@ namespace AnyRPG {
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
             base.OnDisable();
+        }
+
+        public void HandleSkillListChanged(Skill skill) {
+            // this is a special case.  since skill is not a prerequisites, we need to subscribe directly to the event to get notified things have changed
+            if (skills.Contains(skill)) {
+                HandlePrerequisiteUpdates();
+            }
         }
 
         public override int GetValidOptionCount() {
