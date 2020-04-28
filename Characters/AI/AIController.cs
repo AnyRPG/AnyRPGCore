@@ -6,7 +6,7 @@ namespace AnyRPG {
     public class AIController : BaseController {
 
         [SerializeField]
-        private float initialAggroRange = 15f;
+        private float initialAggroRange = 20f;
 
         public float MyAggroRange { get; set; }
 
