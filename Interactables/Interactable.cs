@@ -141,11 +141,13 @@ namespace AnyRPG {
 
         public override void OrchestratorFinish() {
             //Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
-            base.OrchestratorFinish();
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
                 interactable.OrchestratorFinish();
             }
+
+            // TEST MOVING THIS DOWN SO NAMEPLATE UNIT HAS CHANCE TO INITIALIZE NAMEPLATE BEFORE WE REACT TO SPAWN CONDITIONS
+            base.OrchestratorFinish();
 
         }
 

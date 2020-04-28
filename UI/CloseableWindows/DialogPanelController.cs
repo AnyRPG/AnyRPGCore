@@ -81,8 +81,12 @@ namespace AnyRPG {
             //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count);
             dialogIndex++;
             if (dialogIndex >= MyDialog.MyDialogNodes.Count) {
+                MyDialog.TurnedIn = true;
                 if (quest == null) {
+
+                    // next line is no longer true because onconfirmaction calls a prerequisiteupdate on the dialog controller
                     // no one is currently subscribed so safe to set turnedIn at bottom because nothing here depends on it being set yet
+
                     OnConfirmAction();
                     PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
                 } else {
@@ -96,8 +100,9 @@ namespace AnyRPG {
                         PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
                     }
                 }
+                // going to see what got blocked from popping, because this needs to be set true before we call onconfirmaction
                 // SETTING THIS LAST SO THE DIALOG WINDOW IS DETECTED AS CLOSED, AND OTHER WINDOWS DON'T GET BLOCKED FROM POPPING.
-                MyDialog.TurnedIn = true;
+                //MyDialog.TurnedIn = true;
             } else {
                 DisplayNodeText();
             }

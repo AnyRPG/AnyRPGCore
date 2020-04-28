@@ -76,9 +76,11 @@ namespace AnyRPG {
         public override void HandleConfirmAction() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
             base.HandleConfirmAction();
-
             // just to be safe
             CleanupConfirm();
+
+            // since the dialog completion status is itself a form of prerequisite, we should call the prerequisite update here
+            HandlePrerequisiteUpdates();
         }
 
         public void CleanupConfirm() {
@@ -108,14 +110,14 @@ namespace AnyRPG {
         }
 
         public List<Dialog> GetCurrentOptionList() {
-            //Debug.Log("DialogInteractable.GetValidOptionList()");
+            Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             foreach (Dialog dialog in dialogList) {
                 if (dialog.MyPrerequisitesMet == true && dialog.TurnedIn == false) {
                     currentList.Add(dialog);
                 }
             }
-            //Debug.Log("DialogInteractable.GetValidOptionList(): List Size: " + validList.Count);
+            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList(): List Size: " + currentList.Count);
             return currentList;
         }
 
@@ -246,7 +248,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionCount()");
+            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionCount(): " + GetCurrentOptionList().Count);
             return GetCurrentOptionList().Count;
         }
 
@@ -269,6 +271,8 @@ namespace AnyRPG {
                     Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
                     if (tmpDialog != null) {
                         dialogList.Add(tmpDialog);
+                    } else {
+                        Debug.LogError(gameObject.name + ".SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
                     }
                 }
             }
