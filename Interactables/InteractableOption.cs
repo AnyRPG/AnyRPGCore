@@ -154,7 +154,8 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
                 //SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
