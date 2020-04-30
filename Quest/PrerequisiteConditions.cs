@@ -16,6 +16,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool reverseMatch = false;
 
+        private bool lastResult = false;
+
         [SerializeField]
         private List<LevelPrerequisite> levelPrerequisites = new List<LevelPrerequisite>();
 
@@ -45,10 +47,22 @@ namespace AnyRPG {
 
         public void HandlePrerequisiteUpdates() {
             //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates()");
+            /*
+            if ((prerequisiteOwner as MonoBehaviour) is MonoBehaviour) {
+                Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates(): owner: " + (prerequisiteOwner as MonoBehaviour).gameObject.name);
+            }
+            */
+            bool oldResult = lastResult;
             if (IsMet() && prerequisiteOwner != null) {
                 // do callback to the owning object
                 //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates()");
                 prerequisiteOwner.HandlePrerequisiteUpdates();
+            } else {
+                if (oldResult != lastResult) {
+                    //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): ismet: " + IsMet() + "; prerequisiteOwner: " + (prerequisiteOwner == null ? "null" : "set") + "; RESULT CHANGED!");
+                    prerequisiteOwner.HandlePrerequisiteUpdates();
+                }
+                //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): ismet: " + IsMet() + "; prerequisiteOwner: " + (prerequisiteOwner == null ? "null" : "set"));
             }
         }
 
@@ -198,10 +212,13 @@ namespace AnyRPG {
                 returnValue = false;
             }
             if (prerequisiteCount == 0) {
+                lastResult = true;
                 return true;
             }
             //Debug.Log("PrerequisiteConditions: reversematch: " + reverseMatch + "; returnvalue native: " + returnValue);
-            return reverseMatch ? !returnValue : returnValue;
+            bool returnResult = reverseMatch ? !returnValue : returnValue;
+            lastResult = returnResult;
+            return returnResult;
         }
 
         // force prerequisite status update outside normal event notification

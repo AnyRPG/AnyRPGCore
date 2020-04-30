@@ -20,7 +20,7 @@ namespace AnyRPG {
         [SerializeField]
         protected GameObject spawnReference;
 
-        // if there is an object spawned, and the prerequisite conditions are no longer met, despawn it
+        [Tooltip("if there is an object spawned, and the prerequisite conditions are no longer met, despawn it")]
         [SerializeField]
         private bool despawnObject = false;
 
@@ -35,7 +35,7 @@ namespace AnyRPG {
 
         public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
-        public bool MyPrerequisitesMet {
+        public virtual bool MyPrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".Spawnable.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -193,6 +193,7 @@ namespace AnyRPG {
         public virtual void DestroySpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
             if (spawnReference != null) {
+                //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
                 Destroy(spawnReference);
                 spawnReference = null;
             }

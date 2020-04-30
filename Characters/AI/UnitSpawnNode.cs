@@ -181,12 +181,12 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandlePrerequisiteUpdates()");
             CheckPrerequisites();
         }
 
         public void CheckPrerequisites() {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.CheckPrerequisites()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.CheckPrerequisites()");
             if (MyPrerequisitesMet && !triggerBased) {
                 SpawnWithDelay();
             }
@@ -386,6 +386,9 @@ namespace AnyRPG {
             if (!triggerBased) {
                 return;
             }
+            if (countDownRoutine != null) {
+                return;
+            }
             CharacterUnit _characterUnit = other.gameObject.GetComponent<CharacterUnit>();
             if (_characterUnit != null && _characterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
                 Spawn();
@@ -400,6 +403,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
+                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): setting up prerequisites");
                         tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
                 }

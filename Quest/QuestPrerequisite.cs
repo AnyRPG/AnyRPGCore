@@ -37,7 +37,7 @@ namespace AnyRPG {
                 return;
             }
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
-                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true");
+                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true; originalresult: " + originalResult);
                 prerequisiteMet = true;
             } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.MyName)) {
                 prerequisiteMet = true;
@@ -47,11 +47,12 @@ namespace AnyRPG {
                 prerequisiteMet = false;
             }
             if (prerequisiteMet != originalResult && notify == true) {
+                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + "; calling OnStatusUpated; originalresult: " + originalResult + "; notify: " + notify);
                 OnStatusUpdated();
+            } else {
+                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + "; STATUS DID NOT CHANGE; originalresult: " + originalResult + "; notify: " + notify);
             }
         }
-
-
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("QuestPrerequisite.IsMet(): " + prerequisiteQuest.MyName + " returning " + prerequisiteMet);

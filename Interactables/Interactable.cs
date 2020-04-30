@@ -11,6 +11,10 @@ namespace AnyRPG {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
 
+        [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
+        [SerializeField]
+        private bool checkOptionsToSpawn = false;
+
         // the physical interactable to spawn
         [SerializeField]
         private string interactableName = string.Empty;
@@ -96,6 +100,21 @@ namespace AnyRPG {
         public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public BoxCollider MyBoxCollider { get => boxCollider;}
+
+        public override bool MyPrerequisitesMet {
+            get {
+                bool returnResult = base.MyPrerequisitesMet;
+                if (returnResult != true) {
+                    return returnResult;
+                }
+                if (checkOptionsToSpawn == true) {
+                    if (CanInteract() == false) {
+                        return false;
+                    }
+                }
+                return returnResult;
+            }
+        }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");

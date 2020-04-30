@@ -35,7 +35,7 @@ namespace AnyRPG {
         public virtual string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
-        public bool MyPrerequisitesMet {
+        public virtual bool MyPrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".InteractableOption.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {

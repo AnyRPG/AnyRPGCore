@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public List<Dialog> GetCurrentOptionList() {
-            Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
+            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             foreach (Dialog dialog in dialogList) {
                 if (dialog.MyPrerequisitesMet == true && dialog.TurnedIn == false) {

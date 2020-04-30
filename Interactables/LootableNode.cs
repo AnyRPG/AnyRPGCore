@@ -23,6 +23,20 @@ namespace AnyRPG {
 
         protected bool lootDropped = false;
 
+        private Coroutine spawnCoroutine = null;
+
+        public override bool MyPrerequisitesMet {
+            get {
+                bool returnResult = base.MyPrerequisitesMet;
+                if (returnResult == false) {
+                    return returnResult;
+                }
+                if (spawnCoroutine != null) {
+                    return false;
+                }
+                return returnResult;
+            }
+        }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
@@ -43,16 +57,19 @@ namespace AnyRPG {
         }
 
         protected IEnumerator StartSpawnCountdown() {
-            //Debug.Log(gameObject.name + ".GatheringNode.StartSpawnCountdown()");
+            Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
             HandlePrerequisiteUpdates();
             currentTimer = spawnTimer;
             while (currentTimer > 0) {
-                //Debug.Log("Spawn Timer: " + currentTimer);
+                Debug.Log("Spawn Timer: " + currentTimer);
                 yield return new WaitForSeconds(1);
                 currentTimer -= 1;
             }
-            interactable.Spawn();
+            spawnCoroutine = null;
+
+            Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown(): countdown complete");
+            //interactable.Spawn();
             // ENABLE MINIMAP ICON AFTER SPAWN
             HandlePrerequisiteUpdates();
         }
@@ -73,7 +90,7 @@ namespace AnyRPG {
         public void PickUp() {
             //Debug.Log("GatheringNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
-            CreateEventSubscriptions();
+            CreateWindowEventSubscriptions();
             LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
             PopupWindowManager.MyInstance.lootWindow.OpenWindow();
         }
@@ -88,9 +105,12 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
             //LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
             eventSubscriptionsInitialized = true;
+        }
+
+        public void CreateWindowEventSubscriptions() {
+            SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
         }
 
         public void CleanupWindowEventSubscriptions() {
@@ -136,7 +156,7 @@ namespace AnyRPG {
         }
 
         public void CheckDropListSize() {
-            //Debug.Log("GatheringNode.CheckDropListSize()");
+            //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize()");
             int lootCount = 0;
             foreach (LootTable lootTable in lootTables) {
                 lootCount += lootTable.MyDroppedItems.Count;
@@ -149,7 +169,13 @@ namespace AnyRPG {
                 foreach (LootTable lootTable in lootTables) {
                     lootTable.Reset();
                 }
-                StartCoroutine(StartSpawnCountdown());
+
+                if (spawnCoroutine == null) {
+                    spawnCoroutine = StartCoroutine(StartSpawnCountdown());
+                }
+
+                // loot being gone is a type of prerequisite for a lootable node
+                HandlePrerequisiteUpdates();
             }
         }
 
@@ -196,6 +222,9 @@ namespace AnyRPG {
         public override bool CanInteract() {
             bool returnValue = base.CanInteract();
             if (returnValue == false) {
+                return false;
+            }
+            if (spawnCoroutine != null) {
                 return false;
             }
             return (GetCurrentOptionCount() == 0 ? false : true);
