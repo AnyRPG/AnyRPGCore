@@ -30,6 +30,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool automatic = false;
 
+        private IPrerequisiteOwner prerequisiteOwner = null;
+
         /// <summary>
         /// Track whether this dialog has been turned in
         /// </summary>
@@ -43,10 +45,15 @@ namespace AnyRPG {
             set {
                 turnedIn = value;
                 if (turnedIn == true) {
+                    // these events are for things that need the dialog turned in as a prerequisite
                     SystemEventManager.MyInstance.NotifyOnDialogCompleted(this);
                     OnDialogCompleted();
                 }
             }
+        }
+
+        public void RegisterPrerequisiteOwner(IPrerequisiteOwner prerequisiteOwner) {
+            this.prerequisiteOwner = prerequisiteOwner;
         }
 
         public bool MyPrerequisitesMet {
@@ -99,7 +106,10 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
-            
+            if (prerequisiteOwner != null) {
+                // this event is for the interactable that will display this dialog and needs to know when it becomes available
+                prerequisiteOwner.HandlePrerequisiteUpdates();
+            }
         }
     }
 }

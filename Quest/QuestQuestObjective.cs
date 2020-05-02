@@ -25,7 +25,9 @@ namespace AnyRPG {
                 }
                 if (questObjective.GetStatus() == "completed") {
                     MyCurrentAmount++;
-                    questObjective.CheckCompletion(true, printMessages);
+                    // i think that is supposed to be this instead to ask the quest that we are an objective for to check completion
+                    quest.CheckCompletion(true, printMessages);
+                    //questObjective.CheckCompletion(true, printMessages);
                     if (MyCurrentAmount <= MyAmount && !questObjective.MyIsAchievement && printMessages == true && MyCurrentAmount != 0) {
                         MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.MyName, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
                     }
@@ -40,13 +42,17 @@ namespace AnyRPG {
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
-            SystemEventManager.MyInstance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            // not needed anymore ?
+            //SystemEventManager.MyInstance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemEventManager.MyInstance.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            // not needed anymore ?
+            //SystemEventManager.MyInstance.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            questObjective.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
         }
 
 
@@ -64,6 +70,10 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective.  CHECK INSPECTOR");
             }
+        }
+
+        public void CleanupScriptableObjects () {
+
         }
     }
 

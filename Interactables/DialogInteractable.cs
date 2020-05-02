@@ -270,6 +270,7 @@ namespace AnyRPG {
                 foreach (string dialogName in dialogNames) {
                     Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
                     if (tmpDialog != null) {
+                        tmpDialog.RegisterPrerequisiteOwner(this);
                         dialogList.Add(tmpDialog);
                     } else {
                         Debug.LogError(gameObject.name + ".SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
