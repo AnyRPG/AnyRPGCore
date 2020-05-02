@@ -263,7 +263,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
@@ -409,7 +409,7 @@ namespace AnyRPG {
         */
 
         public void OpenInteractionWindow() {
-            //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
+            Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
             InteractionPanelUI.MyInstance.MyInteractable = this;
             PopupWindowManager.MyInstance.interactionWindow.OpenWindow();
         }

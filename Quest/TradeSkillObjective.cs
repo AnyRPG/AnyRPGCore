@@ -34,14 +34,14 @@ namespace AnyRPG {
                 return;
             }
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skill)) {
-                MyCurrentAmount++;
+                CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
             }
-            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && MyCurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", skill.MyName, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", skill.MyName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", MyCurrentAmount, skill.MyName));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.MyName));
             }
             base.UpdateCompletionCount(printMessages);
         }

@@ -153,14 +153,23 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            if (true) {
+
+            }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
             if (SystemEventManager.MyInstance == null) {
                 Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
+                return;
                 //SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
-                //HandlePlayerUnitSpawn();
+            if (PlayerManager.MyInstance == null) {
+                Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
+                return;
+            } else {
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                    //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
+                    //HandlePlayerUnitSpawn();
+                }
             }
             eventSubscriptionsInitialized = true;
         }

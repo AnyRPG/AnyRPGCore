@@ -13,6 +13,9 @@ namespace AnyRPG {
 
         public event System.Action OnDialogCompleted = delegate { };
 
+        [Tooltip("This should be set to true for cutscene subtitles and npc speech bubble monologues to allow them to advance on a timer")]
+        [SerializeField]
+        private bool automatic = false;
 
         [SerializeField]
         private string audioProfileName = string.Empty;
@@ -24,11 +27,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
-
-        // should this dialog open in a speech bubble and automatically progress
-        // also used to allow cutscenes to send messages to the dialog to advance it
-        [SerializeField]
-        private bool automatic = false;
 
         private IPrerequisiteOwner prerequisiteOwner = null;
 

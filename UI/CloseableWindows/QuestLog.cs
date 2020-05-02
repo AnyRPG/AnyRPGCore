@@ -60,7 +60,7 @@ namespace AnyRPG {
                     //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType);
                     if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
+                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
             }
@@ -68,7 +68,7 @@ namespace AnyRPG {
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.collectObjectives) {
                 foreach (QuestObjective existingQuestObjective in quest.MyCollectObjectives) {
                     if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
+                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading tradeskill objective");
                 foreach (QuestObjective existingQuestObjective in quest.MyTradeSkillObjectives) {
                     if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
+                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace AnyRPG {
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.useInteractableObjectives) {
                 foreach (QuestObjective existingQuestObjective in quest.MyUseInteractableObjectives) {
                     if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
+                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
             }
@@ -95,7 +95,7 @@ namespace AnyRPG {
                 foreach (QuestObjective existingQuestObjective in quest.MyAbilityObjectives) {
                     if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.MyCurrentAmount = objectiveSaveData.MyAmount;
+                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
             }

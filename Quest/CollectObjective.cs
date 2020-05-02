@@ -23,17 +23,17 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            MyCurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
+            CurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(MyType)) {
-                MyCurrentAmount++;
+                CurrentAmount++;
             }
 
             quest.CheckCompletion(true, printMessages);
-            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && MyCurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", MyCurrentAmount, MyType));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
             //Debug.Log("CollectObjective Updating item count to " + MyCurrentAmount.ToString() + " for type " + MyType);
             base.UpdateCompletionCount(printMessages);

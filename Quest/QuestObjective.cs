@@ -15,15 +15,12 @@ namespace AnyRPG {
 
         protected Quest quest;
 
-        /*
         [SerializeField]
-        private BaseCharacter killType;
-        */
+        private string type = string.Empty;
 
-        // this will be much better if we make this a reference to the actual class
-
+        [Tooltip("Set this if you want to override the name shown in the quest log objective to be something other than the type")]
         [SerializeField]
-        private string type;
+        private string overrideDisplayName = string.Empty;
 
         public int MyAmount {
             get {
@@ -34,17 +31,27 @@ namespace AnyRPG {
             }
         }
 
-        public int MyCurrentAmount { get => currentAmount; set => currentAmount = value; }
+        public int CurrentAmount { get => currentAmount; set => currentAmount = value; }
         public string MyType { get => type; set => type = value; }
 
         public virtual bool IsComplete {
             get {
                 //Debug.Log("checking if quest objective iscomplete, current: " + MyCurrentAmount.ToString() + "; needed: " + amount.ToString());
-                return MyCurrentAmount >= MyAmount;
+                return CurrentAmount >= MyAmount;
             }
         }
 
         public Quest MyQuest { get => quest; set => quest = value; }
+        public string OverrideDisplayName { get => overrideDisplayName; set => overrideDisplayName = value; }
+        public string DisplayName {
+            get {
+                if (overrideDisplayName != string.Empty) {
+                    return overrideDisplayName;
+                }
+                return type;
+            }
+            set => overrideDisplayName = value;
+        }
 
         public virtual void UpdateCompletionCount(bool printMessages = true) {
             //Debug.Log("QuestObjective.UpdateCompletionCount()");

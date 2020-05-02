@@ -355,20 +355,20 @@ namespace AnyRPG {
             string objectives = string.Empty;
             List<string> objectiveList = new List<string>();
             foreach (CollectObjective obj in MyCollectObjectives) {
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (KillObjective obj in MyKillObjectives) {
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (TradeSkillObjective obj in MyTradeSkillObjectives) {
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (QuestQuestObjective obj in MyQuestQuestObjectives) {
                 //Debug.Log("questquestobjective display");
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (UseInteractableObjective obj in MyUseInteractableObjectives) {
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (AbilityObjective obj in MyAbilityObjectives) {
                 string beginText = string.Empty;
@@ -377,10 +377,10 @@ namespace AnyRPG {
                 } else {
                     beginText = "Learn ";
                 }
-                objectiveList.Add(beginText + obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(beginText + obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             foreach (DialogObjective obj in MyDialogObjectives) {
-                objectiveList.Add(obj.MyType + ": " + Mathf.Clamp(obj.MyCurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             objectives = string.Join("\n", objectiveList);
             if (objectives == string.Empty) {

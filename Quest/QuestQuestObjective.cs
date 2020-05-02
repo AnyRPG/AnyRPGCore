@@ -24,15 +24,15 @@ namespace AnyRPG {
                     return;
                 }
                 if (questObjective.GetStatus() == "completed") {
-                    MyCurrentAmount++;
+                    CurrentAmount++;
                     // i think that is supposed to be this instead to ask the quest that we are an objective for to check completion
                     quest.CheckCompletion(true, printMessages);
                     //questObjective.CheckCompletion(true, printMessages);
-                    if (MyCurrentAmount <= MyAmount && !questObjective.MyIsAchievement && printMessages == true && MyCurrentAmount != 0) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.MyName, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
+                    if (CurrentAmount <= MyAmount && !questObjective.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
+                        MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.MyName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                     }
                     if (completeBefore == false && IsComplete && !questObjective.MyIsAchievement && printMessages == true) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("Complete {1}: Objective Complete", MyCurrentAmount, questObjective.MyName));
+                        MessageFeedManager.MyInstance.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.MyName));
                     }
                 }
             }

@@ -393,7 +393,7 @@ namespace AnyRPG {
                 foreach (QuestObjective questObjective in quest.MyKillObjectives) {
                     QuestObjectiveSaveData tmp = new QuestObjectiveSaveData();
                     tmp.MyName = questObjective.MyType;
-                    tmp.MyAmount = questObjective.MyCurrentAmount;
+                    tmp.MyAmount = questObjective.CurrentAmount;
                     //Debug.Log("Saving killobjective: " + tmp.MyName + "; amount: " + tmp.MyAmount);
                     killObjectiveSaveDataList.Add(tmp);
                 }
@@ -401,7 +401,7 @@ namespace AnyRPG {
                 foreach (QuestObjective questObjective in quest.MyUseInteractableObjectives) {
                     QuestObjectiveSaveData tmp = new QuestObjectiveSaveData();
                     tmp.MyName = questObjective.MyType;
-                    tmp.MyAmount = questObjective.MyCurrentAmount;
+                    tmp.MyAmount = questObjective.CurrentAmount;
                     useInteractableObjectiveSaveDataList.Add(tmp);
                 }
                 // ability
@@ -410,7 +410,7 @@ namespace AnyRPG {
                     //Debug.Log("Saving abilityobjective: " + questObjective.MyType);
                     QuestObjectiveSaveData tmp = new QuestObjectiveSaveData();
                     tmp.MyName = questObjective.MyType;
-                    tmp.MyAmount = questObjective.MyCurrentAmount;
+                    tmp.MyAmount = questObjective.CurrentAmount;
                     //Debug.Log("Saving abilityobjective: " + tmp.MyName + "; amount: " + tmp.MyAmount);
                     abilityObjectiveSaveDataList.Add(tmp);
                 }
@@ -419,14 +419,14 @@ namespace AnyRPG {
                 foreach (QuestObjective questObjective in quest.MyCollectObjectives) {
                     QuestObjectiveSaveData tmp = new QuestObjectiveSaveData();
                     tmp.MyName = questObjective.MyType;
-                    tmp.MyAmount = questObjective.MyCurrentAmount;
+                    tmp.MyAmount = questObjective.CurrentAmount;
                     collectObjectiveSaveDataList.Add(tmp);
                 }
                 List<QuestObjectiveSaveData> tradeSkillObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
                 foreach (QuestObjective questObjective in quest.MyTradeSkillObjectives) {
                     QuestObjectiveSaveData tmp = new QuestObjectiveSaveData();
                     tmp.MyName = questObjective.MyType;
-                    tmp.MyAmount = questObjective.MyCurrentAmount;
+                    tmp.MyAmount = questObjective.CurrentAmount;
                     tradeSkillObjectiveSaveDataList.Add(tmp);
                 }
                 questSaveData.killObjectives = killObjectiveSaveDataList;

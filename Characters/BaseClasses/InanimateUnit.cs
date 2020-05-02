@@ -16,10 +16,19 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        [Header("NAMEPLATE SETTINGS")]
+
+        [Tooltip("This is what will be printed on the nameplate above the object.")]
         [SerializeField]
         private string displayName = string.Empty;
 
+        [Tooltip("Set a transform to override the default nameplate placement above the interactable.  Useful for interactables that are not 2m tall.")]
+        [SerializeField]
+        private Transform namePlateTransform = null;
+
         private NamePlateController namePlate;
+
+        [Header("UNIT FRAME SETTINGS")]
 
         [SerializeField]
         private string unitFrameTarget = string.Empty;
@@ -30,8 +39,6 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
-        [SerializeField]
-        private Transform namePlateTransform = null;
 
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }

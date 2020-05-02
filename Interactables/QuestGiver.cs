@@ -16,7 +16,6 @@ namespace AnyRPG {
 
         private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();
 
-        [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 
         private bool questGiverInitialized = false;
@@ -307,7 +306,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
+            Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
             UpdateQuestStatus();
@@ -332,12 +331,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".QuestGiver.SetupScriptableObjects()");
             
             base.SetupScriptableObjects();
-
-            if (quests != null) {
-                foreach (QuestNode questNode in quests) {
-                    questNode.SetupScriptableObjects();
-                }
-            }
 
             questGiverProfiles = new List<QuestGiverProfile>();
             if (questGiverProfileNames != null) {

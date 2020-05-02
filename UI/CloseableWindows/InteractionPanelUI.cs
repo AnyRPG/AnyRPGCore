@@ -54,6 +54,7 @@ namespace AnyRPG {
         public Interactable MyInteractable {
             get => interactable;
             set {
+                Debug.Log("InteractionPanelUI.MyInteractable.Set(" + (value == null ? "null" : value.MyName ) + ")");
                 if (interactable != null) {
                     interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
                 }
@@ -107,11 +108,12 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
+            Debug.Log("InteractionPanelUI.HandlePrerequisiteUpdates()");
             CheckPrerequisites();
         }
 
         public void CheckPrerequisites() {
-            //Debug.Log("InteractionPanelUI.CheckPrerequisites()");
+            Debug.Log("InteractionPanelUI.CheckPrerequisites()");
             if (interactable == null) {
                 //Debug.Log("InteractionPanelUI.CheckPrerequisites(): no interactable. exiting");
                 return;
@@ -246,7 +248,7 @@ namespace AnyRPG {
         }
 
         public void ShowInteractables(bool suppressAutoInteract = false) {
-            //Debug.Log("InteractionPanelUI.ShowInteractables()");
+            Debug.Log("InteractionPanelUI.ShowInteractables(" + suppressAutoInteract + ")");
             if (interactable != null) {
                 //Debug.Log("InteractionPanelUI.ShowInteractables() interactable: " + interactable.MyName);
                 ShowInteractablesCommon(interactable, suppressAutoInteract);

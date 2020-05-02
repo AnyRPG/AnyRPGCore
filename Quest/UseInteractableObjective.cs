@@ -44,15 +44,15 @@ public class UseInteractableObjective : QuestObjective {
             if (requireCompletion == false && interactionComplete) {
                 return;
             }
-            if (MyCurrentAmount < MyAmount) {
-                MyCurrentAmount++;
+            if (CurrentAmount < MyAmount) {
+                CurrentAmount++;
                 quest.CheckCompletion();
             }
-            if (MyCurrentAmount <= MyAmount && !quest.MyIsAchievement && MyCurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", MyType, Mathf.Clamp(MyCurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: Objective Complete", MyType));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
             }
         }
     }
