@@ -3,15 +3,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class AnyRPGCutsceneCameraController : MonoBehaviour {
+    public class CutsceneCameraController : MonoBehaviour {
 
         #region Singleton
-        private static AnyRPGCutsceneCameraController instance;
+        private static CutsceneCameraController instance;
 
-        public static AnyRPGCutsceneCameraController MyInstance {
+        public static CutsceneCameraController MyInstance {
             get {
                 if (instance == null) {
-                    instance = FindObjectOfType<AnyRPGCutsceneCameraController>();
+                    instance = FindObjectOfType<CutsceneCameraController>();
                 }
 
                 return instance;

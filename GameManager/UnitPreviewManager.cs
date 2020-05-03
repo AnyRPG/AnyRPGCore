@@ -29,8 +29,9 @@ namespace AnyRPG {
         private Vector3 previewSpawnLocation;
 
         [SerializeField]
-        private int previewLayer = 16;
+        private string layerName = "UnitPreview";
 
+        private int previewLayer;
 
         // the source we are going to clone from 
         private GameObject cloneSource;
@@ -38,6 +39,11 @@ namespace AnyRPG {
         //private bool targetInitialized = false;
 
         public GameObject MyPreviewUnit { get => previewUnit; set => previewUnit = value; }
+        public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
+
+        private void Awake() {
+            previewLayer = LayerMask.NameToLayer(layerName);
+        }
 
         public void Start() {
             if (previewSpawnLocation == null) {
@@ -61,6 +67,9 @@ namespace AnyRPG {
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
             if (previewUnit.GetComponent<PlayerUnitMovementController>() != null) {
                 previewUnit.GetComponent<PlayerUnitMovementController>().enabled = false;
+            }
+            if (previewUnit.GetComponent<NavMeshAgent>() != null) {
+                previewUnit.GetComponent<NavMeshAgent>().enabled = false;
             }
             if (previewUnit.GetComponent<Interactable>() != null) {
                 previewUnit.GetComponent<Interactable>().enabled = false;

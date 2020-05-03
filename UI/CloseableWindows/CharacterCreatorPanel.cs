@@ -93,7 +93,7 @@ namespace AnyRPG {
 
 
         [SerializeField]
-        private AnyRPGCharacterPreviewCameraController previewCameraController = null;
+        private CharacterPreviewCameraController previewCameraController = null;
 
         [SerializeField]
         private LayoutElement panelLayoutElement = null;
@@ -115,7 +115,7 @@ namespace AnyRPG {
         private List<UMATextRecipe> eyebrowsRecipes = new List<UMATextRecipe>();
         private List<UMATextRecipe> beardRecipes = new List<UMATextRecipe>();
 
-        public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");

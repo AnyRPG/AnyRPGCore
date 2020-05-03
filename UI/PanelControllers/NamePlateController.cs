@@ -340,7 +340,7 @@ namespace AnyRPG {
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
                 Camera currentCamera;
                 if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null) {
-                    currentCamera = AnyRPGCutsceneCameraController.MyInstance.GetComponent<Camera>();
+                    currentCamera = CutsceneCameraController.MyInstance.GetComponent<Camera>();
                 } else {
                     currentCamera = CameraManager.MyInstance.MyActiveMainCamera;
                 }
@@ -352,7 +352,7 @@ namespace AnyRPG {
                 }
                 if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null) {
                     //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera");
-                    float unitDistance = Mathf.Abs(Vector3.Distance(AnyRPGCutsceneCameraController.MyInstance.gameObject.transform.position, namePlateUnit.MyNamePlateTransform.position));
+                    float unitDistance = Mathf.Abs(Vector3.Distance(CutsceneCameraController.MyInstance.gameObject.transform.position, namePlateUnit.MyNamePlateTransform.position));
                     if (unitDistance > 40f) {
                         //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera: more than 40f: " + unitDistance);
                         renderNamePlate = false;

@@ -17,11 +17,6 @@ namespace AnyRPG {
         public event Action<int, int> HealthBarNeedsUpdate = delegate { };
         public event System.Action<GameObject> OnDespawn = delegate { };
 
-        //[SerializeField]
-        private BaseCharacter baseCharacter = null;
-        private AnimatedUnit animatedUnit = null;
-
-
         [SerializeField]
         protected float despawnDelay = 20f;
 
@@ -31,9 +26,9 @@ namespace AnyRPG {
 
         private float hitBoxSize = 1.5f;
 
-        /// <summary>
-        /// a string that represents the location of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame
-        /// </summary>
+        [Header("UNIT FRAME")]
+
+        [Tooltip("a string that represents the name of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame")]
         [SerializeField]
         private string unitFrameTarget = string.Empty;
 
@@ -43,11 +38,19 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
+        [Header("PLAYER PREVIEW")]
+
+        [Tooltip("a string that represents the name of the transform in the heirarchy that we will attach the camera to when this character is displayed in a player preview type of window")]
         [SerializeField]
         private string playerPreviewTarget = string.Empty;
 
         [SerializeField]
-        private Vector3 playerPreviewInitialOffset = Vector3.zero;
+        private Vector3 unitPreviewCameraLookOffset = new Vector3(0f, 1f, 0f);
+
+        [SerializeField]
+        private Vector3 unitPreviewCameraPositionOffset = new Vector3(0f, 1f, 1f);
+
+        [Header("NAMEPLATE")]
 
         [SerializeField]
         private bool suppressNamePlate = false;
@@ -59,6 +62,9 @@ namespace AnyRPG {
         private Coroutine despawnCoroutine = null;
 
         private bool startHasRun = false;
+
+        private BaseCharacter baseCharacter = null;
+        private AnimatedUnit animatedUnit = null;
 
         // keep track of mounted state
         private bool mounted = false;
@@ -76,7 +82,6 @@ namespace AnyRPG {
         public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.MyCharacterName : interactionPanelTitle); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
-        public Vector3 MyPlayerPreviewInitialOffset { get => playerPreviewInitialOffset; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
@@ -96,6 +101,8 @@ namespace AnyRPG {
         public bool MyMounted { get => mounted; set => mounted = value; }
         public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
         public float MyHitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
+        public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
+        public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
@@ -177,15 +184,22 @@ namespace AnyRPG {
             startHasRun = true;
         }
 
+        public static bool IsInLayerMask(int layer, LayerMask layermask) {
+            return layermask == (layermask | (1 << layer));
+        }
+
         protected virtual void SetDefaultLayer() {
             if (SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != null && SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
-                if (gameObject.layer != defaultLayer) {
+                int finalmask = (1 << defaultLayer) | (1 << UnitPreviewManager.MyInstance.PreviewLayer) | (1 << PetPreviewManager.MyInstance.PreviewLayer);
+                if (!IsInLayerMask(gameObject.layer, finalmask)) {
+                    //if (gameObject.layer != defaultLayer) {
                     gameObject.layer = defaultLayer;
                     Debug.Log(gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
                 }
             }
         }
+        
 
         public override void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OrchestratorStart()");

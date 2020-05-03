@@ -29,7 +29,9 @@ namespace AnyRPG {
         private Vector3 previewSpawnLocation;
 
         [SerializeField]
-        private int previewLayer = 17;
+        private string layerName = "PetPreview";
+
+        private int previewLayer;
 
         // the source we are going to clone from 
         private GameObject cloneSource;
@@ -39,6 +41,11 @@ namespace AnyRPG {
 
 
         public GameObject MyPreviewUnit { get => previewUnit; set => previewUnit = value; }
+        public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
+
+        private void Awake() {
+            previewLayer = LayerMask.NameToLayer(layerName);
+        }
 
         public void Start() {
             if (previewSpawnLocation == null) {

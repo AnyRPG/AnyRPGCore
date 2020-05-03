@@ -33,7 +33,7 @@ namespace AnyRPG {
         private LoadGameButton selectedLoadGameButton;
 
         [SerializeField]
-        private AnyRPGCharacterPreviewCameraController previewCameraController = null;
+        private CharacterPreviewCameraController previewCameraController = null;
 
         [SerializeField]
         private LayoutElement panelLayoutElement = null;
@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         private AnyRPGSaveData anyRPGSaveData;
 
-        public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
         public override void RecieveClosedWindowNotification() {

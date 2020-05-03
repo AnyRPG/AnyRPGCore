@@ -36,7 +36,7 @@ namespace AnyRPG {
         private TextMeshProUGUI statsDescription = null;
 
         [SerializeField]
-        private AnyRPGCharacterPreviewCameraController previewCameraController;
+        private CharacterPreviewCameraController previewCameraController;
 
         [SerializeField]
         private Color emptySlotColor = new Color32(0, 0, 0, 0);
@@ -50,7 +50,7 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         public CharacterButton MySelectedButton { get; set; }
-        public AnyRPGCharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         private void Start() {
             //Debug.Log("CharacterPanel.Start()");

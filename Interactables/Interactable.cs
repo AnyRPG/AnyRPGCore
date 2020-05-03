@@ -263,7 +263,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");

@@ -58,7 +58,7 @@ namespace AnyRPG {
         private TMP_Dropdown toughnessDropdown = null;
 
         [SerializeField]
-        private AnyRPGUnitPreviewCameraController previewCameraController;
+        private UnitPreviewCameraController previewCameraController;
 
         [SerializeField]
         private LayoutElement panelLayoutElement = null;
@@ -78,7 +78,7 @@ namespace AnyRPG {
 
         private UnitToughness unitToughness;
 
-        public AnyRPGUnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public UnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public UnitSpawnButton MySelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
         public List<UnitProfile> MyUnitProfileList { get => unitProfileList; set => unitProfileList = value; }
         public List<UnitSpawnNode> MyUnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }

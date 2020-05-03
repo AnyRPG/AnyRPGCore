@@ -140,15 +140,15 @@ namespace AnyRPG {
 
         public void EnableCutsceneCamera() {
             //Debug.Log("CameraManager.EnableCutsceneCamera()");
-            if (AnyRPGCutsceneCameraController.MyInstance != null) {
-                AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(true);
+            if (CutsceneCameraController.MyInstance != null) {
+                CutsceneCameraController.MyInstance.gameObject.SetActive(true);
             }
         }
 
         public void DisableCutsceneCamera() {
             //Debug.Log("CameraManager.DisableCutsceneCamera()");
-            if (AnyRPGCutsceneCameraController.MyInstance != null) {
-                AnyRPGCutsceneCameraController.MyInstance.gameObject.SetActive(false);
+            if (CutsceneCameraController.MyInstance != null) {
+                CutsceneCameraController.MyInstance.gameObject.SetActive(false);
             }
         }
 

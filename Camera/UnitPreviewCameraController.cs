@@ -7,13 +7,13 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class PetPreviewCameraController : PreviewCameraController {
+    public class UnitPreviewCameraController : PreviewCameraController {
 
         //public event System.Action OnTargetReady = delegate { };
 
         protected override void Awake() {
             base.Awake();
-            currentCamera = CameraManager.MyInstance.MyPetPreviewCamera;
+            currentCamera = CameraManager.MyInstance.MyUnitPreviewCamera;
         }
 
     }

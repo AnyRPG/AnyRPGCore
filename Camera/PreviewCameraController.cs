@@ -1,77 +1,93 @@
 using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class AnyRPGUnitPreviewCameraController : MonoBehaviour {
+    public class PreviewCameraController : MonoBehaviour {
         // public variables
         public event System.Action OnTargetReady = delegate { };
 
+
         [SerializeField]
-        private Transform target = null;
+        protected Transform target = null;
+
+        [SerializeField]
+        protected Vector3 cameraLookOffsetDefault = new Vector3(0f, 0.8f, 0f);
+
+        [SerializeField]
+        protected Vector3 cameraPositionOffsetDefault = new Vector3(0f, 0.8f, 2f);
 
         // track the position of the window to ensure we are over it
-        private RectTransform rectTransform;
+        protected RectTransform rectTransform;
 
         //public Vector3 offset;
         //public float rightMouseLookSpeed = 10f;
         public float cameraSpeed = 4f;
         public float minZoom = 1f;
         public float maxZoom = 5f;
-        public float maxVerticalPan = 45;
-        public float minVerticalPan = -45;
+        public float maxVerticalPan = 75;
+        public float minVerticalPan = -75;
 
         // to slow down mouse pan
         public float mousePanSpeedDivider = 5f;
 
-        // target offsets, the position relative to the target where the camera will face and all rotations will be performed around
-        public Vector3 initialTargetOffset = Vector3.zero;
-        private Vector3 currentTargetOffset;
-
-        // camera offset, the position of the camera relative to the target location
-        private Vector3 initialCameraOffset;
-
         // calculated every frame after apply quaternion rotations to the initial location
-        private Vector3 currentCameraOffset;
+        //protected Vector3 currentCameraOffset;
+
+        protected Vector3 initialCameraLookOffset = Vector3.zero;
+        protected Vector3 currentCameraLookOffset = Vector3.zero;
+
+        protected Vector3 initialCameraPositionOffset = Vector3.zero;
+        protected Vector3 currentCameraPositionOffset = Vector3.zero;
+
+        protected Vector3 initialLookVector = Vector3.zero;
 
         public float yawSpeed = 10f;
 
         // the calculated position we want the camera to go to
-        private Vector3 wantedPosition;
+        protected Vector3 wantedPosition;
+
+        protected Vector3 wantedLookPosition;
 
         // the location we want the camera to look at
-        private Vector3 targetPosition;
+        //protected Vector3 targetPosition;
+
+        protected Camera currentCamera = null;
 
         public float initialYDegrees = 0f;
         public float initialXDegrees = 0f;
 
-        private float currentYDegrees = 0f;
-        private float currentXDegrees = 0f;
+        protected float currentYDegrees = 0f;
+        protected float currentXDegrees = 0f;
 
-        private float currentZoomDistance = 0f;
+        protected float currentZoomDistance = 0f;
 
         // keep track if we are panning or zooming this frame
-        private bool cameraPan = false;
-        private bool cameraZoom = false;
+        protected bool cameraPan = false;
+        protected bool cameraZoom = false;
 
-        private bool leftMouseClickedOverThisWindow = false;
-        private bool rightMouseClickedOverThisWindow = false;
-        private bool middleMouseClickedOverThisWindow = false;
+        protected bool leftMouseClickedOverThisWindow = false;
+        protected bool rightMouseClickedOverThisWindow = false;
+        protected bool middleMouseClickedOverThisWindow = false;
 
-        private Vector3[] worldCorners = new Vector3[4];
+        protected Vector3[] worldCorners = new Vector3[4];
 
-        private Transform followTransform;
-        private bool targetInitialized = false;
+        protected Transform followTransform;
+        protected bool targetInitialized = false;
 
-        private bool mouseOutsideWindow = true;
+        protected bool mouseOutsideWindow = true;
+
+        // reference to the dynamic character avatar on the mount, if it exists
+        protected DynamicCharacterAvatar dynamicCharacterAvatar = null;
+
+        // keep reference to bone we should be searching for on uma create
+        protected string initialTargetString = string.Empty;
 
         public Transform MyTarget { get => target; set => target = value; }
 
-        private void Awake() {
+        protected virtual void Awake() {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.Awake()");
 
             rectTransform = gameObject.GetComponent<RectTransform>();
@@ -82,32 +98,73 @@ namespace AnyRPG {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.ClearTarget()");
             target = null;
             followTransform = null;
-            CameraManager.MyInstance.MyUnitPreviewCamera.enabled = false;
+            dynamicCharacterAvatar = null;
+            initialTargetString = string.Empty;
+            DisableCamera();
+        }
+
+        public virtual void DisableCamera() {
+            currentCamera.enabled = false;
+        }
+
+        public virtual void EnableCamera() {
+            currentCamera.enabled = true;
         }
 
         public void SetTarget(Transform newTarget) {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.SetTarget(" + newTarget.name + ")");
 
             // initial zoom distance is based on offset
-            initialCameraOffset = new Vector3(0, 0, 2);
-            currentZoomDistance = initialCameraOffset.magnitude;
+            //initialCameraPositionOffset = new Vector3(0, 0, 2);
+            //currentZoomDistance = initialCameraPositionOffset.magnitude;
 
-            currentYDegrees = initialYDegrees;
-            currentXDegrees = initialXDegrees;
             //Debug.Log("Awake(): currentZoomDistance: " + currentZoomDistance);
 
             target = newTarget;
-            StartCoroutine(WaitForFollowTarget());
-            CameraManager.MyInstance.MyUnitPreviewCamera.enabled = true;
+            InitializePosition();
+
+            currentZoomDistance = initialLookVector.magnitude;
+
+            //Debug.Log("PreviewCameraController.SetTarget(): currentZoomDistance: " + currentZoomDistance);
+
+            currentYDegrees = initialYDegrees;
+            currentXDegrees = initialXDegrees;
+
+            FindFollowTarget();
+            EnableCamera();
         }
 
+        public void InitializePosition() {
+            //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition()");
+            if (target.GetComponent<CharacterUnit>().UnitPreviewCameraPositionOffset != null) {
+                initialCameraPositionOffset = target.GetComponent<CharacterUnit>().UnitPreviewCameraPositionOffset;
+            } else {
+                initialCameraPositionOffset = cameraPositionOffsetDefault;
+            }
+
+            if (target.GetComponent<CharacterUnit>().UnitPreviewCameraLookOffset != null) {
+                initialCameraLookOffset = target.GetComponent<CharacterUnit>().UnitPreviewCameraLookOffset;
+            } else {
+                initialCameraLookOffset = cameraLookOffsetDefault;
+            }
+            currentCameraLookOffset = initialCameraLookOffset;
+
+            initialLookVector = initialCameraPositionOffset - initialCameraLookOffset;
+
+            currentCameraPositionOffset = initialLookVector;
+
+            Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
+        }
+
+        /*
         private void SetTargetPosition() {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.SetTargetPosition()");
             if (followTransform != null) {
-                targetPosition = followTransform.position + currentTargetOffset;
+                targetPosition = followTransform.position + currentCameraPositionOffset;
             }
             //Debug.Log("SetTargetPosition(): currentTargetOffset: " + currentTargetOffset);
         }
+        */
 
         public void InitializeCamera(Transform newTarget) {
             //Debug.Log("AnyRPGCameraController.InitializeCamera(" + newTarget.gameObject.name + ")");
@@ -188,7 +245,10 @@ namespace AnyRPG {
                 currentYDegrees += yInput;
                 currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
                 Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, Vector3.right);
-                currentCameraOffset = xQuaternion * yQuaternion * initialCameraOffset;
+                //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
+                //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
+                //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraLookOffset;
+                currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
                 //Debug.Log("currentYDegrees: " + currentYDegrees + "; currentXDegrees: " + currentXDegrees + "xInput: " + xInput + "; yInput: " + yInput + "; initialCameraOffset: " + initialCameraOffset + "; currentCameraOffset: " + currentCameraOffset);
                 cameraPan = true;
             }
@@ -198,13 +258,14 @@ namespace AnyRPG {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float xInput = Input.GetAxis("Mouse X");
                 float yInput = Input.GetAxis("Mouse Y");
-                currentTargetOffset = new Vector3(currentTargetOffset.x + (xInput / mousePanSpeedDivider), currentTargetOffset.y - (yInput / mousePanSpeedDivider), currentTargetOffset.z);
+                //currentCameraPositionOffset = new Vector3(currentCameraPositionOffset.x + (xInput / mousePanSpeedDivider), currentCameraPositionOffset.y - (yInput / mousePanSpeedDivider), currentCameraPositionOffset.z);
+                currentCameraLookOffset = new Vector3(currentCameraLookOffset.x + (xInput / mousePanSpeedDivider), currentCameraLookOffset.y - (yInput / mousePanSpeedDivider), currentCameraLookOffset.z);
                 //Debug.Log("xInput: " + xInput + "; yInput: " + yInput + "; currentTargetOffset: " + currentTargetOffset);
                 cameraPan = true;
             }
 
             // THIS MUST BE DOWN HERE SO ITS UPDATED BASED ON MIDDLE MOUSE PAN
-            SetTargetPosition();
+            //SetTargetPosition();
 
             // follow the player
             //if (hasMoved || cameraZoom || (cameraPan && !InputManager.MyInstance.rightMouseButtonClickedOverUI && !InputManager.MyInstance.leftMouseButtonClickedOverUI) ) {
@@ -225,7 +286,12 @@ namespace AnyRPG {
         private void SetWantedPosition() {
             //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
             if (followTransform != null) {
-                wantedPosition = followTransform.TransformPoint((currentCameraOffset.normalized * currentZoomDistance)) + currentTargetOffset;
+                //wantedPosition = followTransform.TransformPoint((currentCameraOffset.normalized * currentZoomDistance)) + currentCameraPositionOffset;
+                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + initialCameraPositionOffset;
+                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance));
+                wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + currentCameraLookOffset;
+
+                wantedLookPosition = followTransform.TransformPoint(currentCameraLookOffset);
             } else {
                 //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
             }
@@ -239,32 +305,35 @@ namespace AnyRPG {
 
         private void JumpToWantedPosition() {
             //Debug.Log("JumpToWantedPosition()");
-            CameraManager.MyInstance.MyUnitPreviewCamera.transform.position = wantedPosition;
+            currentCamera.transform.position = wantedPosition;
         }
 
         private void SmoothToWantedPosition() {
             //Debug.Log("SmoothToWantedPosition(" + wantedPosition + ")");
-            CameraManager.MyInstance.MyUnitPreviewCamera.transform.position = Vector3.MoveTowards(CameraManager.MyInstance.MyUnitPreviewCamera.transform.position, wantedPosition, cameraSpeed);
+            currentCamera.transform.position = Vector3.MoveTowards(currentCamera.transform.position, wantedPosition, cameraSpeed);
         }
 
         private void LookAtTargetPosition() {
             //Debug.Log("AnyRPGCameraController.LookAtTargetPosition()");
-            CameraManager.MyInstance.MyUnitPreviewCamera.transform.LookAt(targetPosition);
+            currentCamera.transform.LookAt(wantedLookPosition);
         }
 
+        /*
         private void InitializeFollowLocation() {
             //Debug.Log("CameraController.InitializeFollowLocation()");
-            currentCameraOffset = initialCameraOffset;
+            //currentCameraOffset = initialCameraPositionOffset;
+            currentCameraPositionOffset = initialCameraPositionOffset;
             //Debug.Log("CameraController.InitializeFollowLocation(): initialCameraLocation in local space: " + initialCameraLocalLocation);
             //Debug.Log("CameraController.InitializeFollowLocation(): initialCameraLocation in world space: " + initialCameraLocation);
             //cameraOffsetVector = initialCameraLocation - targetPosition;
             //Debug.Log("CameraController.InitialCameraLocation(): cameraOffsetVector in local space: " + cameraOffsetVector);
         }
+        */
 
 
         private void JumpToFollowSpot() {
             //Debug.Log("CameraController.JumpToFollowSpot()");
-            InitializeFollowLocation();
+            //InitializeFollowLocation();
             SetWantedPosition();
             JumpToWantedPosition();
             LookAtTargetPosition();
@@ -273,47 +342,91 @@ namespace AnyRPG {
             //Debug.Log("Camera offset is " + cameraOffsetVector);
         }
 
-        private IEnumerator WaitForFollowTarget() {
-            Debug.Log("UnitPreviewCameraController.WaitForFollowTarget()");
+        public void HandleCharacterCreated(UMAData umaData) {
+            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            UnsubscribeFromUMACreate();
+            if (initialTargetString != string.Empty) {
+                Transform targetBone = target.transform.FindChildByRecursive(initialTargetString);
+                if (targetBone == null) {
+                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.HandleCharacterCreated(): UMA is ready and could not find target bone: " + initialTargetString);
+                } else {
+                    followTransform = targetBone;
+                    HandleTargetAvailable();
+                    return;
+                }
+            }
+            followTransform = target.transform;
+            HandleTargetAvailable();
+
+        }
+
+        public void UnsubscribeFromUMACreate() {
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+            }
+        }
+
+        public void SubscribeToUMACreate() {
+
+            // is this stuff necessary on ai characters?
+            
+            AnimatedUnit animatedUnit = dynamicCharacterAvatar.gameObject.GetComponent<AnimatedUnit>();
+            animatedUnit.OrchestratorStart();
+            animatedUnit.OrchestratorFinish();
+            if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
+                animatedUnit.MyCharacterAnimator.InitializeAnimator();
+            } else {
+
+            }
+            dynamicCharacterAvatar.Initialize();
+            
+            // is this stuff necessary end
+
+            UMAData umaData = dynamicCharacterAvatar.umaData;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
+        }
+
+        private void FindFollowTarget() {
+            //Debug.Log("CharacterPreviewCameraController.FindFollowTarget()");
             if (target == null) {
                 //Debug.Log("WaitForFollowTarget(): target is null!!!!");
             }
-            Transform targetBone = target.transform;
-            string initialTargetString = string.Empty;
-            Vector3 unitTargetOffset = initialTargetOffset;
+            Transform targetBone = null;
+            Vector3 unitTargetOffset = Vector3.zero;
 
-            if (target.GetComponent<CharacterUnit>() == null) {
+            CharacterUnit targetCharacterUnit = null;
+            targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit == null) {
                 //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>() is null!!!!");
             } else {
                 //Debug.Log("WaitForFollowTarget(): target.GetComponent<CharacterUnit>(): " + target.GetComponent<CharacterUnit>().MyDisplayName);
-                initialTargetString = target.GetComponent<CharacterUnit>().MyUnitFrameTarget;
-                if (target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget != string.Empty) {
-                    targetBone = target.transform.FindChildByRecursive(target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
+                initialTargetString = targetCharacterUnit.MyPlayerPreviewTarget;
+                if (initialTargetString != string.Empty) {
+                    targetBone = target.transform.FindChildByRecursive(initialTargetString);
                 }
-                unitTargetOffset = target.GetComponent<CharacterUnit>().MyPlayerPreviewInitialOffset;
+                unitTargetOffset = targetCharacterUnit.UnitPreviewCameraLookOffset;
+            }
+            currentCameraLookOffset = unitTargetOffset;
+
+            if (targetBone == null) {
+                // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
+                dynamicCharacterAvatar = target.GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
+                    SubscribeToUMACreate();
+                } else {
+                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
+                    followTransform = target.transform;
+                    HandleTargetAvailable();
+                }
+            } else {
+                followTransform = targetBone;
+                HandleTargetAvailable();
             }
 
-            if (initialTargetString != string.Empty) {
-                //Debug.Log("WaitForFollowTarget(): searching for unitFrameTarget: " + initialTargetString);
-                while (target.transform.FindChildByRecursive(initialTargetString) == null) {
-                    //targetBone = target.transform.Find(initialTargetString);
-                    //if (targetBone == null) {
-                    yield return null;
-                    /*} else {
-                        Debug.Log("WaitForFollowTarget(): found unitFrameTarget: " + initialTargetString);
-                        break;
-                    }*/
-                }
-                currentTargetOffset = unitTargetOffset;
-            } else {
-                currentTargetOffset = unitTargetOffset;
-            }
-            if (targetBone == null) {
-                Debug.LogWarning("Could not find target bone: " + target.GetComponent<CharacterUnit>().MyPlayerPreviewTarget);
-            } else {
-                Debug.Log("targetBone is " + targetBone.name);
-            }
-            followTransform = targetBone;
+        }
+
+        public void HandleTargetAvailable() {
+            //Debug.Log("AnyRPGCharacterPreviewCameraController.HandleTargetAvailable()");
             targetInitialized = true;
             JumpToFollowSpot();
             OnTargetReady();
