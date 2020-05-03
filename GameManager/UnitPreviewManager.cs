@@ -77,6 +77,11 @@ namespace AnyRPG {
                 previewUnit.GetComponent<NavMeshAgent>().enabled = false;
             }
 
+            // prevent the character from enabling the navmeshagent
+            if (previewUnit.GetComponent<BaseCharacter>() != null) {
+                previewUnit.GetComponent<BaseCharacter>().PreviewCharacter = true;
+            }
+
             // re-enable behaviors needed for character animation
             if (previewUnit.GetComponent<DynamicCharacterAvatar>() != null) {
                 previewUnit.GetComponent<DynamicCharacterAvatar>().enabled = true;

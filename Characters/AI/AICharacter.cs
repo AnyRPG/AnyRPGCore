@@ -61,9 +61,13 @@ namespace AnyRPG {
             if (interactable != null) {
                 interactable.OrchestratorStart();
             }
-            // now that interactable has initialized character unit, and therefore animatedunit we can turn on the navmeshagent
-            animatedUnit.MyAgent.enabled = true;
 
+            // now that interactable has initialized character unit, and therefore animatedunit we can turn on the navmeshagent
+            /*
+            if (previewCharacter == false) {
+                animatedUnit.MyAgent.enabled = true;
+            }
+            */
 
             // commented because interactable will call characterUnit because it is an interactableOption
             /*
@@ -87,17 +91,23 @@ namespace AnyRPG {
         protected override void Start() {
             //Debug.Log(gameObject.name + ".AICharacter.Start()");
             base.Start();
+
             if (characterModelGameObject == null && characterModelPrefab != null) {
                 //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
                 characterModelGameObject = Instantiate(characterModelPrefab, MyCharacterUnit.transform);
+            }
+            if (previewCharacter == false && MyAnimatedUnit != null) {
+                MyAnimatedUnit.MyAgent.enabled = true;
             }
             if (MyAnimatedUnit != null && MyAnimatedUnit.MyCharacterAnimator != null) {
                 MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             } else {
                 if (MyAnimatedUnit == null) {
                     //Debug.Log(gameObject.name + ".AICharacter.Start(): myanimatedunit is null");
-                } else if (MyAnimatedUnit.MyCharacterAnimator == null) {
-                    //Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
+                } else {
+                    if (MyAnimatedUnit.MyCharacterAnimator == null) {
+                        //Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
+                    }
                 }
             }
         }

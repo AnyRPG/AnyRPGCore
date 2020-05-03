@@ -70,6 +70,9 @@ namespace AnyRPG {
         protected AnimatedUnit animatedUnit = null;
         protected Interactable interactable = null;
 
+        // disable certain things not needed for preview units
+        protected bool previewCharacter = false;
+
         public CharacterStats MyCharacterStats { get => characterStats; }
         public CharacterCombat MyCharacterCombat { get => characterCombat; }
         public BaseController MyCharacterController { get => characterController; }
@@ -120,6 +123,7 @@ namespace AnyRPG {
         public string MyClassSpecializationName { get => classSpecializationName; set => classSpecializationName = value; }
         public UnitType MyUnitType { get => unitType; set => unitType = value; }
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
+        public bool PreviewCharacter { get => previewCharacter; set => previewCharacter = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");

@@ -154,11 +154,15 @@ namespace AnyRPG {
 
         public void HandleDie(CharacterStats _characterStats) {
             HandleNamePlateNeedsRemoval(_characterStats);
-
+            HandleFreezePosition();
             // give a chance to blank out minimap indicator
             // when the engine is upgraded to support multiplayer, this may need to be revisited.
             // some logic to still show minimap icons for dead players in your group so you can find and res them could be necessary
             HandlePrerequisiteUpdates();
+        }
+
+        public void HandleFreezePosition() {
+            animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         }
 
         public void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
