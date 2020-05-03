@@ -150,7 +150,8 @@ namespace AnyRPG {
         public override void HandleLevitated() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
             SetDefaultOverrideController();
-
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartLevitated", eventParam);
             base.HandleLevitated();
         }
 
@@ -158,12 +159,16 @@ namespace AnyRPG {
             base.HandleUnLevitated(swapAnimator);
             if (swapAnimator) {
                 SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndLevitated", eventParam);
             }
         }
 
         public override void HandleStunned() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleStunned()");
+            //Debug.Log(gameObject.name + ".PlayerAnimator.HandleStunned()");
             SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartStunned", eventParam);
             base.HandleStunned();
         }
 
@@ -172,6 +177,8 @@ namespace AnyRPG {
             base.HandleUnStunned(swapAnimator);
             if (swapAnimator) {
                 SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
             }
         }
 

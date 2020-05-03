@@ -531,13 +531,17 @@ namespace AnyRPG {
                 return;
             }
             Vector3 direction = (newTarget.transform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+            //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             if (animatedUnit.MyAgent.enabled) {
                 animatedUnit.MyAgent.updateRotation = false;
                 //animatedUnit.MyAgent.r
             }
             //transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, Time.deltaTime * 500);
-            transform.rotation = lookRotation;
+            //transform.rotation = lookRotation;
+            //Debug.Log(gameObject.name + ".CharacterMotor.FaceTarget(" + newTarget.name + "): direction: " + direction);
+            if (direction != Vector3.zero) {
+                transform.forward = direction;
+            }
             if (animatedUnit.MyAgent.enabled) {
                 animatedUnit.MyAgent.updateRotation = true;
                 //animatedUnit.MyAgent.r

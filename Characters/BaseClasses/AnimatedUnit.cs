@@ -138,6 +138,17 @@ namespace AnyRPG {
             */
         }
 
+        public virtual void FreezePositionXZ() {
+            MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        }
+
+        public virtual void FreezeAll() {
+            MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
+        public virtual void FreezeRotation() {
+            MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        }
 
     }
 

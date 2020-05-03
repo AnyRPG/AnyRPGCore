@@ -146,43 +146,97 @@ namespace AnyRPG {
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
             frozen = true;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = false;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = false;
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                }
+            }
         }
 
         public void UnFreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnFreezeCharacter(): ");
             frozen = false;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = true;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = true;
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                }
+            }
         }
 
         public void StunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): ");
             stunned = true;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleStunned();
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleStunned();
+                } else {
+                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                } else {
+                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
+                }
+            } else {
+                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): animated unit was null");
+            }
         }
 
         public void UnStunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnStunCharacter(): ");
             stunned = false;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnStunned();
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnStunned();
+                } else {
+                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                } else {
+                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
+                }
+            } else {
+                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): animated unit was null");
+            }
         }
 
         public void LevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
             levitated = true;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleLevitated();
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleLevitated();
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                }
+            }
         }
 
         public void UnLevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnLevitateCharacter(): ");
             levitated = false;
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnLevitated();
-            MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+            if (MyBaseCharacter.MyAnimatedUnit != null) {
+                baseCharacter.MyAnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnLevitated();
+                }
+                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                }
+            }
         }
 
 

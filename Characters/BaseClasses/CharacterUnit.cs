@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public void HandleFreezePosition() {
-            animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            animatedUnit.FreezePositionXZ();
         }
 
         public void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {

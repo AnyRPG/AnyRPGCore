@@ -248,7 +248,7 @@ namespace AnyRPG {
         void Idle_EnterState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
             if (animatedUnit != null && animatedUnit.MyRigidBody != null) {
-                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+                animatedUnit.FreezePositionXZ();
             }
 
             // reset velocity from any falling movement that was happening
@@ -298,7 +298,7 @@ namespace AnyRPG {
             } else {
 
                 // allow the character to fall until they reach the ground
-                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+                animatedUnit.FreezePositionXZ();
                 currentMoveVelocity = new Vector3(0, Mathf.Clamp(animatedUnit.MyRigidBody.velocity.y, -53, 0), 0);
             }
         }

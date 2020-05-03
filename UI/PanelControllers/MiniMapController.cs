@@ -53,7 +53,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject followGameObject = null;
 
-        private float cameraOffsetZ = 0f;
+        //private float cameraOffsetZ = 0f;
         private float cameraOffsetY = 0f;
         private float cameraSize = 0f;
 

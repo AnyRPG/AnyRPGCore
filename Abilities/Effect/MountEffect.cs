@@ -126,7 +126,7 @@ namespace AnyRPG {
                     if ((PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController) {
                         (PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
                     }
-                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                    PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.FreezeAll();
 
                     //Debug.Log("MountEffect.ActivateMountedState()Setting Animator Values");
                     // set player animator to riding state
@@ -193,7 +193,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.detectCollisions = false;
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.isKinematic = true;
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.useGravity = false;
-            PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.FreezeAll();
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
             Collider collider = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
@@ -209,7 +209,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.isKinematic = false;
             PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.useGravity = true;
-            PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.FreezeRotation();
             Collider collider = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
                 collider.enabled = true;
