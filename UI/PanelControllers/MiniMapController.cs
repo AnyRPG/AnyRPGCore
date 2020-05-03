@@ -138,7 +138,8 @@ namespace AnyRPG {
         }
 
         private void UpdateCameraPosition() {
-            Vector3 wantedPosition = followTransform.TransformPoint(0, cameraOffsetY, cameraOffsetZ);
+            //Vector3 wantedPosition = followTransform.TransformPoint(0, cameraOffsetY, cameraOffsetZ);
+            Vector3 wantedPosition = new Vector3(followTransform.position.x, followTransform.position.y + cameraOffsetY, followTransform.position.z);
             Vector3 wantedLookPosition = new Vector3(followTransform.position.x, followTransform.position.y, followTransform.position.z);
             cameraTransform.position = wantedPosition;
             cameraTransform.LookAt(wantedLookPosition);
