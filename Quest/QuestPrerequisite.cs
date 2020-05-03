@@ -72,7 +72,9 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): prerequisiteName was empty while inititalizing a quest prerequisite.  CHECK INSPECTOR");
             }
-            prerequisiteQuest.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            if (prerequisiteQuest != null) {
+                prerequisiteQuest.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            }
         }
 
         public void CleanupScriptableObjects() {

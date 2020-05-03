@@ -269,6 +269,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
+            if (spawnReference == null && CanInteract() == false) {
+                DisableInteraction();
+            }
+
             InstantiateMiniMapIndicator();
             /*
             foreach (IInteractable _interactable in interactables) {
