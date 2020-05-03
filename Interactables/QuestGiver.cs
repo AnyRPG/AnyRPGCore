@@ -306,7 +306,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
             UpdateQuestStatus();

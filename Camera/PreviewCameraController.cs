@@ -26,7 +26,7 @@ namespace AnyRPG {
         //public float rightMouseLookSpeed = 10f;
         public float cameraSpeed = 4f;
         public float minZoom = 1f;
-        public float maxZoom = 5f;
+        public float maxZoom = 10f;
         public float maxVerticalPan = 75;
         public float minVerticalPan = -75;
 
@@ -153,7 +153,7 @@ namespace AnyRPG {
 
             currentCameraPositionOffset = initialLookVector;
 
-            Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
+            //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
         }
 
         /*
@@ -414,7 +414,9 @@ namespace AnyRPG {
                 if (dynamicCharacterAvatar != null) {
                     SubscribeToUMACreate();
                 } else {
-                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
+                    if (initialTargetString != string.Empty) {
+                        Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
+                    }
                     followTransform = target.transform;
                     HandleTargetAvailable();
                 }

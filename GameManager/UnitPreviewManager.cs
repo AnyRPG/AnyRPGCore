@@ -1,7 +1,10 @@
 using AnyRPG;
 using System.Collections;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine;
 using UnityEngine.AI;
+
 
 namespace AnyRPG {
     public class UnitPreviewManager : MonoBehaviour {
@@ -65,24 +68,26 @@ namespace AnyRPG {
             UIManager.MyInstance.SetLayerRecursive(previewUnit, previewLayer);
 
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
-            if (previewUnit.GetComponent<PlayerUnitMovementController>() != null) {
-                previewUnit.GetComponent<PlayerUnitMovementController>().enabled = false;
+            MonoBehaviour[] monoBehaviours = previewUnit.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
+                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): disable monobehavior: " + monoBehaviour.GetType().Name);
+                monoBehaviour.enabled = false;
             }
             if (previewUnit.GetComponent<NavMeshAgent>() != null) {
                 previewUnit.GetComponent<NavMeshAgent>().enabled = false;
             }
-            if (previewUnit.GetComponent<Interactable>() != null) {
-                previewUnit.GetComponent<Interactable>().enabled = false;
+
+            // re-enable behaviors needed for character animation
+            if (previewUnit.GetComponent<DynamicCharacterAvatar>() != null) {
+                previewUnit.GetComponent<DynamicCharacterAvatar>().enabled = true;
             }
-            if (previewUnit.GetComponent<AnyRPGCharacterController>() != null) {
-                previewUnit.GetComponent<AnyRPGCharacterController>().enabled = false;
+            if (previewUnit.GetComponent<CharacterAnimator>() != null) {
+                previewUnit.GetComponent<CharacterAnimator>().enabled = true;
             }
-            if (previewUnit.GetComponent<AIController>() != null) {
-                previewUnit.GetComponent<AIController>().enabled = false;
+            if (previewUnit.GetComponent<AnimatedUnit>() != null) {
+                previewUnit.GetComponent<AnimatedUnit>().enabled = true;
             }
-            if (previewUnit.GetComponent<NavMeshAgent>() != null) {
-                previewUnit.GetComponent<NavMeshAgent>().enabled = false;
-            }
+
             if (previewUnit.GetComponent<Rigidbody>() != null) {
                 previewUnit.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 previewUnit.GetComponent<Rigidbody>().isKinematic = true;

@@ -108,7 +108,7 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
-        public void OnDisable() {
+        public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
             CleanupEverything();
         }
@@ -223,8 +223,6 @@ namespace AnyRPG {
             //HandlePrerequisiteUpdates();
 
         }
-
-
 
         protected virtual void OnDestroy() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDestroy()");

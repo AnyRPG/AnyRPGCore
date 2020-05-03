@@ -87,7 +87,6 @@ namespace AnyRPG {
 
             // loop through monobehaviors and disable them
 
-
             foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): disable monobehavior: " + monoBehaviour.GetType().Name);
                 monoBehaviour.enabled = false;
@@ -132,6 +131,7 @@ namespace AnyRPG {
         public void HandleCloseWindow() {
             //Debug.Log("CharacterCreatorManager.HandleCloseWindow();");
             if (previewUnit != null) {
+                //Debug.Log("CharacterCreatorManager.HandleCloseWindow(): destroying " + previewUnit.name);
                 Destroy(previewUnit);
             }
         }

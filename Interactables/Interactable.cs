@@ -409,7 +409,7 @@ namespace AnyRPG {
         */
 
         public void OpenInteractionWindow() {
-            Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
+            //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
             InteractionPanelUI.MyInstance.MyInteractable = this;
             PopupWindowManager.MyInstance.interactionWindow.OpenWindow();
         }

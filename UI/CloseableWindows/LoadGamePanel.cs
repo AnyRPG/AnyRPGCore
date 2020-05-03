@@ -165,7 +165,7 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             if (CharacterCreatorManager.MyInstance.MyPreviewUnit == null) {
-                Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
+                //Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
                 return;
             }
             umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
