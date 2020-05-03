@@ -141,7 +141,7 @@ namespace AnyRPG {
             SetPreviewTarget();
             if (unitSpawnButton.MyUnitProfile.MyDefaultToughness != null) {
                 //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
-                int counter = 1;
+                int counter = 0;
                 foreach (TMP_Dropdown.OptionData data in toughnessDropdown.options) {
                     if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyName) {
                         toughnessDropdown.value = counter;
@@ -149,6 +149,8 @@ namespace AnyRPG {
                     }
                     counter++;
                 }
+            } else {
+                toughnessDropdown.value = 0;
             }
         }
 
