@@ -54,6 +54,20 @@ namespace AnyRPG {
             this.prerequisiteOwner = prerequisiteOwner;
         }
 
+        public virtual void UpdatePrerequisites(bool notify = true) {
+            //Debug.Log(gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
+            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
+                    }
+                }
+            } else {
+                //HandlePrerequisiteUpdates();
+            }
+            //HandlePrerequisiteUpdates();
+        }
+
         public bool MyPrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {

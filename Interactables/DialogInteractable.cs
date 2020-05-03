@@ -259,7 +259,26 @@ namespace AnyRPG {
 
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
+            UpdateDialogStatuses();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        public void UpdateDialogStatuses() {
+            foreach (Dialog dialog in dialogList) {
+                dialog.UpdatePrerequisites(false);
+            }
+
+            bool preRequisitesUpdated = false;
+            foreach (Dialog dialog in dialogList) {
+                if (dialog.MyPrerequisitesMet == true) {
+                    preRequisitesUpdated = true;
+                }
+            }
+
+            if (preRequisitesUpdated) {
+                HandlePrerequisiteUpdates();
+            }
+
         }
 
 

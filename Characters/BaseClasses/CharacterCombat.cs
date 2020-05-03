@@ -139,6 +139,9 @@ namespace AnyRPG {
         }
 
         protected virtual void Update() {
+            if (baseCharacter == null) {
+                return;
+            }
             if (!baseCharacter.MyCharacterStats.IsAlive) {
                 return;
             }
