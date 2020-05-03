@@ -42,6 +42,7 @@ namespace AnyRPG {
 
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }
+        public string Title { get => string.Empty; }
         public Faction MyFaction { get => null; }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }

@@ -221,6 +221,9 @@ namespace AnyRPG {
                             factionString = "<" + namePlateUnit.MyFaction.MyName + ">";
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): showing faction");
                         }
+                        if (namePlateUnit.Title != string.Empty) {
+                            factionString = "<" + namePlateUnit.Title + ">";
+                        }
                         string newLineString = string.Empty;
                         if (factionString != string.Empty && nameString != string.Empty) {
                             newLineString = "\n";

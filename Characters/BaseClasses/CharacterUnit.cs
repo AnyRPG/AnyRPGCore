@@ -80,6 +80,7 @@ namespace AnyRPG {
         public Faction MyFaction { get => MyCharacter.MyFaction; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.MyCharacterName : interactionPanelTitle); }
+        public string Title { get => (MyCharacter != null ? MyCharacter.Title : string.Empty); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }

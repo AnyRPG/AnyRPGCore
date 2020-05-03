@@ -18,6 +18,10 @@ namespace AnyRPG {
 
         protected Faction faction;
 
+        [Tooltip("If set, this will show in the nameplate instead of the faction")]
+        [SerializeField]
+        protected string title = string.Empty;
+
         [SerializeField]
         protected string characterClassName;
 
@@ -124,6 +128,7 @@ namespace AnyRPG {
         public UnitType MyUnitType { get => unitType; set => unitType = value; }
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
         public bool PreviewCharacter { get => previewCharacter; set => previewCharacter = value; }
+        public string Title { get => title; set => title = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
