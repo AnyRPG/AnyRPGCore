@@ -125,6 +125,9 @@ namespace AnyRPG {
         public void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
             GetComponentReferences();
+        }
+
+        public void OrchestratorFinish() {
             ConfigureStateMachine();
         }
 

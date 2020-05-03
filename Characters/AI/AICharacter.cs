@@ -61,6 +61,10 @@ namespace AnyRPG {
             if (interactable != null) {
                 interactable.OrchestratorStart();
             }
+            // now that interactable has initialized character unit, and therefore animatedunit we can turn on the navmeshagent
+            animatedUnit.MyAgent.enabled = true;
+
+
             // commented because interactable will call characterUnit because it is an interactableOption
             /*
             if (characterUnit != null) {

@@ -1393,7 +1393,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetRiding(bool varValue) {
-            Debug.Log(gameObject.name + ".SetRiding(" + varValue + ")");
+            //Debug.Log(gameObject.name + ".SetRiding(" + varValue + ")");
             if (animator == null) {
                 return;
             }

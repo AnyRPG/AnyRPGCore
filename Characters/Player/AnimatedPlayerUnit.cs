@@ -32,6 +32,9 @@ namespace AnyRPG {
         public override void OrchestratorFinish() {
             //Debug.Log(gameObject.name + ".AnimatedPlayerUnit.OrchestratorFinish()");
             base.OrchestratorFinish();
+            if (playerUnitMovementController != null) {
+                playerUnitMovementController.OrchestratorFinish();
+            }
         }
 
         public override void CreateEventSubscriptions() {
