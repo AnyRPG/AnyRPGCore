@@ -1442,7 +1442,10 @@ namespace AnyRPG {
                 } else {
                     Vector3 normalizedVector = varValue.normalized;
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
-                        animator.transform.forward = transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
+                        Vector3 newDirection = transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
+                        if (newDirection != Vector3.zero) {
+                            animator.transform.forward = newDirection;
+                        }
                         //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): setting forward to: " + transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z)));
                     }
                     //animator.transform.forward = varValue.normalized;
