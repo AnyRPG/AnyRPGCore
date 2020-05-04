@@ -36,7 +36,7 @@ namespace AnyRPG {
         GameObject ReturnTarget(BaseCharacter source, GameObject target);
         bool Use();
         void StartCasting(BaseCharacter source);
-        void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target);
+        float OnCastTimeChanged(float currentCastTime, float nextTickTime, BaseCharacter source, GameObject target);
         //void HandleCastStop(BaseCharacter source);
 
     }

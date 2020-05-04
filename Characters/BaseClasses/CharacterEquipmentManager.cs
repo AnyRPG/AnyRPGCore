@@ -224,6 +224,7 @@ namespace AnyRPG {
         }
 
         public void SpawnAbilityObjects(List<PrefabProfile> holdableObjects) {
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObjects()");
             foreach (PrefabProfile holdableObject in holdableObjects) {
                 if (holdableObject != null) {
 

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InstantEffectAbility : BaseAbility {
 
+
         public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".InstantEffectAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
 
@@ -47,7 +48,6 @@ namespace AnyRPG {
             }
             return true;
         }
-
 
 
     }

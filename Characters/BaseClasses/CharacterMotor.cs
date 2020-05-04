@@ -357,13 +357,13 @@ namespace AnyRPG {
 
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + "CharacterMotor.FreezeCharacter()");
-            animatedUnit.MyAgent.enabled = false;
+            animatedUnit.DisableAgent();
             frozen = true;
         }
 
         public void UnFreezeCharacter() {
             //Debug.Log(gameObject.name + "CharacterMotor.UnFreezeCharacter()");
-            animatedUnit.MyAgent.enabled = true;
+            animatedUnit.EnableAgent();
             frozen = false;
         }
 
@@ -551,7 +551,7 @@ namespace AnyRPG {
         public void StartNavAgent() {
             //Debug.Log(gameObject.name + ".CharacterMotor.StartNavAgent()");
             if (!animatedUnit.MyAgent.enabled) {
-                animatedUnit.MyAgent.enabled = true;
+                animatedUnit.EnableAgent();
                 animatedUnit.MyRigidBody.isKinematic = true;
             }
         }
@@ -559,7 +559,7 @@ namespace AnyRPG {
         public void StopNavAgent() {
             //Debug.Log(gameObject.name + ".CharacterMotor.StopNavAgent()");
             if (animatedUnit.MyAgent.enabled) {
-                animatedUnit.MyAgent.enabled = false;
+                animatedUnit.DisableAgent();
             }
         }
 

@@ -150,6 +150,18 @@ namespace AnyRPG {
             MyRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
+        public void EnableAgent() {
+            if (MyAgent != null) {
+                MyAgent.enabled = true;
+            }
+        }
+
+        public void DisableAgent() {
+            if (MyAgent != null) {
+                MyAgent.enabled = false;
+            }
+        }
+
     }
 
 }

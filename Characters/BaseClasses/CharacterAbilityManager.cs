@@ -612,7 +612,8 @@ namespace AnyRPG {
                     ability.StartCasting(baseCharacter as BaseCharacter);
                 }
                 float currentCastTime = 0f;
-                //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
+                float nextTickTime = 0f;
+                //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
                 if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyHoldableObjects.Count != 0) {
                     //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
@@ -627,17 +628,19 @@ namespace AnyRPG {
                     //baseCharacter.MyCharacterUnit.MyUnitAudio.MyEffectSource.clip = ability.MyCastingAudioClip;
                     baseCharacter.MyCharacterUnit.MyUnitAudio.PlayEffect(ability.MyCastingAudioClip);
                 }
+                
                 while (currentCastTime < ability.MyAbilityCastingTime) {
                     yield return null;
                     currentCastTime += Time.deltaTime;
 
                     // call this first because it updates the cast bar
-                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
+                    //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
                     OnCastTimeChanged(ability, currentCastTime);
 
                     // now call the ability on casttime changed (really only here for channeled stuff to do damage)
-                    ability.OnCastTimeChanged(currentCastTime, baseCharacter as BaseCharacter, target);
+                    nextTickTime = ability.OnCastTimeChanged(currentCastTime, nextTickTime, baseCharacter as BaseCharacter, target);
                 }
+                //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ") Done casting with tag: " + startTime);
                 /*
                 if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
                     baseCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
@@ -719,7 +722,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="abilityName"></param>
         public void BeginAbility(string abilityName) {
+            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+            // these have to be new resources because the ability stores a tick time
+            //BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetNewResource(abilityName);
             if (baseAbility != null) {
                 BeginAbility(baseAbility);
             }
@@ -781,7 +787,7 @@ namespace AnyRPG {
             GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter as BaseCharacter, target);
 
             if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 return;
             }
 

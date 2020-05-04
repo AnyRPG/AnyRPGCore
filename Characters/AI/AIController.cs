@@ -84,6 +84,8 @@ namespace AnyRPG {
         public void GetCombatStrategy() {
             //Debug.Log(gameObject.name + ".AIController.GetCombatStategy()");
             string usedStrategyName = combatStrategyName;
+            // automatic combat strategy by name is no longer in use to prevent units from accidentally picking up a strategy they shouldn't have just because it has the same name as the unit
+            /*
             if (usedStrategyName == null || usedStrategyName == string.Empty) {
                 //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured");
                 if (baseCharacter != null && baseCharacter.MyCharacterName != null && baseCharacter.MyCharacterName != string.Empty) {
@@ -91,6 +93,7 @@ namespace AnyRPG {
                     usedStrategyName = baseCharacter.MyCharacterName;
                 }
             }
+            */
             if (usedStrategyName != null && usedStrategyName != string.Empty) {
                 //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured: using usedStrategyName: " + usedStrategyName);
                 combatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(usedStrategyName);

@@ -232,8 +232,10 @@ namespace AnyRPG {
         }
 
         public virtual void CancelEffect(BaseCharacter targetCharacter) {
+            //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
+                    //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
                     Destroy(go, prefabDestroyDelay);
                 }
                 // give slight delay to allow for graphic effects to finish

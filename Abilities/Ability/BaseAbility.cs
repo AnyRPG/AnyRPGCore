@@ -174,6 +174,16 @@ namespace AnyRPG {
         [SerializeField]
         protected List<string> abilityEffectNames = new List<string>();
 
+        [Tooltip("During casting, this ability will perform its tick effects, every x seconds")]
+        [SerializeField]
+        private float tickRate = 1f;
+
+        [SerializeField]
+        protected List<string> channeledAbilityEffectnames = new List<string>();
+
+        protected List<AbilityEffect> channeledAbilityEffects = new List<AbilityEffect>();
+
+
         protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         protected Vector3 groundTarget = Vector3.zero;
@@ -248,6 +258,18 @@ namespace AnyRPG {
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
         }
+
+        public virtual void PerformChanneledEffect(BaseCharacter source, GameObject target) {
+            //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
+
+                // channeled effects need to override the object lifetime so they get destroyed at the tickrate
+                //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
+                _abilityEffect.Cast(source, target, target, null);
+            }
+        }
+
 
         public bool CanCast(BaseCharacter sourceCharacter) {
             if (weaponAffinityNames.Count == 0) {
@@ -525,9 +547,14 @@ namespace AnyRPG {
             //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
-        public virtual void OnCastTimeChanged(float currentCastTime, BaseCharacter source, GameObject target) {
+        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, BaseCharacter source, GameObject target) {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
+            if (currentCastTime >= nextTickTime) {
+                PerformChanneledEffect(source, target);
+                nextTickTime += tickRate;
+            }
+            return nextTickTime;
         }
 
         public void NotifyOnLearn() {
@@ -615,6 +642,18 @@ namespace AnyRPG {
                     animationProfile = tmpAnimationProfile;
                 } else {
                     Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            channeledAbilityEffects = new List<AbilityEffect>();
+            if (channeledAbilityEffectnames != null) {
+                foreach (string abilityEffectName in channeledAbilityEffectnames) {
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    if (abilityEffect != null) {
+                        channeledAbilityEffects.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
                 }
             }
 

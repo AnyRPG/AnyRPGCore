@@ -97,7 +97,7 @@ namespace AnyRPG {
                 characterModelGameObject = Instantiate(characterModelPrefab, MyCharacterUnit.transform);
             }
             if (previewCharacter == false && MyAnimatedUnit != null) {
-                MyAnimatedUnit.MyAgent.enabled = true;
+                MyAnimatedUnit.EnableAgent();
             }
             if (MyAnimatedUnit != null && MyAnimatedUnit.MyCharacterAnimator != null) {
                 MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();

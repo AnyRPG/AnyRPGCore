@@ -108,12 +108,12 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
-            Debug.Log("InteractionPanelUI.HandlePrerequisiteUpdates()");
+            //Debug.Log("InteractionPanelUI.HandlePrerequisiteUpdates()");
             CheckPrerequisites();
         }
 
         public void CheckPrerequisites() {
-            Debug.Log("InteractionPanelUI.CheckPrerequisites()");
+            //Debug.Log("InteractionPanelUI.CheckPrerequisites()");
             if (interactable == null) {
                 //Debug.Log("InteractionPanelUI.CheckPrerequisites(): no interactable. exiting");
                 return;
