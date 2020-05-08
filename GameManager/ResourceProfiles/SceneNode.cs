@@ -35,6 +35,8 @@ namespace AnyRPG {
 
         private Cutscene autoPlayCutscene = null;
 
+        private bool visited = false;
+
         [SerializeField]
         private List<string> environmentStateNames = new List<string>();
 
@@ -51,6 +53,13 @@ namespace AnyRPG {
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
         public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene MyAutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
+        public bool Visited { get => visited; }
+
+        public void Visit() {
+            if (visited == false) {
+                visited = true;
+            }
+        }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

@@ -814,7 +814,9 @@ namespace AnyRPG {
                 }
             }
 
-            statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
+            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyName))) {
+                statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
+            }
         }
 
         public void SetupScriptableObjects() {

@@ -337,13 +337,17 @@ namespace AnyRPG {
         }
 
         public void EnableInteraction() {
+            // interactables have box colliders and units have capsule so this should not interfere with units
             if (boxCollider != null) {
                 boxCollider.enabled = true;
             }
         }
 
         public void DisableInteraction() {
-            boxCollider.enabled = false;
+            // interactables have box colliders and units have capsule so this should not interfere with units
+            if (boxCollider != null) {
+                boxCollider.enabled = false;
+            }
         }
 
         public override void DestroySpawn() {

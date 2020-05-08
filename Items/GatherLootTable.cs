@@ -6,6 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class GatherLootTable : LootTable {
 
+        /*
         protected override void RollLoot() {
             //Debug.Log("GatherLootTable.RollLoot()");
             MyDroppedItems = new List<LootDrop>();
@@ -23,6 +24,7 @@ namespace AnyRPG {
 
             rolled = true;
         }
+        */
     }
 
 }

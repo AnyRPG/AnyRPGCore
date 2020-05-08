@@ -236,7 +236,10 @@ namespace AnyRPG {
 
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
-
+            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+                // we are in a cutscene and shouldn't be dealing with mouseover
+                return;
+            }
             Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -476,6 +479,7 @@ namespace AnyRPG {
         public void InterActWithTarget(Interactable interactable, GameObject _gameObject) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + "); my current target: " + target);
             if (target != _gameObject) {
+                ClearTarget();
                 SetTarget(_gameObject);
             } else {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): current target remains the same");

@@ -492,7 +492,7 @@ namespace AnyRPG {
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
         public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
-            //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 

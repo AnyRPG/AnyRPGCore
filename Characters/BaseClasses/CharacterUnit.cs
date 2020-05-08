@@ -148,6 +148,7 @@ namespace AnyRPG {
 
         public void HandleReviveComplete() {
             InitializeNamePlate();
+            animatedUnit.FreezeRotation();
 
             // give chance to update minimap and put character indicator back on it
             HandlePrerequisiteUpdates();

@@ -22,6 +22,12 @@ namespace AnyRPG {
         [SerializeField]
         private int maxDrops = 1;
 
+        [Header("Restrictions")]
+
+        [Tooltip("If set to true, character class requirements on the item must match for it to drop.")]
+        [SerializeField]
+        protected bool matchItemRestrictions = true;
+
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
@@ -34,10 +40,18 @@ namespace AnyRPG {
             get {
                 //Debug.Log(itemName + ".MyPrerequisitesMet");
 
+                // match standard prerequisites
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     // realtime check for loot
                     prerequisiteCondition.UpdatePrerequisites();
                     if (!prerequisiteCondition.IsMet()) {
+                        return false;
+                    }
+                }
+
+                // match character class
+                if (matchItemRestrictions) {
+                    if (item.MyCharacterClassRequirementList.Count > 0 && item.MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass) == false) {
                         return false;
                     }
                 }

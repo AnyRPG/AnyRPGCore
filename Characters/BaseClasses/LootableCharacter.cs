@@ -180,7 +180,7 @@ namespace AnyRPG {
         public int GetLootCount() {
             int lootCount = 0;
             foreach (LootTable lootTable in lootTables) {
-                lootCount += lootTable.MyLoot.Count;
+                lootCount += lootTable.MyDroppedItems.Count;
             }
             return lootCount;
         }

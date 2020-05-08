@@ -62,7 +62,7 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
             currentTimer = spawnTimer;
             while (currentTimer > 0) {
-                Debug.Log("Spawn Timer: " + currentTimer);
+                //Debug.Log("Spawn Timer: " + currentTimer);
                 yield return new WaitForSeconds(1);
                 currentTimer -= 1;
             }
