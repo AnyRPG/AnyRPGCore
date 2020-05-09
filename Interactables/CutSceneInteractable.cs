@@ -55,7 +55,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (cutscene != null) {
+            if (cutscene != null && (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.MyPlayerUnitSpawned == true))) {
                 if (cutscene.MyLoadScene != null) {
                     LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
                 } else {

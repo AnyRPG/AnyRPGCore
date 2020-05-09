@@ -15,13 +15,12 @@ namespace AnyRPG {
         [SerializeField]
         private bool checkOptionsToSpawn = false;
 
-        // the physical interactable to spawn
+        [Tooltip("This value will show in the mouseover tooltip")]
         [SerializeField]
         private string interactableName = string.Empty;
 
         [SerializeField]
         private Sprite interactableIcon = null;
-
 
         public bool glowOnMouseOver = true;
         public float glowFlashSpeed = 1.5f;
@@ -29,28 +28,28 @@ namespace AnyRPG {
         public float glowMaxIntensity = 6f;
         private Color glowColor = Color.yellow;
 
+        [Tooltip("Set this value to prevent direct interaction from the player.  This can be useful for interactables that only need to be activated with control switches.")]
         [SerializeField]
         private bool notInteractable = false;
 
-        // if true, we can trigger interaction on anything that has a collider, not just players
+        [Tooltip("Set this to true to allow triggering interaction with anything that has a collider, not just players.")]
         [SerializeField]
         private bool interactWithAny = false;
 
-        // interact on trigger exit, not just on trigger enter
+        [Tooltip("Set this to true to cause the interaction to trigger on when something exits the collider.")]
         [SerializeField]
         private bool interactOnExit = false;
 
         // automatically triggered by walking into it
-        public bool isTrigger = false;
+        [Tooltip("If true, interaction is triggered by a collider, and not by clicking with the mouse")]
+        [SerializeField]
+        private bool isTrigger = false;
 
-        //public Transform interactionTransform;
-        //private Transform interactionTransform;
-        //private Transform avatar;
+        [Tooltip("Set this to true to automatically activate the first interactable instead of opening the interaction window and presenting the player with interaction options.")]
+        [SerializeField]
+        private bool suppressInteractionWindow = false;
 
         private IInteractable[] interactables;
-        //private Component meshRenderer;
-        //private GameObject avatar = null;
-        //private Material[] materialList = new Material[0];
 
         public Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
@@ -97,7 +96,7 @@ namespace AnyRPG {
 
         public Sprite MyIcon { get => interactableIcon; }
 
-        public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : "namePlateUnit.MyDisplayname is null!!")); }
+        public string MyName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
@@ -418,8 +417,12 @@ namespace AnyRPG {
 
         public void OpenInteractionWindow() {
             //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
-            InteractionPanelUI.MyInstance.MyInteractable = this;
-            PopupWindowManager.MyInstance.interactionWindow.OpenWindow();
+            if (InteractionPanelUI.MyInstance != null) {
+                InteractionPanelUI.MyInstance.MyInteractable = this;
+            }
+            if (PopupWindowManager.MyInstance != null) {
+                PopupWindowManager.MyInstance.interactionWindow.OpenWindow();
+            }
         }
 
         public void CloseInteractionWindow() {
@@ -472,7 +475,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.Interact(): validInteractables.Count: " + validInteractables.Count);
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (validInteractables.Count > 0) {
-                OpenInteractionWindow();
+                if (suppressInteractionWindow == true) {
+                    validInteractables[0].Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                } else {
+                    OpenInteractionWindow();
+                }
                 return true;
             }
             return false;

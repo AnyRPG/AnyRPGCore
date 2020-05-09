@@ -132,6 +132,10 @@ namespace AnyRPG {
         }
 
         public void CreateLootTables() {
+            if (SystemLootTableManager.MyInstance == null) {
+                Debug.LogError("SystemLootTableManager not found.  Is the GameManager in the scene?");
+                return;
+            }
             foreach (string lootTableName in lootTableNames) {
                 LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                 if (lootTable != null) {

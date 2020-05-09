@@ -147,7 +147,10 @@ namespace AnyRPG {
 
         public void ProcessLocalEvent(string eventName) {
             //Debug.Log("eventName was: " + eventName);
-            
+            if (enabled == false) {
+                // we should not process events if we are disabled
+                return;
+            }
             if (this == null) {
                 //Debug.Log("ProcessLocalEvent(): this is NULL");
             } else {
@@ -181,6 +184,10 @@ namespace AnyRPG {
 
         public void CallbackFunction(string eventName, EventParamProperties eventParam) {
             //Debug.Log(gameObject.name + ".ObjectMessageController.CallbackFunction(" + eventName + ")");
+            if (enabled == false) {
+                // we should not process events if we are disabled
+                return;
+            }
             if (systemEventDictionary.ContainsKey(eventName)) {
                 ProcessEvent(systemEventDictionary[eventName], eventParam);
             }
@@ -513,6 +520,10 @@ namespace AnyRPG {
 
         private void ProcessEvent(EventResponseNode eventResponseNode, EventParamProperties eventParam) {
             //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent()");
+            if (enabled == false) {
+                // we should not process events if we are disabled
+                return;
+            }
 
             if (eventResponseNode.ResponseLimit > 0) {
                 //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent(): responseLimit: " + eventResponseNode.ResponseLimit + "; counter: " + eventResponseNode.ResponseCounter);

@@ -49,7 +49,9 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
+            if (namePlateUnit != null) {
+                namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
+            }
         }
 
         public void CleanupWindowEventSubscriptions() {

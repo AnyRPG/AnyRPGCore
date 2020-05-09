@@ -396,7 +396,11 @@ namespace AnyRPG {
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
-
+                } else {
+                    if (requiresLiveTarget == true || requireDeadTarget == true) {
+                        // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
+                        return false;
+                    }
                 }
             }
             if (target == sourceCharacter.MyCharacterUnit.gameObject) {
@@ -492,7 +496,7 @@ namespace AnyRPG {
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
         public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
-            Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 

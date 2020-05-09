@@ -292,7 +292,9 @@ namespace AnyRPG {
             //Debug.Log("InteractionPanelUI.OnOpenWindow()");
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
-            PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.MyName);
+            if (PopupWindowManager.MyInstance != null) {
+                PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.MyName);
+            }
 
             ShowInteractables();
 

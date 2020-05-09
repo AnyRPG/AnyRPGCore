@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class Spawnable : MonoBehaviour, IPrerequisiteOwner {
 
         [SerializeField]
-        protected string prefabProfileName;
+        protected string prefabProfileName = string.Empty;
 
         protected PrefabProfile prefabProfile;
 
@@ -18,7 +18,7 @@ namespace AnyRPG {
         protected float spawnDelay = 0f;
 
         [SerializeField]
-        protected GameObject spawnReference;
+        protected GameObject spawnReference = null;
 
         [Tooltip("if there is an object spawned, and the prerequisite conditions are no longer met, despawn it")]
         [SerializeField]
@@ -57,6 +57,10 @@ namespace AnyRPG {
             if (GetComponent<CharacterUnit>() == null) {
                 SetupScriptableObjects();
                 OrchestrateStartup();
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                    // this allows us to spawn things with no prerequisites that don't need to check against the player
+                    PrerequisiteCheck();
+                }
             }
         }
 
@@ -203,8 +207,7 @@ namespace AnyRPG {
             UpdateOnPlayerUnitSpawn();
         }
 
-        public virtual bool UpdateOnPlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".Spawnable.UpdateOnPlayerUnitSpawn()");
+        public bool PrerequisiteCheck() {
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -220,8 +223,13 @@ namespace AnyRPG {
                 return true;
             }
             return false;
-            //HandlePrerequisiteUpdates();
 
+        }
+
+        public virtual bool UpdateOnPlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".Spawnable.UpdateOnPlayerUnitSpawn()");
+            return PrerequisiteCheck();
+            //HandlePrerequisiteUpdates();
         }
 
         protected virtual void OnDestroy() {
