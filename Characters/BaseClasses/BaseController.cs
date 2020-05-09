@@ -72,7 +72,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = true;
         }
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = false;
         }
 
@@ -100,6 +100,11 @@ namespace AnyRPG {
 
         }
 
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
+
         public virtual void UpdateApparentVelocity() {
             // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
             if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
@@ -113,7 +118,7 @@ namespace AnyRPG {
 
         }
 
-        public void HandleLevelUnload() {
+        public virtual void ProcessLevelUnload() {
             ClearTarget();
         }
 

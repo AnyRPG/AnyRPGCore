@@ -66,7 +66,6 @@ namespace AnyRPG {
         public event System.Action OnPlayerNameChanged = delegate { };
 
         // Level manager
-        public event System.Action OnLevelUnload = delegate { };
         public event System.Action OnLevelLoad = delegate { };
         public event System.Action OnExitGame = delegate { };
 
@@ -167,10 +166,6 @@ namespace AnyRPG {
 
         public void NotifyOnTakeLoot() {
             OnTakeLoot();
-        }
-
-        public void NotifyOnLevelUnload() {
-            OnLevelUnload();
         }
 
         public void NotifyOnLevelLoad() {

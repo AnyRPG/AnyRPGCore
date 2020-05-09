@@ -309,7 +309,7 @@ namespace AnyRPG {
         /// <param name="levelName"></param>
         public void LoadLevel(string levelName) {
             //Debug.Log("LevelManager.LoadLevel(" + levelName + ")");
-            SystemEventManager.MyInstance.NotifyOnLevelUnload();
+            SystemEventManager.TriggerEvent("OnLevelUnload", new EventParamProperties());
 
             UIManager.MyInstance.DeactivateInGameUI();
             UIManager.MyInstance.DeactivateSystemMenuUI();

@@ -46,7 +46,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = true;
         }
 
@@ -55,7 +55,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = false;
         }
 
@@ -63,6 +63,11 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
 
         public void ConfigureDefaultMaterial() {
             if (SystemConfigurationManager.MyInstance != null) {
@@ -72,7 +77,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleLevelUnload() {
+        public void ProcessLevelUnload() {
             DisableProjector();
         }
 

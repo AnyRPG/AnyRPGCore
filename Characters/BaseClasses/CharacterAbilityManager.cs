@@ -90,7 +90,7 @@ namespace AnyRPG {
             baseCharacter.MyCharacterCombat.OnKillEvent += ReceiveKillDetails;
             baseCharacter.OnClassChange += HandleClassChange;
             baseCharacter.OnSpecializationChange += HandleSpecializationChange;
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
                 baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
             }
@@ -108,7 +108,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             }
             if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
                 baseCharacter.MyCharacterCombat.OnKillEvent -= ReceiveKillDetails;
@@ -128,6 +128,11 @@ namespace AnyRPG {
             CleanupCoroutines();
             CleanupAbilityEffectGameObjects();
         }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
 
         public virtual void LearnUnitProfileAbilities() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnUnitProfileAbilities()");
@@ -787,7 +792,7 @@ namespace AnyRPG {
             GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter as BaseCharacter, target);
 
             if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
-                Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 return;
             }
 
@@ -962,7 +967,7 @@ namespace AnyRPG {
             OnCastStop(MyBaseCharacter as BaseCharacter);
         }
 
-        public void HandleLevelUnload() {
+        public void ProcessLevelUnload() {
             StopCasting();
             MyWaitingForAnimatedAbility = false;
         }

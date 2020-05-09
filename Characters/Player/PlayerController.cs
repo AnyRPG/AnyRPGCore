@@ -78,9 +78,6 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnDie += HandleDeath;
                 baseCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload += ClearInteractables;
-            }
         }
 
         public override void CleanupEventSubscriptions() {
@@ -89,15 +86,17 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterStats.OnDie -= HandleDeath;
                 baseCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload -= ClearInteractables;
-            }
         }
 
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
             CleanupEventSubscriptions();
+        }
+
+        public override void ProcessLevelUnload() {
+            base.ProcessLevelUnload();
+            ClearInteractables();
         }
 
         public void ClearInteractables() {
@@ -312,6 +311,11 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
             // Check if the left mouse button clicked on an interactable and focus it
             if (!InputManager.MyInstance.leftMouseButtonClicked) {
+                return;
+            }
+
+            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+                // probably in a cutscene.  don't respond to clicks on objects if there is no camera following the player
                 return;
             }
 

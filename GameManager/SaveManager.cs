@@ -313,6 +313,9 @@ namespace AnyRPG {
         public void SaveGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveGame()");
 
+            // do this first because persistent objects need to add their locations to the scene node before we write it to disk
+            SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
+
             anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
             anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;

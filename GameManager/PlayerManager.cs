@@ -184,7 +184,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += DespawnPlayerUnit;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.MyInstance.OnLevelLoad += OnLevelLoad;
             SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
             SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
@@ -198,7 +198,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload -= DespawnPlayerUnit;
+                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.MyInstance.OnLevelLoad -= OnLevelLoad;
                 SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
                 SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
@@ -211,6 +211,11 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
 
         public void ResetInitialLevel() {
             initialLevel = 1;
@@ -330,6 +335,10 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.Initialize()");
             SpawnPlayerConnection();
             SpawnPlayerUnit();
+        }
+
+        public void ProcessLevelUnload() {
+            DespawnPlayerUnit();
         }
 
         public void DespawnPlayerUnit() {

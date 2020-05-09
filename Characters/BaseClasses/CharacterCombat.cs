@@ -102,7 +102,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterCombat.CreateEventSubscriptions(): subscribing to onequipmentchanged");
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = true;
         }
 
@@ -115,7 +115,7 @@ namespace AnyRPG {
                 baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             }
         }
 
@@ -132,7 +132,12 @@ namespace AnyRPG {
             AttemptStopRegen();
         }
 
-        public void HandleLevelUnload() {
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
+
+        public void ProcessLevelUnload() {
             SetWaitingForAutoAttack(false);
             DropCombat();
             AttemptStopRegen();

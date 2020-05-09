@@ -52,7 +52,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             //SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
             eventSubscriptionsInitialized = true;
         }
@@ -62,7 +62,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             //SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
             foreach (IInteractable _interactable in interactable.MyInteractables) {
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
@@ -76,6 +76,11 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
 
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap()");
@@ -149,7 +154,7 @@ namespace AnyRPG {
             //}
         }
 
-        public void HandleLevelUnload() {
+        public void ProcessLevelUnload() {
             //Debug.Log("MiniMapIndicatorController.HandleLevelUnload(): interactable: " + interactable.MyName);
             Destroy(gameObject, 0);
         }

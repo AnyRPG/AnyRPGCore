@@ -6,8 +6,13 @@ namespace AnyRPG {
     [RequireComponent(typeof(UUID))]
     public class PersistentObject : MonoBehaviour {
 
+        [Tooltip("If true, this object will save it's position when switching from one scene to another (including the main menu).  It will not save if the game is quit directly from the main menu.")]
         [SerializeField]
         private bool saveOnLevelUnload = false;
+
+        [Tooltip("If true, this object will save it's position when the player saves the game.")]
+        [SerializeField]
+        private bool saveOnGameSave = false;
 
         private Vector3 storedPosition;
 
@@ -58,7 +63,8 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + ".PersistentObject.CreateEventSubscriptions: Could not find SystemEventManager.  Is GameManager in the scene?");
             } else {
-                SystemEventManager.MyInstance.OnLevelUnload += HandleLevelUnload;
+                SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+                SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
             }
             eventSubscriptionsInitialized = true;
         }
@@ -68,24 +74,29 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelUnload -= HandleLevelUnload;
+                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+                SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
             }
             eventSubscriptionsInitialized = false;
         }
 
-        public void HandleLevelUnload() {
-            //Debug.Log(gameObject.name + "PersistentObject.HandleLevelUnload()");
+        private void OnEnable() {
+        }
+
+        private void OnDisable() {
+            CleanupEventSubscriptions();
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
             if (saveOnLevelUnload == true) {
                 SaveProperties();
             }
         }
 
-        private void OnEnable() {
-
-        }
-
-        private void OnDisable() {
-            CleanupEventSubscriptions();
+        public void HandleSaveGame(string eventName, EventParamProperties eventParamProperties) {
+            if (saveOnGameSave == true) {
+                SaveProperties();
+            }
         }
 
         public void SaveProperties() {
