@@ -130,10 +130,10 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): SystemEventManager not found.  Is the GameManager in the scene?");
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
         }
@@ -145,13 +145,19 @@ namespace AnyRPG {
             }
             
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
-            
+
             eventSubscriptionsInitialized = false;
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
+
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.HandlePlayerUnitSpawn()");
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {

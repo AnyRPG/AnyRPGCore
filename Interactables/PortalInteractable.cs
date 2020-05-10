@@ -6,29 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class PortalInteractable : InteractableOption {
+    public abstract class PortalInteractable : InteractableOption {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyPortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyPortalNamePlateImage : base.MyNamePlateImage); }
 
-        /// <summary>
-        /// The ability to cast in order to use this portal
-        /// </summary>
-        //[SerializeField]
-        private BaseAbility ability = null;
+        [Header("Location Override")]
 
-        /// <summary>
-        /// The ability to cast in order to use this portal
-        /// </summary>
+        [Tooltip("If this is set, the player will spawn at the location of the object in the scene with this tag, instead of the default spawn location for the scene.")]
         [SerializeField]
-        private string abilityName = string.Empty;
-
-        [SerializeField]
-        private string locationTag = string.Empty;
-
-        public IAbility MyAbility { get => ability; }
+        protected string locationTag = string.Empty;
 
         protected override void Awake() {
             //Debug.Log("Portal.Awake()");
@@ -44,13 +33,8 @@ namespace AnyRPG {
             if (locationTag != null && locationTag != string.Empty) {
                 LevelManager.MyInstance.MyOverrideSpawnLocationTag = locationTag;
             }
-            source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
@@ -88,18 +72,5 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
-                if (baseAbility != null) {
-                    ability = baseAbility;
-                } else {
-                    Debug.LogError(gameObject.name + ".PortalInteractable.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing " + gameObject.name);
-                }
-            }
-        }
-
     }
-
 }

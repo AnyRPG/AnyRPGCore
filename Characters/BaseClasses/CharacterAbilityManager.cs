@@ -520,7 +520,7 @@ namespace AnyRPG {
             CastTargettingManager.MyInstance.DisableProjector();
         }
 
-        public virtual void HandleCharacterUnitSpawn() {
+        public virtual void ProcessCharacterUnitSpawn() {
             //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn()");
 
             if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {

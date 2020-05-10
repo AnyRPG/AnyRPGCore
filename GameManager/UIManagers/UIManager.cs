@@ -156,7 +156,7 @@ namespace AnyRPG {
             CreateEventSubscriptions();
 
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             }
             toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -177,7 +177,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn += HandleBeforePlayerConnectionSpawn;
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
@@ -190,9 +190,9 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= InitializeMainCamera;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
                 SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn -= HandleBeforePlayerConnectionSpawn;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
             }
@@ -231,7 +231,7 @@ namespace AnyRPG {
             if (inGameUI.activeSelf == true) {
                 inGameUI.SetActive(false);
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= InitializeMainCamera;
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
         }
 
         public void ActivateInGameUI() {
@@ -242,10 +242,25 @@ namespace AnyRPG {
                 CutsceneCameraController.MyInstance.gameObject.SetActive(false);
             }
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn += InitializeMainCamera;
+                SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);
             } else {
                 InitializeMainCamera();
             }
+        }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
+        public void HandleMainCamera(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessMainCamera();
+        }
+
+
+        public void ProcessMainCamera() {
+            InitializeMainCamera();
         }
 
         public void InitializeMainCamera() {
@@ -305,7 +320,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("UIManager.HandlePlayerUnitSpawn()");
             ActivatePlayerUI();
 

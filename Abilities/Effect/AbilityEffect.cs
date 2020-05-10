@@ -11,6 +11,8 @@ namespace AnyRPG {
 
     public abstract class AbilityEffect : DescribableResource {
 
+        [Header("Valid Target Settings")]
+
         [SerializeField]
         protected bool requiresTarget;
 
@@ -35,6 +37,8 @@ namespace AnyRPG {
         [SerializeField]
         protected bool autoSelfCast;
 
+        [Header("Range Settings")]
+
         // require target in hitbox
         [SerializeField]
         protected bool useMeleeRange;
@@ -43,6 +47,8 @@ namespace AnyRPG {
         [SerializeField]
         protected int maxRange;
 
+        [Header("Material Changes")]
+
         [SerializeField]
         private string effectMaterialName = string.Empty;
 
@@ -50,12 +56,11 @@ namespace AnyRPG {
         //[SerializeField]
         private Material effectMaterial;
 
-        // the duration of the material change
+        [Tooltip("The length, in seconds, that any material change (such as ice freeze) should last.")]
         [SerializeField]
         private float materialChangeDuration = 2f;
 
-        [SerializeField]
-        protected string onHitAudioProfileName;
+        [Header("Audio")]
 
         [SerializeField]
         protected List<string> onHitAudioProfileNames = new List<string>();
@@ -67,11 +72,6 @@ namespace AnyRPG {
         //protected AudioProfile onHitAudioProfile;
         protected List<AudioProfile> onHitAudioProfiles = new List<AudioProfile>();
 
-        /*
-        [SerializeField]
-        protected AudioClip OnHitAudioClip;
-        */
-
         // any abilities to cast immediately on hit
         [SerializeField]
         protected List<string> hitAbilityEffectNames = new List<string>();
@@ -81,12 +81,6 @@ namespace AnyRPG {
 
         // the character that cast the spell
         protected BaseCharacter sourceCharacter;
-
-        // pass this onto the next effect
-        //protected AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
-
-        // receive this from the previous effect
-        //protected AbilityEffectOutput abilityEffectInput = new AbilityEffectOutput();
 
         // amount to multiply inputs by when adding their amount to this effect
         public float inputMultiplier = 0f;
@@ -404,9 +398,6 @@ namespace AnyRPG {
             }
 
             onHitAudioProfiles = new List<AudioProfile>();
-            if (onHitAudioProfileName != null && onHitAudioProfileName != string.Empty) {
-                onHitAudioProfileNames.Add(onHitAudioProfileName);
-            }
             if (onHitAudioProfileNames != null) {
                 foreach (string audioProfileName in onHitAudioProfileNames) {
                     AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);

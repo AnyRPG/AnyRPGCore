@@ -11,22 +11,40 @@ namespace AnyRPG {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
 
-        [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
-        [SerializeField]
-        private bool checkOptionsToSpawn = false;
+        // this field does not do anything, but is needed to satisfy the IDescribable interface
+        private Sprite interactableIcon = null;
+        
+        [Header("Mouse Over")]
 
-        [Tooltip("This value will show in the mouseover tooltip")]
+        [Tooltip("This value will show in the mouseover tooltip.")]
         [SerializeField]
         private string interactableName = string.Empty;
 
+        [Tooltip("Should the object glow when the mouse is over it or its nameplate")]
         [SerializeField]
-        private Sprite interactableIcon = null;
+        private bool glowOnMouseOver = true;
 
-        public bool glowOnMouseOver = true;
-        public float glowFlashSpeed = 1.5f;
-        public float glowMinIntensity = 4.5f;
-        public float glowMaxIntensity = 6f;
+        [Tooltip("The time period in seconds between high and low intensity of the glow strength")]
+        [SerializeField]
+        private float glowFlashSpeed = 1.5f;
+
+        [Tooltip("The minimum intensity the object should glow with")]
+        [SerializeField]
+        private float glowMinIntensity = 4.5f;
+
+        [Tooltip("The maximum intensity the object should glow with")]
+        [SerializeField]
+        private float glowMaxIntensity = 6f;
+
+        [Tooltip("The color of light to emit when glowing")]
+        [SerializeField]
         private Color glowColor = Color.yellow;
+
+        [Tooltip("The glow material that should replace any normal materials on this object while glowing")]
+        [SerializeField]
+        private Material temporaryMaterial = null;
+
+        [Header("Interaction Options")]
 
         [Tooltip("Set this value to prevent direct interaction from the player.  This can be useful for interactables that only need to be activated with control switches.")]
         [SerializeField]
@@ -40,7 +58,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool interactOnExit = false;
 
-        // automatically triggered by walking into it
         [Tooltip("If true, interaction is triggered by a collider, and not by clicking with the mouse")]
         [SerializeField]
         private bool isTrigger = false;
@@ -49,24 +66,27 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressInteractionWindow = false;
 
-        private IInteractable[] interactables;
+        [Header("Additional Spawn Options")]
 
-        public Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
-
-        private Material[] temporaryMaterials = null;
-
+        [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
         [SerializeField]
-        private Material temporaryMaterial = null;
+        private bool checkOptionsToSpawn = false;
 
-        // require a valid interactable option in addition to any preqrequisites in the spawnbable base class
+        [Tooltip("Require a valid interactable option in addition to any preqrequisites.  For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
         private bool spawnRequiresValidOption = false;
 
-        // require no valid interactable options in addition to any preqrequisites in the spawnbable base class
+        [Tooltip("require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
         private bool despawnRequiresNoValidOption = false;
 
-        Renderer[] meshRenderers = null;
+        private IInteractable[] interactables;
+
+        private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+
+        private Material[] temporaryMaterials = null;
+
+        private Renderer[] meshRenderers = null;
 
         private List<Shader> shaderList = new List<Shader>();
         private List<Color> emissionColorList = new List<Color>();
@@ -75,13 +95,9 @@ namespace AnyRPG {
 
         private GameObject miniMapIndicator = null;
 
-        //private List<GameObject> triggeredList = new List<GameObject>();
-
         protected bool isInteracting = false;
         private bool isFlashing = false;
-        //bool isFocus = false;
 
-        //bool hasInteracted = false;
         bool hasMeshRenderer = false;
 
         private bool miniMapIndicatorReady = false;
@@ -152,7 +168,10 @@ namespace AnyRPG {
 
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
-                interactable.OrchestratorStart();
+                if (interactable != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    interactable.OrchestratorStart();
+                }
             }
 
         }
@@ -161,7 +180,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
-                interactable.OrchestratorFinish();
+                if (interactable != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    interactable.OrchestratorFinish();
+                }
             }
 
             // TEST MOVING THIS DOWN SO NAMEPLATE UNIT HAS CHANCE TO INITIALIZE NAMEPLATE BEFORE WE REACT TO SPAWN CONDITIONS
@@ -318,6 +340,8 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
                         namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].MyNamePlateImage;
+                    } else {
+                        //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");

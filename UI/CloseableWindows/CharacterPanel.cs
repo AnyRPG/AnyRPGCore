@@ -82,11 +82,11 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+                SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             }
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
         }
@@ -94,10 +94,16 @@ namespace AnyRPG {
         protected virtual void CleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             }
         }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
 
         public virtual void OnEnable() {
             CreateEventSubscriptions();
@@ -108,7 +114,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");

@@ -60,7 +60,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+                SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             }
             eventSubscriptionsInitialized = true;
@@ -72,13 +72,19 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             }
             eventSubscriptionsInitialized = false;
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
+
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
             PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget += HandleSetTarget;
             PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget += HandleClearTarget;

@@ -10,15 +10,25 @@ namespace AnyRPG {
 
         public abstract event System.Action<IInteractable> MiniMapStatusUpdateHandler;
 
+        [Header("Interaction Panel")]
+
+        [Tooltip("The text to display for the clickable option in the interaction panel if this object has multiple interaction options.")]
         [SerializeField]
         protected string interactionPanelTitle;
 
+        [Tooltip("The image to display beside the text for the clickable option in the interaction panel if this object has multiple interaction options.")]
         [SerializeField]
         protected Sprite interactionPanelImage;
 
+        [Header("Nameplate")]
+
+        [Tooltip("If there is no system option set for the nameplate image of this interactable option type, this will be used instead.")]
         [SerializeField]
         protected Sprite namePlateImage;
 
+        [Header("Interaction")]
+
+        [Tooltip("These game conditions must be satisfied to be able to interact with this option.")]
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
@@ -73,10 +83,6 @@ namespace AnyRPG {
 
         }
 
-        public virtual void HandleConfirmAction() {
-            SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
-        }
-
         public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences()");
             if (componentReferencesInitialized) {
@@ -91,6 +97,10 @@ namespace AnyRPG {
             namePlateUnit = GetComponent<INamePlateUnit>();
 
             componentReferencesInitialized = true;
+        }
+
+        public virtual void HandleConfirmAction() {
+            SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
         }
 
         public virtual bool CanInteract() {
@@ -152,9 +162,6 @@ namespace AnyRPG {
         public virtual void CreateEventSubscriptions() {
             if (eventSubscriptionsInitialized) {
                 return;
-            }
-            if (true) {
-
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
             if (SystemEventManager.MyInstance == null) {

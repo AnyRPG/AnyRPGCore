@@ -14,7 +14,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerStats.Start()");
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log("PlayerStats.Start(): Player Unit is already spawned");
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             }
             CreateStartEventReferences();
         }
@@ -32,7 +32,7 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnEquipmentChanged += OnEquipmentChanged;
             SystemEventManager.MyInstance.OnLevelChanged += LevelUpHandler;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             eventSubscriptionsInitialized = true;
         }
@@ -50,11 +50,17 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnLevelChanged -= LevelUpHandler;
                 //SystemEventManager.MyInstance.OnEquipmentChanged -= OnEquipmentChanged;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             }
             eventSubscriptionsInitialized = false;
         }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
 
         public override void OnDisable() {
             base.OnDisable();
@@ -117,7 +123,7 @@ namespace AnyRPG {
             return _statusEffectNode;
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
             if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
                 MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;

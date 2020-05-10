@@ -1,22 +1,25 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class Spawnable : MonoBehaviour, IPrerequisiteOwner {
 
+        [Header("Spawn Object")]
+
+        [Tooltip("The name of the prefab profile to use.  The object referenced in the prefab profile will be spawned.")]
         [SerializeField]
         protected string prefabProfileName = string.Empty;
 
         protected PrefabProfile prefabProfile;
 
+        [Header("Spawn Control")]
+
+        [Tooltip("The amount of time to delay spawn once all the prerequisites are met and the object can spawn")]
         [SerializeField]
         protected float spawnDelay = 0f;
 
+        [Tooltip("Set this to a static object to prevent the object in the prefabprofile from spawning")]
         [SerializeField]
         protected GameObject spawnReference = null;
 
@@ -24,6 +27,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool despawnObject = false;
 
+        [Tooltip("Game conditions that must be satisfied for the object to spawn")]
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
@@ -89,10 +93,10 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             } else {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
@@ -107,9 +111,14 @@ namespace AnyRPG {
             }
             if (SystemEventManager.MyInstance != null) {
                 //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
         }
 
         public virtual void OnDisable() {
@@ -203,7 +212,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void HandlePlayerUnitSpawn() {
+        public virtual void ProcessPlayerUnitSpawn() {
             UpdateOnPlayerUnitSpawn();
         }
 

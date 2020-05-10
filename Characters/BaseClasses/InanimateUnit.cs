@@ -8,17 +8,18 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class InanimateUnit : InteractableOption, INamePlateUnit {
+    //public class InanimateUnit : InteractableOption, INamePlateUnit {
+    public class InanimateUnit : MonoBehaviour, INamePlateUnit {
 
         public event System.Action OnInitializeNamePlate = delegate { };
         public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
         public event Action<int, int> HealthBarNeedsUpdate = delegate { };
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [Header("NAMEPLATE SETTINGS")]
 
-        [Tooltip("This is what will be printed on the nameplate above the object.")]
+        [Tooltip("This is what will be printed on the nameplate above the object.  It will also override whatever value is set for the Interactable mouseover display name.")]
         [SerializeField]
         private string displayName = string.Empty;
 
@@ -39,7 +40,13 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
+        protected Interactable interactable;
 
+        protected bool componentReferencesInitialized = false;
+        protected bool eventSubscriptionsInitialized = false;
+
+
+        public Interactable MyInteractable { get => interactable; set => interactable = value; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }
         public string Title { get => string.Empty; }
@@ -73,38 +80,90 @@ namespace AnyRPG {
             //InitializeNamePlate();
         }
 
-        public override void OnDisable() {
+        public void OnDisable() {
             if (NamePlateManager.MyInstance != null) {
                 NamePlateManager.MyInstance.RemoveNamePlate(this as INamePlateUnit);
             }
+            CleanupEventSubscriptions();
+            //CleanupScriptableObjects();
         }
 
-        protected override void Awake() {
+        protected void Awake() {
             //Debug.Log(gameObject.name + ": Awake() about to get references to all local components");
-            base.Awake();
+            OrchestratorStart();
         }
 
-        protected override void Start() {
+        protected void Start() {
             //Debug.Log(gameObject.name + ".InanimateUnit.Start()");
-            base.Start();
+            CreateEventSubscriptions();
             InitializeNamePlate();
         }
 
-        /*
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".InanimateUnit.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+        public virtual void OrchestratorStart() {
+            //Debug.Log(gameObject.name + ".InteractableOption.OrchestratorStart()");
+            //SetupScriptableObjects();
+            GetComponentReferences();
         }
-        */
+
+        public virtual void OrchestratorFinish() {
+
+        }
+
+        public virtual void GetComponentReferences() {
+            //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences()");
+            if (componentReferencesInitialized) {
+                //Debug.Log("InteractableOption.GetComponentReferences(): already initialized. exiting!");
+                return;
+            }
+            interactable = GetComponent<Interactable>();
+            if (interactable == null) {
+                //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences(): " + interactable is null);
+            }
+
+            componentReferencesInitialized = true;
+        }
+
+        public virtual void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
+                return;
+            }
+            if (PlayerManager.MyInstance == null) {
+                Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
+                return;
+            } else {
+                SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                    //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
+                    ProcessPlayerUnitSpawn();
+                }
+            }
+            eventSubscriptionsInitialized = true;
+        }
+
+        public virtual void CleanupEventSubscriptions() {
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            }
+            eventSubscriptionsInitialized = false;
+        }
 
         public void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
 
-            if (interactable != null && interactable.CanInteract()) {
-                //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): isStarted && interactable.CanInteract() == true");
+            if (interactable != null && interactable.CanInteract() && namePlate == null) {
+                //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): can interact with interactable");
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this, (namePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;
+                    //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): set nameplate reference successfully");
+                } else {
+                    //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): nameplate was null!!!");
                 }
                 OnInitializeNamePlate();
             } else {
@@ -113,48 +172,69 @@ namespace AnyRPG {
             }
         }
 
-        public override bool HasMiniMapText() {
-            return true;
-        }
-
-        public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".InanimateUnit.SetMiniMapText()");
-            text.text = "";
-            text.color = new Color32(0, 0, 0, 0);
-            //text.fontSize = 50;
-            //text.color = Faction.GetFactionColor(baseCharacter.MyFaction);
-            return true;
-        }
-
-        public override bool CanInteract() {
+        /*
+        public bool CanInteract() {
             return false;
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public bool Interact(CharacterUnit source) {
+            Debug.Log(gameObject.name + ".InanimateUnit.Interact()");
             return false;
         }
 
-        public override void StopInteract() {
-            base.StopInteract();
+        public void StopInteract() {
+            // nothing needed tobe done
         }
+        */
 
         public void OnDestroy() {
             CleanupEventSubscriptions();
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
-            MiniMapStatusUpdateHandler(this);
+        public void HandlePrerequisiteUpdates() {
+            Debug.Log(gameObject.name + ".InanimateUnit.HandlePrerequisiteUpdates()");
             InitializeNamePlate();
+            if (interactable != null) {
+                interactable.HandlePrerequisiteUpdates();
+            } else {
+                //Debug.Log(gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates(): interactable was null");
+            }
         }
 
-        public override void HandlePlayerUnitSpawn() {
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-            InitializeNamePlate();
+            ProcessPlayerUnitSpawn();
         }
+
+        public void ProcessPlayerUnitSpawn() {
+            HandlePrerequisiteUpdates();
+        }
+
+
+        /*
+        public virtual void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".InteractableOption.SetupScriptableObjects()");
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                    }
+                }
+            }
+        }
+
+        public virtual void CleanupScriptableObjects() {
+            if (prerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+                    if (tmpPrerequisiteConditions != null) {
+                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                    }
+                }
+            }
+
+        }
+        */
+
     }
 
 }

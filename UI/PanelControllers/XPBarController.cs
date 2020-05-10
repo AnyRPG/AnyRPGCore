@@ -34,9 +34,9 @@ namespace AnyRPG {
             }
             SystemEventManager.MyInstance.OnXPGained += UpdateXP;
             SystemEventManager.MyInstance.OnLevelChanged += UpdateXPBar;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                HandlePlayerUnitSpawn();
+                ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
         }
@@ -49,17 +49,23 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnXPGained -= UpdateXP;
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateXPBar;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;
         }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
 
         private void OnDestroy() {
             // this gameobject will be enabled and disabled multiple times during the game and doesn't need to reset its references every time
             CleanupEventSubscriptions();
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("XPBarController.HandlePlayerUnitSpawn()");
             if (originalXPSliderWidth == 0f) {
                 originalXPSliderWidth = xpSlider.GetComponent<LayoutElement>().preferredWidth;

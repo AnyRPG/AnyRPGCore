@@ -454,7 +454,7 @@ namespace AnyRPG {
             // inform any subscribers that we just spawned a player unit
             //Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
             playerUnitSpawned = true;
-            SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn();
+            SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 
             // do this just in case things that would not update before the player unit spawned that are now initialized due to that last call have a chance to react : EDIT BELOW
             // this should no longer be necessary and it is causing double calls every time the player unit spawns.  if it is needed, then whatever is supposed to use it, should instead react to

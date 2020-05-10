@@ -190,7 +190,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             eventSubscriptionsInitialized = true;
         }
@@ -200,7 +200,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             eventSubscriptionsInitialized = false;
         }
@@ -210,7 +210,13 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandlePlayerUnitSpawn() {
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessPlayerUnitSpawn();
+        }
+
+
+        public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CameraManager.HandlePlayerUnitSpawn()");
             if (LevelManager.MyInstance.GetActiveSceneNode() == null) {
                 //Debug.Log("CameraManager.HandlePlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");

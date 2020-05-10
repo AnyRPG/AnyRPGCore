@@ -17,11 +17,11 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
             SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandleCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
-                HandleCharacterUnitSpawn();
+                ProcessCharacterUnitSpawn();
             }
             if (KeyBindManager.MyInstance != null && KeyBindManager.MyInstance.MyKeyBinds != null && KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("CANCEL")) {
                 KeyBindManager.MyInstance.MyKeyBinds["CANCEL"].OnKeyPressedHandler += OnEscapeKeyPressedHandler;
@@ -37,7 +37,7 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateAbilityList;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
-                SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
+                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandleCharacterUnitDespawn;
             }
             // that next code would have never been necessary because that handler was never set : TEST THAT ESCAPE CANCELS SPELLCASTING - THAT METHOD IS NEVER SET
@@ -46,6 +46,12 @@ namespace AnyRPG {
             }
 
         }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            ProcessCharacterUnitSpawn();
+        }
+
 
         /// <summary>
         /// Stop casting if the escape key is pressed
@@ -192,7 +198,7 @@ namespace AnyRPG {
             base.StopCasting();
         }
 
-        public override void HandleCharacterUnitSpawn() {
+        public override void ProcessCharacterUnitSpawn() {
             if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null) {
                 PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
                 //CharacterMotor characterMotor = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor;
@@ -201,7 +207,7 @@ namespace AnyRPG {
                     movementController.OnMovement += HandleManualMovement;
                 }
             }
-            base.HandleCharacterUnitSpawn();
+            base.ProcessCharacterUnitSpawn();
 
         }
 

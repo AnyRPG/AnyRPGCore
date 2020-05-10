@@ -59,7 +59,6 @@ namespace AnyRPG {
         // Player Manager
         public event System.Action OnPlayerConnectionSpawn = delegate { };
         public event System.Action OnBeforePlayerConnectionSpawn = delegate { };
-        public event System.Action OnPlayerUnitSpawn = delegate { };
         public event System.Action OnPlayerConnectionDespawn = delegate { };
         public event System.Action OnPlayerUnitDespawn = delegate { };
         public event System.Action OnPlayerUMACreated = delegate { };
@@ -182,11 +181,6 @@ namespace AnyRPG {
 
         public void NotifyBeforePlayerConnectionSpawn() {
             OnBeforePlayerConnectionSpawn();
-        }
-
-        public void NotifyOnPlayerUnitSpawn() {
-            //Debug.Log("SystemEventManager.NotifyOnPlayerUnitSpawn()");
-            OnPlayerUnitSpawn();
         }
 
         public void NotifyOnPlayerConnectionDespawn() {

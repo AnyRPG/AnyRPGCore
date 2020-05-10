@@ -13,164 +13,147 @@ namespace AnyRPG {
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };
 
-        // ability cannot be cast in combat if true
+        [Tooltip("If true, this ability cannot be cast in combat.")]
         [SerializeField]
         protected bool requireOutOfCombat = false;
 
+        [Tooltip("If this list is not empty, this ability will require the character to have the following weapons equipped to use it.")]
         [SerializeField]
         private List<string> weaponAffinityNames = new List<string>();
 
         private List<WeaponSkill> weaponAffinityList = new List<WeaponSkill>();
 
-        [SerializeField]
-        protected string holdableObjectName;
-
-        // now we have multiple objects
+        [Tooltip("The names of items to spawn while casting this ability")]
         [SerializeField]
         private List<string> holdableObjectNames = new List<string>();
 
         [SerializeField]
         private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
 
-        // holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start
+        [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
         [SerializeField]
         protected bool animatorCreatePrefabs;
 
+        [Tooltip("The name of an animation profile to get animations for the character to perform while casting this ability")]
         [SerializeField]
         protected string animationProfileName = string.Empty;
 
         protected AnimationProfile animationProfile;
 
-        /*
-        // will randomly rotate through these
-        [SerializeField]
-        protected List<AnimationClip> animationClips = new List<AnimationClip>();
-        */
-
+        [Tooltip("If the animation has hit events while it is playing (such as when a hammer strike occurs), this audio profile will be played in response to those events.")]
         [SerializeField]
         protected string animationHitAudioProfileName;
 
         protected AudioProfile animationHitAudioProfile;
 
-        /*
-        [SerializeField]
-        protected AudioClip animationHitAudioClip;
-        */
-
-        /*
-        // on hit animation
-        [SerializeField]
-        protected AnimationClip castingAnimationClip = null;
-        */
-
+        [Tooltip("An audio profile to play while the ability is casting")]
         [SerializeField]
         protected string castingAudioProfileName;
 
         protected AudioProfile castingAudioProfile;
 
-        /*
-        [SerializeField]
-        protected AudioClip castingAudioClip;
-        */
-
-        //public AnimationClip MyAnimationClip { get => animationClip; set => animationClip = value; }
         public AnimationClip MyCastingAnimationClip { get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null); }
 
+        [Tooltip("The minimum level a character must be to cast this ability")]
         [SerializeField]
         protected int requiredLevel = 1;
 
-        // for abilities that anyone can use, like scrolls or crafting
+        [Tooltip("If true, this ability does not have to be learned to cast. For abilities that anyone can use, like scrolls or crafting")]
         [SerializeField]
         protected bool useableWithoutLearning = false;
 
-        // this spell can be cast while other spell casts are in progress
+        [Tooltip("This spell can be cast while other spell casts are in progress. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
         private bool canSimultaneousCast = false;
 
-        // prevent special effects from triggering gcd
-        // could possibly try just casting effects directly in future instead of casting the actual ability
+        [Tooltip("This spell can be cast while the global cooldown is active. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
         private bool ignoreGlobalCoolDown = false;
 
+        [Tooltip("The mana cost to cast the ability")]
         [SerializeField]
         protected int abilityManaCost = 0;
 
-        // the cooldown in seconds before we can use this ability again.  0 means no cooldown.
+        [Tooltip("The cooldown in seconds before this ability can be cast again.  0 means no cooldown.")]
+        [SerializeField]
         public float abilityCoolDown = 0f;
 
+        [Tooltip("If true, the cast time is based on the time of the animation played while casting.")]
         [SerializeField]
         protected bool useAnimationCastTime = true;
 
+        [Tooltip("If the animation cast time is not used, the number of seconds to spend casting")]
         [SerializeField]
         protected float abilityCastingTime = 0f;
 
-        /*
-        // a prefab to spawn while casting
-        [SerializeField]
-        protected GameObject abilityCastingPrefab;
-        */
-
-        // delay to destroy prefab after casting completes
+        [Tooltip("Delay to destroy casting effect prefabs after casting completes")]
         [SerializeField]
         protected float prefabDestroyDelay = 0f;
 
-        /*
-        [SerializeField]
-        protected Vector3 prefabOffset = Vector3.zero;
-
-        [SerializeField]
-        protected Vector3 prefabRotation = Vector3.zero;
-
-        protected GameObject abilityCastingPrefabRef;
-        */
-
+        [Tooltip("If true, casting this spell will require choosing a target on the ground, instead of a target character.")]
         [SerializeField]
         private bool requiresGroundTarget = false;
 
+        [Tooltip("If this is a ground targeted spell, tint it with this color.")]
         [SerializeField]
         protected Color groundTargetColor = new Color32(255, 255, 255, 255);
 
-        // how big should the projector be on the ground if this is ground targeted
+        [Tooltip("How big should the projector be on the ground if this is ground targeted. Used to show accurate effect size.")]
         [SerializeField]
         protected float groundTargetRadius = 0f;
 
-        // ignore requireTarget and canCast variables and use the check from the first ability effect instead
+        [Tooltip("Ignore requireTarget and canCast variables and use the check from the first ability effect instead")]
         [SerializeField]
         private bool useAbilityEffectTargetting = false;
 
-        public bool requiresTarget;
-        public bool requiresLiveTarget = true;
+        [Tooltip("If true, the character must have a target selected to cast this ability.")]
+        [SerializeField]
+        private bool requiresTarget;
 
+        [Tooltip("If true, the target must be a character and must be alive.")]
+        [SerializeField]
+        private bool requiresLiveTarget = true;
+
+        [Tooltip("If true, the target must be a character and must be dead.")]
         [SerializeField]
         private bool requireDeadTarget;
 
+        [Tooltip("Can the character cast this ability on itself?")]
         [SerializeField]
         protected bool canCastOnSelf = false;
 
+        [Tooltip("Can the character cast this ability on a character belonging to an enemy faction?")]
         [SerializeField]
         protected bool canCastOnEnemy = false;
 
+        [Tooltip("Can the character cast this ability on a character belonging to a friendly faction?")]
         [SerializeField]
         protected bool canCastOnFriendly = false;
 
-        // if no target is given, automatically cast on the caster
-        public bool autoSelfCast = false;
+        [Tooltip("If no target is given, automatically cast on the caster")]
+        [SerializeField]
+        private bool autoSelfCast = false;
 
+        [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
         [SerializeField]
         protected bool useMeleeRange;
 
+        [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
         [SerializeField]
         protected int maxRange;
 
+        [Tooltip("Will this ability be automatically added to the player spellbook if they are of the required level?")]
         [SerializeField]
         protected bool autoLearn = false;
 
+        [Tooltip("When learned, should the ability be automatically placed on the player action bars in an available slot?")]
         [SerializeField]
         protected bool autoAddToBars = true;
 
         // this will be set to the ability casting length only for direct cast abilities
         protected float castTimeMultiplier = 1f;
 
+        [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeField]
         protected List<string> abilityEffectNames = new List<string>();
 
@@ -178,6 +161,7 @@ namespace AnyRPG {
         [SerializeField]
         private float tickRate = 1f;
 
+        [Tooltip("During casting, these ability effects will be triggered on every tick.")]
         [SerializeField]
         protected List<string> channeledAbilityEffectnames = new List<string>();
 

@@ -24,18 +24,10 @@ namespace AnyRPG {
         Transform MyNamePlateTransform { get; }
         Interactable MyInteractable { get; }
 
-        event System.Action<IInteractable> MiniMapStatusUpdateHandler;
-
-        bool CanInteract();
-        bool Interact(CharacterUnit source);
         bool HasHealth();
         int CurrentHealth();
         int MaxHealth();
-        void StopInteract();
-        bool HasMiniMapText();
-        bool HasMiniMapIcon();
-        bool SetMiniMapText(TextMeshProUGUI text);
-        void SetMiniMapIcon(Image icon);
+        //void StopInteract();
 
     }
 

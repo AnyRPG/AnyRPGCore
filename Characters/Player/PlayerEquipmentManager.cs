@@ -17,7 +17,7 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.OnClassChange += HandleClassChange;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandleCharacterUnitSpawn;
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             base.CreateEventSubscriptions();
         }
@@ -30,9 +30,14 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.OnClassChange -= HandleClassChange;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandleCharacterUnitSpawn;
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             base.CleanupEventSubscriptions();
+        }
+
+        public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            HandleCharacterUnitSpawn();
         }
 
         public override void HandleCharacterUnitSpawn() {
