@@ -13,16 +13,20 @@ namespace AnyRPG {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
 
-
         [SerializeField]
         private List<BehaviorNode> behaviorNodes = new List<BehaviorNode>();
 
+        [Tooltip("Game conditions that must be satisfied for this behavior to be available.")]
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        // should this dialog open in a speech bubble and automatically progress
+        [Tooltip("Should this behavior automatically play when the object that is referencing it is activated.")]
         [SerializeField]
         private bool automatic = false;
+
+        [Tooltip("Can this behavior be repeated or should it only play once per game.")]
+        [SerializeField]
+        private bool repeatable = false;
 
         // track whether it is completed to prevent it from repeating if it is automatic
         private bool completed = false;
@@ -41,13 +45,15 @@ namespace AnyRPG {
 
         public List<BehaviorNode> MyBehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
-        public bool MyCompleted {
+        public bool Completed {
             get => completed;
             set {
                 //Debug.Log(MyName + ".BehaviorProfile.MyCompleted = " + value + "; id: " + GetInstanceID());
                 completed = value;
             } 
         }
+
+        public bool Repeatable { get => repeatable; set => repeatable = value; }
 
         public void HandlePrerequisiteUpdates() {
             // call back to owner

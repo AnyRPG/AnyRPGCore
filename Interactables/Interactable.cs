@@ -234,7 +234,7 @@ namespace AnyRPG {
             }
         }
 
-        protected override bool CanSpawn() {
+        public override bool CanSpawn() {
             bool returnResult = base.CanSpawn();
             if (returnResult == true && spawnRequiresValidOption) {
                 if (GetCurrentInteractables().Count == 0) {
@@ -830,6 +830,8 @@ namespace AnyRPG {
             return string.Format("{0}", returnString);
         }
 
+        #region MaterialChange
+
         public void InitializeMaterialsNew() {
             //public void InitializeMaterialsNew(Material temporaryMaterial) {
             //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew()");
@@ -952,6 +954,7 @@ namespace AnyRPG {
             }
         }
 
+        #endregion
 
         public override void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");

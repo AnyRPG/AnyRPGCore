@@ -11,25 +11,31 @@ namespace AnyRPG {
     [System.Serializable]
     public class SceneNode : DescribableResource {
 
+        [Tooltip("If there is no object in the scene tagged with DefaultSpawnLocation, then the player will spawn at these coordinates by default.")]
         [SerializeField]
         private Vector3 defaultSpawnPosition = Vector3.zero;
 
+        [Tooltip("Ambient sounds to play in the background while this scene is active")]
         [SerializeField]
         private string ambientMusicProfile = string.Empty;
 
         private AudioProfile realAmbientMusicProfile;
 
+        [Tooltip("Music to play in the background while this scene is active")]
         [SerializeField]
         private string backgroundMusicProfile = string.Empty;
 
         private AudioProfile realBackgroundMusicProfile;
 
+        [Tooltip("Prevent the player unit from spawning in this scene.  Useful for cutscenes that are separate scenes or menu / game over scenes.")]
         [SerializeField]
         private bool suppressCharacterSpawn = false;
 
+        [Tooltip("Prevent the main camera from activating when this scene is loaded.  Useful for cutscenes.")]
         [SerializeField]
         private bool suppressMainCamera = false;
 
+        [Tooltip("A Cutscene to play automatically when this level is loaded.")]
         [SerializeField]
         private string autoPlayCutsceneName = string.Empty;
 
@@ -37,6 +43,7 @@ namespace AnyRPG {
 
         private bool visited = false;
 
+        [Tooltip("A list of environment state names available to this scene.  Used for swapping environment states with unity timeline.")]
         [SerializeField]
         private List<string> environmentStateNames = new List<string>();
 

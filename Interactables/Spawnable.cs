@@ -160,7 +160,7 @@ namespace AnyRPG {
             return false;
         }
 
-        protected virtual bool CanSpawn() {
+        public virtual bool CanSpawn() {
             if (MyPrerequisitesMet) {
                 return true;
             }

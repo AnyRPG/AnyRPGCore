@@ -162,6 +162,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.dialogSaveData == null || overWrite) {
                 anyRPGSaveData.dialogSaveData = new List<DialogSaveData>();
             }
+            if (anyRPGSaveData.behaviorSaveData == null || overWrite) {
+                anyRPGSaveData.behaviorSaveData = new List<BehaviorSaveData>();
+            }
             if (anyRPGSaveData.sceneNodeSaveData == null || overWrite) {
                 anyRPGSaveData.sceneNodeSaveData = new List<SceneNodeSaveData>();
             }
@@ -346,6 +349,7 @@ namespace AnyRPG {
 
             SaveQuestData(anyRPGSaveData);
             SaveDialogData(anyRPGSaveData);
+            SaveBehaviorData(anyRPGSaveData);
             SaveActionBarData(anyRPGSaveData);
             SaveInventorySlotData(anyRPGSaveData);
             SaveEquippedBagData(anyRPGSaveData);
@@ -456,6 +460,18 @@ namespace AnyRPG {
             }
         }
 
+        public void SaveBehaviorData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveQuestData()");
+
+            foreach (BehaviorProfile behaviorProfile in SystemBehaviorProfileManager.MyInstance.GetResourceList()) {
+                BehaviorSaveData behaviorSaveData = new BehaviorSaveData();
+                behaviorSaveData.MyName = behaviorProfile.MyName;
+                behaviorSaveData.completed = behaviorProfile.Completed;
+                anyRPGSaveData.behaviorSaveData.Add(behaviorSaveData);
+                //Debug.Log("Savemanager.SaveQuestData(): " + questSaveData.MyName + ", turnedIn: " + questSaveData.turnedIn + ", inLog: " + questSaveData.inLog);
+            }
+        }
+
         public void SaveSceneNodeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
@@ -478,7 +494,7 @@ namespace AnyRPG {
             foreach (Cutscene cutscene in SystemCutsceneManager.MyInstance.GetResourceList()) {
                 CutsceneSaveData cutsceneSaveData = new CutsceneSaveData();
                 cutsceneSaveData.MyName = cutscene.MyName;
-                cutsceneSaveData.isCutSceneViewed = cutscene.MyViewed;
+                cutsceneSaveData.isCutSceneViewed = cutscene.Viewed;
 
                 anyRPGSaveData.cutsceneSaveData.Add(cutsceneSaveData);
             }
@@ -606,6 +622,12 @@ namespace AnyRPG {
         public void LoadDialogData(AnyRPGSaveData anyRPGSaveData) {
             foreach (DialogSaveData dialogSaveData in anyRPGSaveData.dialogSaveData) {
                 SystemDialogManager.MyInstance.LoadDialog(dialogSaveData);
+            }
+        }
+
+        public void LoadBehaviorData(AnyRPGSaveData anyRPGSaveData) {
+            foreach (BehaviorSaveData behaviorSaveData in anyRPGSaveData.behaviorSaveData) {
+                SystemBehaviorProfileManager.MyInstance.LoadBehavior(behaviorSaveData);
             }
         }
 
@@ -892,6 +914,7 @@ namespace AnyRPG {
             LoadReputationData(anyRPGSaveData);
             LoadQuestData(anyRPGSaveData);
             LoadDialogData(anyRPGSaveData);
+            LoadBehaviorData(anyRPGSaveData);
             LoadSceneNodeData(anyRPGSaveData);
             LoadCutsceneData(anyRPGSaveData);
 

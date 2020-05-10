@@ -355,7 +355,7 @@ namespace AnyRPG {
         }
 
         private void DestroySpawns() {
-            Debug.Log("UnitSpawnNode.DestroySpawn(): Destroying spawns");
+            //Debug.Log("UnitSpawnNode.DestroySpawn(): Destroying spawns");
             foreach (GameObject _gameObject in spawnReferences) {
                 Destroy(_gameObject, despawnDelay);
             }

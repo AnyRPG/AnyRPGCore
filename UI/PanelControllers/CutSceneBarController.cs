@@ -117,7 +117,7 @@ namespace AnyRPG {
             */
             ClearCoRoutine();
             gameObject.SetActive(false);
-            currentCutscene.MyViewed = true;
+            currentCutscene.Viewed = true;
             // if this is not a cutscene that should return, then do not, else do
             //if (currentCutscene.MyUnloadSceneOnEnd) {
             LevelManager.MyInstance.EndCutscene(currentCutscene);
@@ -175,7 +175,11 @@ namespace AnyRPG {
         public IEnumerator playDialog() {
             //Debug.Log("CharacterAbilitymanager.playDialog()");
             float elapsedTime = 0f;
+            dialogIndex = 0;
             DialogNode currentdialogNode = null;
+
+            // this needs to be reset to allow for repeatable dialogs to replay
+            currentDialog.TurnedIn = false;
 
             while (currentDialog.TurnedIn == false) {
                 foreach (DialogNode dialogNode in currentDialog.MyDialogNodes) {

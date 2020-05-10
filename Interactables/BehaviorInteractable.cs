@@ -85,7 +85,7 @@ namespace AnyRPG {
             //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList) {
-                if (behaviorProfile.MyPrerequisitesMet == true && behaviorProfile.MyCompleted == false) {
+                if (behaviorProfile.MyPrerequisitesMet == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
                 }
@@ -133,7 +133,9 @@ namespace AnyRPG {
             behaviorIndex = 0;
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
-            interactable.UpdateNamePlateImage();
+
+            // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
+            ProcessBehaviorBeginEnd();
             while (behaviorIndex < behaviorProfile.MyBehaviorNodes.Count) {
                 foreach (BehaviorNode behaviorNode in behaviorProfile.MyBehaviorNodes) {
                     if (behaviorNode.MyStartTime <= elapsedTime && behaviorNode.MyCompleted == false) {
@@ -167,10 +169,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ") : END LOOP");
             behaviorCoroutine = null;
             suppressNameplateImage = false;
-            behaviorProfile.MyCompleted = true;
-            interactable.UpdateNamePlateImage();
+            behaviorProfile.Completed = true;
 
+            // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
+            ProcessBehaviorBeginEnd();
         }
+
 
         public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
@@ -218,6 +222,11 @@ namespace AnyRPG {
             }
         }
 
+        public void ProcessBehaviorBeginEnd() {
+            base.HandlePrerequisiteUpdates();
+            MiniMapStatusUpdateHandler(this);
+        }
+
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
@@ -238,7 +247,7 @@ namespace AnyRPG {
         public void PlayAutomaticBehaviors() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.PlayAutomaticBehaviors()");
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
-                if (behaviorProfile.MyAutomatic == true && behaviorProfile.MyCompleted == false) {
+                if (behaviorProfile.MyAutomatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     TryPlayBehavior(behaviorProfile);
                 }
             }
@@ -278,7 +287,12 @@ namespace AnyRPG {
             LevelManager.MyInstance.PlayLevelSounds();
         }
 
-
+        public override bool CanShowMiniMapIcon() {
+            if (suppressNameplateImage == true) {
+                return false;
+            }
+            return base.CanShowMiniMapIcon();
+        }
 
     }
 

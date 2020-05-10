@@ -226,7 +226,7 @@ namespace AnyRPG {
             if (GetActiveSceneNode() != null) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): GetActiveSceneNode is not null");
                 if (GetActiveSceneNode().MyAutoPlayCutscene != null) {
-                    if (GetActiveSceneNode().MyAutoPlayCutscene.MyViewed == true) {
+                    if (GetActiveSceneNode().MyAutoPlayCutscene.Viewed == true && GetActiveSceneNode().MyAutoPlayCutscene.Repeatable == false) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
                         CameraManager.MyInstance.ActivateMainCamera();
                         return;

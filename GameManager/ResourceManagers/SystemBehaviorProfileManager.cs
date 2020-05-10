@@ -77,6 +77,14 @@ namespace AnyRPG {
             return returnList;
         }
 
-    }
+        public void LoadBehavior(BehaviorSaveData behaviorSaveData) {
+            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
+            BehaviorProfile behaviorProfile = GetResource(behaviorSaveData.MyName);
+            if (behaviorProfile != null) {
+                behaviorProfile.Completed = behaviorSaveData.completed;
+            }
+        }
+
+    }
 }

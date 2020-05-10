@@ -39,6 +39,7 @@ namespace AnyRPG {
         public List<EquipmentSaveData> equipmentSaveData;
         public List<CurrencySaveData> currencySaveData;
         public List<DialogSaveData> dialogSaveData;
+        public List<BehaviorSaveData> behaviorSaveData;
         public List<SceneNodeSaveData> sceneNodeSaveData;
         public List<CutsceneSaveData> cutsceneSaveData;
         public List<StatusEffectSaveData> statusEffectSaveData;
@@ -71,7 +72,7 @@ namespace AnyRPG {
     public struct SceneNodeSaveData {
 
         public string MyName;
-        public bool isCutSceneViewed;
+        public bool visited;
 
         public List<PersistentObjectSaveData> persistentObjects;
     }
@@ -95,7 +96,6 @@ namespace AnyRPG {
         public float DirectionZ;
     }
 
-
     [Serializable]
     public struct DialogSaveData {
 
@@ -103,6 +103,12 @@ namespace AnyRPG {
         public bool turnedIn;
     }
 
+    [Serializable]
+    public struct BehaviorSaveData {
+
+        public string MyName;
+        public bool completed;
+    }
 
     [Serializable]
     public struct ActionBarSaveData {

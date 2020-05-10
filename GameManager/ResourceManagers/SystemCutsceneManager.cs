@@ -66,7 +66,7 @@ namespace AnyRPG {
                 //Debug.LogError("SystemSceneNodeManager.LoadSceneNode(): Scene " + sceneNodeSaveData.MyName + " could not be found.");
                 return;
             }
-            cutScene.MyViewed = cutsceneSaveData.isCutSceneViewed;
+            cutScene.Viewed = cutsceneSaveData.isCutSceneViewed;
         }
     }
 

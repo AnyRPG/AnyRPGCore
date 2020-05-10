@@ -53,7 +53,6 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            //SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
             eventSubscriptionsInitialized = true;
         }
 
@@ -63,7 +62,6 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            //SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
             foreach (IInteractable _interactable in interactable.MyInteractables) {
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
                     _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;

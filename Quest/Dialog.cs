@@ -17,6 +17,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool automatic = false;
 
+        [Tooltip("This should be set to true for dialogs that will be included in cutscenes to allow cutscene replay.")]
+        [SerializeField]
+        private bool repeatable = false;
+
+        [Tooltip("The name of an audio profile to play when this dialog is started.")]
         [SerializeField]
         private string audioProfileName = string.Empty;
 
@@ -25,6 +30,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<DialogNode> dialogNodes = new List<DialogNode>();
 
+        [Tooltip("Game conditions that must be satisfied for this dialog to be available")]
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
@@ -85,6 +91,7 @@ namespace AnyRPG {
         public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
         public AudioProfile MyAudioProfile { get => audioProfile; set => audioProfile = value; }
+        public bool Repeatable { get => repeatable; set => repeatable = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

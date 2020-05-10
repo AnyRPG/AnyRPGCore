@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider;
 
+        [Tooltip("The names of the dialogs available to this interactable")]
         [SerializeField]
         private List<string> dialogNames = new List<string>();
 
@@ -113,7 +114,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             foreach (Dialog dialog in dialogList) {
-                if (dialog.MyPrerequisitesMet == true && dialog.TurnedIn == false) {
+                if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
                     currentList.Add(dialog);
                 }
             }
@@ -169,6 +170,9 @@ namespace AnyRPG {
             float elapsedTime = 0f;
             dialogIndex = 0;
             DialogNode currentdialogNode = null;
+
+            // this needs to be reset to allow for repeatable dialogs to replay
+            dialog.TurnedIn = false;
 
             while (dialog.TurnedIn == false) {
                 foreach (DialogNode dialogNode in dialog.MyDialogNodes) {

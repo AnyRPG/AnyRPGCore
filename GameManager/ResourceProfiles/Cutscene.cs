@@ -11,6 +11,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class Cutscene : DescribableResource {
 
+        [Tooltip("Can this cutscene be viewed more than once.")]
+        [SerializeField]
+        private bool repeatable = false;
+
         [Tooltip("If this cutscene plays in a separate scene, this should be set to the scene name.")]
         [SerializeField]
         private string loadSceneName = string.Empty;
@@ -45,13 +49,14 @@ namespace AnyRPG {
 
         private Dialog dialog;
 
-        public bool MyViewed { get => viewed; set => viewed = value; }
+        public bool Viewed { get => viewed; set => viewed = value; }
         public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
         public Dialog MyDialog { get => dialog; set => dialog = value; }
         public bool MyUnloadSceneOnEnd { get => unloadSceneOnEnd; set => unloadSceneOnEnd = value; }
         public SceneNode MyLoadScene { get => loadScene; set => loadScene = value; }
         public string MyTimelineName { get => timelineName; set => timelineName = value; }
         public bool RequirePlayerUnitSpawn { get => requirePlayerUnitSpawn; set => requirePlayerUnitSpawn = value; }
+        public bool Repeatable { get => repeatable; set => repeatable = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

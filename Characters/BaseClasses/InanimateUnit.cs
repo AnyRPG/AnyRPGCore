@@ -156,7 +156,8 @@ namespace AnyRPG {
         public void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate()");
 
-            if (interactable != null && interactable.CanInteract() && namePlate == null) {
+            //if (interactable != null && interactable.CanInteract() && namePlate == null) {
+            if (interactable != null && interactable.CanSpawn() == true && namePlate == null) {
                 //Debug.Log(gameObject.name + ".InanimateUnit.InitializeNamePlate(): can interact with interactable");
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this, (namePlateTransform == null ? true : false));
                 if (_namePlate != null) {
