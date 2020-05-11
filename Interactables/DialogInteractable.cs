@@ -172,11 +172,11 @@ namespace AnyRPG {
             DialogNode currentdialogNode = null;
 
             // this needs to be reset to allow for repeatable dialogs to replay
-            dialog.TurnedIn = false;
+            dialog.ResetStatus();
 
             while (dialog.TurnedIn == false) {
                 foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
-                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
+                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
                         if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
                             namePlateUnit.MyNamePlate.SetSpeechText(dialogNode.MyDescription);
@@ -188,7 +188,7 @@ namespace AnyRPG {
                             CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
                         }
 
-                        dialogNode.MyShown = true;
+                        dialogNode.Shown = true;
                         dialogIndex++;
                     }
                 }

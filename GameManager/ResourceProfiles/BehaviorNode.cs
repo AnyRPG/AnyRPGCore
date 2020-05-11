@@ -8,6 +8,7 @@ namespace AnyRPG {
     public class BehaviorNode {
 
         // time in seconds to show this text
+        [Tooltip("The time, in seconds, after the behavior starts playing to play this node.")]
         [SerializeField]
         private float startTime;
 
@@ -20,6 +21,13 @@ namespace AnyRPG {
         public float MyStartTime { get => startTime; set => startTime = value; }
         public List<BehaviorActionNode> MyBehaviorActionNodes { get => behaviorActionNodes; set => behaviorActionNodes = value; }
         public bool MyCompleted { get => completed; set => completed = value; }
+
+        /// <summary>
+        /// Reset the completion status
+        /// </summary>
+        public void ResetStatus() {
+            completed = false;
+        }
     }
 
 }

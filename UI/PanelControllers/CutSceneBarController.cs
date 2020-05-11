@@ -139,6 +139,7 @@ namespace AnyRPG {
 
             }
             if (currentDialog != null) {
+                dialogIndex = 0;
                 if (currentDialog.MyAutomatic == true) {
                     dialogCoroutine = StartCoroutine(playDialog());
                 } else {
@@ -168,22 +169,21 @@ namespace AnyRPG {
             }
 
 
-            currentDialogNode.MyShown = true;
+            currentDialogNode.Shown = true;
         }
 
 
         public IEnumerator playDialog() {
             //Debug.Log("CharacterAbilitymanager.playDialog()");
             float elapsedTime = 0f;
-            dialogIndex = 0;
             DialogNode currentdialogNode = null;
 
             // this needs to be reset to allow for repeatable dialogs to replay
-            currentDialog.TurnedIn = false;
+            currentDialog.ResetStatus();
 
             while (currentDialog.TurnedIn == false) {
                 foreach (DialogNode dialogNode in currentDialog.MyDialogNodes) {
-                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.MyShown == false) {
+                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
 
                         ProcessDialogNode(dialogIndex);

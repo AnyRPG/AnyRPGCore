@@ -7,18 +7,20 @@ namespace AnyRPG {
     [System.Serializable]
     public class DialogNode {
 
-        // time in seconds to show this text
+        [Tooltip("The number of seconds to wait after the dialog starts playing before showing this text.")]
         [SerializeField]
         private float startTime;
 
-        // the length of time the bubble should be shown for
+        [Tooltip("The length of time the bubble should be shown for")]
         [SerializeField]
         private float showTime = 10f;
 
+        [Tooltip("The dialog text to display")]
         [SerializeField]
         [TextArea(10, 20)]
         private string description;
 
+        [Tooltip("If this dialog is manually driven, this text will show on the next button.")]
         [SerializeField]
         private string nextOption;
 
@@ -28,8 +30,15 @@ namespace AnyRPG {
         public string MyDescription { get => description; set => description = value; }
         public string MyNextOption { get => nextOption; set => nextOption = value; }
         public float MyStartTime { get => startTime; set => startTime = value; }
-        public bool MyShown { get => shown; set => shown = value; }
+        public bool Shown { get => shown; set => shown = value; }
         public float MyShowTime { get => showTime; set => showTime = value; }
+
+        /// <summary>
+        /// Set the shown value to false
+        /// </summary>
+        public void ResetStatus() {
+            shown = false;
+        }
     }
 
 }

@@ -93,6 +93,19 @@ namespace AnyRPG {
         public AudioProfile MyAudioProfile { get => audioProfile; set => audioProfile = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }
 
+        /// <summary>
+        /// Set the shown value to false for all dialog Nodes and reset the turned in status
+        /// </summary>
+        public void ResetStatus() {
+            if (repeatable == false) {
+                return;
+            }
+            turnedIn = false;
+            foreach (DialogNode dialogNode in dialogNodes) {
+                dialogNode.ResetStatus();
+            }
+        }
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
 

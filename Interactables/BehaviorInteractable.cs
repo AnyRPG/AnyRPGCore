@@ -134,6 +134,8 @@ namespace AnyRPG {
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
 
+            behaviorProfile.ResetStatus();
+
             // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
             ProcessBehaviorBeginEnd();
             while (behaviorIndex < behaviorProfile.MyBehaviorNodes.Count) {

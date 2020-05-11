@@ -90,7 +90,19 @@ namespace AnyRPG {
                     }
                 }
             }
-
         }
+
+        /// <summary>
+        /// Reset the completion status of this profile and all its nodes
+        /// </summary>
+        public void ResetStatus() {
+            if (repeatable == true) {
+                completed = false;
+                foreach (BehaviorNode behaviorNode in behaviorNodes) {
+                    behaviorNode.ResetStatus();
+                }
+            }
+        }
+
     }
 }
