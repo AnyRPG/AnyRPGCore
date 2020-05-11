@@ -478,6 +478,7 @@ namespace AnyRPG {
             foreach (SceneNode sceneNode in SystemSceneNodeManager.MyInstance.GetResourceList()) {
                 SceneNodeSaveData sceneNodeSaveData = new SceneNodeSaveData();
                 sceneNodeSaveData.MyName = sceneNode.MyName;
+                sceneNodeSaveData.visited = sceneNode.Visited;
                 //sceneNodeSaveData.isCutSceneViewed = sceneNode.MyCutsceneViewed;
                 sceneNodeSaveData.persistentObjects = new List<PersistentObjectSaveData>();
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNode.MyPersistentObjects.Values) {

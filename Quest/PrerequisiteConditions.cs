@@ -31,6 +31,9 @@ namespace AnyRPG {
         private List<DialogPrerequisite> dialogPrerequisites = new List<DialogPrerequisite>();
 
         [SerializeField]
+        private List<VisitZonePrerequisite> visitZonePrerequisites = new List<VisitZonePrerequisite>();
+
+        [SerializeField]
         private List<TradeSkillPrerequisite> tradeSkillPrerequisites = new List<TradeSkillPrerequisite>();
 
         [SerializeField]
@@ -189,6 +192,25 @@ namespace AnyRPG {
                 returnValue = true;
             }
             tempCount = 0;
+            foreach (VisitZonePrerequisite visitZonePrerequisite in visitZonePrerequisites) {
+                //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
+                prerequisiteCount++;
+                bool checkResult = visitZonePrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                if (requireAny && checkResult == true) {
+                    returnValue = true;
+                    break;
+                }
+                if (!checkResult && requireAny == false) {
+                    falseCount++;
+                    break;
+                } else if (checkResult && requireAny == false) {
+                    tempCount++;
+                }
+            }
+            if (tempCount > 0 && tempCount == visitZonePrerequisites.Count && requireAny == false) {
+                returnValue = true;
+            }
+            tempCount = 0;
             foreach (FactionPrerequisite factionPrerequisite in factionPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
@@ -235,6 +257,9 @@ namespace AnyRPG {
             foreach (IPrerequisite prerequisite in dialogPrerequisites) {
                 prerequisite.UpdateStatus(notify);
             }
+            foreach (IPrerequisite prerequisite in visitZonePrerequisites) {
+                prerequisite.UpdateStatus(notify);
+            }
             foreach (IPrerequisite prerequisite in tradeSkillPrerequisites) {
                 prerequisite.UpdateStatus(notify);
             }
@@ -262,6 +287,10 @@ namespace AnyRPG {
                 prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
             foreach (IPrerequisite prerequisite in dialogPrerequisites) {
+                prerequisite.SetupScriptableObjects();
+                prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
+            }
+            foreach (IPrerequisite prerequisite in visitZonePrerequisites) {
                 prerequisite.SetupScriptableObjects();
                 prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }

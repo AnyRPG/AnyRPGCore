@@ -72,6 +72,7 @@ namespace AnyRPG {
                 //Debug.LogError("SystemSceneNodeManager.LoadSceneNode(): Scene " + sceneNodeSaveData.MyName + " could not be found.");
                 return;
             }
+            sceneNode.Visited = sceneNodeSaveData.visited;
             if (sceneNodeSaveData.persistentObjects != null) {
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNodeSaveData.persistentObjects) {
                     if (sceneNode.MyPersistentObjects.ContainsKey(persistentObjectSaveData.UUID) == false) {

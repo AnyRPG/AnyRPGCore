@@ -796,18 +796,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (baseCharacter.MyCharacterUnit.MyMounted == true) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
-
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
-                    if (statusEffectNode.MyStatusEffect is MountEffect) {
-                        //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
-                        statusEffectNode.CancelStatusEffect();
-                        break;
-                    }
-                }
-            }
+            baseCharacter.MyCharacterUnit.CancelMountEffects();
 
             if (usedAbility.MyCanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted

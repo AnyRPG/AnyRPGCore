@@ -53,6 +53,8 @@ namespace AnyRPG {
 
         private bool levelManagerInitialized = false;
 
+        private SceneNode activeSceneNode = null;
+
         [Header("LOADING SCREEN")]
         public Slider loadBar;
         public TextMeshProUGUI finishedLoadingText;
@@ -85,7 +87,8 @@ namespace AnyRPG {
 
         public SceneNode GetActiveSceneNode() {
             //Debug.Log("LevelManager.GetActiveSceneNode(): return " + SceneManager.GetActiveScene().name);
-            return SystemSceneNodeManager.MyInstance.GetResource(SceneManager.GetActiveScene().name);
+            //return SystemSceneNodeManager.MyInstance.GetResource(SceneManager.GetActiveScene().name);
+            return activeSceneNode;
         }
 
         public Vector3 GetSpawnLocation() {
@@ -167,9 +170,17 @@ namespace AnyRPG {
             NavMesh.pathfindingIterationsPerFrame = 500;
         }
 
+        public void SetActiveSceneNode() {
+            activeSceneNode = SystemSceneNodeManager.MyInstance.GetResource(SceneManager.GetActiveScene().name);
+        }
+
         public void PerformLevelLoadActivities() {
             // determine if this is the game manager loading scene
             //Debug.Log("Levelmanager.PerformLevelLoadActivities(): Finding Scene Settings. SceneManager.GetActiveScene().name: " + SceneManager.GetActiveScene().name + " == " + initializationScene);
+            SetActiveSceneNode();
+            if (activeSceneNode != null) {
+                activeSceneNode.Visit();
+            }
             if (SceneManager.GetActiveScene().name == initializationScene) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Loading Main Menu");
                 LoadLevel(mainMenuScene);

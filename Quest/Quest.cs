@@ -131,6 +131,9 @@ namespace AnyRPG {
         private DialogObjective[] dialogObjectives;
 
         [SerializeField]
+        private VisitZoneObjective[] visitZoneObjectives;
+
+        [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         /// <summary>
@@ -202,6 +205,12 @@ namespace AnyRPG {
                     }
                 }
 
+                foreach (VisitZoneObjective o in visitZoneObjectives) {
+                    if (!o.IsComplete) {
+                        return false;
+                    }
+                }
+
                 //Debug.Log("Quest: " + MyTitle + ": no objectives for this quest:  were not complete, about to return true");
                 return true;
             }
@@ -255,6 +264,7 @@ namespace AnyRPG {
         //public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
         public bool MyHasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
         public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
+        public VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
@@ -306,6 +316,9 @@ namespace AnyRPG {
                 o.OnAbandonQuest();
             }
             foreach (DialogObjective o in MyDialogObjectives) {
+                o.OnAbandonQuest();
+            }
+            foreach (VisitZoneObjective o in VisitZoneObjectives) {
                 o.OnAbandonQuest();
             }
         }
@@ -382,6 +395,9 @@ namespace AnyRPG {
             foreach (DialogObjective obj in MyDialogObjectives) {
                 objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
+            foreach (VisitZoneObjective obj in VisitZoneObjectives) {
+                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
+            }
             objectives = string.Join("\n", objectiveList);
             if (objectives == string.Empty) {
                 objectives = MyName;
@@ -408,6 +424,9 @@ namespace AnyRPG {
                 o.OnAcceptQuest(this, printMessages);
             }
             foreach (DialogObjective o in MyDialogObjectives) {
+                o.OnAcceptQuest(this, printMessages);
+            }
+            foreach (VisitZoneObjective o in VisitZoneObjectives) {
                 o.OnAcceptQuest(this, printMessages);
             }
             foreach (QuestQuestObjective o in MyQuestQuestObjectives) {
@@ -457,6 +476,11 @@ namespace AnyRPG {
                 }
             }
             foreach (DialogObjective o in MyDialogObjectives) {
+                if (!o.IsComplete) {
+                    questComplete = false;
+                }
+            }
+            foreach (VisitZoneObjective o in VisitZoneObjectives) {
                 if (!o.IsComplete) {
                     questComplete = false;
                 }
@@ -584,6 +608,9 @@ namespace AnyRPG {
                 objective.SetupScriptableObjects();
             }
             foreach (QuestObjective objective in dialogObjectives) {
+                objective.SetupScriptableObjects();
+            }
+            foreach (QuestObjective objective in visitZoneObjectives) {
                 objective.SetupScriptableObjects();
             }
             //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");

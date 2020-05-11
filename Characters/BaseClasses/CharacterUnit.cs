@@ -133,8 +133,24 @@ namespace AnyRPG {
             if (capsuleCollider != null) {
                 capsuleCollider.enabled = false;
             }
-
         }
+
+        public virtual void CancelMountEffects() {
+            if (MyMounted == true) {
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
+
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
+                    if (statusEffectNode.MyStatusEffect is MountEffect) {
+                        //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
+                        statusEffectNode.CancelStatusEffect();
+                        break;
+                    }
+                }
+            }
+        }
+
+
 
         public int CurrentHealth() {
             if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {

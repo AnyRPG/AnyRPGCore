@@ -21,7 +21,7 @@ namespace AnyRPG {
         public IAbility MyAbility { get => ability; }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
+            //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
             source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);

@@ -11,6 +11,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class SceneNode : DescribableResource {
 
+        public event System.Action OnVisitZone = delegate { };
+
         [Tooltip("If there is no object in the scene tagged with DefaultSpawnLocation, then the player will spawn at these coordinates by default.")]
         [SerializeField]
         private Vector3 defaultSpawnPosition = Vector3.zero;
@@ -60,12 +62,13 @@ namespace AnyRPG {
         public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
         public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene MyAutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
-        public bool Visited { get => visited; }
+        public bool Visited { get => visited; set => visited = value; }
 
         public void Visit() {
             if (visited == false) {
                 visited = true;
             }
+            OnVisitZone();
         }
 
         public override void SetupScriptableObjects() {
