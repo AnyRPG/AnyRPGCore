@@ -23,6 +23,10 @@ namespace AnyRPG {
         [SerializeField]
         private string displayName = string.Empty;
 
+        [Tooltip("If true, the faction will not be shown on the nameplate")]
+        [SerializeField]
+        private bool suppressFaction = true;
+
         [Tooltip("Set a transform to override the default nameplate placement above the interactable.  Useful for interactables that are not 2m tall.")]
         [SerializeField]
         private Transform namePlateTransform = null;
@@ -31,12 +35,15 @@ namespace AnyRPG {
 
         [Header("UNIT FRAME SETTINGS")]
 
+        [Tooltip("An object or bone in the heirarchy to use as the camera target.")]
         [SerializeField]
         private string unitFrameTarget = string.Empty;
 
+        [Tooltip("The position the camera is looking at, relative to the target")]
         [SerializeField]
         private Vector3 unitFrameCameraLookOffset = Vector3.zero;
 
+        [Tooltip("The position of the camera relative to the target")]
         [SerializeField]
         private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
 
@@ -62,6 +69,8 @@ namespace AnyRPG {
                 return transform;
             }
         }
+
+        public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
 
         public bool HasHealth() {
             return false;
@@ -193,7 +202,7 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".InanimateUnit.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePrerequisiteUpdates()");
             InitializeNamePlate();
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();

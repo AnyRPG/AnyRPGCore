@@ -65,6 +65,13 @@ namespace AnyRPG {
 
         public void InitializeCombatTextController() {
             gameObject.SetActive(true);
+
+            // if the combat text ui is not active, then we should just immediately disable this
+            if (gameObject.activeInHierarchy == false) {
+                CombatTextManager.MyInstance.returnControllerToPool(this);
+                return;
+            }
+
             //Debug.Log("Combat Text spawning: " + textType);
             randomX = Random.Range(0, randomXLimit);
             randomY = Random.Range(0, randomYLimit);

@@ -228,7 +228,9 @@ namespace AnyRPG {
                         if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): not showing faction");
                         } else {
-                            factionString = "<" + namePlateUnit.MyFaction.MyName + ">";
+                            if (namePlateUnit.SuppressFaction == false) {
+                                factionString = "<" + namePlateUnit.MyFaction.MyName + ">";
+                            }
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): showing faction");
                         }
                         if (namePlateUnit.Title != string.Empty) {

@@ -52,10 +52,16 @@ namespace AnyRPG {
 
         [Header("NAMEPLATE")]
 
+        [Tooltip("If true, the nameplate is not shown above this unit.")]
         [SerializeField]
         private bool suppressNamePlate = false;
 
+        [Tooltip("If true, the nameplate will not show the faction of the unit.")]
+        [SerializeField]
+        private bool suppressFaction = false;
+
         // the transform to use for the nameplate anchor
+        [Tooltip("Drag an object in the heirarchy here and the nameplate will show at its transform location")]
         [SerializeField]
         private Transform namePlateTransform = null;
 
@@ -104,6 +110,7 @@ namespace AnyRPG {
         public float MyHitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
         public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
         public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
+        public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
