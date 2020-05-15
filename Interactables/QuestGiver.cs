@@ -186,6 +186,10 @@ namespace AnyRPG {
 
         public void UpdateQuestStatus() {
             //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus()");
+            if (PlayerManager.MyInstance == null) {
+                Debug.LogError(gameObject.name + ": PlayerManager not found.  Is the GameManager in the scene?");
+                return;
+            }
             if (PlayerManager.MyInstance.MyCharacter == null) {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;

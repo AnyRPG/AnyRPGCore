@@ -116,9 +116,9 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
-                PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged += UpdateStatsDescription;
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.OnStatChanged += UpdateStatsDescription;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -133,8 +133,8 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnStatChanged -= UpdateStatsDescription;
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
@@ -165,7 +165,7 @@ namespace AnyRPG {
             SetPreviewTarget();
             UpdateStatsDescription();
             if (PlayerManager.MyInstance.MyCharacter != null) {
-                PopupWindowManager.MyInstance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.MyCharacterName);
+                PopupWindowManager.MyInstance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.CharacterName);
             }
         }
 
@@ -203,38 +203,38 @@ namespace AnyRPG {
                 Debug.LogError("Must set statsdescription text in inspector!");
             }
             string updateString = string.Empty;
-            updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.MyCharacterName + "\n";
+            updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.CharacterName + "\n";
             updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName) + "\n";
             updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName) + "\n";
-            updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "\n";
-            updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) + "\n\n";
-            updateString += "Stamina: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStamina;
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStamina != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStamina) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStamina + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStamina - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStamina) + "</color> )";
+            updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
+            updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
+            updateString += "Stamina: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina) {
+                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina) + "</color> )";
             }
             updateString += "\n";
-            updateString += "Strength: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStrength;
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStrength != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStrength) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStrength + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStrength - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseStrength) + "</color> )";
+            updateString += "Strength: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength) {
+                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength) + "</color> )";
             }
             updateString += "\n";
-            updateString += "Intellect: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyIntellect;
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyIntellect != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseIntellect) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseIntellect + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyIntellect - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseIntellect) + "</color> )";
+            updateString += "Intellect: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect) {
+                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect) + "</color> )";
             }
             updateString += "\n";
-            updateString += "Agility: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyAgility;
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyAgility != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyAgility - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseAgility) + "</color> )";
+            updateString += "Agility: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility) {
+                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility) + "</color> )";
             }
 
             updateString += "\n\n";
-            updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth + "\n";
-            updateString += "Mana: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana + " / " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxMana + "\n\n";
-            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyArmor + "\n";
-            updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyPhysicalDamage);
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyPhysicalDamage != 0f) {
-                updateString += " ( " + LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyPhysicalDamage + "</color> )";
+            updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth + "\n";
+            updateString += "Mana: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxMana + "\n\n";
+            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyArmor + "\n";
+            updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage);
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage != 0f) {
+                updateString += " ( " + LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage + "</color> )";
             }
             /*
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) {
@@ -245,7 +245,7 @@ namespace AnyRPG {
             updateString += "SpellPower: " + LevelEquations.GetSpellPowerForCharacter(PlayerManager.MyInstance.MyCharacter);
             updateString += "\n";
             updateString += "Critical Hit Chance: " + LevelEquations.GetCritChanceForCharacter(PlayerManager.MyInstance.MyCharacter) + "%\n\n";
-            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyRunSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.MyRunSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }
@@ -312,8 +312,8 @@ namespace AnyRPG {
             */
             CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (characterEquipmentManager != null) {
-                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-                    characterEquipmentManager.MyCurrentEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment;
+                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
+                    characterEquipmentManager.MyCurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment;
                     characterEquipmentManager.EquipCharacter();
                 }
             }

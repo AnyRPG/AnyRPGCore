@@ -74,8 +74,8 @@ namespace AnyRPG {
 
             // player character case
             if (baseCharacter != null) {
-                if (baseCharacter.MyCharacterUnit != null) {
-                    playerUnitObject = baseCharacter.MyCharacterUnit.gameObject;
+                if (baseCharacter.CharacterUnit != null) {
+                    playerUnitObject = baseCharacter.CharacterUnit.gameObject;
                 } else {
                     //Debug.Log(gameObject.name + ".CharacterEquipmentManager.CreateComponentReferences(): baseCharacter.MyCharacterUnit == null!");
                 }
@@ -83,8 +83,8 @@ namespace AnyRPG {
 
             // player character case
             if (baseCharacter != null) {
-                if (baseCharacter.MyCharacterUnit != null) {
-                    dynamicCharacterAvatar = baseCharacter.MyCharacterUnit.GetComponent<DynamicCharacterAvatar>();
+                if (baseCharacter.CharacterUnit != null) {
+                    dynamicCharacterAvatar = baseCharacter.CharacterUnit.GetComponent<DynamicCharacterAvatar>();
                 }
             }
 

@@ -74,14 +74,14 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget += HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget += HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(GameObject target) {
@@ -122,17 +122,17 @@ namespace AnyRPG {
             float distanceToTarget = 0f;
             bool inRange = false;
             while (HasTarget()) {
-                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit == null) {
+                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.AnimatedUnit == null) {
                     break;
                 }
-                distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.transform.position, target.transform.position);
+                distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.AnimatedUnit.transform.position, target.transform.position);
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionBarController actionBarController in actionBarControllers) {
                     foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
                         if ((actionButton.MyUseable as BaseAbility) is BaseAbility) {
                             BaseAbility baseAbility = actionButton.MyUseable as BaseAbility;
-                            if (baseAbility.MyUseMeleeRange == true) {
-                                if (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit.MyHitBoxSize < distanceToTarget) {
+                            if (baseAbility.UseMeleeRange == true) {
+                                if (PlayerManager.MyInstance.MyCharacter.CharacterUnit.MyHitBoxSize < distanceToTarget) {
                                     // red text
                                     inRange = false;
                                 } else {
@@ -141,7 +141,7 @@ namespace AnyRPG {
                                 }
                                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): melee " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
                             } else {
-                                if (baseAbility.MyMaxRange < distanceToTarget) {
+                                if (baseAbility.MaxRange < distanceToTarget) {
                                     // set text color to red
                                     inRange = false;
                                 } else {
@@ -236,9 +236,9 @@ namespace AnyRPG {
                 return;
             }
             // TODO: set maximum size of loop to less of abilitylist count or button count
-            int abilityListCount = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Count;
+            int abilityListCount = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                 AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;

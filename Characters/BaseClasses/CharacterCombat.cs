@@ -95,12 +95,12 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnDie += OnDieHandler;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnDie += OnDieHandler;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+            if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.CreateEventSubscriptions(): subscribing to onequipmentchanged");
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
+                baseCharacter.CharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             eventSubscriptionsInitialized = true;
@@ -108,11 +108,11 @@ namespace AnyRPG {
 
         protected virtual void CleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnDie -= OnDieHandler;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnDie -= OnDieHandler;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
+            if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
+                baseCharacter.CharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
@@ -147,7 +147,7 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 return;
             }
-            if (!baseCharacter.MyCharacterStats.IsAlive) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
                 return;
             }
 
@@ -157,13 +157,13 @@ namespace AnyRPG {
                 attackCooldown -= Time.deltaTime;
             }
 
-            if (inCombat && baseCharacter.MyCharacterController.MyTarget == null) {
+            if (inCombat && baseCharacter.CharacterController.MyTarget == null) {
                 TryToDropCombat();
             }
         }
 
         public bool WaitingForAction() {
-            if (baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || baseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.MyCharacterAbilityManager.MyIsCasting) {
+            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return true;
             }
@@ -172,14 +172,14 @@ namespace AnyRPG {
 
         public IEnumerator outOfCombatRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning");
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats.IsAlive == true) {
-                while (baseCharacter.MyCharacterStats.currentHealth < baseCharacter.MyCharacterStats.MyMaxHealth || baseCharacter.MyCharacterStats.currentMana < baseCharacter.MyCharacterStats.MyMaxMana) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == true) {
+                while (baseCharacter.CharacterStats.currentHealth < baseCharacter.CharacterStats.MyMaxHealth || baseCharacter.CharacterStats.currentMana < baseCharacter.CharacterStats.MyMaxMana) {
                     yield return new WaitForSeconds(1);
-                    int healthAmount = baseCharacter.MyCharacterStats.MyMaxHealth / 100;
-                    int manaAmount = baseCharacter.MyCharacterStats.MyMaxMana / 100;
+                    int healthAmount = baseCharacter.CharacterStats.MyMaxHealth / 100;
+                    int manaAmount = baseCharacter.CharacterStats.MyMaxMana / 100;
                     //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning; about to recover health: " + healthAmount + "; mana: " + manaAmount);
-                    baseCharacter.MyCharacterStats.RecoverHealth(healthAmount, baseCharacter as BaseCharacter, false);
-                    baseCharacter.MyCharacterStats.RecoverMana(manaAmount, baseCharacter as BaseCharacter, false);
+                    baseCharacter.CharacterStats.RecoverHealth(healthAmount, baseCharacter.CharacterAbilityManager, false);
+                    baseCharacter.CharacterStats.RecoverMana(manaAmount, baseCharacter.CharacterAbilityManager, false);
                 }
             }
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() ending naturally on full health");
@@ -198,43 +198,42 @@ namespace AnyRPG {
             MyWaitingForAutoAttack = newValue;
         }
 
-        public virtual void ProcessTakeDamage(int damage, BaseCharacter target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual void ProcessTakeDamage(int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
             AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
             abilityAffectInput.healthAmount = damage;
 
             // prevent infinite reflect loops
             if (reflectDamage != false) {
-                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
-                        statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter as BaseCharacter, target.MyCharacterUnit.gameObject, abilityAffectInput);
+                        statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter.CharacterAbilityManager, target.UnitGameObject, abilityAffectInput);
                     }
                 }
             }
 
-            if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.MyCharacterUnit != null) {
-                if (target == PlayerManager.MyInstance.MyCharacter || (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) || (target.MyCharacterController != null && target.MyCharacterController.MyMasterUnit != null && target.MyCharacterController.MyMasterUnit == (PlayerManager.MyInstance.MyCharacter as BaseCharacter))) {
+            if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.CharacterUnit != null) {
+                if (target == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster) ||
+                    (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
+                    target.IsPlayerControlled()) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
-                    if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {
+                    if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
                         combatTextType = CombatTextType.normal;
-                    } else if ((abilityEffect as AttackEffect).MyDamageType == DamageType.ability) {
+                    } else if ((abilityEffect as AttackEffect).DamageType == DamageType.ability) {
                         combatTextType = CombatTextType.ability;
                     }
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, damage, combatTextType, combatMagnitude);
-                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.MyCharacterUnit, damage, abilityEffect.MyName);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, damage, combatTextType, combatMagnitude);
+                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.CharacterUnit, damage, abilityEffect.MyName);
                 }
                 lastCombatEvent = Time.time;
-                if (target.MyCharacterStats.IsAlive) {
-                    float totalThreat = damage;
-                    totalThreat *= abilityEffect.MyThreatMultiplier * target.MyCharacterStats.GetThreatModifiers();
-                    aggroTable.AddToAggroTable(target.MyCharacterUnit, (int)totalThreat);
-                    EnterCombat(target);
-                } else {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.OnTakeDamage(): Received damage from dead character.  Ignoring aggro mechanics.");
-                }
+                float totalThreat = damage;
+                totalThreat *= abilityEffect.ThreatMultiplier * target.GetThreatModifiers();
+                target.AddToAggroTable(baseCharacter.CharacterUnit, (int)totalThreat);
+                //aggroTable.AddToAggroTable(target.CharacterUnit, );
+                EnterCombat(target);
             }
 
         }
@@ -251,12 +250,12 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
                 // this next condition should prevent crashes as a result of level unloads
-                if (MyBaseCharacter.MyCharacterUnit != null) {
+                if (MyBaseCharacter.CharacterUnit != null) {
                     foreach (AggroNode aggroNode in MyAggroTable.MyAggroNodes) {
-                        AIController _aiController = aggroNode.aggroTarget.MyCharacter.MyCharacterController as AIController;
+                        AIController _aiController = aggroNode.aggroTarget.MyCharacter.CharacterController as AIController;
                         // since players don't have an agro radius, we can skip the check and drop combat automatically
                         if (_aiController != null) {
-                            if (Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, aggroNode.aggroTarget.transform.position) < _aiController.MyAggroRange) {
+                            if (Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, aggroNode.aggroTarget.transform.position) < _aiController.MyAggroRange) {
                                 // fail if we are inside the agro radius of an AI on our agro table
                                 return;
                             }
@@ -276,11 +275,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
             inCombat = false;
             SetWaitingForAutoAttack(false);
-            if (baseCharacter != null && baseCharacter.MyCharacterAbilityManager != null) {
-                baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
+            if (baseCharacter != null && baseCharacter.CharacterAbilityManager != null) {
+                baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", false);
+            if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.SetBool("InCombat", false);
             }
             DeActivateAutoAttack();
             //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
@@ -309,9 +308,9 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// return true if this is a new entry, false if not
-        public virtual bool EnterCombat(BaseCharacter target) {
+        public virtual bool EnterCombat(IAbilityCaster target) {
             //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + ")");
-            if (MyBaseCharacter.MyCharacterStats.IsAlive == false) {
+            if (MyBaseCharacter.CharacterStats.IsAlive == false) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + "): character is not alive, returning!");
                 return false;
             }
@@ -321,14 +320,19 @@ namespace AnyRPG {
             //}
             lastCombatEvent = Time.time;
             // maybe do this in update?
-            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("InCombat", true);
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.SetBool("InCombat", true);
             }
             inCombat = true;
             OnEnterCombat();
-            if (aggroTable.AddToAggroTable(target.MyCharacterUnit, 0)) {
+            if (target.AddToAggroTable(baseCharacter.CharacterUnit, 0)) {
                 return true;
             }
+            /*
+            if (aggroTable.AddToAggroTable(target.CharacterUnit, 0)) {
+                return true;
+            }
+            */
             return false;
         }
 
@@ -346,26 +350,26 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
             //bool hitSucceeded = false;
             // The character could die mid swing before the attack event fires.  We can't let a dead character do damage
-            if (!baseCharacter.MyCharacterStats.IsAlive) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() Character is not alive!");
                 return false;
             }
             CharacterUnit targetCharacterUnit = null;
             //stats.TakeDamage(myStats.damage.GetValue());
-            if (MyBaseCharacter.MyCharacterController.MyTarget != null) {
-                targetCharacterUnit = MyBaseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>();
+            if (MyBaseCharacter.CharacterController.MyTarget != null) {
+                targetCharacterUnit = MyBaseCharacter.CharacterController.MyTarget.GetComponent<CharacterUnit>();
             }
 
-            if (MyBaseCharacter.MyCharacterController.MyTarget != null && targetCharacterUnit != null) {
+            if (MyBaseCharacter.CharacterController.MyTarget != null && targetCharacterUnit != null) {
 
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 //OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
 
                 bool attackLanded = true;
-                if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    BaseAbility animatorCurrentAbility = MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+                if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                    BaseAbility animatorCurrentAbility = MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
                     if (animatorCurrentAbility is AnimatedAbility) {
-                        attackLanded = (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility as AnimatedAbility).HandleAbilityHit(MyBaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+                        attackLanded = (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility as AnimatedAbility).HandleAbilityHit(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterController.MyTarget);
                     }
 
                 }
@@ -375,11 +379,11 @@ namespace AnyRPG {
                     return false;
                 }
                 AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
-                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.MyStatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
-                        statusEffectNode.MyStatusEffect.CastWeaponHit(MyBaseCharacter as BaseCharacter, targetCharacterUnit.gameObject, abilityAffectInput);
+                        statusEffectNode.MyStatusEffect.CastWeaponHit(MyBaseCharacter.CharacterAbilityManager as IAbilityCaster, targetCharacterUnit.gameObject, abilityAffectInput);
                     }
                 }
 
@@ -395,9 +399,9 @@ namespace AnyRPG {
                 */
                 return true;
             } else {
-                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
-                        OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
+                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null && baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
+                    if (baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
+                        OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.CharacterController.MyTarget);
                         return true;
                     }
                 }
@@ -407,14 +411,14 @@ namespace AnyRPG {
 
         public virtual void ReceiveCombatMiss(GameObject targetObject) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
-            if (targetObject == PlayerManager.MyInstance.MyPlayerUnitObject || baseCharacter.MyCharacterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+            if (targetObject == PlayerManager.MyInstance.MyPlayerUnitObject || baseCharacter.CharacterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal);
             }
         }
 
         public bool DidAttackMiss() {
             int randomNumber = UnityEngine.Random.Range(0, 100);
-            int randomCutoff = (int)(100 * baseCharacter.MyCharacterStats.GetAccuracyModifiers());
+            int randomCutoff = (int)(100 * baseCharacter.CharacterStats.GetAccuracyModifiers());
             //Debug.Log(gameObject.name + ".CharacterCombat.DidAttackMiss(): number: " + randomNumber + "; accuracy = " + randomCutoff);
             if (randomNumber >= randomCutoff) {
                 return true;
@@ -426,28 +430,28 @@ namespace AnyRPG {
             attackCooldown = attackSpeed;
         }
 
-        private void TakeDamageCommon(int damage, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        private void TakeDamageCommon(int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
 
-            damage = (int)(damage * MyBaseCharacter.MyCharacterStats.GetIncomingDamageModifiers());
+            damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
 
             ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect, reflectDamage);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
-            baseCharacter.MyCharacterStats.ReduceHealth(damage);
+            baseCharacter.CharacterStats.ReduceHealth(damage);
         }
 
-        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
-            if (baseCharacter.MyCharacterStats.IsAlive) {
+            if (baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
                 // replace with hitbox check
                 bool canPerformAbility = true;
-                if ((abilityEffect as AttackEffect).MyDamageType == DamageType.physical) {
-                    damage -= (int)baseCharacter.MyCharacterStats.MyArmor;
+                if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
+                    damage -= (int)baseCharacter.CharacterStats.MyArmor;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
-                if (abilityEffect.MyUseMeleeRange) {
-                    if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(baseCharacter.MyCharacterUnit.gameObject)) {
+                if (abilityEffect.UseMeleeRange) {
+                    if (!sourceCharacter.IsTargetInMeleeRange(baseCharacter.CharacterUnit.gameObject)) {
                         canPerformAbility = false;
                     }
                 }
@@ -470,19 +474,19 @@ namespace AnyRPG {
             if (sourceCharacter != null) {
                 OnKillEvent(sourceCharacter, creditPercent);
             }
-            aggroTable.ClearSingleTarget(sourceCharacter.MyCharacterUnit);
+            aggroTable.ClearSingleTarget(sourceCharacter.CharacterUnit);
             TryToDropCombat();
         }
 
         public virtual void BroadcastCharacterDeath() {
-            if (!baseCharacter.MyCharacterStats.IsAlive) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
                 // putting this here because it can be overwritten easier than the event handler that calls it
                 //Debug.Log(gameObject.name + " broadcasting death to aggro table");
                 foreach (AggroNode _aggroNode in MyAggroTable.MyAggroNodes) {
                     if (_aggroNode.aggroTarget == null) {
                         //Debug.Log(gameObject.name + ": aggronode.aggrotarget is null!");
                     } else {
-                        CharacterCombat _otherCharacterCombat = _aggroNode.aggroTarget.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat as CharacterCombat;
+                        CharacterCombat _otherCharacterCombat = _aggroNode.aggroTarget.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat as CharacterCombat;
                         if (_otherCharacterCombat != null) {
                             _otherCharacterCombat.OnKillConfirmed(baseCharacter as BaseCharacter, (_aggroNode.aggroValue > 0) ? 1 : 0);
                         } else {
@@ -506,7 +510,7 @@ namespace AnyRPG {
 
         public void AttemptRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
-            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter.MyCharacterStats.IsAlive == true) {
+            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(): starting coroutine");
                 regenRoutine = StartCoroutine(outOfCombatRegen());
             }

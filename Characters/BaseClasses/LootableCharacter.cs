@@ -53,16 +53,16 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            characterUnit.MyCharacter.MyCharacterStats.BeforeDie += HandleDeath;
-            characterUnit.MyCharacter.MyCharacterStats.OnReviveComplete += HandleRevive;
+            characterUnit.MyCharacter.CharacterStats.BeforeDie += HandleDeath;
+            characterUnit.MyCharacter.CharacterStats.OnReviveComplete += HandleRevive;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
-                characterUnit.MyCharacter.MyCharacterStats.BeforeDie -= HandleDeath;
-                characterUnit.MyCharacter.MyCharacterStats.OnReviveComplete -= HandleRevive;
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
+                characterUnit.MyCharacter.CharacterStats.BeforeDie -= HandleDeath;
+                characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleRevive;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
@@ -100,7 +100,7 @@ namespace AnyRPG {
                 // game is exiting
                 return;
             }
-            if (lootTableNames != null && characterStats.MyBaseCharacter.MyCharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            if (lootTableNames != null && characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
                 int lootCount = 0;
                 foreach (LootTable lootTable in lootTables) {
@@ -112,10 +112,10 @@ namespace AnyRPG {
                 if (lootCount > 0) {
                     //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
-                    characterUnit.MyCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
+                    characterUnit.MyCharacter.CharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
                 }
             } else {
-                if (!characterStats.MyBaseCharacter.MyCharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+                if (!characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): Player not in agro table, no reason to drop loot.");
                 }
                 //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): MyLootTable == null. can't drop loot");
@@ -126,7 +126,7 @@ namespace AnyRPG {
         public void TryToDespawn() {
 
             //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn()");
-            if (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true) {
+            if (MyCharacterUnit.MyCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
             }
@@ -147,9 +147,9 @@ namespace AnyRPG {
                 List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.MyLootSparkleAbility.MyAbilityEffects;
                 foreach (AbilityEffect abilityEffect in sparkleEffects) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
-                    if (characterUnit.MyBaseCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyName))) {
+                    if (characterUnit.MyBaseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyName))) {
                         //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                        characterUnit.MyBaseCharacter.MyCharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyName)].CancelStatusEffect();
+                        characterUnit.MyBaseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyName)].CancelStatusEffect();
                     }
                 }
 
@@ -203,7 +203,7 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (!characterUnit.MyCharacter.MyCharacterStats.IsAlive) {
+            if (!characterUnit.MyCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source);
 
@@ -211,7 +211,7 @@ namespace AnyRPG {
                 foreach (GameObject interactable in GetLootableTargets()) {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();
                     if (lootableCharacter != null) {
-                        CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats as CharacterStats;
+                        CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().MyCharacter.CharacterStats as CharacterStats;
                         if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.lootTables != null) {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
                             foreach (LootTable lootTable in lootableCharacter.MyLootTables) {
@@ -288,7 +288,7 @@ namespace AnyRPG {
         public override int GetValidOptionCount() {
             // this was commented out.  putting it back in because bunnies are 
             //if (MyCharacterUnit != null && MyCharacterUnit.MyCharacter != null && MyCharacterUnit.MyCharacter.MyCharacterStats != null) {
-                return (MyCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false ? 1 : 0);
+                return (MyCharacterUnit.MyCharacter.CharacterStats.IsAlive == false ? 1 : 0);
             //}
             //return 0;
         }

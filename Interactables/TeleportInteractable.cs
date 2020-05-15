@@ -24,7 +24,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
-            source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
+            source.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             return true;
         }
 

@@ -94,18 +94,18 @@ namespace AnyRPG {
 
             if (characterModelGameObject == null && characterModelPrefab != null) {
                 //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
-                characterModelGameObject = Instantiate(characterModelPrefab, MyCharacterUnit.transform);
+                characterModelGameObject = Instantiate(characterModelPrefab, CharacterUnit.transform);
             }
-            if (previewCharacter == false && MyAnimatedUnit != null) {
-                MyAnimatedUnit.EnableAgent();
+            if (previewCharacter == false && AnimatedUnit != null) {
+                AnimatedUnit.EnableAgent();
             }
-            if (MyAnimatedUnit != null && MyAnimatedUnit.MyCharacterAnimator != null) {
-                MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            if (AnimatedUnit != null && AnimatedUnit.MyCharacterAnimator != null) {
+                AnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             } else {
-                if (MyAnimatedUnit == null) {
+                if (AnimatedUnit == null) {
                     //Debug.Log(gameObject.name + ".AICharacter.Start(): myanimatedunit is null");
                 } else {
-                    if (MyAnimatedUnit.MyCharacterAnimator == null) {
+                    if (AnimatedUnit.MyCharacterAnimator == null) {
                         //Debug.Log(gameObject.name + ".AICharacter.Start() myanimatedunit.MyCharacterAnimator is null");
                     }
                 }

@@ -245,7 +245,7 @@ namespace AnyRPG {
         }
 
         public Quest MyQuestTemplate { get => questTemplate; set => questTemplate = value; }
-        public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : experienceLevel) + extraLevels); }
+        public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
         public int MyExperienceReward { get => experienceReward; set => experienceReward = value; }
         public List<Item> MyItemRewards { get => realItemRewardList; }
@@ -359,7 +359,7 @@ namespace AnyRPG {
 
         public string GetObjectiveDescription() {
 
-            Color titleColor = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, MyExperienceLevel);
+            Color titleColor = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyExperienceLevel);
             return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), MyName, MyDescription, GetUnformattedObjectiveList());
 
         }

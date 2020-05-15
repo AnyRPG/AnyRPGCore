@@ -319,9 +319,9 @@ namespace AnyRPG {
             // do this first because persistent objects need to add their locations to the scene node before we write it to disk
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
-            anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
-            anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
-            anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.MyCharacterName;
+            anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+            anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP;
+            anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.CharacterName;
             if (PlayerManager.MyInstance.MyCharacter.MyFaction != null) {
                 anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFaction.MyName;
             }
@@ -332,8 +332,8 @@ namespace AnyRPG {
                 anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName;
             }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
-            anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth;
-            anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana;
+            anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
+            anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana;
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
             anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.y;
             anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.z;
@@ -505,8 +505,9 @@ namespace AnyRPG {
         public void SaveStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
-            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyStatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyClassTrait == false && statusEffectNode.MyStatusEffect.MySourceCharacter == PlayerManager.MyInstance.MyCharacter) {
+            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.MyClassTrait == false
+                    && statusEffectNode.MyStatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.MyName = statusEffectNode.MyStatusEffect.MyName;
                     statusEffectSaveData.remainingSeconds = (int)statusEffectNode.MyStatusEffect.GetRemainingDuration();
@@ -538,7 +539,7 @@ namespace AnyRPG {
 
         public void SaveReputationData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveReputationData()");
-            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.MyDispositionDictionary) {
+            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary) {
                 ReputationSaveData saveData = new ReputationSaveData();
                 saveData.MyName = factionDisposition.MyFaction.MyName;
                 saveData.MyAmount = factionDisposition.disposition;
@@ -570,7 +571,7 @@ namespace AnyRPG {
 
         public void SaveAbilityData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (BaseAbility baseAbility in PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+            foreach (BaseAbility baseAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                 AbilitySaveData saveData = new AbilitySaveData();
                 saveData.MyName = baseAbility.MyName;
                 anyRPGSaveData.abilitySaveData.Add(saveData);
@@ -589,8 +590,8 @@ namespace AnyRPG {
 
         public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquipmentData()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Values) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
+                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment.Values) {
                     EquipmentSaveData saveData = new EquipmentSaveData();
                     saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
                     anyRPGSaveData.equipmentSaveData.Add(saveData);
@@ -600,7 +601,7 @@ namespace AnyRPG {
 
         public void SaveSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSkillData()");
-            foreach (string skillName in PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.MySkillList.Keys) {
+            foreach (string skillName in PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.MySkillList.Keys) {
                 SkillSaveData saveData = new SkillSaveData();
                 saveData.MyName = skillName;
                 anyRPGSaveData.skillSaveData.Add(saveData);
@@ -647,7 +648,7 @@ namespace AnyRPG {
 
         public void LoadStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
@@ -709,7 +710,7 @@ namespace AnyRPG {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.MyFaction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition, false);
+                PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition, false);
                 //counter++;
             }
         }
@@ -726,7 +727,7 @@ namespace AnyRPG {
 
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).LoadAbility(abilitySaveData.MyName);
+                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).LoadAbility(abilitySaveData.MyName);
                 }
             }
         }
@@ -745,7 +746,7 @@ namespace AnyRPG {
         public void LoadSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadSkillData()");
             foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LoadSkill(skillSaveData.MyName);
+                PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
             }
         }
 
@@ -879,7 +880,7 @@ namespace AnyRPG {
 
             // spawn player connection so all the data can be loaded
             PlayerManager.MyInstance.SpawnPlayerConnection();
-            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
+            PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
@@ -904,7 +905,7 @@ namespace AnyRPG {
             LoadAbilityData(anyRPGSaveData);
 
             // testing - move here to prevent learning auto-attack ability twice
-            LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager);
+            LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager);
 
             // testing - move here to prevent learning abilities and filling up bars
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
@@ -930,10 +931,10 @@ namespace AnyRPG {
 
             // necessary?  should be handled by setcharacterclass call
             CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
-            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplyClassTraits(characterClass);
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplyClassTraits(characterClass);
 
             ClassSpecialization classSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization);
-            PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.ApplySpecializationTraits(classSpecialization);
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySpecializationTraits(classSpecialization);
 
             // now that we have loaded the quest data, we can re-enable references
             SystemQuestManager.MyInstance.CreateEventSubscriptions();
@@ -941,10 +942,10 @@ namespace AnyRPG {
 
             // set health last after equipment loaded for modifiers
             if (anyRPGSaveData.currentHealth > 0) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterStats.SetHealth(anyRPGSaveData.currentHealth);
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetHealth(anyRPGSaveData.currentHealth);
             }
             if (anyRPGSaveData.currentMana > 0) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterStats.SetMana(anyRPGSaveData.currentMana);
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetMana(anyRPGSaveData.currentMana);
             }
 
             LoadWindowPositions();

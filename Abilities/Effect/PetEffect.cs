@@ -10,7 +10,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New PetEffect", menuName = "AnyRPG/Abilities/Effects/PetEffect")]
     public class PetEffect : StatusEffect {
 
-        public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
             if (target == null) {
                 return false;
             }

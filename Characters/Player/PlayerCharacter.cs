@@ -73,9 +73,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
             foreach (BaseAbility baseAbility in newFaction.MyLearnedAbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel && PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(baseAbility) == false) {
+                if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.CharacterStats.Level && PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(baseAbility);
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
                 }

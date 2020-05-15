@@ -20,9 +20,9 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnHealthChanged += AttemptRegen;
-                baseCharacter.MyCharacterStats.OnManaChanged += AttemptRegen;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnHealthChanged += AttemptRegen;
+                baseCharacter.CharacterStats.OnManaChanged += AttemptRegen;
             }
             eventSubscriptionsInitialized = true;
         }
@@ -41,9 +41,9 @@ namespace AnyRPG {
             }
             */
 
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnHealthChanged -= AttemptRegen;
-                baseCharacter.MyCharacterStats.OnManaChanged -= AttemptRegen;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnHealthChanged -= AttemptRegen;
+                baseCharacter.CharacterStats.OnManaChanged -= AttemptRegen;
             }
             eventSubscriptionsInitialized = false;
         }
@@ -79,26 +79,26 @@ namespace AnyRPG {
 
         public void HandleAutoAttack() {
             //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack()");
-            if (baseCharacter.MyCharacterController.MyTarget == null && MyAutoAttackActive == true) {
+            if (baseCharacter.CharacterController.MyTarget == null && MyAutoAttackActive == true) {
                 //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(): target is null.  deactivate autoattack");
                 DeActivateAutoAttack();
                 return;
             }
-            if (baseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || baseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.MyCharacterAbilityManager.MyIsCasting) {
+            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.MyWaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return;
             }
             
 
-            if (MyAutoAttackActive == true && baseCharacter.MyCharacterController.MyTarget != null) {
+            if (MyAutoAttackActive == true && baseCharacter.CharacterController.MyTarget != null) {
                 //Debug.Log("player controller is in combat and target is not null");
                 //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
-                CharacterUnit _characterUnit = baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>();
+                CharacterUnit _characterUnit = baseCharacter.CharacterController.MyTarget.GetComponent<CharacterUnit>();
                 if (_characterUnit != null) {
                     BaseCharacter targetCharacter = _characterUnit.MyCharacter;
                     if (targetCharacter != null) {
                         //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
-                        Attack(baseCharacter.MyCharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
+                        Attack(baseCharacter.CharacterController.MyTarget.GetComponent<CharacterUnit>().MyCharacter);
                         return;
                     } else {
                         //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is null. deactivating auto attack");
@@ -126,29 +126,29 @@ namespace AnyRPG {
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
                 if (WaitingForAction() == false) {
-                    baseCharacter.MyCharacterAbilityManager.AttemptAutoAttack();
+                    baseCharacter.CharacterAbilityManager.AttemptAutoAttack();
                 }
             }
         }
 
-        public override bool EnterCombat(BaseCharacter target) {
+        public override bool EnterCombat(IAbilityCaster target) {
             //Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyCharacterName != null ? target.MyCharacterName : "null") + ")");
-            if (baseCharacter.MyCharacterStats.IsAlive == false) {
+            if (baseCharacter.CharacterStats.IsAlive == false) {
                 //Debug.Log("Player is dead but was asked to enter combat!!!");
                 return false;
             }
             AttemptStopRegen();
 
             // If we do not have a focus, set the target as the focus
-            if (baseCharacter.MyCharacterController != null) {
-                if (baseCharacter.MyCharacterController.MyTarget == null) {
-                    baseCharacter.MyCharacterController.SetTarget(target.MyCharacterUnit.gameObject);
+            if (baseCharacter.CharacterController != null) {
+                if (baseCharacter.CharacterController.MyTarget == null) {
+                    baseCharacter.CharacterController.SetTarget(target.UnitGameObject);
                 }
             }
 
             if (base.EnterCombat(target)) {
                 if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage("Entered combat with " + (target.MyCharacterName != null ? target.MyCharacterName : target.name));
+                    CombatLogUI.MyInstance.WriteCombatMessage("Entered combat with " + target.Name);
                 }
                 return true;
             }
@@ -156,16 +156,16 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public override bool TakeDamage(int damage, Vector3 sourcePosition, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
             // added damageTaken bool to prevent blood effects from showing if you ran out of range of the attack while it was in progress
+            /*
             bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
-            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyTakeDamageAbility != null && damageTaken) {
-                MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyTakeDamageAbility, MyBaseCharacter.MyCharacterUnit.gameObject);
-            }
             return damageTaken;
+            */
+            return base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
         }
 
         /*
@@ -203,7 +203,7 @@ namespace AnyRPG {
         public override void BroadcastCharacterDeath() {
             //Debug.Log("PlayerCombat.BroadcastCharacterDeath()");
             base.BroadcastCharacterDeath();
-            if (!baseCharacter.MyCharacterStats.IsAlive) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log("PlayerCombat.BroadcastCharacterDeath(): not alive, attempt stop regen");
                 AttemptStopRegen();
             }
@@ -211,10 +211,10 @@ namespace AnyRPG {
 
         public override bool AttackHit_AnimationEvent() {
             //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
-            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.MyCharacterController.MyTarget != null) {
+            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.CharacterController.MyTarget != null) {
                 // TESTING, THIS WAS MESSING WITH ABILITIES THAT DONT' NEED A TARGET LIKE GROUND SLAM - OR NOT, ITS JUST FOR THE WHITE HIT...!!
                 //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
-                MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.MyCharacterController.MyTarget);
+                MyBaseCharacter.CharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.CharacterController.MyTarget);
             }
             bool attackSucceeded = base.AttackHit_AnimationEvent();
             if (attackSucceeded) {
@@ -224,7 +224,7 @@ namespace AnyRPG {
                 } else if (overrideHitSoundEffect == null && defaultHitSoundEffect != null) {
                     // do nothing sound was suppressed for special attack sound
                 } else if (overrideHitSoundEffect != null) {
-                    baseCharacter.MyCharacterUnit.MyUnitAudio.PlayEffect(overrideHitSoundEffect);
+                    baseCharacter.CharacterUnit.MyUnitAudio.PlayEffect(overrideHitSoundEffect);
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
 

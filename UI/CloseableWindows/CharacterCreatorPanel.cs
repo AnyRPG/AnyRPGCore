@@ -676,8 +676,8 @@ namespace AnyRPG {
                 //PlayerManager.MyInstance.SetUMAPrefab();
                 PlayerManager.MyInstance.MyCharacter.SetUnitProfile(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName);
                 PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager != null) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnDefaultAutoAttackAbility();
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
                 }
 
             }

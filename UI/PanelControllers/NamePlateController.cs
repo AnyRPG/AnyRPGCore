@@ -165,7 +165,7 @@ namespace AnyRPG {
 
         public void CheckForPlayerOwnerShip() {
             //Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned && ((namePlateUnit as CharacterUnit) == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned && ((namePlateUnit as CharacterUnit) == PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
                 namePlateCanvasGroup.blocksRaycasts = false;
                 UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
@@ -281,8 +281,8 @@ namespace AnyRPG {
                 OnHealthChanged(namePlateUnit.MaxHealth(), namePlateUnit.CurrentHealth());
                 if (namePlateUnit is CharacterUnit) {
                     if ((namePlateUnit as CharacterUnit).MyBaseCharacter != null) {
-                        if ((namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager != null) {
-                            (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager.OnReputationChange += HandleReputationChange;
+                        if ((namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager != null) {
+                            (namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
                         } else {
                             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") nameplate unit has no character faction manager!");
                         }
@@ -306,8 +306,8 @@ namespace AnyRPG {
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (namePlateUnit.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
-                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth == PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
+                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth == PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
                     }
@@ -444,7 +444,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
                 namePlateUnit.HealthBarNeedsUpdate -= OnHealthChanged;
                 if (namePlateUnit.HasHealth()) {
-                    (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                    (namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
                 namePlateUnit.MyNamePlate = null;
             }
@@ -480,15 +480,15 @@ namespace AnyRPG {
 
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.MyDisplayName);
-            if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as INamePlateUnit)) {
-                (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(namePlateUnit.MyInteractable, (namePlateUnit as MonoBehaviour).gameObject);
+            if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
+                (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).InterActWithTarget(namePlateUnit.MyInteractable, (namePlateUnit as MonoBehaviour).gameObject);
             }
         }
 
         private void HandleLeftClick() {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
-            if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.MyCharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterController.SetTarget((namePlateUnit as MonoBehaviour).gameObject);
+            if (namePlateUnit != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
+                PlayerManager.MyInstance.MyCharacter.CharacterController.SetTarget((namePlateUnit as MonoBehaviour).gameObject);
             }
         }
 

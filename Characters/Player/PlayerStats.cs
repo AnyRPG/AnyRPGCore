@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         public void CreateStartEventReferences() {
             // TRYING DO THIS HERE TO GIVE IT TIME TO INITIALIZE IN AWAKE
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent += OnKillEventHandler;
+            PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent += OnKillEventHandler;
         }
 
         public override void CreateEventSubscriptions() {
@@ -43,8 +43,8 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             if (PlayerManager.MyInstance != null) {
-                if (PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat != null) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent -= OnKillEventHandler;
+                if (PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat != null) {
+                    PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent -= OnKillEventHandler;
                 }
             }
             if (SystemEventManager.MyInstance != null) {
@@ -67,12 +67,36 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public override bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            bool returnValue = base.WasImmuneToFreeze(statusEffect, sourceCharacter);
+            if (returnValue == true) {
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            }
+            return false;
+        }
+
+        public override bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            bool returnValue = base.WasImmuneToStun(statusEffect, sourceCharacter);
+            if (returnValue == true) {
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            }
+            return false;
+        }
+
+        public override bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            bool returnValue = base.WasImmuneToLevitate(statusEffect, sourceCharacter);
+            if (returnValue == true) {
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            }
+            return false;
+        }
+
         public void OnKillEventHandler(BaseCharacter sourceCharacter, float creditPercent) {
             if (creditPercent == 0) {
                 return;
             }
             //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
-            GainXP((int)(LevelEquations.GetXPAmountForKill(MyLevel, sourceCharacter.MyCharacterStats.MyLevel) * creditPercent));
+            GainXP((int)(LevelEquations.GetXPAmountForKill(Level, sourceCharacter.CharacterStats.Level) * creditPercent));
         }
 
         public override void Die() {
@@ -104,18 +128,18 @@ namespace AnyRPG {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", NewLevel.ToString()));
         }
 
-        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter source, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster source, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("Playerstats.ApplyStatusEffect()");
             if (statusEffect == null) {
                 //Debug.Log("Playerstats.ApplyStatusEffect(): statusEffect is null!");
             }
-            StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, source, target, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, source, abilityEffectInput);
             if (statusEffect.MyClassTrait == false) {
                 if (_statusEffectNode != null) {
-                    UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(_statusEffectNode, target);
+                    UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(_statusEffectNode, baseCharacter.CharacterUnit);
                     if (abilityEffectInput.savedEffect == false) {
-                        if (target != null) {
-                            CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, statusEffect, true);
+                        if (baseCharacter.CharacterUnit != null) {
+                            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, statusEffect, true);
                         }
                     }
                 }
@@ -125,27 +149,27 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
-            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }
 
             //code to re-apply visual effects when the player loads into a new level
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterUnit.gameObject, MyBaseCharacter.MyCharacterUnit.gameObject, new AbilityEffectOutput());
+                statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterUnit.gameObject, MyBaseCharacter.CharacterUnit.gameObject, new AbilityEffectOutput());
             }
         }
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitDespawn()");
-            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
+            if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
             }
         }
 
         public override void GainLevel() {
             base.GainLevel();
-            SystemEventManager.MyInstance.NotifyOnLevelChanged(MyLevel);
+            SystemEventManager.MyInstance.NotifyOnLevelChanged(Level);
         }
 
         public override void SetLevel(int newLevel) {

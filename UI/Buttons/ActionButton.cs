@@ -145,11 +145,11 @@ namespace AnyRPG {
             // clear reference to any existing useable on this button.
             if (MyUseable != null && MyUseable is BaseAbility) {
                 //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
                     // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility -= OnAttemptUseableUse;
+                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility -= OnAttemptUseableUse;
                 } else {
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
+                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
                 }
                 UnsubscribeFromCombatEvents();
             }
@@ -172,11 +172,11 @@ namespace AnyRPG {
                 //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
                 //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
                 //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && MyUseable is AnimatedAbility && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
                     // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility += OnAttemptUseableUse;
+                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility += OnAttemptUseableUse;
                 } else {
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
+                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
                 }
                 SubscribeToCombatEvents();
             }
@@ -196,8 +196,8 @@ namespace AnyRPG {
 
         public void SubscribeToCombatEvents() {
             if (MyUseable != null && MyUseable is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat += HandleEnterCombat;
-                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat += HandleDropCombat;
+                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
+                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
             }
         }
 
@@ -205,7 +205,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
             if (MyUseable is IAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
                         autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
@@ -224,7 +224,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
             if (MyUseable is IAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
                         autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(MyUseable as IAbility));
@@ -243,7 +243,7 @@ namespace AnyRPG {
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             yield return null;
 
-            while (MyUseable != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+            while (MyUseable != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                 //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
@@ -259,7 +259,7 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(IAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
-            while (MyUseable != null && (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName))) {
+            while (MyUseable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
@@ -295,7 +295,7 @@ namespace AnyRPG {
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
                 if (MyUseable != null && (MyUseable is IAbility)) {
-                    if (!PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyUseable as BaseAbility)) {
+                    if (!PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(MyUseable as BaseAbility)) {
                         MyUseable = null;
                     }
                 }
@@ -331,9 +331,9 @@ namespace AnyRPG {
 
                 //TESTING MOVING TO BEFORE BASEABILTY AND WEAPONAFFINITY CHECKS
                 // auto-attack buttons are special and display the current weapon of the character
-                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if ((MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Values) {
+                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment.Values) {
                         if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
                             if (MyIcon.sprite != equipment.MyIcon) {
                                 MyIcon.sprite = equipment.MyIcon;
@@ -342,7 +342,7 @@ namespace AnyRPG {
                         }
                     }
                 }
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).MyIsAutoAttack == true) {
+                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (MyUseable is AnimatedAbility) && (MyUseable as AnimatedAbility).IsAutoAttack == true) {
 
                     /*
                     if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
@@ -352,7 +352,7 @@ namespace AnyRPG {
                         }
                     }
                     */
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                         coolDownIcon.enabled = true;
                         /*
                         if (coolDownIcon.sprite != MyIcon.sprite) {
@@ -378,7 +378,7 @@ namespace AnyRPG {
                 }
 
                 if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat) {
-                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                         //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
                         EnableFullCoolDownIcon();
                         return;
@@ -387,7 +387,7 @@ namespace AnyRPG {
 
                 if ((MyUseable as BaseAbility) is BaseAbility && (MyUseable as BaseAbility).MyWeaponAffinityNames.Count > 0) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
-                        if (!((MyUseable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
+                        if (!((MyUseable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager))) {
                             //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
                             EnableFullCoolDownIcon();
                             return;
@@ -396,7 +396,7 @@ namespace AnyRPG {
                 }
 
 
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(MyUseable.MyName)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(MyUseable.MyName)) {
                     //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
                     coolDownIcon.enabled = true;
                     if (coolDownIcon.sprite != MyIcon.sprite) {
@@ -410,15 +410,15 @@ namespace AnyRPG {
                     //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
                     float abilityCoolDown = 0f;
                     float initialCoolDown = 0f;
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName)) {
-                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyRemainingCoolDown;
-                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyInitialCoolDown;
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((MyUseable as IAbility).MyName)) {
+                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyRemainingCoolDown;
+                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(MyUseable as IAbility).MyName].MyInitialCoolDown;
                     } else {
                         initialCoolDown = (MyUseable as BaseAbility).abilityCoolDown;
                     }
                     //float globalCoolDown
-                    float fillAmount = Mathf.Max(abilityCoolDown, PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown) /
-                        (abilityCoolDown > PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyInitialGlobalCoolDown);
+                    float fillAmount = Mathf.Max(abilityCoolDown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
+                        (abilityCoolDown > PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
                     //Debug.Log("Setting fill amount to: " + fillAmount);
                     coolDownIcon.fillAmount = fillAmount;
                 } else {
@@ -472,8 +472,8 @@ namespace AnyRPG {
 
         public void UnsubscribeFromCombatEvents() {
             if (MyUseable != null && MyUseable is BaseAbility && (MyUseable as BaseAbility).MyRequireOutOfCombat == true) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnEnterCombat -= HandleEnterCombat;
-                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnDropCombat -= HandleDropCombat;
+                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
+                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             }
         }
 

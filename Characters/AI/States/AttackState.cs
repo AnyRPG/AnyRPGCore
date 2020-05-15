@@ -10,7 +10,7 @@ namespace AnyRPG {
         public void Enter(AIController enemyController) {
             //Debug.Log("Entering Attack State");
             this.aiController = enemyController;
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StopFollowingTarget();
         }
 
         public void Exit() {
@@ -28,26 +28,26 @@ namespace AnyRPG {
                 return;
             }
 
-            if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
+            if (aiController.MyBaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true) {
                 //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAnimatedAbility is true");
                 // nothing to do, animated ability in progress
                 return;
             }
 
-            if (aiController.MyBaseCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true) {
+            if (aiController.MyBaseCharacter.CharacterCombat.MyWaitingForAutoAttack == true) {
                 //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAutoAttack == true");
                 // nothing to do, auto-attack in progress
                 return;
             }
 
-            if (aiController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting == true || aiController.MyBaseCharacter.MyCharacterAbilityManager.MyCurrentCastCoroutine != null) {
+            if (aiController.MyBaseCharacter.CharacterAbilityManager.IsCasting == true || aiController.MyBaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null) {
                 //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null || MyIsCasting == true");
                 // nothing to do, cast in progress
                 return;
             }
 
             // face target before attack to ensure they are in the hitbox
-            aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FaceTarget(aiController.MyTarget);
+            aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FaceTarget(aiController.MyTarget);
 
             if (aiController.CanGetValidAttack(true)) {
                 return;

@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class HealthPotion : CastableItem {
 
         public override bool Use() {
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentHealth < PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxHealth) {
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth < PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth) {
                 //Debug.Log("The current health was less than the max health and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();
                 if (returnValue == false) {

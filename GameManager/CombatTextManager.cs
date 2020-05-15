@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         public void TrySpawnCombatText(BaseCharacter sourceCharacter, GameObject target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude) {
-            if (target == PlayerManager.MyInstance.MyPlayerUnitObject || sourceCharacter.MyCharacterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+            if (target == PlayerManager.MyInstance.MyPlayerUnitObject || sourceCharacter.CharacterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 SpawnCombatText(target, damage, combatType, combatMagnitude);
             }
 

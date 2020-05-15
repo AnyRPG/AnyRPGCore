@@ -88,7 +88,7 @@ namespace AnyRPG {
             SkillTrainerSkillScript firstAvailableSkill = null;
 
             foreach (Skill skill in skillTrainer.MySkills) {
-                if (!PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skill)) {
+                if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     GameObject go = Instantiate(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
                     qs.MyText.text = skill.MyName;
@@ -134,7 +134,7 @@ namespace AnyRPG {
         // Enable or disable learn and unlearn buttons based on what is selected
         private void UpdateButtons(Skill newSkill) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(newSkill)) {
+            if (PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(newSkill)) {
                 learnButton.gameObject.SetActive(false);
                 learnButton.GetComponent<Button>().enabled = false;
                 unlearnButton.gameObject.SetActive(true);
@@ -216,7 +216,7 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentSkill != null) {
                 //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
+                PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
                 //UpdateButtons(MySelectedSkillTrainerSkillScript.MySkillName);
                 MySelectedSkillTrainerSkillScript = null;
                 ClearDescription();
@@ -227,7 +227,7 @@ namespace AnyRPG {
         public void UnlearnSkill() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
             if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkill != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.UnlearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
+                PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.UnlearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
                 UpdateButtons(MySelectedSkillTrainerSkillScript.MySkill);
                 ShowSkills();
             }

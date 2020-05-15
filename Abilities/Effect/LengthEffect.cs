@@ -10,48 +10,35 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New LengthEffect", menuName = "AnyRPG/Abilities/Effects/LengthEffect")]
     public class LengthEffect : AbilityEffect {
 
+        [Header("Prefab")]
+
         [SerializeField]
         private List<string> prefabNames = new List<string>();
 
-        // randomly select a prefab instead of spawning all of them
+        [Tooltip("randomly select a prefab instead of spawning all of them")]
         [SerializeField]
         private bool randomPrefabs = false;
 
         private List<PrefabProfile> prefabProfileList = new List<PrefabProfile>();
 
-        /*
-        [SerializeField]
-        protected GameObject abilityEffectPrefab = null;
-        */
-
         [SerializeField]
         protected PrefabSpawnLocation prefabSpawnLocation;
 
-        /*
-        [SerializeField]
-        protected string prefabSourceBone;
-
-        [SerializeField]
-        protected Vector3 prefabOffset = Vector3.zero;
-
-        [SerializeField]
-        protected Vector3 prefabRotation = Vector3.zero;
-        */
-
-        // a delay after the effect ends to destroy the spell effect prefab
+        [Tooltip("a delay after the effect ends to destroy the spell effect prefab")]
         [SerializeField]
         protected float prefabDestroyDelay = 0f;
 
+        [Header("Tick")]
 
-        // every <tickRate> seconds, the Tick() will occur
+        [Tooltip("every <tickRate> seconds, the Tick() will occur")]
         [SerializeField]
         protected float tickRate;
 
-        // do we cast an immediate tick at zero seconds
+        [Tooltip("do we cast an immediate tick at zero seconds")]
         [SerializeField]
         protected bool castZeroTick;
 
-        // any abilities to cast every tick
+        [Tooltip("any abilities to cast every tick")]
         [SerializeField]
         protected List<string> tickAbilityEffectNames = new List<string>();
 
@@ -61,18 +48,16 @@ namespace AnyRPG {
         [SerializeField]
         protected List<string> onTickAudioProfileNames = new List<string>();
 
-        // whether to play all audio profiles or just one random one
+        [Tooltip("whether to play all audio profiles or just one random one")]
         [SerializeField]
         protected bool randomTickAudioProfiles = false;
 
         //protected AudioProfile onHitAudioProfile;
         protected List<AudioProfile> onTickAudioProfiles = new List<AudioProfile>();
 
+        [Header("Complete")]
 
-        //private float nextTickTime;
-        protected DateTime nextTickTime;
-
-        // any abilities to cast when the effect completes
+        [Tooltip("any abilities to cast when the effect completes")]
         [SerializeField]
         protected List<string> completeAbilityEffectNames = new List<string>();
 
@@ -81,15 +66,14 @@ namespace AnyRPG {
 
         public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
         public List<AbilityEffect> MyCompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
-        public float MyTickRate { get => tickRate; set => tickRate = value; }
-        public DateTime MyNextTickTime { get => nextTickTime; set => nextTickTime = value; }
+        public float TickRate { get => tickRate; set => tickRate = value; }
         public float MyPrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
         public PrefabSpawnLocation MyPrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
         public bool MyCastZeroTick { get => castZeroTick; set => castZeroTick = value; }
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".LengthEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
@@ -113,8 +97,8 @@ namespace AnyRPG {
                     if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                         //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                         //spawnLocation = source.GetComponent<Collider>().bounds.center;
-                        spawnLocation = source.MyCharacterUnit.transform.position;
-                        prefabParent = source.MyCharacterUnit.transform;
+                        spawnLocation = source.UnitGameObject.transform.position;
+                        prefabParent = source.UnitGameObject.transform;
                         Transform usedPrefabSourceBone = null;
                         if (prefabProfile.MyTargetBone != null && prefabProfile.MyTargetBone != string.Empty) {
                             usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabProfile.MyTargetBone);
@@ -144,10 +128,10 @@ namespace AnyRPG {
                         Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
                         //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                         // CORRECT WAY BELOW
-                        //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
+                        //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                         Vector3 usedForwardDirection = Vector3.forward;
-                        if (source != null && source.MyCharacterUnit != null) {
-                            usedForwardDirection = source.MyCharacterUnit.transform.forward;
+                        if (source != null && source.UnitGameObject != null) {
+                            usedForwardDirection = source.UnitGameObject.transform.forward;
                         }
                         if (prefabParent != null) {
                             usedForwardDirection = prefabParent.transform.forward;
@@ -173,7 +157,7 @@ namespace AnyRPG {
 
         }
 
-        public virtual void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" + source.name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
             if (onTickAudioProfiles != null) {
@@ -204,29 +188,29 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void CastComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
         }
 
-        protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 
-        public virtual void PerformAbilityTickEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityTickEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, tickAbilityEffectList);
         }
 
-        public virtual void PerformAbilityCompleteEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityCompleteEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, completeAbilityEffectList);
         }
 
-        public virtual void PerformAbilityTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityTickEffects(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityComplete(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityCompleteEffects(source, target, abilityEffectInput);
         }

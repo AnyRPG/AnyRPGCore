@@ -52,7 +52,7 @@ namespace AnyRPG {
             if (tmpPatrolProfile != null) {
                 tmpPatrolProfile.MyCharacterUnit = characterUnit;
                 SetCurrentPatrol(tmpPatrolProfile);
-                (characterUnit.MyCharacter.MyCharacterController as AIController).ChangeState(new PatrolState());
+                (characterUnit.MyCharacter.CharacterController as AIController).ChangeState(new PatrolState());
             }
         }
 

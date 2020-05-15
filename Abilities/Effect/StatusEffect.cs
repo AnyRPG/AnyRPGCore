@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New StatusEffect",menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
+    [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect {
 
         [SerializeField]
@@ -16,80 +16,105 @@ namespace AnyRPG {
         private string statusEffectTypeName = string.Empty;
 
         private StatusEffectType statusEffectType = null;
-        
-        // automatically cast on the character, active at all times, and do not appear on the status bar
+
+        [Header("Trait")]
+
+        [Tooltip("Automatically cast on the character, active at all times, and do not appear on the status bar. Useful for class traits and equipment set bonuses.")]
         [SerializeField]
         protected bool classTrait;
 
-        // the required level to automatically cast this if it is a trait
+        [Tooltip("The required level to automatically cast this if it is a trait")]
         [SerializeField]
         private int requiredLevel = 1;
 
-        // by default all status effects are infinite duration
+        [Header("Duration")]
+
+        [Tooltip("by default all status effects are infinite duration")]
         [SerializeField]
         protected bool limitedDuration;
 
-        // the number of seconds this will be active for without haste or slow
+        [Tooltip("when an attempt to apply the effect is made, is the duration refreshed")]
+        public bool refreshableDuration = true;
+
+        [Tooltip("If limited duration is true, the number of seconds this will be active for without haste or slow")]
         [SerializeField]
         protected float duration;
 
-        // the maximum number of stacks of this effect that can be applied at once
-        public int maxStacks = 1;
+        [Header("Stack Size")]
 
-        // when an attempt to apply the effect is made, is the duration refreshed
-        public bool refreshableDuration = true;
+        [Tooltip("the maximum number of stacks of this effect that can be applied at once")]
+        public int maxStacks = 1;
 
         private int currentStacks = 1;
 
-        [SerializeField]
-        protected int statAmount;
+        [Header("Stat Buffs and Debuffs")]
 
-        [SerializeField]
-        protected float statMultiplier = 1;
-
-        [SerializeField]
-        protected float incomingDamageMultiplier = 1f;
-
-        [SerializeField]
-        protected float outgoingDamageMultiplier = 1f;
-
-        [SerializeField]
-        protected float speedMultiplier = 1f;
-
-        [SerializeField]
-        protected float accuracyMultiplier = 1f;
-
-
-        [SerializeField]
-        protected float extraCriticalStrikePercent;
-
+        [Tooltip("The values in this section will be applied to all of the following stats")]
         [SerializeField]
         protected List<StatBuffType> statBuffTypes = new List<StatBuffType>();
 
+        [Tooltip("This amount will be added to the stats")]
+        [SerializeField]
+        protected int statAmount;
+
+        [Tooltip("The stats will be multiplied by this amount (after addition)")]
+        [SerializeField]
+        protected float statMultiplier = 1;
+
+        [Tooltip("Multiply incoming damage by this amount.  1 = normal damage.")]
+        [SerializeField]
+        protected float incomingDamageMultiplier = 1f;
+
+        [Tooltip("Multiply outgoing damage by this amount.  1 = normal damage.")]
+        [SerializeField]
+        protected float outgoingDamageMultiplier = 1f;
+
+        [Tooltip("Multiply attack and casting speed by this amount.  1 = normal speed.")]
+        [SerializeField]
+        protected float speedMultiplier = 1f;
+
+        [Tooltip("Multiply attack and casting accuracy by this amount.  1 = normal accuracy.")]
+        [SerializeField]
+        protected float accuracyMultiplier = 1f;
+
+        [Tooltip("Add this amount as a flat percentage increase to the critical strike chance.")]
+        [SerializeField]
+        protected float extraCriticalStrikePercent;
+
+        [Tooltip("Temporarily modify a character faction relationship while this buff is active")]
         [SerializeField]
         protected List<FactionDisposition> factionModifiers = new List<FactionDisposition>();
 
-        // freeze effect
+        [Header("Status Effects")]
+
+        [Tooltip("Freeze the character and prevent all movement and animation.  Can be combined with different materials for statue, ice block, etc")]
         [SerializeField]
         protected bool disableAnimator = false;
 
+        [Tooltip("Stun the character.  They cannot move, and a stun animation will be played.")]
         [SerializeField]
         protected bool stun = false;
 
+        [Tooltip("Levitate the character.  They cannot move, and will hover above the ground.")]
         [SerializeField]
         protected bool levitate = false;
 
-        // freeze effect
+        [Header("Status Immunity")]
+
+        [Tooltip("Immune to freeze effects")]
         [SerializeField]
         protected bool immuneDisableAnimator = false;
 
+        [Tooltip("Immune to stun effects")]
         [SerializeField]
         protected bool immuneStun = false;
 
+        [Tooltip("Immune to levitate effects")]
         [SerializeField]
         protected bool immuneLevitate = false;
 
-        // if true, the target will mirror all actions taken by the caster
+        [Header("Target Control")]
+        [Tooltip("If true, the target will mirror all actions taken by the caster and will not be able to control their actions")]
         [SerializeField]
         protected bool controlTarget = false;
 
@@ -97,6 +122,8 @@ namespace AnyRPG {
 
         // list of status effect nodes to send updates to so multiple effects panels and bars can access this
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
+
+        [Tooltip("Additional Effects")]
 
         [SerializeField]
         protected List<string> reflectAbilityEffectNames = new List<string>();
@@ -114,7 +141,7 @@ namespace AnyRPG {
         public List<StatBuffType> MyStatBuffTypes { get => statBuffTypes; set => statBuffTypes = value; }
         public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
         public int MyCurrentStacks { get => currentStacks; set => currentStacks = value; }
-        public float MyIncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
+        public float IncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
         public List<FactionDisposition> MyFactionModifiers { get => factionModifiers; set => factionModifiers = value; }
         public bool MyControlTarget { get => controlTarget; set => controlTarget = value; }
         public bool MyDisableAnimator { get => disableAnimator; set => disableAnimator = value; }
@@ -216,38 +243,37 @@ namespace AnyRPG {
         }
 
         // bypass the creation of the status effect and just make its visual prefab
-        public void RawCast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public void RawCast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".StatusEffect.RawCast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
-            if (classTrait == true && sourceCharacter.MyCharacterStats.MyLevel >= requiredLevel) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+            if (classTrait == true && sourceCharacter.Level >= requiredLevel) {
                 return true;
             }
             return base.CanUseOn(target, sourceCharacter);
         }
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             CharacterStats targetCharacterStats = null;
-            CharacterUnit targetCharacterUnit = null;
-            if (classTrait || abilityEffectInput.savedEffect) {
-                targetCharacterStats = source.MyCharacterStats;
+
+            if ((classTrait || abilityEffectInput.savedEffect) && (source as CharacterAbilityManager) is CharacterAbilityManager) {
+                targetCharacterStats = (source as CharacterAbilityManager).BaseCharacter.CharacterStats;
             } else {
-                targetCharacterStats = target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterStats;
-                targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                targetCharacterStats = target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats;
             }
 
             // prevent status effect from sending scaled up damage to its ticks
             abilityEffectInput.castTimeMultipler = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(MyName) as StatusEffect, source, targetCharacterUnit, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(MyName) as StatusEffect, source, abilityEffectInput);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
@@ -261,7 +287,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("DirectEffect.PerformAbilityEffect()");
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
@@ -288,7 +314,7 @@ namespace AnyRPG {
             return remainingDuration;
         }
 
-        public override void Initialize(BaseCharacter source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
+        public override void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyAbilityEffectName + ".StatusEffect.Initialize(" + source.name + ", " + target.name + ")");
             base.Initialize(source, target, abilityEffectInput);
             //co = (target.MyCharacterStats as CharacterStats).StartCoroutine(Tick(source, abilityEffectInput, target));
@@ -298,46 +324,46 @@ namespace AnyRPG {
         //public void HandleStatusEffectEnd(
 
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
-        public override void CastTick(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
             abilityEffectInput.spellDamageMultiplier = tickRate / duration;
             base.CastTick(source, target, abilityEffectInput);
             PerformAbilityTick(source, target, abilityEffectInput);
         }
 
-        public override void CastComplete(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastComplete()");
             base.CastComplete(source, target, abilityEffectInput);
             PerformAbilityComplete(source, target, abilityEffectInput);
         }
 
-        public virtual void CastWeaponHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityWeaponHit(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityWeaponHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
         }
 
 
-        public virtual void PerformAbilityWeaponHitEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
         }
 
-        public virtual void CastReflect(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityReflect(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityReflect(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityReflectEffects(source, target, abilityEffectInput);
         }
 
 
-        public virtual void PerformAbilityReflectEffects(BaseCharacter source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
             effectOutput.refectDamage = true;
             PerformAbilityEffects(source, target, effectOutput, reflectAbilityEffectList);
         }
@@ -425,16 +451,16 @@ namespace AnyRPG {
         public void ApplyControlEffects(BaseCharacter targetCharacter) {
             if (MyDisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
-                targetCharacter.MyCharacterController.FreezeCharacter();
+                targetCharacter.CharacterController.FreezeCharacter();
             }
 
             if (MyStun == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
-                targetCharacter.MyCharacterController.StunCharacter();
+                targetCharacter.CharacterController.StunCharacter();
             }
             if (MyLevitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
-                targetCharacter.MyCharacterController.LevitateCharacter();
+                targetCharacter.CharacterController.LevitateCharacter();
             }
         }
 
@@ -443,13 +469,13 @@ namespace AnyRPG {
                 return;
             }
             if (MyDisableAnimator == true) {
-                targetCharacter.MyCharacterController.UnFreezeCharacter();
+                targetCharacter.CharacterController.UnFreezeCharacter();
             }
             if (MyStun == true) {
-                targetCharacter.MyCharacterController.UnStunCharacter();
+                targetCharacter.CharacterController.UnStunCharacter();
             }
             if (MyLevitate == true) {
-                targetCharacter.MyCharacterController.UnLevitateCharacter();
+                targetCharacter.CharacterController.UnLevitateCharacter();
             }
         }
 

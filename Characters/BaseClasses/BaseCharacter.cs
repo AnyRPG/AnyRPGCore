@@ -37,29 +37,23 @@ namespace AnyRPG {
 
         protected ClassSpecialization classSpecialization;
 
-        [SerializeField]
         protected CharacterStats characterStats = null;
 
-        [SerializeField]
         protected CharacterCombat characterCombat = null;
 
-        [SerializeField]
         protected CharacterAbilityManager characterAbilityManager = null;
 
-        [SerializeField]
         protected CharacterSkillManager characterSkillManager = null;
 
-        [SerializeField]
         protected CharacterPetManager characterPetManager = null;
 
-        [SerializeField]
         protected BaseController characterController = null;
 
         // unit profile name
         [SerializeField]
         protected string unitProfileName;
 
-        // should this character start the game dead
+        [Tooltip("should this character start the game dead")]
         [SerializeField]
         protected bool spawnDead = false;
 
@@ -77,18 +71,18 @@ namespace AnyRPG {
         // disable certain things not needed for preview units
         protected bool previewCharacter = false;
 
-        public CharacterStats MyCharacterStats { get => characterStats; }
-        public CharacterCombat MyCharacterCombat { get => characterCombat; }
-        public BaseController MyCharacterController { get => characterController; }
-        public CharacterAbilityManager MyCharacterAbilityManager { get => characterAbilityManager; }
-        public CharacterSkillManager MyCharacterSkillManager { get => characterSkillManager; }
-        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
-        public AnimatedUnit MyAnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
-        public CharacterFactionManager MyCharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
-        public CharacterEquipmentManager MyCharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
+        public CharacterStats CharacterStats { get => characterStats; }
+        public CharacterCombat CharacterCombat { get => characterCombat; }
+        public BaseController CharacterController { get => characterController; }
+        public CharacterAbilityManager CharacterAbilityManager { get => characterAbilityManager; }
+        public CharacterSkillManager CharacterSkillManager { get => characterSkillManager; }
+        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public AnimatedUnit AnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
+        public CharacterFactionManager CharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
+        public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
-        public string MyCharacterName { get => characterName; }
-        public string MyName { get => MyCharacterName; }
+        public string CharacterName { get => characterName; }
+        public string MyName { get => CharacterName; }
         /*
         private string MyFactionName {
 
@@ -109,9 +103,9 @@ namespace AnyRPG {
         public Faction MyFaction {
 
             get {
-                if (MyCharacterController != null && MyCharacterController.MyUnderControl) {
+                if (CharacterController != null && CharacterController.MyUnderControl) {
                     //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
-                    return MyCharacterController.MyMasterUnit.MyFaction;
+                    return CharacterController.MyMasterUnit.MyFaction;
                 }
                 return faction;
             }
@@ -145,16 +139,16 @@ namespace AnyRPG {
             characterSkillManager = GetComponent<CharacterSkillManager>();
             characterPetManager = GetComponent<CharacterPetManager>();
 
-            if (MyCharacterUnit == null) {
+            if (CharacterUnit == null) {
                 CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
                 if (_characterUnit != null) {
-                    MyCharacterUnit = _characterUnit;
+                    CharacterUnit = _characterUnit;
                 }
             }
-            if (MyAnimatedUnit == null) {
+            if (AnimatedUnit == null) {
                 AnimatedUnit _animatedUnit = GetComponent<AnimatedUnit>();
                 if (_animatedUnit != null) {
-                    MyAnimatedUnit = _animatedUnit;
+                    AnimatedUnit = _animatedUnit;
                 }
             }
             characterFactionManager = GetComponent<CharacterFactionManager>();
@@ -255,7 +249,7 @@ namespace AnyRPG {
                 classSpecialization = newClassSpecialization;
 
                 // resets character stats because classes and specializations can get bonuses
-                characterStats.SetLevel(characterStats.MyLevel);
+                characterStats.SetLevel(characterStats.Level);
 
                 OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
             }
@@ -267,7 +261,7 @@ namespace AnyRPG {
             if (newCharacterClass != null) {
                 CharacterClass oldCharacterClass = characterClass;
                 characterClass = newCharacterClass;
-                characterStats.SetLevel(characterStats.MyLevel);
+                characterStats.SetLevel(characterStats.Level);
                 if (notify) {
                     OnClassChange(newCharacterClass, oldCharacterClass);
                 }

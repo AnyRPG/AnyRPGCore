@@ -19,23 +19,15 @@ namespace AnyRPG {
             set => abilityCastingTime = value;
         }
 
-        public bool MyIsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
+        public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
 
-        public override bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
             if (base.Cast(sourceCharacter, target, groundTarget)) {
                 if (MyAnimationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
-                    // this type of ability is allowed to interrupt other types of animations, so clear them all
-                    sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
-
-                    // now block further animations of other types from starting
-                    if (!isAutoAttack) {
-                        sourceCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = true;
-                    } else {
-                        sourceCharacter.MyCharacterCombat.SetWaitingForAutoAttack(true);
-                    }
+                    
 
                     CharacterUnit targetCharacterUnit = null;
                     if (target != null) {
@@ -49,9 +41,8 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, MyAnimationClips.Count);
                     if (MyAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
+                        float animationLength = sourceCharacter.PerformAnimatedAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
 
-                        // unblock 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
                             //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationLength);
@@ -68,12 +59,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void BeginAbilityCoolDown(BaseCharacter sourceCharacter, float animationLength = -1) {
+        public override void BeginAbilityCoolDown(IAbilityCaster sourceCharacter, float animationLength = -1) {
             // intentionally do nothing, we will call this method manually here and pass in a time
             //base.BeginAbilityCoolDown(sourceCharacter);
         }
 
-        public override void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
+        public override void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".AnimatedAbility.ProcessAbilityPrefabs()");
             //base.ProcessAbilityPrefabs(sourceCharacter);
             // do nothing intentionally, we will clean these up at the end of the ability
@@ -83,26 +74,17 @@ namespace AnyRPG {
             //source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 
-        public bool HandleAbilityHit(BaseCharacter source, GameObject target) {
+        public bool HandleAbilityHit(IAbilityCaster source, GameObject target) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
             bool returnResult = PerformAbilityEffects(source, target, Vector3.zero);
             if (!returnResult) {
                 return false;
             }
 
-            // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
-            // check for friendly target in case it somehow turned friendly mid swing
-            if (target == null || !base.CanUseOn(target, source)) {
-                source.MyCharacterCombat.DeActivateAutoAttack();
+            if (!source.ProcessAnimatedAbilityHit(target, !base.CanUseOn(target, source))) {
                 return false;
             }
 
-            //if (isAutoAttack) {
-                if (source.MyCharacterCombat.MyAutoAttackActive == false) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
-                    source.MyCharacterCombat.ActivateAutoAttack();
-                }
-            //}
             return true;
 
         }
@@ -113,20 +95,17 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(GameObject target, BaseCharacter source) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source) {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
-            if (source.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true) {
-                //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") FAILING.  ALREADY IN PROGRESS");
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && source == PlayerManager.MyInstance.MyCharacter && CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (MyName == null ? "null" : MyName) + ". Waiting for another ability to finish.");
-                }
+            if (!source.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
+            
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
             return base.CanUseOn(target, source);
         }
 
-        public override void ProcessGCDAuto(BaseCharacter sourceCharacter) {
+        public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + "AnimatedAbility.ProcessGCDAuto()");
             //intentionally do nothing
         }

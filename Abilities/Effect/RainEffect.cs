@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class RainEffect : AOEEffect {
 
 
-        protected override List<AOETargetNode> GetValidTargets(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 
@@ -21,14 +21,14 @@ namespace AnyRPG {
                 aoeSpawnCenter = target.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
-                aoeSpawnCenter = source.MyCharacterUnit.transform.position;
+                aoeSpawnCenter = source.UnitGameObject.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectInput.prefabLocation;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
-            //aoeSpawnCenter += source.MyCharacterUnit.transform.TransformDirection(aoeCenter);
+            //aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
 
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();

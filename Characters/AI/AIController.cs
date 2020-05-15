@@ -115,8 +115,8 @@ namespace AnyRPG {
 
             // moved next 2 lines here from awake because we need some references first for them to work
             Vector3 correctedPosition = Vector3.zero;
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                correctedPosition = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterUnit != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                correctedPosition = MyBaseCharacter.AnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(transform.position);
             } else {
                 //Debug.Log(gameObject.name + ".AIController.Start(): unable to get a corrected navmesh position for start point because there were no references to a charactermotor");
             }
@@ -144,14 +144,14 @@ namespace AnyRPG {
                     Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
                     return;
                 }
-                masterUnit.MyCharacterController.OnClearTarget += ClearTarget;
-                masterUnit.MyCharacterAbilityManager.OnAttack += OnMasterAttack;
-                masterUnit.MyCharacterCombat.OnDropCombat += OnMasterDropCombat;
-                masterUnit.MyCharacterController.OnManualMovement += OnMasterMovement;
+                masterUnit.CharacterController.OnClearTarget += ClearTarget;
+                masterUnit.CharacterAbilityManager.OnAttack += OnMasterAttack;
+                masterUnit.CharacterCombat.OnDropCombat += OnMasterDropCombat;
+                masterUnit.CharacterController.OnManualMovement += OnMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
-                MyBaseCharacter.MyCharacterCombat.MyAggroTable.ClearTable();
-                baseCharacter.MyCharacterFactionManager.NotifyOnReputationChange();
+                MyBaseCharacter.CharacterCombat.MyAggroTable.ClearTable();
+                baseCharacter.CharacterFactionManager.NotifyOnReputationChange();
                 SetMasterRelativeDestination();
             } else {
                 //Debug.Log("Can only be under the control of one master at a time");
@@ -161,10 +161,10 @@ namespace AnyRPG {
         public void RemoveControlEffects() {
             if (underControl && masterUnit != null) {
                 //masterUnit.MyCharacterController.OnSetTarget -= SetTarget;
-                masterUnit.MyCharacterController.OnClearTarget -= ClearTarget;
-                masterUnit.MyCharacterAbilityManager.OnAttack -= OnMasterAttack;
-                masterUnit.MyCharacterCombat.OnDropCombat -= OnMasterDropCombat;
-                masterUnit.MyCharacterController.OnManualMovement -= OnMasterMovement;
+                masterUnit.CharacterController.OnClearTarget -= ClearTarget;
+                masterUnit.CharacterAbilityManager.OnAttack -= OnMasterAttack;
+                masterUnit.CharacterCombat.OnDropCombat -= OnMasterDropCombat;
+                masterUnit.CharacterController.OnManualMovement -= OnMasterMovement;
             }
             masterUnit = null;
             underControl = false;
@@ -186,15 +186,15 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
-            Vector3 masterRelativeDestination = masterUnit.MyCharacterUnit.gameObject.transform.position + masterUnit.MyCharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
+            Vector3 masterRelativeDestination = masterUnit.CharacterUnit.gameObject.transform.position + masterUnit.CharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
             float usedMaxDistance = 0f;
-            if (baseCharacter.MyCharacterCombat.GetInCombat() == true) {
+            if (baseCharacter.CharacterCombat.GetInCombat() == true) {
                 usedMaxDistance = maxCombatDistanceFromMasterOnMove;
             } else {
                 usedMaxDistance = maxDistanceFromMasterOnMove;
             }
 
-            if (Vector3.Distance(gameObject.transform.position, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(MyLeashPosition, masterUnit.MyCharacterUnit.gameObject.transform.position) > usedMaxDistance) {
+            if (Vector3.Distance(gameObject.transform.position, masterUnit.CharacterUnit.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(MyLeashPosition, masterUnit.CharacterUnit.gameObject.transform.position) > usedMaxDistance) {
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
                 masterRelativeDestination = SetDestination(masterRelativeDestination);
                 MyLeashPosition = masterRelativeDestination;
@@ -205,11 +205,11 @@ namespace AnyRPG {
         }
 
         public void OnMasterAttack(BaseCharacter target) {
-            SetTarget(target.MyCharacterUnit.gameObject);
+            SetTarget(target.CharacterUnit.gameObject);
         }
 
         public void OnMasterDropCombat() {
-            baseCharacter.MyCharacterCombat.TryToDropCombat();
+            baseCharacter.CharacterCombat.TryToDropCombat();
         }
 
         protected override void FixedUpdate() {
@@ -231,19 +231,19 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter is null!!!");
                 return;
             }
-            if (baseCharacter.MyCharacterCombat == null) {
+            if (baseCharacter.CharacterCombat == null) {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat is null. (ok for non combat units)");
                 return;
             }
-            if (baseCharacter.MyCharacterCombat.MyAggroTable == null) {
+            if (baseCharacter.CharacterCombat.MyAggroTable == null) {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
                 return;
             }
             AggroNode topNode;
             if (underControl) {
-                topNode = masterUnit.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
+                topNode = masterUnit.CharacterCombat.MyAggroTable.MyTopAgroNode;
             } else {
-                topNode = baseCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
+                topNode = baseCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
             }
 
             if (topNode == null) {
@@ -251,8 +251,8 @@ namespace AnyRPG {
                 if (MyTarget != null) {
                     ClearTarget();
                 }
-                if (baseCharacter.MyCharacterCombat.GetInCombat() == true) {
-                    baseCharacter.MyCharacterCombat.TryToDropCombat();
+                if (baseCharacter.CharacterCombat.GetInCombat() == true) {
+                    baseCharacter.CharacterCombat.TryToDropCombat();
                 }
                 return;
             }
@@ -280,7 +280,7 @@ namespace AnyRPG {
                 if (!(currentState is EvadeState)) {
                     if (MyTarget == null) {
                         //Debug.Log("Setting target function and target was previously null");
-                        float distance = Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, newTarget.transform.position);
+                        float distance = Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, newTarget.transform.position);
                         /*MyAggroRange = initialAggroRange;
                         MyAggroRange += distance;
                         */
@@ -309,7 +309,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 CommonMovementNotifier();
-                return MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MoveToPoint(destination);
+                return MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MoveToPoint(destination);
             } else {
                 //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
             }
@@ -319,7 +319,7 @@ namespace AnyRPG {
         public void FollowTarget(GameObject target) {
             //Debug.Log(gameObject.name + ": AIController.FollowTarget()");
             if (!(currentState is DeathState)) {
-                MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FollowTarget(target);
+                MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target);
             }
         }
 
@@ -351,10 +351,10 @@ namespace AnyRPG {
             target = null;
             MyAggroRange = initialAggroRange;
             if (baseCharacter != null) {
-                baseCharacter.MyCharacterStats.ResetHealth();
-                if (baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.ResetPath();
+                baseCharacter.CharacterStats.ResetHealth();
+                if (baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.ResetPath();
                 } else {
                     //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter.myanimatedunit was null!");
                 }
@@ -418,7 +418,7 @@ namespace AnyRPG {
                 return MyCombatStrategy.GetMinAttackRange(MyBaseCharacter as BaseCharacter);
             } else {
                 // get random attack if no strategy exists
-                return (MyBaseCharacter.MyCharacterCombat as AICombat).GetMinAttackRange();
+                return (MyBaseCharacter.CharacterCombat as AICombat).GetMinAttackRange();
             }
         }
 
@@ -433,7 +433,7 @@ namespace AnyRPG {
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = (MyBaseCharacter.MyCharacterCombat as AICombat).GetMeleeAbility();
+                BaseAbility validAttackAbility = (MyBaseCharacter.CharacterCombat as AICombat).GetMeleeAbility();
                 if (validAttackAbility != null) {
                     //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
                     return true;
@@ -450,15 +450,15 @@ namespace AnyRPG {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
                 BaseAbility validCombatStrategyAbility = MyCombatStrategy.GetValidAbility(MyBaseCharacter as BaseCharacter);
                 if (validCombatStrategyAbility != null) {
-                    MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
+                    MyBaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = (MyBaseCharacter.MyCharacterCombat as AICombat).GetValidAttackAbility();
+                BaseAbility validAttackAbility = (MyBaseCharacter.CharacterCombat as AICombat).GetValidAttackAbility();
                 if (validAttackAbility != null) {
                     //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
-                    MyBaseCharacter.MyCharacterAbilityManager.BeginAbility(validAttackAbility);
+                    MyBaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
                 }
             }

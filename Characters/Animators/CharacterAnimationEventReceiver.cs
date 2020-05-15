@@ -25,8 +25,8 @@ namespace AnyRPG {
 
         public void AttackHitEvent() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null) {
-                characterUnit.MyCharacter.MyCharacterCombat.AttackHit_AnimationEvent();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterCombat != null) {
+                characterUnit.MyCharacter.CharacterCombat.AttackHit_AnimationEvent();
             }
         }
 
@@ -36,36 +36,36 @@ namespace AnyRPG {
         }
 
         public void AnimationHit() {
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
-                characterUnit.MyCharacter.MyCharacterAbilityManager.AnimationHitAnimationEvent();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterAbilityManager != null) {
+                characterUnit.MyCharacter.CharacterAbilityManager.AnimationHitAnimationEvent();
             }
         }
 
         public void AnimationPrefabCreate() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreate()");
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
-                characterUnit.MyCharacter.MyCharacterAbilityManager.SpawnAbilityObjects();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterAbilityManager != null) {
+                characterUnit.MyCharacter.CharacterAbilityManager.SpawnAbilityObjects();
             }
         }
 
         public void AnimationPrefabCreateByIndex(int animationIndex) {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreateByIndex(" + animationIndex + ")");
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
-                characterUnit.MyCharacter.MyCharacterAbilityManager.SpawnAbilityObjects(animationIndex);
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterAbilityManager != null) {
+                characterUnit.MyCharacter.CharacterAbilityManager.SpawnAbilityObjects(animationIndex);
             }
         }
 
         public void AnimationPrefabDestroy() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabDestroy()");
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
-                characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.CharacterEquipmentManager.DespawnAbilityObjects();
             }
         }
 
         // for root motion
         public void OnAnimatorMove() {
-            if (animator != null && characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyAnimatedUnit != null && characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                characterUnit.MyCharacter.MyAnimatedUnit.MyCharacterMotor.ReceiveAnimatorMovment(animator.deltaPosition);
+            if (animator != null && characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.AnimatedUnit != null && characterUnit.MyCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                characterUnit.MyCharacter.AnimatedUnit.MyCharacterMotor.ReceiveAnimatorMovment(animator.deltaPosition);
             }
         }
 

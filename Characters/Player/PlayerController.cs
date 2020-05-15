@@ -73,18 +73,18 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 //Debug.Log(gameObject.name + ".PlayerController.CreateEventSubscriptions(): subscribing to OnDie");
-                baseCharacter.MyCharacterStats.OnDie += HandleDeath;
-                baseCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
+                baseCharacter.CharacterStats.OnDie += HandleDeath;
+                baseCharacter.CharacterStats.OnReviveBegin += HandleRevive;
             }
         }
 
         public override void CleanupEventSubscriptions() {
             base.CleanupEventSubscriptions();
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnDie -= HandleDeath;
-                baseCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnDie -= HandleDeath;
+                baseCharacter.CharacterStats.OnReviveBegin -= HandleRevive;
             }
         }
 
@@ -337,9 +337,9 @@ namespace AnyRPG {
             Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if ((MyBaseCharacter.MyCharacterAbilityManager as PlayerAbilityManager).WaitingForTarget()) {
+                if ((MyBaseCharacter.CharacterAbilityManager as PlayerAbilityManager).WaitingForTarget()) {
 
-                    (MyBaseCharacter.MyCharacterAbilityManager as PlayerAbilityManager).SetGroundTarget(hit.point);
+                    (MyBaseCharacter.CharacterAbilityManager as PlayerAbilityManager).SetGroundTarget(hit.point);
                 }
             }
         }
@@ -352,8 +352,8 @@ namespace AnyRPG {
                 return;
             }
             if (InteractionSucceeded()) {
-                if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+                if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StopFollowingTarget();
                 }
             }
         }
@@ -365,7 +365,7 @@ namespace AnyRPG {
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
-            if (interactable.Interact(baseCharacter.MyCharacterUnit)) {
+            if (interactable.Interact(baseCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 if (interactable != null) {
                     SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.MyName);
@@ -395,7 +395,7 @@ namespace AnyRPG {
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
             lastTabTargetTime = DateTime.Now;
             int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-            Collider[] hitColliders = Physics.OverlapSphere(baseCharacter.MyCharacterUnit.transform.position, tabTargetMaxDistance, validMask);
+            Collider[] hitColliders = Physics.OverlapSphere(baseCharacter.CharacterUnit.transform.position, tabTargetMaxDistance, validMask);
             int i = 0;
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
             int preferredTargetIndex = -1;
@@ -407,11 +407,11 @@ namespace AnyRPG {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
                 CharacterUnit targetCharacterUnit = collidedGameObject.GetComponent<CharacterUnit>();
-                if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.MyFaction) <= -1) {
+                if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.MyFaction) <= -1) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
-                    Vector3 transformedPosition = baseCharacter.MyCharacterUnit.transform.InverseTransformPoint(collidedGameObject.transform.position);
+                    Vector3 transformedPosition = baseCharacter.CharacterUnit.transform.InverseTransformPoint(collidedGameObject.transform.position);
                     if (transformedPosition.z > 0f) {
                         characterUnitList.Add(collidedGameObject);
 
@@ -434,7 +434,7 @@ namespace AnyRPG {
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
                 }
-                if (Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, collidedGameObject.transform.position) < Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
+                if (Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, collidedGameObject.transform.position) < Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
                     closestTargetIndex = i;
                 }
                 // this next variable shouldn't actually be needed.  i think it was a logic error with not tracking the target index properly
@@ -499,18 +499,18 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 //Debug.Log("BaseCharacter is null!!!");
             }
-            if (baseCharacter.MyCharacterUnit == null) {
+            if (baseCharacter.CharacterUnit == null) {
                 //Debug.Log("BaseCharacter.MyCharacterUnit is null!!!");
             }
             if (InteractionSucceeded()) {
                 //Debug.Log("We were able to interact with the target");
                 // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
                 StopInteract();
-            } else if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null && (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+            } else if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && (MyBaseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if ((MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
+                if ((MyBaseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FollowTarget(target);
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -527,7 +527,7 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 //Debug.Log("BaseCharacter is null!!!");
             }
-            if (baseCharacter.MyCharacterUnit == null) {
+            if (baseCharacter.CharacterUnit == null) {
                 //Debug.Log("BaseCharacter.MyCharacterUnit is null!!!");
             }
             if (InteractionWithOptionSucceeded(interactableOption)) {
@@ -536,9 +536,9 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if ((MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
+                if ((MyBaseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FollowTarget(target);
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -548,7 +548,7 @@ namespace AnyRPG {
         private bool InteractionWithOptionSucceeded(InteractableOption interactableOption) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
             //if (IsTargetInHitBox(target)) {
-            if (interactableOption.Interact(baseCharacter.MyCharacterUnit)) {
+            if (interactableOption.Interact(baseCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.MyName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
@@ -577,7 +577,7 @@ namespace AnyRPG {
             //Debug.Log("HandleCancelButtonPressed()");
             if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
                 ClearTarget();
-                MyBaseCharacter.MyCharacterAbilityManager.DeActivateTargettingMode();
+                MyBaseCharacter.CharacterAbilityManager.DeActivateTargettingMode();
             }
         }
 
@@ -681,18 +681,18 @@ namespace AnyRPG {
         //Keep character from moving.
         public void LockMovement() {
             canMove = false;
-            if (baseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.SetMoving(false);
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableRootMotion();
-                if ((baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
-                    (baseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+            if (baseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.SetMoving(false);
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.EnableRootMotion();
+                if ((baseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (baseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
                 }
             }
         }
 
         public void UnlockMovement() {
             canMove = true;
-            baseCharacter.MyAnimatedUnit.MyCharacterAnimator.DisableRootMotion();
+            baseCharacter.AnimatedUnit.MyCharacterAnimator.DisableRootMotion();
         }
 
         public override void OnDestroy() {

@@ -45,8 +45,8 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
         //Debug.Log("ReputationBookUI.CreatePages()");
         ClearPages();
         List<FactionDisposition> page = new List<FactionDisposition>();
-        for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.MyDispositionDictionary.Count; i++) {
-            page.Add(PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.MyDispositionDictionary[i]);
+        for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary.Count; i++) {
+            page.Add(PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary[i]);
             if (page.Count == pageSize) {
                 pages.Add(page);
                 page = new List<FactionDisposition>();

@@ -53,7 +53,7 @@ namespace AnyRPG {
         public event System.Action OnEndKeybind = delegate { };
         public event System.Action<Dialog> OnDialogCompleted = delegate { };
         public event System.Action OnDeleteSaveData = delegate { };
-        public event System.Action<BaseCharacter, CharacterUnit, int, string> OnTakeDamage = delegate { };
+        public event System.Action<IAbilityCaster, CharacterUnit, int, string> OnTakeDamage = delegate { };
         public event System.Action OnXPGained = delegate { };
 
         // Player Manager
@@ -203,7 +203,7 @@ namespace AnyRPG {
             OnXPGained();
         }
 
-        public void NotifyOnTakeDamage(BaseCharacter source, CharacterUnit target, int damage, string abilityName) {
+        public void NotifyOnTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             OnTakeDamage(source, target, damage, abilityName);
         }
 

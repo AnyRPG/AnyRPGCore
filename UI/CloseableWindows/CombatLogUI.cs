@@ -312,12 +312,12 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void HandleTakeDamage(BaseCharacter source, CharacterUnit target, int damage, string abilityName) {
+        public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;
-            if (target == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+            if (target == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 textColor = Color.red;
             }
-            string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.MyDisplayName, damage, source.MyCharacterName, abilityName);
+            string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.MyDisplayName, damage, source.Name, abilityName);
 
             WriteCombatMessage(combatMessage);
         }

@@ -318,7 +318,7 @@ namespace AnyRPG {
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
-                MyCharacter.MyCharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyLevelUpAbility as IAbility), MyCharacter.MyCharacterUnit.gameObject);
+                MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyLevelUpAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
             }
         }
 
@@ -328,7 +328,7 @@ namespace AnyRPG {
                 return;
             }
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
-            MyCharacter.MyCharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyDeathAbility as IAbility), MyCharacter.MyCharacterUnit.gameObject);
+            MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyDeathAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
         }
 
         public void Initialize() {
@@ -363,13 +363,13 @@ namespace AnyRPG {
         public void RespawnPlayer() {
             //Debug.Log("PlayerManager.RespawnPlayer()");
             DespawnPlayerUnit();
-            MyCharacter.MyCharacterStats.ReviveRaw();
+            MyCharacter.CharacterStats.ReviveRaw();
             SpawnPlayerUnit();
         }
 
         public void RevivePlayerUnit() {
             //Debug.Log("PlayerManager.RevivePlayerUnit()");
-            MyCharacter.MyCharacterStats.Revive();
+            MyCharacter.CharacterStats.Revive();
         }
 
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
@@ -395,13 +395,13 @@ namespace AnyRPG {
             playerUnitObject = Instantiate(MyCharacter.MyUnitProfile.MyUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);
 
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
-            MyCharacter.MyCharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
-            MyCharacter.MyCharacterUnit.MyCharacter = MyCharacter;
-            MyCharacter.MyCharacterUnit.GetComponentReferences();
+            MyCharacter.CharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
+            MyCharacter.CharacterUnit.MyCharacter = MyCharacter;
+            MyCharacter.CharacterUnit.GetComponentReferences();
 
-            MyCharacter.MyAnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
-            MyCharacter.MyCharacterUnit.OrchestratorStart();
-            MyCharacter.MyCharacterUnit.OrchestratorFinish();
+            MyCharacter.AnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
+            MyCharacter.CharacterUnit.OrchestratorStart();
+            MyCharacter.CharacterUnit.OrchestratorFinish();
 
             NavMeshAgent navMeshAgent = playerUnitObject.GetComponent<NavMeshAgent>();
 
@@ -410,16 +410,16 @@ namespace AnyRPG {
                 if (navMeshAgent != null) {
                     navMeshAgent.enabled = true;
                 }
-                if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
-                    (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
+                if (MyCharacter.AnimatedUnit is AnimatedPlayerUnit && (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
                 }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
                 if (navMeshAgent != null) {
                     navMeshAgent.enabled = false;
                 }
-                if (MyCharacter.MyAnimatedUnit is AnimatedPlayerUnit && (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
-                    (MyCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
+                if (MyCharacter.AnimatedUnit is AnimatedPlayerUnit && (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
+                    (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
                 }
             }
 
@@ -478,7 +478,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMASettings(false);
 
             // initialize the animator so our avatar initialization has an animator.
-            MyCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            MyCharacter.AnimatedUnit.MyCharacterAnimator.InitializeAnimator();
             avatar.Initialize();
             UMAData umaData = avatar.umaData;
             umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;

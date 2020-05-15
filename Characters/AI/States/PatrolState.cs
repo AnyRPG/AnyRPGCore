@@ -19,7 +19,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.aiController = aiController;
             if (!aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete()) {
-                originalMovementSpeed = this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed;
+                originalMovementSpeed = this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed;
                 SetMovementSpeed();
 
                 // set destination
@@ -36,9 +36,9 @@ namespace AnyRPG {
         public void SetMovementSpeed() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() movment speed: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed);
             if (aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed == 0) {
-                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             } else {
-                this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed;
+                this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed;
             }
         }
 
@@ -46,7 +46,7 @@ namespace AnyRPG {
             if (coroutine != null) {
                 aiController.StopCoroutine(coroutine);
             }
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = originalMovementSpeed;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = originalMovementSpeed;
         }
 
         public void Update() {
@@ -59,7 +59,7 @@ namespace AnyRPG {
             aiController.UpdateTarget();
 
             if (aiController.MyTarget != null && aiController.AggroEnabled() == true) {
-                aiController.MyLeashPosition = aiController.MyBaseCharacter.MyCharacterUnit.transform.position;
+                aiController.MyLeashPosition = aiController.MyBaseCharacter.CharacterUnit.transform.position;
                 aiController.ChangeState(new FollowState());
             }
 
@@ -67,14 +67,14 @@ namespace AnyRPG {
 
             if (currentDestination == Vector3.zero && coroutine == null) {
                 getNewDestination = true;
-            } else if (Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+            } else if (Vector3.Distance(aiController.MyBaseCharacter.CharacterUnit.transform.position, currentDestination) <= aiController.MyBaseCharacter.AnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
                 if (aiController.MyAiPatrol.MyCurrentPatrol.PatrolComplete()) {
                     if (aiController.MyAiPatrol.MyCurrentPatrol.MyDespawnOnCompletion) {
-                        if (aiController.MyBaseCharacter.MyCharacterUnit != null) {
-                            aiController.MyBaseCharacter.MyCharacterUnit.Despawn(0, false, true);
+                        if (aiController.MyBaseCharacter.CharacterUnit != null) {
+                            aiController.MyBaseCharacter.CharacterUnit.Despawn(0, false, true);
                         }
                     } else {
                         TrySavePersistentData();
@@ -89,13 +89,13 @@ namespace AnyRPG {
 
 
             //pathstatus: " + animatedUnit.MyAgent.pathStatus
-            if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
+            if (aiController.MyBaseCharacter.AnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
                 // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS INVALID, GETTING NEW DESTINATION");
                 getNewDestination = true;
             }
 
-            if (aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
+            if (aiController.MyBaseCharacter.AnimatedUnit.MyAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
                 // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS PARTIAL, GETTING NEW DESTINATION");
                 getNewDestination = true;

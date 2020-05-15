@@ -206,10 +206,10 @@ namespace AnyRPG {
 
                 INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
                 if (namePlateUnit is CharacterUnit) {
-                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnHealthChanged -= OnHealthChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnManaChanged -= OnManaChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterStats.OnLevelChanged -= OnLevelChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.MyCharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnManaChanged -= OnManaChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
             }
             followGameObject = null;
@@ -237,22 +237,22 @@ namespace AnyRPG {
 
             if (namePlateUnit.HasHealth()) {
                 BaseCharacter baseCharacter = followGameObject.GetComponent<CharacterUnit>().MyCharacter;
-                if (baseCharacter.MyCharacterStats == null) {
+                if (baseCharacter.CharacterStats == null) {
                     //Debug.Log("UnitFrameController: followGameObject(" + followGameObject.name + ") does not have a BaseCharacter component");
                     return;
                 }
 
                 // set initial hp and mana values in character display
-                OnHealthChanged(baseCharacter.MyCharacterStats.MyMaxHealth, baseCharacter.MyCharacterStats.currentHealth);
-                OnManaChanged(baseCharacter.MyCharacterStats.MyMaxMana, baseCharacter.MyCharacterStats.currentMana);
-                OnLevelChanged(baseCharacter.MyCharacterStats.MyLevel);
+                OnHealthChanged(baseCharacter.CharacterStats.MyMaxHealth, baseCharacter.CharacterStats.currentHealth);
+                OnManaChanged(baseCharacter.CharacterStats.MyMaxMana, baseCharacter.CharacterStats.currentMana);
+                OnLevelChanged(baseCharacter.CharacterStats.Level);
 
                 // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
-                baseCharacter.MyCharacterStats.OnHealthChanged += OnHealthChanged;
-                baseCharacter.MyCharacterStats.OnManaChanged += OnManaChanged;
-                baseCharacter.MyCharacterStats.OnLevelChanged += OnLevelChanged;
-                if (baseCharacter.MyCharacterFactionManager != null) {
-                    baseCharacter.MyCharacterFactionManager.OnReputationChange += HandleReputationChange;
+                baseCharacter.CharacterStats.OnHealthChanged += OnHealthChanged;
+                baseCharacter.CharacterStats.OnManaChanged += OnManaChanged;
+                baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
+                if (baseCharacter.CharacterFactionManager != null) {
+                    baseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
                 } else {
                     Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + baseCharacter.name + " has no CharacterFactionManager");
                 }
@@ -313,8 +313,8 @@ namespace AnyRPG {
 
         public void OnLevelChanged(int _level) {
             unitLevelText.text = _level.ToString();
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, _level);
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, _level);
             }
         }
 

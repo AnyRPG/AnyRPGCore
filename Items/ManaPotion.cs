@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class ManaPotion : CastableItem {
 
         public override bool Use() {
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.currentMana < PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMaxMana) {
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana < PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxMana) {
                 //Debug.Log("The current mana was less than the max mana and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();
                 if (returnValue == false) {

@@ -62,7 +62,7 @@ namespace AnyRPG {
                     RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(characterClass.MyTraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((characterClass.MyTraitList[i] as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                    if ((characterClass.MyTraitList[i] as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + (characterClass.MyTraitList[i] as StatusEffect).MyRequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -85,7 +85,7 @@ namespace AnyRPG {
                     RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(characterClass.MyAbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (characterClass.MyAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                    if (characterClass.MyAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + characterClass.MyAbilityList[i].MyRequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }

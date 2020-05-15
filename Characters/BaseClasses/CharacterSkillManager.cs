@@ -27,7 +27,7 @@ namespace AnyRPG {
         protected virtual void Start() {
             //Debug.Log("CharacterAbilityManager.Start()");
             CreateEventSubscriptions();
-            UpdateSkillList(baseCharacter.MyCharacterStats.MyLevel);
+            UpdateSkillList(baseCharacter.CharacterStats.Level);
         }
 
         public virtual void OnDisable() {
@@ -73,7 +73,7 @@ namespace AnyRPG {
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[SystemResourceManager.prepareStringForMatch(newSkill.MyName)] = newSkill;
                 foreach (BaseAbility ability in newSkill.MyAbilityList) {
-                    MyBaseCharacter.MyCharacterAbilityManager.LearnAbility(ability);
+                    MyBaseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
                 SystemEventManager.MyInstance.NotifyOnSkillListChanged(newSkill);
             }
@@ -92,7 +92,7 @@ namespace AnyRPG {
             if (skillList.ContainsValue(oldSkill)) {
                 skillList.Remove(SystemResourceManager.prepareStringForMatch(oldSkill.MyName));
                 foreach (BaseAbility ability in oldSkill.MyAbilityList) {
-                    MyBaseCharacter.MyCharacterAbilityManager.UnlearnAbility(ability);
+                    MyBaseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
                 }
             }
         }

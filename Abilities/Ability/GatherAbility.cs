@@ -8,7 +8,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
     public class GatherAbility : DirectAbility {
 
-        public override bool Cast(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
             if (target == null) {
                 return false;
             }
@@ -23,7 +23,7 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ")");
             if (target != null) {
                 //Debug.Log("GatherAbility.CanUseOn(" + target.name + ")");
@@ -34,9 +34,9 @@ namespace AnyRPG {
                 return false;
             }
             // distance from center of character to whereever the raycast hit the object
-            //float distanceToTarget = Vector3.Distance((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyMouseOverhit.point, source.MyCharacterUnit.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
+            //float distanceToTarget = Vector3.Distance((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyMouseOverhit.point, source.UnitGameObject.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
             //Debug.Log("PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point: " + PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point);
-            
+
             /*
             if (distanceToTarget > (source.MyCharacterStats.MyHitBox * 2)) {
                 //Debug.Log(target.name + " is out of range: " + distanceToTarget);

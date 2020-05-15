@@ -12,15 +12,15 @@ namespace AnyRPG {
         int MyRequiredLevel { get; }
         bool MyUseableWithoutLearning { get; }
         bool MyIgnoreGlobalCoolDown { get; }
-        bool MyCanSimultaneousCast { get; }
+        bool CanSimultaneousCast { get; }
         int MyAbilityManaCost { get; set; }
         float MyAbilityCastingTime { get; set; }
         bool MyRequiresTarget { get; set; }
         bool MyRequiresGroundTarget { get; set; }
         Color MyGroundTargetColor { get; set; }
-        bool MyCanCastOnEnemy { get; }
+        bool CanCastOnEnemy { get; }
         bool MyCanCastOnSelf { get; }
-        bool MyCanCastOnFriendly { get; }
+        bool CanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
         AnimationClip MyCastingAnimationClip { get; }
         List<PrefabProfile> MyHoldableObjects { get; set; }
@@ -29,14 +29,14 @@ namespace AnyRPG {
         bool MyRequireOutOfCombat { get; set; }
 
 
-        bool CanUseOn(GameObject target, BaseCharacter source);
-        bool Cast(BaseCharacter source, GameObject target, Vector3 GroundTarget);
+        bool CanUseOn(GameObject target, IAbilityCaster source);
+        bool Cast(IAbilityCaster source, GameObject target, Vector3 GroundTarget);
         string GetDescription();
         string GetSummary();
-        GameObject ReturnTarget(BaseCharacter source, GameObject target);
+        GameObject ReturnTarget(IAbilityCaster source, GameObject target);
         bool Use();
-        void StartCasting(BaseCharacter source);
-        float OnCastTimeChanged(float currentCastTime, float nextTickTime, BaseCharacter source, GameObject target);
+        void StartCasting(IAbilityCaster source);
+        float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target);
         //void HandleCastStop(BaseCharacter source);
 
     }

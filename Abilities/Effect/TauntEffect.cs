@@ -15,8 +15,8 @@ namespace AnyRPG {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
-            if (targetCharacter != null && targetCharacter.MyCharacterCombat != null && targetCharacter.MyCharacterCombat.MyAggroTable != null) {
-                targetCharacter.MyCharacterCombat.MyAggroTable.UnLockAgro();
+            if (targetCharacter != null && targetCharacter.CharacterCombat != null && targetCharacter.CharacterCombat.MyAggroTable != null) {
+                targetCharacter.CharacterCombat.MyAggroTable.UnLockAgro();
             }
             base.CancelEffect(targetCharacter);
         }
@@ -28,7 +28,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
                 //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CANNOT USE RETURNING");
@@ -38,18 +38,15 @@ namespace AnyRPG {
             // make ourselves the top threat in his threat table
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null) {
-                if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.MyCharacterCombat != null && targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable != null) {
+                if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterCombat != null && targetCharacterUnit.MyCharacter.CharacterCombat.MyAggroTable != null) {
                     //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
-                    AggroNode AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
+                    AggroNode AgroNode = targetCharacterUnit.MyCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
                     float usedAgroValue = 0f;
                     if (AgroNode != null) {
                         usedAgroValue = AgroNode.aggroValue;
                     }
-                    if (source != null && source.MyCharacterUnit != null) {
-                        targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.AddToAggroTable(source.MyCharacterUnit, (int)(usedAgroValue + extraThreat));
-                        AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
-                        //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
-                        targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.LockAgro();
+                    if (source != null) {
+                        source.GenerateAgro(targetCharacterUnit, (int)(usedAgroValue + extraThreat));
                     }
                 }
 

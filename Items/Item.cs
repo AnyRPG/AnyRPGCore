@@ -64,8 +64,8 @@ namespace AnyRPG {
             get {
                 int returnLevel = itemLevel;
                 if (dynamicLevel == true) {
-                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-                        returnLevel = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
+                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                        returnLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                     } else {
                         returnLevel = itemLevel;
                     }
@@ -74,8 +74,8 @@ namespace AnyRPG {
                     return returnLevel;
                 } else {
                     if (MyItemQuality.MyDynamicItemLevel) {
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterStats != null) {
-                            return PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel;
+                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                            return PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                         } else {
                             return returnLevel;
                         }

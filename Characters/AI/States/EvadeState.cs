@@ -13,8 +13,8 @@ namespace AnyRPG {
             this.aiController = aiController;
             this.aiController.ClearTarget();
             this.aiController.SetDestination(aiController.MyLeashPosition);
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyEvadeRunSpeed;
-            this.aiController.MyBaseCharacter.MyCharacterCombat.MyAggroTable.ClearAndBroadcast();
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyEvadeRunSpeed;
+            this.aiController.MyBaseCharacter.CharacterCombat.MyAggroTable.ClearAndBroadcast();
         }
 
         public void Exit() {
@@ -23,9 +23,9 @@ namespace AnyRPG {
         public void Update() {
             //Debug.Log(aiController.gameObject.name + ": EvadeState.Update()");
 
-            float distance = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.MyCharacterUnit.transform.position);
+            float distance = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.CharacterUnit.transform.position);
             //Debug.Log(aiController.gameObject.name + ": EvadeState.Update(): Distance from spawn point: " + distance.ToString());
-            if (distance <= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+            if (distance <= aiController.MyBaseCharacter.AnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
                 aiController.ChangeState(new IdleState());
             }
         }

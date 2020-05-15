@@ -38,10 +38,10 @@ namespace AnyRPG {
         public BaseCharacter MyBaseCharacter { get => baseCharacter; }
         public float MyMovementSpeed {
             get {
-                if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.MyCharacterController != null) {
-                    return MyMasterUnit.MyCharacterController.MyMovementSpeed;
+                if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.CharacterController != null) {
+                    return MyMasterUnit.CharacterController.MyMovementSpeed;
                 }
-                return (walking == false ? baseCharacter.MyCharacterStats.MyRunSpeed : baseCharacter.MyCharacterStats.MyWalkSpeed);
+                return (walking == false ? baseCharacter.CharacterStats.MyRunSpeed : baseCharacter.CharacterStats.MyWalkSpeed);
             }
         }
         public bool MyUnderControl { get => underControl; set => underControl = value; }
@@ -107,9 +107,9 @@ namespace AnyRPG {
 
         public virtual void UpdateApparentVelocity() {
             // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterUnit != null) {
-                apparentVelocity = Vector3.Distance(MyBaseCharacter.MyCharacterUnit.transform.position, lastPosition) * (1 / Time.deltaTime);
-                lastPosition = MyBaseCharacter.MyCharacterUnit.transform.position;
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterUnit != null) {
+                apparentVelocity = Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, lastPosition) * (1 / Time.deltaTime);
+                lastPosition = MyBaseCharacter.CharacterUnit.transform.position;
             }
 
         }
@@ -129,16 +129,16 @@ namespace AnyRPG {
                 //Debug.Log("no character unit on target");
             } else if (targetCharacterUnit.MyCharacter == null) {
                 // nothing for now
-            } else if (targetCharacterUnit.MyCharacter.MyCharacterCombat == null) {
+            } else if (targetCharacterUnit.MyCharacter.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
             } else {
-                if (baseCharacter.MyCharacterCombat == null) {
+                if (baseCharacter.CharacterCombat == null) {
                     //Debug.Log("for some strange reason, combat is null????");
                     // like inanimate units
                 } else {
-                    if (targetCharacterUnit.MyCharacter.MyCharacterStats != null && baseCharacter.MyCharacterStats != null && targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && baseCharacter.MyCharacterStats.IsAlive == true) {
-                        targetCharacterUnit.MyCharacter.MyCharacterCombat.EnterCombat(MyBaseCharacter as BaseCharacter);
-                        baseCharacter.MyCharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter);
+                    if (targetCharacterUnit.MyCharacter.CharacterStats != null && baseCharacter.CharacterStats != null && targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && baseCharacter.CharacterStats.IsAlive == true) {
+                        targetCharacterUnit.MyCharacter.CharacterCombat.EnterCombat(MyBaseCharacter.CharacterAbilityManager);
+                        baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter.CharacterAbilityManager);
                     } else {
                         //Debug.Log(gameObject.name + ".Agro(): One of the units was dead or did not have an active characterStats");
                     }
@@ -151,13 +151,13 @@ namespace AnyRPG {
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
             frozen = true;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = false;
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = false;
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FreezeCharacter();
                 }
             }
         }
@@ -165,13 +165,13 @@ namespace AnyRPG {
         public void UnFreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnFreezeCharacter(): ");
             frozen = false;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezeRotation();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = true;
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyAnimator.enabled = true;
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
                 }
             }
         }
@@ -179,15 +179,15 @@ namespace AnyRPG {
         public void StunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): ");
             stunned = true;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleStunned();
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.HandleStunned();
                 } else {
                     //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FreezeCharacter();
                 } else {
                     //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
                 }
@@ -199,15 +199,15 @@ namespace AnyRPG {
         public void UnStunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnStunCharacter(): ");
             stunned = false;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezeRotation();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnStunned();
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.HandleUnStunned();
                 } else {
                     //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
                 } else {
                     //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
                 }
@@ -219,13 +219,13 @@ namespace AnyRPG {
         public void LevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
             levitated = true;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezePositionXZ();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleLevitated();
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezePositionXZ();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.HandleLevitated();
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.FreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FreezeCharacter();
                 }
             }
         }
@@ -233,13 +233,13 @@ namespace AnyRPG {
         public void UnLevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnLevitateCharacter(): ");
             levitated = false;
-            if (MyBaseCharacter.MyAnimatedUnit != null) {
-                baseCharacter.MyAnimatedUnit.FreezeRotation();
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterAnimator.HandleUnLevitated();
+            if (MyBaseCharacter.AnimatedUnit != null) {
+                baseCharacter.AnimatedUnit.FreezeRotation();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.HandleUnLevitated();
                 }
-                if (MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
+                if (MyBaseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.UnFreezeCharacter();
                 }
             }
         }
@@ -254,8 +254,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
             target = null;
             // FIX ME (reenable possibly?)
-            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                baseCharacter.AnimatedUnit.MyCharacterMotor.StopFollowingTarget();
             }
         }
 
@@ -265,11 +265,11 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter is null!");
                 return Vector3.zero;
             }
-            if (baseCharacter.MyCharacterUnit == null) {
+            if (baseCharacter.CharacterUnit == null) {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            Vector3 returnValue = baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.MyCharacterUnit.transform.forward * (baseCharacter.MyCharacterUnit.MyHitBoxSize / 2f));
+            Vector3 returnValue = baseCharacter.CharacterUnit.transform.TransformPoint(baseCharacter.CharacterUnit.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.CharacterUnit.transform.forward * (baseCharacter.CharacterUnit.MyHitBoxSize / 2f));
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
@@ -278,12 +278,12 @@ namespace AnyRPG {
             if (baseCharacter == null) {
                 return Vector3.zero;
             }
-            if (baseCharacter.MyCharacterUnit == null) {
+            if (baseCharacter.CharacterUnit == null) {
                 return Vector3.zero;
             }
             // testing disable size multiplier and just put it straight into the hitbox.  it is messing with character motor because we stop moving toward a character that is 0.5 units outside of the hitbox
             //return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
-            return new Vector3(baseCharacter.MyCharacterUnit.MyHitBoxSize, baseCharacter.MyCharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.MyCharacterUnit.MyHitBoxSize);
+            return new Vector3(baseCharacter.CharacterUnit.MyHitBoxSize, baseCharacter.CharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.MyHitBoxSize);
         }
 
         public bool IsTargetInHitBox(GameObject newTarget) {
@@ -309,7 +309,7 @@ namespace AnyRPG {
         // leave this function here for debugging hitboxes
         void OnDrawGizmos() {
             if (Application.isPlaying) {
-                if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>() == null) {
+                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.CharacterUnit.gameObject.GetComponent<CapsuleCollider>() == null) {
                     return;
                 }
 

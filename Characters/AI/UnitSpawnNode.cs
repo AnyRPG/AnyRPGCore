@@ -250,7 +250,7 @@ namespace AnyRPG {
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
                 Vector3 attemptVector = tempVector;
                 RaycastHit hit;
-                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
+                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).movementMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
                     //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
@@ -310,13 +310,13 @@ namespace AnyRPG {
                 _characterUnit.OnDespawn += HandleDespawn;
             }
             // don't override an existing toughness
-            if (_characterUnit.MyCharacter.MyCharacterStats.MyToughness == null) {
+            if (_characterUnit.MyCharacter.CharacterStats.MyToughness == null) {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
-                _characterUnit.MyCharacter.MyCharacterStats.MyToughness = toughness;
+                _characterUnit.MyCharacter.CharacterStats.MyToughness = toughness;
             }
-            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
-            _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
-            _characterUnit.MyCharacter.MyCharacterStats.TrySpawnDead();
+            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            _characterUnit.MyCharacter.CharacterStats.SetLevel(_unitLevel);
+            _characterUnit.MyCharacter.CharacterStats.TrySpawnDead();
             spawnReferences.Add(spawnReference);
         }
 
@@ -400,14 +400,14 @@ namespace AnyRPG {
                 return;
             }
             CharacterUnit _characterUnit = other.gameObject.GetComponent<CharacterUnit>();
-            if (_characterUnit != null && _characterUnit == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit) {
+            if (_characterUnit != null && _characterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 Spawn();
             }
         }
 
         public void SetupScriptableObjects() {
             if (SystemGameManager.MyInstance == null) {
-                Debug.LogError("System Game Manager Not Found In The Scene.");
+                Debug.LogError(gameObject.name + ": System Game Manager Not Found In The Scene.");
                 return;
             }
             if (prerequisiteConditions != null) {

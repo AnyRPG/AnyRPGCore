@@ -450,7 +450,7 @@ namespace AnyRPG {
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                     if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
+                        PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
                     }
                 }
             }
@@ -460,7 +460,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
+                        PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
                     }
                 }
             }
@@ -470,13 +470,13 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
+                        PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
                     }
                 }
             }
 
             // xp reward
-            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, currentQuest));
+            PlayerManager.MyInstance.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, currentQuest));
 
             UpdateButtons(currentQuest);
 

@@ -8,6 +8,8 @@ namespace AnyRPG {
     // base class to hold amounts and spellpower calculations for heal and damage effects
     public abstract class AmountEffect : InstantEffect {
 
+        [Header("Amounts")]
+
         [SerializeField]
         protected bool useHealthAmount;
 
@@ -36,7 +38,7 @@ namespace AnyRPG {
         [SerializeField]
         protected DamageType damageType;
 
-        public DamageType MyDamageType { get => damageType; set => damageType = value; }
+        public DamageType DamageType { get => damageType; set => damageType = value; }
         public int MyHealthMinAmount { get => healthMinAmount; set => healthMinAmount = value; }
         public int MyHealthBaseAmount { get => healthBaseAmount; set => healthBaseAmount = value; }
         public float MyHealthAmountPerLevel { get => healthAmountPerLevel; set => healthAmountPerLevel = value; }
@@ -48,54 +50,49 @@ namespace AnyRPG {
         protected bool MyUseHealthAmount { get => useHealthAmount; set => useHealthAmount = value; }
         protected bool MyUseManaAmount { get => useManaAmount; set => useManaAmount = value; }
 
-        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, BaseCharacter sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
             float amountAddModifier = 0f;
             float amountMultiplyModifier = 1f;
             //float spellPowerModifier = 0f;
             //float physicalDamageModifier = 0f;
             float critChanceModifier = 0f;
             float critDamageModifier = 1f;
-            if (sourceCharacter.MyCharacterClass != null) {
-                if (sourceCharacter.MyCharacterClass != null) {
 
-                    // stats
-                    if (damageType == DamageType.physical) {
-                        amountAddModifier = LevelEquations.GetPhysicalPowerForCharacter(sourceCharacter);
-                    } else if (damageType == DamageType.ability) {
-                        amountAddModifier = LevelEquations.GetSpellPowerForCharacter(sourceCharacter) * abilityEffectInput.spellDamageMultiplier;
-                    }
-
-                    // critical hit modifer
-                    critChanceModifier = LevelEquations.GetCritChanceForCharacter(sourceCharacter);
-
-                    int randomInt = Random.Range(0, 100);
-                    if (randomInt <= critChanceModifier) {
-                        critDamageModifier = 2f;
-                    }
-                }
+            // stats
+            if (damageType == DamageType.physical) {
+                amountAddModifier = sourceCharacter.GetPhysicalPower();
+            } else if (damageType == DamageType.ability) {
+                amountAddModifier = sourceCharacter.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
             }
+
+            // critical hit modifer
+            critChanceModifier = sourceCharacter.GetCritChance();
+
+            int randomInt = Random.Range(0, 100);
+            if (randomInt <= critChanceModifier) {
+                critDamageModifier = 2f;
+            }
+
             if (damageType == DamageType.physical) {
                 
-                // additive damage modifiers from gear +damage stat
-                amountAddModifier += sourceCharacter.MyCharacterStats.MyPhysicalDamage;
+                // additive damage modifiers from gear +damage stat and weapons
+                amountAddModifier += sourceCharacter.GetPhysicalDamage();
 
-                // weapon damage
-                if (sourceCharacter.MyCharacterEquipmentManager != null) {
-                    amountAddModifier += sourceCharacter.MyCharacterEquipmentManager.GetWeaponDamage();
-                }
+                // since all damage so far is DPS, we need to multiply it by the attack length.
+                // Since global cooldown is 1 second, all abilities less than one second should have their damage increased to one second worth of damage to prevent dps loss
+                amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
 
-                amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.MyAnimatedUnit.MyCharacterAnimator.MyLastAnimationLength, 1, Mathf.Infinity);
             } else if (damageType == DamageType.ability) {
 
                 amountMultiplyModifier *= Mathf.Clamp(abilityEffectInput.castTimeMultipler, 1, Mathf.Infinity);
             }
             // multiplicative damage modifiers
-            amountMultiplyModifier *= sourceCharacter.MyCharacterStats.GetOutGoingDamageModifiers();
+            amountMultiplyModifier *= sourceCharacter.GetOutgoingDamageModifiers();
 
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
 
-        public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             abilityEffectInput.castTimeMultipler = 1f;
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }

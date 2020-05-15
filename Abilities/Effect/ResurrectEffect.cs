@@ -12,7 +12,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
             AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
@@ -30,10 +30,10 @@ namespace AnyRPG {
                 //Debug.Log("CharacterUnit is null? target despawn during cast?");
                 return;
             }
-            characterUnit.MyCharacter.MyCharacterStats.Revive();
+            characterUnit.MyCharacter.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(GameObject target, BaseCharacter source) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source) {
             if (target == null) {
                 return false;
             }
@@ -41,13 +41,13 @@ namespace AnyRPG {
             if (characterUnit == null) {
                 return false;
             }
-            if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false && characterUnit.MyCharacter.MyCharacterStats.MyIsReviving == false) {
+            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false && characterUnit.MyCharacter.CharacterStats.MyIsReviving == false) {
                 return true;
             }
             return false;
         }
 
-        public override CharacterUnit ReturnTarget(CharacterUnit source, CharacterUnit target) {
+        public override GameObject ReturnTarget(GameObject target) {
             if (target == null) {
                 //Debug.Log("Ressurect spell cast, but there was no target");
                 return null;
@@ -56,7 +56,7 @@ namespace AnyRPG {
             if (targetCharacterUnit == null) {
                 return null;
             }
-            if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
+            if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false) {
                 return target;
             }
             return null;

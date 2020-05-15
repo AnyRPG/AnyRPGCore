@@ -68,7 +68,7 @@ public class QuestGiverQuestScript : MonoBehaviour
             markedComplete = false;
             MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyName;
         }
-        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
+        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
     }
 
 

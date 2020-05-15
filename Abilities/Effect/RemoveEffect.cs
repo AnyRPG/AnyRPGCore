@@ -20,14 +20,14 @@ namespace AnyRPG {
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();
 
-        public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             base.PerformAbilityHit(source, target, abilityEffectInput);
 
             List<StatusEffectNode> removeEffects = new List<StatusEffectNode>();
 
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
-            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.MyCharacterStats != null) {
-                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.MyCharacterStats.MyStatusEffects.Values) {
+            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
+                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.CharacterStats.MyStatusEffects.Values) {
                     if (statusEffectNode.MyStatusEffect.MyStatusEffectType != null && effectTypes.Contains(statusEffectNode.MyStatusEffect.MyStatusEffectType)) {
                         removeEffects.Add(statusEffectNode);
                     }

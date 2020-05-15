@@ -137,7 +137,8 @@ namespace AnyRPG {
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 if (SystemConfigurationManager.MyInstance == null) {
-                    Debug.LogError(gameObject.name + ".Interactable.Awake(); SystemConfigurationManager.MyInstance is null.  Is the GameManager in the scene?");
+                    Debug.LogError(gameObject.name + ": SystemConfigurationManager not found. Is the GameManager in the scene?");
+                    return;
                 } else {
                     temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
                 }
@@ -308,7 +309,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
 
             //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage()");
-            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.MyCharacterUnit == null) {
+            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.CharacterUnit == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -500,7 +501,7 @@ namespace AnyRPG {
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (validInteractables.Count > 0) {
                 if (suppressInteractionWindow == true) {
-                    validInteractables[0].Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                    validInteractables[0].Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
                 } else {
                     OpenInteractionWindow();
                 }
@@ -743,10 +744,10 @@ namespace AnyRPG {
                 AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
                 if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.CharacterController as PlayerController).InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null) {
-                    Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
                 }
             }
         }
@@ -765,10 +766,10 @@ namespace AnyRPG {
                 AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
                 if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.MyCharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.CharacterController as PlayerController).InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.MyCharacterUnit != null) {
-                    Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
                 }
             }
 
@@ -777,9 +778,9 @@ namespace AnyRPG {
         public void ClearFromPlayerRangeTable() {
             //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");
             // prevent bugs if a unit despawns before the player moves out of range of it
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterController != null) {
-                if ((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyInteractables.Contains(this)) {
-                    (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyInteractables.Remove(this);
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterController != null) {
+                if ((PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).MyInteractables.Contains(this)) {
+                    (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).MyInteractables.Remove(this);
                 }
             }
         }

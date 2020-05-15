@@ -142,8 +142,8 @@ namespace AnyRPG {
                 }
 
                 // get a random point that's on the navmesh
-                Vector3 randomPoint = (characterUnit.MyCharacter.MyCharacterController as AIController).MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
-                randomPoint = characterUnit.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(randomPoint);
+                Vector3 randomPoint = (characterUnit.MyCharacter.CharacterController as AIController).MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
+                randomPoint = characterUnit.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(randomPoint);
                 /*
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPoint, out hit, 10.0f, NavMesh.AllAreas)) {

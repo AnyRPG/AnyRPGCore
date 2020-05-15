@@ -171,9 +171,9 @@ namespace AnyRPG {
                     // the handscript has equipment in it
                     if (MyItem is Equipment && (MyItem as Equipment).MyEquipmentSlotType == (HandScript.MyInstance.MyMoveable as Equipment).MyEquipmentSlotType) {
                         // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
-                        EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile);
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(MyItem as Equipment, equipmentSlotProfile);
+                        EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
+                        PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(MyItem as Equipment, equipmentSlotProfile);
                         MyItem.Remove();
                        //UseItem();
                         //UIManager.MyInstance.RefreshTooltip();
@@ -200,8 +200,8 @@ namespace AnyRPG {
                     //AddItem(equipment);
 
                     //CharacterPanel.MyInstance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
-                    EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile, GetCurrentSlotIndex());
+                    EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
+                    PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile, GetCurrentSlotIndex());
                     HandScript.MyInstance.Drop();
                 }
             }

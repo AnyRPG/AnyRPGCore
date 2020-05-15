@@ -9,13 +9,13 @@ namespace AnyRPG {
         protected override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".AICombat.CreateEventSubscriptions()");
             base.CreateEventSubscriptions();
-            baseCharacter.MyCharacterStats.OnDie += HandleDie;
+            baseCharacter.CharacterStats.OnDie += HandleDie;
         }
 
         protected override void Update() {
             //Debug.Log(gameObject.name + ".AICombat.Update()");
             base.Update();
-            if (!baseCharacter.MyCharacterStats.IsAlive) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
                 return;
             }
         }
@@ -26,9 +26,9 @@ namespace AnyRPG {
             }
             */
 
-        public override bool TakeDamage(int damage, Vector3 sourcePosition, BaseCharacter source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public override bool TakeDamage(int damage, Vector3 sourcePosition, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log("AICombat.TakeDamage(" + damage + ", " + sourcePosition + ", " + source + ")");
-            if (!((baseCharacter.MyCharacterController as AIController).MyCurrentState is EvadeState) && !((baseCharacter.MyCharacterController as AIController).MyCurrentState is DeathState)) {
+            if (!((baseCharacter.CharacterController as AIController).MyCurrentState is EvadeState) && !((baseCharacter.CharacterController as AIController).MyCurrentState is DeathState)) {
                 // order is important here.  we want to set target before taking damage because taking damage could kill us, and we don't want to re-trigger and agro on someone after we are dead
 
                 // this should happen automatically inside the update loop of idle state
@@ -49,15 +49,15 @@ namespace AnyRPG {
 
         public void HandleDie(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".AICombat.Die()");
-            if (!((baseCharacter.MyCharacterController as AIController).MyCurrentState is DeathState)) {
+            if (!((baseCharacter.CharacterController as AIController).MyCurrentState is DeathState)) {
 
-                (baseCharacter.MyCharacterController as AIController).ChangeState(new DeathState());
+                (baseCharacter.CharacterController as AIController).ChangeState(new DeathState());
                 //Destroy(gameObject);
                 // drop loot
             }
         }
 
-        public override bool EnterCombat(BaseCharacter target) {
+        public override bool EnterCombat(IAbilityCaster target) {
             //Debug.Log(gameObject.name + ".AICombat.EnterCombat()");
             bool returnResult = base.EnterCombat(target);
             return returnResult;
@@ -68,13 +68,13 @@ namespace AnyRPG {
 
             List<BaseAbility> returnList = new List<BaseAbility>();
 
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.MyCanCastOnEnemy && MyBaseCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(MyBaseCharacter.MyCharacterController.MyTarget, MyBaseCharacter as BaseCharacter)) {
+                    if (baseAbility.CanCastOnEnemy && MyBaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(MyBaseCharacter.CharacterController.MyTarget, MyBaseCharacter.CharacterAbilityManager as IAbilityCaster)) {
                         //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         //if (baseAbility.MyCanCastOnEnemy) {
                         returnList.Add(baseAbility);
@@ -94,13 +94,13 @@ namespace AnyRPG {
         public BaseAbility GetMeleeAbility() {
             //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
 
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == true) {
+                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == true) {
                         //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         //if (baseAbility.MyCanCastOnEnemy) {
                         return baseAbility;
@@ -117,15 +117,15 @@ namespace AnyRPG {
 
             int returnValue = 0;
 
-            if (MyBaseCharacter != null && MyBaseCharacter.MyCharacterAbilityManager != null) {
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.MyCharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == false && baseAbility.MyMaxRange > 0 && (returnValue == 0 || baseAbility.MyMaxRange < returnValue)) {
+                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0 && (returnValue == 0 || baseAbility.MaxRange < returnValue)) {
                         //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
-                        returnValue = baseAbility.MyMaxRange;
+                        returnValue = baseAbility.MaxRange;
                     }
                     //}
                 }

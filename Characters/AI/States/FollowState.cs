@@ -10,12 +10,12 @@ namespace AnyRPG {
         public void Enter(AIController aiController) {
             //Debug.Log(aiController.gameObject.name + ".FollowState.Enter()");
             this.aiController = aiController;
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyBaseCharacter.MyCharacterController.MyMovementSpeed;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyBaseCharacter.CharacterController.MyMovementSpeed;
             MakeFollowDecision();
         }
 
         public void Exit() {
-            aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+            aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StopFollowingTarget();
             // stop following target code goes here
         }
 
@@ -57,7 +57,7 @@ namespace AnyRPG {
                     if (aiController.HasMeleeAttack() || (aiController.GetMinAttackRange() > 0 && (aiController.GetMinAttackRange() < aiController.MyDistanceToTarget))) {
                         aiController.FollowTarget(aiController.MyTarget);
                     } else {
-                        aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopFollowingTarget();
+                        aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StopFollowingTarget();
                     }
                 }
             } else {

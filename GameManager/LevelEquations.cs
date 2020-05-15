@@ -173,13 +173,13 @@ namespace AnyRPG {
             if (sourceCharacter.MyCharacterClass != null) {
                 foreach (PowerEnhancerNode powerEnhancerNode in sourceCharacter.MyCharacterClass.MyPowerEnhancerStats) {
 
-                    critChanceModifier += powerEnhancerNode.MyStaminaToCritPerLevel * (sourceCharacter.MyCharacterStats.MyStamina / sourceCharacter.MyCharacterStats.MyLevel);
-                    critChanceModifier += powerEnhancerNode.MyIntellectToCritPerLevel * (sourceCharacter.MyCharacterStats.MyIntellect / sourceCharacter.MyCharacterStats.MyLevel);
-                    critChanceModifier += powerEnhancerNode.MyStrengthToCritPerLevel * (sourceCharacter.MyCharacterStats.MyStrength / sourceCharacter.MyCharacterStats.MyLevel);
-                    critChanceModifier += powerEnhancerNode.MyAgilityToCritPerLevel * (sourceCharacter.MyCharacterStats.MyAgility / sourceCharacter.MyCharacterStats.MyLevel);
+                    critChanceModifier += powerEnhancerNode.MyStaminaToCritPerLevel * (sourceCharacter.CharacterStats.MyStamina / sourceCharacter.CharacterStats.Level);
+                    critChanceModifier += powerEnhancerNode.MyIntellectToCritPerLevel * (sourceCharacter.CharacterStats.MyIntellect / sourceCharacter.CharacterStats.Level);
+                    critChanceModifier += powerEnhancerNode.MyStrengthToCritPerLevel * (sourceCharacter.CharacterStats.MyStrength / sourceCharacter.CharacterStats.Level);
+                    critChanceModifier += powerEnhancerNode.MyAgilityToCritPerLevel * (sourceCharacter.CharacterStats.MyAgility / sourceCharacter.CharacterStats.Level);
                 }
             }
-            critChanceModifier += sourceCharacter.MyCharacterStats.GetCriticalStrikeModifiers();
+            critChanceModifier += sourceCharacter.CharacterStats.GetCriticalStrikeModifiers();
             return critChanceModifier;
         }
 
@@ -192,10 +192,10 @@ namespace AnyRPG {
                         // base damage modifer
                         if (powerEnhancerNode.MyPowerToSpellDamage == true) {
                             float totalDamageModifier = 0f;
-                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.MyCharacterStats.MyStamina;
-                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.MyCharacterStats.MyStrength;
-                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.MyCharacterStats.MyIntellect;
-                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.MyCharacterStats.MyAgility;
+                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.CharacterStats.MyStamina;
+                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.CharacterStats.MyStrength;
+                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.CharacterStats.MyIntellect;
+                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.CharacterStats.MyAgility;
                             amountModifier += totalDamageModifier;
                         }
                     }
@@ -214,10 +214,10 @@ namespace AnyRPG {
                         // base damage modifer
                         if (powerEnhancerNode.MyPowerToPhysicalDamage == true) {
                             float totalDamageModifier = 0f;
-                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.MyCharacterStats.MyStamina;
-                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.MyCharacterStats.MyStrength;
-                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.MyCharacterStats.MyIntellect;
-                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.MyCharacterStats.MyAgility;
+                            totalDamageModifier += powerEnhancerNode.MyStaminaToPowerRatio * sourceCharacter.CharacterStats.MyStamina;
+                            totalDamageModifier += powerEnhancerNode.MyStrengthToPowerRatio * sourceCharacter.CharacterStats.MyStrength;
+                            totalDamageModifier += powerEnhancerNode.MyIntellectToPowerRatio * sourceCharacter.CharacterStats.MyIntellect;
+                            totalDamageModifier += powerEnhancerNode.MyAgilityToPowerRatio * sourceCharacter.CharacterStats.MyAgility;
                             amountModifier += totalDamageModifier;
                         }
                     }

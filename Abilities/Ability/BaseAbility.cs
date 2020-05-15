@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
-    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility {
+    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility, ITargetable {
 
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };
@@ -194,9 +194,9 @@ namespace AnyRPG {
         public bool MyRequiresGroundTarget { get => requiresGroundTarget; set => requiresGroundTarget = value; }
         public Color MyGroundTargetColor { get => groundTargetColor; set => groundTargetColor = value; }
         public bool MyCanCastOnSelf { get => canCastOnSelf; }
-        public bool MyCanCastOnEnemy { get => canCastOnEnemy; }
-        public bool MyCanCastOnFriendly { get => canCastOnFriendly; }
-        public bool MyCanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
+        public bool CanCastOnEnemy { get => canCastOnEnemy; }
+        public bool CanCastOnFriendly { get => canCastOnFriendly; }
+        public bool CanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip MyCastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.MyAudioClip); }
@@ -204,14 +204,15 @@ namespace AnyRPG {
         public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> MyAnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
-        public int MyMaxRange { get => maxRange; set => maxRange = value; }
-        public bool MyUseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
+        public int MaxRange { get => maxRange; set => maxRange = value; }
+        public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool MyRequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> MyAbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> MyAbilityEffects { get => abilityEffects; set => abilityEffects = value; }
         public AnimationProfile MyAnimationProfile { get => animationProfile; set => animationProfile = value; }
         public float MyGroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
+        public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -226,7 +227,7 @@ namespace AnyRPG {
                 List<string> requireWeaponSkills = new List<string>();
                 foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
                     requireWeaponSkills.Add(_weaponAffinity.MyName);
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
                 }
@@ -238,12 +239,12 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            string abilityRange = (useMeleeRange == true ? "melee" : MyMaxRange + " meters");
+            string abilityRange = (useMeleeRange == true ? "melee" : MaxRange + " meters");
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
         }
 
-        public virtual void PerformChanneledEffect(BaseCharacter source, GameObject target) {
+        public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
@@ -255,35 +256,26 @@ namespace AnyRPG {
         }
 
 
-        public bool CanCast(BaseCharacter sourceCharacter) {
+        public bool CanCast(IAbilityCaster sourceCharacter) {
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 return true;
             } else {
-                if (true) {
-
-                }
-                foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
-                    if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null && sourceCharacter.MyCharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
-                        return true;
-                    }
-                }
+                return sourceCharacter.PerformWeaponAffinityCheck(this);
             }
-            //Debug.Log(MyName + ".BaseAbility.CanCast(): FALSE");
-            return false;
         }
 
         public bool Use() {
             //Debug.Log("BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
-            if (CanCast(PlayerManager.MyInstance.MyCharacter)) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.BeginAbility(this);
+            if (CanCast(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(this);
                 return true;
             }
             return false;
         }
 
-        public virtual bool Cast(BaseCharacter sourceCharacter, GameObject target, Vector3 groundTarget) {
+        public virtual bool Cast(IAbilityCaster sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
             if (!CanCast(sourceCharacter)) {
                 //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
@@ -291,9 +283,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
-                BeginAbilityCoolDown(sourceCharacter);
-            }
+            BeginAbilityCoolDown(sourceCharacter);
 
             ProcessAbilityPrefabs(sourceCharacter);
             ProcessGCDAuto(sourceCharacter);
@@ -303,33 +293,34 @@ namespace AnyRPG {
             //OnAbilityCast(this);
         }
 
-        public virtual void BeginAbilityCoolDown(BaseCharacter sourceCharacter, float animationLength = -1f) {
-            sourceCharacter.MyCharacterAbilityManager.BeginAbilityCoolDown(this, animationLength);
+        public virtual void BeginAbilityCoolDown(IAbilityCaster sourceCharacter, float animationLength = -1f) {
+            if (sourceCharacter != null) {
+                sourceCharacter.BeginAbilityCoolDown(this, animationLength);
+            }
         }
 
-        public virtual void ProcessGCDAuto(BaseCharacter sourceCharacter) {
+        public virtual void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
             ProcessGCDManual(sourceCharacter);
         }
 
-        public virtual void ProcessGCDManual(BaseCharacter sourceCharacter, float usedCoolDown = 0f) {
-            if (MyCanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && MyAbilityCastingTime == 0f) {
-                sourceCharacter.MyCharacterAbilityManager.InitiateGlobalCooldown(usedCoolDown);
+        public virtual void ProcessGCDManual(IAbilityCaster sourceCharacter, float usedCoolDown = 0f) {
+            if (CanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && MyAbilityCastingTime == 0f) {
+                sourceCharacter.InitiateGlobalCooldown(usedCoolDown);
             } else {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
             }
         }
 
-        public virtual void ProcessAbilityPrefabs(BaseCharacter sourceCharacter) {
+        public virtual void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbilitiy.ProcessAbilityPrefabs()");
             if (MyHoldableObjects.Count == 0) {
                 return;
             }
-            if (sourceCharacter != null && sourceCharacter.MyCharacterEquipmentManager != null) {
-                sourceCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
-            }
+
+            sourceCharacter.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
+        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
@@ -337,13 +328,11 @@ namespace AnyRPG {
             }
 
             // create target booleans
-            bool targetIsFriendly = false;
-            bool targetIsEnemy = false;
             bool targetIsSelf = false;
             CharacterUnit targetCharacterUnit = null;
 
             // special case for ground targeted spells cast by AI since AI currently has to cast a ground targeted spell on its current target
-            if (requiresGroundTarget == true && maxRange > 0 && target != null && (sourceCharacter as AICharacter) is AICharacter && Vector3.Distance(sourceCharacter.transform.position, target.transform.position) > maxRange) {
+            if (requiresGroundTarget == true && maxRange > 0 && target != null && (sourceCharacter as AICharacter) is AICharacter && Vector3.Distance(sourceCharacter.UnitGameObject.transform.position, target.transform.position) > maxRange) {
                 return false;
             }
 
@@ -359,23 +348,25 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (target == sourceCharacter.UnitGameObject) {
+                targetIsSelf = true;
+            }
+
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
                 if (targetCharacterUnit != null) {
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) <= -1) {
-                        targetIsEnemy = true;
-                    }
-                    if (Faction.RelationWith(targetCharacterUnit.MyCharacter, sourceCharacter) >= 0) {
-                        targetIsFriendly = true;
+
+                    if (!sourceCharacter.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
+                        return false;
                     }
 
                     // liveness checks
-                    if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == false && requiresLiveTarget == true) {
+                    if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
                         //Debug.Log("This ability requires a live target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
                         return false;
                     }
-                    if (targetCharacterUnit.MyCharacter.MyCharacterStats.IsAlive == true && requireDeadTarget == true) {
+                    if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && requireDeadTarget == true) {
                         //Debug.Log("This ability requires a dead target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
@@ -387,50 +378,19 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (target == sourceCharacter.MyCharacterUnit.gameObject) {
-                targetIsSelf = true;
-            }
-
-            // correct match conditions.  if any of these are met, the target is already valid
+            
             if (!canCastOnSelf && targetIsSelf) {
                 //Debug.Log(MyName + ": Can't cast on self. return false");
                 return false;
             }
-            if (!canCastOnEnemy && targetIsEnemy) {
-                //Debug.Log(MyName + ": Can't cast on enemy. return false");
-                return false;
-            }
-            if (!canCastOnFriendly && targetIsFriendly && targetIsSelf == false) {
-                //Debug.Log(MyName + ": Can't cast on friendly. return false");
-                return false;
-            }
 
-            /*
-            if (!(canCastOnFriendly && targetIsFriendly)) {
-                Debug.Log("Friendly check failed");
-                return false;
-            }
-            */
-
-            
-            // range checks
             if (target != null) {
                 if (canCastOnSelf && targetIsSelf) {
                     return true;
                 }
-                // if none of those is true, then we are casting on ourselves, so don't need to do range check
-                if (MyUseMeleeRange) {
-                    if (!sourceCharacter.MyCharacterController.IsTargetInHitBox(target)) {
-                        return false;
-                    }
-                } else {
-                    if (maxRange > 0 && Vector3.Distance(sourceCharacter.MyCharacterUnit.transform.position, target.transform.position) > maxRange) {
-                        //Debug.Log(target.name + " is out of range");
-                        if (CombatLogUI.MyInstance != null && sourceCharacter != null && PlayerManager.MyInstance.MyCharacter != null && sourceCharacter == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
-                            CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (MyName == null ? "null" : MyName));
-                        }
-                        return false;
-                    }
+
+                if (!sourceCharacter.IsTargetInAbilityRange(this, target)) {
+                    return false;
                 }
             }
 
@@ -439,7 +399,7 @@ namespace AnyRPG {
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
-        public virtual bool PerformAbilityEffects(BaseCharacter source, GameObject target, Vector3 groundTarget) {
+        public virtual bool PerformAbilityEffects(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
             if (abilityEffects.Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
@@ -448,9 +408,7 @@ namespace AnyRPG {
 
             // perform hit / miss check only if baseability requires target and return false if miss
             if (requiresTarget) {
-                if (source.MyCharacterCombat.DidAttackMiss() == true) {
-                    //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
-                    source.MyCharacterCombat.ReceiveCombatMiss(target);
+                if (!source.AbilityHit(target)) {
                     return false;
                 }
             }
@@ -479,12 +437,12 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
-        public virtual GameObject ReturnTarget(BaseCharacter sourceCharacter, GameObject target) {
+        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target) {
             //Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
 
-            if (sourceCharacter == null || sourceCharacter.MyCharacterUnit == null) {
+            if (sourceCharacter == null || sourceCharacter.UnitGameObject == null) {
                 //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
                 return null;
             }
@@ -493,7 +451,7 @@ namespace AnyRPG {
             if (CanUseOn(target, sourceCharacter) == false) {
                 //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
-                    target = sourceCharacter.MyCharacterUnit.gameObject;
+                    target = sourceCharacter.UnitGameObject;
                     //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;
                 } else {
@@ -503,18 +461,18 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning original target: " + (target == null ? "null" : target.name));
                 if (canCastOnSelf && autoSelfCast && target == null) {
-                    target = sourceCharacter.MyCharacterUnit.gameObject;
+                    target = sourceCharacter.UnitGameObject;
                     return target;
                 }
                 return target;
             }
         }
 
-        public virtual void StartCasting(BaseCharacter source) {
+        public virtual void StartCasting(IAbilityCaster source) {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
             //Debug.Log("setting casting animation");
             if (MyCastingAnimationClip != null) {
-                source.MyAnimatedUnit.MyCharacterAnimator.HandleCastingAbility(MyCastingAnimationClip, this);
+                source.PerformCastingAnimation(MyCastingAnimationClip, this);
             }
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
@@ -523,19 +481,19 @@ namespace AnyRPG {
             /*
             if (abilityCastingPrefab != null) {
                 if (abilityCastingPrefabRef == null) {
-                    //Vector3 relativePrefabOffset = source.MyCharacterUnit.transform.TransformPoint(prefabOffset);
-                    //Vector3 spawnLocation = new Vector3(source.MyCharacterUnit.transform.position.x + relativePrefabOffset.x, source.MyCharacterUnit.transform.position.y + relativePrefabOffset.y, source.MyCharacterUnit.transform.position.z + relativePrefabOffset.z);
-                    Vector3 spawnLocation = source.MyCharacterUnit.transform.TransformPoint(prefabOffset);
+                    //Vector3 relativePrefabOffset = source.UnitGameObject.transform.TransformPoint(prefabOffset);
+                    //Vector3 spawnLocation = new Vector3(source.UnitGameObject.transform.position.x + relativePrefabOffset.x, source.MyCharacterUnit.transform.position.y + relativePrefabOffset.y, source.MyCharacterUnit.transform.position.z + relativePrefabOffset.z);
+                    Vector3 spawnLocation = source.UnitGameObject.transform.TransformPoint(prefabOffset);
                     //Debug.Log("BaseAbility.OnCastStart(): Instantiating spell casting prefab at " + source.transform.position + "; spawnLocation is : " + spawnLocation);
-                    //abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, source.MyCharacterUnit.transform.rotation * Quaternion.Euler(source.MyCharacterUnit.transform.TransformDirection(prefabRotation)), source.transform);
-                    abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.MyCharacterUnit.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
+                    //abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, source.UnitGameObject.transform.rotation * Quaternion.Euler(source.MyCharacterUnit.transform.TransformDirection(prefabRotation)), source.transform);
+                    abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
                 }
             }
             */
             //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
-        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, BaseCharacter source, GameObject target) {
+        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target) {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
             if (currentCastTime >= nextTickTime) {

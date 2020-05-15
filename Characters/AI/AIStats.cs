@@ -8,31 +8,30 @@ namespace AnyRPG {
 
         public override void CreateLateSubscriptions() {
             base.CreateEventSubscriptions();
-            if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            if (baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }
         }
 
-        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(gameObject + ".AISats.ApplyStatusEffect()");
-            StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, sourceCharacter, target, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, sourceCharacter, abilityEffectInput);
             if (_statusEffectNode != null && _statusEffectNode.MyStatusEffect.MyControlTarget == true) {
                 //Debug.Log(gameObject + ".AISats.ApplyStatusEffect() : disabling ai patrol");
-                if ((baseCharacter.MyCharacterController as AIController).MyAiPatrol != null) {
-                    (baseCharacter.MyCharacterController as AIController).MyAiPatrol.enabled = false;
+                if ((baseCharacter.CharacterController as AIController).MyAiPatrol != null) {
+                    (baseCharacter.CharacterController as AIController).MyAiPatrol.enabled = false;
                 }
-                (baseCharacter.MyCharacterController as AIController).ChangeState(new IdleState());
+                (baseCharacter.CharacterController as AIController).ChangeState(new IdleState());
                 ApplyControlEffects(sourceCharacter);
-                if (sourceCharacter.MyCharacterPetManager != null && target.MyCharacter != null && target.MyCharacter.MyUnitProfile != null) {
-                    sourceCharacter.MyCharacterPetManager.AddPet(target.MyCharacter.MyUnitProfile);
-                }
+
+                sourceCharacter.AddPet(baseCharacter.CharacterUnit);
 
             }
             return _statusEffectNode;
         }
 
-        public void ApplyControlEffects(BaseCharacter source) {
-            (baseCharacter.MyCharacterController as AIController).ApplyControlEffects(source);
+        public void ApplyControlEffects(IAbilityCaster source) {
+            (baseCharacter.CharacterController as AIController).ApplyControlEffects((source as CharacterAbilityManager).BaseCharacter);
         }
 
     }

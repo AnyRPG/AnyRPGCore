@@ -85,7 +85,7 @@ namespace AnyRPG {
 
         public Faction MyFaction { get => MyCharacter.MyFaction; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
-        public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.MyCharacterName : interactionPanelTitle); }
+        public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.CharacterName : interactionPanelTitle); }
         public string Title { get => (MyCharacter != null ? MyCharacter.Title : string.Empty); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
@@ -96,7 +96,7 @@ namespace AnyRPG {
         public Transform MyNamePlateTransform {
             get {
                 if (mounted) {
-                    return baseCharacter.MyAnimatedUnit.transform;
+                    return baseCharacter.AnimatedUnit.transform;
                 }
                 if (namePlateTransform != null) {
                     return namePlateTransform;
@@ -118,8 +118,8 @@ namespace AnyRPG {
         }
 
         public void SetUseRootMotion(bool useRootMotion) {
-            if (MyCharacter != null && MyCharacter.MyAnimatedUnit != null && MyCharacter.MyAnimatedUnit.MyCharacterMotor != null) {
-                MyCharacter.MyAnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
+            if (MyCharacter != null && MyCharacter.AnimatedUnit != null && MyCharacter.AnimatedUnit.MyCharacterMotor != null) {
+                MyCharacter.AnimatedUnit.MyCharacterMotor.MyUseRootMotion = false;
             }
         }
 
@@ -139,7 +139,7 @@ namespace AnyRPG {
             if (MyMounted == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
 
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.MyCharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.MyStatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
                     if (statusEffectNode.MyStatusEffect is MountEffect) {
                         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
@@ -153,17 +153,17 @@ namespace AnyRPG {
 
 
         public int CurrentHealth() {
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                return baseCharacter.MyCharacterStats.currentHealth;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                return baseCharacter.CharacterStats.currentHealth;
             }
             return 1;
         }
 
         public int MaxHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth(): we had character stats; returning " + baseCharacter.MyCharacterStats.MyMaxHealth);
-                return baseCharacter.MyCharacterStats.MyMaxHealth;
+                return baseCharacter.CharacterStats.MyMaxHealth;
             }
             return 1;
         }
@@ -268,11 +268,11 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnDie += HandleDie;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnDie += HandleDie;
                 //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): subscribing to HEALTH BAR NEEDS UPDATE");
-                baseCharacter.MyCharacterStats.OnHealthChanged += HandleHealthBarNeedsUpdate;
-                baseCharacter.MyCharacterStats.OnReviveComplete += HandleReviveComplete;
+                baseCharacter.CharacterStats.OnHealthChanged += HandleHealthBarNeedsUpdate;
+                baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
                 eventSubscriptionsInitialized = true;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
@@ -286,10 +286,10 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            if (baseCharacter != null && baseCharacter.MyCharacterStats != null) {
-                baseCharacter.MyCharacterStats.OnDie -= HandleDie;
-                baseCharacter.MyCharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
-                baseCharacter.MyCharacterStats.OnReviveComplete -= HandleReviveComplete;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                baseCharacter.CharacterStats.OnDie -= HandleDie;
+                baseCharacter.CharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
+                baseCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
             }
             eventSubscriptionsInitialized = false;
         }
@@ -384,7 +384,7 @@ namespace AnyRPG {
                 return false;
             }
             */
-            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, MyBaseCharacter) <= -1 && baseCharacter.MyCharacterStats.IsAlive == true) {
+            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, MyBaseCharacter) <= -1 && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }
@@ -398,7 +398,7 @@ namespace AnyRPG {
                 base.Interact(source);
 
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
-                (source.MyCharacter.MyCharacterCombat as PlayerCombat).Attack(baseCharacter);
+                (source.MyCharacter.CharacterCombat as PlayerCombat).Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
                 return true;
             }
@@ -454,7 +454,7 @@ namespace AnyRPG {
                 totalDelay -= Time.deltaTime;
             }
 
-            if (baseCharacter.MyCharacterStats.IsAlive == false || forceDespawn == true) {
+            if (baseCharacter.CharacterStats.IsAlive == false || forceDespawn == true) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 Destroy(gameObject);
@@ -477,7 +477,7 @@ namespace AnyRPG {
         // CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
         public override int GetValidOptionCount() {
             //Debug.Log(gameObject.name + ".CharacterUnit.GetValidOptionCount()");
-            return (MyCharacter.MyCharacterStats.IsAlive == true ? 1 : 0);
+            return (MyCharacter.CharacterStats.IsAlive == true ? 1 : 0);
         }
 
         public override int GetCurrentOptionCount() {

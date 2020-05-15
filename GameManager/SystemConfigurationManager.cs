@@ -189,11 +189,6 @@ namespace AnyRPG {
         private BaseAbility doWhiteDamageAbility = null;
 
         [SerializeField]
-        private string takeDamageAbilityName = string.Empty;
-
-        private BaseAbility takeDamageAbility = null;
-
-        [SerializeField]
         private AudioClip defaultHitSoundEffect = null;
 
         [Header("INTERACTABLE CONFIGURATION")]
@@ -324,7 +319,6 @@ namespace AnyRPG {
         public Sprite MySkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
         public BaseAbility MyDoWhiteDamageAbility { get => doWhiteDamageAbility; set => doWhiteDamageAbility = value; }
-        public BaseAbility MyTakeDamageAbility { get => takeDamageAbility; set => takeDamageAbility = value; }
         public BaseAbility MyDeathAbility { get => deathAbility; set => deathAbility = value; }
         public Sprite MyMultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
         public float MyDefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
@@ -439,15 +433,6 @@ namespace AnyRPG {
                     return;
                 } else {
                     doWhiteDamageAbility = testAbility;
-                }
-            }
-            if (takeDamageAbilityName != null && takeDamageAbilityName != string.Empty) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(takeDamageAbilityName);
-                if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + takeDamageAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
-                    return;
-                } else {
-                    takeDamageAbility = testAbility;
                 }
             }
             if (defaultCurrencyGroup == null) {

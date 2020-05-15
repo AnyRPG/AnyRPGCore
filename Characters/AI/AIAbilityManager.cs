@@ -10,8 +10,8 @@ namespace AnyRPG {
             base.BeginAbilityCommon(ability, target);
             if (currentCastAbility != null && currentCastAbility.MyRequiresGroundTarget == true) {
                 Vector3 groundTarget = Vector3.zero;
-                if (baseCharacter != null && baseCharacter.MyCharacterController != null && baseCharacter.MyCharacterController.MyTarget != null) {
-                    groundTarget = baseCharacter.MyCharacterController.MyTarget.transform.position;
+                if (baseCharacter != null && baseCharacter.CharacterController != null && baseCharacter.CharacterController.MyTarget != null) {
+                    groundTarget = baseCharacter.CharacterController.MyTarget.transform.position;
                 }
                 SetGroundTarget(groundTarget);
             }

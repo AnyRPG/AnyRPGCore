@@ -150,11 +150,11 @@ namespace AnyRPG {
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to HandleDeath");
                 //characterUnit.MyCharacter.MyCharacterCombat.OnAttack += HandleAttack;
-                characterUnit.MyCharacter.MyCharacterStats.OnDie += HandleDeath;
-                characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin += HandleRevive;
-                if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.CharacterStats.OnDie += HandleDeath;
+                characterUnit.MyCharacter.CharacterStats.OnReviveBegin += HandleRevive;
+                if (characterUnit.MyCharacter.CharacterEquipmentManager != null) {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.CreateEventSubscriptions(): subscribing to onequipmentchanged");
-                    characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += PerformEquipmentChange;
+                    characterUnit.MyCharacter.CharacterEquipmentManager.OnEquipmentChanged += PerformEquipmentChange;
                 }
             } else {
                 if (characterUnit == null) {
@@ -169,10 +169,10 @@ namespace AnyRPG {
         public virtual void CleanupEventSubscriptions() {
             if (characterUnit != null && characterUnit.MyCharacter != null) {
                 //characterUnit.MyCharacter.MyCharacterCombat.OnAttack -= HandleAttack;
-                characterUnit.MyCharacter.MyCharacterStats.OnDie -= HandleDeath;
-                characterUnit.MyCharacter.MyCharacterStats.OnReviveBegin -= HandleRevive;
-                if (characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
-                    characterUnit.MyCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= PerformEquipmentChange;
+                characterUnit.MyCharacter.CharacterStats.OnDie -= HandleDeath;
+                characterUnit.MyCharacter.CharacterStats.OnReviveBegin -= HandleRevive;
+                if (characterUnit.MyCharacter.CharacterEquipmentManager != null) {
+                    characterUnit.MyCharacter.CharacterEquipmentManager.OnEquipmentChanged -= PerformEquipmentChange;
                 }
             }
         }
@@ -1120,7 +1120,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
                 return 0f;
             }
-            characterUnit.MyCharacter.MyCharacterCombat.MySwingTarget = targetCharacterUnit;
+            characterUnit.MyCharacter.CharacterCombat.MySwingTarget = targetCharacterUnit;
 
             if (SystemConfigurationManager.MyInstance != null) {
                 // override the default attack animation
@@ -1136,19 +1136,19 @@ namespace AnyRPG {
 
 
             float speedNormalizedAnimationLength = 1f;
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
-                speedNormalizedAnimationLength = characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers() * animationLength;
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
+                speedNormalizedAnimationLength = characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() * animationLength;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
             }
             if (ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers());
+                animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers());
             }
 
             // wait for the animation to play before allowing the character to attack again
-            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).MyIsAutoAttack, !(baseAbility as AnimatedAbility).MyIsAutoAttack, false));
+            attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).IsAutoAttack, !(baseAbility as AnimatedAbility).IsAutoAttack, false));
 
             // SUPPRESS DEFAULT SOUND EFFECT FOR ANIMATED ABILITIES, WHICH ARE NOW RESPONSIBLE FOR THEIR OWN SOUND EFFECTS
-            characterUnit.MyCharacter.MyCharacterCombat.MyOverrideHitSoundEffect = null;
+            characterUnit.MyCharacter.CharacterCombat.MyOverrideHitSoundEffect = null;
 
             // tell the animator to play the animation
             SetAttacking(true);
@@ -1205,7 +1205,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".WaitForAnimation(" + animationLength + ")");
             float remainingTime = animationLength;
             //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting);
-            while (remainingTime > 0f && (characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility == true || characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack == true || characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting)) {
+            while (remainingTime > 0f && (characterUnit.MyCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || characterUnit.MyCharacter.CharacterCombat.MyWaitingForAutoAttack == true || characterUnit.MyCharacter.CharacterAbilityManager.IsCasting)) {
                 //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): remainingTime: " + remainingTime + "; MyWaitingForHits: " + characterUnit.MyCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 //Debug.Log(gameObject.name + ".WaitForAttackAnimation(" + animationLength + "): animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 yield return null;
@@ -1227,20 +1227,20 @@ namespace AnyRPG {
         }
 
         public void ClearAutoAttack() {
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null) {
-                characterUnit.MyCharacter.MyCharacterCombat.SetWaitingForAutoAttack(false);
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterCombat != null) {
+                characterUnit.MyCharacter.CharacterCombat.SetWaitingForAutoAttack(false);
             }
             SetAttacking(false);
         }
 
         public void ClearAnimatedAttack(BaseAbility baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
-            characterUnit.MyCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility = false;
+            characterUnit.MyCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
             (baseAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             SetAttacking(false);
             currentAbility = null;
-            if (characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterEquipmentManager != null) {
-                characterUnit.MyCharacter.MyCharacterEquipmentManager.DespawnAbilityObjects();
+            if (characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterEquipmentManager != null) {
+                characterUnit.MyCharacter.CharacterEquipmentManager.DespawnAbilityObjects();
             }
         }
 
@@ -1357,8 +1357,8 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterAbilityManager != null) {
-                characterUnit.MyCharacter.MyCharacterAbilityManager.MyIsCasting = varValue;
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterAbilityManager != null) {
+                characterUnit.MyCharacter.CharacterAbilityManager.IsCasting = varValue;
             }
             if (ParameterExists("Casting")) {
                 animator.SetBool("Casting", varValue);
@@ -1366,7 +1366,7 @@ namespace AnyRPG {
 
             if (varValue == true) {
                 SetTrigger("CastingTrigger");
-                characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
+                characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
             }
         }
 
@@ -1380,13 +1380,13 @@ namespace AnyRPG {
             }
             if (varValue == true) {
                 float animationSpeed = 1f;
-                if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterStats != null) {
-                    animationSpeed = 1f / characterUnit.MyCharacter.MyCharacterStats.GetSpeedModifiers();
+                if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
+                    animationSpeed = 1f / characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers();
                 }
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to: " + animationSpeed);
                 //animator.SetFloat("AnimationSpeed", animationSpeed);
                 SetTrigger("AttackTrigger");
-                characterUnit.MyCharacter.MyCharacterCombat.ResetAttackCoolDown();
+                characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
             } else {
                 //animator.SetFloat("AnimationSpeed", 1f);
             }
@@ -1478,7 +1478,7 @@ namespace AnyRPG {
                 float usedBaseStrafeForwardRightAnimationSpeed;
 
 
-                if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.MyCharacterCombat != null && characterUnit.MyCharacter.MyCharacterCombat.GetInCombat() == true) {
+                if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterCombat != null && characterUnit.MyCharacter.CharacterCombat.GetInCombat() == true) {
                     // in combat
                     usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
                     usedbaseWalkBackAnimationSpeed = (absZValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);

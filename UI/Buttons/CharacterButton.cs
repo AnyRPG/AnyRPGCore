@@ -77,13 +77,13 @@ namespace AnyRPG {
                 if (HandScript.MyInstance.MyMoveable is Equipment) {
                     Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.MyEquipmentSlotType)) {
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
 
                         //tmp.Use();
 
                         // equip to this slot
-                        PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
+                        PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
                         // call remove
                         tmp.Remove();
 
@@ -116,9 +116,9 @@ namespace AnyRPG {
             GetLocalComponents();
             GetSystemResourceReferences();
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+            if (equipmentSlotProfile != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
-                equippedEquipment = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[equipmentSlotProfile];
+                equippedEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment[equipmentSlotProfile];
             } else {
                 /*
                 if (equipmentSlotProfile == null) {

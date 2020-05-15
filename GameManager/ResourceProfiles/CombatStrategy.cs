@@ -19,7 +19,7 @@ namespace AnyRPG {
         public BaseAbility GetValidAbility(BaseCharacter sourceCharacter) {
             List<BaseAbility> returnList = new List<BaseAbility>();
 
-            if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
+            if (sourceCharacter != null && sourceCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
@@ -29,10 +29,12 @@ namespace AnyRPG {
 
                     // ATTEMPT BUFF AND IMMEDIATELY RETURN ANY BUFF THAT NEEDS CASTING
                     foreach (BaseAbility baseAbility in validPhaseNode.MyMaintainBuffList) {
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
+                        if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (!sourceCharacter.MyCharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].MyName)) && sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterUnit.gameObject, sourceCharacter as BaseCharacter)) {
+                            if (!sourceCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].MyName))
+                                && sourceCharacter.CharacterAbilityManager.CanCastAbility(baseAbility)
+                                && baseAbility.CanUseOn(sourceCharacter.CharacterUnit.gameObject, sourceCharacter.CharacterAbilityManager)) {
                                 //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
                                 return baseAbility;
                             }
@@ -42,10 +44,11 @@ namespace AnyRPG {
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
+                        if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (sourceCharacter.MyCharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(sourceCharacter.MyCharacterController.MyTarget, sourceCharacter as BaseCharacter)) {
+                            if (sourceCharacter.CharacterAbilityManager.CanCastAbility(baseAbility)
+                                && baseAbility.CanUseOn(sourceCharacter.CharacterController.MyTarget, sourceCharacter.CharacterAbilityManager)) {
                                 //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 returnList.Add(baseAbility);
                             }
@@ -68,7 +71,7 @@ namespace AnyRPG {
 
         public BaseAbility GetMeleeAbility(BaseCharacter sourceCharacter) {
 
-            if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
+            if (sourceCharacter != null && sourceCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
@@ -79,10 +82,10 @@ namespace AnyRPG {
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
+                        if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == true) {
+                            if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == true) {
                                 //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 return baseAbility;
                             }
@@ -102,7 +105,7 @@ namespace AnyRPG {
 
             int returnValue = 0;
 
-            if (sourceCharacter != null && sourceCharacter.MyCharacterAbilityManager != null) {
+            if (sourceCharacter != null && sourceCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
@@ -113,12 +116,12 @@ namespace AnyRPG {
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
-                        if (sourceCharacter.MyCharacterAbilityManager.HasAbility(baseAbility)) {
+                        if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (baseAbility.MyCanCastOnEnemy && baseAbility.MyUseMeleeRange == false && baseAbility.MyMaxRange > 0 && (returnValue == 0 || baseAbility.MyMaxRange < returnValue)) {
+                            if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0 && (returnValue == 0 || baseAbility.MaxRange < returnValue)) {
                                 //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
-                                returnValue = baseAbility.MyMaxRange;
+                                returnValue = baseAbility.MaxRange;
                             }
                         } else {
                             Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyName);
@@ -135,8 +138,8 @@ namespace AnyRPG {
         public List<CombatStrategyNode> GetValidPhaseNodes(BaseCharacter sourceCharacter) {
             List<CombatStrategyNode> returnList = new List<CombatStrategyNode>();
             foreach (CombatStrategyNode phaseNode in phaseNodes) {
-                if (sourceCharacter != null && sourceCharacter.MyCharacterStats != null) {
-                    if (Mathf.Ceil((sourceCharacter.MyCharacterStats.currentHealth / (float)sourceCharacter.MyCharacterStats.MyMaxHealth) * 100f) <= phaseNode.MyMaxHealthPercent && Mathf.Floor((sourceCharacter.MyCharacterStats.currentHealth / (float)sourceCharacter.MyCharacterStats.MyMaxHealth) * 100f) >= phaseNode.MyMinHealthPercent) {
+                if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {
+                    if (Mathf.Ceil((sourceCharacter.CharacterStats.currentHealth / (float)sourceCharacter.CharacterStats.MyMaxHealth) * 100f) <= phaseNode.MyMaxHealthPercent && Mathf.Floor((sourceCharacter.CharacterStats.currentHealth / (float)sourceCharacter.CharacterStats.MyMaxHealth) * 100f) >= phaseNode.MyMinHealthPercent) {
                         //Debug.Log(sourceCharacter.MyName + ".GetValidPhaseNodes: currentHealth: " + sourceCharacter.MyCharacterStats.currentHealth + "; MaxHealth: " + sourceCharacter.MyCharacterStats.MyMaxHealth);
                         returnList.Add(phaseNode);
                     }

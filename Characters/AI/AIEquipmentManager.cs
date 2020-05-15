@@ -39,8 +39,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "AIEquipmentManager.SubscribeToUMACreate()");
 
             // is this stuff necessary on ai characters?
-            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.InitializeAnimator();
                 dynamicCharacterAvatar.Initialize();
                 // is this stuff necessary end
 
@@ -49,9 +49,9 @@ namespace AnyRPG {
             } else {
                 if (baseCharacter == null ) {
                     //Debug.Log(gameObject.name + "AIEquipmentManager.SubscribeToUMACreate(): baseCharacter is null!");
-                } else if (baseCharacter.MyAnimatedUnit == null) {
+                } else if (baseCharacter.AnimatedUnit == null) {
                     //Debug.Log(gameObject.name + "AIEquipmentManager.SubscribeToUMACreate(): baseCharacter.MyAnimatedUnit is null!");
-                } else if (baseCharacter.MyAnimatedUnit.MyCharacterAnimator == null) {
+                } else if (baseCharacter.AnimatedUnit.MyCharacterAnimator == null) {
                     //Debug.Log(gameObject.name + "AIEquipmentManager.SubscribeToUMACreate(): baseCharacter.MyAnimatedUnit.MyCharacterAnimator is null!");
                 }
             }

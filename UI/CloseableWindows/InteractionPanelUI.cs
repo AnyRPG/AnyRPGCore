@@ -171,7 +171,7 @@ namespace AnyRPG {
                                 qs.MyText.text = displayText;
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, quest.MyExperienceLevel);
+                                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                                 //quests.Add(go);
                                 questScripts.Add(qs);
                                 if (quest.IsComplete && !quest.TurnedIn) {
@@ -239,7 +239,7 @@ namespace AnyRPG {
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
                 if (iPS.MyInteractableOption.CanInteract()) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
+                    iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }

@@ -91,7 +91,7 @@ namespace AnyRPG {
         public bool IsAlive { get => isAlive; }
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
-        public int MyLevel { get => currentLevel; }
+        public int Level { get => currentLevel; }
         public int MyCurrentXP { get => currentXP; set => currentXP = value; }
         public int MyMaxHealth { get => (int)(MyStamina * 10 * healthMultiplier); }
         public int MyMaxMana { get => (int)(MyIntellect * 10 * manaMultiplier); }
@@ -155,17 +155,17 @@ namespace AnyRPG {
 
         public virtual void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions()");
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
+            if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
                 //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions(): subscribing to onequipmentchanged event");
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged += OnEquipmentChanged;
+                baseCharacter.CharacterEquipmentManager.OnEquipmentChanged += OnEquipmentChanged;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions(): could not subscribe to onequipmentchanged event");
             }
         }
 
         public virtual void CleanupEventSubscriptions() {
-            if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null) {
-                baseCharacter.MyCharacterEquipmentManager.OnEquipmentChanged -= OnEquipmentChanged;
+            if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
+                baseCharacter.CharacterEquipmentManager.OnEquipmentChanged -= OnEquipmentChanged;
             }
 
             ClearStatusEffects();
@@ -222,19 +222,19 @@ namespace AnyRPG {
             if (newItem != null) {
                 armorModifiers.AddModifier(newItem.MyArmorModifier);
                 meleeDamageModifiers.AddModifier(newItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier(Level, baseCharacter));
             }
 
             if (oldItem != null) {
                 armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
                 meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier(MyLevel, baseCharacter));
-                primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier(MyLevel, baseCharacter));
+                primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier(Level, baseCharacter));
+                primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier(Level, baseCharacter));
             }
 
             ManaChangedNotificationHandler();
@@ -272,9 +272,13 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MyIncomingDamageMultiplier != 1) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyIncomingDamageMultiplier;
+                if (statusEffectNode.MyStatusEffect != null) {
+                    if (statusEffectNode.MyStatusEffect.IncomingDamageMultiplier != 1) {
+                        //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
+                        returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.IncomingDamageMultiplier;
+                    }
+                } else {
+                    Debug.Log(gameObject.name + "CharacterStats.GetIncomingDamageModifiers(): statusEffectNode.MyStatusEffect is null!!!");
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -345,9 +349,9 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MyThreatMultiplier != 1) {
+                if (statusEffectNode.MyStatusEffect.ThreatMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyThreatMultiplier;
+                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.ThreatMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -382,13 +386,64 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, BaseCharacter sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        /// <summary>
+        /// attempt to pull target into combat
+        /// </summary>
+        /// <param name="sourceCharacter"></param>
+        /// <param name="target"></param>
+        public virtual void AttemptAgro(IAbilityCaster sourceCharacter, CharacterUnit target) {
+            if (target != null && (sourceCharacter as CharacterAbilityManager) is CharacterAbilityManager) {
+                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
+                    if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, (sourceCharacter as CharacterAbilityManager).BaseCharacter) <= -1) {
+                        if (targetCharacterUnit.MyBaseCharacter.CharacterCombat != null) {
+                            // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                            targetCharacterUnit.MyBaseCharacter.CharacterController.Agro((sourceCharacter as CharacterAbilityManager).BaseCharacter.CharacterUnit);
+                        }
+                    }
+                }
+            }
+        }
+
+        public virtual bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            if (statusEffect.MyDisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public virtual bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            // check for stun
+            if (statusEffect.MyStun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public virtual bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+            // check for levitate
+            if (statusEffect.MyLevitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyAbilityEffectName + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            if (IsAlive == false && statusEffect.MyRequiresLiveTarget == true) {
+            if (IsAlive == false && statusEffect.RequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
-            if (IsAlive == true && statusEffect.MyRequireDeadTarget == true) {
+            if (IsAlive == true && statusEffect.RequireDeadTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
@@ -398,23 +453,20 @@ namespace AnyRPG {
             if (sourceCharacter == null) {
                 //Debug.Log("CharacterStats.ApplyAbilityEffect() source is null");
             }
-            if (target == null) {
-                //Debug.Log("CharacterStats.ApplyAbilityEffect() target is null");
-                // this is fine in characterTraits
-            }
+            AttemptAgro(sourceCharacter, baseCharacter.CharacterUnit);
+
             // check for frozen
-            if (statusEffect.MyDisableAnimator == true && target.MyCharacter.MyCharacterStats.HasFreezeImmunity()) {
-                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            if (WasImmuneToFreeze(statusEffect, sourceCharacter)) {
                 return null;
             }
+
             // check for stun
-            if (statusEffect.MyStun == true && target.MyCharacter.MyCharacterStats.HasStunImmunity()) {
-                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            if (WasImmuneToStun(statusEffect, sourceCharacter)) {
                 return null;
             }
+
             // check for levitate
-            if (statusEffect.MyLevitate == true && target.MyCharacter.MyCharacterStats.HasLevitateImmunity()) {
-                CombatTextManager.MyInstance.SpawnCombatText(target.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+            if (WasImmuneToLevitate(statusEffect, sourceCharacter)) {
                 return null;
             }
             //Debug.Log("CharacterStats.ApplyStatusEffect(" + statusEffect.ToString() + ", " + source.name + ", " + target.name + ")");
@@ -436,23 +488,23 @@ namespace AnyRPG {
                 }
                 return null;
             } else {
-                BaseCharacter targetCharacter = null;
-                if (statusEffect.MyClassTrait == true || abilityEffectInput.savedEffect == true) {
-                    targetCharacter = sourceCharacter;
-                } else {
-                    CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
-                    if (_characterUnit != null) {
-                        targetCharacter = _characterUnit.MyCharacter;
-                    }
-                }
 
                 // add to effect list since it was not in there
                 StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyName) as StatusEffect;
+                if (_statusEffect == null) {
+                    Debug.LogError(gameObject.name + ".CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.MyName);
+                    return null;
+                }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
+
                 statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.MyName), newStatusEffectNode);
-                _statusEffect.Initialize(sourceCharacter, targetCharacter, abilityEffectInput);
-                Coroutine newCoroutine = StartCoroutine(Tick(sourceCharacter, abilityEffectInput, targetCharacter, _statusEffect));
-                newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
+
+                _statusEffect.Initialize(sourceCharacter, baseCharacter, abilityEffectInput);
+                newStatusEffectNode.Setup(this, _statusEffect);
+                Coroutine newCoroutine = StartCoroutine(Tick(sourceCharacter, abilityEffectInput, _statusEffect));
+                newStatusEffectNode.MyMonitorCoroutine = newCoroutine;
+                //newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
+
                 HandleAddNotifications(newStatusEffectNode);
                 return newStatusEffectNode;
             }
@@ -531,7 +583,7 @@ namespace AnyRPG {
                 currentXP = overflowXP;
             }
 
-            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal);
+            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal);
 
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }
@@ -594,12 +646,12 @@ namespace AnyRPG {
             OnManaChanged(MyMaxMana, currentMana);
         }
 
-        public void RecoverMana(int mana, BaseCharacter source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public void RecoverMana(int mana, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
             SetMana(mana);
-            if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter.MyCharacterUnit)) {
+            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, mana, CombatTextType.gainMana, combatMagnitude);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, mana, CombatTextType.gainMana, combatMagnitude);
             }
         }
 
@@ -630,13 +682,13 @@ namespace AnyRPG {
             OnHealthChanged(MyMaxHealth, currentHealth);
         }
 
-        public void RecoverHealth(int health, BaseCharacter source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public void RecoverHealth(int health, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
             //Debug.Log(gameObject.name + ".CharacterStats.RecoverHealth(" + health + ", " + (source != null && source.MyDisplayName != null ? source.MyDisplayName : null) + ", " + showCombatText + ")");
             SetHealth(health);
 
-            if (showCombatText && (baseCharacter.MyCharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source == PlayerManager.MyInstance.MyCharacter)) {
+            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.MyCharacterUnit.gameObject, health, CombatTextType.gainHealth, combatMagnitude);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, health, CombatTextType.gainHealth, combatMagnitude);
             }
         }
 
@@ -713,8 +765,8 @@ namespace AnyRPG {
                 //Debug.Log(MyBaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyAnimatedUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                baseCharacter.MyAnimatedUnit.MyCharacterAnimator.EnableAnimator();
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                baseCharacter.AnimatedUnit.MyCharacterAnimator.EnableAnimator();
             }
             isReviving = true;
             //baseCharacter.MyCharacterUnit.DisableCollider();
@@ -730,8 +782,8 @@ namespace AnyRPG {
         public virtual void ReviveRaw() {
             //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
             isReviving = false;
-            baseCharacter.MyCharacterUnit.DisableCollider();
-            baseCharacter.MyCharacterUnit.EnableCollider();
+            baseCharacter.CharacterUnit.DisableCollider();
+            baseCharacter.CharacterUnit.EnableCollider();
             isAlive = true;
             ClearInvalidStatusEffects();
             ResetHealth();
@@ -759,7 +811,7 @@ namespace AnyRPG {
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
-                if (statusEffectNode.MyStatusEffect.MyRequireDeadTarget == true) {
+                if (statusEffectNode.MyStatusEffect.RequireDeadTarget == true) {
                     //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
                     statusEffectNodes.Add(statusEffectNode);
                 }
@@ -770,10 +822,11 @@ namespace AnyRPG {
 
         }
 
-        public IEnumerator Tick(BaseCharacter source, AbilityEffectOutput abilityEffectInput, BaseCharacter target, StatusEffect statusEffect) {
-            //Debug.Log(MyName + ".StatusEffect.Tick() start");
-            BaseCharacter characterSource = source;
-            statusEffect.ApplyControlEffects(target);
+        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectOutput abilityEffectInput, StatusEffect statusEffect) {
+            //Debug.Log(gameObject.name + ".StatusEffect.Tick() start");
+            float elapsedTime = 0f;
+
+            statusEffect.ApplyControlEffects(baseCharacter);
             if (abilityEffectInput.overrideDuration != 0) {
                 statusEffect.SetRemainingDuration(abilityEffectInput.overrideDuration);
             } else {
@@ -782,39 +835,42 @@ namespace AnyRPG {
             //Debug.Log("duration: " + duration);
             //nextTickTime = remainingDuration - tickRate;
             //DateTime nextTickTime2 = System.DateTime.Now + tickRate;
-            int milliseconds = (int)((statusEffect.MyTickRate - (int)statusEffect.MyTickRate) * 1000);
+            //int milliseconds = (int)((statusEffect.MyTickRate - (int)statusEffect.MyTickRate) * 1000);
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() milliseconds: " + milliseconds);
-            TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
+            //TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
             if (statusEffect.MyCastZeroTick) {
-                statusEffect.MyNextTickTime = System.DateTime.Now;
-            } else {
-                statusEffect.MyNextTickTime = System.DateTime.Now + tickRateTimeSpan;
+                if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
+                    statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
+                }
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
-            while ((statusEffect.MyLimitedDuration == false || statusEffect.MyClassTrait == true || statusEffect.GetRemainingDuration() >= 0) && target != null) {
+            while ((statusEffect.MyLimitedDuration == false || statusEffect.MyClassTrait == true || statusEffect.GetRemainingDuration() > 0f) && baseCharacter != null) {
                 yield return null;
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
                 statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);
-
+                elapsedTime += Time.deltaTime;
                 // check for tick first so we can do final tick;
-                if (System.DateTime.Now > statusEffect.MyNextTickTime && statusEffect.MyTickRate != 0) {
+
+                if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
                     //Debug.Log(MyName + ".StatusEffect.Tick() TickTime!");
-                    if (target != null && target.MyCharacterUnit != null && characterSource != null) {
-                        statusEffect.CastTick(characterSource, target.MyCharacterUnit.gameObject, abilityEffectInput);
-                        statusEffect.MyNextTickTime += tickRateTimeSpan;
+                    if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
+                        statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
+                        elapsedTime -= statusEffect.TickRate;
                     }
                 }
                 statusEffect.UpdateStatusNode();
             }
-            if (target != null) {
-                if (source != null & target.MyCharacterUnit != null) {
-                    statusEffect.CastComplete(source, target.MyCharacterUnit.gameObject, abilityEffectInput);
+            //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
+            if (baseCharacter != null) {
+                if (characterSource != null & baseCharacter.CharacterUnit != null) {
+                    statusEffect.CastComplete(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
                 }
             }
 
             if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyName))) {
+                //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; cancelling ");
                 statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyName)].CancelStatusEffect();
             }
         }

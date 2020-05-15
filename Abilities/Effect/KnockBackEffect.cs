@@ -21,7 +21,7 @@ namespace AnyRPG {
         private Vector3 spawnLocation = Vector3.zero;
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             if (target == null) {
                 return null;
             }
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
 
-            Vector3 sourcePosition = source.MyCharacterUnit.transform.position;
+            Vector3 sourcePosition = source.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
             
             // get vector from source to target for flight direction

@@ -24,7 +24,7 @@ namespace AnyRPG {
                 return;
             }
             CurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(MyType)) {
+            if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(MyType)) {
                 CurrentAmount++;
             }
 

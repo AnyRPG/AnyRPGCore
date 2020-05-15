@@ -19,7 +19,7 @@ namespace AnyRPG {
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.MyCharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFaction.MyName, MyType)) {
+            if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.CharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFaction.MyName, MyType)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
@@ -37,13 +37,13 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent += UpdateKillCount;
+            PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterCombat != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterCombat.OnKillEvent -= UpdateKillCount;
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat != null) {
+                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
             }
         }
 

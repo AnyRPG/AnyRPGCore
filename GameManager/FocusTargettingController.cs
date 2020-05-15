@@ -86,14 +86,14 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget += HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget += HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.MyCharacterController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(GameObject target) {
@@ -107,14 +107,14 @@ namespace AnyRPG {
             this.target = target;
             gameObject.SetActive(true);
             colorOverrideDictionary.Clear();
-            if (characterUnit.MyCharacter.MyCharacterStats.MyToughness != null && characterUnit.MyCharacter.MyCharacterStats.MyToughness.MyFocusProjectorOverrideMap != null) {
-                foreach (ProjectorColorMapNode colorMapNode in characterUnit.MyCharacter.MyCharacterStats.MyToughness.MyFocusProjectorOverrideMap) {
+            if (characterUnit.MyCharacter.CharacterStats.MyToughness != null && characterUnit.MyCharacter.CharacterStats.MyToughness.MyFocusProjectorOverrideMap != null) {
+                foreach (ProjectorColorMapNode colorMapNode in characterUnit.MyCharacter.CharacterStats.MyToughness.MyFocusProjectorOverrideMap) {
                     colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor)] = colorMapNode.MyProjectorMaterial;
                     //Debug.Log("FocusTargettingController.SetupController(): added override " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
                 }
             }
 
-            if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false) {
+            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false) {
                 //SetCircleColor(Color.gray);
                 SetMaterial(Color.gray);
             } else {
@@ -183,7 +183,7 @@ namespace AnyRPG {
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 1, target.transform.position.z);
             this.transform.forward = target.transform.forward;
             transform.Rotate(new Vector3(90f, 0f, 0f));
-            if (characterUnit.MyCharacter.MyCharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[ColorUtility.ToHtmlStringRGBA(Color.gray)]) {
+            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[ColorUtility.ToHtmlStringRGBA(Color.gray)]) {
                 //SetCircleColor(Color.gray);
                 SetMaterial(Color.gray);
             }

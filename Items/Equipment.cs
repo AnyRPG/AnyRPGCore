@@ -223,13 +223,13 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
                 if (CanEquip(PlayerManager.MyInstance.MyCharacter)) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.Equip(this);
+                    PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(this);
                     Remove();
                     return true;
                 } else {
@@ -261,16 +261,16 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format(" +{0} Damage", MyDamageModifier));
             }
             if (useStaminaModifier) {
-                abilitiesList.Add(string.Format(" +{0} Stamina", MyStaminaModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
+                abilitiesList.Add(string.Format(" +{0} Stamina", MyStaminaModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useStrengthModifier) {
-                abilitiesList.Add(string.Format(" +{0} Strength", MyStrengthModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
+                abilitiesList.Add(string.Format(" +{0} Strength", MyStrengthModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useIntellectModifier) {
-                abilitiesList.Add(string.Format(" +{0} Intellect", MyIntellectModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
+                abilitiesList.Add(string.Format(" +{0} Intellect", MyIntellectModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
             }
             if (useAgilityModifier) {
-                abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, PlayerManager.MyInstance.MyCharacter)));
+                abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
             }
 
             // abilities
@@ -283,11 +283,11 @@ namespace AnyRPG {
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(equipment.MyName)) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.MyName)) {
                         colorName = "yellow";
                     }
                     abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.MyName));

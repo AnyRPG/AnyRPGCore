@@ -109,14 +109,14 @@ namespace AnyRPG {
             if (otherFaction != null && thisFaction != null) {
                 // first, checking if mycharacter has a reputation modifier for the other faction
                 //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " is checking if it's own faction manager has a reputation modifier for the faction of target: " + characterToCheck.MyName);
-                if (myCharacter.MyCharacterFactionManager != null && myCharacter.MyCharacterFactionManager.HasReputationModifier(otherFaction)) {
+                if (myCharacter.CharacterFactionManager != null && myCharacter.CharacterFactionManager.HasReputationModifier(otherFaction)) {
                     //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.MyCharacterName : "null") + "): SOURCE HAS MODIFIER!");
-                    return myCharacter.MyCharacterFactionManager.GetReputationValue(otherFaction);
+                    return myCharacter.CharacterFactionManager.GetReputationValue(otherFaction);
                 }
                 //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " did not have a local reputation modifer.  now checking modifer for it's own faction modifer exists in the target: " + characterToCheck.MyName);
-                if (characterToCheck.MyCharacterFactionManager != null && characterToCheck.MyCharacterFactionManager.HasReputationModifier(thisFaction)) {
+                if (characterToCheck.CharacterFactionManager != null && characterToCheck.CharacterFactionManager.HasReputationModifier(thisFaction)) {
                     //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.MyCharacterName : "null") + "): TARGET HAS MODIFIER!");
-                    return characterToCheck.MyCharacterFactionManager.GetReputationValue(thisFaction);
+                    return characterToCheck.CharacterFactionManager.GetReputationValue(thisFaction);
                 }
             } else {
                 //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.MyCharacterName : "null") + "): ONE CHARACTER WAS NULL!");
@@ -135,9 +135,9 @@ namespace AnyRPG {
             if (targetCharacter != null) {
                 Faction otherFaction = targetCharacter.MyFaction;
                 // this is duplicated but needs to be here because you can check colors for ui panels and stuff
-                if (targetCharacter.MyCharacterFactionManager != null && targetCharacter.MyCharacterFactionManager.HasReputationModifier(thisFaction)) {
+                if (targetCharacter.CharacterFactionManager != null && targetCharacter.CharacterFactionManager.HasReputationModifier(thisFaction)) {
                     //Debug.Log("Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + sourceFactionName + "): target had reputation modifer, returning it");
-                    return targetCharacter.MyCharacterFactionManager.GetReputationValue(thisFaction);
+                    return targetCharacter.CharacterFactionManager.GetReputationValue(thisFaction);
                 }
 
                 if (otherFaction == null && thisFaction != null) {

@@ -58,7 +58,7 @@ namespace AnyRPG {
         /// </summary>
         public void OnEscapeKeyPressedHandler() {
             //Debug.Log("Received Escape Key Pressed Handler");
-            baseCharacter.MyCharacterAbilityManager.StopCasting();
+            baseCharacter.CharacterAbilityManager.StopCasting();
 
         }
 
@@ -68,11 +68,31 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public override bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
+            bool returnresult = base.PerformAnimatedAbilityCheck(animatedAbility);
+            if (!returnresult) {
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
+                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.MyName == null ? "null" : animatedAbility.MyName) + ". Waiting for another ability to finish.");
+                }
+            }
+            return returnresult;
+        }
+
         public void AbilityLearnedHandler(BaseAbility newAbility) {
             //Debug.Log("PlayerAbilityManager.AbilityLearnedHandler()");
             if (MessageFeedManager.MyInstance != null) {
                 MessageFeedManager.MyInstance.WriteMessage(string.Format("Learned New Ability: {0}", newAbility.MyName));
             }
+        }
+
+        public override bool IsTargetInMaxRange(GameObject target, float maxRange, string abilityOrEffectName) {
+            bool returnResult = base.IsTargetInMaxRange(target, maxRange, abilityOrEffectName);
+            if (!returnResult) {
+                if (CombatLogUI.MyInstance != null) {
+                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (abilityOrEffectName == null ? "null" : abilityOrEffectName));
+                }
+            }
+            return returnResult;
         }
 
         public override bool PerformCombatCheck(IAbility ability) {
@@ -147,7 +167,7 @@ namespace AnyRPG {
                 string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
                 if (!abilityList.ContainsKey(keyName)) {
                     //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
-                    if (ability is AnimatedAbility && (ability as AnimatedAbility).MyIsAutoAttack == true) {
+                    if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
 
@@ -199,8 +219,8 @@ namespace AnyRPG {
         }
 
         public override void ProcessCharacterUnitSpawn() {
-            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null) {
-                PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
+            if (BaseCharacter != null && BaseCharacter.AnimatedUnit != null) {
+                PlayerUnitMovementController movementController = (BaseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
                 //CharacterMotor characterMotor = MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor;
                 if (movementController != null) {
                     //Debug.Log("CharacterAbilityManager.OnCharacterUnitSpawn(): movementController is not null");
@@ -212,9 +232,9 @@ namespace AnyRPG {
         }
 
         public override void HandleCharacterUnitDespawn() {
-            if (MyBaseCharacter != null && MyBaseCharacter.MyAnimatedUnit != null) {
+            if (BaseCharacter != null && BaseCharacter.AnimatedUnit != null) {
 
-                PlayerUnitMovementController movementController = (MyBaseCharacter.MyAnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
+                PlayerUnitMovementController movementController = (BaseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController;
                 if (movementController != null) {
                     movementController.OnMovement -= HandleManualMovement;
                 }

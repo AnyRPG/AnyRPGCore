@@ -93,18 +93,18 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CastBarController.InitializeCallbacks()");
 
             BaseCharacter baseCharacter = followGameObject.GetComponent<CharacterUnit>().MyCharacter;
-            if (baseCharacter.MyCharacterStats == null) {
+            if (baseCharacter.CharacterStats == null) {
                 //Debug.Log("CastBarController: baseCharacter does not have CharacterStats");
                 return;
             }
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
 
-            if (baseCharacter.MyCharacterAbilityManager == null) {
+            if (baseCharacter.CharacterAbilityManager == null) {
                 // selected a vendor or questgiver that we don't want to be attackable
                 //Debug.Log("CastBarController: baseCharacter does not have CharacterAbilityManager");
             } else {
-                baseCharacter.MyCharacterAbilityManager.OnCastTimeChanged += OnCastTimeChanged;
-                baseCharacter.MyCharacterAbilityManager.OnCastStop += OnCastStop;
+                baseCharacter.CharacterAbilityManager.OnCastTimeChanged += OnCastTimeChanged;
+                baseCharacter.CharacterAbilityManager.OnCastStop += OnCastStop;
             }
 
         }

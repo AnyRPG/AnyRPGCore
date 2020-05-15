@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         protected virtual void SetMovementSpeed() {
             if (movementSpeed == 0) {
-                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.MyCharacterController.MyMovementSpeed;
+                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.CharacterController.MyMovementSpeed;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterMotor.Update(): movementSpeed: " + movementSpeed);
                 animatedUnit.MyAgent.speed = movementSpeed;
@@ -160,7 +160,7 @@ namespace AnyRPG {
                 //Debug.Log("Target is " + target.ToString() + " and target position is " + target.position.ToString() + " and my position is " + transform.position.ToString());
                 //if (distanceToTarget > 0.1f) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): ABOUT TO CHECK IF TARGET IS IN HITBOX!!");
-                if (characterUnit.MyCharacter.MyCharacterController.IsTargetInHitBox(target)) {
+                if (characterUnit.MyCharacter.CharacterController.IsTargetInHitBox(target)) {
                     // this code can tend to get bypassed because followstate for AI runs on update, not fixedupdate, so will null the target quicker than this method usually
                     //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Target is in hitbox.  Stop following target.");
                     StopFollowingTarget();

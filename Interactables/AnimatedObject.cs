@@ -33,10 +33,10 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
-            if (coroutine != null) {
+            //if (coroutine != null) {
                 //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): coroutine is not null, exiting");
-                return false;
-            }
+                //return false;
+            //}
             base.Interact(source);
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
 
@@ -66,6 +66,9 @@ namespace AnyRPG {
                 audioSource.PlayOneShot(audioProfile.MyAudioClip);
             }
 
+            // testing doing this first to allow an object to reverse before it's animation has completed
+            objectOpen = !objectOpen;
+
             while (interactable.MySpawnReference.transform.localEulerAngles != newAngle || interactable.MySpawnReference.transform.localPosition != newPosition) {
                 //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition);
                 //Quaternion newRotation = Quaternion.Lerp(originalRotation, Quaternion.Euler(newAngle), 0.01f);
@@ -75,7 +78,7 @@ namespace AnyRPG {
                 interactable.MySpawnReference.transform.localRotation = newRotation;
                 yield return null;
             }
-            objectOpen = !objectOpen;
+            //objectOpen = !objectOpen;
             //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition + "; COMPLETE ANIMATION");
             coroutine = null;
         }

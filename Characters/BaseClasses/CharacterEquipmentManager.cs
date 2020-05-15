@@ -175,8 +175,8 @@ namespace AnyRPG {
             }
             SpawnEquipmentObjects(equipmentSlotProfile, newItem);
             CharacterAnimator characterAnimator = null;
-            if (baseCharacter != null && baseCharacter.MyCharacterUnit != null && baseCharacter.MyAnimatedUnit.MyCharacterAnimator != null) {
-                characterAnimator = baseCharacter.MyAnimatedUnit.MyCharacterAnimator;
+            if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                characterAnimator = baseCharacter.AnimatedUnit.MyCharacterAnimator;
                 if (characterAnimator != null) {
                     //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
                     characterAnimator.PerformEquipmentChange(newItem, null);
@@ -205,7 +205,7 @@ namespace AnyRPG {
                                     //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
                                     newEquipmentPrefab.transform.localScale = attachmentNode.MyHoldableObject.MyScale;
-                                    if (baseCharacter != null && baseCharacter.MyCharacterCombat != null && baseCharacter.MyCharacterCombat.GetInCombat() == true) {
+                                    if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
                                         HoldObject(newEquipmentPrefab, attachmentNode.MyHoldableObject, playerUnitObject);
                                     } else {
                                         SheathObject(newEquipmentPrefab, attachmentNode.MyHoldableObject, playerUnitObject);
@@ -585,9 +585,9 @@ namespace AnyRPG {
             if (subscribedToCombatEvents) {
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
-                baseCharacter.MyCharacterCombat.OnEnterCombat += HoldWeapons;
-                baseCharacter.MyCharacterCombat.OnDropCombat += SheathWeapons;
+            if (baseCharacter != null && baseCharacter.CharacterCombat != null) {
+                baseCharacter.CharacterCombat.OnEnterCombat += HoldWeapons;
+                baseCharacter.CharacterCombat.OnDropCombat += SheathWeapons;
 
             }
             subscribedToCombatEvents = true;
@@ -598,9 +598,9 @@ namespace AnyRPG {
             if (!subscribedToCombatEvents) {
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyCharacterCombat != null) {
-                baseCharacter.MyCharacterCombat.OnEnterCombat -= HoldWeapons;
-                baseCharacter.MyCharacterCombat.OnDropCombat -= SheathWeapons;
+            if (baseCharacter != null && baseCharacter.CharacterCombat != null) {
+                baseCharacter.CharacterCombat.OnEnterCombat -= HoldWeapons;
+                baseCharacter.CharacterCombat.OnDropCombat -= SheathWeapons;
             }
             subscribedToCombatEvents = false;
         }

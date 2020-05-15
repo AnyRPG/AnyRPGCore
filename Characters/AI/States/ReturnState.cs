@@ -12,7 +12,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ": Enter return state at position: " + aiController.transform.position);
             this.aiController = aiController;
             this.aiController.SetDestination(aiController.MyLeashPosition);
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             if (this.aiController.MyCombatStrategy != null) {
                 this.aiController.ResetCombat();
             }
@@ -31,13 +31,13 @@ namespace AnyRPG {
                 aiController.ChangeState(new FollowState());
             }
 
-            float distanceToLeashPosition = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.MyCharacterUnit.transform.position);
+            float distanceToLeashPosition = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.CharacterUnit.transform.position);
             //Debug.Log(aiController.gameObject.name + ": ReturnState: Distance from spawn point: " + distance.ToString());
             if (distanceToLeashPosition <= 1) {
                 aiController.ChangeState(new IdleState());
             } else {
-                float agentDestinationDrift = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.destination);
-                if (agentDestinationDrift >= aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
+                float agentDestinationDrift = Vector3.Distance(aiController.MyLeashPosition, aiController.MyBaseCharacter.AnimatedUnit.MyAgent.destination);
+                if (agentDestinationDrift >= aiController.MyBaseCharacter.AnimatedUnit.MyAgent.stoppingDistance + aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyNavMeshDistancePadding) {
                     //Debug.Log("ReturnState.Update(). agent destination is: " + aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.destination + "; resetting to: " + aiController.MyStartPosition);
                     this.aiController.SetDestination(aiController.MyLeashPosition);
                 }

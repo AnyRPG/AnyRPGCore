@@ -67,7 +67,7 @@ namespace AnyRPG {
                     if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) > 0) {
                         //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
                     }
-                    if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) == 0 && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.HasEquipment(item.MyItem.MyName) == false))) {
+                    if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyName) == 0 && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyName) == false))) {
                         int roll = Random.Range(0, 100);
                         if (roll <= item.MyDropChance) {
                             int itemCount = Random.Range(item.MyMinDrops, item.MyMaxDrops + 1);

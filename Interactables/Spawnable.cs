@@ -55,7 +55,7 @@ namespace AnyRPG {
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".Spawnable.Awake()");
             if (SystemGameManager.MyInstance == null) {
-                Debug.LogError(gameObject.name + "Spawnable.Awake(): Could not find System Game Manager.  Is Game Manager Prefab in Scene?!!!");
+                Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
             if (GetComponent<CharacterUnit>() == null) {

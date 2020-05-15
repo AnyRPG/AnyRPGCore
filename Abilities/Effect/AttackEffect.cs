@@ -14,7 +14,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(BaseCharacter source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(MyAbilityEffectName + ".AttackAbility.PerformAbilityEffect(" + source.name + ", " + target.name + ")");
             if (abilityEffectInput == null) {
                 //Debug.Log("AttackEffect.PerformAbilityEffect() abilityEffectInput is null!");
@@ -23,15 +23,13 @@ namespace AnyRPG {
                 // something died or despawned mid cast
                 return;
             }
-            if (source.MyCharacterCombat.DidAttackMiss() == true) {
-                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
-                source.MyCharacterCombat.ReceiveCombatMiss(target);
+            if (!source.AbilityHit(target)) {
                 return;
             }
             int healthFinalAmount = 0;
             CombatMagnitude combatMagnitude = CombatMagnitude.normal;
             if (useHealthAmount == true) {
-                float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.MyCharacterStats.MyLevel);
+                float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.Level);
                 KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
                 healthFinalAmount = (int)abilityKeyValuePair.Key;
                 combatMagnitude = abilityKeyValuePair.Value;
@@ -42,24 +40,17 @@ namespace AnyRPG {
             abilityEffectOutput.healthAmount = healthFinalAmount;
             if (healthFinalAmount > 0) {
                 // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                target.GetComponent<CharacterUnit>().MyCharacter.MyCharacterCombat.TakeDamage(healthFinalAmount, source.MyCharacterUnit.transform.position, source, combatMagnitude, this, abilityEffectInput.refectDamage);
+                target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(healthFinalAmount, source.UnitGameObject.transform.position, source, combatMagnitude, this, abilityEffectInput.refectDamage);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
 
-            // handle weapon on hit effects
-            if (source.MyCharacterCombat != null && source.MyCharacterCombat.MyOnHitEffect != null && damageType == DamageType.physical && source.MyCharacterCombat.MyOnHitEffect.MyName != MyName) {
-                List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                onHitEffectList.Add(source.MyCharacterCombat.MyOnHitEffect);
-                PerformAbilityEffects(source, target, abilityEffectOutput, onHitEffectList);
-            } else {
-                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");
-            }
+            source.ProcessWeaponHitEffects(this, target, abilityEffectInput);
 
             // handle regular effects
             base.PerformAbilityHit(source, target, abilityEffectOutput);
         }
 
-        public override bool CanUseOn(GameObject target, BaseCharacter source) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source) {
             //Debug.Log("AttackEffect.CanUseOn(" + (target == null ? " null" : target.name) + ", " + source.gameObject.name + ")");
             return base.CanUseOn(target, source);
         }

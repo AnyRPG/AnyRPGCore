@@ -18,10 +18,12 @@ namespace AnyRPG {
         public StatusEffect MyStatusEffect { get => statusEffect; set => statusEffect = value; }
         public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
 
-        public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
+        //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
+        public void Setup(CharacterStats characterStats, StatusEffect _statusEffect) {
+            //Debug.Log("StatusEffectNode.Setup(): " + _statusEffect.MyName);
             this.characterStats = characterStats;
             this.statusEffect = _statusEffect;
-            this.monitorCoroutine = newCoroutine;
+            //this.monitorCoroutine = newCoroutine;
         }
 
         public void CancelStatusEffect() {

@@ -116,11 +116,11 @@ namespace AnyRPG {
             }
             Vector3 spawnLocation = Vector3.zero;
             Transform prefabParent = null;
-            spawnLocation = baseCharacter.MyCharacterUnit.transform.position;
-            prefabParent = baseCharacter.MyCharacterUnit.transform;
+            spawnLocation = baseCharacter.CharacterUnit.transform.position;
+            prefabParent = baseCharacter.CharacterUnit.transform;
             //Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
             Vector3 finalSpawnLocation = spawnLocation;
-            Vector3 usedForwardDirection = baseCharacter.MyCharacterUnit.transform.forward;
+            Vector3 usedForwardDirection = baseCharacter.CharacterUnit.transform.forward;
             GameObject prefabObject = Instantiate(unitProfile.MyUnitPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection), prefabParent);
             activeUnitProfiles.Add(unitProfile, prefabObject);
             HandlePetSpawn(prefabObject);
@@ -130,7 +130,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterPetManager.HandlePetSpawn()");
             go.transform.parent = null;
             //Vector3 newSpawnLocation = GetSpawnLocation();
-            Vector3 newSpawnLocation = baseCharacter.MyCharacterUnit.transform.position;
+            Vector3 newSpawnLocation = baseCharacter.CharacterUnit.transform.position;
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
             NavMeshAgent navMeshAgent = go.GetComponent<NavMeshAgent>();
             AIController aIController = go.GetComponent<AIController>();
@@ -146,10 +146,10 @@ namespace AnyRPG {
             }
             */
             //int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel : unitLevel) + extraLevels;
-            int _unitLevel = baseCharacter.MyCharacterStats.MyLevel;
+            int _unitLevel = baseCharacter.CharacterStats.Level;
             //Debug.Log(gameObject.name + ".CharacterPetManager.HandlePetSpawn(): level: " + _unitLevel);
-            _characterUnit.MyCharacter.MyCharacterStats.SetLevel(_unitLevel);
-            (_characterUnit.MyCharacter.MyCharacterStats as AIStats).ApplyControlEffects(baseCharacter);
+            _characterUnit.MyCharacter.CharacterStats.SetLevel(_unitLevel);
+            (_characterUnit.MyCharacter.CharacterStats as AIStats).ApplyControlEffects(baseCharacter.CharacterAbilityManager);
         }
 
     }

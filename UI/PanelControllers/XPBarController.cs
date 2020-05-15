@@ -72,12 +72,12 @@ namespace AnyRPG {
                 //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
                 //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
             }
-            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
+            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXP() {
             //Debug.Log("XPBarController.UpdateXP()");
-            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel);
+            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXPBar(int _Level) {
@@ -85,7 +85,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-            int currentXP = PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyCurrentXP;
+            int currentXP = PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP;
             int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
             float xpPercent = (float)currentXP / (float)neededXP;
 

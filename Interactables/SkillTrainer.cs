@@ -105,7 +105,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount()");
             int optionCount = 0;
             foreach (Skill skill in skills) {
-                if (!PlayerManager.MyInstance.MyCharacter.MyCharacterSkillManager.HasSkill(skill)) {
+                if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
             }

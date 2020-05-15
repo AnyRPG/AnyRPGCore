@@ -63,7 +63,7 @@ namespace AnyRPG {
             if (lootDropped == true) {
                 PickUp();
             } else {
-                source.GetComponent<CharacterUnit>().MyCharacter.MyCharacterAbilityManager.BeginAbility(MyAbility, gameObject);
+                source.GetComponent<CharacterUnit>().MyCharacter.CharacterAbilityManager.BeginAbility(MyAbility, gameObject);
             }
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility) == true && interactable.MySpawnReference != null ? 1 : 0);
+            return (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(MyAbility) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
 
         /*

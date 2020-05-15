@@ -11,8 +11,8 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".DeathState.Enter(): entered death state");
             this.aiController = aiController;
             //this.aiController.MyBaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StopNavAgent();
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = false;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StopNavAgent();
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.enabled = false;
             this.aiController.DisableAggro();
             this.aiController.ClearTarget();
 
@@ -27,13 +27,13 @@ namespace AnyRPG {
 
         public void Exit() {
             //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.StartNavAgent();
-            this.aiController.MyBaseCharacter.MyAnimatedUnit.MyCharacterMotor.enabled = true;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.StartNavAgent();
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.enabled = true;
             aiController.EnableAggro();
         }
 
         public void Update() {
-            if (aiController.MyBaseCharacter.MyCharacterStats.IsAlive) {
+            if (aiController.MyBaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log("No Longer Dead!");
                 aiController.ChangeState(new ReturnState());
             }

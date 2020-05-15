@@ -135,12 +135,12 @@ namespace AnyRPG {
 
         public void SetupDeathPopup() {
             //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnDie += PlayerDeathHandler;
+            PlayerManager.MyInstance.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
         }
 
         public void RemoveDeathPopup() {
             //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
-            PlayerManager.MyInstance.MyCharacter.MyCharacterStats.OnDie -= PlayerDeathHandler;
+            PlayerManager.MyInstance.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void OpenInGameMainMenu() {

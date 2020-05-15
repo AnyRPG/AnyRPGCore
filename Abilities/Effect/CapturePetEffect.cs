@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
 
-        public override bool CanUseOn(GameObject target, BaseCharacter sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
             if (unitTypeRestrictionList != null && unitTypeRestrictionList.Count > 0) {
                 BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
                 if (targetCharacter == null) {
@@ -36,7 +36,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(BaseCharacter source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             if (target == null) {
                 Debug.Log(MyName + ".CapturePetEffect.Cast(): target is null, returning");
                 return null;
@@ -45,15 +45,13 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnValue = base.Cast(source, target, originalTarget, abilityEffectInput);
 
             BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
-            if (targetCharacter != null && targetCharacter.MyCharacterStats != null && targetCharacter.MyCharacterStats is AIStats) {
+            if (targetCharacter != null && targetCharacter.CharacterStats != null && targetCharacter.CharacterStats is AIStats) {
                 Debug.Log(MyName + ".CapturePetEffect.Cast(): applying control effects");
-                (targetCharacter.MyCharacterStats as AIStats).ApplyControlEffects(source);
+                (targetCharacter.CharacterStats as AIStats).ApplyControlEffects(source);
             }
-            
-            if (source.MyCharacterPetManager != null && targetCharacter != null && targetCharacter.MyUnitProfile != null) {
-                Debug.Log(MyName + ".CapturePetEffect.Cast(): adding to pet manager");
-                source.MyCharacterPetManager.AddPet(targetCharacter.MyUnitProfile);
-                source.MyCharacterPetManager.MyActiveUnitProfiles.Add(targetCharacter.MyUnitProfile, target);
+
+            if (targetCharacter != null && targetCharacter.MyUnitProfile != null) {
+                source.CapturePet(targetCharacter.MyUnitProfile, target);
             }
 
             return returnValue;

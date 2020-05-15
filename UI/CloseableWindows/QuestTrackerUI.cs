@@ -115,7 +115,7 @@ namespace AnyRPG {
                 qs.MyText.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, quest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
                 go.transform.SetParent(inProgressArea.transform);

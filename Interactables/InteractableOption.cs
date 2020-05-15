@@ -115,7 +115,7 @@ namespace AnyRPG {
 
         public virtual void StopInteract() {
             //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
-            (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).StopInteract();
+            (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).StopInteract();
         }
 
         public virtual bool HasMiniMapText() {

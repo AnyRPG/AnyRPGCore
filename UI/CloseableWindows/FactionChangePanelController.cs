@@ -50,7 +50,7 @@ namespace AnyRPG {
                 RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.SetDescribable(faction.MyLearnedAbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (faction.MyLearnedAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel) {
+                if (faction.MyLearnedAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + faction.MyLearnedAbilityList[i].MyRequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
