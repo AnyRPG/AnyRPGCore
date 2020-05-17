@@ -173,6 +173,10 @@ namespace AnyRPG {
             RegisterAbilityButtonPresses();
 
             RegisterTab();
+
+            if (apparentVelocity > 0.1f) {
+                baseCharacter.CharacterAbilityManager.HandleManualMovement();
+            }
         }
 
         private Vector3 NormalizedVelocity(Vector3 inputVelocity) {

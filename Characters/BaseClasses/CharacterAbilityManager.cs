@@ -1184,9 +1184,29 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (!PerformLivenessCheck(ability)) {
+                return false;
+            }
+            
+            if (!PerformMovementCheck()) {
+                return false;
+            }
+            
+
             // default is true, nothing has stopped us so far
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): returning true");
             return true;
+        }
+
+        public virtual bool PerformLivenessCheck(IAbility ability) {
+            if (!baseCharacter.CharacterStats.IsAlive) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool PerformMovementCheck() {
+            return !(baseCharacter.CharacterController.MyApparentVelocity > 0.1f);
         }
 
         public virtual bool PerformLearnedCheck(IAbility ability) {

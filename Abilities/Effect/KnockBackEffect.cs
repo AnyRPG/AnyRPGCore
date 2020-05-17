@@ -47,8 +47,13 @@ namespace AnyRPG {
             Vector3 targetPosition = target.transform.position;
 
             AnimatedUnit animatedUnit = target.GetComponent<AnimatedUnit>();
+            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterAbilityManager) {
+                //Debug.Log("KnockBackEffect.Cast(): stop casting");
+                targetCharacterUnit.MyCharacter.CharacterAbilityManager.StopCasting();
+            }
             if (animatedUnit != null && animatedUnit.MyCharacterMotor != null) {
-                Debug.Log("KnockBackEffect.Cast(): casting on character");
+                //Debug.Log("KnockBackEffect.Cast(): casting on character");
                 animatedUnit.MyCharacterMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
             } else {
                 Rigidbody rigidbody = target.GetComponent<Rigidbody>();
