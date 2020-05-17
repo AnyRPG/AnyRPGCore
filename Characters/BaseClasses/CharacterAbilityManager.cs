@@ -1188,7 +1188,7 @@ namespace AnyRPG {
                 return false;
             }
             
-            if (!PerformMovementCheck()) {
+            if (!PerformMovementCheck(ability)) {
                 return false;
             }
             
@@ -1205,7 +1205,10 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool PerformMovementCheck() {
+        public virtual bool PerformMovementCheck(IAbility ability) {
+            if (ability.MyAbilityCastingTime == 0f) {
+                return true;
+            }
             return !(baseCharacter.CharacterController.MyApparentVelocity > 0.1f);
         }
 
