@@ -23,6 +23,15 @@ namespace AnyRPG {
         GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target);
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter);
 
+        /// <summary>
+        /// True if the target is in line of sight of the caster
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="targetable"></param>
+        /// <returns></returns>
+        bool PerformLOSCheck(GameObject target, ITargetable targetable);
+
+        float GetMeleeRange();
 
         void PerformCastingAnimation(AnimationClip animationClip, BaseAbility baseAbility);
 

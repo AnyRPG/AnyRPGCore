@@ -156,6 +156,13 @@ namespace AnyRPG {
             base.OnDisable();
         }
 
+        public override float GetMeleeRange() {
+            if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
+                return baseCharacter.CharacterUnit.HitBoxSize;
+            }
+            return base.GetMeleeRange();
+        }
+
         /// <summary>
         /// Return false if the target does not meet the faction requirements
         /// </summary>
@@ -231,19 +238,59 @@ namespace AnyRPG {
 
         public bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
-            return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility.MyName);
+            return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility);
         }
 
         public bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
-            return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect.MyName);
+            return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect);
         }
 
         public bool IsTargetInMeleeRange(GameObject target) {
             return baseCharacter.CharacterController.IsTargetInHitBox(target);
         }
 
-        public bool IsTargetInRange(GameObject target, bool useMeleeRange, float maxRange, string abilityOrEffectName) {
+        public override bool PerformLOSCheck(GameObject target, ITargetable targetable) {
+
+            if (targetable.RequireLineOfSight == false) {
+                return true;
+            }
+
+            // get initial positions in case of no collider
+            Vector3 sourcePosition = transform.position;
+            Vector3 targetPosition = target.transform.position;
+
+            Collider sourceCollider = GetComponent<Collider>();
+            if (sourceCollider != null) {
+                sourcePosition = sourceCollider.bounds.center;
+            }
+
+            Collider targetCollider = target.GetComponent<Collider>();
+            if (targetCollider != null) {
+                targetPosition = targetCollider.bounds.center;
+            }
+
+            Debug.DrawLine(sourcePosition, targetPosition, Color.cyan);
+            RaycastHit wallHit = new RaycastHit();
+
+            int targetMask = 1 << target.layer;
+            int defaultMask = 1 << LayerMask.NameToLayer("Default");
+
+            int layerMask = (defaultMask | targetMask);
+
+            if (Physics.Linecast(sourcePosition, targetPosition, out wallHit, layerMask)) {
+                //Debug.Log("hit: " + wallHit.transform.name);
+                Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
+                if (wallHit.collider.gameObject != target) {
+                    //Debug.Log("return false; hit: " + wallHit.collider.gameObject + "; target: " + target);
+                    return false;
+                }
+            }
+            //Debug.Log(gameObject.name + ".PerformLOSCheck(): return true;");
+            return base.PerformLOSCheck(target, targetable);
+        }
+
+        public bool IsTargetInRange(GameObject target, bool useMeleeRange, float maxRange, ITargetable targetable) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
             if (useMeleeRange) {
@@ -251,14 +298,17 @@ namespace AnyRPG {
                     return false;
                 }
             } else {
-                if (!IsTargetInMaxRange(target, maxRange, abilityOrEffectName)) {
+                if (!IsTargetInMaxRange(target, maxRange, targetable)) {
+                    return false;
+                }
+                if (!PerformLOSCheck(target, targetable)) {
                     return false;
                 }
             }
             return true;
         }
 
-        public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, string abilityOrEffectName) {
+        public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable) {
             if (maxRange > 0 && Vector3.Distance(UnitGameObject.transform.position, target.transform.position) > maxRange) {
                 //Debug.Log(target.name + " is out of range");
                 return false;
@@ -1040,7 +1090,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!CanCastAbility(ability)) {
+            if (!CanCastAbility(usedAbility)) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 return;
             }
@@ -1051,7 +1101,7 @@ namespace AnyRPG {
             }
             if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
                 if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, baseCharacter) <= -1) {
-                    if (targetCharacterUnit.MyBaseCharacter.CharacterCombat != null && ability.CanCastOnEnemy == true && targetCharacterUnit.MyBaseCharacter.CharacterStats.IsAlive == true) {
+                    if (targetCharacterUnit.MyBaseCharacter.CharacterCombat != null && usedAbility.CanCastOnEnemy == true && targetCharacterUnit.MyBaseCharacter.CharacterStats.IsAlive == true) {
 
                         // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
@@ -1066,13 +1116,17 @@ namespace AnyRPG {
                 }
             }
 
-            NotifyAttemptPerformAbility(ability);
+            NotifyAttemptPerformAbility(usedAbility);
 
             // get final target before beginning casting
             GameObject finalTarget = usedAbility.ReturnTarget(this, target);
 
             if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                return;
+            }
+            if (finalTarget != null && PerformLOSCheck(target, usedAbility as ITargetable) == false) {
+                Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): LOS check failed. exiting");
                 return;
             }
 

@@ -15,10 +15,13 @@ namespace AnyRPG {
 
         [SerializeField]
         protected int healthMinAmount = 0;
+
         [SerializeField]
         protected int healthBaseAmount = 0;
+
         [SerializeField]
         protected float healthAmountPerLevel = 0f;
+
         [SerializeField]
         protected int healthMaxAmount = 0;
 
@@ -51,6 +54,8 @@ namespace AnyRPG {
         protected bool MyUseManaAmount { get => useManaAmount; set => useManaAmount = value; }
 
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(MyName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
+
             float amountAddModifier = 0f;
             float amountMultiplyModifier = 1f;
             //float spellPowerModifier = 0f;

@@ -38,6 +38,7 @@ namespace AnyRPG {
         void StartCasting(IAbilityCaster source);
         float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target);
         //void HandleCastStop(BaseCharacter source);
+        //bool PerformLOSCheck(IAbilityCaster source, GameObject target);
 
     }
 }

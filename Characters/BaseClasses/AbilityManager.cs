@@ -19,6 +19,14 @@ namespace AnyRPG {
         protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
+        public virtual bool PerformLOSCheck(GameObject target, ITargetable targetable) {
+            return true;
+        }
+
+
+        public virtual float GetMeleeRange() {
+            return 1f;
+        }
 
         public void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, ChanneledEffect channeledEffect) {
             abilityHitDelayCoroutine = StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));

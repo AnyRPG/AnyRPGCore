@@ -211,11 +211,6 @@ namespace AnyRPG {
 
         public override bool AttackHit_AnimationEvent() {
             //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
-            if (onHitEffect == null && SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility != null && MyBaseCharacter.CharacterController.MyTarget != null) {
-                // TESTING, THIS WAS MESSING WITH ABILITIES THAT DONT' NEED A TARGET LIKE GROUND SLAM - OR NOT, ITS JUST FOR THE WHITE HIT...!!
-                //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent(): onHitAbility is not null");
-                MyBaseCharacter.CharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyDoWhiteDamageAbility, MyBaseCharacter.CharacterController.MyTarget);
-            }
             bool attackSucceeded = base.AttackHit_AnimationEvent();
             if (attackSucceeded) {
 

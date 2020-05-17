@@ -33,9 +33,7 @@ namespace AnyRPG {
 
         [Tooltip("The layers to hit when performing the explosion.")]
         [SerializeField]
-        private LayerMask explosionMask;
-
-
+        private LayerMask explosionMask = 0;
 
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
@@ -72,7 +70,7 @@ namespace AnyRPG {
                     //Debug.Log(MyName + "KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                     Rigidbody rigidbody = collider.gameObject.GetComponent<Rigidbody>();
                     if (rigidbody != null) {
-                        Debug.Log(MyName + "KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                        //Debug.Log(MyName + "KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
 
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
                         rigidbody.AddExplosionForce(explosionForce, targetPosition, 0, 0, ForceMode.VelocityChange);
@@ -98,7 +96,7 @@ namespace AnyRPG {
             // add velocity to the now correct flight direction
             finalDirection *= knockBackVelocity;
 
-            Debug.Log(MyName + "KnockBackEffect.GetKnockBackVelocity() return: " + finalDirection);
+            //Debug.Log(MyName + "KnockBackEffect.GetKnockBackVelocity() return: " + finalDirection);
 
             return finalDirection;
 

@@ -13,37 +13,45 @@ namespace AnyRPG {
 
         [Header("Valid Target Settings")]
 
+        [Tooltip("If true, the character must have a target selected to cast this ability.")]
         [SerializeField]
         protected bool requiresTarget;
 
-        // only applies if requiresTarget is checked
+        [Tooltip("If true, the character must have an uninterrupted line of sight to the target.")]
+        [SerializeField]
+        private bool requireLineOfSight;
+
+        [Tooltip("If true, the target must be a character and must be alive.")]
         [SerializeField]
         protected bool requiresLiveTarget;
 
-        // for now this is not used on casting, only checked for status effect removal on revive
+        [Tooltip("If true, the target must be a character and must be dead.")]
         [SerializeField]
         protected bool requireDeadTarget;
 
+        [Tooltip("Can the character cast this ability on itself?")]
         [SerializeField]
         protected bool canCastOnSelf;
 
+        [Tooltip("Can the character cast this ability on a character belonging to an enemy faction?")]
         [SerializeField]
         protected bool canCastOnEnemy;
 
+        [Tooltip("Can the character cast this ability on a character belonging to a friendly faction?")]
         [SerializeField]
         protected bool canCastOnFriendly;
 
-        // if no target is given, automatically cast on the caster
+        [Tooltip("If no target is given, automatically cast on the caster")]
         [SerializeField]
         protected bool autoSelfCast;
 
         [Header("Range Settings")]
 
-        // require target in hitbox
+        [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
         [SerializeField]
         protected bool useMeleeRange;
 
-        // ignored if useMeleeRange is checked
+        [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
         [SerializeField]
         protected int maxRange;
 
@@ -103,6 +111,8 @@ namespace AnyRPG {
         public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public IAbilityCaster SourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
+        public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
+
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
         public virtual void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {

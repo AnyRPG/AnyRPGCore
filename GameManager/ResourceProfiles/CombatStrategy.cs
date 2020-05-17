@@ -48,7 +48,8 @@ namespace AnyRPG {
                             //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (sourceCharacter.CharacterAbilityManager.CanCastAbility(baseAbility)
-                                && baseAbility.CanUseOn(sourceCharacter.CharacterController.MyTarget, sourceCharacter.CharacterAbilityManager)) {
+                                && baseAbility.CanUseOn(sourceCharacter.CharacterController.MyTarget, sourceCharacter.CharacterAbilityManager)
+                                && sourceCharacter.CharacterAbilityManager.PerformLOSCheck(sourceCharacter.CharacterController.MyTarget, baseAbility)) {
                                 //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 returnList.Add(baseAbility);
                             }
@@ -101,9 +102,9 @@ namespace AnyRPG {
 
         }
 
-        public int GetMinAttackRange(BaseCharacter sourceCharacter) {
+        public List<BaseAbility> GetAttackRangeAbilityList(BaseCharacter sourceCharacter) {
 
-            int returnValue = 0;
+            List<BaseAbility> returnList = new List<BaseAbility>();
 
             if (sourceCharacter != null && sourceCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
@@ -113,25 +114,16 @@ namespace AnyRPG {
 
                     validPhaseNode.StartPhase();
 
-                    // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
-                        //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
                         if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
-                            //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                            //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0 && (returnValue == 0 || baseAbility.MaxRange < returnValue)) {
-                                //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
-                                returnValue = baseAbility.MaxRange;
-                            }
+                            returnList.Add(baseAbility);
                         } else {
                             Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyName);
                         }
                     }
-
                 }
             }
-            //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
-            return returnValue;
+            return returnList;
 
         }
 

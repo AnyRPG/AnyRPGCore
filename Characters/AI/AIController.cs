@@ -317,7 +317,7 @@ namespace AnyRPG {
         }
 
         public void FollowTarget(GameObject target, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + ": AIController.FollowTarget()");
+            //Debug.Log(gameObject.name + ": AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
             if (!(currentState is DeathState)) {
                 MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target, minAttackRange);
             }
@@ -411,14 +411,14 @@ namespace AnyRPG {
             }
         }
 
-        public int GetMinAttackRange() {
+        public float GetMinAttackRange() {
 
             if (MyCombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                return MyCombatStrategy.GetMinAttackRange(MyBaseCharacter as BaseCharacter);
+                return (MyBaseCharacter.CharacterCombat as AICombat).GetMinAttackRange(MyCombatStrategy.GetAttackRangeAbilityList(MyBaseCharacter as BaseCharacter));
             } else {
                 // get random attack if no strategy exists
-                return (MyBaseCharacter.CharacterCombat as AICombat).GetMinAttackRange();
+                return (MyBaseCharacter.CharacterCombat as AICombat).GetMinAttackRange((MyBaseCharacter.CharacterCombat as AICombat).GetAttackRangeAbilityList());
             }
         }
 

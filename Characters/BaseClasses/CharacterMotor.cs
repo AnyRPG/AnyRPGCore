@@ -171,12 +171,12 @@ namespace AnyRPG {
 
                     // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
                     // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
-                    if (Vector3.Distance(target.transform.position, transform.position) > (characterUnit.MyHitBoxSize * 2)) {
+                    if (Vector3.Distance(target.transform.position, transform.position) > (characterUnit.HitBoxSize * 2)) {
                         // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): More than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position));
 
                         // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyHitBoxSize * 1.5) && animatedUnit.MyAgent.pathPending == false) {
+                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.HitBoxSize * 1.5) && animatedUnit.MyAgent.pathPending == false) {
                             // the target has moved more than 1 hitbox from our destination position, re-adjust heading
                             //Debug.Log(gameObject.name + ": FixedUpdate() destinationPosition: " + destinationPosition + " distance: " + Vector3.Distance(target.transform.position, destinationPosition) + ". Issuing MoveToPoint()");
                             if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + Vector3.Distance(target.transform.position, transform.position) + ". Issuing MoveToPoint (maybe)");
 
                         //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): Less than twice the hitbox distance from the target: " + target.transform.position + "; destination: " + destinationPosition);
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.MyHitBoxSize / 2) && animatedUnit.MyAgent.pathPending == false) {
+                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), animatedUnit.MyAgent.destination) > (characterUnit.HitBoxSize / 2) && animatedUnit.MyAgent.pathPending == false) {
                             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; animatedUnit.MyAgent.destination: " + animatedUnit.MyAgent.destination + "; pathpending: " + animatedUnit.MyAgent.pathPending + " ISSUING MOVETOPOINT!");
                             if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
                                 // prevent anything from resetting movement twice in the same frame
@@ -355,7 +355,17 @@ namespace AnyRPG {
                 }
                 sampleRadius += navMeshSampleStepSize;
             }
-            
+
+            // a fallback to the default radius if nothing was found in the above checks in case the radius was accidentally made too small
+            sampleRadius = 0.5f;
+            while (sampleRadius <= maxNavMeshSampleRadius) {
+                if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
+                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " on NavMesh found closest point on a different navmesh at : " + hit.position + ")");
+                    return hit.position;
+                }
+                sampleRadius += navMeshSampleStepSize;
+            }
+
 
             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition: " + testPosition + " was not within " + maxNavMeshSampleRadius + " of a NavMesh!");
             // should the code that calls this go into evade 
@@ -426,7 +436,8 @@ namespace AnyRPG {
 
                 //agent.Move(moveDirection);
                 ResetPath();
-                animatedUnit.MyAgent.updateRotation = false;
+                // TEST DISABLE TO PREVENT GETTING STUCK SIDEWAYS WALKING AROUND CORNERS
+                //animatedUnit.MyAgent.updateRotation = false;
                 animatedUnit.MyAgent.velocity = moveDirection;
             } else {
                 //float currentYVelocity = moveDirection.y != 0 ? moveDirection.y : animatedUnit.MyRigidBody.velocity.y;
@@ -494,18 +505,22 @@ namespace AnyRPG {
 
 
         public void FollowTarget(GameObject newTarget, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget()");
+            //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (newTarget == null ? "null" : newTarget.name) + ", " + minAttackRange + ")");
             if (frozen) {
                 return;
             }
             animatedUnit.MyAgent.stoppingDistance = 0.2f;
             //agent.stoppingDistance = myStats.hitBox;
             // moving to a target happens when we click on an interactable.  Since it might be moving, we will manually update the rotation every frame
-            animatedUnit.MyAgent.updateRotation = false;
+            // TEST DISABLE THIS TO PREVENT WALKING SIDEWAYS AROUND CORNERS
+            //animatedUnit.MyAgent.updateRotation = false;
             GameObject oldTarget = target;
             target = newTarget;
-            if (oldTarget == null) {
+            if (oldTarget == null || (minAttackRange > 0f && currentMaxSampleRadius != minAttackRange)) {
+                //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + "): issuing movetopoint. currentradius: " + currentMaxSampleRadius + "; minattack: " + minAttackRange);
                 MoveToPoint(target.transform.position, minAttackRange);
+            } else {
+                //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + "): doing nothing.  oldtarget is not null");
             }
 
         }

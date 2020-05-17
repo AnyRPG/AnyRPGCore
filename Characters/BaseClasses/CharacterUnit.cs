@@ -107,7 +107,7 @@ namespace AnyRPG {
 
         public bool MyMounted { get => mounted; set => mounted = value; }
         public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
-        public float MyHitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
+        public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
         public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
         public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
         public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }

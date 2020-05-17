@@ -74,7 +74,10 @@ namespace AnyRPG {
                 foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.CanCastOnEnemy && MyBaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) && baseAbility.CanUseOn(MyBaseCharacter.CharacterController.MyTarget, MyBaseCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                    if (baseAbility.CanCastOnEnemy &&
+                        MyBaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
+                        baseAbility.CanUseOn(MyBaseCharacter.CharacterController.MyTarget, MyBaseCharacter.CharacterAbilityManager as IAbilityCaster) &&
+                        baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.CharacterController.MyTarget, baseAbility)) {
                         //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         //if (baseAbility.MyCanCastOnEnemy) {
                         returnList.Add(baseAbility);
@@ -112,25 +115,39 @@ namespace AnyRPG {
             return null;
         }
 
-        public int GetMinAttackRange() {
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
-
-            int returnValue = 0;
+        public List<BaseAbility> GetAttackRangeAbilityList() {
+            List<BaseAbility> returnList = new List<BaseAbility>();
 
             if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
                 foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
-                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0 && (returnValue == 0 || baseAbility.MaxRange < returnValue)) {
-                        //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
-                        returnValue = baseAbility.MaxRange;
-                    }
-                    //}
+                    returnList.Add(baseAbility);
                 }
             }
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            return returnList;
+        }
+
+        public float GetMinAttackRange(List<BaseAbility> baseAbilityList) {
+            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
+
+            float returnValue = 0f;
+
+            if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
+                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+
+                foreach (BaseAbility baseAbility in baseAbilityList) {
+                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0f) {
+                        float returnedMaxRange = baseAbility.GetLOSMaxRange(baseCharacter.CharacterAbilityManager, baseCharacter.CharacterController.MyTarget);
+                        if (returnValue == 0f || returnedMaxRange < returnValue) {
+                            //Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
+                            returnValue = returnedMaxRange;
+                        }
+                    }
+                }
+            }
+            //Debug.Log(gameObject.name + ".AICombat.GetMinAttackRange(): return " + returnValue);
             return returnValue;
         }
 

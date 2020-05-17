@@ -136,6 +136,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool requiresTarget;
 
+        [Tooltip("If true, the character must have an uninterrupted line of sight to the target.")]
+        [SerializeField]
+        private bool requireLineOfSight;
+
         [Tooltip("If true, the target must be a character and must be alive.")]
         [SerializeField]
         private bool requiresLiveTarget = true;
@@ -242,6 +246,7 @@ namespace AnyRPG {
         public AnimationProfile MyAnimationProfile { get => animationProfile; set => animationProfile = value; }
         public float MyGroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
+        public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -271,6 +276,18 @@ namespace AnyRPG {
             string abilityRange = (useMeleeRange == true ? "melee" : MaxRange + " meters");
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
+        }
+
+        
+
+        public virtual float GetLOSMaxRange(IAbilityCaster source, GameObject target) {
+            //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
+            if (source.PerformLOSCheck(target, this)) {
+                //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + MaxRange);
+                return MaxRange;
+            }
+            //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + source.GetMeleeRange());
+            return source.GetMeleeRange();
         }
 
         public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target) {
@@ -451,7 +468,7 @@ namespace AnyRPG {
 
                 abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
-                if (_abilityEffect != null) {
+                if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
                     //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);

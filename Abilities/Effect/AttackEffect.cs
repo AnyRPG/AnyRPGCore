@@ -29,6 +29,7 @@ namespace AnyRPG {
             int healthFinalAmount = 0;
             CombatMagnitude combatMagnitude = CombatMagnitude.normal;
             if (useHealthAmount == true) {
+                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(): source.level: " + source.Level + "; healthperlevel: " + healthAmountPerLevel);
                 float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.Level);
                 KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
                 healthFinalAmount = (int)abilityKeyValuePair.Key;

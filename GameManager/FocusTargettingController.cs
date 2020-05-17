@@ -123,7 +123,7 @@ namespace AnyRPG {
                 SetMaterial(newColor);
             }
 
-            float hitBoxSize = characterUnit.MyHitBoxSize;
+            float hitBoxSize = characterUnit.HitBoxSize;
             SetCircleRadius(hitBoxSize * 2f);
         }
 
