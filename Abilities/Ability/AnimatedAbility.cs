@@ -8,9 +8,15 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
-        // is this an auto attack ability
+        [Header("Animated Ability")]
+
+        [Tooltip("Is this an auto attack ability")]
         [SerializeField]
         private bool isAutoAttack;
+
+        [Tooltip("This option is only valid if this is not an auto attack ability.  If true, it will use the current auto-attack animations so it looks good with any weapon.")]
+        [SerializeField]
+        private bool useAutoAttackAnimations;
 
         public override float MyAbilityCastingTime {
             get {

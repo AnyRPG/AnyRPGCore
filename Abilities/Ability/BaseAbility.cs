@@ -23,6 +23,8 @@ namespace AnyRPG {
 
         private List<WeaponSkill> weaponAffinityList = new List<WeaponSkill>();
 
+        [Header("Prefabs")]
+
         [Tooltip("The names of items to spawn while casting this ability")]
         [SerializeField]
         private List<string> holdableObjectNames = new List<string>();
@@ -30,15 +32,25 @@ namespace AnyRPG {
         [SerializeField]
         private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
 
+        [Header("Prefab Control")]
+
         [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
         [SerializeField]
         protected bool animatorCreatePrefabs;
+
+        [Tooltip("Delay to destroy casting effect prefabs after casting completes")]
+        [SerializeField]
+        protected float prefabDestroyDelay = 0f;
+
+        [Header("Animation")]
 
         [Tooltip("The name of an animation profile to get animations for the character to perform while casting this ability")]
         [SerializeField]
         protected string animationProfileName = string.Empty;
 
         protected AnimationProfile animationProfile;
+
+        [Header("Audio")]
 
         [Tooltip("If the animation has hit events while it is playing (such as when a hammer strike occurs), this audio profile will be played in response to those events.")]
         [SerializeField]
@@ -52,7 +64,7 @@ namespace AnyRPG {
 
         protected AudioProfile castingAudioProfile;
 
-        public AnimationClip MyCastingAnimationClip { get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null); }
+        [Header("Learning")]
 
         [Tooltip("The minimum level a character must be to cast this ability")]
         [SerializeField]
@@ -62,6 +74,16 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useableWithoutLearning = false;
 
+        [Tooltip("Will this ability be automatically added to the player spellbook if they are of the required level?")]
+        [SerializeField]
+        protected bool autoLearn = false;
+
+        [Tooltip("When learned, should the ability be automatically placed on the player action bars in an available slot?")]
+        [SerializeField]
+        protected bool autoAddToBars = true;
+
+        [Header("Casting Restrictions")]
+
         [Tooltip("This spell can be cast while other spell casts are in progress. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
         private bool canSimultaneousCast = false;
@@ -69,6 +91,8 @@ namespace AnyRPG {
         [Tooltip("This spell can be cast while the global cooldown is active. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
         private bool ignoreGlobalCoolDown = false;
+
+        [Header("Cost")]
 
         [Tooltip("The mana cost to cast the ability")]
         [SerializeField]
@@ -78,6 +102,8 @@ namespace AnyRPG {
         [SerializeField]
         public float abilityCoolDown = 0f;
 
+        [Header("Cast Time")]
+
         [Tooltip("If true, the cast time is based on the time of the animation played while casting.")]
         [SerializeField]
         protected bool useAnimationCastTime = true;
@@ -86,9 +112,7 @@ namespace AnyRPG {
         [SerializeField]
         protected float abilityCastingTime = 0f;
 
-        [Tooltip("Delay to destroy casting effect prefabs after casting completes")]
-        [SerializeField]
-        protected float prefabDestroyDelay = 0f;
+        [Header("Ground Target")]
 
         [Tooltip("If true, casting this spell will require choosing a target on the ground, instead of a target character.")]
         [SerializeField]
@@ -101,6 +125,8 @@ namespace AnyRPG {
         [Tooltip("How big should the projector be on the ground if this is ground targeted. Used to show accurate effect size.")]
         [SerializeField]
         protected float groundTargetRadius = 0f;
+
+        [Header("Standard Target")]
 
         [Tooltip("Ignore requireTarget and canCast variables and use the check from the first ability effect instead")]
         [SerializeField]
@@ -134,6 +160,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoSelfCast = false;
 
+        [Header("Range")]
+
         [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
         [SerializeField]
         protected bool useMeleeRange;
@@ -142,24 +170,22 @@ namespace AnyRPG {
         [SerializeField]
         protected int maxRange;
 
-        [Tooltip("Will this ability be automatically added to the player spellbook if they are of the required level?")]
-        [SerializeField]
-        protected bool autoLearn = false;
-
-        [Tooltip("When learned, should the ability be automatically placed on the player action bars in an available slot?")]
-        [SerializeField]
-        protected bool autoAddToBars = true;
-
         // this will be set to the ability casting length only for direct cast abilities
         protected float castTimeMultiplier = 1f;
+
+        [Header("Cast Complete Ability Effects")]
 
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeField]
         protected List<string> abilityEffectNames = new List<string>();
 
+        [Header("Channeling")]
+
         [Tooltip("During casting, this ability will perform its tick effects, every x seconds")]
         [SerializeField]
         private float tickRate = 1f;
+
+        [Header("Chanelling Effects")]
 
         [Tooltip("During casting, these ability effects will be triggered on every tick.")]
         [SerializeField]
@@ -172,6 +198,9 @@ namespace AnyRPG {
 
         protected Vector3 groundTarget = Vector3.zero;
 
+        public AnimationClip MyCastingAnimationClip {
+            get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null);
+        }
         public int MyRequiredLevel { get => requiredLevel; }
         public bool MyAutoLearn { get => autoLearn; }
         public bool MyAutoAddToBars { get => autoAddToBars; }
@@ -607,6 +636,6 @@ namespace AnyRPG {
 
     }
 
-    public enum PrefabSpawnLocation { None, Caster, Target, Point, OriginalTarget }
+    public enum PrefabSpawnLocation { None, Caster, Target, Point, OriginalTarget, targetPoint }
 
 }

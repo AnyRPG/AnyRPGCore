@@ -23,53 +23,55 @@ namespace AnyRPG {
         [SerializeField]
         private int unitLevel = 1;
 
-        // levels above the normal level for this mob
+        [Tooltip("The number of extra levels above the normal level for this mob")]
         [SerializeField]
         private int extraLevels = 0;
 
-        // spawn time for regular mob spawns
+        [Tooltip("spawn time for regular mob spawns")]
         [SerializeField]
         private int spawnTimer = 0;
 
-        // an additional delay to add to the timer.  meant to allow an offset for multiple spawners of the same type
+        [Tooltip("an additional delay to add to the timer.  meant to allow an offset for multiple spawners of the same type")]
         [SerializeField]
         private int spawnDelay = 0;
 
         //private int defaultSpawnDelay = 0;
 
-        // a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units
+        [Tooltip("a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units")]
         [SerializeField]
         private int DespawnTimer = 0;
 
-        // set to -1 to do infinite spawns ;>
+        [Tooltip("The maximum number of units that can be active at once.  Once this limit is reached, spawns will be paused until a unit dies. set to -1 to do infinite spawns")]
         [SerializeField]
         private int maxUnits = 1;
 
-        // to allow for unit spawn control panels to use this node
+        [Tooltip("to allow for unit spawn control panels to use this node")]
         [SerializeField]
         private bool suppressAutoSpawn = false;
 
-        // ignore spawn timers and use trigger instead
+        [Tooltip("ignore spawn timers and use trigger instead")]
         [SerializeField]
         private bool triggerBased = false;
 
         //[SerializeField]
         //private bool areaBased = false;
 
-        // in area mode, the number of mobs per square meter to spawn
+        [Tooltip("in area mode, the number of mobs per square meter to spawn")]
         [SerializeField]
         private float spawnDensity = 0.01f;
 
+        [Tooltip("Spawn at the pivot of the UnitSpawnNode")]
         [SerializeField]
         private bool pointBased = true;
 
-        // if there are units spawned, and the prerequisite conditions are no longer met, despawn them
+        [Tooltip("if there are units spawned, and the prerequisite conditions are no longer met, despawn them")]
         [SerializeField]
         private bool forceDespawnUnits = false;
 
         [SerializeField]
         private float despawnDelay = 0f;
 
+        [Tooltip("If a unit has no toughness set, this toughness will be used.")]
         [SerializeField]
         private string defaultToughness = string.Empty;
 

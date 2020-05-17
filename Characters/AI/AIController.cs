@@ -316,10 +316,10 @@ namespace AnyRPG {
             return Vector3.zero;
         }
 
-        public void FollowTarget(GameObject target) {
+        public void FollowTarget(GameObject target, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ": AIController.FollowTarget()");
             if (!(currentState is DeathState)) {
-                MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target);
+                MyBaseCharacter.AnimatedUnit.MyCharacterMotor.FollowTarget(target, minAttackRange);
             }
         }
 

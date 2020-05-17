@@ -94,6 +94,12 @@ namespace AnyRPG {
                         spawnLocation = abilityEffectInput.prefabLocation;
                         prefabParent = null;
                     }
+                    if (prefabSpawnLocation == PrefabSpawnLocation.targetPoint) {
+                        //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+                        //spawnLocation = source.GetComponent<Collider>().bounds.center;
+                        spawnLocation = target.transform.position;
+                        prefabParent = null;
+                    }
                     if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                         //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                         //spawnLocation = source.GetComponent<Collider>().bounds.center;
@@ -160,32 +166,7 @@ namespace AnyRPG {
         public virtual void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" + source.name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
-            if (onTickAudioProfiles != null) {
-                AudioSource audioSource = null;
-                if (target != null) {
-                    audioSource = target.GetComponent<AudioSource>();
-                } else {
-                    if (prefabObjects != null && prefabObjects.Count > 0 && prefabObjects.First().Value != null) {
-                        audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
-                    }
-                }
-                if (audioSource != null) {
-                    List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
-                    if (randomTickAudioProfiles == true) {
-                        usedAudioProfiles.Add(onTickAudioProfiles[UnityEngine.Random.Range(0, onTickAudioProfiles.Count)]);
-                    } else {
-                        usedAudioProfiles = onTickAudioProfiles;
-                    }
-                    foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                        if (audioProfile.MyAudioClip != null) {
-                            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-
-                            audioSource.PlayOneShot(audioProfile.MyAudioClip);
-                        }
-                    }
-                }
-                //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
-            }
+            PlayAudioEffects(onTickAudioProfiles, target);
         }
 
         public virtual void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {

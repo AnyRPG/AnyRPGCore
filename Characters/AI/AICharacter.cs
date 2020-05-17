@@ -46,9 +46,12 @@ namespace AnyRPG {
             characterCombat = GetComponent<AICombat>();
             lootableCharacter = GetComponent<LootableCharacter>();
             animatedUnit = GetComponent<AnimatedUnit>();
+            /*
+             * not necessary ? will mess up stationary targets
             if (animatedUnit == null) {
                 animatedUnit = gameObject.AddComponent<AnimatedUnit>();
             }
+            */
             interactable = GetComponent<Interactable>();
         }
 

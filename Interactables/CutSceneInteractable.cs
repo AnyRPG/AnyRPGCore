@@ -55,13 +55,17 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (cutscene != null && (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.MyPlayerUnitSpawned == true))) {
-                if (cutscene.MyLoadScene != null) {
-                    LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
-                } else {
-                    UIManager.MyInstance.MyCutSceneBarController.StartCutScene(cutscene);
-                    if (cutscene.MyTimelineName != null && cutscene.MyTimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.MyTimelineName)) {
-                        SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.MyTimelineName].Play();
+            if (cutscene != null) {
+                if (cutscene.Viewed == false || cutscene.Repeatable == true) {
+                    if (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.MyPlayerUnitSpawned == true)) {
+                        if (cutscene.MyLoadScene != null) {
+                            LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
+                        } else {
+                            UIManager.MyInstance.MyCutSceneBarController.StartCutScene(cutscene);
+                            if (cutscene.MyTimelineName != null && cutscene.MyTimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.MyTimelineName)) {
+                                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.MyTimelineName].Play();
+                            }
+                        }
                     }
                 }
             }

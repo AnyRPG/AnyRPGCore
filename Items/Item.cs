@@ -113,12 +113,29 @@ namespace AnyRPG {
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
+            if (!CharacterClassRequirementIsMet()) {
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyName);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool CharacterClassRequirementIsMet() {
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
                 if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
-                    MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyName);
                     return false;
                 }
             }
+            return true;
+
+        }
+
+        public virtual bool RequirementsAreMet() {
+            if (!CharacterClassRequirementIsMet()) {
+                return false;
+            }
+
             return true;
         }
 

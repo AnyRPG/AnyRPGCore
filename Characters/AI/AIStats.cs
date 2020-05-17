@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         public override void CreateLateSubscriptions() {
             base.CreateEventSubscriptions();
-            if (baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }
         }

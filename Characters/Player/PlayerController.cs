@@ -298,7 +298,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
 
 
-                if (mouseOverInteractable != null) {
+                if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
                     //Debug.Log("setting interaction target to " + hit.collider.gameObject.name);
                     //interactionTarget = hit.collider.gameObject;
                     InterActWithTarget(mouseOverInteractable, mouseOverInteractable.gameObject);

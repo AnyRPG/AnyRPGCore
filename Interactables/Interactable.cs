@@ -13,8 +13,12 @@ namespace AnyRPG {
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         private Sprite interactableIcon = null;
-        
+
         [Header("Mouse Over")]
+
+        [Tooltip("Show a tooltip when the mouse is over the object")]
+        [SerializeField]
+        private bool showTooltip = true;
 
         [Tooltip("This value will show in the mouseover tooltip.")]
         [SerializeField]
@@ -130,6 +134,8 @@ namespace AnyRPG {
                 return returnResult;
             }
         }
+
+        public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
@@ -623,6 +629,10 @@ namespace AnyRPG {
                 return;
             }
 
+            if (showTooltip == false) {
+                return;
+            }
+
             if (PlayerManager.MyInstance == null) {
                 return;
             }
@@ -681,6 +691,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
 
             if (notInteractable == true) {
+                return;
+            }
+
+            if (showTooltip == false) {
                 return;
             }
 

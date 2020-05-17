@@ -9,25 +9,37 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New KnockBackEffect", menuName = "AnyRPG/Abilities/Effects/KnockBackEffect")]
     public class KnockBackEffect : InstantEffect {
 
-        // The prefab to summon
+        [Header("Knockback Effect")]
+
         [SerializeField]
         private float knockBackVelocity = 20f;
 
         [SerializeField]
         private float knockBackAngle = 45f;
 
-        /*
+        [Header("Explosion")]
+
+        [Tooltip("If true, all rigidbodies in a set radius will be affected by the knockback")]
         [SerializeField]
-        private Vector3 spawnLocation = Vector3.zero;
-        */
+        private bool isExplosion = false;
+
+        [Tooltip("The radius of the explosion.  All rigidbodies in this radius will have the force applied.")]
+        [SerializeField]
+        private float explosionRadius = 5f;
+
+        [Tooltip("The force of the explosion.  All rigidbodies in this radius will have the force applied.")]
+        [SerializeField]
+        private float explosionForce = 200f;
+
+        [Tooltip("The layers to hit when performing the explosion.")]
+        [SerializeField]
+        private LayerMask explosionMask;
+
+
+
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
             if (target == null) {
-                return null;
-            }
-
-            AnimatedUnit animatedUnit = target.GetComponent<AnimatedUnit>();
-            if (animatedUnit == null || animatedUnit.MyCharacterMotor == null) {
                 return null;
             }
 
@@ -35,7 +47,45 @@ namespace AnyRPG {
 
             Vector3 sourcePosition = source.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
-            
+
+            AnimatedUnit animatedUnit = target.GetComponent<AnimatedUnit>();
+            if (animatedUnit != null && animatedUnit.MyCharacterMotor != null) {
+                Debug.Log("KnockBackEffect.Cast(): casting on character");
+                animatedUnit.MyCharacterMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+            } else {
+                Rigidbody rigidbody = target.GetComponent<Rigidbody>();
+                if (rigidbody != null) {
+                    rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                    rigidbody.AddForce(GetKnockBackVelocity(sourcePosition, targetPosition), ForceMode.VelocityChange);
+                }
+            }
+
+            if (isExplosion) {
+                Collider[] colliders = new Collider[0];
+                int playerMask = 1 << LayerMask.NameToLayer("Default");
+                //int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+                //int validMask = (playerMask | characterMask);
+                int validMask = playerMask;
+                //colliders = Physics.OverlapSphere(targetPosition, explosionRadius, validMask);
+                colliders = Physics.OverlapSphere(targetPosition, explosionRadius, explosionMask);
+                foreach (Collider collider in colliders) {
+                    //Debug.Log(MyName + "KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                    Rigidbody rigidbody = collider.gameObject.GetComponent<Rigidbody>();
+                    if (rigidbody != null) {
+                        Debug.Log(MyName + "KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+
+                        //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
+                        rigidbody.AddExplosionForce(explosionForce, targetPosition, 0, 0, ForceMode.VelocityChange);
+                    }
+                }
+            }
+
+
+            return returnObjects;
+        }
+
+        public Vector3 GetKnockBackVelocity(Vector3 sourcePosition, Vector3 targetPosition) {
+
             // get vector from source to target for flight direction
             Vector3 originalDirection = (targetPosition - sourcePosition).normalized;
 
@@ -48,10 +98,10 @@ namespace AnyRPG {
             // add velocity to the now correct flight direction
             finalDirection *= knockBackVelocity;
 
-            //Debug.Log("KnockBackEffect.Cast(): originalDirection: " + originalDirection + "; rotationDirection: " + rotationDirection + "; finalDirection: " + finalDirection + "; knockbackAngle: " + knockBackAngle);
-            animatedUnit.MyCharacterMotor.Move(finalDirection, true);
+            Debug.Log(MyName + "KnockBackEffect.GetKnockBackVelocity() return: " + finalDirection);
 
-            return returnObjects;
+            return finalDirection;
+
         }
 
 

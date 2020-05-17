@@ -268,36 +268,44 @@ namespace AnyRPG {
             PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
-        public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            PerformAbilityHitEffects(source, target, abilityEffectInput);
-            if (onHitAudioProfiles != null) {
+        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, GameObject target) {
+            if (audioProfiles != null) {
                 AudioSource audioSource = null;
+                UnitAudio unitAudio = null;
                 if (target != null) {
-                    audioSource = target.GetComponent<AudioSource>();
+                    unitAudio = target.GetComponent<UnitAudio>();
                 } else {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
-                if (audioSource != null) {
+                if (audioSource != null || unitAudio != null) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
-                        usedAudioProfiles.Add(onHitAudioProfiles[UnityEngine.Random.Range(0, onHitAudioProfiles.Count)]);
+                        usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
                     } else {
-                        usedAudioProfiles = onHitAudioProfiles;
+                        usedAudioProfiles = audioProfiles;
                     }
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.MyAudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-
-                            audioSource.PlayOneShot(audioProfile.MyAudioClip);
+                            if (unitAudio != null) {
+                                unitAudio.PlayEffect(audioProfile.MyAudioClip);
+                            } else {
+                                audioSource.PlayOneShot(audioProfile.MyAudioClip);
+                            }
                         }
                     }
                 }
-                //AudioManager.MyInstance.PlayEffect(OnHitAudioClip);
             }
+        }
+
+        public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            PerformAbilityHitEffects(source, target, abilityEffectInput);
+
+            PlayAudioEffects(onHitAudioProfiles, target);
             //PerformMaterialChange(source, target);
             PerformMaterialChange(target);
         }

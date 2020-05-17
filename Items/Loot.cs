@@ -51,7 +51,7 @@ namespace AnyRPG {
 
                 // match character class
                 if (matchItemRestrictions) {
-                    if (item.MyCharacterClassRequirementList.Count > 0 && item.MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass) == false) {
+                    if (!item.RequirementsAreMet()) {
                         return false;
                     }
                 }

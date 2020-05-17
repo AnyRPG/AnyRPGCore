@@ -240,7 +240,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
-            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0 && !MyCharacterClassRequirementList.Contains(baseCharacter.MyCharacterClass)) {
+            if (!CharacterClassRequirementIsMet()) {
                 MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyName);
                 return false;
             }

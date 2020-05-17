@@ -21,7 +21,7 @@ namespace AnyRPG {
                 List<AggroNode> removeNodes = new List<AggroNode>();
                 // we need to remove stale nodes on each check because we could have aggro'd a target that was already fighting with someone and not got the message it died if we didn't hit it first
                 foreach (AggroNode node in aggroNodes) {
-                    if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.MyCharacter, MyBaseCharacter) > -1 || node.aggroTarget.MyCharacter.CharacterStats.IsAlive == false) {
+                    if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.MyCharacter, MyBaseCharacter) > -1 || node.aggroTarget.MyCharacter.CharacterStats.IsAlive == false || node.aggroTarget.gameObject.activeInHierarchy == false) {
                         //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                         // we could be in combat with someone who has switched faction from a faction buff mid combat or died
                         removeNodes.Add(node);

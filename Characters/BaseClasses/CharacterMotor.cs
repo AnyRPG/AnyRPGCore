@@ -26,6 +26,9 @@ namespace AnyRPG {
         // the maximum radius from an arbitrary point which the NavMeshAgent will search to find a valid NavMesh location to move to
         private float maxNavMeshSampleRadius = 3f;
 
+        // this current maximum distance to expand a navmesh search outward to
+        private float currentMaxSampleRadius = 3f;
+
         // the amount to expand the search radius each iteration as the navMesh Agent searches for a valid location on a navMesh
         private float navMeshSampleStepSize = 0.5f;
 
@@ -247,8 +250,13 @@ namespace AnyRPG {
 
         }
 
-        public Vector3 CorrectedNavmeshPosition(Vector3 testPosition) {
+        public Vector3 CorrectedNavmeshPosition(Vector3 testPosition, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + ")");
+
+            if (minAttackRange > 0f) {
+                currentMaxSampleRadius = minAttackRange;
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + ", " + minAttackRange + ")");
+            }
 
             NavMeshHit hit;
             
@@ -296,15 +304,16 @@ namespace AnyRPG {
             if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.MyDefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
-                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; mask: " + raycastHit.collider.name);
+                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; collider: " + raycastHit.collider.name);
             }
 
             float sampleRadius = 0.5f;
             if (foundMatch) {
                 // our upward raycast found a walkable area.  is it the same area?  check outward for valid point on same area
-                while (sampleRadius <= maxNavMeshSampleRadius) {
+                while (sampleRadius <= currentMaxSampleRadius) {
+                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + "; radius: " + sampleRadius);
                     if (NavMesh.SamplePosition(firstTestPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
-                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " got hit above on walkable ground at current mask: " + firstTestPosition + ")");
+                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + " got hit above on walkable ground at : " + hit.position);
                         return hit.position;
                     }
                     sampleRadius += navMeshSampleStepSize;
@@ -326,7 +335,7 @@ namespace AnyRPG {
             sampleRadius = 0.5f;
             if (foundMatch) {
                 // our downward raycast found a walkable area.  is it the same area?  check outward for valid point on same area
-                while (sampleRadius <= maxNavMeshSampleRadius) {
+                while (sampleRadius <= currentMaxSampleRadius) {
                     if (NavMesh.SamplePosition(firstTestPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
                         //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " got hit below on walkable ground at current mask: " + firstTestPosition + ")");
                         return hit.position;
@@ -339,7 +348,7 @@ namespace AnyRPG {
             // it's possible we are switching areas between navmesh boundaries
             
             sampleRadius = 0.5f;
-            while (sampleRadius <= maxNavMeshSampleRadius) {
+            while (sampleRadius <= currentMaxSampleRadius) {
                 if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
                     //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + testPosition + " on NavMesh found closest point on a different navmesh at : " + hit.position + ")");
                     return hit.position;
@@ -351,7 +360,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition: " + testPosition + " was not within " + maxNavMeshSampleRadius + " of a NavMesh!");
             // should the code that calls this go into evade 
 
-            Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", RETURNING VECTOR3.ZERO!!!");
+            //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", RETURNING VECTOR3.ZERO!!!");
             return Vector3.zero;
         }
 
@@ -368,7 +377,7 @@ namespace AnyRPG {
         }
 
         // move toward the position at a normal speed
-        public Vector3 MoveToPoint(Vector3 point) {
+        public Vector3 MoveToPoint(Vector3 point, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount);
             if (frozen) {
                 //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");
@@ -384,7 +393,7 @@ namespace AnyRPG {
             animatedUnit.MyAgent.updateRotation = true;
             //Debug.Log(gameObject.name + ".CharacterMotor.MoveToPoint(" + point + "): calling animatedUnit.MyAgent.ResetPath()");
             ResetPath();
-            destinationPosition = CorrectedNavmeshPosition(point);
+            destinationPosition = CorrectedNavmeshPosition(point, minAttackRange);
             // set to false for test
             moveToDestination = false;
             setMoveDestination = true;
@@ -484,7 +493,7 @@ namespace AnyRPG {
         }
 
 
-        public void FollowTarget(GameObject newTarget) {
+        public void FollowTarget(GameObject newTarget, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget()");
             if (frozen) {
                 return;
@@ -496,7 +505,7 @@ namespace AnyRPG {
             GameObject oldTarget = target;
             target = newTarget;
             if (oldTarget == null) {
-                MoveToPoint(target.transform.position);
+                MoveToPoint(target.transform.position, minAttackRange);
             }
 
         }

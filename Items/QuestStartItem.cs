@@ -39,6 +39,29 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public bool QuestRequirementsAreMet() {
+            if (MyQuests != null) {
+                foreach (QuestNode questNode in MyQuests) {
+                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName)) {
+                        return true;
+                    }
+                }
+            } else {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool RequirementsAreMet() {
+            bool returnValue = base.RequirementsAreMet();
+            if (returnValue == true) {
+                if (!QuestRequirementsAreMet()) {
+                    return false;
+                }
+            }
+            return base.RequirementsAreMet();
+        }
+
         public void HandleAcceptQuest() {
             //Debug.Log("QuestStartItem.HandleAcceptQuest()");
             Remove();

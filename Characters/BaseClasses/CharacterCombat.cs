@@ -278,7 +278,7 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.CharacterAbilityManager != null) {
                 baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
             }
-            if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
                 baseCharacter.AnimatedUnit.MyCharacterAnimator.SetBool("InCombat", false);
             }
             DeActivateAutoAttack();
