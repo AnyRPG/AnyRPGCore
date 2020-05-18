@@ -318,7 +318,8 @@ namespace AnyRPG {
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
-                MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyLevelUpAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
+                //MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyLevelUpAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
+                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, MyCharacter.CharacterUnit.gameObject, Vector3.zero);
             }
         }
 
@@ -328,7 +329,8 @@ namespace AnyRPG {
                 return;
             }
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
-            MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyDeathAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
+            //MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.DeathAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
+            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, MyCharacter.CharacterUnit.gameObject, Vector3.zero);
         }
 
         public void Initialize() {
