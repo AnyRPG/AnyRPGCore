@@ -56,12 +56,12 @@ namespace AnyRPG {
                     quantity.text = string.Empty;
                 }
                 descriptionText.text = vendorItem.MyItem.MyDescription;
-                if (vendorItem.MyItem.MyPrice > 0 && vendorItem.MyItem.MyCurrency != null && vendorItem.MyItem.MyCurrency.MyName != null && vendorItem.MyItem.MyCurrency.MyName != string.Empty) {
+                if (vendorItem.MyItem.BuyPrice > 0 && vendorItem.MyItem.MyCurrency != null && vendorItem.MyItem.MyCurrency.MyName != null && vendorItem.MyItem.MyCurrency.MyName != string.Empty) {
                     price.gameObject.SetActive(false);
                     //price.text = "Price:";
                     if (currencyBarController != null) {
                         if (buyBackButton == false) {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice);
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice);
                         } else {
                             currencyBarController.UpdateCurrencyAmount(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value, "Buy Back Price: ");
                         }
@@ -80,7 +80,7 @@ namespace AnyRPG {
 
 
         public void OnPointerClick(PointerEventData eventData) {
-            if (vendorItem.MyItem.MyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice) <= (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
+            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= (PlayerManager.MyInstance.MyCharacter as PlayerCharacter).MyPlayerCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
                 //Item tmpItem = Instantiate(vendorItem.MyItem);
                 Item tmpItem = SystemItemManager.MyInstance.GetNewResource(vendorItem.MyItem.MyName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
@@ -104,13 +104,13 @@ namespace AnyRPG {
         private void SellItem() {
             //Debug.Log("VendorButton.SellItem()");
             string priceString = string.Empty;
-            if (vendorItem.MyItem.MyPrice == 0 || vendorItem.MyItem.MyCurrency == null) {
+            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null) {
                 priceString = "FREE";
             } else {
                 KeyValuePair<Currency, int> usedSellPrice = new KeyValuePair<Currency, int>();
                 if (buyBackButton == false) {
-                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.MyPrice);
-                    priceString = vendorItem.MyItem.MyPrice + " " + vendorItem.MyItem.MyCurrency.MyName;
+                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice);
+                    priceString = vendorItem.MyItem.BuyPrice + " " + vendorItem.MyItem.MyCurrency.MyName;
                 } else {
                     usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
                     priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);

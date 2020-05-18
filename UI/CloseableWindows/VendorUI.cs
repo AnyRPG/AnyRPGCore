@@ -192,7 +192,7 @@ namespace AnyRPG {
         
 
         public bool SellItem(Item item) {
-            if (item.MyPrice <= 0) {
+            if (item.BuyPrice <= 0) {
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;

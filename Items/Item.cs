@@ -12,42 +12,53 @@ namespace AnyRPG {
 
         public bool isDefaultItem = false;
 
-        /// <summary>
-        /// Size of the stack, less than 2 is not stackable
-        /// </summary>
+        [Header("Item")]
+
+        [Tooltip("Size of the stack, less than 2 is not stackable")]
         [SerializeField]
         private int stackSize = 1;
 
+        [Tooltip("The name of the item quality to use")]
         [SerializeField]
         protected string itemQuality = string.Empty;
 
-        protected ItemQuality realItemQuality = null;
+        [Header("Item Level")]
 
+        [Tooltip("If true, this item level will scale to match the character level")]
         [SerializeField]
-        private bool dynamicLevel = false;
+        protected bool dynamicLevel = false;
 
+        [Tooltip("If dynamic level is true and this value is greater than zero, the item scaling will be capped at this level")]
+        [SerializeField]
+        protected int levelCap = 0;
+
+        [Tooltip("If dynamic level is not true, this value will be used for the static level")]
         [SerializeField]
         private int itemLevel = 1;
 
-        // if an item is unique, it will not drop from a loot table if it already exists in the bags
-        [SerializeField]
-        private bool uniqueItem = false;
+        [Header("Price")]
 
-        /// <summary>
-        /// A reference to the slot that this item is sitting on
-        /// </summary>
-        private SlotScript slot;
-
-        //public CharacterButton MyCharacterButton { get; set; }
-
+        [Tooltip("The currency used when buying or selling this item")]
         [SerializeField]
         private string currencyName = string.Empty;
 
-        //[SerializeField]
-        private Currency currency = null;
-
+        [Tooltip("If true, the purchase and sale price will scale with level")]
         [SerializeField]
-        private int price = 0;
+        protected bool dynamicCurrencyAmount = true;
+
+        [Tooltip("If dynamic currency amount is true, this is the amount per level this item will cost")]
+        [SerializeField]
+        protected int pricePerLevel = 10;
+
+        [Tooltip("Base item price. If dynamic currency is true, this price is added to the dynamic price.")]
+        [SerializeField]
+        private int basePrice = 0;
+
+        [Header("Restrictions")]
+
+        [Tooltip("if an item is unique, it will not drop from a loot table if it already exists in the bags")]
+        [SerializeField]
+        private bool uniqueItem = false;
 
         [Tooltip("If not empty, the character must be one of these classes to use this item.")]
         [SerializeField]
@@ -55,9 +66,42 @@ namespace AnyRPG {
 
         private List<CharacterClass> realCharacterClassRequirementList = new List<CharacterClass>();
 
+        // a reference to the real item quality
+        protected ItemQuality realItemQuality = null;
+
+        // a reference to the actual currency
+        private Currency currency = null;
+
+        // A reference to the slot that this item is sitting on
+        private SlotScript slot;
+
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
-        public int MyPrice { get => price; set => price = value; }
+        public int BuyPrice {
+            get {
+
+                if (dynamicCurrencyAmount) {
+                    return (int)(((pricePerLevel * MyItemLevel) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+                }
+                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+            }
+            set => basePrice = value;
+        }
+
+        public int SellPrice {
+            get {
+
+                if (dynamicCurrencyAmount) {
+                    if (realItemQuality == null) {
+                        Debug.Log("realItemQuality was null");
+                    }
+                    return (int)(((pricePerLevel * MyItemLevel) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+                }
+                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+            }
+            set => basePrice = value;
+        }
+
         public bool MyUniqueItem { get => uniqueItem; }
         public Currency MyCurrency { get => currency; set => currency = value; }
         public ItemQuality MyItemQuality { get => realItemQuality; set => realItemQuality = value; }
@@ -66,17 +110,19 @@ namespace AnyRPG {
                 int returnLevel = itemLevel;
                 if (dynamicLevel == true) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                        returnLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                        returnLevel = (int)Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
                     } else {
                         returnLevel = itemLevel;
                     }
                 }
+
+                // item quality can override regular individual item scaling (example, heirlooms always scale)
                 if (MyItemQuality == null) {
                     return returnLevel;
                 } else {
                     if (MyItemQuality.MyDynamicItemLevel) {
                         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                            return PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                            return (int)Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
                         } else {
                             return returnLevel;
                         }
@@ -91,7 +137,7 @@ namespace AnyRPG {
         public KeyValuePair<Currency, int> MySellPrice {
             get {
                 //Debug.Log(MyName + ".Item.MySellPrice()");
-                int sellAmount = MyPrice;
+                int sellAmount = SellPrice;
                 Currency currency = MyCurrency;
                 if (currency != null) {
                     CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);

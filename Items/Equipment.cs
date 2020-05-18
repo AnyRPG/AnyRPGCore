@@ -9,6 +9,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Equipment", menuName = "AnyRPG/Inventory/Equipment/Equipment")]
     public class Equipment : Item {
 
+        [Header("Equipment")]
+
         [SerializeField]
         protected string equipmentSlotType;
 
@@ -251,7 +253,12 @@ namespace AnyRPG {
             //string stats = string.Empty;
             List<string> abilitiesList = new List<string>();
 
-            abilitiesList.Add(string.Format(" Item Level: {0}", MyItemLevel));
+            string itemRange = "";
+            //Debug.Log(MyName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
+            if (dynamicLevel == true) {
+                itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemConfigurationManager.MyInstance.MyMaxLevel) + ")";
+            }
+            abilitiesList.Add(string.Format(" Item Level: {0}{1}", MyItemLevel, itemRange));
 
             // stats
             if (useArmorModifier) {
