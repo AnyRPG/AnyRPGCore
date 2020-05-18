@@ -39,7 +39,11 @@ namespace AnyRPG {
 
         protected bool initialized = false;
 
-        private float lastAnimationLength;
+        // keep track of the number of hits in the last animation for normalizing damage to animation length
+        private float lastAnimationLength = 0f;
+
+        // keep track of the number of hits in the last animation for normalizing multi-hit abilities
+        private int lastAnimationHits = 0;
 
         private AnimationProfile currentAnimations = null;
         private AnimationProfile systemAnimations = null;
@@ -98,7 +102,8 @@ namespace AnyRPG {
             get => animatorController;
             set => animatorController = value;
         }
-        public float MyLastAnimationLength { get => lastAnimationLength; set => lastAnimationLength = value; }
+        public float LastAnimationLength { get => lastAnimationLength; set => lastAnimationLength = value; }
+        public int LastAnimationHits { get => lastAnimationHits; set => lastAnimationHits = value; }
 
         public virtual void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.OrchestratorStart()");
@@ -1113,6 +1118,17 @@ namespace AnyRPG {
 
         }
 
+        public virtual int GetAnimationHitCount(AnimationClip animationClip) {
+            int hitCount = 0;
+            foreach (AnimationEvent animationEvent in animationClip.events) {
+                if (animationEvent.functionName == "Hit") {
+                    hitCount++;
+                }
+            }
+            //Debug.Log(gameObject.name + ".CharacterAnimator.GetAnimationHitCount(): " + hitCount);
+            return hitCount;
+        }
+
         // special melee attack
         public virtual float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
@@ -1131,6 +1147,9 @@ namespace AnyRPG {
             // save animation length for weapon damage normalization
             lastAnimationLength = animationLength;
 
+            // save animation number of hits for multi hit weapon damage normalization
+            lastAnimationHits = GetAnimationHitCount(animationClip);
+
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
             currentAbility = baseAbility;
 
@@ -1146,9 +1165,6 @@ namespace AnyRPG {
 
             // wait for the animation to play before allowing the character to attack again
             attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).IsAutoAttack, !(baseAbility as AnimatedAbility).IsAutoAttack, false));
-
-            // SUPPRESS DEFAULT SOUND EFFECT FOR ANIMATED ABILITIES, WHICH ARE NOW RESPONSIBLE FOR THEIR OWN SOUND EFFECTS
-            characterUnit.MyCharacter.CharacterCombat.MyOverrideHitSoundEffect = null;
 
             // tell the animator to play the animation
             SetAttacking(true);
