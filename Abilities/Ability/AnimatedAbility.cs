@@ -12,11 +12,15 @@ namespace AnyRPG {
 
         [Tooltip("Is this an auto attack ability")]
         [SerializeField]
-        private bool isAutoAttack;
+        private bool isAutoAttack = false;
 
         [Tooltip("This option is only valid if this is not an auto attack ability.  If true, it will use the current auto-attack animations so it looks good with any weapon.")]
         [SerializeField]
-        private bool useAutoAttackAnimations;
+        private bool useAutoAttackAnimations = false;
+
+        [Tooltip("If true, the current weapon default hit sound will be played when this ability hits an enemy.")]
+        [SerializeField]
+        private bool useWeaponHitSound = false;
 
         public override float MyAbilityCastingTime {
             get {
@@ -26,14 +30,36 @@ namespace AnyRPG {
         }
 
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
+        public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+
+        /// <summary>
+        /// weapon hit sound
+        /// </summary>
+        /// <param name="abilityCaster"></param>
+        /// <returns></returns>
+        public override AudioClip GetHitSound(IAbilityCaster abilityCaster) {
+            if (useWeaponHitSound == true) {
+                return abilityCaster.GetAnimatedAbilityHitSound();
+            }
+            return base.GetHitSound(abilityCaster);
+        }
+
+        public List<AnimationClip> GetAnimationClips(IAbilityCaster sourceCharacter) {
+            List<AnimationClip> animationClips = new List<AnimationClip>();
+            if (useAutoAttackAnimations == true) {
+                animationClips = sourceCharacter.GetDefaultAttackAnimations();
+            } else {
+                animationClips = AnimationClips;
+            }
+            return animationClips;
+        }
 
         public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, Vector3 groundTarget) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
             if (base.Cast(sourceCharacter, target, groundTarget)) {
-                if (MyAnimationClips.Count > 0) {
+                List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
+                if (usedAnimationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
-
-                    
 
                     CharacterUnit targetCharacterUnit = null;
                     if (target != null) {
@@ -44,10 +70,10 @@ namespace AnyRPG {
                         targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;
                     }
 
-                    int attackIndex = UnityEngine.Random.Range(0, MyAnimationClips.Count);
-                    if (MyAnimationClips[attackIndex] != null) {
+                    int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
+                    if (usedAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.PerformAnimatedAbility(MyAnimationClips[attackIndex], this, targetBaseCharacter);
+                        float animationLength = sourceCharacter.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter);
 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
@@ -101,14 +127,14 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true) {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
-            if (!source.PerformAnimatedAbilityCheck(this)) {
+            if (performCooldownChecks && !source.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
             
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
-            return base.CanUseOn(target, source);
+            return base.CanUseOn(target, source, performCooldownChecks);
         }
 
         public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {

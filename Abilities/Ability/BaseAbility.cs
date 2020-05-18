@@ -13,6 +13,8 @@ namespace AnyRPG {
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };
 
+        [Header("Casting Requirements")]
+
         [Tooltip("If true, this ability cannot be cast in combat.")]
         [SerializeField]
         protected bool requireOutOfCombat = false;
@@ -69,6 +71,12 @@ namespace AnyRPG {
         [Tooltip("The minimum level a character must be to cast this ability")]
         [SerializeField]
         protected int requiredLevel = 1;
+
+        [Tooltip("If not empty, the character must be one of these classes to use this item.")]
+        [SerializeField]
+        private List<string> characterClassRequirements = new List<string>();
+
+        private List<CharacterClass> characterClassRequirementList = new List<CharacterClass>();
 
         [Tooltip("If true, this ability does not have to be learned to cast. For abilities that anyone can use, like scrolls or crafting")]
         [SerializeField]
@@ -236,7 +244,7 @@ namespace AnyRPG {
         public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
         public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> MyAnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
+        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }
         public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> MyWeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
@@ -247,6 +255,8 @@ namespace AnyRPG {
         public float MyGroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
+        public List<CharacterClass> CharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
+
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -278,7 +288,14 @@ namespace AnyRPG {
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
         }
 
-        
+        public virtual AudioClip GetAnimationHitSound() {
+            return MyAnimationHitAudioClip;
+        }
+
+        public virtual AudioClip GetHitSound(IAbilityCaster abilityCaster) {
+            // only meant for animated Abilities
+            return null;
+        }
 
         public virtual float GetLOSMaxRange(IAbilityCaster source, GameObject target) {
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
@@ -366,7 +383,7 @@ namespace AnyRPG {
             sourceCharacter.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
@@ -483,7 +500,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
-        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target) {
+        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target, bool performCooldownChecks = true) {
             //Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
@@ -494,7 +511,7 @@ namespace AnyRPG {
             }
 
             // perform ability dependent checks
-            if (CanUseOn(target, sourceCharacter) == false) {
+            if (CanUseOn(target, sourceCharacter, performCooldownChecks) == false) {
                 //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
                     target = sourceCharacter.UnitGameObject;
@@ -555,6 +572,32 @@ namespace AnyRPG {
 
         public void NotifyOnAbilityUsed() {
             OnAbilityUsed();
+        }
+
+        /// <summary>
+        /// are the character class requirements met to learn or use this ability
+        /// </summary>
+        /// <returns></returns>
+        public bool CharacterClassRequirementIsMet() {
+            // only used when changing class or for action bars, so hard coding player character is ok for now
+            if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
+                if (!CharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// are all requirements met to learn or use this ability
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool RequirementsAreMet() {
+            if (!CharacterClassRequirementIsMet()) {
+                return false;
+            }
+
+            return true;
         }
 
 
@@ -648,6 +691,19 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            characterClassRequirementList = new List<CharacterClass>();
+            if (characterClassRequirementList != null) {
+                foreach (string characterClassName in characterClassRequirements) {
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    if (tmpCharacterClass != null) {
+                        characterClassRequirementList.Add(tmpCharacterClass);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
 
         }
 
