@@ -41,7 +41,8 @@ namespace AnyRPG {
             abilityEffectOutput.healthAmount = healthFinalAmount;
             if (healthFinalAmount > 0) {
                 // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(healthFinalAmount, source.UnitGameObject.transform.position, source, combatMagnitude, this, abilityEffectInput.refectDamage);
+
+                target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(healthFinalAmount, source, combatMagnitude, this, abilityEffectInput.refectDamage);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
 

@@ -27,7 +27,9 @@ namespace AnyRPG {
         }
 
         protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
-            source.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
+            if (source != null) {
+                SystemAbilityController.MyInstance.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
+            }
         }
 
     }

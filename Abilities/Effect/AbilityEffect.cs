@@ -279,11 +279,12 @@ namespace AnyRPG {
         }
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, GameObject target) {
+            //Debug.Log(MyName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
-                UnitAudio unitAudio = null;
+                UnitAudioController unitAudio = null;
                 if (target != null) {
-                    unitAudio = target.GetComponent<UnitAudio>();
+                    unitAudio = target.GetComponent<UnitAudioController>();
                 } else {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();

@@ -29,16 +29,17 @@ namespace AnyRPG {
         bool MyRequireOutOfCombat { get; set; }
 
 
-        bool CanUseOn(GameObject target, IAbilityCaster source);
+        bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks);
         bool Cast(IAbilityCaster source, GameObject target, Vector3 GroundTarget);
         string GetDescription();
         string GetSummary();
-        GameObject ReturnTarget(IAbilityCaster source, GameObject target);
+        GameObject ReturnTarget(IAbilityCaster source, GameObject target, bool performCooldownChecks = true);
         bool Use();
         void StartCasting(IAbilityCaster source);
         float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target);
         //void HandleCastStop(BaseCharacter source);
         //bool PerformLOSCheck(IAbilityCaster source, GameObject target);
+        bool RequirementsAreMet();
 
     }
 }
