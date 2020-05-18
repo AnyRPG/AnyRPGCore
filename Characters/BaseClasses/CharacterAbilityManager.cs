@@ -29,6 +29,7 @@ namespace AnyRPG {
         // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
         protected float initialGlobalCoolDown;
 
+        protected BaseAbility autoAttackAbility = null;
 
         public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
 
@@ -42,7 +43,7 @@ namespace AnyRPG {
             set => baseCharacter = value;
         }
 
-        public GameObject UnitGameObject {
+        public override GameObject UnitGameObject {
             get {
                 if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
                     return baseCharacter.CharacterUnit.gameObject;
@@ -51,7 +52,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool PerformingAbility {
+        public override bool PerformingAbility {
             get {
                 if (WaitingForAnimatedAbility == true) {
                     return true;
@@ -59,25 +60,34 @@ namespace AnyRPG {
                 if (IsCasting == true) {
                     return true;
                 }
-                return false;
+                return base.PerformingAbility;
             }
         }
 
-        public int Level {
+        public override int Level {
             get {
                 if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                     return baseCharacter.CharacterStats.Level;
                 }
-                return 1;
+                return base.Level;
             }
         }
 
-        public string Name {
+        public override string Name {
             get {
                 if (baseCharacter.CharacterName != null) {
                     return baseCharacter.CharacterName;
                 }
-                return gameObject.name;
+                return base.Name;
+            }
+        }
+
+        public override bool IsDead {
+            get {
+                if (baseCharacter.CharacterStats.IsAlive == false) {
+                    return true;
+                }
+                return base.IsDead;
             }
         }
 
@@ -86,6 +96,7 @@ namespace AnyRPG {
         public bool IsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
         public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
+        public BaseAbility AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
 
         protected virtual void Start() {
             //Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
@@ -156,6 +167,14 @@ namespace AnyRPG {
             base.OnDisable();
         }
 
+        public override List<AnimationClip> GetDefaultAttackAnimations() {
+            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            if (autoAttackAbility != null) {
+                return autoAttackAbility.AnimationClips;
+            }
+            return base.GetDefaultAttackAnimations();
+        }
+
         public override float GetMeleeRange() {
             if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
                 return baseCharacter.CharacterUnit.HitBoxSize;
@@ -170,7 +189,7 @@ namespace AnyRPG {
         /// <param name="targetCharacterUnit"></param>
         /// <param name="targetIsSelf"></param>
         /// <returns></returns>
-        public bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
+        public override bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
 
             if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
                 //targetIsEnemy = true;
@@ -191,7 +210,7 @@ namespace AnyRPG {
                 }
             }
 
-            return true;
+            return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
         }
 
         public override float GetThreatModifiers() {
@@ -236,17 +255,17 @@ namespace AnyRPG {
             }
         }
 
-        public bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility);
         }
 
-        public bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
+        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect);
         }
 
-        public bool IsTargetInMeleeRange(GameObject target) {
+        public override bool IsTargetInMeleeRange(GameObject target) {
             return baseCharacter.CharacterController.IsTargetInHitBox(target);
         }
 
@@ -309,8 +328,12 @@ namespace AnyRPG {
         }
 
         public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable) {
+            if (target == null) {
+                return false;
+            }
+            //Debug.Log(target.name + " range(" + maxRange + ": " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
             if (maxRange > 0 && Vector3.Distance(UnitGameObject.transform.position, target.transform.position) > maxRange) {
-                //Debug.Log(target.name + " is out of range");
+                //Debug.Log(target.name + " is out of range(" + maxRange + "): " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
                 return false;
             }
 
@@ -321,7 +344,7 @@ namespace AnyRPG {
             ProcessLevelUnload();
         }
 
-        public float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
+        public override float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
             // this type of ability is allowed to interrupt other types of animations, so clear them all
             baseCharacter.AnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
@@ -338,23 +361,23 @@ namespace AnyRPG {
         /// Return true if the ability hit, false if it missed
         /// </summary>
         /// <returns></returns>
-        public bool AbilityHit(GameObject target) {
+        public override bool AbilityHit(GameObject target) {
             if (baseCharacter.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 baseCharacter.CharacterCombat.ReceiveCombatMiss(target);
                 return false;
             }
-            return true;
+            return base.AbilityHit(target);
         }
 
-        public virtual bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
+        public override bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
             if (WaitingForAnimatedAbility == true) {
                 return false;
             }
-            return true;
+            return base.PerformAnimatedAbilityCheck(animatedAbility);
         }
 
-        public virtual bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
+        public override bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || deactivateAutoAttack == true) {
@@ -366,15 +389,17 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
                 baseCharacter.CharacterCombat.ActivateAutoAttack();
             }
-            return true;
+            return base.ProcessAnimatedAbilityHit(target, deactivateAutoAttack);
         }
 
-        public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
+        public override bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
             foreach (WeaponSkill _weaponAffinity in baseAbility.WeaponAffinityList) {
                 if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && baseCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                     return true;
                 }
             }
+
+            // intentionally not calling base because it's always true
             return false;
         }
 
@@ -414,7 +439,7 @@ namespace AnyRPG {
         }
 
         // this ability exists to allow a caster to auto-self cast
-        public virtual GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
+        public override GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
             //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             CharacterUnit targetCharacterUnit = null;
             if (target != null) {
@@ -446,11 +471,12 @@ namespace AnyRPG {
                 }
             }
 
-            if (!abilityEffect.CanCastOnSelf && target == baseCharacter.CharacterUnit.gameObject) {
+            if (!abilityEffect.CanCastOnSelf && baseCharacter != null && baseCharacter.CharacterUnit != null && target == baseCharacter.CharacterUnit.gameObject) {
                 //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
                 target = null;
             }
 
+            // intentionally not calling base as it always returns the original target
             return target;
         }
 
@@ -567,7 +593,7 @@ namespace AnyRPG {
 
         public virtual void LearnDefaultAutoAttackAbility() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
-            if (AutoAttackKnown() == true) {
+            if (autoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): auto-attack already know, exiting");
                 // can't learn two auto-attacks at the same time
                 return;
@@ -697,12 +723,13 @@ namespace AnyRPG {
                 }
             }
         }
-        public void UnLearnClassAbilities (CharacterClass characterClass) {
+
+        public virtual void UnLearnClassAbilities (CharacterClass characterClass, bool updateActionBars = false) {
             if (characterClass == null) {
                 return;
             }
             foreach (BaseAbility oldAbility in characterClass.MyAbilityList) {
-                UnlearnAbility(oldAbility);
+                UnlearnAbility(oldAbility, updateActionBars);
             }
         }
 
@@ -825,12 +852,20 @@ namespace AnyRPG {
                 // can't learn a nonexistent ability
                 return false;
             }
-            if (newAbility is AnimatedAbility && (newAbility as AnimatedAbility).IsAutoAttack && baseCharacter.CharacterAbilityManager.AutoAttackKnown() == true) {
+            bool isAutoAttack = false;
+            if (newAbility is AnimatedAbility && (newAbility as AnimatedAbility).IsAutoAttack) {
+                isAutoAttack = true;
+            }
+            if (isAutoAttack && autoAttackAbility != null) {
                 // can't learn 2 auto-attacks
                 return false;
             }
             if (!HasAbility(newAbility) && newAbility.MyRequiredLevel <= BaseCharacter.CharacterStats.Level) {
                 abilityList[SystemResourceManager.prepareStringForMatch(newAbility.MyName)] = newAbility;
+                if (isAutoAttack) {
+                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + "): setting auto-attack ability");
+                    autoAttackAbility = newAbility;
+                }
                 return true;
             }/* else {
                 if (HasAbility(newAbility)) {
@@ -843,19 +878,18 @@ namespace AnyRPG {
             return false;
         }
 
-        public void UnlearnAbility(BaseAbility oldAbility) {
+        public virtual void UnlearnAbility(BaseAbility oldAbility, bool updateActionBars = true) {
             string keyName = SystemResourceManager.prepareStringForMatch(oldAbility.MyName);
             if (abilityList.ContainsKey(keyName)) {
-                abilityList.Remove(keyName);
-                /*
-                 * Fix this so we remove abilities we don't have from our bars ?  or just keep them there but disabled?
-                if (OnAbilityListChanged != null) {
-                    OnAbilityListChanged(ability);
+                bool isAutoAttack = false;
+                if (oldAbility is AnimatedAbility && (oldAbility as AnimatedAbility).IsAutoAttack) {
+                    isAutoAttack = true;
                 }
-                */
+                if (isAutoAttack) {
+                    autoAttackAbility = null;
+                }
+                abilityList.Remove(keyName);
             }
-            // attemp to remove from bars
-            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
         }
 
         /// <summary>
@@ -906,10 +940,7 @@ namespace AnyRPG {
                     }
                 }
                 if (ability.MyCastingAudioClip != null) {
-                    //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
-                    //baseCharacter.MyCharacterUnit.MyAudioSource.PlayOneShot(ability.MyCastingAudioClip);
-                    //baseCharacter.MyCharacterUnit.MyUnitAudio.MyEffectSource.clip = ability.MyCastingAudioClip;
-                    baseCharacter.CharacterUnit.MyUnitAudio.PlayEffect(ability.MyCastingAudioClip);
+                    baseCharacter.CharacterUnit.UnitAudio.PlayCast(ability.MyCastingAudioClip);
                 }
                 
                 while (currentCastTime < ability.MyAbilityCastingTime) {
@@ -975,8 +1006,8 @@ namespace AnyRPG {
 
         public override void EndCastCleanup() {
             base.EndCastCleanup();
-            if (baseCharacter.CharacterUnit.MyUnitAudio != null) {
-                baseCharacter.CharacterUnit.MyUnitAudio.StopEffect();
+            if (baseCharacter.CharacterUnit.UnitAudio != null) {
+                baseCharacter.CharacterUnit.UnitAudio.StopCast();
             }
         }
 
@@ -992,10 +1023,8 @@ namespace AnyRPG {
         public void AttemptAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
 
-            foreach (BaseAbility baseAbility in MyAbilityList.Values) {
-                if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack) {
-                    BeginAbility(baseAbility);
-                }
+            if (autoAttackAbility != null) {
+                BeginAbility(autoAttackAbility);
             }
         }
 
@@ -1033,12 +1062,18 @@ namespace AnyRPG {
             BeginAbilityCommon(ability, target);
         }
 
-        public virtual float GetAnimationLengthMultiplier() {
-            return baseCharacter.AnimatedUnit.MyCharacterAnimator.MyLastAnimationLength;
+        public override float GetAnimationLengthMultiplier() {
+            if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                return (baseCharacter.AnimatedUnit.MyCharacterAnimator.LastAnimationLength / (float)baseCharacter.AnimatedUnit.MyCharacterAnimator.LastAnimationHits);
+            }
+            return base.GetAnimationLengthMultiplier();
         }
 
-        public virtual float GetOutgoingDamageModifiers() {
-            return baseCharacter.CharacterStats.GetOutGoingDamageModifiers();
+        public override float GetOutgoingDamageModifiers() {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                return baseCharacter.CharacterStats.GetOutGoingDamageModifiers();
+            }
+            return base.GetOutgoingDamageModifiers();
         }
 
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectOutput abilityEffectOutput) {
@@ -1058,28 +1093,40 @@ namespace AnyRPG {
         /// +damage stat from gear and weapon damage
         /// </summary>
         /// <returns></returns>
-        public virtual float GetPhysicalDamage() {
-            // +damage stat from gear
-            float returnValue = baseCharacter.CharacterStats.MyPhysicalDamage;
-            
-            // weapon damage
-            if (baseCharacter.CharacterEquipmentManager != null) {
-                returnValue += baseCharacter.CharacterEquipmentManager.GetWeaponDamage();
+        public override float GetPhysicalDamage() {
+            if (baseCharacter != null  && baseCharacter.CharacterStats != null) {
+                // +damage stat from gear
+                float returnValue = baseCharacter.CharacterStats.MyPhysicalDamage;
+
+                // weapon damage
+                if (baseCharacter.CharacterEquipmentManager != null) {
+                    returnValue += baseCharacter.CharacterEquipmentManager.GetWeaponDamage();
+                }
+
+                return returnValue;
             }
-
-            return returnValue;
+            return base.GetPhysicalDamage();
         }
 
-        public virtual float GetPhysicalPower() {
-            return LevelEquations.GetPhysicalPowerForCharacter(baseCharacter);
+        public override float GetPhysicalPower() {
+            if (baseCharacter != null) {
+                return LevelEquations.GetPhysicalPowerForCharacter(baseCharacter);
+            }
+            return base.GetPhysicalPower();
         }
 
-        public virtual float GetSpellPower() {
-            return LevelEquations.GetSpellPowerForCharacter(baseCharacter);
+        public override float GetSpellPower() {
+            if (baseCharacter != null) {
+                return LevelEquations.GetSpellPowerForCharacter(baseCharacter);
+            }
+            return base.GetSpellPower();
         }
 
-        public virtual float GetCritChance() {
-            return LevelEquations.GetCritChanceForCharacter(baseCharacter);
+        public override float GetCritChance() {
+            if (baseCharacter != null) {
+                return LevelEquations.GetCritChanceForCharacter(baseCharacter);
+            }
+            return base.GetCritChance();
         }
 
         protected virtual void BeginAbilityCommon(IAbility ability, GameObject target) {
@@ -1318,15 +1365,25 @@ namespace AnyRPG {
             WaitingForAnimatedAbility = false;
         }
 
+        public override AudioClip GetAnimatedAbilityHitSound() {
+            if (baseCharacter != null && baseCharacter.CharacterCombat != null) {
+                return baseCharacter.CharacterCombat.MyDefaultHitSoundEffect;
+            }
+            return base.GetAnimatedAbilityHitSound();
+        }
 
-
+        /// <summary>
+        /// This will be triggered in response to things like hammer taps, not attacks
+        /// </summary>
         public void AnimationHitAnimationEvent() {
-            if (currentCastAbility != null) {
-                if (currentCastAbility.MyAnimationHitAudioClip != null) {
-                    //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
-                    baseCharacter.CharacterUnit.MyUnitAudio.PlayEffect(currentCastAbility.MyAnimationHitAudioClip);
-                }
+            Debug.Log(gameObject.name + ".CharacterAbilitymanager.AnimationHitAnimationEvent()");
 
+            if (currentCastAbility != null) {
+                AudioClip audioClip = currentCastAbility.GetAnimationHitSound();
+                if (audioClip != null) {
+                    //AudioManager.MyInstance.PlayEffect(ability.MyCastingAudioClip);
+                    baseCharacter.CharacterUnit.UnitAudio.PlayEffect(audioClip);
+                }
             }
         }
 
@@ -1339,7 +1396,6 @@ namespace AnyRPG {
             } else {
                 Debug.Log(gameObject.name + ".CharacterAbilityManager.InitiateGlobalCooldown(): INVESTIGATE: GCD COROUTINE WAS NOT NULL");
             }
-
         }
 
         public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
@@ -1355,15 +1411,6 @@ namespace AnyRPG {
                 //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
             }
             globalCoolDownCoroutine = null;
-        }
-
-        public bool AutoAttackKnown() {
-            foreach (BaseAbility baseAbility in abilityList.Values) {
-                if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
-                    return true;
-                }
-            }
-            return false;
         }
 
     }

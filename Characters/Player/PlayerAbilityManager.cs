@@ -16,7 +16,6 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
-            SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandleCharacterUnitDespawn;
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
@@ -36,7 +35,6 @@ namespace AnyRPG {
             base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateAbilityList;
-                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandleCharacterUnitDespawn;
             }
@@ -141,6 +139,23 @@ namespace AnyRPG {
             return returnResult;
         }
 
+        public override void UnLearnClassAbilities(CharacterClass characterClass, bool updateActionBars = false) {
+            
+            // to avoid a bunch of unnecessary loops of update action bars as abilities are unlearned, suppress the update
+            base.UnLearnClassAbilities(characterClass, updateActionBars);
+
+            // now perform a single action bar update
+            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+        }
+
+        public override void UnlearnAbility(BaseAbility oldAbility, bool updateActionBars = true) {
+            base.UnlearnAbility(oldAbility);
+            if (updateActionBars) {
+                // attemp to remove from bars
+                UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+            }
+        }
+
         public override bool LearnAbility(BaseAbility newAbility) {
             //Debug.Log(gameObject.name + "PlayerAbilityManager.LearnAbility()");
             bool returnValue = base.LearnAbility(newAbility);
@@ -160,17 +175,27 @@ namespace AnyRPG {
         }
 
         public void LoadAbility(string abilityName) {
-            //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + ")");
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
             IAbility ability = SystemAbilityManager.MyInstance.GetResource(abilityName) as IAbility;
             if (ability != null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
+                bool isAutoAttack = false;
+                if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack) {
+                    isAutoAttack = true;
+                }
+                if (isAutoAttack && autoAttackAbility != null) {
+                    // can't learn 2 auto-attacks
+                    return;
+                }
+
                 string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
                 if (!abilityList.ContainsKey(keyName)) {
                     //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
                     if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
+                        //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + "): is auto-attack!");
+                        autoAttackAbility = ability as BaseAbility;
                     }
-
                     abilityList[keyName] = ability;
                 }
             }

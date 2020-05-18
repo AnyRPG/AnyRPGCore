@@ -19,6 +19,45 @@ namespace AnyRPG {
         protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
+        public virtual bool IsDead {
+            get {
+                return false;
+            }
+        }
+
+        public virtual GameObject UnitGameObject {
+            get {
+                return gameObject;
+            }
+        }
+
+        public virtual bool PerformingAbility {
+            get {
+                return false;
+            }
+        }
+
+        // for now, all environmental effects will calculate their ability damage as if they were level 1
+        public virtual int Level {
+            get {
+                return 1;
+            }
+        }
+
+        public virtual string Name {
+            get {
+                return gameObject.name;
+            }
+        }
+
+        public virtual AudioClip GetAnimatedAbilityHitSound() {
+            return null;
+        }
+
+        public virtual List<AnimationClip> GetDefaultAttackAnimations() {
+            return new List<AnimationClip>();
+        }
+
         public virtual bool PerformLOSCheck(GameObject target, ITargetable targetable) {
             return true;
         }
@@ -43,74 +82,7 @@ namespace AnyRPG {
             abilityHitDelayCoroutine = null;
         }
 
-        public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
-            foreach (GameObject go in abilityEffectObjects.Values) {
-                abilityEffectGameObjects.Add(go);
-            }
-            destroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
-        }
-
-        public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
-            //Debug.Log("CharacterAbilityManager.DestroyAbilityEffectObject(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
-            float timeRemaining = timer;
-
-            // keep track of temporary elapsed time between ticks
-            float elapsedTime = 0f;
-
-            bool nullTarget = false;
-            CharacterStats targetStats = null;
-            if (target != null) {
-                CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
-                if (_characterUnit != null) {
-                    targetStats = _characterUnit.MyCharacter.CharacterStats;
-                }
-            } else {
-                nullTarget = true;
-            }
-
-            int milliseconds = (int)((fixedLengthEffect.TickRate - (int)fixedLengthEffect.TickRate) * 1000);
-            float finalTickRate = fixedLengthEffect.TickRate;
-            if (finalTickRate == 0) {
-                finalTickRate = timer + 1;
-            }
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() milliseconds: " + milliseconds);
-            //TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (int)finalTickRate, milliseconds);
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
-            //fixedLengthEffect.MyNextTickTime = System.DateTime.Now + tickRateTimeSpan;
-            //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() nextTickTime: " + nextTickTime);
-
-            while (timeRemaining > 0f) {
-                yield return null;
-
-                if (nullTarget == false && (targetStats == null || fixedLengthEffect == null)) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.DestroyAbilityEffectObject: BREAKING!!!!!!!!!!!!!!!!!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.MyName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.name));
-                    break;
-                }
-
-                if (fixedLengthEffect.MyPrefabSpawnLocation != PrefabSpawnLocation.Point && fixedLengthEffect.RequiresTarget == true && (target == null || (targetStats.IsAlive == true && fixedLengthEffect.RequireDeadTarget == true) || (targetStats.IsAlive == false && fixedLengthEffect.RequiresLiveTarget == true))) {
-                    //Debug.Log("BREAKING!!!!!!!!!!!!!!!!!");
-                    break;
-                } else {
-                    timeRemaining -= Time.deltaTime;
-                    if (elapsedTime > finalTickRate) {
-                        //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() TickTime!");
-                        fixedLengthEffect.CastTick(source, target, abilityEffectInput);
-                        elapsedTime -= finalTickRate;
-                    }
-                }
-            }
-            //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
-            fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
-            foreach (GameObject go in abilityEffectObjects.Values) {
-                if (abilityEffectGameObjects.Contains(go)) {
-                    abilityEffectGameObjects.Remove(go);
-                }
-                Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
-            }
-            abilityEffectObjects.Clear();
-
-            destroyAbilityEffectObjectCoroutine = null;
-        }
+        
 
         public virtual bool AddToAggroTable(CharacterUnit targetCharacterUnit, int usedAgroValue) {
             return false;
@@ -215,6 +187,90 @@ namespace AnyRPG {
 
         public virtual bool IsPlayerControlled() {
             return false;
+        }
+
+
+        public virtual float GetAnimationLengthMultiplier() {
+            // environmental effects don't need casting animations
+            // this is a multiplier, so needs to be one for normal damage
+            return 1f;
+        }
+
+        public virtual float GetOutgoingDamageModifiers() {
+            // this is a multiplier, so needs to be one for normal damage
+            return 1f;
+        }
+
+        public virtual float GetPhysicalDamage() {
+            return 0f;
+        }
+
+        public virtual float GetPhysicalPower() {
+            return 0f;
+        }
+
+        public virtual float GetSpellPower() {
+            return 0f;
+        }
+
+        public virtual float GetCritChance() {
+            return 0f;
+        }
+
+        public virtual bool IsTargetInMeleeRange(GameObject target) {
+            return true;
+        }
+
+        public virtual bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
+            // environmental effects should be cast on all units, regardless of faction
+            return true;
+        }
+
+        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
+            // environmental effects only target things inside their collider, so everything is always in range
+            return true;
+        }
+
+        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
+            // environmental effects only target things inside their collider, so everything is always in range
+            return true;
+        }
+
+        public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
+            return true;
+        }
+
+        public virtual bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
+            return true;
+        }
+
+        public virtual bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
+            // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
+            // check for friendly target in case it somehow turned friendly mid swing
+            if (target == null || deactivateAutoAttack == true) {
+                //baseCharacter.MyCharacterCombat.DeActivateAutoAttack();
+                return false;
+            }
+            return true;
+        }
+
+        public virtual GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
+            return target;
+        }
+
+
+        public virtual float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
+
+            // do nothing for now
+            return 0f;
+        }
+
+        public virtual bool AbilityHit(GameObject target) {
+            return true;
+        }
+
+        public virtual void OnDestroy() {
+
         }
 
     }
