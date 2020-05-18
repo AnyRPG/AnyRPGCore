@@ -112,7 +112,8 @@ namespace AnyRPG {
                 if (lootCount > 0) {
                     //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
-                    characterUnit.MyCharacter.CharacterAbilityManager.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
+                    //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
+                    SystemConfigurationManager.MyInstance.MyLootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, Vector3.zero);
                 }
             } else {
                 if (!characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
