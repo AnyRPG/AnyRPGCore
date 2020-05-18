@@ -133,7 +133,7 @@ namespace AnyRPG {
 
         public override bool EnterCombat(IAbilityCaster target) {
             //Debug.Log(gameObject.name + ".PlayerCombat.EnterCombat(" + (target != null && target.MyCharacterName != null ? target.MyCharacterName : "null") + ")");
-            if (baseCharacter.CharacterStats.IsAlive == false) {
+            if (baseCharacter.CharacterStats.IsAlive == false || target.IsDead == true) {
                 //Debug.Log("Player is dead but was asked to enter combat!!!");
                 return false;
             }
@@ -156,7 +156,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(int damage, Vector3 sourcePosition, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public override bool TakeDamage(int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
@@ -165,7 +165,7 @@ namespace AnyRPG {
             bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
             return damageTaken;
             */
-            return base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
+            return base.TakeDamage(damage, source, combatMagnitude, abilityEffect, reflectDamage = false);
         }
 
         /*
@@ -209,27 +209,19 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public override bool AttackHit_AnimationEvent() {
             //Debug.Log(gameObject.name + ".PlayerCombat.AttackHit_AnimationEvent()");
             bool attackSucceeded = base.AttackHit_AnimationEvent();
             if (attackSucceeded) {
-
-                if (overrideHitSoundEffect == null && defaultHitSoundEffect == null) {
-                    AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.MyDefaultHitSoundEffect);
-                } else if (overrideHitSoundEffect == null && defaultHitSoundEffect != null) {
-                    // do nothing sound was suppressed for special attack sound
-                } else if (overrideHitSoundEffect != null) {
-                    baseCharacter.CharacterUnit.MyUnitAudio.PlayEffect(overrideHitSoundEffect);
+                if (defaultHitSoundEffect != null) {
+                    baseCharacter.CharacterUnit.MyUnitAudio.PlayEffect(defaultHitSoundEffect);
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
-                }
-
-                // reset back to default if possible now that an attack has hit
-                if (overrideHitSoundEffect == null && defaultHitSoundEffect != null) {
-                    overrideHitSoundEffect = defaultHitSoundEffect;
                 }
             }
             return attackSucceeded;
         }
+        */
 
 
     }

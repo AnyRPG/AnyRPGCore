@@ -15,16 +15,17 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        /// <summary>
-        /// Attack speed is based on animation speed.  This is a limiter in case animations are too fast.
-        /// </summary>
+        [Tooltip("Attack speed is based on animation speed.  This is a limiter in case animations are too fast")]
         public float attackSpeed = 1f;
 
+        [Tooltip("If true, this character will perform the current auto-attack ability in combat whenever it is off cooldown.")]
         public bool autoAttack = true;
 
         private bool autoAttackActive = false;
 
+        [Tooltip("The amount of seconds after the last combat event to wait before dropping combat")]
         public float combatCooldown = 10f;
+
         protected float lastCombatEvent;
 
         //public bool isAttacking { get; private set; }
@@ -40,12 +41,8 @@ namespace AnyRPG {
 
         protected AggroTable aggroTable = null;
 
-        // this is what the current weapon defaults to.  I't
+        // this is what the current weapon defaults to
         protected AudioClip defaultHitSoundEffect = null;
-
-        // this holds the current weapon default, is null when special ability going, then resets back to default value after.
-        // if this value is null, and default is not, no sound is played, if both null, system default played
-        protected AudioClip overrideHitSoundEffect = null;
 
         /// <summary>
         ///  waiting for the animator to let us know we can hit again
@@ -73,7 +70,6 @@ namespace AnyRPG {
         }
 
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
-        public AudioClip MyOverrideHitSoundEffect { get => overrideHitSoundEffect; set => overrideHitSoundEffect = value; }
         public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool MyAutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
         public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
@@ -365,19 +361,28 @@ namespace AnyRPG {
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 //OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
 
+                BaseAbility animatorCurrentAbility = null;
                 bool attackLanded = true;
                 if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    BaseAbility animatorCurrentAbility = MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+                    animatorCurrentAbility = MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
                     if (animatorCurrentAbility is AnimatedAbility) {
                         attackLanded = (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility as AnimatedAbility).HandleAbilityHit(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterController.MyTarget);
                     }
-
                 }
 
                 // onHitAbility is only for weapons, not for special moves
                 if (!attackLanded) {
                     return false;
                 }
+
+                if (animatorCurrentAbility != null) {
+                    AudioClip audioClip = animatorCurrentAbility.GetHitSound(baseCharacter.CharacterAbilityManager);
+                    if (audioClip != null) {
+                        baseCharacter.CharacterUnit.UnitAudio.PlayEffect(audioClip);
+                    }
+                    //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
+                }
+
                 AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
@@ -439,7 +444,7 @@ namespace AnyRPG {
             baseCharacter.CharacterStats.ReduceHealth(damage);
         }
 
-        public virtual bool TakeDamage(int damage, Vector3 sourcePosition, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual bool TakeDamage(int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
@@ -542,11 +547,9 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
                         onHitEffect = (newItem as Weapon).MyOnHitEffect;
                     }
-                    overrideHitSoundEffect = null;
                     defaultHitSoundEffect = null;
                     if (newItem is Weapon && (newItem as Weapon).MyDefaultHitSoundEffect != null) {
                         //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
-                        overrideHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
                         defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
                     }
                 }
