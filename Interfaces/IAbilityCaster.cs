@@ -19,9 +19,18 @@ namespace AnyRPG {
         /// </summary>
         bool PerformingAbility { get; }
 
+        bool IsDead { get; }
+
+        AudioClip GetAnimatedAbilityHitSound();
 
         GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target);
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter);
+
+        /// <summary>
+        /// return a list of auto-attack animations for the currently equipped weapon
+        /// </summary>
+        /// <returns></returns>
+        List<AnimationClip> GetDefaultAttackAnimations();
 
         /// <summary>
         /// True if the target is in line of sight of the caster
@@ -176,7 +185,8 @@ namespace AnyRPG {
         /// <param name="timer"></param>
         /// <param name="abilityEffectInput"></param>
         /// <param name="fixedLengthEffect"></param>
-        void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect);
+        //void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectOutput abilityEffectInput, FixedLengthEffect fixedLengthEffect);
+        // moved to systemabilitycontroller
 
         /// <summary>
         /// If combat enabled, generate agro on the target and lock agro

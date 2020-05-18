@@ -520,8 +520,9 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveActionBarData()");
             foreach (ActionButton actionButton in UIManager.MyInstance.MyActionBarManager.GetActionButtons()) {
                 ActionBarSaveData saveData = new ActionBarSaveData();
-                saveData.MyName = (actionButton.MyUseable == null ? string.Empty : (actionButton.MyUseable as IDescribable).MyName);
-                saveData.isItem = (actionButton.MyUseable == null ? false : (actionButton.MyUseable is Item ? true : false));
+                saveData.MyName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).MyName);
+                saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).MyName);
+                saveData.isItem = (actionButton.Useable == null ? false : (actionButton.Useable is Item ? true : false));
                 //Debug.Log("Savemanager.SaveActionBarData(): saveData.MyName:" + saveData.MyName + "; saveData.isItem" + saveData.isItem);
                 anyRPGSaveData.actionBarSaveData.Add(saveData);
             }
@@ -770,21 +771,27 @@ namespace AnyRPG {
                 } else {
                     // find ability from system ability manager
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
-                    if (actionBarSaveData.MyName != string.Empty && actionBarSaveData.MyName != null) {
+                    if (actionBarSaveData.MyName != null && actionBarSaveData.MyName != string.Empty) {
                         useable = SystemAbilityManager.MyInstance.GetResource(actionBarSaveData.MyName);
                     } else {
                         //Debug.Log("Savemanager.LoadActionBarData(): saved action bar had no name");
                     }
+                    if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
+                        IUseable savedUseable = SystemAbilityManager.MyInstance.GetResource(actionBarSaveData.savedName);
+                        if (savedUseable != null) {
+                            UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
+                        }
+                    }
                 }
                 if (useable != null) {
-                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter);
+                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
                     UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SetUseable(useable);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                 }
                 counter++;
             }
-
+            UIManager.MyInstance.MyActionBarManager.UpdateVisuals();
         }
 
         public void TryNewGame() {

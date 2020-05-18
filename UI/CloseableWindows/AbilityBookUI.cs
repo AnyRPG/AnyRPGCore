@@ -50,10 +50,12 @@ namespace AnyRPG {
             ClearPages();
             List<IAbility> page = new List<IAbility>();
             foreach (IAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Values) {
-                page.Add(newAbility);
-                if (page.Count == pageSize) {
-                    pages.Add(page);
-                    page = new List<IAbility>();
+                if (newAbility.RequirementsAreMet()) {
+                    page.Add(newAbility);
+                    if (page.Count == pageSize) {
+                        pages.Add(page);
+                        page = new List<IAbility>();
+                    }
                 }
             }
             if (page.Count > 0) {

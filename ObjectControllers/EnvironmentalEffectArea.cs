@@ -22,31 +22,6 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider = null;
 
-        public GameObject UnitGameObject {
-            get {
-                return gameObject;
-            }
-        }
-
-        public bool PerformingAbility {
-            get {
-                return false;
-            }
-        }
-
-        // for now, all environmental effects will calculate their ability damage as if they were level 1
-        public int Level {
-            get {
-                return 1;
-            }
-        }
-
-        public string Name {
-            get {
-                return gameObject.name;
-            }
-        }
-
         private void Awake() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.Awake()");
             GetComponentReferences();
@@ -67,70 +42,6 @@ namespace AnyRPG {
             }
         }
 
-        public virtual float GetAnimationLengthMultiplier() {
-            // environmental effects don't need casting animations
-            // this is a multiplier, so needs to be one for normal damage
-            return 1f;
-        }
-
-        public virtual float GetOutgoingDamageModifiers() {
-            // this is a multiplier, so needs to be one for normal damage
-            return 1f;
-        }
-
-        public float GetPhysicalDamage() {
-            return 0f;
-        }
-
-        public float GetPhysicalPower() {
-            return 0f;
-        }
-
-        public float GetSpellPower() {
-            return 0f;
-        }
-
-        public virtual float GetCritChance() {
-            return 0f;
-        }
-
-        public bool IsTargetInMeleeRange(GameObject target) {
-            return true;
-        }
-
-        public bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
-            // environmental effects should be cast on all units, regardless of faction
-            return true;
-        }
-
-        public bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
-            // environmental effects only target things inside their collider, so everything is always in range
-            return true;
-        }
-
-        public bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
-            // environmental effects only target things inside their collider, so everything is always in range
-            return true;
-        }
-
-        public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
-            return true;
-        }
-
-        public bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
-            return true;
-        }
-
-        public virtual bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
-            // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
-            // check for friendly target in case it somehow turned friendly mid swing
-            if (target == null || deactivateAutoAttack == true) {
-                //baseCharacter.MyCharacterCombat.DeActivateAutoAttack();
-                return false;
-            }
-            return true;
-        }
-
         private void PerformAbilityEffects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.PerformAbilityEffects()");
 
@@ -142,10 +53,6 @@ namespace AnyRPG {
                     abilityEffect.Cast(this, validTarget.targetGameObject, null, new AbilityEffectOutput());
                 }
             }
-        }
-
-        public GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
-            return target;
         }
 
         protected virtual List<AOETargetNode> GetValidTargets() {
@@ -186,16 +93,6 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets(). Valid targets count: " + validTargets.Count);
             return validTargets;
-        }
-
-        public float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
-
-            // do nothing for now
-            return 0f;
-        }
-
-        public bool AbilityHit(GameObject target) {
-            return true;
         }
 
         private void SetupScriptableObjects() {

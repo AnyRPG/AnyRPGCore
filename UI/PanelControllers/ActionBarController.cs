@@ -48,15 +48,29 @@ namespace AnyRPG {
             }
         }
 
+        public bool AddSavedAbility(BaseAbility newAbility) {
+            //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
+            for (int i = 0; i < actionButtons.Count; i++) {
+                if (actionButtons[i].Useable == null && actionButtons[i].SavedUseable != null && actionButtons[i].SavedUseable.MyName == newAbility.MyName) {
+                    //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
+                    actionButtons[i].SetUseable(newAbility);
+                    return true;
+                } else if (actionButtons[i].Useable == (newAbility as IUseable)) {
+                    //Debug.Log("Ability exists on bars already!");
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public bool AddNewAbility(BaseAbility newAbility) {
             //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
             for (int i = 0; i < actionButtons.Count; i++) {
-                if (actionButtons[i].MyUseable == null) {
+                if (actionButtons[i].Useable == null) {
                     //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
                     actionButtons[i].SetUseable(newAbility);
                     return true;
-                } else if (actionButtons[i].MyUseable == (newAbility as IUseable)) {
+                } else if (actionButtons[i].Useable == (newAbility as IUseable)) {
                     //Debug.Log("Ability exists on bars already!");
                     return true;
                 }

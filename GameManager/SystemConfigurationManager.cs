@@ -183,14 +183,6 @@ namespace AnyRPG {
 
         private BaseAbility lootSparkleAbility = null;
 
-        [SerializeField]
-        private string doWhiteDamageAbilityName = string.Empty;
-
-        private BaseAbility doWhiteDamageAbility = null;
-
-        [SerializeField]
-        private AudioClip defaultHitSoundEffect = null;
-
         [Header("INTERACTABLE CONFIGURATION")]
 
         [SerializeField]
@@ -317,9 +309,7 @@ namespace AnyRPG {
         public Sprite MyPortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
         public Sprite MySkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
         public Sprite MySkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
-        public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
-        public BaseAbility MyDoWhiteDamageAbility { get => doWhiteDamageAbility; set => doWhiteDamageAbility = value; }
-        public BaseAbility MyDeathAbility { get => deathAbility; set => deathAbility = value; }
+        public BaseAbility DeathAbility { get => deathAbility; set => deathAbility = value; }
         public Sprite MyMultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
         public float MyDefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite MyBankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
@@ -424,15 +414,6 @@ namespace AnyRPG {
                     return;
                 } else {
                     lootSparkleAbility = testAbility;
-                }
-            }
-            if (doWhiteDamageAbilityName != null && doWhiteDamageAbilityName != string.Empty) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(doWhiteDamageAbilityName);
-                if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + doWhiteDamageAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
-                    return;
-                } else {
-                    doWhiteDamageAbility = testAbility;
                 }
             }
             if (defaultCurrencyGroup == null) {

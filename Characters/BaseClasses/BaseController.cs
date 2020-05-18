@@ -136,12 +136,9 @@ namespace AnyRPG {
                     //Debug.Log("for some strange reason, combat is null????");
                     // like inanimate units
                 } else {
-                    if (targetCharacterUnit.MyCharacter.CharacterStats != null && baseCharacter.CharacterStats != null && targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && baseCharacter.CharacterStats.IsAlive == true) {
-                        targetCharacterUnit.MyCharacter.CharacterCombat.EnterCombat(MyBaseCharacter.CharacterAbilityManager);
-                        baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter.CharacterAbilityManager);
-                    } else {
-                        //Debug.Log(gameObject.name + ".Agro(): One of the units was dead or did not have an active characterStats");
-                    }
+                    // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
+                    targetCharacterUnit.MyCharacter.CharacterCombat.EnterCombat(MyBaseCharacter.CharacterAbilityManager);
+                    baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter.CharacterAbilityManager);
                 }
                 //Debug.Log("combat is " + combat.ToString());
                 //Debug.Log("mytarget is " + MyTarget.ToString());

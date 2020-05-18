@@ -49,6 +49,7 @@ namespace AnyRPG {
         [SerializeField]
         private int price = 0;
 
+        [Tooltip("If not empty, the character must be one of these classes to use this item.")]
         [SerializeField]
         private List<string> characterClassRequirementList = new List<string>();
 
@@ -128,7 +129,6 @@ namespace AnyRPG {
                 }
             }
             return true;
-
         }
 
         public virtual bool RequirementsAreMet() {

@@ -7,53 +7,50 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Weapon", menuName = "AnyRPG/Inventory/Equipment/Weapon", order = 3)]
     public class Weapon : Equipment {
 
+        [Header("Damage")]
+
+        [Tooltip("Automatic damage per second is based on the item level and item quality")]
         [SerializeField]
         protected bool useDamagePerSecond = true;
 
+        [Tooltip("If true, manually specify the damage per second independent of item level and item quallity")]
         [SerializeField]
         protected bool useManualDamagePerSecond = false;
 
+        [Tooltip("This value is used if manual damage per second is enabled")]
         [SerializeField]
         protected float damagePerSecond = 0f;
 
+        [Header("Animation")]
+
+        [Tooltip("An animation profile that can overwrite default animations to match the weapon")]
         [SerializeField]
         protected string defaultAttackAnimationProfileName = string.Empty;
 
-        //[SerializeField]
         protected AnimationProfile defaultAttackAnimationProfile = null;
 
-        /*
-        /// <summary>
-        /// The ability to cast when the weapon hits a target
-        /// </summary>
-        [SerializeField]
-        private InstantEffectAbility onHitAbility;
-        */
+        [Header("On Hit")]
 
+        [Tooltip("An ability effect to cast on the target when the weapon does damage")]
         [SerializeField]
         private string onHitEffectName = string.Empty;
 
-        //[SerializeField]
         private AbilityEffect onHitEffect;
 
-        // the skill required to use this weapon
+        [Tooltip("An audio effect that can be used by any physical ability cast while this weapon is equippped")]
+        [SerializeField]
+        private string defaultHitAudioProfile = string.Empty;
+
+        private AudioClip defaultHitSoundEffect;
+
+        [Header("Restrictions")]
+
+        [Tooltip("the skill required to use this weapon")]
         [SerializeField]
         private string weaponSkill = string.Empty;
 
         private WeaponSkill realWeaponSkill;
 
-        [SerializeField]
-        private string defaultHitAudioProfile = string.Empty;
-
-        //[SerializeField]
-        private AudioClip defaultHitSoundEffect;
-        /*
-        public InstantEffectAbility OnHitAbility {
-            get {
-                return onHitAbility;
-            }
-        }
-        */
 
         public AnimationProfile MyDefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
         public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
