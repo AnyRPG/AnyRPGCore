@@ -27,6 +27,16 @@ namespace AnyRPG {
 
         private ActionButton actionButton = null;
 
+        // tracker to see if the key was pressed this frame
+        private bool keyPressed = false;
+
+        private bool keyHeld = false;
+
+        private bool keyUp = false;
+
+        // prevent multiple triggers
+        private bool keyLocked = false;
+
         public KeyBindNode(string keyBindID, KeyCode keyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
             //Debug.Log("KeyBindNode(" + keyBindID + ")");
             this.keyBindID = keyBindID;
@@ -47,7 +57,7 @@ namespace AnyRPG {
                 //Debug.Log("KeyBindNode.SetMyKeyCode");
                 keyCode = value;
                 if (MyActionButton != null) {
-                    MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
+                    MyActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
                 if (MyKeyBindSlotScript != null) {
                     MyKeyBindSlotScript.Initialize(this);
@@ -92,8 +102,9 @@ namespace AnyRPG {
         public ActionButton MyActionButton {
             get => actionButton;
             set {
+                //Debug.Log("KeyBindNode.SetMyActionButton: " + (value == null ? "null" : value.GetInstanceID().ToString()) + "keybindID: " + keyBindID);
                 actionButton = value;
-                actionButton.MyKeyBindText.text = FormatActionButtonLabel();
+                actionButton.KeyBindText.text = FormatActionButtonLabel();
             }
         }
 
@@ -101,12 +112,16 @@ namespace AnyRPG {
         public KeyBindType MyKeyBindType { get => keyBindType; set => keyBindType = value; }
         public bool MyControl { get => control; set => control = value; }
         public bool MyShift { get => shift; set => shift = value; }
+        public bool KeyPressed { get => keyPressed; }
+        public bool KeyHeld { get => keyHeld; }
+        public bool KeyUp { get => keyUp; }
 
         private string FormatActionButtonLabel() {
             if (MyKeyCode.ToString() == "None") {
                 return string.Empty;
             }
             return (control ? "c" : "") + (shift ? "s" : "") + ReplaceSpecialCharacters(MyKeyCode.ToString());
+            //return keyBindID;
         }
 
         public string ReplaceSpecialCharacters(string inputString) {
@@ -160,7 +175,32 @@ namespace AnyRPG {
         */
 
         public void RegisterKeyPress() {
-            OnKeyPressedHandler();
+            if (keyLocked == false) {
+                keyPressed = true;
+                keyLocked = true;
+                OnKeyPressedHandler();
+            }
+        }
+
+        public void UnRegisterKeyPress() {
+            keyPressed = false;
+        }
+
+        public void RegisterKeyHeld() {
+            keyHeld = true;
+        }
+
+        public void UnRegisterKeyHeld() {
+            keyHeld = false;
+        }
+
+        public void RegisterKeyUp() {
+            keyUp = true;
+            keyLocked = false;
+        }
+
+        public void UnRegisterKeyUp() {
+            keyUp = false;
         }
     }
 

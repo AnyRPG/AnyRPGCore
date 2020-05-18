@@ -592,7 +592,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action && InputManager.MyInstance.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
                     //Debug.Log("PlayerController.RegisterAbilityButtonPresses(): key pressed: " + keyBindNode.MyKeyCode.ToString());
-                    keyBindNode.MyActionButton.OnClick();
+                    keyBindNode.MyActionButton.OnClick(true);
                 }
             }
         }

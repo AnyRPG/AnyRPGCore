@@ -45,10 +45,17 @@ namespace AnyRPG {
         public Vector3 leftMouseButtonUpPosition = Vector3.zero;
         public bool mouseScrolled = false;
 
+        private int lastRegisteredFrame = 0;
+
         void Update() {
             if (KeyBindManager.MyInstance.MyBindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
+                foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+                    keyBindNode.UnRegisterKeyPress();
+                    keyBindNode.UnRegisterKeyHeld();
+                    keyBindNode.UnRegisterKeyUp();
+                }
                 return;
             }
 
@@ -58,48 +65,96 @@ namespace AnyRPG {
         }
 
         public void RegisterKeyPresses() {
+            if (lastRegisteredFrame >= Time.frameCount) {
+                // we have already registered keypresses this frame
+                return;
+            }
+            lastRegisteredFrame = Time.frameCount;
+
+            if (SystemWindowManager.MyInstance.nameChangeWindow.IsOpen) {
+                //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
+                return;
+            }
+
+            bool control = false;
+
+            if (Input.GetKeyDown(KeyCode.LeftControl)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): left control pressed");
+                control = true;
+            }
+            if (Input.GetKey(KeyCode.LeftControl)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): left control held");
+                control = true;
+            }
+            if (Input.GetKeyDown(KeyCode.RightControl)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): right control pressed");
+                control = true;
+            }
+            if (Input.GetKey(KeyCode.RightControl)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): right control held");
+                control = true;
+            }
+
+            bool shift = false;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): left shift pressed");
+                shift = true;
+            }
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): left shift held");
+                shift = true;
+            }
+            if (Input.GetKeyDown(KeyCode.RightShift)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): right shift pressed");
+                shift = true;
+            }
+            if (Input.GetKey(KeyCode.RightShift)) {
+                //Debug.Log("InputManager.KeyBindWasPressed(): right shift held");
+                shift = true;
+            }
+
             foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
-                if (KeyBindWasPressed(keyBindNode.MyKeyBindID)) {
+                // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
+                // register key down
+                if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
+                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
                     keyBindNode.RegisterKeyPress();
+                } else {
+                    keyBindNode.UnRegisterKeyPress();
                 }
+
+                if (Input.GetKey(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || (control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift))) {
+                    //Debug.Log(keyBindNode.MyKeyCode + " held true!");
+                    keyBindNode.RegisterKeyHeld();
+                } else {
+                    keyBindNode.UnRegisterKeyHeld();
+                }
+
+                // register key up
+                if (Input.GetKeyUp(keyBindNode.MyKeyCode)) {
+                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
+                    keyBindNode.RegisterKeyUp();
+                } else {
+                    keyBindNode.UnRegisterKeyUp();
+                }
+
             }
         }
 
-        public bool KeyBindWasPressed(string keyBindID) {
-            if (SystemWindowManager.MyInstance.nameChangeWindow.IsOpen) {
-                //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
-                return false;
-            }
-            bool control = (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl) || Input.GetKey(KeyCode.RightControl));
-            bool shift = (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.RightShift));
-            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
-                // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
-                if (Input.GetKeyDown(keyBindNode.MyKeyCode) && keyBindNode.MyKeyBindID == keyBindID && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " true!");
-                    return true;
-                }
+        public bool KeyBindWasPressedOrHeld(string keyBindID) {
+            RegisterKeyPresses();
+            if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey(keyBindID) &&
+                (KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyPressed == true || KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyHeld == true)) {
+                return true;
             }
             return false;
         }
 
-        public bool KeyBindWasPressedOrHeld(string keyBindID) {
-            if (SystemWindowManager.MyInstance.nameChangeWindow.IsOpen) {
-                //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
-                return false;
-            }
-            bool control = (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl) || Input.GetKey(KeyCode.RightControl));
-            bool shift = (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.RightShift));
-            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
-                if (keyBindNode.MyKeyBindID == keyBindID) {
-                    if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || (control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift))) {
-                        //Debug.Log(keyBindNode.MyKeyCode + " true!");
-                        return true;
-                    }
-                    if (Input.GetKey(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || (control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift))) {
-                        //Debug.Log(keyBindNode.MyKeyCode + " true!");
-                        return true;
-                    }
-                }
+        public bool KeyBindWasPressed(string keyBindID) {
+            RegisterKeyPresses();
+            if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey(keyBindID) && KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyPressed == true) {
+                return true;
             }
             return false;
         }

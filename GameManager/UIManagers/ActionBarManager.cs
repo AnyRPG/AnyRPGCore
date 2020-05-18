@@ -108,58 +108,63 @@ namespace AnyRPG {
 
         public void ResetRangeColors() {
             //Debug.Log("ActionBarmanager.ResetRangeColors()");
-            foreach (ActionBarController actionBarController in actionBarControllers) {
-                foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
-                    if (actionButton.MyKeyBindText.color != Color.white) {
-                        actionButton.MyKeyBindText.color = Color.white;
-                    }
+            foreach (ActionButton actionButton in GetActionButtons()) {
+                if (actionButton.KeyBindText.color != Color.white) {
+                    actionButton.KeyBindText.color = Color.white;
                 }
             }
         }
 
         public IEnumerator UpdateTargetRange() {
             //Debug.Log("ActionBarmanager.UpdateTargetRange()");
-            float distanceToTarget = 0f;
+            //float distanceToTarget = 0f;
             bool inRange = false;
             while (HasTarget()) {
                 if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.AnimatedUnit == null) {
                     break;
                 }
-                distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.AnimatedUnit.transform.position, target.transform.position);
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
-                foreach (ActionBarController actionBarController in actionBarControllers) {
-                    foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
-                        if ((actionButton.MyUseable as BaseAbility) is BaseAbility) {
-                            BaseAbility baseAbility = actionButton.MyUseable as BaseAbility;
-                            if (baseAbility.UseMeleeRange == true) {
-                                if (PlayerManager.MyInstance.MyCharacter.CharacterUnit.HitBoxSize < distanceToTarget) {
-                                    // red text
-                                    inRange = false;
-                                } else {
-                                    // white text
-                                    inRange = true;
-                                }
-                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): melee " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                foreach (ActionButton actionButton in GetActionButtons()) {
+                    if ((actionButton.Useable as BaseAbility) is BaseAbility) {
+                        BaseAbility baseAbility = actionButton.Useable as BaseAbility;
+                        //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.MyName);
+
+                        GameObject finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager, target, false);
+                        //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.AnimatedUnit.transform.position, target.transform.position);
+                        inRange = false;
+                        if (finalTarget != null) {
+                            inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInAbilityRange(baseAbility, finalTarget);
+                        }
+                        /*
+                        if (baseAbility.UseMeleeRange == true) {
+                            if (PlayerManager.MyInstance.MyCharacter.CharacterUnit.HitBoxSize < distanceToTarget) {
+                                // red text
+                                inRange = false;
                             } else {
-                                if (baseAbility.MaxRange < distanceToTarget) {
-                                    // set text color to red
-                                    inRange = false;
-                                } else {
-                                    // set the text color to white
-                                    inRange = true;
-                                }
-                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                                // white text
+                                inRange = true;
                             }
-                            if (inRange) {
-                                if (actionButton.MyKeyBindText.color != Color.white) {
-                                    actionButton.MyKeyBindText.color = Color.white;
-                                    //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white for ability " + baseAbility.MyName);
-                                }
+                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): melee " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                        } else {
+                            if (baseAbility.MaxRange > 0 && distanceToTarget > baseAbility.MaxRange) {
+                                // set text color to red
+                                inRange = false;
                             } else {
-                                if (actionButton.MyKeyBindText.color != Color.red) {
-                                    actionButton.MyKeyBindText.color = Color.red;
-                                    //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to red for ability " + baseAbility.MyName);
-                                }
+                                // set the text color to white
+                                inRange = true;
+                            }
+                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
+                        }
+                        */
+                        if (inRange) {
+                            if (actionButton.KeyBindText.color != Color.white) {
+                                actionButton.KeyBindText.color = Color.white;
+                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white for ability " + baseAbility.MyName);
+                            }
+                        } else {
+                            if (actionButton.KeyBindText.color != Color.red) {
+                                actionButton.KeyBindText.color = Color.red;
+                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to red for ability " + baseAbility.MyName);
                             }
                         }
                     }
@@ -173,8 +178,14 @@ namespace AnyRPG {
         public List<ActionButton> GetActionButtons() {
             //Debug.Log("ActionBarManager.GetActionButtons()");
             List<ActionButton> actionButtons = new List<ActionButton>();
+            int count = 0;
             foreach (ActionBarController actionBarController in actionBarControllers) {
-                actionButtons.AddRange(actionBarController.MyActionButtons);
+                foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
+                    actionButtons.Add(actionButton);
+                    //Debug.Log("ActionBarManager.GetActionButtons() count: " + count + "; actionbutton: " + actionButton.name + actionButton.GetInstanceID());
+                    count++;
+                }
+                //actionButtons.AddRange(actionBarController.MyActionButtons);
             }
             return actionButtons;
         }
@@ -182,21 +193,19 @@ namespace AnyRPG {
         private void AssociateActionBarKeyBinds() {
             //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds()");
             int count = 1;
-            foreach (ActionBarController actionBarController in actionBarControllers) {
-                foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
-                    if (KeyBindManager.MyInstance.MyKeyBinds.Count >= count) {
-                        //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: " + count);
-                        if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
-                            KeyBindManager.MyInstance.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
-                            count++;
-                        } else {
-                            //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");
-                            return;
-                        }
+            foreach (ActionButton actionButton in GetActionButtons()) {
+                if (KeyBindManager.MyInstance.MyKeyBinds.Count >= count) {
+                    //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
+                    if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
+                        KeyBindManager.MyInstance.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
+                        count++;
                     } else {
                         //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");
                         return;
                     }
+                } else {
+                    //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");
+                    return;
                 }
             }
         }
@@ -205,6 +214,11 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.AddNewAbility()");
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                if (actionBarController.AddSavedAbility(newAbility)) {
+                    return true;
+                }
+            }
+            foreach (ActionBarController actionBarController in actionBarControllers) {
                 if (actionBarController.AddNewAbility(newAbility)) {
                     //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
                     return true;
