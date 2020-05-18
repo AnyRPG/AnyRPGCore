@@ -209,6 +209,7 @@ namespace AnyRPG {
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnManaChanged -= OnManaChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
             }
@@ -220,6 +221,10 @@ namespace AnyRPG {
                 gameObject.SetActive(false);
             }
             previewCamera.enabled = false;
+        }
+
+        public void HandleReviveComplete() {
+            HandleReputationChange();
         }
 
         private void InitializeStats() {
@@ -251,6 +256,8 @@ namespace AnyRPG {
                 baseCharacter.CharacterStats.OnHealthChanged += OnHealthChanged;
                 baseCharacter.CharacterStats.OnManaChanged += OnManaChanged;
                 baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
+                baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
+
                 if (baseCharacter.CharacterFactionManager != null) {
                     baseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
                 } else {
@@ -308,6 +315,13 @@ namespace AnyRPG {
             }
             if (healthText != null) {
                 healthText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentHealth, displayedMaxHealth, (healthPercent * 100).ToString("F0"));
+            }
+
+            if (displayedCurrentHealth <= 0) {
+                Color tmp = Color.gray;
+                //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
+                tmp.a = 0.5f;
+                unitNameBackground.color = tmp;
             }
         }
 
