@@ -184,6 +184,11 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnReviveComplete", new EventParamProperties());
         }
 
+        protected override void PerformResourceRegen() {
+            //Debug.Log(gameObject.name + ".PlayerStats.PerformResourceRegen()");
+            base.PerformResourceRegen();
+        }
+
     }
 
 }

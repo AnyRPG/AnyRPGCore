@@ -72,6 +72,8 @@ namespace AnyRPG {
 
         private Transform followTransform = null;
 
+        private Color powerResourceColor = Color.blue;
+
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
@@ -176,7 +178,11 @@ namespace AnyRPG {
 
             InitializeController();
             followGameObject = target;
+
             INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
+            if ((namePlateUnit as CharacterUnit) is CharacterUnit && (namePlateUnit as CharacterUnit).MyBaseCharacter != null && (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterClass != null) {
+                powerResourceColor = (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterClass.PowerResourceList[0].DisplayColor;
+            }
             if (namePlateUnit.HasHealth()) {
                 castBarController.SetTarget(target);
                 statusEffectPanelController.SetTarget(namePlateUnit as CharacterUnit);
@@ -207,7 +213,7 @@ namespace AnyRPG {
                 INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
                 if (namePlateUnit is CharacterUnit) {
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnManaChanged -= OnManaChanged;
+                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnPrimaryResourceAmountChanged -= OnResourceAmountChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
                     (namePlateUnit as CharacterUnit).MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
@@ -249,12 +255,12 @@ namespace AnyRPG {
 
                 // set initial hp and mana values in character display
                 OnHealthChanged(baseCharacter.CharacterStats.MyMaxHealth, baseCharacter.CharacterStats.currentHealth);
-                OnManaChanged(baseCharacter.CharacterStats.MyMaxMana, baseCharacter.CharacterStats.currentMana);
+                OnResourceAmountChanged(baseCharacter.CharacterStats.MaxPrimaryResource, baseCharacter.CharacterStats.CurrentPrimaryResource);
                 OnLevelChanged(baseCharacter.CharacterStats.Level);
 
                 // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
                 baseCharacter.CharacterStats.OnHealthChanged += OnHealthChanged;
-                baseCharacter.CharacterStats.OnManaChanged += OnManaChanged;
+                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged += OnResourceAmountChanged;
                 baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
                 baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
 
@@ -267,7 +273,7 @@ namespace AnyRPG {
             } else {
                 // manually set everything to 1 if this is an inanimate unit
                 OnHealthChanged(1, 1);
-                OnManaChanged(1, 1);
+                OnResourceAmountChanged(1, 1);
                 OnLevelChanged(1);
             }
         }
@@ -332,9 +338,14 @@ namespace AnyRPG {
             }
         }
 
-        public void OnManaChanged(int maxMana, int currentMana) {
+        /// <summary>
+        /// accept a resource amount changed message
+        /// </summary>
+        /// <param name="maxResourceAmount"></param>
+        /// <param name="currentResourceAmount"></param>
+        public void OnResourceAmountChanged(int maxResourceAmount, int currentResourceAmount) {
             //Debug.Log("Updating mana bar");
-            float manaPercent = (float)currentMana / maxMana;
+            float resourcePercent = (float)currentResourceAmount / maxResourceAmount;
             //Debug.Log("UnitFrameController: setting manaSlider width to " + (manaPercent * originalManaSliderWidth).ToString());
 
             // code for an actual image, not currently used
@@ -342,11 +353,14 @@ namespace AnyRPG {
 
             // code for the default image
             if (manaSlider != null) {
-                manaSlider.GetComponent<LayoutElement>().preferredWidth = manaPercent * originalManaSliderWidth;
+                manaSlider.GetComponent<LayoutElement>().preferredWidth = resourcePercent * originalManaSliderWidth;
+                if (manaSlider.color != powerResourceColor) {
+                    manaSlider.color = powerResourceColor;
+                }
             }
 
             if (manaText != null) {
-                manaText.text = string.Format("{0} / {1} ({2}%)", currentMana, maxMana, (manaPercent * 100).ToString("F0"));
+                manaText.text = string.Format("{0} / {1} ({2}%)", currentResourceAmount, maxResourceAmount, (resourcePercent * 100).ToString("F0"));
             }
         }
 

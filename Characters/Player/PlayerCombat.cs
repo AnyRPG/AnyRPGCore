@@ -22,7 +22,7 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 baseCharacter.CharacterStats.OnHealthChanged += AttemptRegen;
-                baseCharacter.CharacterStats.OnManaChanged += AttemptRegen;
+                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged += AttemptRegen;
             }
             eventSubscriptionsInitialized = true;
         }
@@ -43,7 +43,7 @@ namespace AnyRPG {
 
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 baseCharacter.CharacterStats.OnHealthChanged -= AttemptRegen;
-                baseCharacter.CharacterStats.OnManaChanged -= AttemptRegen;
+                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged -= AttemptRegen;
             }
             eventSubscriptionsInitialized = false;
         }

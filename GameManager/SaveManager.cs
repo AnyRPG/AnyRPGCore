@@ -333,7 +333,10 @@ namespace AnyRPG {
             }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
-            anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana;
+
+            //anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana;
+            SaveResourcePowerData(anyRPGSaveData);
+
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
             anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.y;
             anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.z;
@@ -383,6 +386,21 @@ namespace AnyRPG {
             //Debug.Log(jsonString);
             string jsonSavePath = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + dataToSave.DataFileName;
             File.WriteAllText(jsonSavePath, jsonString);
+
+        }
+
+        public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveQuestData()");
+
+            foreach (PowerResource powerResource in PlayerManager.MyInstance.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
+                //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
+                ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
+                resourcePowerData.MyName = powerResource.MyName;
+                resourcePowerData.amount = PlayerManager.MyInstance.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
+                anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
+                //Debug.Log("Savemanager.SaveQuestData(): " + questSaveData.MyName + ", turnedIn: " + questSaveData.turnedIn + ", inLog: " + questSaveData.inLog);
+            }
+            //Debug.Log("Savemanager.SaveQuestData(): size: " + anyRPGSaveData.questSaveData.Count);
 
         }
 
@@ -609,7 +627,19 @@ namespace AnyRPG {
             }
         }
 
-        public void LoadQuestData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadQuestData()");
+
+            foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
+                //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.AddResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
+            }
+
+        }
+            
+
+
+    public void LoadQuestData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadQuestData()");
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
@@ -951,9 +981,12 @@ namespace AnyRPG {
             if (anyRPGSaveData.currentHealth > 0) {
                 PlayerManager.MyInstance.MyCharacter.CharacterStats.SetHealth(anyRPGSaveData.currentHealth);
             }
+            LoadResourcePowerData(anyRPGSaveData);
+            /*
             if (anyRPGSaveData.currentMana > 0) {
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetMana(anyRPGSaveData.currentMana);
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetPrimaryResourceamount(anyRPGSaveData.currentMana);
             }
+            */
 
             LoadWindowPositions();
 

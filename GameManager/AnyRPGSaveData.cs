@@ -11,7 +11,7 @@ namespace AnyRPG {
         public int PlayerLevel;
         public int currentExperience;
         public int currentHealth;
-        public int currentMana;
+
         public string playerName;
         public string playerFaction;
         public string characterClass;
@@ -30,6 +30,7 @@ namespace AnyRPG {
         public string DataFileName;
 
         public List<QuestSaveData> questSaveData;
+        public List<ResourcePowerSaveData> resourcePowerSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
         public List<InventorySlotSaveData> inventorySlotSaveData;
         public List<EquippedBagSaveData> equippedBagSaveData;
@@ -44,6 +45,13 @@ namespace AnyRPG {
         public List<CutsceneSaveData> cutsceneSaveData;
         public List<StatusEffectSaveData> statusEffectSaveData;
         public List<PetSaveData> petSaveData;
+    }
+
+    [Serializable]
+    public struct ResourcePowerSaveData {
+
+        public string MyName;
+        public float amount;
     }
 
     [Serializable]

@@ -21,6 +21,8 @@ namespace AnyRPG {
 
         bool IsDead { get; }
 
+        void GeneratePower(IAbility ability);
+
         AudioClip GetAnimatedAbilityHitSound();
 
         GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target);

@@ -169,13 +169,11 @@ namespace AnyRPG {
         public IEnumerator outOfCombatRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning");
             if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == true) {
-                while (baseCharacter.CharacterStats.currentHealth < baseCharacter.CharacterStats.MyMaxHealth || baseCharacter.CharacterStats.currentMana < baseCharacter.CharacterStats.MyMaxMana) {
+                while (baseCharacter.CharacterStats.currentHealth < baseCharacter.CharacterStats.MyMaxHealth) {
                     yield return new WaitForSeconds(1);
                     int healthAmount = baseCharacter.CharacterStats.MyMaxHealth / 100;
-                    int manaAmount = baseCharacter.CharacterStats.MyMaxMana / 100;
                     //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning; about to recover health: " + healthAmount + "; mana: " + manaAmount);
                     baseCharacter.CharacterStats.RecoverHealth(healthAmount, baseCharacter.CharacterAbilityManager, false);
-                    baseCharacter.CharacterStats.RecoverMana(manaAmount, baseCharacter.CharacterAbilityManager, false);
                 }
             }
             //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() ending naturally on full health");
@@ -515,7 +513,7 @@ namespace AnyRPG {
 
         public void AttemptRegen() {
             //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
-            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter.CharacterStats.IsAlive == true) {
+            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(): starting coroutine");
                 regenRoutine = StartCoroutine(outOfCombatRegen());
             }

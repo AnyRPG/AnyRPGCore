@@ -93,7 +93,7 @@ namespace AnyRPG {
 
                 if (dynamicCurrencyAmount) {
                     if (realItemQuality == null) {
-                        Debug.Log("realItemQuality was null");
+                        //Debug.Log("realItemQuality was null");
                     }
                     return (int)(((pricePerLevel * MyItemLevel) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
                 }

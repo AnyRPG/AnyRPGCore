@@ -230,7 +230,9 @@ namespace AnyRPG {
 
             updateString += "\n\n";
             updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth + "\n";
-            updateString += "Mana: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxMana + "\n\n";
+
+            updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+
             updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyArmor + "\n";
             updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage);
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage != 0f) {

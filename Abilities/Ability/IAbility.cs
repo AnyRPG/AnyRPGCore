@@ -13,7 +13,6 @@ namespace AnyRPG {
         bool MyUseableWithoutLearning { get; }
         bool MyIgnoreGlobalCoolDown { get; }
         bool CanSimultaneousCast { get; }
-        int MyAbilityManaCost { get; set; }
         float MyAbilityCastingTime { get; set; }
         bool MyRequiresTarget { get; set; }
         bool MyRequiresGroundTarget { get; set; }
@@ -27,6 +26,10 @@ namespace AnyRPG {
         AudioClip MyCastingAudioClip { get; }
         bool MyAnimatorCreatePrefabs { get; set; }
         bool MyRequireOutOfCombat { get; set; }
+        PowerResource PowerResource { get; }
+        PowerResource GeneratePowerResource { get; set; }
+        int BaseResourceGain { get; set; }
+        int ResourceGainPerLevel { get; set; }
 
 
         bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks);
@@ -40,6 +43,7 @@ namespace AnyRPG {
         //void HandleCastStop(BaseCharacter source);
         //bool PerformLOSCheck(IAbilityCaster source, GameObject target);
         bool RequirementsAreMet();
-
+        float GetResourceCost(IAbilityCaster abilityCaster);
+        float GetResourceGain(IAbilityCaster abilityCaster);
     }
 }

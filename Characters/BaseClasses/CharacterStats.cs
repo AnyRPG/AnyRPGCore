@@ -10,7 +10,7 @@ namespace AnyRPG {
         //public static event Action<CharacterStats> OnCharacterStatsRemoved = delegate { };
 
         public event System.Action<int, int> OnHealthChanged = delegate { };
-        public event System.Action<int, int> OnManaChanged = delegate { };
+        public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
         public event System.Action<CharacterStats> OnDie = delegate { };
         public event System.Action<CharacterStats> BeforeDie = delegate { };
         public event System.Action OnReviveBegin = delegate { };
@@ -51,7 +51,11 @@ namespace AnyRPG {
         protected float currentSprintSpeed = 0f;
 
         public int currentHealth { get; private set; }
-        public int currentMana { get; private set; }
+
+        private Dictionary<PowerResource, PowerResourceNode> powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
+
+
+        //public int currentMana { get; private set; }
 
         // hitbox is now a function of character unit collider height
         //private float hitBox = 1.5f;
@@ -94,12 +98,40 @@ namespace AnyRPG {
         public int Level { get => currentLevel; }
         public int MyCurrentXP { get => currentXP; set => currentXP = value; }
         public int MyMaxHealth { get => (int)(MyStamina * 10 * healthMultiplier); }
-        public int MyMaxMana { get => (int)(MyIntellect * 10 * manaMultiplier); }
+        public PowerResource PrimaryResource {
+            get {
+                if (baseCharacter != null && baseCharacter.MyCharacterClass != null) {
+                    if (baseCharacter.MyCharacterClass.PowerResourceList.Count > 0) {
+                        return baseCharacter.MyCharacterClass.PowerResourceList[0];
+                    }
+                }
+                return null;
+            }
+        }
+        public int MaxPrimaryResource {
+            get {
+                if (PrimaryResource != null) {
+                    return (int)baseCharacter.MyCharacterClass.GetResourceMaximum(baseCharacter.MyCharacterClass.PowerResourceList[0], this);
+                }
+                return 0;
+            }
+        }
+        public int CurrentPrimaryResource {
+            get {
+                if (PrimaryResource != null) {
+                    if (powerResourceDictionary.Count > 0) {
+                        return (int)powerResourceDictionary[baseCharacter.MyCharacterClass.PowerResourceList[0]].currentValue;
+                    }
+                }
+                return 0;
+            }
+        }
 
         public Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get => primaryStatModifiers; }
         public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
         public UnitToughness MyToughness { get => unitToughness; set => unitToughness = value; }
         public bool MyIsReviving { get => isReviving; set => isReviving = value; }
+        public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
@@ -136,6 +168,28 @@ namespace AnyRPG {
 
         public void GetComponentReferences() {
             baseCharacter = GetComponent<BaseCharacter>();
+        }
+
+        public void SetCharacterClass(CharacterClass characterClass) {
+            //Debug.Log(gameObject.name + ".CharacterStats.SetCharacterClass(" + (characterClass == null ? "null" : characterClass.MyName) + ")");
+            powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
+            foreach (PowerResource powerResource in characterClass.PowerResourceList) {
+                powerResourceDictionary.Add(powerResource, new PowerResourceNode());
+            }
+        }
+
+        public virtual bool PerformPowerResourceCheck(IAbility ability, float resourceCost) {
+            //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.MyName) + ", " + resourceCost + ")");
+            if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
+                return true;
+            }
+            if (PowerResourceDictionary == null) {
+                return false;
+            }
+            if (powerResourceDictionary.ContainsKey(ability.PowerResource) && (powerResourceDictionary[ability.PowerResource].currentValue >= resourceCost)) {
+                return true;
+            }
+            return false;
         }
 
         public void SetPrimaryStatModifiers() {
@@ -237,7 +291,7 @@ namespace AnyRPG {
                 primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier(Level, baseCharacter));
             }
 
-            ManaChangedNotificationHandler();
+            PrimaryResourceAmountChangedNotificationHandler();
             HealthChangedNotificationHandler();
         }
 
@@ -520,7 +574,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.MyName) + ")");
             if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Intellect)) {
                 //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING MANA CHANGED");
-                ManaChangedNotificationHandler();
+                PrimaryResourceAmountChangedNotificationHandler();
                 StatChangedNotificationHandler();
             }
             if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Stamina)) {
@@ -622,33 +676,67 @@ namespace AnyRPG {
             CalculatePrimaryStats();
 
             ResetHealth();
-            ResetMana();
+            ResetPrimaryResourceAmount();
         }
 
         public Vector3 GetTransFormPosition() {
             return transform.position;
         }
 
-        public virtual void UseMana(int usedMana) {
-            usedMana = Mathf.Clamp(usedMana, 0, int.MaxValue);
-            currentMana -= usedMana;
-            currentMana = Mathf.Clamp(currentMana, 0, int.MaxValue);
-            OnManaChanged(MyMaxMana, currentMana);
+        public virtual void UsePowerResource(PowerResource powerResource, int usedResourceAmount) {
+            usedResourceAmount = Mathf.Clamp(usedResourceAmount, 0, int.MaxValue);
+            if (powerResourceDictionary.ContainsKey(powerResource)) {
+                powerResourceDictionary[powerResource].currentValue -= usedResourceAmount;
+                powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, int.MaxValue);
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+            }
         }
 
-        public void SetMana(int mana) {
+        public void SetResourceAmount(string resourceName, float newAmount) {
+            //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+            PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
+
+            if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
+                powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
+                powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
+                    powerResourceDictionary[tmpPowerResource].currentValue,
+                    0,
+                    (int)baseCharacter.MyCharacterClass.GetResourceMaximum(tmpPowerResource, this));
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            }
+        }
+
+        public void AddResourceAmount(string resourceName, float newAmount) {
+            //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+            PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
+
+            if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
+                powerResourceDictionary[tmpPowerResource].currentValue += newAmount;
+                powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
+                    powerResourceDictionary[tmpPowerResource].currentValue,
+                    0,
+                    (int)baseCharacter.MyCharacterClass.GetResourceMaximum(tmpPowerResource, this));
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            }
+        }
+
+        public void SetPrimaryResourceAmount(int newAmount) {
             //Debug.Log(gameObject.name + ": setting mana: " + mana.ToString());
-            mana = Mathf.Clamp(mana, 0, int.MaxValue);
-            currentMana += mana;
-            currentMana = Mathf.Clamp(currentMana, 0, MyMaxMana);
-
-            // notify subscribers that our mana has changed
-            OnManaChanged(MyMaxMana, currentMana);
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+            if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
+                powerResourceDictionary[PrimaryResource].currentValue += newAmount;
+                powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+            }
         }
 
-        public void RecoverMana(int mana, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public void RecoverPrimaryResource(int mana, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
-            SetMana(mana);
+            SetPrimaryResourceAmount(mana);
             if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, mana, CombatTextType.gainMana, combatMagnitude);
@@ -694,12 +782,18 @@ namespace AnyRPG {
 
         public void HandleIntellectUpdate() {
             CalculateIntellect();
-            ManaChangedNotificationHandler();
+            PrimaryResourceAmountChangedNotificationHandler();
         }
 
-        public void ManaChangedNotificationHandler() {
-            currentMana = Mathf.Clamp(currentMana, 0, MyMaxMana);
-            OnManaChanged(MyMaxMana, currentMana);
+        /// <summary>
+        /// allows to cap the resource amount if the resource cap has been lowered due to stat debuff etc
+        /// </summary>
+        public void PrimaryResourceAmountChangedNotificationHandler() {
+
+            if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
+                powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+            }
         }
 
         public void HandleStaminaUpdate() {
@@ -730,11 +824,11 @@ namespace AnyRPG {
         /// <summary>
         /// Set mana to maximum
         /// </summary>
-        public void ResetMana() {
-            currentMana = MyMaxMana;
-
-            // notify subscribers that our health has changed
-            OnManaChanged(MyMaxMana, currentMana);
+        public void ResetPrimaryResourceAmount() {
+            if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
+                powerResourceDictionary[PrimaryResource].currentValue = MaxPrimaryResource;
+                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+            }
         }
 
         public virtual void TrySpawnDead() {
@@ -754,6 +848,7 @@ namespace AnyRPG {
             if (isAlive) {
                 isAlive = false;
                 ClearStatusEffects(false);
+                ClearPowerAmounts();
                 BeforeDie(this);
                 OnDie(this);
             }
@@ -787,7 +882,7 @@ namespace AnyRPG {
             isAlive = true;
             ClearInvalidStatusEffects();
             ResetHealth();
-            ResetMana();
+            //ResetPrimaryResourceAmount();
         }
 
         protected virtual void ClearStatusEffects(bool clearAll = true) {
@@ -888,6 +983,86 @@ namespace AnyRPG {
             }
 
         }
+
+        public void Update() {
+            PerformResourceRegen();
+        }
+
+        public float GetPowerResourceAmount(PowerResource powerResource) {
+            if (powerResourceDictionary.ContainsKey(powerResource)) {
+                return powerResourceDictionary[powerResource].currentValue;
+            }
+            return 0f;
+        }
+
+        public float GetPowerResourceMaxAmount(PowerResource powerResource) {
+            if (powerResourceDictionary.ContainsKey(powerResource)) {
+                return baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this);
+            }
+            return 0f;
+        }
+
+        protected virtual void ClearPowerAmounts() {
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                SetResourceAmount(powerResource.MyName, 0f);
+            }
+        }
+
+        protected virtual void PerformResourceRegen() {
+            if (baseCharacter == null || baseCharacter.CharacterUnit == null || isAlive == false) {
+                // if the character is not spawned, we should not be regenerating their resources.
+                return;
+            }
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                powerResourceDictionary[powerResource].elapsedTime += Time.deltaTime;
+                //Debug.Log(gameObject.name + ".CharacterStats.PerformResourceRegen(): powerResource: " + powerResource.MyName + "; value: " + powerResourceDictionary[powerResource].currentValue + "; max: " + baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this));
+
+                if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
+                    powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
+                    float usedRegenAmount = 0f;
+                    if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
+                        // perform combat regen
+                        if (powerResource.CombatRegenIsPercent) {
+                            usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.CombatRegenPerTick / 100);
+                        } else {
+                            usedRegenAmount = powerResource.CombatRegenPerTick;
+                        }
+                    } else {
+                        // perform out of combat regen
+                        if (powerResource.RegenIsPercent) {
+                            usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.RegenPerTick / 100);
+                        } else {
+                            usedRegenAmount = powerResource.RegenPerTick;
+                        }
+                    }
+                    powerResourceDictionary[powerResource].currentValue += usedRegenAmount;
+                    powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(
+                        powerResourceDictionary[powerResource].currentValue,
+                        0,
+                        (int)baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this));
+
+                    // this is notifying on primary resource, but for now, we don't have multiples, so its ok
+                    // this will need to be fixed when we add secondary resources
+                    OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+
+                }
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class PowerResourceNode {
+
+        /// <summary>
+        /// elapsed time per tick
+        /// </summary>
+        public float elapsedTime = 0f;
+
+        /// <summary>
+        /// the value of the power resource
+        /// </summary>
+        public float currentValue = 0f;
+
     }
 
 }

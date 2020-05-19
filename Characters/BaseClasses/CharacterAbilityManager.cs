@@ -167,6 +167,19 @@ namespace AnyRPG {
             base.OnDisable();
         }
 
+        public override void GeneratePower(IAbility ability) {
+            //Debug.Log(gameObject.name + ".GeneratePower(" + ability.MyName + ")");
+            if (ability.GeneratePowerResource == null) {
+                // nothing to generate
+                return;
+            }
+            base.GeneratePower(ability);
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                //Debug.Log(gameObject.name + ".GeneratePower(" + ability.MyName + "): name " + ability.GeneratePowerResource.MyName  + "; " + ability.GetResourceGain(this));
+                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.MyName, ability.GetResourceGain(this));
+            }
+        }
+
         public override List<AnimationClip> GetDefaultAttackAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
             if (autoAttackAbility != null) {
@@ -1223,7 +1236,7 @@ namespace AnyRPG {
             }
 
             // check if we have enough mana
-            if (!PerformManaCheck(ability)) {
+            if (!PerformPowerResourceCheck(ability)) {
                 return false;
             }
 
@@ -1283,11 +1296,16 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool PerformManaCheck(IAbility ability) {
-            if (BaseCharacter.CharacterStats.currentMana < ability.MyAbilityManaCost) {
-                return false;
+        /// <summary>
+        /// Check if the caster has the required amount of the power resource to cast the ability
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
+        public virtual bool PerformPowerResourceCheck(IAbility ability) {
+            if (BaseCharacter.CharacterStats.PerformPowerResourceCheck(ability, ability.GetResourceCost(this))) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -1304,15 +1322,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + ": finalTarget is null");
             }
 
-            if (BaseCharacter.CharacterStats.currentMana < ability.MyAbilityManaCost) {
-                CombatLogUI.MyInstance.WriteCombatMessage("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
-                //Debug.Log("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
-                // GET RID OF CASTING PREFABS HERE
+            if (!PerformPowerResourceCheck(ability)) {
                 return;
             }
 
-            if (ability.MyAbilityManaCost != 0) {
-                BaseCharacter.CharacterStats.UseMana(ability.MyAbilityManaCost);
+            if (ability.GetResourceCost(this) != 0 && ability.PowerResource != null) {
+                BaseCharacter.CharacterStats.UsePowerResource(ability.PowerResource, (int)ability.GetResourceCost(this));
             }
 
             // cast the system manager version so we can track globally the spell cooldown

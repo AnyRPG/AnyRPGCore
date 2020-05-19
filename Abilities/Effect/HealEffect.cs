@@ -42,7 +42,7 @@ namespace AnyRPG {
             manaFinalAmount += (int)(abilityEffectInput.manaAmount * inputMultiplier);
             abilityEffectOutput.manaAmount = manaFinalAmount;
             if (manaFinalAmount > 0) {
-                target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverMana(manaFinalAmount, source, true, combatMagnitude);
+                target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverPrimaryResource(manaFinalAmount, source, true, combatMagnitude);
             }
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
             base.PerformAbilityHit(source, target, abilityEffectOutput);

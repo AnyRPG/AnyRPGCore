@@ -102,13 +102,39 @@ namespace AnyRPG {
 
         [Header("Cost")]
 
-        [Tooltip("The mana cost to cast the ability")]
+        [Tooltip("The resource to use when casting this ability")]
         [SerializeField]
-        protected int abilityManaCost = 0;
+        protected string powerResourceName = string.Empty;
 
-        [Tooltip("The cooldown in seconds before this ability can be cast again.  0 means no cooldown.")]
+        /// <summary>
+        /// the resource to spend when casting
+        /// </summary>
+        protected PowerResource powerResource = null;
+
+        [Tooltip("A fixed amount of the resource to use per cast")]
         [SerializeField]
-        public float abilityCoolDown = 0f;
+        protected int baseResourceCost = 0;
+
+        [Tooltip("A fixed amount of the resource to use per cast")]
+        [SerializeField]
+        protected int resourceCostPerLevel = 5;
+
+        [Header("Power Generation")]
+
+        [Tooltip("The resource to refill when this ability hits the target")]
+        [SerializeField]
+        protected string generatePowerResourceName = string.Empty;
+
+        protected PowerResource generatePowerResource = null;
+
+        [Tooltip("A fixed amount of the resource to gain")]
+        [SerializeField]
+        protected int baseResourceGain = 0;
+
+        [Tooltip("An amount of the resource to gain that is multiplied by the caster level")]
+        [SerializeField]
+        protected int resourceGainPerLevel = 0;
+
 
         [Header("Cast Time")]
 
@@ -119,6 +145,11 @@ namespace AnyRPG {
         [Tooltip("If the animation cast time is not used, the number of seconds to spend casting")]
         [SerializeField]
         protected float abilityCastingTime = 0f;
+
+        [Tooltip("The cooldown in seconds before this ability can be cast again.  0 means no cooldown.")]
+        [SerializeField]
+        public float abilityCoolDown = 0f;
+
 
         [Header("Ground Target")]
 
@@ -217,7 +248,6 @@ namespace AnyRPG {
         public bool MyAutoLearn { get => autoLearn; }
         public bool MyAutoAddToBars { get => autoAddToBars; }
         public bool MyUseableWithoutLearning { get => useableWithoutLearning; }
-        public int MyAbilityManaCost { get => abilityManaCost; set => abilityManaCost = value; }
         public virtual float MyAbilityCastingTime {
             get {
                 if (useAnimationCastTime == false) {
@@ -256,7 +286,10 @@ namespace AnyRPG {
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
         public List<CharacterClass> CharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
-
+        public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
+        public PowerResource GeneratePowerResource { get => generatePowerResource; set => generatePowerResource = value; }
+        public int BaseResourceGain { get => baseResourceGain; set => baseResourceGain = value; }
+        public int ResourceGainPerLevel { get => resourceGainPerLevel; set => resourceGainPerLevel = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -285,7 +318,29 @@ namespace AnyRPG {
 
             string abilityRange = (useMeleeRange == true ? "melee" : MaxRange + " meters");
 
-            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s)\nCost: {2} Mana\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, abilityManaCost, abilityRange, description, addString);
+            string costString = string.Empty;
+            if (powerResource != null) {
+                costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager) + " " + powerResource.MyName;
+            }
+
+            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
+        }
+
+        public virtual float GetResourceCost(IAbilityCaster abilityCaster) {
+            if (abilityCaster != null && powerResource != null) {
+                return baseResourceCost + (abilityCaster.Level * resourceCostPerLevel);
+            }
+            return baseResourceCost;
+        }
+
+        public virtual float GetResourceGain(IAbilityCaster abilityCaster) {
+            Debug.Log(MyName + ".BaseAbility.GetResourceGain(" + (abilityCaster == null ? "null" : abilityCaster.Name) + ")");
+            if (abilityCaster != null) {
+                Debug.Log(MyName + ".BaseAbility.GetResourceGain() level: " + abilityCaster.Level + "; gainperLevel: " + resourceGainPerLevel + "; base: " + baseResourceGain);
+
+                return baseResourceGain + (abilityCaster.Level * resourceGainPerLevel);
+            }
+            return baseResourceCost;
         }
 
         public virtual AudioClip GetAnimationHitSound() {
@@ -475,6 +530,9 @@ namespace AnyRPG {
                     return false;
                 }
             }
+
+            // generate power resource
+            source.GeneratePower(this);
 
             foreach (AbilityEffect abilityEffect in abilityEffects) {
                 if (abilityEffect == null) {
@@ -679,6 +737,27 @@ namespace AnyRPG {
                     Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                 }
             }
+
+            powerResource = null;
+            if (powerResourceName != null && powerResourceName != string.Empty) {
+                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourceName);
+                if (tmpPowerResource != null) {
+                    powerResource = tmpPowerResource;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            generatePowerResource = null;
+            if (generatePowerResourceName != null && generatePowerResourceName != string.Empty) {
+                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(generatePowerResourceName);
+                if (tmpPowerResource != null) {
+                    generatePowerResource = tmpPowerResource;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                }
+            }
+
 
             channeledAbilityEffects = new List<AbilityEffect>();
             if (channeledAbilityEffectnames != null) {

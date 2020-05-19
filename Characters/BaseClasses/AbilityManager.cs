@@ -50,6 +50,10 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void GeneratePower(IAbility ability) {
+            // do nothing
+        }
+
         public virtual AudioClip GetAnimatedAbilityHitSound() {
             return null;
         }
