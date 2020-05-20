@@ -140,6 +140,8 @@ namespace AnyRPG {
                 LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
+                } else {
+                    Debug.LogError("Could not find loot table " + lootTableName + " while initializing Loot Node");
                 }
             }
         }

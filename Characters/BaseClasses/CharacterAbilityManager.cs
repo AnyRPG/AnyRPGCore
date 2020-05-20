@@ -1391,7 +1391,7 @@ namespace AnyRPG {
         /// This will be triggered in response to things like hammer taps, not attacks
         /// </summary>
         public void AnimationHitAnimationEvent() {
-            Debug.Log(gameObject.name + ".CharacterAbilitymanager.AnimationHitAnimationEvent()");
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AnimationHitAnimationEvent()");
 
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationHitSound();

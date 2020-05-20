@@ -197,7 +197,9 @@ namespace AnyRPG {
             }
             base.DropCombat();
             AttemptRegen();
-            CombatLogUI.MyInstance.WriteCombatMessage("Left combat");
+            if (CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteCombatMessage("Left combat");
+            }
         }
 
         public override void BroadcastCharacterDeath() {
