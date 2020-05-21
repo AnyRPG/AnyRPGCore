@@ -187,6 +187,7 @@ namespace AnyRPG {
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
+                spawnReference.transform.localScale = prefabProfile.MyScale;
                 spawnReference.transform.Rotate(prefabProfile.MyRotation);
             } else {
                 if (spawnReference != null) {

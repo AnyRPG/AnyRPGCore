@@ -31,7 +31,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> holdableObjectNames = new List<string>();
 
-        [SerializeField]
+        //[SerializeField]
         private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
 
         [Header("Prefab Control")]
@@ -272,7 +272,7 @@ namespace AnyRPG {
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip MyCastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.MyAudioClip); }
         public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
-        public List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
+        public virtual List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }

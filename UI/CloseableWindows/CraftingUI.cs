@@ -94,6 +94,7 @@ namespace AnyRPG {
         public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
         public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
+        public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
 
         private Coroutine waitCoroutine = null;
 
