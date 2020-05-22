@@ -334,9 +334,9 @@ namespace AnyRPG {
         }
 
         public virtual float GetResourceGain(IAbilityCaster abilityCaster) {
-            Debug.Log(MyName + ".BaseAbility.GetResourceGain(" + (abilityCaster == null ? "null" : abilityCaster.Name) + ")");
+            //Debug.Log(MyName + ".BaseAbility.GetResourceGain(" + (abilityCaster == null ? "null" : abilityCaster.Name) + ")");
             if (abilityCaster != null) {
-                Debug.Log(MyName + ".BaseAbility.GetResourceGain() level: " + abilityCaster.Level + "; gainperLevel: " + resourceGainPerLevel + "; base: " + baseResourceGain);
+                //Debug.Log(MyName + ".BaseAbility.GetResourceGain() level: " + abilityCaster.Level + "; gainperLevel: " + resourceGainPerLevel + "; base: " + baseResourceGain);
 
                 return baseResourceGain + (abilityCaster.Level * resourceGainPerLevel);
             }

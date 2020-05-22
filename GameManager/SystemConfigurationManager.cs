@@ -106,7 +106,7 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite systemBarMap;
 
-        [Header("CHARACTER CONFIGURATION")]
+        [Header("CHARACTER ANIMATION CONFIGURATION")]
 
         [FormerlySerializedAs("defaultAttackAnimationProfile")]
         [SerializeField]
@@ -115,11 +115,59 @@ namespace AnyRPG {
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
 
+        [Header("Level Values")]
+
+        [Tooltip("The character cannot level up past this level")]
         [SerializeField]
         private int maxLevel = 50;
 
+        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount")]
+        [SerializeField]
+        private int xpRequiredPerLevel = 100;
+
+        [Header("Quest Experience Scaling")]
+
+        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [SerializeField]
+        private int baseQuestXP = 0;
+
+        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [SerializeField]
+        private int questXPPerLevel = 100;
+
+        [Tooltip("If true, the experience per level will be multiplied by (1 / level)")]
+        [SerializeField]
+        private bool useQuestXPLevelMultiplierDemoninator = true;
+
+        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level)")]
+        [SerializeField]
+        private int questXPMultiplierLevelCap = 5;
+
+        [Header("Kill Experience Scaling")]
+
+        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [SerializeField]
+        private int baseKillXP = 0;
+
+        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [SerializeField]
+        private int killXPPerLevel = 100;
+
+        [Tooltip("If true, the experience per level will be multiplied by (1 / level)")]
+        [SerializeField]
+        private bool useKillXPLevelMultiplierDemoninator = true;
+
+        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level)")]
+        [SerializeField]
+        private int killXPMultiplierLevelCap = 10;
+
+
+        [Header("DPS Scaling")]
+
         [SerializeField]
         private float weaponDPSBudgetPerLevel = 2.5f;
+
+        [Header("Stat Scaling")]
 
         [SerializeField]
         private float statBudgetPerLevel = 0f;
@@ -358,6 +406,15 @@ namespace AnyRPG {
         public bool MyUseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
         public bool MyUseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
         public bool MyAllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
+        public int XpRequiredPerLevel { get => xpRequiredPerLevel; set => xpRequiredPerLevel = value; }
+        public int BaseQuestXP { get => baseQuestXP; set => baseQuestXP = value; }
+        public int QuestXPPerLevel { get => questXPPerLevel; set => questXPPerLevel = value; }
+        public bool UseQuestXPLevelMultiplierDemoninator { get => useQuestXPLevelMultiplierDemoninator; set => useQuestXPLevelMultiplierDemoninator = value; }
+        public int QuestXPMultiplierLevelCap { get => questXPMultiplierLevelCap; set => questXPMultiplierLevelCap = value; }
+        public int BaseKillXP { get => baseKillXP; set => baseKillXP = value; }
+        public int KillXPPerLevel { get => killXPPerLevel; set => killXPPerLevel = value; }
+        public bool UseKillXPLevelMultiplierDemoninator { get => useKillXPLevelMultiplierDemoninator; set => useKillXPLevelMultiplierDemoninator = value; }
+        public int KillXPMultiplierLevelCap { get => killXPMultiplierLevelCap; set => killXPMultiplierLevelCap = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

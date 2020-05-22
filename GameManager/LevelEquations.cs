@@ -7,7 +7,7 @@ namespace AnyRPG {
     static class LevelEquations {
 
         public static int GetXPNeededForLevel(int _level) {
-            return _level * 100;
+            return _level * SystemConfigurationManager.MyInstance.XpRequiredPerLevel;
         }
 
         /// <summary>
@@ -48,38 +48,62 @@ namespace AnyRPG {
             }
         }
 
-        public static int GetXPAmountForKill(int sourceLevel, int targetLevel) {
-            int baseXP = (sourceLevel * 5) + 45;
+        public static int GetXPAmountForKill(int sourceLevel, BaseCharacter targetCharacter) {
+
+            float multiplierValue = 1f;
+            float toughnessMultiplierValue = 1f;
+
+            if (SystemConfigurationManager.MyInstance.UseKillXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap > 0 ? SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap : Mathf.Infinity));
+            }
+            if (targetCharacter.CharacterStats.MyToughness != null) {
+                toughnessMultiplierValue = targetCharacter.CharacterStats.MyToughness.ExperienceMultiplier;
+            }
+
+            int baseXP = (int)((((sourceLevel * SystemConfigurationManager.MyInstance.KillXPPerLevel) * multiplierValue) + SystemConfigurationManager.MyInstance.BaseKillXP) * toughnessMultiplierValue);
+
             int totalXP = 0;
-            if (sourceLevel < targetLevel) {
+            if (sourceLevel < targetCharacter.CharacterStats.Level) {
                 // higher level mob
-                totalXP = (int)(baseXP * (1 + 0.05 * (targetLevel - sourceLevel)));
-            } else if (sourceLevel == targetLevel) {
+                totalXP = (int)(baseXP * (1 + 0.05 * (targetCharacter.CharacterStats.Level - sourceLevel)));
+            } else if (sourceLevel == targetCharacter.CharacterStats.Level) {
                 totalXP = baseXP;
-            } else if (targetLevel > GetGrayLevel(sourceLevel)) {
-                totalXP = baseXP * (1 - (sourceLevel - targetLevel) / ZeroDifference(sourceLevel));
+            } else if (targetCharacter.CharacterStats.Level > GetGrayLevel(sourceLevel)) {
+                totalXP = baseXP * (1 - (sourceLevel - targetCharacter.CharacterStats.Level) / ZeroDifference(sourceLevel));
             }
             return totalXP;
         }
 
         public static int GetXPAmountForQuest(int sourceLevel, Quest quest) {
+
+            float multiplierValue = 1f;
+
+            if (SystemConfigurationManager.MyInstance.UseQuestXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.MyInstance.QuestXPMultiplierLevelCap > 0 ? SystemConfigurationManager.MyInstance.QuestXPMultiplierLevelCap : Mathf.Infinity));
+            }
+
+            int experiencePerLevel = SystemConfigurationManager.MyInstance.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
+            int baseExperience = SystemConfigurationManager.MyInstance.BaseQuestXP + quest.BaseExperienceReward;
+
+            int baseXP = (int)(((quest.MyExperienceLevel * experiencePerLevel) * multiplierValue) + baseExperience);
+
             if (sourceLevel <= quest.MyExperienceLevel + 5) {
-                return quest.MyExperienceReward;
+                return baseXP;
             }
             if (sourceLevel == quest.MyExperienceLevel + 6) {
-                return (int)(quest.MyExperienceReward * 0.8);
+                return (int)(baseXP * 0.8);
             }
             if (sourceLevel == quest.MyExperienceLevel + 7) {
-                return (int)(quest.MyExperienceReward * 0.6);
+                return (int)(baseXP * 0.6);
             }
             if (sourceLevel == quest.MyExperienceLevel + 8) {
-                return (int)(quest.MyExperienceReward * 0.4);
+                return (int)(baseXP * 0.4);
             }
             if (sourceLevel == quest.MyExperienceLevel + 9) {
-                return (int)(quest.MyExperienceReward * 0.2);
+                return (int)(baseXP * 0.2);
             }
             if (sourceLevel == quest.MyExperienceLevel + 10) {
-                return (int)(quest.MyExperienceReward * 0.1);
+                return (int)(baseXP * 0.1);
             }
             return 0;
         }

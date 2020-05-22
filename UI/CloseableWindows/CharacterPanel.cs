@@ -196,6 +196,10 @@ namespace AnyRPG {
         public void UpdateStatsDescription() {
             //Debug.Log("CharacterPanel.UpdateStatsDescription");
 
+            if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
+                return;
+            }
+
             // update images on character buttons
             UpdateCharacterButtons();
 

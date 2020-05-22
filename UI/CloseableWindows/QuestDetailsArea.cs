@@ -146,7 +146,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += quest.MyExperienceReward + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest) + " XP";
 
             // show item rewards
             if (quest.MyItemRewards.Count > 0) {

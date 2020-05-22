@@ -320,7 +320,11 @@ namespace AnyRPG {
                 healthSlider.GetComponent<LayoutElement>().preferredWidth = healthPercent * originalHealthSliderWidth;
             }
             if (healthText != null) {
-                healthText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentHealth, displayedMaxHealth, (healthPercent * 100).ToString("F0"));
+                string percentText = string.Empty;
+                if (healthPercent != 0f) {
+                    percentText = (healthPercent * 100).ToString("F0");
+                } 
+                healthText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentHealth, displayedMaxHealth, percentText);
             }
 
             if (displayedCurrentHealth <= 0) {
@@ -360,7 +364,11 @@ namespace AnyRPG {
             }
 
             if (manaText != null) {
-                manaText.text = string.Format("{0} / {1} ({2}%)", currentResourceAmount, maxResourceAmount, (resourcePercent * 100).ToString("F0"));
+                string percentText = string.Empty;
+                if (maxResourceAmount > 0) {
+                    percentText = " (" + (resourcePercent * 100).ToString("F0") + "%)";
+                }
+                manaText.text = string.Format("{0} / {1}{2}", currentResourceAmount, maxResourceAmount, percentText);
             }
         }
 

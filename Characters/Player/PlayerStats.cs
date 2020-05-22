@@ -96,7 +96,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
-            GainXP((int)(LevelEquations.GetXPAmountForKill(Level, sourceCharacter.CharacterStats.Level) * creditPercent));
+            GainXP((int)(LevelEquations.GetXPAmountForKill(Level, sourceCharacter) * creditPercent));
         }
 
         public override void Die() {

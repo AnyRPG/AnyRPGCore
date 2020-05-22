@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         protected IEnumerator StartSpawnCountdown() {
-            Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
+            //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
             HandlePrerequisiteUpdates();
             currentTimer = spawnTimer;
@@ -68,7 +68,7 @@ namespace AnyRPG {
             }
             spawnCoroutine = null;
 
-            Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown(): countdown complete");
+            //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown(): countdown complete");
             //interactable.Spawn();
             // ENABLE MINIMAP ICON AFTER SPAWN
             HandlePrerequisiteUpdates();

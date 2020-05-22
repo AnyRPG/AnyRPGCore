@@ -135,6 +135,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.questSaveData == null || overWrite) {
                 anyRPGSaveData.questSaveData = new List<QuestSaveData>();
             }
+            if (anyRPGSaveData.resourcePowerSaveData == null || overWrite) {
+                anyRPGSaveData.resourcePowerSaveData = new List<ResourcePowerSaveData>();
+            }
             if (anyRPGSaveData.actionBarSaveData == null || overWrite) {
                 anyRPGSaveData.actionBarSaveData = new List<ActionBarSaveData>();
             }
@@ -334,9 +337,6 @@ namespace AnyRPG {
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
             anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
 
-            //anyRPGSaveData.currentMana = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentMana;
-            SaveResourcePowerData(anyRPGSaveData);
-
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
             anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.y;
             anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.z;
@@ -349,6 +349,8 @@ namespace AnyRPG {
 
             // shared code to setup resource lists on load of old version file or save of new one
             anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, true);
+
+            SaveResourcePowerData(anyRPGSaveData);
 
             SaveQuestData(anyRPGSaveData);
             SaveDialogData(anyRPGSaveData);
@@ -390,8 +392,7 @@ namespace AnyRPG {
         }
 
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.SaveQuestData()");
-
+            //Debug.Log("Savemanager.SaveResourcePowerData()");
             foreach (PowerResource powerResource in PlayerManager.MyInstance.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
                 //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();

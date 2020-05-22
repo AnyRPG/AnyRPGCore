@@ -33,35 +33,32 @@ namespace AnyRPG {
 
         private bool markedComplete = false;
 
-        /// <summary>
-        /// The level the quest becomes available from questgivers
-        /// </summary>
-        /// 
-        /*
-        [SerializeField]
-        private int availableLevel = 1;
-        */
+        [Header("Quest Level")]
 
-        /// <summary>
-        /// The level that is considered appropriate for the quest.  Used to calculate xp reduction
-        /// </summary>
+        [Tooltip("The level that is considered appropriate for the quest.  Used to calculate xp reduction")]
         [SerializeField]
         private int experienceLevel = 1;
 
+        [Tooltip("If true, this quest is always the same level as the player")]
         [SerializeField]
         private bool dynamicLevel = true;
 
-        // levels above the normal level for this mob
+        [Tooltip("If dynamic level is true, this amount of extra levels will be added to the quest")]
         [SerializeField]
         private int extraLevels = 0;
 
+        [Header("Experience Reward")]
 
-        /// <summary>
-        /// The amount of experience gained for completing this quest at an appropriate level
-        /// </summary>
+        [Tooltip("The base experience for the quest, not scaled by level, and in addition to any automatic quest xp configured at the game level")]
         [SerializeField]
-        private int experienceReward = 50;
+        private int baseExperienceReward = 0;
 
+        [Tooltip("The experience for the quest, scaled by level, and in addition to any automatic quest xp configured at the game level")]
+        [SerializeField]
+        private int experienceRewardPerLevel = 0;
+
+
+        [Tooltip("The maximum number of item rewards that can be chosen if there are more than 1 reward")]
         [SerializeField]
         private int maxItemRewards = 0;
 
@@ -247,7 +244,6 @@ namespace AnyRPG {
         public Quest MyQuestTemplate { get => questTemplate; set => questTemplate = value; }
         public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
-        public int MyExperienceReward { get => experienceReward; set => experienceReward = value; }
         public List<Item> MyItemRewards { get => realItemRewardList; }
         public List<FactionNode> MyFactionRewards { get => factionRewards; }
         public List<BaseAbility> MyAbilityRewards { get => realAbilityRewardList; }
@@ -265,6 +261,8 @@ namespace AnyRPG {
         public bool MyHasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
         public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
         public VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
+        public int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
+        public int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
@@ -354,7 +352,7 @@ namespace AnyRPG {
         }
 
         public override string GetSummary() {
-            return string.Format("{0}\n{1} Points", description, experienceReward);
+            return string.Format("{0}\n{1} Points", description, baseExperienceReward);
         }
 
         public string GetObjectiveDescription() {

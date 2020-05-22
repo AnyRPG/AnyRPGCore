@@ -166,7 +166,10 @@ namespace AnyRPG {
             GetUnitProfile();
         }
 
-        public virtual void GetUnitProfile() {
+        /// <summary>
+        /// This will retrieve a unit profile from the system unit profile manager
+        /// </summary>
+        protected virtual void GetUnitProfile() {
             if (unitProfileName != null && unitProfileName != string.Empty && unitProfile == null) {
                 unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
             }

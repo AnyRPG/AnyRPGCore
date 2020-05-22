@@ -15,6 +15,13 @@ namespace AnyRPG {
         [SerializeField]
         private List<ProjectorColorMapNode> focusProjectorOverrideMap = new List<ProjectorColorMapNode>();
 
+        [Header("Experience Multiplier")]
+
+        [Tooltip("Multiply the total experience gain from a kill by this amount")]
+        [SerializeField]
+        private float experienceMultiplier = 1f;
+
+        [Header("Stat Multiplier")]
 
         [SerializeField]
         private float healthMultiplier = 1f;
@@ -41,6 +48,7 @@ namespace AnyRPG {
         public float MyStrengthMultiplier { get => strengthMultiplier; set => strengthMultiplier = value; }
         public float MyAgilityMultiplier { get => agilityMultiplier; set => agilityMultiplier = value; }
         public List<ProjectorColorMapNode> MyFocusProjectorOverrideMap { get => focusProjectorOverrideMap; set => focusProjectorOverrideMap = value; }
+        public float ExperienceMultiplier { get => experienceMultiplier; set => experienceMultiplier = value; }
     }
 
 }
