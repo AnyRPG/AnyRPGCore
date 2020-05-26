@@ -485,17 +485,21 @@ namespace AnyRPG {
             if (!baseCharacter.CharacterStats.IsAlive) {
                 // putting this here because it can be overwritten easier than the event handler that calls it
                 //Debug.Log(gameObject.name + " broadcasting death to aggro table");
+                Dictionary<CharacterCombat, float> broadcastDictionary = new Dictionary<CharacterCombat, float>();
                 foreach (AggroNode _aggroNode in MyAggroTable.MyAggroNodes) {
                     if (_aggroNode.aggroTarget == null) {
                         //Debug.Log(gameObject.name + ": aggronode.aggrotarget is null!");
                     } else {
                         CharacterCombat _otherCharacterCombat = _aggroNode.aggroTarget.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat as CharacterCombat;
                         if (_otherCharacterCombat != null) {
-                            _otherCharacterCombat.OnKillConfirmed(baseCharacter as BaseCharacter, (_aggroNode.aggroValue > 0) ? 1 : 0);
+                            broadcastDictionary.Add(_otherCharacterCombat, (_aggroNode.aggroValue > 0 ? 1 : 0));
                         } else {
                             //Debug.Log(gameObject.name + ": aggronode.aggrotarget(" + _aggroNode.aggroTarget.name + ") had no character combat!");
                         }
                     }
+                }
+                foreach (CharacterCombat characterCombat in broadcastDictionary.Keys) {
+                    characterCombat.OnKillConfirmed(baseCharacter as BaseCharacter, broadcastDictionary[characterCombat]);
                 }
                 aggroTable.ClearTable();
                 DropCombat();

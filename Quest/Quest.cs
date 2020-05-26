@@ -57,6 +57,7 @@ namespace AnyRPG {
         [SerializeField]
         private int experienceRewardPerLevel = 0;
 
+        [Header("Item Rewards")]
 
         [Tooltip("The maximum number of item rewards that can be chosen if there are more than 1 reward")]
         [SerializeField]
@@ -65,10 +66,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> itemRewardNames = new List<string>();
 
-        //[SerializeField]
-        //private List<string> itemRewardList = new List<string>();
+        private List<Item> itemRewardList = new List<Item>();
 
-        private List<Item> realItemRewardList = new List<Item>();
+        [Header("Faction Rewards")]
 
         [SerializeField]
         private int maxFactionRewards = 0;
@@ -76,16 +76,17 @@ namespace AnyRPG {
         [SerializeField]
         private List<FactionNode> factionRewards = new List<FactionNode>();
 
+        [Header("Ability Rewards")]
+
         [SerializeField]
         private int maxAbilityRewards = 0;
 
         [SerializeField]
         private List<string> abilityRewardNames = new List<string>();
 
-        //[SerializeField]
-        //private List<string> abilityRewardList = new List<string>();
+        private List<BaseAbility> abilityRewardList = new List<BaseAbility>();
 
-        private List<BaseAbility> realAbilityRewardList = new List<BaseAbility>();
+        [Header("Skill Rewards")]
 
         [SerializeField]
         private int maxSkillRewards = 0;
@@ -93,19 +94,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> skillRewardNames = new List<string>();
 
-        [SerializeField]
-        private List<string> skillRewardList = new List<string>();
+        private List<Skill> skillRewardList = new List<Skill>();
 
-        private List<Skill> realSkillRewardList = new List<Skill>();
+        [Header("Objectives")]
 
-        /// <summary>
-        /// The maximum number of copies of this quest you can have in your quest log at once.
-        /// This is here because the quest system in the future should allow you to have multiple copies of a quest from different players
-        /// </summary>
-        //[SerializeField]
-        //private int maxInstances = 1;
-
-        // since we will have more than a few types in the future, this will be a generic array of objectives
         [SerializeField]
         private CollectObjective[] collectObjectives;
 
@@ -130,24 +122,24 @@ namespace AnyRPG {
         [SerializeField]
         private VisitZoneObjective[] visitZoneObjectives;
 
+        [Header("Prerequisites")]
+
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        /// <summary>
-        /// Whether or not to give the items to the questgiver when you turn in a quest.  If false, you keep the items in your bag.
-        /// </summary>
+        [Header("Completion")]
+
+        [Tooltip("Whether or not to give the items to the questgiver when you turn in a quest.  If false, you keep the items in your bag.")]
         [SerializeField]
         private bool turnInItems;
 
-        // the player can complete the quest without having the quest in the questlog
+        [Tooltip("the player can complete the quest without having the quest in the questlog")]
         [SerializeField]
         private bool allowRawComplete = false;
 
         private Quest questTemplate = null;
 
-        /// <summary>
-        /// Track whether this quest has been turned in
-        /// </summary>
+        // Track whether this quest has been turned in
         private bool turnedIn = false;
 
         public CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
@@ -244,10 +236,10 @@ namespace AnyRPG {
         public Quest MyQuestTemplate { get => questTemplate; set => questTemplate = value; }
         public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
-        public List<Item> MyItemRewards { get => realItemRewardList; }
+        public List<Item> MyItemRewards { get => itemRewardList; }
         public List<FactionNode> MyFactionRewards { get => factionRewards; }
-        public List<BaseAbility> MyAbilityRewards { get => realAbilityRewardList; }
-        public List<Skill> MySkillRewards { get => realSkillRewardList; }
+        public List<BaseAbility> MyAbilityRewards { get => abilityRewardList; }
+        public List<Skill> MySkillRewards { get => skillRewardList; }
 
         public bool MyTurnInItems { get => turnInItems; set => turnInItems = value; }
         public bool MyAllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
@@ -535,36 +527,36 @@ namespace AnyRPG {
         
             base.SetupScriptableObjects();
 
-            realAbilityRewardList = new List<BaseAbility>();
+            abilityRewardList = new List<BaseAbility>();
             if (abilityRewardNames != null) {
                 foreach (string baseAbilityName in abilityRewardNames) {
                     BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
-                        realAbilityRewardList.Add(baseAbility);
+                        abilityRewardList.Add(baseAbility);
                     } else {
                         Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
-            realSkillRewardList = new List<Skill>();
+            skillRewardList = new List<Skill>();
             if (skillRewardNames != null) {
                 foreach (string skillName in skillRewardNames) {
                     Skill skill = SystemSkillManager.MyInstance.GetResource(skillName);
                     if (skill != null) {
-                        realSkillRewardList.Add(skill);
+                        skillRewardList.Add(skill);
                     } else {
                         Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
-            realItemRewardList = new List<Item>();
+            itemRewardList = new List<Item>();
             if (itemRewardNames != null) {
                 foreach (string itemName in itemRewardNames) {
                     Item item = SystemItemManager.MyInstance.GetResource(itemName);
                     if (item != null) {
-                        realItemRewardList.Add(item);
+                        itemRewardList.Add(item);
                     } else {
                         Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
                     }

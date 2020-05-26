@@ -31,7 +31,7 @@ namespace AnyRPG {
                         description = tmpResourceDescription.MyDescription;
                     }
                 } else {
-                    Debug.LogError("DescribableResource.SetupScriptableObjects(): COULD NOT FIND " + resourceDescriptionProfile + " while processing " + MyName + ". CHECK INSPECTOR!");
+                    Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + MyName + ". CHECK INSPECTOR!");
                 }
             }
         }
