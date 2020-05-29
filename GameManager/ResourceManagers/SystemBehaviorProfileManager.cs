@@ -24,12 +24,6 @@ namespace AnyRPG {
 
         const string resourceClassName = "BehaviorProfile";
 
-        // the icon shown when a player has no faction
-        [SerializeField]
-        private Sprite defaultIcon;
-
-        public Sprite MyDefaultIcon { get => defaultIcon; set => defaultIcon = value; }
-
         protected override void Awake() {
             base.Awake();
         }

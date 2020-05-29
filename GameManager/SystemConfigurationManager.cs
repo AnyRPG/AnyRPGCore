@@ -62,14 +62,13 @@ namespace AnyRPG {
         [SerializeField]
         private List<ProjectorColorMapNode> focusProjectorColorMap = new List<ProjectorColorMapNode>();
 
-        // default UI color for static elements that have no additional transparency applied to them
+        [Tooltip("default UI color for static elements that have no additional transparency applied to them")]
         [SerializeField]
         private Color defaultUIColor;
 
-        // defaultUIColor with full opacity for button frames
+        [Tooltip("defaultUIColor with full opacity for button frames")]
         [SerializeField]
         private Color defaultUISolidColor;
-
 
         [SerializeField]
         private Color defaultUIFillColor;
@@ -80,6 +79,9 @@ namespace AnyRPG {
         [SerializeField]
         private CurrencyGroup defaultCurrencyGroup;
 
+        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
+        [SerializeField]
+        private Sprite defaultFactionIcon;
 
         [Header("ANIMATION")]
 
@@ -187,32 +189,6 @@ namespace AnyRPG {
         // character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.
         [SerializeField]
         private string defaultCharacterUnitLayer = string.Empty;
-
-        [Header("CHARACTER PANEL")]
-
-        [SerializeField]
-        private Sprite characterPanelHead;
-
-        [SerializeField]
-        private Sprite characterPanelShoulders;
-
-        [SerializeField]
-        private Sprite characterPanelChest;
-
-        [SerializeField]
-        private Sprite characterPanelHands;
-
-        [SerializeField]
-        private Sprite characterPanelLegs;
-
-        [SerializeField]
-        private Sprite characterPanelFeet;
-
-        [SerializeField]
-        private Sprite characterPanelMainHand;
-
-        [SerializeField]
-        private Sprite characterPanelOffHand;
 
         [Header("SYSTEM ABILITIES")]
 
@@ -367,14 +343,6 @@ namespace AnyRPG {
         public Sprite MyMultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
         public string MyGameName { get => gameName; set => gameName = value; }
         public string MyGameVersion { get => gameVersion; set => gameVersion = value; }
-        public Sprite MyCharacterPanelHead { get => characterPanelHead; set => characterPanelHead = value; }
-        public Sprite MyCharacterPanelShoulders { get => characterPanelShoulders; set => characterPanelShoulders = value; }
-        public Sprite MyCharacterPanelChest { get => characterPanelChest; set => characterPanelChest = value; }
-        public Sprite MyCharacterPanelHands { get => characterPanelHands; set => characterPanelHands = value; }
-        public Sprite MyCharacterPanelLegs { get => characterPanelLegs; set => characterPanelLegs = value; }
-        public Sprite MyCharacterPanelFeet { get => characterPanelFeet; set => characterPanelFeet = value; }
-        public Sprite MyCharacterPanelMainHand { get => characterPanelMainHand; set => characterPanelMainHand = value; }
-        public Sprite MyCharacterPanelOffHand { get => characterPanelOffHand; set => characterPanelOffHand = value; }
         public Sprite MySystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
         public Sprite MySystemBarAbilityBook { get => systemBarAbilityBook; set => systemBarAbilityBook = value; }
         public Sprite MySystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
@@ -415,6 +383,8 @@ namespace AnyRPG {
         public int KillXPPerLevel { get => killXPPerLevel; set => killXPPerLevel = value; }
         public bool UseKillXPLevelMultiplierDemoninator { get => useKillXPLevelMultiplierDemoninator; set => useKillXPLevelMultiplierDemoninator = value; }
         public int KillXPMultiplierLevelCap { get => killXPMultiplierLevelCap; set => killXPMultiplierLevelCap = value; }
+        public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }
+
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
