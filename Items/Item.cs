@@ -10,8 +10,6 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Item", menuName = "AnyRPG/Inventory/Item")]
     public class Item : DescribableResource, IMoveable {
 
-        public bool isDefaultItem = false;
-
         [Header("Item")]
 
         [Tooltip("Size of the stack, less than 2 is not stackable")]
