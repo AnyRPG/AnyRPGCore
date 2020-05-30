@@ -10,10 +10,12 @@ namespace AnyRPG {
         [SerializeField]
         protected string resourceName;
 
-        //protected string displayName = string.Empty;
-
         [SerializeField]
         protected Sprite icon;
+
+        [Tooltip("The image that appears behind the items when viewed in equipment manager and bags")]
+        [SerializeField]
+        protected Sprite iconBackgroundImage;
 
         [SerializeField]
         [TextArea(10, 20)]
@@ -23,6 +25,7 @@ namespace AnyRPG {
         //public string MyName { get => displayName; set => displayName = value; }
         public string MyName { get => resourceName; set => resourceName = value; }
         public string MyDescription { get => description; set => description = value; }
+        public Sprite IconBackgroundImage { get => iconBackgroundImage; set => iconBackgroundImage = value; }
 
         public virtual string GetDescription() {
             return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());

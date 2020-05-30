@@ -371,8 +371,27 @@ namespace AnyRPG {
             if (MyItem == null) {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
+                backGroundImage.sprite = null;
             } else {
-                finalColor = new Color32(0, 0, 0, 255);
+                // check if the item has a quality.  if not, just do the default color
+                if (MyItem.MyItemQuality != null) {
+                    if (MyItem.MyItemQuality.IconBackgroundImage != null) {
+                        if (MyItem.IconBackgroundImage != null) {
+                            backGroundImage.sprite = MyItem.IconBackgroundImage;
+                        } else {
+                            backGroundImage.sprite = MyItem.MyItemQuality.IconBackgroundImage;
+                        }
+                        if (MyItem.MyItemQuality.TintBackgroundImage == true) {
+                            finalColor = MyItem.MyItemQuality.MyQualityColor;
+                        } else {
+                            finalColor = Color.white;
+                        }
+                    } else {
+                        finalColor = new Color32(0, 0, 0, 255);
+                    }
+                } else {
+                    finalColor = new Color32(0, 0, 0, 255);
+                }
             }
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
             if (backGroundImage != null) {

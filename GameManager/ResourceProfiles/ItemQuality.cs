@@ -24,9 +24,6 @@ namespace AnyRPG {
         [SerializeField]
         private float sellPriceMultiplier = 1f;
 
-        [Tooltip("The color that will be used for text and image backgrounds when an item of this quality is displayed")]
-        [SerializeField]
-        private Color qualityColor;
 
         [Tooltip("Any items of this quality, will automatically scale, regardless of whether they individually have scaling set")]
         [SerializeField]
@@ -36,12 +33,23 @@ namespace AnyRPG {
         [SerializeField]
         private bool requireSellConfirmation;
 
+        [Header("Colors")]
+
+        [Tooltip("The color that will be used for text and image backgrounds when an item of this quality is displayed")]
+        [SerializeField]
+        private Color qualityColor;
+
+        [Tooltip("If true, the background image will have its color set to this color, intead of black")]
+        [SerializeField]
+        private bool tintBackgroundImage = false;
+
         public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
         public Color MyQualityColor { get => qualityColor; set => qualityColor = value; }
         public bool MyDynamicItemLevel { get => dynamicItemLevel; set => dynamicItemLevel = value; }
         public bool MyRequireSellConfirmation { get => requireSellConfirmation; set => requireSellConfirmation = value; }
         public float BuyPriceMultiplier { get => buyPriceMultiplier; set => buyPriceMultiplier = value; }
         public float SellPriceMultiplier { get => sellPriceMultiplier; set => sellPriceMultiplier = value; }
+        public bool TintBackgroundImage { get => tintBackgroundImage; set => tintBackgroundImage = value; }
     }
 
 }

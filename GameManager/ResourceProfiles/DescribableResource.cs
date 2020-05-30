@@ -36,6 +36,9 @@ namespace AnyRPG {
                     if (tmpResourceDescription.MyIcon != null) {
                         icon = tmpResourceDescription.MyIcon;
                     }
+                    if (tmpResourceDescription.IconBackgroundImage != null) {
+                        iconBackgroundImage = tmpResourceDescription.IconBackgroundImage;
+                    }
                     if (tmpResourceDescription.MyDescription != null && tmpResourceDescription.MyDescription != string.Empty) {
                         description = tmpResourceDescription.MyDescription;
                     }
