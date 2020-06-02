@@ -277,8 +277,8 @@ namespace AnyRPG {
             InitializeLocalComponents();
 
             if (namePlateUnit.HasHealth()) {
-                namePlateUnit.HealthBarNeedsUpdate += OnHealthChanged;
-                OnHealthChanged(namePlateUnit.MaxHealth(), namePlateUnit.CurrentHealth());
+                namePlateUnit.HealthBarNeedsUpdate += ProcessHealthChanged;
+                ProcessHealthChanged(namePlateUnit.MaxHealth(), namePlateUnit.CurrentHealth());
                 if (namePlateUnit is CharacterUnit) {
                     if ((namePlateUnit as CharacterUnit).MyBaseCharacter != null) {
                         if ((namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager != null) {
@@ -307,7 +307,7 @@ namespace AnyRPG {
             if (namePlateUnit.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth == PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource == PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
                     }
@@ -332,7 +332,7 @@ namespace AnyRPG {
             }
         }
 
-        void OnHealthChanged(int maxHealth, int currentHealth) {
+        void ProcessHealthChanged(int maxHealth, int currentHealth) {
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
             if (MyHealthSlider == null) {
@@ -442,7 +442,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy()");
             if (namePlateUnit != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
-                namePlateUnit.HealthBarNeedsUpdate -= OnHealthChanged;
+                namePlateUnit.HealthBarNeedsUpdate -= ProcessHealthChanged;
                 if (namePlateUnit.HasHealth()) {
                     (namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }

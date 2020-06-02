@@ -49,8 +49,6 @@ namespace AnyRPG {
         /// </summary>
         private bool waitingForAutoAttack = false;
 
-        protected Coroutine regenRoutine = null;
-
         // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
         protected BaseCharacter swingTarget = null;
 
@@ -125,7 +123,6 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterCombat.OnDisable()");
-            AttemptStopRegen();
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
@@ -136,7 +133,6 @@ namespace AnyRPG {
         public void ProcessLevelUnload() {
             SetWaitingForAutoAttack(false);
             DropCombat();
-            AttemptStopRegen();
         }
 
         protected virtual void Update() {
@@ -166,20 +162,6 @@ namespace AnyRPG {
             return false;
         }
 
-        public IEnumerator outOfCombatRegen() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning");
-            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == true) {
-                while (baseCharacter.CharacterStats.currentHealth < baseCharacter.CharacterStats.MyMaxHealth) {
-                    yield return new WaitForSeconds(1);
-                    int healthAmount = baseCharacter.CharacterStats.MyMaxHealth / 100;
-                    //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() beginning; about to recover health: " + healthAmount + "; mana: " + manaAmount);
-                    baseCharacter.CharacterStats.RecoverHealth(healthAmount, baseCharacter.CharacterAbilityManager, false);
-                }
-            }
-            //Debug.Log(gameObject.name + ".CharacterCombat.outOfCombatRegen() ending naturally on full health");
-            regenRoutine = null;
-        }
-
         public virtual void OnDieHandler(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".OnDieHandler()");
             SetWaitingForAutoAttack(false);
@@ -192,10 +174,11 @@ namespace AnyRPG {
             MyWaitingForAutoAttack = newValue;
         }
 
-        public virtual void ProcessTakeDamage(int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual void ProcessTakeDamage(string resourceName, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
-            AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
-            abilityAffectInput.healthAmount = damage;
+            AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
+
+            abilityAffectInput.SetResourceAmount(resourceName, damage);
 
             // prevent infinite reflect loops
             if (reflectDamage != false) {
@@ -381,7 +364,7 @@ namespace AnyRPG {
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
 
-                AbilityEffectOutput abilityAffectInput = new AbilityEffectOutput();
+                AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
@@ -433,16 +416,16 @@ namespace AnyRPG {
             attackCooldown = attackSpeed;
         }
 
-        private void TakeDamageCommon(int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        private void TakeDamageCommon(PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
 
             damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
 
-            ProcessTakeDamage(damage, source, combatMagnitude, abilityEffect, reflectDamage);
+            ProcessTakeDamage(powerResource.MyName, damage, source, combatMagnitude, abilityEffect, reflectDamage);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
-            baseCharacter.CharacterStats.ReduceHealth(damage);
+            baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
         }
 
-        public virtual bool TakeDamage(int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual bool TakeDamage(PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
@@ -450,7 +433,7 @@ namespace AnyRPG {
                 // replace with hitbox check
                 bool canPerformAbility = true;
                 if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
-                    damage -= (int)baseCharacter.CharacterStats.MyArmor;
+                    damage -= (int)baseCharacter.CharacterStats.Armor;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.UseMeleeRange) {
@@ -463,7 +446,7 @@ namespace AnyRPG {
                 // MAY WANT TO CHANGE THIS IF DODGE MECHANICS ARE A IMPORTANT PART OF GAMEPLAY
 
                 if (canPerformAbility) {
-                    TakeDamageCommon(damage, sourceCharacter, combatMagnitude, abilityEffect, reflectDamage);
+                    TakeDamageCommon(powerResource, damage, sourceCharacter, combatMagnitude, abilityEffect, reflectDamage);
                     return true;
                 }
             } else {
@@ -506,32 +489,6 @@ namespace AnyRPG {
             }
         }
 
-        public void AttemptRegen(int MaxAmount, int currentAmount) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
-            if (currentAmount != MaxAmount && regenRoutine == null) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(" + MaxAmount + ", " + currentAmount + "); regenRoutine == null");
-                AttemptRegen();
-            }
-        }
-
-
-        public void AttemptRegen() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen()");
-            if (regenRoutine == null && GetInCombat() == false && isActiveAndEnabled == true && baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == true) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttemptRegen(): starting coroutine");
-                regenRoutine = StartCoroutine(outOfCombatRegen());
-            }
-        }
-
-        public void AttemptStopRegen() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttemptStopRegen()");
-            if (regenRoutine != null) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttemptStopRegen(): regen routine was not null, stopping now");
-                StopCoroutine(regenRoutine);
-                regenRoutine = null;
-            }
-        }
-
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
             if (oldItem != null) {
@@ -556,7 +513,6 @@ namespace AnyRPG {
                     }
                 }
             }
-            AttemptRegen();
         }
 
     }

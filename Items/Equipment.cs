@@ -37,7 +37,7 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useManualArmor = false;
 
-        // should the manual value be per level instead of a total
+        [Tooltip("should the manual value be per level instead of a total")]
         [SerializeField]
         protected bool manualValueIsScale = false;
 
@@ -53,41 +53,10 @@ namespace AnyRPG {
         [SerializeField]
         private int damageModifier = 0;
 
-        [SerializeField]
-        private bool useIntellectModifier = false;
+        [Header("Primary Stats")]
 
         [SerializeField]
-        protected bool useManualIntellect = false;
-
-        [SerializeField]
-        private int intellectModifier = 0;
-
-        [SerializeField]
-        private bool useStaminaModifier = false;
-
-        [SerializeField]
-        protected bool useManualStamina = false;
-
-        [SerializeField]
-        private int staminaModifier = 0;
-
-        [SerializeField]
-        private bool useStrengthModifier = false;
-
-        [SerializeField]
-        protected bool useManualStrength = false;
-
-        [SerializeField]
-        private int strengthModifier = 0;
-
-        [SerializeField]
-        private bool useAgilityModifier = false;
-
-        [SerializeField]
-        protected bool useManualAgility = false;
-
-        [SerializeField]
-        private int agilityModifier = 0;
+        protected List<ItemPrimaryStatNode> primaryStats = new List<ItemPrimaryStatNode>();
 
         [SerializeField]
         private string onEquipAbilityName = string.Empty;
@@ -143,70 +112,31 @@ namespace AnyRPG {
             set => armorModifier = value;
         }
 
-        public virtual int MyIntellectModifier(int currentLevel, BaseCharacter baseCharacter) {
-                if (!useIntellectModifier) {
-                    return 0;
+        public virtual int GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
+            foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
+                if (statName == itemPrimaryStatNode.StatName) {
+                    if (itemPrimaryStatNode.UseManualValue) {
+                        return itemPrimaryStatNode.ManualModifierValue;
+                    }
+                    return (int)Mathf.Ceil(Mathf.Clamp(
+                        (float)MyItemLevel * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        0f,
+                        Mathf.Infinity
+                        ));
                 }
-                if (useManualIntellect) {
-                    return intellectModifier;
-                }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f) ) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
-                    0f,
-                    Mathf.Infinity
-                    ));
+            }
+            return 0;
         }
-        public virtual int MyStaminaModifier(int currentLevel, BaseCharacter baseCharacter) {
-                if (!useStaminaModifier || baseCharacter == null) {
-                    return 0;
-                }
-                if (useManualStamina) {
-                    return staminaModifier;
-                }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
-                    0f,
-                    Mathf.Infinity
-                    ));
-        }
-        public virtual int MyStrengthModifier(int currentLevel, BaseCharacter baseCharacter) {
-                if (!useStrengthModifier) {
-                    return 0;
-                }
-                if (useManualStrength) {
-                    return strengthModifier;
-                }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
-                    0f,
-                    Mathf.Infinity
-                    ));
-        }
-        public virtual int MyAgilityModifier(int currentLevel, BaseCharacter baseCharacter) {
-                if (!useAgilityModifier) {
-                    return 0;
-                }
-                if (useManualAgility) {
-                    return agilityModifier;
-                }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
-                    0f,
-                    Mathf.Infinity
-                    ));
-        }
+
         public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
-        public bool MyUseManualIntellect { get => useManualIntellect; set => useManualIntellect = value; }
-        public bool MyUseManualStamina { get => useManualStamina; set => useManualStamina = value; }
-        public bool MyUseManualStrength { get => useManualStrength; set => useManualStrength = value; }
-        public bool MyUseManualAgility { get => useManualAgility; set => useManualAgility = value; }
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public UMATextRecipe MyUMARecipe { get => UMARecipe; set => UMARecipe = value; }
         public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
+        public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -267,17 +197,10 @@ namespace AnyRPG {
             if (useDamageModifier) {
                 abilitiesList.Add(string.Format(" +{0} Damage", MyDamageModifier));
             }
-            if (useStaminaModifier) {
-                abilitiesList.Add(string.Format(" +{0} Stamina", MyStaminaModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
-            }
-            if (useStrengthModifier) {
-                abilitiesList.Add(string.Format(" +{0} Strength", MyStrengthModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
-            }
-            if (useIntellectModifier) {
-                abilitiesList.Add(string.Format(" +{0} Intellect", MyIntellectModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
-            }
-            if (useAgilityModifier) {
-                abilitiesList.Add(string.Format(" +{0} Agility", MyAgilityModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter)));
+            foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
+                abilitiesList.Add(string.Format(" +{0} {1}",
+                    GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter),
+                    itemPrimaryStatNode.StatName));
             }
 
             // abilities
@@ -385,6 +308,26 @@ namespace AnyRPG {
 
         }
 
+    }
+
+    [System.Serializable]
+    public class ItemPrimaryStatNode {
+
+        [Tooltip("The primary stat to increase when this item is equipped.  By default, this stat will be automatically set based on the item level")]
+        [SerializeField]
+        private string statName = string.Empty;
+
+        [Tooltip("If true, the stat value entered in the manual modifier value field will be used instead of the automatically scaled value")]
+        [SerializeField]
+        private bool useManualValue = false;
+
+        [Tooltip("If use manual value is true, the value in this field will be used instead of the automatically scaled value")]
+        [SerializeField]
+        private int manualModifierValue = 0;
+
+        public string StatName { get => statName; set => statName = value; }
+        public int ManualModifierValue { get => manualModifierValue; set => manualModifierValue = value; }
+        public bool UseManualValue { get => useManualValue; set => useManualValue = value; }
     }
 
     //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }

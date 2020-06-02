@@ -107,8 +107,8 @@ namespace AnyRPG {
             this.target = target;
             gameObject.SetActive(true);
             colorOverrideDictionary.Clear();
-            if (characterUnit.MyCharacter.CharacterStats.MyToughness != null && characterUnit.MyCharacter.CharacterStats.MyToughness.MyFocusProjectorOverrideMap != null) {
-                foreach (ProjectorColorMapNode colorMapNode in characterUnit.MyCharacter.CharacterStats.MyToughness.MyFocusProjectorOverrideMap) {
+            if (characterUnit.MyCharacter.CharacterStats.MyToughness != null && characterUnit.MyCharacter.CharacterStats.MyToughness.FocusProjectorOverrideMap != null) {
+                foreach (ProjectorColorMapNode colorMapNode in characterUnit.MyCharacter.CharacterStats.MyToughness.FocusProjectorOverrideMap) {
                     colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor)] = colorMapNode.MyProjectorMaterial;
                     //Debug.Log("FocusTargettingController.SetupController(): added override " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
                 }

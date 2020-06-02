@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();
 
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             base.PerformAbilityHit(source, target, abilityEffectInput);
 
             List<StatusEffectNode> removeEffects = new List<StatusEffectNode>();

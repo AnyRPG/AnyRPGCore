@@ -114,7 +114,10 @@ namespace AnyRPG {
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
-            return true;
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                return baseCharacter.CharacterStats.HasHealthResource;
+            }
+            return false;
         }
 
         public void SetUseRootMotion(bool useRootMotion) {
@@ -150,11 +153,9 @@ namespace AnyRPG {
             }
         }
 
-
-
         public int CurrentHealth() {
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                return baseCharacter.CharacterStats.currentHealth;
+                return baseCharacter.CharacterStats.CurrentPrimaryResource;
             }
             return 1;
         }
@@ -162,8 +163,7 @@ namespace AnyRPG {
         public int MaxHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth(): we had character stats; returning " + baseCharacter.MyCharacterStats.MyMaxHealth);
-                return baseCharacter.CharacterStats.MyMaxHealth;
+                return baseCharacter.CharacterStats.MaxPrimaryResource;
             }
             return 1;
         }
@@ -187,7 +187,9 @@ namespace AnyRPG {
         }
 
         public void HandleFreezePosition() {
-            animatedUnit.FreezePositionXZ();
+            if (animatedUnit != null) {
+                animatedUnit.FreezePositionXZ();
+            }
         }
 
         public void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {

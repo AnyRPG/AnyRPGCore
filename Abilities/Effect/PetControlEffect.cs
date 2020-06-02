@@ -22,13 +22,13 @@ namespace AnyRPG {
 
         private List<CharacterUnit> petUnits = new List<CharacterUnit>();
 
-        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".PetEffect.CastTick()");
             base.CastTick(source, target, abilityEffectInput);
             CheckPetSpawn(source, target, abilityEffectInput);
         }
 
-        public void CheckPetSpawn(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public void CheckPetSpawn(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".PetEffect.CheckPetSpawn()");
             List<CharacterUnit> unitsToRemove = new List<CharacterUnit>();
             foreach (CharacterUnit characterUnit in petUnits) {

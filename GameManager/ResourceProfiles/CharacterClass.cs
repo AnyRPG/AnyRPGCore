@@ -40,22 +40,12 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
-        [Header("Stat Amounts")]
+        [Header("Stats and Scaling")]
 
+        [Tooltip("Stats available to this character class, in addition to the stats defined at the system level that all character use")]
+        [FormerlySerializedAs("statScaling")]
         [SerializeField]
-        private List<PowerEnhancerNode> powerEnhancerStats = new List<PowerEnhancerNode>();
-
-        [SerializeField]
-        private int staminaPerLevel;
-
-        [SerializeField]
-        private int intellectPerLevel;
-
-        [SerializeField]
-        private int strengthPerLevel;
-
-        [SerializeField]
-        private int agilityPerLevel;
+        private List<StatScalingNode> primaryStats = new List<StatScalingNode>();
 
         [Header("Power Resources")]
 
@@ -66,22 +56,12 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
-        [Header("Stat Conversion")]
-
-        [Tooltip("Conversion amounts for translating primary stats into resources")]
-        [SerializeField]
-        private List<StatToResourceNode> statToResourceNodes = new List<StatToResourceNode>();
-
         public List<BaseAbility> MyAbilityList { get => abilityList; set => abilityList = value; }
         public List<string> MyArmorClassList { get => armorClassList; set => armorClassList = value; }
-        public int MyStaminaPerLevel { get => staminaPerLevel; set => staminaPerLevel = value; }
-        public int MyIntellectPerLevel { get => intellectPerLevel; set => intellectPerLevel = value; }
-        public int MyStrengthPerLevel { get => strengthPerLevel; set => strengthPerLevel = value; }
-        public int MyAgilityPerLevel { get => agilityPerLevel; set => agilityPerLevel = value; }
         public List<WeaponSkill> MyWeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<PowerEnhancerNode> MyPowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
         public List<AbilityEffect> MyTraitList { get => traitList; set => traitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
+        public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -134,27 +114,65 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (StatToResourceNode statToResourceNode in statToResourceNodes) {
-                statToResourceNode.SetupScriptableObjects();
+            foreach (StatScalingNode statScalingNode in primaryStats) {
+                statScalingNode.SetupScriptableObjects();
             }
-
-
 
         }
 
+        /// <summary>
+        /// Return the maximum value for a power resource
+        /// </summary>
+        /// <param name="powerResource"></param>
+        /// <param name="characterStats"></param>
+        /// <returns></returns>
         public float GetResourceMaximum(PowerResource powerResource, CharacterStats characterStats) {
 
             float returnValue = powerResource.MaximumAmount;
 
-            foreach (StatToResourceNode statToResourceNode in statToResourceNodes) {
-                if (statToResourceNode.PowerResource == powerResource) {
-                    returnValue += (statToResourceNode.ResourcePerStaminaPoint * characterStats.MyStamina);
-                    returnValue += (statToResourceNode.ResourcePerStrengthPoint * characterStats.MyStrength);
-                    returnValue += (statToResourceNode.ResourcePerIntellectPoint * characterStats.MyIntellect);
-                    returnValue += (statToResourceNode.ResourcePerAgilityPoint * characterStats.MyAgility);
+            foreach (StatScalingNode statScalingNode in primaryStats) {
+                if (characterStats.PrimaryStats.ContainsKey(statScalingNode.StatName)) {
+                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
+                        if (characterStatToResourceNode.PowerResource == powerResource) {
+                            returnValue += (characterStatToResourceNode.ResourcePerPoint * characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue);
+                        }
+                    }
                 }
             }
             return returnValue;
+        }
+
+    }
+
+
+    [System.Serializable]
+    public class CharacterStatToResourceNode {
+
+        [Tooltip("The name of the resource that will receive points from the stat")]
+        [SerializeField]
+        private string resourceName = string.Empty;
+
+        private PowerResource powerResource = null;
+
+        [Tooltip("The amount of the resource to be gained per point of the stat")]
+        [SerializeField]
+        private float resourcePerPoint = 0;
+
+        public float ResourcePerPoint { get => resourcePerPoint; set => resourcePerPoint = value; }
+        public string ResourceName { get => resourceName; set => resourceName = value; }
+        public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
+
+        public void SetupScriptableObjects() {
+
+            if (resourceName != null && resourceName != string.Empty) {
+                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
+                if (tmpPowerResource != null) {
+                    powerResource = tmpPowerResource;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + resourceName + " while inititalizing statresourceNode.  CHECK INSPECTOR");
+                }
+            }
+
         }
 
     }
@@ -168,27 +186,12 @@ namespace AnyRPG {
 
         private PowerResource powerResource = null;
 
-        [Tooltip("The amount of the resource to be gained per point of the stat")]
+        [Tooltip("List of stats that will contribute to this resource")]
         [SerializeField]
-        private float resourcePerStaminaPoint = 10f;
-
-        [Tooltip("The amount of the resource to be gained per point of the stat")]
-        [SerializeField]
-        private float resourcePerStrengthPoint = 10f;
-
-        [Tooltip("The amount of the resource to be gained per point of the stat")]
-        [SerializeField]
-        private float resourcePerIntellectPoint = 10f;
-
-        [Tooltip("The amount of the resource to be gained per point of the stat")]
-        [SerializeField]
-        private float resourcePerAgilityPoint = 10f;
+        private List<CharacterStatToResourceNode> statConversion = new List<CharacterStatToResourceNode>();
 
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
-        public float ResourcePerStaminaPoint { get => resourcePerStaminaPoint; set => resourcePerStaminaPoint = value; }
-        public float ResourcePerStrengthPoint { get => resourcePerStrengthPoint; set => resourcePerStrengthPoint = value; }
-        public float ResourcePerIntellectPoint { get => resourcePerIntellectPoint; set => resourcePerIntellectPoint = value; }
-        public float ResourcePerAgilityPoint { get => resourcePerAgilityPoint; set => resourcePerAgilityPoint = value; }
+        public List<CharacterStatToResourceNode> StatConversion { get => statConversion; set => statConversion = value; }
 
         public void SetupScriptableObjects() {
 
@@ -200,7 +203,6 @@ namespace AnyRPG {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing statresourceNode.  CHECK INSPECTOR");
                 }
             }
-
 
         }
     }

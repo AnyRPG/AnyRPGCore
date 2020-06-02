@@ -8,7 +8,6 @@ namespace AnyRPG {
 
         protected void Start() {
             //Debug.Log("PlayerCombat.Start()");
-            AttemptRegen();
         }
 
         protected override void CreateEventSubscriptions() {
@@ -20,10 +19,6 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
             //SystemEventManager.MyInstance.OnEquipmentRefresh += OnEquipmentChanged;
-            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                baseCharacter.CharacterStats.OnHealthChanged += AttemptRegen;
-                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged += AttemptRegen;
-            }
             eventSubscriptionsInitialized = true;
         }
 
@@ -41,10 +36,6 @@ namespace AnyRPG {
             }
             */
 
-            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                baseCharacter.CharacterStats.OnHealthChanged -= AttemptRegen;
-                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged -= AttemptRegen;
-            }
             eventSubscriptionsInitialized = false;
         }
 
@@ -57,7 +48,6 @@ namespace AnyRPG {
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             base.OnDisable();
-            AttemptStopRegen();
         }
 
         protected override void Update() {
@@ -137,7 +127,6 @@ namespace AnyRPG {
                 //Debug.Log("Player is dead but was asked to enter combat!!!");
                 return false;
             }
-            AttemptStopRegen();
 
             // If we do not have a focus, set the target as the focus
             if (baseCharacter.CharacterController != null) {
@@ -156,7 +145,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public override bool TakeDamage(PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
@@ -165,7 +154,7 @@ namespace AnyRPG {
             bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
             return damageTaken;
             */
-            return base.TakeDamage(damage, source, combatMagnitude, abilityEffect, reflectDamage = false);
+            return base.TakeDamage(powerResource, damage, source, combatMagnitude, abilityEffect, reflectDamage = false);
         }
 
         /*
@@ -196,7 +185,6 @@ namespace AnyRPG {
                 return;
             }
             base.DropCombat();
-            AttemptRegen();
             if (CombatLogUI.MyInstance != null) {
                 CombatLogUI.MyInstance.WriteCombatMessage("Left combat");
             }
@@ -205,10 +193,6 @@ namespace AnyRPG {
         public override void BroadcastCharacterDeath() {
             //Debug.Log("PlayerCombat.BroadcastCharacterDeath()");
             base.BroadcastCharacterDeath();
-            if (!baseCharacter.CharacterStats.IsAlive) {
-                //Debug.Log("PlayerCombat.BroadcastCharacterDeath(): not alive, attempt stop regen");
-                AttemptStopRegen();
-            }
         }
 
         /*

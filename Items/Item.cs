@@ -168,7 +168,7 @@ namespace AnyRPG {
 
         public bool CharacterClassRequirementIsMet() {
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
-                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
+                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
                     return false;
                 }
             }
@@ -209,7 +209,7 @@ namespace AnyRPG {
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
+                if (realCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));

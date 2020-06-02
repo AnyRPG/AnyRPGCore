@@ -73,7 +73,7 @@ namespace AnyRPG {
         public bool MyCastZeroTick { get => castZeroTick; set => castZeroTick = value; }
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".LengthEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
@@ -163,35 +163,35 @@ namespace AnyRPG {
 
         }
 
-        public virtual void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" + source.name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
             PlayAudioEffects(onTickAudioProfiles, target);
         }
 
-        public virtual void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
         }
 
-        protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 
-        public virtual void PerformAbilityTickEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityTickEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, tickAbilityEffectList);
         }
 
-        public virtual void PerformAbilityCompleteEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityCompleteEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, completeAbilityEffectList);
         }
 
-        public virtual void PerformAbilityTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityTickEffects(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityComplete(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityCompleteEffects(source, target, abilityEffectInput);
         }

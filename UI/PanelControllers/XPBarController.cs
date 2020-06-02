@@ -85,7 +85,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-            int currentXP = PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP;
+            int currentXP = PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP;
             int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
             float xpPercent = (float)currentXP / (float)neededXP;
 

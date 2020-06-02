@@ -538,7 +538,7 @@ namespace AnyRPG {
                 if (abilityEffect == null) {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
-                AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
+                AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
                 abilityEffectOutput.prefabLocation = groundTarget;
 
                 abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
@@ -639,7 +639,7 @@ namespace AnyRPG {
         public bool CharacterClassRequirementIsMet() {
             // only used when changing class or for action bars, so hard coding player character is ok for now
             if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
-                if (!CharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
+                if (!CharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
                     return false;
                 }
             }

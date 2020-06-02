@@ -39,28 +39,28 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             if (abilityEffectInput == null) {
-                abilityEffectInput = new AbilityEffectOutput();
+                abilityEffectInput = new AbilityEffectContext();
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             TargetAOEHit(source, target, abilityEffectInput);
             return returnObjects;
         }
 
-        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityAffectInput) {
+        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityAffectInput) {
             //Debug.Log(resourceName + ".AOEEffect.CastTick(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             base.CastTick(source, target, abilityAffectInput);
             TargetAOETick(source, target, abilityAffectInput);
         }
 
-        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityAffectInput) {
+        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityAffectInput) {
             //Debug.Log(resourceName + ".AOEEffect.CastComplete(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             TargetAOEComplete(source, target, abilityAffectInput);
         }
 
-        protected virtual float TargetAOEHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected virtual float TargetAOEHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectInput, hitAbilityEffectList);
             float accumulatedDelay = 0f;
@@ -71,7 +71,7 @@ namespace AnyRPG {
             return validTargets.Count;
         }
 
-        protected virtual float TargetAOETick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected virtual float TargetAOETick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectInput, tickAbilityEffectList);
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
@@ -81,7 +81,7 @@ namespace AnyRPG {
             return validTargets.Count;
         }
 
-        protected virtual float TargetAOEComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected virtual float TargetAOEComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + "AOEEffect.TargetAOEComplete(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             if (completeAbilityEffectList == null | completeAbilityEffectList.Count == 0) {
                 return 0;
@@ -95,7 +95,7 @@ namespace AnyRPG {
             return validTargets.Count;
         }
 
-        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AOEEffect.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
@@ -171,21 +171,24 @@ namespace AnyRPG {
             return validTargets;
         }
 
-        protected virtual AbilityEffectOutput GetSharedOutput(float outputShare, AbilityEffectOutput abilityEffectInput) {
-            AbilityEffectOutput modifiedOutput = new AbilityEffectOutput();
-            modifiedOutput.healthAmount = (int)(abilityEffectInput.healthAmount * outputShare);
-            modifiedOutput.manaAmount = (int)(abilityEffectInput.manaAmount * outputShare);
+        protected virtual AbilityEffectContext GetSharedOutput(float outputShare, AbilityEffectContext abilityEffectInput) {
+            AbilityEffectContext modifiedOutput = new AbilityEffectContext();
+
+            foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
+                modifiedOutput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
+            }
+
             modifiedOutput.prefabLocation = abilityEffectInput.prefabLocation;
             return modifiedOutput;
         }
 
-        public virtual void PerformAOEHit(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectOutput abilityEffectInput, float castDelay) {
-            //Debug.Log(MyName + ".AOEEffect.PerformAOEHit(): abilityEffectInput.healthAmount: " + (abilityEffectInput == null ? "null" : abilityEffectInput.healthAmount.ToString()) + "; outputShare: " + outputShare);
-            AbilityEffectOutput modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
+        public virtual void PerformAOEHit(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectContext abilityEffectInput, float castDelay) {
+            //Debug.Log(MyName + ".AOEEffect.PerformAOEHit(): outputShare: " + outputShare);
+            AbilityEffectContext modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
             (source as MonoBehaviour).StartCoroutine(WaitForHitDelay(source, target, modifiedOutput, castDelay));
         }
 
-        private IEnumerator WaitForHitDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
+        private IEnumerator WaitForHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext modifiedOutput, float castDelay) {
             //Debug.Log(MyName + ".AOEEffect.WaitForHitDelay(" + source.MyName + ", " + (target == null ? "null" : target.name) + ")");
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
@@ -195,13 +198,13 @@ namespace AnyRPG {
             PerformAbilityHit(source, target, modifiedOutput);
         }
 
-        public virtual void PerformAOETick(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectOutput abilityEffectInput, float castDelay) {
-            //Debug.Log(resourceName + ".AOEEffect.PerformAbilityEffect(): abilityEffectInput.healthAmount: " + (abilityEffectInput == null ? "null" : abilityEffectInput.healthAmount.ToString()) + "; outputShare: " + outputShare);
-            AbilityEffectOutput modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
+        public virtual void PerformAOETick(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectContext abilityEffectInput, float castDelay) {
+            //Debug.Log(resourceName + ".AOEEffect.PerformAbilityEffect(): outputShare: " + outputShare);
+            AbilityEffectContext modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
             (source as MonoBehaviour).StartCoroutine(WaitForTickDelay(source, target, modifiedOutput, castDelay));
         }
 
-        private IEnumerator WaitForTickDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
+        private IEnumerator WaitForTickDelay(IAbilityCaster source, GameObject target, AbilityEffectContext modifiedOutput, float castDelay) {
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
                 yield return null;
@@ -210,13 +213,13 @@ namespace AnyRPG {
             PerformAbilityTick(source, target, modifiedOutput);
         }
 
-        public virtual void PerformAOEComplete(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectOutput abilityEffectInput, float castDelay) {
-            //Debug.Log(abilityEffectName + ".AOEEffect.PerformAbilityEffect(): abilityEffectInput.healthAmount: " + (abilityEffectInput == null ? "null" : abilityEffectInput.healthAmount.ToString()) + "; outputShare: " + outputShare);
-            AbilityEffectOutput modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
+        public virtual void PerformAOEComplete(IAbilityCaster source, GameObject target, float outputShare, AbilityEffectContext abilityEffectInput, float castDelay) {
+            //Debug.Log(abilityEffectName + ".AOEEffect.PerformAbilityEffect(): outputShare: " + outputShare);
+            AbilityEffectContext modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
             (source as MonoBehaviour).StartCoroutine(WaitForCompleteDelay(source, target, modifiedOutput, castDelay));
         }
 
-        private IEnumerator WaitForCompleteDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput modifiedOutput, float castDelay) {
+        private IEnumerator WaitForCompleteDelay(IAbilityCaster source, GameObject target, AbilityEffectContext modifiedOutput, float castDelay) {
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
                 yield return null;
@@ -229,7 +232,7 @@ namespace AnyRPG {
 
     public class AOETargetNode {
         public GameObject targetGameObject;
-        public AbilityEffectOutput abilityEffectInput;
+        public AbilityEffectContext abilityEffectInput;
     }
 
 }

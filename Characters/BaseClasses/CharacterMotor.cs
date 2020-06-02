@@ -74,6 +74,7 @@ namespace AnyRPG {
         }
 
         protected virtual void SetMovementSpeed() {
+            //Debug.Log(gameObject.name + ".CharacterMotor.SetMovementSpeed(): movementSpeed: " + movementSpeed);
             if (movementSpeed == 0) {
                 animatedUnit.MyAgent.speed = characterUnit.MyCharacter.CharacterController.MyMovementSpeed;
             } else {
@@ -105,12 +106,13 @@ namespace AnyRPG {
         }
 
         protected virtual void CheckSetMoveDestination() {
+            //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination()");
             if (setMoveDestination && animatedUnit.MyAgent.pathPending == false && animatedUnit.MyAgent.hasPath == false) {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
+                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
                 moveToDestination = true;
-                //Debug.Log(gameObject.name + ": CharacterMotor.Update(): ISSUING SETDESTINATION: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
+                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
                 animatedUnit.MyAgent.SetDestination(destinationPosition);
-                //Debug.Log(gameObject.name + ": CharacterMotor.Update(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + animatedUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
+                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + animatedUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
                 lastCommandFrame = Time.frameCount;
                 setMoveDestination = false;
             }
@@ -236,14 +238,11 @@ namespace AnyRPG {
                 OnMovement();
                 if (animatedUnit.MyCharacterAnimator != null) {
                     animatedUnit.MyCharacterAnimator.SetMoving(true);
-                    //animatedUnit.MyCharacterAnimator.SetVelocityZ(animatedUnit.MyAgent.velocity.magnitude);
-                    //animatedUnit.MyCharacterAnimator.SetVelocity(animatedUnit.MyAgent.velocity);
                     animatedUnit.MyCharacterAnimator.SetVelocity((characterUnit as MonoBehaviour).transform.InverseTransformDirection(animatedUnit.MyAgent.velocity));
                 }
             } else {
                 if (animatedUnit.MyCharacterAnimator != null) {
                     animatedUnit.MyCharacterAnimator.SetMoving(false);
-                    //animatedUnit.MyCharacterAnimator.SetVelocityZ(0);
                     animatedUnit.MyCharacterAnimator.SetVelocity(Vector3.zero);
                 }
             }

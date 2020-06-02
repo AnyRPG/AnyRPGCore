@@ -10,7 +10,6 @@ namespace AnyRPG {
 
         public int PlayerLevel;
         public int currentExperience;
-        public int currentHealth;
 
         public string playerName;
         public string playerFaction;

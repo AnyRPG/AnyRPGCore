@@ -47,11 +47,11 @@ namespace AnyRPG {
 
         private int currentStacks = 1;
 
-        [Header("Stat Buffs and Debuffs")]
+        [Header("Primary Stat Buffs and Debuffs")]
 
         [Tooltip("The values in this section will be applied to all of the following stats")]
         [SerializeField]
-        protected List<StatBuffType> statBuffTypes = new List<StatBuffType>();
+        protected List<string> statBuffTypeNames = new List<string>();
 
         [Tooltip("This amount will be added to the stats")]
         [SerializeField]
@@ -61,9 +61,23 @@ namespace AnyRPG {
         [SerializeField]
         protected float statMultiplier = 1;
 
-        [Tooltip("Multiply incoming damage by this amount.  1 = normal damage.")]
+        [Header("Primary Stat Buffs and Debuffs")]
+
+        [Tooltip("The values in this section will be applied to all of the following stats")]
         [SerializeField]
-        protected float incomingDamageMultiplier = 1f;
+        protected List<SecondaryStatType> secondaryStatBuffsTypes = new List<SecondaryStatType>();
+
+        [Tooltip("This amount will be added to the stats")]
+        [SerializeField]
+        protected int secondaryStatAmount;
+
+        [Tooltip("The stats will be multiplied by this amount (after addition)")]
+        [SerializeField]
+        protected float secondaryStatMultiplier = 1;
+
+        [Tooltip("The values in this section will be applied to movement speed")]
+        [SerializeField]
+        protected bool buffMovementSpeed = false;
 
         [Tooltip("Multiply outgoing damage by this amount.  1 = normal damage.")]
         [SerializeField]
@@ -80,6 +94,14 @@ namespace AnyRPG {
         [Tooltip("Add this amount as a flat percentage increase to the critical strike chance.")]
         [SerializeField]
         protected float extraCriticalStrikePercent;
+
+        [Header("Damage Adjustments")]
+
+        [Tooltip("Multiply incoming damage by this amount.  1 = normal damage.")]
+        [SerializeField]
+        protected float incomingDamageMultiplier = 1f;
+
+        [Header("Faction Modifiers")]
 
         [Tooltip("Temporarily modify a character faction relationship while this buff is active")]
         [SerializeField]
@@ -138,7 +160,6 @@ namespace AnyRPG {
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
 
         public int MyStatAmount { get => statAmount; }
-        public List<StatBuffType> MyStatBuffTypes { get => statBuffTypes; set => statBuffTypes = value; }
         public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
         public int MyCurrentStacks { get => currentStacks; set => currentStacks = value; }
         public float IncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
@@ -162,6 +183,10 @@ namespace AnyRPG {
         public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
         public StatusEffectType MyStatusEffectType { get => statusEffectType; set => statusEffectType = value; }
         public StatusEffectAlignment MyStatusEffectAlignment { get => statusEffectAlignment; set => statusEffectAlignment = value; }
+        public List<string> StatBuffTypeNames { get => statBuffTypeNames; set => statBuffTypeNames = value; }
+        public List<SecondaryStatType> SecondaryStatBuffsTypes { get => secondaryStatBuffsTypes; set => secondaryStatBuffsTypes = value; }
+        public int SecondaryStatAmount { get => secondaryStatAmount; set => secondaryStatAmount = value; }
+        public float SecondaryStatMultiplier { get => secondaryStatMultiplier; set => secondaryStatMultiplier = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
@@ -243,7 +268,7 @@ namespace AnyRPG {
         }
 
         // bypass the creation of the status effect and just make its visual prefab
-        public void RawCast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public void RawCast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".StatusEffect.RawCast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
@@ -256,7 +281,7 @@ namespace AnyRPG {
         }
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
@@ -287,7 +312,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("DirectEffect.PerformAbilityEffect()");
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
@@ -314,7 +339,7 @@ namespace AnyRPG {
             return remainingDuration;
         }
 
-        public override void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
+        public override void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyAbilityEffectName + ".StatusEffect.Initialize(" + source.name + ", " + target.name + ")");
             base.Initialize(source, target, abilityEffectInput);
             //co = (target.MyCharacterStats as CharacterStats).StartCoroutine(Tick(source, abilityEffectInput, target));
@@ -324,46 +349,46 @@ namespace AnyRPG {
         //public void HandleStatusEffectEnd(
 
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
-        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
             abilityEffectInput.spellDamageMultiplier = tickRate / duration;
             base.CastTick(source, target, abilityEffectInput);
             PerformAbilityTick(source, target, abilityEffectInput);
         }
 
-        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastComplete()");
             base.CastComplete(source, target, abilityEffectInput);
             PerformAbilityComplete(source, target, abilityEffectInput);
         }
 
-        public virtual void CastWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityWeaponHit(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
         }
 
 
-        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
         }
 
-        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityReflect(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityReflectEffects(source, target, abilityEffectInput);
         }
 
 
-        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             effectOutput.refectDamage = true;
             PerformAbilityEffects(source, target, effectOutput, reflectAbilityEffectList);
         }
@@ -373,19 +398,19 @@ namespace AnyRPG {
             string descriptionItem = string.Empty;
             string descriptionFinal = string.Empty;
             List<string> effectStrings = new List<string>();
-            if (MyStatBuffTypes.Count > 0) {
+            if (statBuffTypeNames.Count > 0) {
 
-                foreach (StatBuffType statBuffType in statBuffTypes) {
+                foreach (string statBuffType in statBuffTypeNames) {
                     if (MyStatAmount > 0) {
-                        descriptionItem = "Increases " + statBuffType.ToString() + " by " + MyStatAmount;
+                        descriptionItem = "Increases " + statBuffType + " by " + MyStatAmount;
                         effectStrings.Add(descriptionItem);
                     }
                     if (MyStatMultiplier > 0 && MyStatMultiplier < 1) {
-                        descriptionItem = "Reduces " + statBuffType.ToString() + " by " + ((1 - MyStatMultiplier) * 100) + "%";
+                        descriptionItem = "Reduces " + statBuffType + " by " + ((1 - MyStatMultiplier) * 100) + "%";
                         effectStrings.Add(descriptionItem);
                     }
                     if (MyStatMultiplier > 1) {
-                        descriptionItem = "Increases " + statBuffType.ToString() + " by " + ((MyStatMultiplier - 1) * 100) + "%";
+                        descriptionItem = "Increases " + statBuffType + " by " + ((MyStatMultiplier - 1) * 100) + "%";
                         effectStrings.Add(descriptionItem);
                     }
                 }
@@ -528,7 +553,7 @@ namespace AnyRPG {
 
     }
 
-    public enum StatBuffType { Stamina, Strength, Intellect, Agility, MovementSpeed }
+    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor }
 
     public enum StatusEffectAlignment { None, Beneficial, Harmful }
 }

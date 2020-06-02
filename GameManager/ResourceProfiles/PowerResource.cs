@@ -46,6 +46,12 @@ namespace AnyRPG {
         [SerializeField]
         private float maximumAmount = 0f;
 
+        [Header("Health")]
+
+        [Tooltip("When all of a characters health resources have reached zero, they are considered to have died.  Multiple health resources are allowed.")]
+        [SerializeField]
+        private bool isHealth = false;
+
 
         public Color DisplayColor { get => displayColor; set => displayColor = value; }
         public float RegenPerTick { get => regenPerTick; set => regenPerTick = value; }
@@ -54,6 +60,7 @@ namespace AnyRPG {
         public float TickRate { get => tickRate; set => tickRate = value; }
         public bool RegenIsPercent { get => regenIsPercent; set => regenIsPercent = value; }
         public bool CombatRegenIsPercent { get => combatRegenIsPercent; set => combatRegenIsPercent = value; }
+        public bool IsHealth { get => isHealth; set => isHealth = value; }
     }
 
 }

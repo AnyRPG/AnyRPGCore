@@ -134,7 +134,6 @@ namespace AnyRPG {
             bool returnResult = base.PerformPowerResourceCheck(ability);
             if (!returnResult) {
                 CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.MyName + " to perform " + ability.MyName + " at a cost of " + ability.GetResourceCost(this));
-                //Debug.Log("Not enough mana to perform " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString());
             }
             return returnResult;
         }

@@ -34,7 +34,7 @@ namespace AnyRPG {
         }
 
         public void SetMovementSpeed() {
-            //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() movment speed: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed);
+            //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed + " motor: " + this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed + "; " + "; aicontroller: " + this.aiController.MyMovementSpeed);
             if (aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed == 0) {
                 this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
             } else {
@@ -43,6 +43,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
+            //Debug.Log(aiController.gameObject.name + ".PatrolState.Exit()");
             if (coroutine != null) {
                 aiController.StopCoroutine(coroutine);
             }

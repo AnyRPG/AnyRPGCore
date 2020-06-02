@@ -12,58 +12,18 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".HealEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + abilityEffectName);
-            int healthFinalAmount = 0;
-            CombatMagnitude combatMagnitude = CombatMagnitude.normal;
-            if (useHealthAmount == true) {
-                float healthTotalAmount = healthBaseAmount + (healthAmountPerLevel * source.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
-                healthFinalAmount = (int)abilityKeyValuePair.Key;
-                combatMagnitude = abilityKeyValuePair.Value;
-                //healthFinalAmount = (int)CalculateAbilityAmount(healthTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
-            }
-            healthFinalAmount += (int)(abilityEffectInput.healthAmount * inputMultiplier);
 
-            AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
-            abilityEffectOutput.healthAmount = healthFinalAmount;
-            if (healthFinalAmount > 0) {
-                target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverHealth(healthFinalAmount, source, true, combatMagnitude);
-            }
-            int manaFinalAmount = 0;
-            combatMagnitude = CombatMagnitude.normal;
-            if (useManaAmount == true) {
-                float manaTotalAmount = manaBaseAmount + (manaAmountPerLevel * source.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
-                manaFinalAmount = (int)abilityKeyValuePair.Key;
-                combatMagnitude = abilityKeyValuePair.Value;
-                //manaFinalAmount = (int)CalculateAbilityAmount(manaBaseAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput).Key;
-            }
-            manaFinalAmount += (int)(abilityEffectInput.manaAmount * inputMultiplier);
-            abilityEffectOutput.manaAmount = manaFinalAmount;
-            if (manaFinalAmount > 0) {
-                target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverPrimaryResource(manaFinalAmount, source, true, combatMagnitude);
-            }
-            abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
-            base.PerformAbilityHit(source, target, abilityEffectOutput);
+            base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
-        // we can now heal enemies???! Sure, why not!!!
-        /*
-        public override CharacterUnit ReturnTarget(CharacterUnit source, CharacterUnit target) {
-            //Debug.Log("HealEffect.ReturnTarget(" + (source == null ? "null" : source.MyName) + ", " + (target == null ? "null" : target.MyName) + ")");
-            if (target == null) {
-                //Debug.Log("Heal spell cast, but there was no target");
-                return source;
-            }
-            if (Faction.RelationWith(target.MyCharacter, source.MyCharacter) <= -1) {
-                //if (Faction.RelationWith(source.MyCharacter, target.MyCharacter) < 0) {
-                //Debug.Log("The target is an enemy.  Casting on self instead.");
-                return source;
-            }
-            return target;
+        public override void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+
+            target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverResource(powerResource, finalAmount, source, true, combatMagnitude);
+
+            base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectInput, powerResource);
         }
-        */
 
 
     }

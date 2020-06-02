@@ -17,14 +17,14 @@ namespace AnyRPG {
 
         public override bool Use() {
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
-                //Debug.Log("The current mana was less than the max mana and we can use the potion: " + this.GetInstanceID().ToString());
+                //Debug.Log("The current resource amount was less than the max resource amount and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
                 return returnValue;
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Your mana is already full!");
+                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.name + " is already full!");
                 return false;
             }
         }

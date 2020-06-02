@@ -112,7 +112,8 @@ namespace AnyRPG {
             set => faction = value;
         }
 
-        public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
+
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }

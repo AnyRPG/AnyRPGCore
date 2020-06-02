@@ -125,6 +125,9 @@ namespace AnyRPG {
             // ensure base.Start is run before change to IdleState
             base.Start();
 
+            // this needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
+            (baseCharacter as AICharacter).EnableAnimation();
+
             if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
                 ChangeState(new DeathState());
             } else {
@@ -351,7 +354,7 @@ namespace AnyRPG {
             target = null;
             MyAggroRange = initialAggroRange;
             if (baseCharacter != null) {
-                baseCharacter.CharacterStats.ResetHealth();
+                baseCharacter.CharacterStats.ResetResourceAmounts();
                 if (baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterMotor != null) {
                     MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
                     MyBaseCharacter.AnimatedUnit.MyCharacterMotor.ResetPath();

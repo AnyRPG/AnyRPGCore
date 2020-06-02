@@ -50,7 +50,7 @@ namespace AnyRPG {
         /// give a chance to cast any onhit abilities from the equipped weapon
         /// </summary>
         /// <param name="attackEffect"></param>
-        void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectOutput abilityEffectOutput);
+        void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput);
 
         /// <summary>
         /// return a float that increases damage by the animation time to ensure long cast abilities get the same benefit from dps increases
@@ -176,7 +176,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="abilityEffectInput"></param>
         /// <param name="channeledEffect"></param>
-        void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, ChanneledEffect channeledEffect);
+        void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect);
 
         /// <summary>
         /// Destroy ability effect objects after a certain amount of time

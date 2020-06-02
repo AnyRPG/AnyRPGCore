@@ -263,7 +263,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator MonitorAutoAttack(IAbility ability) {
-            Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             yield return null;
 

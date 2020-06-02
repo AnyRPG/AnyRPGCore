@@ -71,11 +71,11 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, ChanneledEffect channeledEffect) {
+        public void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
             abilityHitDelayCoroutine = StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
         }
 
-        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, ChanneledEffect channeledEffect) {
+        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
             //Debug.Log("ChanelledEffect.PerformAbilityEffectDelay()");
             float timeRemaining = channeledEffect.effectDelay;
             while (timeRemaining > 0f) {
@@ -96,7 +96,7 @@ namespace AnyRPG {
             // do nothing for now
         }
 
-        public virtual void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectOutput abilityEffectOutput) {
+        public virtual void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput) {
             // do nothing.  There is no weapon on the base class
         }
 

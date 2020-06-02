@@ -20,7 +20,7 @@ namespace AnyRPG {
         private Vector3 spawnLocation = Vector3.zero;
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
             Dictionary<PrefabProfile, GameObject> returnObjects = Spawn((source as CharacterAbilityManager).BaseCharacter);
@@ -42,7 +42,7 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             // intentionally not calling base to avoid getting our pet destroyed
         }
 

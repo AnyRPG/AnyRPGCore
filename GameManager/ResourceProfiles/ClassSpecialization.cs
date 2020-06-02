@@ -42,24 +42,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<PowerEnhancerNode> powerEnhancerStats = new List<PowerEnhancerNode>();
 
-        [SerializeField]
-        private int staminaPerLevel;
-
-        [SerializeField]
-        private int intellectPerLevel;
-
-        [SerializeField]
-        private int strengthPerLevel;
-
-        [SerializeField]
-        private int agilityPerLevel;
-
         public List<BaseAbility> MyAbilityList { get => realAbilityList; set => realAbilityList = value; }
         //public List<string> MyArmorClassList { get => armorClassList; set => armorClassList = value; }
-        public int MyStaminaPerLevel { get => staminaPerLevel; set => staminaPerLevel = value; }
-        public int MyIntellectPerLevel { get => intellectPerLevel; set => intellectPerLevel = value; }
-        public int MyStrengthPerLevel { get => strengthPerLevel; set => strengthPerLevel = value; }
-        public int MyAgilityPerLevel { get => agilityPerLevel; set => agilityPerLevel = value; }
         public List<WeaponSkill> MyWeaponSkillList { get => realWeaponSkillList; set => realWeaponSkillList = value; }
         public List<PowerEnhancerNode> MyPowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
         public List<AbilityEffect> MyTraitList { get => realTraitList; set => realTraitList = value; }

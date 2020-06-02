@@ -151,6 +151,7 @@ namespace AnyRPG {
         }
 
         public void EnableAgent() {
+            //Debug.Log(gameObject.name + ".AnimatedUnit.EnableAgent()");
             if (MyAgent != null) {
                 MyAgent.enabled = true;
             }

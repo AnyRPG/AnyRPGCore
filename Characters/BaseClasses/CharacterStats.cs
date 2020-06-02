@@ -6,11 +6,10 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class CharacterStats : MonoBehaviour {
-        //public static event Action<CharacterStats> OnCharacterStatsAdded = delegate { };
-        //public static event Action<CharacterStats> OnCharacterStatsRemoved = delegate { };
 
         public event System.Action<int, int> OnHealthChanged = delegate { };
         public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
+        public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<CharacterStats> OnDie = delegate { };
         public event System.Action<CharacterStats> BeforeDie = delegate { };
         public event System.Action OnReviveBegin = delegate { };
@@ -19,14 +18,15 @@ namespace AnyRPG {
         public event System.Action OnStatChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
 
-        // starting level
+        [Tooltip("starting level")]
         [SerializeField]
         private int level = 0;
 
-        // a stat multiplier to make creatures more difficult
+        [Tooltip("a stat and resource multiplier to make creatures more difficult")]
         [SerializeField]
         protected string toughness = string.Empty;
 
+        [Tooltip("Run speed is multiplied by this amount when sprinting")]
         [SerializeField]
         protected float sprintSpeedModifier = 1.5f;
 
@@ -35,14 +35,17 @@ namespace AnyRPG {
         // keep track of current level
         private int currentLevel;
 
-        private int stamina;
-        private int intellect;
-        private int strength;
-        private int agility;
-        protected int currentStamina;
-        protected int currentIntellect;
-        protected int currentStrength;
-        protected int currentAgility;
+        // primary stat names for this character, and their values
+        protected Dictionary<string, Stat> primaryStats = new Dictionary<string, Stat>();
+
+        // secondary stats for this character, and their values
+        protected Dictionary<SecondaryStatType, Stat> secondaryStats = new Dictionary<SecondaryStatType, Stat>();
+
+        // power resources for this character, and their values
+        protected Dictionary<PowerResource, PowerResourceNode> powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
+
+        // keep track of resource multipliers from unit toughness to directly multiply resource values without multiplying underlying stats
+        private Dictionary<string, float> resourceMultipliers = new Dictionary<string, float>();
 
         protected float walkSpeed = 1f;
         protected float runSpeed = 7f;
@@ -50,24 +53,12 @@ namespace AnyRPG {
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
 
-        public int currentHealth { get; private set; }
-
-        private Dictionary<PowerResource, PowerResourceNode> powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
-
-
-        //public int currentMana { get; private set; }
-
         // hitbox is now a function of character unit collider height
         //private float hitBox = 1.5f;
 
-        protected Stat meleeDamageModifiers = new Stat();
-        protected Stat armorModifiers = new Stat();
+        protected Stat meleeDamageModifiers = new Stat("MeleeDamageModifiers");
+        protected Stat armorModifiers = new Stat("ArmorModifiers");
 
-        protected float healthMultiplier = 1f;
-        protected float manaMultiplier = 1f;
-
-        protected Dictionary<StatBuffType, Stat> primaryStatModifiers = new Dictionary<StatBuffType, Stat>();
-        //protected List<StatusEffect> statusEffects = new List<StatusEffect>();
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter;
 
@@ -77,61 +68,68 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public float MyPhysicalDamage { get => meleeDamageModifiers.GetValue(); }
-        public float MyArmor { get => armorModifiers.GetValue(); }
-        public int MyBaseStamina { get => stamina; }
-        public int MyStamina { get => currentStamina; }
-        public int MyBaseStrength { get => strength; }
-        public int MyStrength { get => currentStrength; }
-        public int MyBaseIntellect { get => intellect; }
-        public int MyIntellect { get => currentIntellect; }
-        public float MyWalkSpeed { get => walkSpeed; }
-        public float MyRunSpeed { get => currentRunSpeed; }
-        public float MySprintSpeed { get => currentSprintSpeed; }
-        public int MyBaseAgility { get => agility; }
-        //public int MyAgility { get => (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility)); }
-        public int MyAgility { get => currentAgility; }
+        public float PhysicalDamage { get => meleeDamageModifiers.GetValue(); }
+        public float Armor { get => armorModifiers.GetValue(); }
+        public float WalkSpeed { get => walkSpeed; }
+        public float RunSpeed { get => currentRunSpeed; }
+        public float SprintSpeed { get => currentSprintSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         public int Level { get => currentLevel; }
-        public int MyCurrentXP { get => currentXP; set => currentXP = value; }
-        public int MyMaxHealth { get => (int)(MyStamina * 10 * healthMultiplier); }
+        public int CurrentXP { get => currentXP; set => currentXP = value; }
         public PowerResource PrimaryResource {
             get {
-                if (baseCharacter != null && baseCharacter.MyCharacterClass != null) {
-                    if (baseCharacter.MyCharacterClass.PowerResourceList.Count > 0) {
-                        return baseCharacter.MyCharacterClass.PowerResourceList[0];
+                if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+                    if (baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                        return baseCharacter.CharacterClass.PowerResourceList[0];
                     }
                 }
                 return null;
             }
         }
+
+        public bool HasHealthResource {
+            get {
+                if (PowerResourceDictionary.Count > 0) {
+                    foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                        if (powerResource.IsHealth == true) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+
         public int MaxPrimaryResource {
             get {
                 if (PrimaryResource != null) {
-                    return (int)baseCharacter.MyCharacterClass.GetResourceMaximum(baseCharacter.MyCharacterClass.PowerResourceList[0], this);
+                    return (int)GetPowerResourceMaxAmount(baseCharacter.CharacterClass.PowerResourceList[0]);
                 }
                 return 0;
             }
         }
+
         public int CurrentPrimaryResource {
             get {
                 if (PrimaryResource != null) {
                     if (powerResourceDictionary.Count > 0) {
-                        return (int)powerResourceDictionary[baseCharacter.MyCharacterClass.PowerResourceList[0]].currentValue;
+                        return (int)powerResourceDictionary[baseCharacter.CharacterClass.PowerResourceList[0]].currentValue;
                     }
                 }
                 return 0;
             }
         }
 
-        public Dictionary<StatBuffType, Stat> MyPrimaryStatModifiers { get => primaryStatModifiers; }
         public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
         public UnitToughness MyToughness { get => unitToughness; set => unitToughness = value; }
         public bool MyIsReviving { get => isReviving; set => isReviving = value; }
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
+        public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".CharacterStats.Awake()");
@@ -160,10 +158,16 @@ namespace AnyRPG {
 
         public void CalculatePrimaryStats() {
             CalculateRunSpeed();
-            CalculateAgility();
-            CalculateStamina();
-            CalculateStrength();
-            CalculateIntellect();
+            foreach (string statName in primaryStats.Keys) {
+                CalculateStat(statName);
+            }
+            CalculateSecondaryStats();
+        }
+
+        public void CalculateSecondaryStats() {
+            foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
+                CalculateSecondaryStat(secondaryStatType);
+            }
         }
 
         public void GetComponentReferences() {
@@ -172,6 +176,13 @@ namespace AnyRPG {
 
         public void SetCharacterClass(CharacterClass characterClass) {
             //Debug.Log(gameObject.name + ".CharacterStats.SetCharacterClass(" + (characterClass == null ? "null" : characterClass.MyName) + ")");
+
+            // add primary stats from the character class
+            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+                AddCharacterClassModifiers(baseCharacter.CharacterClass);
+            }
+
+            // add power resources from the character class
             powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
             foreach (PowerResource powerResource in characterClass.PowerResourceList) {
                 powerResourceDictionary.Add(powerResource, new PowerResourceNode());
@@ -192,15 +203,59 @@ namespace AnyRPG {
             return false;
         }
 
-        public void SetPrimaryStatModifiers() {
-            foreach (StatBuffType statBuffType in Enum.GetValues(typeof(StatBuffType))) {
-                primaryStatModifiers.Add(statBuffType, new Stat());
+        /// <summary>
+        /// Add primary stats from the character class
+        /// </summary>
+        /// <param name="characterClass"></param>
+        public void AddCharacterClassModifiers(CharacterClass characterClass) {
+
+            // setup primary stats dictionary with character class defined stats
+            foreach (StatScalingNode statScalingNode in characterClass.PrimaryStats) {
+                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
+                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
+                }
             }
-            primaryStatModifiers[StatBuffType.Stamina].OnModifierUpdate += HandleStaminaUpdate;
-            primaryStatModifiers[StatBuffType.Intellect].OnModifierUpdate += HandleIntellectUpdate;
-            primaryStatModifiers[StatBuffType.Strength].OnModifierUpdate += HandleStrengthUpdate;
-            primaryStatModifiers[StatBuffType.Agility].OnModifierUpdate += HandleAgilityUpdate;
-            primaryStatModifiers[StatBuffType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
+
+            // setup power resource dictionary with character class defined resources
+            foreach (PowerResource powerResource in characterClass.PowerResourceList) {
+                if (!powerResourceDictionary.ContainsKey(powerResource)) {
+                    powerResourceDictionary.Add(powerResource, new PowerResourceNode());
+                }
+            }
+        }
+
+        /// <summary>
+        /// setup the dictionaries that keep track of the current values for stats and resources
+        /// </summary>
+        public void SetPrimaryStatModifiers() {
+
+            // setup the primary stats dictionary with system defined stats
+            foreach (StatScalingNode statScalingNode in SystemConfigurationManager.MyInstance.PrimaryStats) {
+                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
+                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
+                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+                }
+            }
+
+            // setup power resource dictionary with system defined power resources
+            foreach (PowerResource powerResource in SystemConfigurationManager.MyInstance.PowerResourceList) {
+                if (!powerResourceDictionary.ContainsKey(powerResource)) {
+                    powerResourceDictionary.Add(powerResource, new PowerResourceNode());
+                }
+            }
+
+            // if this character has a class, add primary stats and power resources from their class
+            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+                AddCharacterClassModifiers(baseCharacter.CharacterClass);
+            }
+            
+            // setup the secondary stats from the system defined enum
+            foreach (SecondaryStatType secondaryStatType in Enum.GetValues(typeof(SecondaryStatType))) {
+                secondaryStats.Add(secondaryStatType, new Stat(secondaryStatType.ToString()));
+            }
+
+            // movement speed is a special case for now and needs to be passed onto thiry party controllers
+            secondaryStats[SecondaryStatType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
 
         public virtual void CreateLateSubscriptions() {
@@ -237,37 +292,38 @@ namespace AnyRPG {
             //ClearStatusEffects();
         }
 
-        public virtual void CalculateStrength() {
-            currentStrength = (int)((strength + GetAddModifiers(StatBuffType.Strength)) * GetMultiplyModifiers(StatBuffType.Strength));
-        }
-
-        public virtual void CalculateStamina() {
-            currentStamina = (int)((stamina + GetAddModifiers(StatBuffType.Stamina)) * GetMultiplyModifiers(StatBuffType.Stamina));
-        }
-
-        public virtual void CalculateAgility() {
-            currentAgility = (int)((agility + GetAddModifiers(StatBuffType.Agility)) * GetMultiplyModifiers(StatBuffType.Agility));
-        }
-
-        public virtual void CalculateIntellect() {
-            currentIntellect = (int)((intellect + GetAddModifiers(StatBuffType.Intellect)) * GetMultiplyModifiers(StatBuffType.Intellect));
-        }
-
         public virtual void CalculateRunSpeed() {
-            currentRunSpeed = (runSpeed + GetAddModifiers(StatBuffType.MovementSpeed)) * GetMultiplyModifiers(StatBuffType.MovementSpeed);
+            currentRunSpeed = (runSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
             currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
+            //Debug.Log(gameObject.name + ".CharacterStats.CalculateRunSpeed(): runSpeed: " + runSpeed + "; current: " + currentRunSpeed);
         }
 
-        public virtual void HandleMovementSpeedUpdate() {
+        public virtual void HandleMovementSpeedUpdate(string secondaryStatName) {
             CalculateRunSpeed();
         }
 
-        public virtual void HandleStrengthUpdate() {
-            CalculateStrength();
+        public virtual void HandleStatUpdateCommon(string statName) {
+            // check if the stat that was just updated contributes to any resource in any way
+            // if it does, throw out a resource changed notification handler
+            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+                foreach (StatScalingNode statScalingNode in baseCharacter.CharacterClass.PrimaryStats) {
+                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
+                        if (statScalingNode.StatName == statName) {
+                            ResourceAmountChangedNotificationHandler(characterStatToResourceNode.PowerResource);
+                        }
+                    }
+                }
+            }
         }
 
-        public virtual void HandleAgilityUpdate() {
-            CalculateAgility();
+        public virtual void HandleStatUpdate(string statName, bool calculateStat = true) {
+            if (calculateStat == true) {
+                CalculateStat(statName);
+
+                // in the future, loop and only calculate secondary stats that this primary stat affects
+                CalculateSecondaryStats();
+            }
+            HandleStatUpdateCommon(statName);
         }
 
         void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
@@ -276,45 +332,88 @@ namespace AnyRPG {
             if (newItem != null) {
                 armorModifiers.AddModifier(newItem.MyArmorModifier);
                 meleeDamageModifiers.AddModifier(newItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].AddModifier(newItem.MyStaminaModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Intellect].AddModifier(newItem.MyIntellectModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Strength].AddModifier(newItem.MyStrengthModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Agility].AddModifier(newItem.MyAgilityModifier(Level, baseCharacter));
+
+                foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
+                    if (primaryStats.ContainsKey(itemPrimaryStatNode.StatName)) {
+                        primaryStats[itemPrimaryStatNode.StatName].AddModifier(newItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                    }
+                }
             }
+
+            // theres a bug here ?
+            // if you equip an item at one level, then remove it at another level, it will remove the higher level value for the stat, leaving you with
+            // less stats than you should have
+            // to fix this, we need to recalculate the modifiers for equipment, every time you level up
 
             if (oldItem != null) {
                 armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
                 meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
-                primaryStatModifiers[StatBuffType.Stamina].RemoveModifier(oldItem.MyStaminaModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Intellect].RemoveModifier(oldItem.MyIntellectModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Strength].RemoveModifier(oldItem.MyStrengthModifier(Level, baseCharacter));
-                primaryStatModifiers[StatBuffType.Agility].RemoveModifier(oldItem.MyAgilityModifier(Level, baseCharacter));
+                foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
+                    primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(newItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                }
             }
 
-            PrimaryResourceAmountChangedNotificationHandler();
-            HealthChangedNotificationHandler();
+            foreach (PowerResource _powerResource in baseCharacter.CharacterClass.PowerResourceList) {
+                ResourceAmountChangedNotificationHandler(_powerResource);
+            }
         }
 
+        public virtual void CalculateStat(string statName) {
+            if (primaryStats.ContainsKey(statName)) {
+                primaryStats[statName].CurrentValue = (int)((primaryStats[statName].BaseValue + GetAddModifiers(statName)) * GetMultiplyModifiers(statName));
+            }
+        }
 
-        protected virtual float GetAddModifiers(StatBuffType statBuffType) {
+        public virtual void CalculateSecondaryStat(SecondaryStatType secondaryStatType) {
+            if (secondaryStats.ContainsKey(secondaryStatType)) {
+                secondaryStats[secondaryStatType].CurrentValue = (int)((secondaryStats[secondaryStatType].BaseValue + GetSecondaryAddModifiers(secondaryStatType)) * GetSecondaryMultiplyModifiers(secondaryStatType));
+            }
+        }
+
+        protected virtual float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyStatBuffTypes.Contains(statBuffType)) {
+                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
                 }
             }
-            if (primaryStatModifiers.ContainsKey(statBuffType)) {
-                returnValue += primaryStatModifiers[statBuffType].GetValue();
+            if (secondaryStats.ContainsKey(secondaryStatType)) {
+                returnValue += secondaryStats[secondaryStatType].GetValue();
             }
             return returnValue;
         }
 
-        protected virtual float GetMultiplyModifiers(StatBuffType statBuffType) {
+        protected virtual float GetSecondaryMultiplyModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyStatBuffTypes.Contains(statBuffType)) {
+                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
+                    returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
+                }
+            }
+            return returnValue;
+        }
+
+        protected virtual float GetAddModifiers(string statName) {
+            //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
+            float returnValue = 0;
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
+                    returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
+                }
+            }
+            if (primaryStats.ContainsKey(statName)) {
+                returnValue += primaryStats[statName].GetValue();
+            }
+            return returnValue;
+        }
+
+        protected virtual float GetMultiplyModifiers(string statName) {
+            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
+            float returnValue = 1f;
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
                     returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
                 }
             }
@@ -426,14 +525,28 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public virtual float GetSecondaryStatAddModifiers(SecondaryStatType secondaryStatType) {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            float returnValue = 0f;
+            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
+                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
+                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
+                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
+                }
+            }
+            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
+            return returnValue;
+        }
+
         public virtual float GetCriticalStrikeModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 0f;
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MyExtraCriticalStrikePercent != 1) {
+                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.CriticalStrike)) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyExtraCriticalStrikePercent;
+                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -491,7 +604,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectOutput abilityEffectInput) {
+        public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyAbilityEffectName + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
             if (IsAlive == false && statusEffect.RequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
@@ -572,32 +685,21 @@ namespace AnyRPG {
 
         public void HandleChangedNotifications(StatusEffect statusEffect) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.MyName) + ")");
-            if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Intellect)) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING MANA CHANGED");
-                PrimaryResourceAmountChangedNotificationHandler();
+
+            //statusEffect.StatBuffTypeNames
+            if (statusEffect.StatBuffTypeNames.Count > 0) {
+                foreach (string statName in statusEffect.StatBuffTypeNames) {
+                    HandleStatUpdate(statName, false);
+                }
                 StatChangedNotificationHandler();
             }
-            if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Stamina)) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
-                HealthChangedNotificationHandler();
-                StatChangedNotificationHandler();
-            }
-            if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Strength)) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
-                StatChangedNotificationHandler();
-            }
-            if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.Agility)) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
-                StatChangedNotificationHandler();
-            }
-            if (statusEffect.MyStatBuffTypes.Contains(StatBuffType.MovementSpeed)) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING HEALTH CHANGED");
+
+            if (statusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.MovementSpeed)) {
                 CalculateRunSpeed();
                 StatChangedNotificationHandler();
             }
 
             if (statusEffect.MyFactionModifiers.Count > 0) {
-                //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING REPUTATION CHANGED");
                 if (SystemEventManager.MyInstance != null) {
                     SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
                 }
@@ -606,10 +708,10 @@ namespace AnyRPG {
 
         private void AddStatusEffectModifiers(StatusEffect statusEffect) {
             //Debug.Log(gameObject.name + ".CharacterStats.AddStatusEffectModifiers()");
-            foreach (StatBuffType statBuffType in statusEffect.MyStatBuffTypes) {
+            foreach (string statBuffType in statusEffect.StatBuffTypeNames) {
                 //Debug.Log(gameObject.name + ".CharacterStats.AddStatusEffectModifiers() statBuffType: " + statBuffType);
-                primaryStatModifiers[statBuffType].AddModifier(statusEffect.MyStatAmount);
-                primaryStatModifiers[statBuffType].AddMultiplyModifier(statusEffect.MyStatMultiplier);
+                primaryStats[statBuffType].AddModifier(statusEffect.MyStatAmount);
+                primaryStats[statBuffType].AddMultiplyModifier(statusEffect.MyStatMultiplier);
             }
         }
 
@@ -623,7 +725,7 @@ namespace AnyRPG {
                 statusEffects.Remove(preparedString);
             }
 
-            // should reset health back down after buff expires
+            // should reset resources back down after buff expires
             HandleChangedNotifications(statusEffect);
         }
 
@@ -650,37 +752,57 @@ namespace AnyRPG {
 
         public virtual void SetLevel(int newLevel) {
             //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
-            // arbitrary toughness cap of 5 for now.  add this as system configuration option later maybe
-            //int usedToughNess = (int)Mathf.Clamp((int)toughness, 1, 5);
-            float usedStaminaMultiplier = 1f;
-            float usedIntellectMultiplier = 1f;
-            float usedAgilityMultiplier = 1f;
-            float usedStrengthMultiplier = 1f;
-            currentLevel = newLevel;
-            if (unitToughness != null) {
-                usedStaminaMultiplier = unitToughness.MyStaminaMultiplier;
-                usedIntellectMultiplier = unitToughness.MyIntellectMultiplier;
-                usedAgilityMultiplier = unitToughness.MyAgilityMultiplier;
-                usedStrengthMultiplier = unitToughness.MyStrengthMultiplier;
-                healthMultiplier = unitToughness.MyHealthMultiplier;
-                manaMultiplier = unitToughness.MyManaMultiplier;
+
+            Dictionary<string, float> multiplierValues = new Dictionary<string, float>();
+            foreach (string statName in primaryStats.Keys) {
+                multiplierValues.Add(statName, 1f);
             }
 
-            //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + "): stamina before: " + stamina + "; currentlevel: " + currentLevel + "; usedstaminamultiplier: " + usedStaminaMultiplier);
-            stamina = (int)(currentLevel * LevelEquations.GetStaminaForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStaminaMultiplier);
-            //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + "): stamina after: " + stamina);
-            intellect = (int)(currentLevel * LevelEquations.GetIntellectForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedIntellectMultiplier);
-            strength = (int)(currentLevel * LevelEquations.GetStrengthForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedStrengthMultiplier);
-            agility = (int)(currentLevel * LevelEquations.GetAgilityForLevel(currentLevel, baseCharacter.MyCharacterClass) * usedAgilityMultiplier);
+            currentLevel = newLevel;
+            if (unitToughness != null) {
+                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in unitToughness.PrimaryStatMultipliers) {
+                    multiplierValues[primaryStatMultiplierNode.StatName] = primaryStatMultiplierNode.StatMultiplier;
+                }
+                resourceMultipliers = new Dictionary<string, float>();
+                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in unitToughness.PrimaryStatMultipliers) {
+                    resourceMultipliers.Add(primaryStatMultiplierNode.StatName, primaryStatMultiplierNode.StatMultiplier);
+                }
+            }
 
+            // calculate base values independent of any modifiers
+            foreach (string statName in primaryStats.Keys) {
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * multiplierValues[statName]);
+            }
+
+            // calculate current values that include modifiers
             CalculatePrimaryStats();
 
-            ResetHealth();
-            ResetPrimaryResourceAmount();
+            ResetResourceAmounts();
         }
+
 
         public Vector3 GetTransFormPosition() {
             return transform.position;
+        }
+
+
+        public virtual void ReducePowerResource(PowerResource powerResource, int usedResourceAmount) {
+            UsePowerResource(powerResource, usedResourceAmount);
+            if (powerResource.IsHealth == true) {
+                PerformDeathCheck();
+            }
+        }
+
+        public void PerformDeathCheck() {
+            bool shouldLive = false;
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                if (powerResourceDictionary[powerResource].currentValue > 0f && powerResource.IsHealth == true) {
+                    shouldLive = true;
+                }
+            }
+            if (shouldLive == false) {
+                Die();
+            }
         }
 
         public virtual void UsePowerResource(PowerResource powerResource, int usedResourceAmount) {
@@ -688,7 +810,7 @@ namespace AnyRPG {
             if (powerResourceDictionary.ContainsKey(powerResource)) {
                 powerResourceDictionary[powerResource].currentValue -= usedResourceAmount;
                 powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, int.MaxValue);
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
             }
         }
 
@@ -702,8 +824,8 @@ namespace AnyRPG {
                 powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
                     powerResourceDictionary[tmpPowerResource].currentValue,
                     0,
-                    (int)baseCharacter.MyCharacterClass.GetResourceMaximum(tmpPowerResource, this));
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                    (int)GetPowerResourceMaxAmount(tmpPowerResource));
+                OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             }
         }
@@ -718,8 +840,8 @@ namespace AnyRPG {
                 powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
                     powerResourceDictionary[tmpPowerResource].currentValue,
                     0,
-                    (int)baseCharacter.MyCharacterClass.GetResourceMaximum(tmpPowerResource, this));
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                    (int)GetPowerResourceMaxAmount(tmpPowerResource));
+                OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             }
         }
@@ -734,6 +856,15 @@ namespace AnyRPG {
             }
         }
 
+        public void RecoverResource(PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+
+            AddResourceAmount(powerResource.MyName, amount);
+            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
+                // spawn text over the player
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainMana, combatMagnitude);
+            }
+        }
+
         public void RecoverPrimaryResource(int mana, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
             SetPrimaryResourceAmount(mana);
@@ -743,46 +874,15 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// allows to cap the resource amount if the resource cap has been lowered due to stat debuff etc
+        /// </summary>
+        public void ResourceAmountChangedNotificationHandler(PowerResource powerResource) {
 
-        public void ReduceHealth(int amount) {
-            //Debug.Log(gameObject.name + ".CharacterStats.ReduceHealth(" + amount + ")");
-            // clamp in case we receive a negative amount
-            amount = Mathf.Clamp(amount, 0, int.MaxValue);
-
-            currentHealth -= amount;
-            currentHealth = Mathf.Clamp(currentHealth, 0, int.MaxValue);
-            //Debug.Log(transform.name + " takes " + amount + " damage.");
-
-            OnHealthChanged(MyMaxHealth, currentHealth);
-
-            if (currentHealth <= 0) {
-                Die();
+            if (powerResource != null && powerResourceDictionary.ContainsKey(powerResource)) {
+                powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, GetPowerResourceMaxAmount(powerResource));
+                OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
             }
-        }
-
-        public void SetHealth(int health) {
-            //Debug.Log(gameObject.name + ": setting health: " + health.ToString());
-            health = Mathf.Clamp(health, 0, int.MaxValue);
-            currentHealth += health;
-            currentHealth = Mathf.Clamp(currentHealth, 0, MyMaxHealth);
-
-            // notify subscribers that our health has changed
-            OnHealthChanged(MyMaxHealth, currentHealth);
-        }
-
-        public void RecoverHealth(int health, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            //Debug.Log(gameObject.name + ".CharacterStats.RecoverHealth(" + health + ", " + (source != null && source.MyDisplayName != null ? source.MyDisplayName : null) + ", " + showCombatText + ")");
-            SetHealth(health);
-
-            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
-                // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, health, CombatTextType.gainHealth, combatMagnitude);
-            }
-        }
-
-        public void HandleIntellectUpdate() {
-            CalculateIntellect();
-            PrimaryResourceAmountChangedNotificationHandler();
         }
 
         /// <summary>
@@ -796,39 +896,29 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleStaminaUpdate() {
-            CalculateStamina();
-            HealthChangedNotificationHandler();
-        }
-
-        public void HealthChangedNotificationHandler() {
-            currentHealth = Mathf.Clamp(currentHealth, 0, MyMaxHealth);
-            OnHealthChanged(MyMaxHealth, currentHealth);
-        }
-
         public void StatChangedNotificationHandler() {
             OnStatChanged();
         }
 
         /// <summary>
-        /// Set health to maximum
+        /// Set resources to maximum
         /// </summary>
-        public void ResetHealth() {
-            //Debug.Log(gameObject.name + ".CharacterStats.ResetHealth() : broadcasting OnHealthChanged; maxhealth: " + MyMaxHealth);
-            currentHealth = MyMaxHealth;
+        public void ResetResourceAmounts() {
+            //Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
 
-            // notify subscribers that our health has changed
-            OnHealthChanged(MyMaxHealth, currentHealth);
-        }
-
-        /// <summary>
-        /// Set mana to maximum
-        /// </summary>
-        public void ResetPrimaryResourceAmount() {
-            if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
-                powerResourceDictionary[PrimaryResource].currentValue = MaxPrimaryResource;
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+            if (baseCharacter == null || baseCharacter.CharacterClass == null || baseCharacter.CharacterClass.PowerResourceList == null) {
+                return;
             }
+
+            // loop through and update the resources.
+            foreach (PowerResource _powerResource in baseCharacter.CharacterClass.PowerResourceList) {
+                if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
+                    powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                }
+                OnResourceAmountChanged(_powerResource, (int)baseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)baseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
+            }
+
+            
         }
 
         public virtual void TrySpawnDead() {
@@ -836,10 +926,11 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
                 //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
-                currentHealth = 0;
+
+                SetResourceAmount(PrimaryResource.MyName, 0f);
 
                 // notify subscribers that our health has changed
-                OnHealthChanged(MyMaxHealth, currentHealth);
+                OnHealthChanged(MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
 
@@ -881,8 +972,8 @@ namespace AnyRPG {
             baseCharacter.CharacterUnit.EnableCollider();
             isAlive = true;
             ClearInvalidStatusEffects();
-            ResetHealth();
-            //ResetPrimaryResourceAmount();
+
+            ResetResourceAmounts();
         }
 
         protected virtual void ClearStatusEffects(bool clearAll = true) {
@@ -917,7 +1008,7 @@ namespace AnyRPG {
 
         }
 
-        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectOutput abilityEffectInput, StatusEffect statusEffect) {
+        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectInput, StatusEffect statusEffect) {
             //Debug.Log(gameObject.name + ".StatusEffect.Tick() start");
             float elapsedTime = 0f;
 
@@ -996,10 +1087,14 @@ namespace AnyRPG {
         }
 
         public float GetPowerResourceMaxAmount(PowerResource powerResource) {
+            float returnValue = 0f;
             if (powerResourceDictionary.ContainsKey(powerResource)) {
-                return baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this);
+                returnValue = baseCharacter.CharacterClass.GetResourceMaximum(powerResource, this);
             }
-            return 0f;
+            if (resourceMultipliers.ContainsKey(powerResource.MyName)) {
+                returnValue *= resourceMultipliers[powerResource.MyName];
+            }
+            return returnValue;
         }
 
         protected virtual void ClearPowerAmounts() {
@@ -1015,7 +1110,6 @@ namespace AnyRPG {
             }
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 powerResourceDictionary[powerResource].elapsedTime += Time.deltaTime;
-                //Debug.Log(gameObject.name + ".CharacterStats.PerformResourceRegen(): powerResource: " + powerResource.MyName + "; value: " + powerResourceDictionary[powerResource].currentValue + "; max: " + baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this));
 
                 if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
@@ -1039,11 +1133,11 @@ namespace AnyRPG {
                     powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(
                         powerResourceDictionary[powerResource].currentValue,
                         0,
-                        (int)baseCharacter.MyCharacterClass.GetResourceMaximum(powerResource, this));
+                        (int)GetPowerResourceMaxAmount(powerResource));
 
                     // this is notifying on primary resource, but for now, we don't have multiples, so its ok
                     // this will need to be fixed when we add secondary resources
-                    OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                    OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
 
                 }
             }

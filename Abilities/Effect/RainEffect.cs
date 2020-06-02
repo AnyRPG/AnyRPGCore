@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class RainEffect : AOEEffect {
 
 
-        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 
@@ -37,9 +37,12 @@ namespace AnyRPG {
                 AOETargetNode validTargetNode = new AOETargetNode();
                 validTargetNode.targetGameObject = null;
                 //abilityEffectInput.prefabLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
-                validTargetNode.abilityEffectInput = new AbilityEffectOutput();
-                validTargetNode.abilityEffectInput.healthAmount = abilityEffectInput.healthAmount;
-                validTargetNode.abilityEffectInput.manaAmount = abilityEffectInput.manaAmount;
+                validTargetNode.abilityEffectInput = new AbilityEffectContext();
+
+                foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
+                    validTargetNode.abilityEffectInput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)resourceInputAmountNode.amount);
+                }
+
                 validTargetNode.abilityEffectInput.overrideDuration = abilityEffectInput.overrideDuration;
                 validTargetNode.abilityEffectInput.savedEffect = abilityEffectInput.savedEffect;
                 validTargetNode.abilityEffectInput.castTimeMultipler = abilityEffectInput.castTimeMultipler;

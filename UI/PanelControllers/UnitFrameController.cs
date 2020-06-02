@@ -64,6 +64,9 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject followGameObject = null;
 
+        private INamePlateUnit namePlateUnit = null;
+        private CharacterUnit characterUnit = null;
+
         [SerializeField]
         private StatusEffectPanelController statusEffectPanelController = null;
 
@@ -72,7 +75,8 @@ namespace AnyRPG {
 
         private Transform followTransform = null;
 
-        private Color powerResourceColor = Color.blue;
+        private Color powerResourceColor1 = Color.green;
+        private Color powerResourceColor2 = Color.blue;
 
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
@@ -153,13 +157,13 @@ namespace AnyRPG {
 
         public void InitializePosition() {
             //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition()");
-            if (followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameCameraPositionOffset != null) {
-                cameraPositionOffset = followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameCameraPositionOffset;
+            if (namePlateUnit.MyUnitFrameCameraPositionOffset != null) {
+                cameraPositionOffset = namePlateUnit.MyUnitFrameCameraPositionOffset;
             } else {
                 cameraPositionOffset = cameraPositionOffsetDefault;
             }
-            if (followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameCameraLookOffset != null) {
-                cameraLookOffset = followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameCameraLookOffset;
+            if (namePlateUnit.MyUnitFrameCameraLookOffset != null) {
+                cameraLookOffset = namePlateUnit.MyUnitFrameCameraLookOffset;
             } else {
                 cameraLookOffset = cameraLookOffsetDefault;
             }
@@ -179,13 +183,23 @@ namespace AnyRPG {
             InitializeController();
             followGameObject = target;
 
-            INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
-            if ((namePlateUnit as CharacterUnit) is CharacterUnit && (namePlateUnit as CharacterUnit).MyBaseCharacter != null && (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterClass != null) {
-                powerResourceColor = (namePlateUnit as CharacterUnit).MyBaseCharacter.MyCharacterClass.PowerResourceList[0].DisplayColor;
+            namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
+            if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
+                characterUnit = (namePlateUnit as CharacterUnit);
+            } else {
+                characterUnit = null;
+            }
+            if (characterUnit != null && characterUnit.MyBaseCharacter != null && characterUnit.MyBaseCharacter.CharacterClass != null) {
+                if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                    powerResourceColor1 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[0].DisplayColor;
+                }
+                if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 1) {
+                    powerResourceColor2 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[1].DisplayColor;
+                }
             }
             if (namePlateUnit.HasHealth()) {
                 castBarController.SetTarget(target);
-                statusEffectPanelController.SetTarget(namePlateUnit as CharacterUnit);
+                statusEffectPanelController.SetTarget(characterUnit);
             }
             if (isActiveAndEnabled) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + "):  WE ARE NOW ACTIVE AND ENABLED");
@@ -210,13 +224,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
             if (followGameObject != null) {
 
-                INamePlateUnit namePlateUnit = followGameObject.GetComponent<INamePlateUnit>();
-                if (namePlateUnit is CharacterUnit) {
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnPrimaryResourceAmountChanged -= OnResourceAmountChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
-                    (namePlateUnit as CharacterUnit).MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                if (characterUnit != null) {
+                    characterUnit.MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
+                    characterUnit.MyCharacter.CharacterStats.OnResourceAmountChanged -= OnResourceAmountChanged;
+                    characterUnit.MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
+                    characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
+                    characterUnit.MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
             }
             followGameObject = null;
@@ -253,14 +266,23 @@ namespace AnyRPG {
                     return;
                 }
 
-                // set initial hp and mana values in character display
-                OnHealthChanged(baseCharacter.CharacterStats.MyMaxHealth, baseCharacter.CharacterStats.currentHealth);
-                OnResourceAmountChanged(baseCharacter.CharacterStats.MaxPrimaryResource, baseCharacter.CharacterStats.CurrentPrimaryResource);
+                // set initial resource values in character display
+                int counter = 0;
+                if (characterUnit.MyCharacter.CharacterClass != null) {
+                    foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterClass.PowerResourceList) {
+                        OnResourceAmountChanged(_powerResource, (int)baseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)baseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
+                        counter++;
+                        if (counter > 1) {
+                            break;
+                        }
+                    }
+                }
+
                 OnLevelChanged(baseCharacter.CharacterStats.Level);
 
                 // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
                 baseCharacter.CharacterStats.OnHealthChanged += OnHealthChanged;
-                baseCharacter.CharacterStats.OnPrimaryResourceAmountChanged += OnResourceAmountChanged;
+                baseCharacter.CharacterStats.OnResourceAmountChanged += OnResourceAmountChanged;
                 baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
                 baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
 
@@ -271,10 +293,28 @@ namespace AnyRPG {
                 }
 
             } else {
-                // manually set everything to 1 if this is an inanimate unit
-                OnHealthChanged(1, 1);
-                OnResourceAmountChanged(1, 1);
+                ClearResourceBars();
+                //OnHealthChanged(1, 1);
                 OnLevelChanged(1);
+            }
+        }
+
+        public void ClearResourceBars() {
+            
+            // primary resource bar
+            if (healthSlider != null) {
+                healthSlider.GetComponent<LayoutElement>().preferredWidth = 0;
+            }
+            if (healthText != null) {
+                healthText.text = string.Empty;
+            }
+
+            // secondary resource bar
+            if (manaSlider != null) {
+                manaSlider.GetComponent<LayoutElement>().preferredWidth = 0;
+            }
+            if (manaText != null) {
+                manaText.text = string.Empty;
             }
         }
 
@@ -347,29 +387,54 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="maxResourceAmount"></param>
         /// <param name="currentResourceAmount"></param>
-        public void OnResourceAmountChanged(int maxResourceAmount, int currentResourceAmount) {
-            //Debug.Log("Updating mana bar");
-            float resourcePercent = (float)currentResourceAmount / maxResourceAmount;
-            //Debug.Log("UnitFrameController: setting manaSlider width to " + (manaPercent * originalManaSliderWidth).ToString());
-
-            // code for an actual image, not currently used
-            //playerManaSlider.fillAmount = manaPercent;
-
-            // code for the default image
-            if (manaSlider != null) {
-                manaSlider.GetComponent<LayoutElement>().preferredWidth = resourcePercent * originalManaSliderWidth;
-                if (manaSlider.color != powerResourceColor) {
-                    manaSlider.color = powerResourceColor;
+        public void OnResourceAmountChanged(PowerResource powerResource, int maxResourceAmount, int currentResourceAmount) {
+            //Debug.Log("Updating resource bar");
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterClass != null) {
+                int counter = 0;
+                bool updateBar = false;
+                foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterClass.PowerResourceList) {
+                    if (powerResource == _powerResource) {
+                        updateBar = true;
+                        break;
+                    }
+                    counter++;
+                    if (counter > 1) {
+                        break;
+                    }
                 }
-            }
 
-            if (manaText != null) {
-                string percentText = string.Empty;
-                if (maxResourceAmount > 0) {
-                    percentText = " (" + (resourcePercent * 100).ToString("F0") + "%)";
+                if (updateBar) {
+                    if (counter == 0) {
+                        OnHealthChanged(maxResourceAmount, currentResourceAmount);
+                    }
+                    if (counter == 1) {
+                        float resourcePercent = (float)currentResourceAmount / maxResourceAmount;
+                        //Debug.Log("UnitFrameController: setting manaSlider width to " + (manaPercent * originalManaSliderWidth).ToString());
+
+                        // code for an actual image, not currently used
+                        //playerManaSlider.fillAmount = manaPercent;
+
+                        // code for the default image
+                        if (manaSlider != null) {
+                            manaSlider.GetComponent<LayoutElement>().preferredWidth = resourcePercent * originalManaSliderWidth;
+                            if (manaSlider.color != powerResourceColor2) {
+                                manaSlider.color = powerResourceColor2;
+                            }
+                        }
+
+                        if (manaText != null) {
+                            string percentText = string.Empty;
+                            if (maxResourceAmount > 0) {
+                                percentText = " (" + (resourcePercent * 100).ToString("F0") + "%)";
+                            }
+                            manaText.text = string.Format("{0} / {1}{2}", currentResourceAmount, maxResourceAmount, percentText);
+                        }
+
+                    }
                 }
-                manaText.text = string.Format("{0} / {1}{2}", currentResourceAmount, maxResourceAmount, percentText);
+
             }
+            
         }
 
         public void HandleReputationChange() {

@@ -12,10 +12,10 @@ namespace AnyRPG {
             // this code is a quick way to set speed on third party controllers when the player spawns
             if (MyBaseCharacter != null && MyBaseCharacter.CharacterStats != null) {
                 EventParamProperties eventParam = new EventParamProperties();
-                eventParam.simpleParams.FloatParam = MyBaseCharacter.CharacterStats.MyRunSpeed;
+                eventParam.simpleParams.FloatParam = MyBaseCharacter.CharacterStats.RunSpeed;
                 SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
 
-                eventParam.simpleParams.FloatParam = MyBaseCharacter.CharacterStats.MySprintSpeed;
+                eventParam.simpleParams.FloatParam = MyBaseCharacter.CharacterStats.SprintSpeed;
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
             }

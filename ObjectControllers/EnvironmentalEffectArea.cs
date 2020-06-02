@@ -50,7 +50,7 @@ namespace AnyRPG {
                 foreach (AbilityEffect abilityEffect in abilityEffects) {
                     //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.PerformAbilityEffects(): casting " + abilityEffect.MyName);
 
-                    abilityEffect.Cast(this, validTarget.targetGameObject, null, new AbilityEffectOutput());
+                    abilityEffect.Cast(this, validTarget.targetGameObject, null, new AbilityEffectContext());
                 }
             }
         }

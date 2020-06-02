@@ -115,7 +115,7 @@ namespace AnyRPG {
 
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
-        public virtual void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
             this.sourceCharacter = source;
             //this.target = target;
@@ -202,7 +202,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectOutput abilityEffectInput) {
+        public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             /*
             if (abilityEffectInput != null) {
@@ -223,9 +223,8 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput, List<AbilityEffect> abilityEffectList) {
+        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
-            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityEffects(): effectOutput.healthAmount: " + effectOutput.healthAmount);
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
@@ -250,7 +249,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput, AbilityEffect abilityEffect) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput, AbilityEffect abilityEffect) {
             //Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
@@ -273,7 +272,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public virtual void PerformAbilityHitEffects(IAbilityCaster source, GameObject target, AbilityEffectOutput effectOutput) {
+        public virtual void PerformAbilityHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
@@ -312,7 +311,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityHitEffects(source, target, abilityEffectInput);
 
@@ -355,9 +354,12 @@ namespace AnyRPG {
             }
         }
 
-        public AbilityEffectOutput ApplyInputMultiplier(AbilityEffectOutput abilityEffectInput) {
-            abilityEffectInput.healthAmount = (int)(abilityEffectInput.healthAmount * inputMultiplier);
-            abilityEffectInput.manaAmount = (int)(abilityEffectInput.manaAmount * inputMultiplier);
+        public AbilityEffectContext ApplyInputMultiplier(AbilityEffectContext abilityEffectInput) {
+
+            foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
+                resourceInputAmountNode.amount = (int)(resourceInputAmountNode.amount * inputMultiplier);
+            }
+
             return abilityEffectInput;
         }
 

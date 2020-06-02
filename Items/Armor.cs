@@ -41,7 +41,7 @@ namespace AnyRPG {
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
-                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.MyCharacterClass)) {
+                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
@@ -68,7 +68,7 @@ namespace AnyRPG {
                 return false;
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
-            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.MyCharacterClass)) {
+            if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
                 MessageFeedManager.MyInstance.WriteMessage("You do not have the right armor proficiency to equip " + MyName);
                 return false;
             }

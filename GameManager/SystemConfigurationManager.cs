@@ -169,24 +169,29 @@ namespace AnyRPG {
         [SerializeField]
         private float weaponDPSBudgetPerLevel = 2.5f;
 
-        [Header("Stat Scaling")]
+        [Header("Primary Stats and Scaling")]
 
+        [Tooltip("A Per level stat budget that will be applied to all stats, in addition to their individual budgets")]
         [SerializeField]
         private float statBudgetPerLevel = 0f;
 
+        [Tooltip("Default stats that all characters will use, and their budgets per level")]
+        [FormerlySerializedAs("statScaling")]
         [SerializeField]
-        private float staminaStatBudgetPerLevel = 10f;
+        private List<StatScalingNode> primaryStats = new List<StatScalingNode>();
 
+        [Header("Power Resources")]
+
+        [Tooltip("Power Resources used by all characters.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
-        private float agilityStatBudgetPerLevel = 5f;
+        private List<string> powerResources = new List<string>();
 
-        [SerializeField]
-        private float strengthStatBudgetPerLevel = 5f;
+        // reference to the actual power resources
+        private List<PowerResource> powerResourceList = new List<PowerResource>();
 
-        [SerializeField]
-        private float intellectStatBudgetPerLevel = 5f;
+        [Header("Layer")]
 
-        // character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.
+        [Tooltip("character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
         [SerializeField]
         private string defaultCharacterUnitLayer = string.Empty;
 
@@ -363,10 +368,6 @@ namespace AnyRPG {
         public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
         public CurrencyGroup MyDefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
         public float MyVendorPriceMultiplier { get => vendorPriceMultiplier; set => vendorPriceMultiplier = value; }
-        public float MyStaminaStatBudgetPerLevel { get => staminaStatBudgetPerLevel; set => staminaStatBudgetPerLevel = value; }
-        public float MyAgilityStatBudgetPerLevel { get => agilityStatBudgetPerLevel; set => agilityStatBudgetPerLevel = value; }
-        public float MyStrengthStatBudgetPerLevel { get => strengthStatBudgetPerLevel; set => strengthStatBudgetPerLevel = value; }
-        public float MyIntellectStatBudgetPerLevel { get => intellectStatBudgetPerLevel; set => intellectStatBudgetPerLevel = value; }
         public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
         public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
         public AnimationProfile MySystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
@@ -384,7 +385,9 @@ namespace AnyRPG {
         public bool UseKillXPLevelMultiplierDemoninator { get => useKillXPLevelMultiplierDemoninator; set => useKillXPLevelMultiplierDemoninator = value; }
         public int KillXPMultiplierLevelCap { get => killXPMultiplierLevelCap; set => killXPMultiplierLevelCap = value; }
         public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }
-
+        public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public List<string> PowerResources { get => powerResources; set => powerResources = value; }
+        public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -414,21 +417,23 @@ namespace AnyRPG {
         }
 
         // verify that system abilities are available through the factory
-        public void VerifySystemAbilities() {
+        public void SetupScriptableObjects() {
+
             BaseAbility testAbility = null;
             if (levelUpAbilityName != null && levelUpAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + levelUpAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
                 } else {
                     levelUpAbility = testAbility;
                 }
             }
+
             if (deathAbilityName != null && deathAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + deathAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
                 } else {
                     deathAbility = testAbility;
@@ -437,21 +442,38 @@ namespace AnyRPG {
             if (lootSparkleAbilityName != null && lootSparkleAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): " + lootSparkleAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
                     return;
                 } else {
                     lootSparkleAbility = testAbility;
                 }
             }
             if (defaultCurrencyGroup == null) {
-                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT CURRENCY GROUP SET.  CHECK INSPECTOR");
+                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): NO DEFAULT CURRENCY GROUP SET.  CHECK INSPECTOR");
                 return;
             }
             
             if (defaultAnimationProfile == null) {
-                Debug.LogError("SystemConfigurationManager.VerifySystemAbilities(): NO DEFAULT ANIMATION PROFILE SET.  CHECK INSPECTOR");
+                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): NO DEFAULT ANIMATION PROFILE SET.  CHECK INSPECTOR");
                 return;
             }
+
+            powerResourceList = new List<PowerResource>();
+            if (powerResources != null) {
+                foreach (string powerResourcename in powerResources) {
+                    PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourcename);
+                    if (tmpPowerResource != null) {
+                        powerResourceList.Add(tmpPowerResource);
+                    } else {
+                        Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + ". CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            foreach (StatScalingNode statScalingNode in primaryStats) {
+                statScalingNode.SetupScriptableObjects();
+            }
+
         }
 
     }

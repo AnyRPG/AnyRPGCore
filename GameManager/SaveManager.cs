@@ -323,19 +323,21 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
             anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
-            anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP;
+            anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP;
             anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.CharacterName;
             if (PlayerManager.MyInstance.MyCharacter.MyFaction != null) {
                 anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.MyFaction.MyName;
             }
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterClass != null) {
-                anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterClass != null) {
+                anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.CharacterClass.MyName;
             }
             if (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization != null) {
                 anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName;
             }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
-            anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
+
+            // moved to resource power data
+            //anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
 
             anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
             anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.y;
@@ -633,7 +635,7 @@ namespace AnyRPG {
 
             foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.AddResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
             }
 
         }
@@ -918,7 +920,7 @@ namespace AnyRPG {
 
             // spawn player connection so all the data can be loaded
             PlayerManager.MyInstance.SpawnPlayerConnection();
-            PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP = anyRPGSaveData.currentExperience;
+            PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
@@ -942,12 +944,16 @@ namespace AnyRPG {
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
+            // testing - character class needs to be set first before equipment load so primary stats can be applied
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
+            PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
+
             // testing - move here to prevent learning auto-attack ability twice
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager);
 
             // testing - move here to prevent learning abilities and filling up bars
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
-            PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
+            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
+            //PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
 
             LoadSkillData(anyRPGSaveData);
@@ -977,17 +983,8 @@ namespace AnyRPG {
             // now that we have loaded the quest data, we can re-enable references
             SystemQuestManager.MyInstance.CreateEventSubscriptions();
 
-
-            // set health last after equipment loaded for modifiers
-            if (anyRPGSaveData.currentHealth > 0) {
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetHealth(anyRPGSaveData.currentHealth);
-            }
+            // set resources last after equipment loaded for modifiers
             LoadResourcePowerData(anyRPGSaveData);
-            /*
-            if (anyRPGSaveData.currentMana > 0) {
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetPrimaryResourceamount(anyRPGSaveData.currentMana);
-            }
-            */
 
             LoadWindowPositions();
 

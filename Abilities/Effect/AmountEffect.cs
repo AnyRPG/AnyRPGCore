@@ -10,50 +10,16 @@ namespace AnyRPG {
 
         [Header("Amounts")]
 
+        [Tooltip("The resources to affect, and the amounts of the effects")]
         [SerializeField]
-        protected bool useHealthAmount;
-
-        [SerializeField]
-        protected int healthMinAmount = 0;
-
-        [SerializeField]
-        protected int healthBaseAmount = 0;
-
-        [SerializeField]
-        protected float healthAmountPerLevel = 0f;
-
-        [SerializeField]
-        protected int healthMaxAmount = 0;
-
-
-        [SerializeField]
-        protected bool useManaAmount;
-
-        [SerializeField]
-        protected int manaMinAmount = 0;
-        [SerializeField]
-        protected int manaBaseAmount = 0;
-        [SerializeField]
-        protected float manaAmountPerLevel = 0f;
-        [SerializeField]
-        protected int manaMaxAmount = 0;
+        private List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
 
         [SerializeField]
         protected DamageType damageType;
 
         public DamageType DamageType { get => damageType; set => damageType = value; }
-        public int MyHealthMinAmount { get => healthMinAmount; set => healthMinAmount = value; }
-        public int MyHealthBaseAmount { get => healthBaseAmount; set => healthBaseAmount = value; }
-        public float MyHealthAmountPerLevel { get => healthAmountPerLevel; set => healthAmountPerLevel = value; }
-        public int MyHealthMaxAmount { get => healthMaxAmount; set => healthMaxAmount = value; }
-        public int MyManaMinAmount { get => manaMinAmount; set => manaMinAmount = value; }
-        public int MyManaBaseAmount { get => manaBaseAmount; set => manaBaseAmount = value; }
-        public float MyManaAmountPerLevel { get => manaAmountPerLevel; set => manaAmountPerLevel = value; }
-        public int MyManaMaxAmount { get => manaMaxAmount; set => manaMaxAmount = value; }
-        protected bool MyUseHealthAmount { get => useHealthAmount; set => useHealthAmount = value; }
-        protected bool MyUseManaAmount { get => useManaAmount; set => useManaAmount = value; }
 
-        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectOutput abilityEffectInput) {
+        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
 
             float amountAddModifier = 0f;
@@ -97,9 +63,118 @@ namespace AnyRPG {
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
 
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+            if (abilityEffectInput == null) {
+                //Debug.Log("AttackEffect.PerformAbilityEffect() abilityEffectInput is null!");
+            }
+            if (source == null || target == null) {
+                // something died or despawned mid cast
+                return;
+            }
+            if (!source.AbilityHit(target)) {
+                return;
+            }
+            AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
+
+            // put this in a for loop
+            foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
+                int finalAmount = 0;
+                CombatMagnitude combatMagnitude = CombatMagnitude.normal;
+                float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.Level);
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+                finalAmount = (int)abilityKeyValuePair.Key;
+                combatMagnitude = abilityKeyValuePair.Value;
+                float inputAmount = 0f;
+                foreach (ResourceInputAmountNode _resourceAmountNode in abilityEffectInput.resourceAmounts) {
+                    if (_resourceAmountNode.resourceName  == resourceAmountNode.ResourceName) {
+                        inputAmount += _resourceAmountNode.amount;
+                    }
+                }
+                finalAmount += (int)(inputAmount * inputMultiplier);
+
+                abilityEffectOutput.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
+
+                if (finalAmount > 0) {
+                    // this effect may not have any damage and only be here for spawning a prefab or making a sound
+                    ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectInput, resourceAmountNode.PowerResource);
+                }
+            }
+            
+
+            abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
+
             abilityEffectInput.castTimeMultipler = 1f;
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
+
+        public virtual void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+            // nothing here for now, override by heal or attack
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
+                resourceAmountNode.SetupScriptableObjects();
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class ResourceAmountNode {
+
+        [Tooltip("The resource to add to or remove from")]
+        [SerializeField]
+        private string resourceName = string.Empty;
+
+        private PowerResource powerResource = null;
+
+        [Tooltip("If the amount is lower than this value, it will be rasied to this value.")]
+        [SerializeField]
+        private int minAmount = 0;
+
+        [Tooltip("Amount not scaled by level.  This will be added to any scaled value.")]
+        [SerializeField]
+        private int baseAmount = 0;
+
+        [Tooltip("This amount will be multipled by the caster level")]
+        [SerializeField]
+        private float amountPerLevel = 0f;
+
+        [Tooltip("If the amount is higher than this value, it will be lowered to this value.  0 is unlimited.")]
+        [SerializeField]
+        private int maxAmount = 0;
+
+        public string ResourceName { get => resourceName; set => resourceName = value; }
+        public int MinAmount { get => minAmount; set => minAmount = value; }
+        public int BaseAmount { get => baseAmount; set => baseAmount = value; }
+        public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
+        public int MaxAmount { get => maxAmount; set => maxAmount = value; }
+        public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
+
+        public void SetupScriptableObjects() {
+
+            if (resourceName != null && resourceName != string.Empty) {
+                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
+                if (tmpPowerResource != null) {
+                    powerResource = tmpPowerResource;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + resourceName + " while inititalizing statresourceNode.  CHECK INSPECTOR");
+                }
+            }
+
+        }
+    }
+
+    public class ResourceInputAmountNode {
+
+        public ResourceInputAmountNode(string resourceName, float resourceAmount) {
+            this.resourceName = resourceName;
+            amount = resourceAmount;
+        }
+
+        public string resourceName = string.Empty;
+
+        public float amount = 0f;
+
     }
 }

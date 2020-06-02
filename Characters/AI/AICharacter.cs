@@ -21,6 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool preventAutoDespawn = false;
 
+        private bool animationEnabled = false;
+
         public GameObject MyCharacterModelPrefab { get => characterModelPrefab; set => characterModelPrefab = value; }
 
         public GameObject MyCharacterModelGameObject { get => characterModelGameObject; set => characterModelGameObject = value; }
@@ -91,10 +93,10 @@ namespace AnyRPG {
             }
         }
 
-        protected override void Start() {
-            //Debug.Log(gameObject.name + ".AICharacter.Start()");
-            base.Start();
-
+        public void EnableAnimation() {
+            if (animationEnabled == true) {
+                return;
+            }
             if (characterModelGameObject == null && characterModelPrefab != null) {
                 //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
                 characterModelGameObject = Instantiate(characterModelPrefab, CharacterUnit.transform);
@@ -113,6 +115,14 @@ namespace AnyRPG {
                     }
                 }
             }
+            animationEnabled = true;
+        }
+
+        protected override void Start() {
+            //Debug.Log(gameObject.name + ".AICharacter.Start()");
+            base.Start();
+
+            EnableAnimation();
         }
 
         public void DespawnImmediate() {

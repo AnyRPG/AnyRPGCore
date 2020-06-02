@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class ProjectileScript : MonoBehaviour {
 
-        public event System.Action<IAbilityCaster, GameObject, GameObject, AbilityEffectOutput> OnCollission = delegate { };
+        public event System.Action<IAbilityCaster, GameObject, GameObject, AbilityEffectContext> OnCollission = delegate { };
 
         private IAbilityCaster source;
 
@@ -20,13 +20,13 @@ namespace AnyRPG {
 
         private bool initialized = false;
 
-        private AbilityEffectOutput abilityEffectInput = null;
+        private AbilityEffectContext abilityEffectInput = null;
 
         private void Update() {
             MoveTowardTarget();
         }
 
-        public void Initialize(float velocity, IAbilityCaster source, GameObject target, Vector3 positionOffset, AbilityEffectOutput abilityEffectInput) {
+        public void Initialize(float velocity, IAbilityCaster source, GameObject target, Vector3 positionOffset, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
             this.source = source;
             this.velocity = velocity;

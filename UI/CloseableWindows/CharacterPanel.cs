@@ -208,39 +208,31 @@ namespace AnyRPG {
             }
             string updateString = string.Empty;
             updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.CharacterName + "\n";
-            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyCharacterClass.MyName) + "\n";
+            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.MyName) + "\n";
             updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName) + "\n";
             updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
-            updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyCurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
-            updateString += "Stamina: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina;
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStamina - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStamina) + "</color> )";
-            }
-            updateString += "\n";
-            updateString += "Strength: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength;
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStrength - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseStrength) + "</color> )";
-            }
-            updateString += "\n";
-            updateString += "Intellect: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect;
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyIntellect - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseIntellect) + "</color> )";
-            }
-            updateString += "\n";
-            updateString += "Agility: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility;
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility != PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyAgility - PlayerManager.MyInstance.MyCharacter.CharacterStats.MyBaseAgility) + "</color> )";
+            updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
+
+            foreach (string statName in PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats.Keys) {
+                updateString += statName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue;
+                if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) {
+                    updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue +
+                        " + <color=green>" +
+                        (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) +
+                        "</color> )";
+                }
+                updateString += "\n";
             }
 
-            updateString += "\n\n";
-            updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyMaxHealth + "\n";
+            updateString += "\n";
+            updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n";
 
             updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
 
-            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyArmor + "\n";
-            updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage != 0f) {
-                updateString += " ( " + LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.MyPhysicalDamage + "</color> )";
+            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Armor + "\n";
+            updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage);
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage != 0f) {
+                updateString += " ( " + LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage + "</color> )";
             }
             /*
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) {
@@ -251,7 +243,7 @@ namespace AnyRPG {
             updateString += "SpellPower: " + LevelEquations.GetSpellPowerForCharacter(PlayerManager.MyInstance.MyCharacter);
             updateString += "\n";
             updateString += "Critical Hit Chance: " + LevelEquations.GetCritChanceForCharacter(PlayerManager.MyInstance.MyCharacter) + "%\n\n";
-            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.MyRunSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.RunSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }

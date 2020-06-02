@@ -12,9 +12,9 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectOutput abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
-            AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
+            AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
             abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
             ResurrectTarget(target);
             base.PerformAbilityHit(source, target, abilityEffectOutput);

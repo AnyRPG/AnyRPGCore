@@ -128,7 +128,7 @@ namespace AnyRPG {
             MessageFeedManager.MyInstance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", NewLevel.ToString()));
         }
 
-        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster source, AbilityEffectOutput abilityEffectInput) {
+        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster source, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("Playerstats.ApplyStatusEffect()");
             if (statusEffect == null) {
                 //Debug.Log("Playerstats.ApplyStatusEffect(): statusEffect is null!");
@@ -156,7 +156,7 @@ namespace AnyRPG {
             //code to re-apply visual effects when the player loads into a new level
             foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterUnit.gameObject, MyBaseCharacter.CharacterUnit.gameObject, new AbilityEffectOutput());
+                statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterUnit.gameObject, MyBaseCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
             }
         }
 

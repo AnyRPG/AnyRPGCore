@@ -542,8 +542,8 @@ namespace AnyRPG {
                 }
             }
             if (weaponCount == 0) {
-                if (baseCharacter.MyCharacterClass != null) {
-                    if (baseCharacter.MyCharacterClass.MyWeaponSkillList.Contains(weaponAffinity)) {
+                if (baseCharacter.CharacterClass != null) {
+                    if (baseCharacter.CharacterClass.MyWeaponSkillList.Contains(weaponAffinity)) {
                         if (weaponAffinity.MyDefaultWeaponSkill) {
                             return true;
                         }

@@ -653,7 +653,7 @@ namespace AnyRPG {
 
         public void ApplyStatusEffect(AbilityEffect statusEffect, int overrideDuration = 0) {
             if (baseCharacter.CharacterStats != null) {
-                AbilityEffectOutput abilityEffectOutput = new AbilityEffectOutput();
+                AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
                 abilityEffectOutput.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
                 abilityEffectOutput.savedEffect = true;
@@ -1089,7 +1089,7 @@ namespace AnyRPG {
             return base.GetOutgoingDamageModifiers();
         }
 
-        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectOutput abilityEffectOutput) {
+        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
             // handle weapon on hit effects
             if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.MyOnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.MyOnHitEffect.MyName != attackEffect.MyName) {
@@ -1109,7 +1109,7 @@ namespace AnyRPG {
         public override float GetPhysicalDamage() {
             if (baseCharacter != null  && baseCharacter.CharacterStats != null) {
                 // +damage stat from gear
-                float returnValue = baseCharacter.CharacterStats.MyPhysicalDamage;
+                float returnValue = baseCharacter.CharacterStats.PhysicalDamage;
 
                 // weapon damage
                 if (baseCharacter.CharacterEquipmentManager != null) {

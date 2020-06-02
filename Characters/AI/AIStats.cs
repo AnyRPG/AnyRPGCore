@@ -13,7 +13,7 @@ namespace AnyRPG {
             }
         }
 
-        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectOutput abilityEffectInput) {
+        public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(gameObject + ".AISats.ApplyStatusEffect()");
             StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, sourceCharacter, abilityEffectInput);
             if (_statusEffectNode != null && _statusEffectNode.MyStatusEffect.MyControlTarget == true) {
