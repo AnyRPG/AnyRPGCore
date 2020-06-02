@@ -708,7 +708,7 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.MyInstance.MyFocusUnitFrameController.MyFollowGameObject == null) {
+            if (UIManager.MyInstance.MyFocusUnitFrameController.FollowGameObject == null) {
                 ClearTarget();
             }
         }

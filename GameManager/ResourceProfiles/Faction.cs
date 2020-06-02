@@ -35,7 +35,7 @@ namespace AnyRPG {
             }
 
             // finally, fallback on dispisition dictionaries and defaults
-            return GetFactionColor(namePlateUnit.MyFaction);
+            return GetFactionColor(namePlateUnit.Faction);
         }
 
         public static Color GetFactionColor(BaseCharacter characterToCheck, BaseCharacter myCharacter) {

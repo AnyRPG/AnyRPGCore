@@ -3,12 +3,13 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
     public class UnitFrameController : DraggableWindow {
 
-        // objects in the player stats window
+        [Header("Unit Name")]
 
         [SerializeField]
         private TextMeshProUGUI unitNameText = null;
@@ -19,20 +20,34 @@ namespace AnyRPG {
         [SerializeField]
         private Image unitNameBackground = null;
 
-        [SerializeField]
-        private Image healthSlider = null;
+        [Header("Resources")]
 
+        [FormerlySerializedAs("healthSlider")]
         [SerializeField]
-        private TextMeshProUGUI healthText = null;
+        private Image primaryResourceSlider = null;
 
+        [FormerlySerializedAs("healthText")]
         [SerializeField]
-        private Image manaSlider = null;
+        private TextMeshProUGUI primaryResourceText = null;
 
+        [FormerlySerializedAs("manaSlider")]
         [SerializeField]
-        private TextMeshProUGUI manaText = null;
+        private Image secondaryResourceSlider = null;
+
+        [FormerlySerializedAs("manaText")]
+        [SerializeField]
+        private TextMeshProUGUI secondaryResourceText = null;
+
+        [Header("Cast Bar")]
 
         [SerializeField]
         private CastBarController castBarController = null;
+
+        [Header("Unit Preview")]
+
+        [Tooltip("If false, a single snapshot is taken of the unit, instead of a real-time video in the preview image")]
+        [SerializeField]
+        private bool realTimeCamera = false;
 
         // the next 2 things need to be updated to focus on the right character
         [SerializeField]
@@ -58,8 +73,8 @@ namespace AnyRPG {
 
         private Vector3 cameraPositionOffset = Vector3.zero;
 
-        private float originalHealthSliderWidth = 0f;
-        private float originalManaSliderWidth = 0f;
+        private float originalPrimaryResourceSliderWidth = 0f;
+        private float originalSecondaryResourceSliderWidth = 0f;
 
         [SerializeField]
         private GameObject followGameObject = null;
@@ -67,13 +82,18 @@ namespace AnyRPG {
         private INamePlateUnit namePlateUnit = null;
         private CharacterUnit characterUnit = null;
 
+        [Header("Status Effects")]
+
         [SerializeField]
         private StatusEffectPanelController statusEffectPanelController = null;
 
-        [SerializeField]
-        private bool realTimeCamera = false;
-
         private Transform followTransform = null;
+
+        private PowerResource primaryPowerResource = null;
+        private PowerResource secondaryPowerResource = null;
+
+        private LayoutElement primaryResourceSliderLayout = null;
+        private LayoutElement secondaryResourceSliderLayout = null;
 
         private Color powerResourceColor1 = Color.green;
         private Color powerResourceColor2 = Color.blue;
@@ -81,7 +101,7 @@ namespace AnyRPG {
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
-        public GameObject MyFollowGameObject { get => followGameObject; set => followGameObject = value; }
+        public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
 
 
         public override void Awake() {
@@ -89,7 +109,6 @@ namespace AnyRPG {
             InitializeController();
             previewCamera.enabled = false;
         }
-
 
         protected void Start() {
             //Debug.Log(gameObject.name + ".UnitFrameController.Start()");
@@ -108,8 +127,14 @@ namespace AnyRPG {
                 return;
             }
             portraitImage.texture = portraitTexture;
-            originalHealthSliderWidth = healthSlider.GetComponent<LayoutElement>().preferredWidth;
-            originalManaSliderWidth = manaSlider.GetComponent<LayoutElement>().preferredWidth;
+            if (primaryResourceSliderLayout == null) {
+                primaryResourceSliderLayout = primaryResourceSlider.GetComponent<LayoutElement>();
+            }
+            if (secondaryResourceSliderLayout == null) {
+                secondaryResourceSliderLayout = secondaryResourceSlider.GetComponent<LayoutElement>();
+            }
+            originalPrimaryResourceSliderWidth = primaryResourceSliderLayout.preferredWidth;
+            originalSecondaryResourceSliderWidth = secondaryResourceSliderLayout.preferredWidth;
             DeActivateCastBar();
             controllerInitialized = true;
             //Debug.Log(gameObject.name + ": UnitFrameController.Awake() originalHealthSliderWidth: " + originalHealthSliderWidth);
@@ -142,12 +167,9 @@ namespace AnyRPG {
             if (followGameObject == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".UnitFrameController.TargetInitialization() at beginning isactive: " + isActiveAndEnabled);
             InitializeStats();
             InitializePosition();
-            //Debug.Log(gameObject.name + ".UnitFrameController.TargetInitialization() before setactive isactive: " + isActiveAndEnabled);
             gameObject.SetActive(true);
-            //Debug.Log(gameObject.name + ".UnitFrameController.TargetInitialization() after setactve isactive: " + isActiveAndEnabled);
             if (isActiveAndEnabled) {
                 GetFollowTarget();
             } else {
@@ -191,10 +213,16 @@ namespace AnyRPG {
             }
             if (characterUnit != null && characterUnit.MyBaseCharacter != null && characterUnit.MyBaseCharacter.CharacterClass != null) {
                 if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                    primaryPowerResource = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[0];
                     powerResourceColor1 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[0].DisplayColor;
+                } else {
+                    primaryPowerResource = null;
                 }
                 if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 1) {
+                    secondaryPowerResource = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[1];
                     powerResourceColor2 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[1].DisplayColor;
+                } else {
+                    secondaryPowerResource = null;
                 }
             }
             if (namePlateUnit.HasHealth()) {
@@ -225,7 +253,6 @@ namespace AnyRPG {
             if (followGameObject != null) {
 
                 if (characterUnit != null) {
-                    characterUnit.MyCharacter.CharacterStats.OnHealthChanged -= OnHealthChanged;
                     characterUnit.MyCharacter.CharacterStats.OnResourceAmountChanged -= OnResourceAmountChanged;
                     characterUnit.MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
                     characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
@@ -236,6 +263,8 @@ namespace AnyRPG {
             targetInitialized = false;
             castBarController.ClearTarget();
             statusEffectPanelController.ClearTarget();
+            primaryPowerResource = null;
+            secondaryPowerResource = null;
             if (closeWindowOnClear) {
                 gameObject.SetActive(false);
             }
@@ -278,10 +307,7 @@ namespace AnyRPG {
                     }
                 }
 
-                OnLevelChanged(baseCharacter.CharacterStats.Level);
-
                 // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
-                baseCharacter.CharacterStats.OnHealthChanged += OnHealthChanged;
                 baseCharacter.CharacterStats.OnResourceAmountChanged += OnResourceAmountChanged;
                 baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
                 baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
@@ -293,29 +319,38 @@ namespace AnyRPG {
                 }
 
             } else {
-                ClearResourceBars();
-                //OnHealthChanged(1, 1);
-                OnLevelChanged(1);
+                ClearPrimaryResourceBar();
+            }
+
+
+            OnLevelChanged(namePlateUnit.Level);
+        }
+
+        public void ClearPrimaryResourceBar() {
+
+            if (primaryResourceSliderLayout != null) {
+                primaryResourceSliderLayout.preferredWidth = 0;
+            }
+            if (primaryResourceText != null) {
+                primaryResourceText.text = string.Empty;
+            }
+        }
+
+        public void ClearSecondaryResourceBar() {
+
+            if (secondaryResourceSliderLayout != null) {
+                secondaryResourceSliderLayout.preferredWidth = 0;
+            }
+            if (secondaryResourceText != null) {
+                secondaryResourceText.text = string.Empty;
             }
         }
 
         public void ClearResourceBars() {
-            
-            // primary resource bar
-            if (healthSlider != null) {
-                healthSlider.GetComponent<LayoutElement>().preferredWidth = 0;
-            }
-            if (healthText != null) {
-                healthText.text = string.Empty;
-            }
 
-            // secondary resource bar
-            if (manaSlider != null) {
-                manaSlider.GetComponent<LayoutElement>().preferredWidth = 0;
-            }
-            if (manaText != null) {
-                manaText.text = string.Empty;
-            }
+            ClearPrimaryResourceBar();
+            ClearSecondaryResourceBar();
+
         }
 
         private void GetFollowTarget() {
@@ -339,39 +374,74 @@ namespace AnyRPG {
             castBarController.ClearTarget();
         }
 
-        public void OnHealthChanged(int maxHealth, int currentHealth) {
+        public void HandlePrimaryResourceAmountChanged(int maxResourceAmount, int currentResourceAmount) {
 
             // prevent division by zero
-            int displayedMaxHealth = maxHealth;
-            int displayedCurrentHealth = currentHealth;
-            if (displayedMaxHealth == 0) {
-                displayedMaxHealth = 1;
-                displayedCurrentHealth = 1;
+            int displayedMaxResource = maxResourceAmount;
+            int displayedCurrentResource = currentResourceAmount;
+            if (displayedMaxResource == 0) {
+                displayedMaxResource = 1;
+                displayedCurrentResource = 1;
             }
 
-            float healthPercent = (float)displayedCurrentHealth / displayedMaxHealth;
-            //Debug.Log("UnitFrameController: setting healthSlider width to " + (healthPercent * originalHealthSliderWidth).ToString());
+            float resourcePercent = (float)displayedCurrentResource / displayedMaxResource;
 
             // code for an actual image, not currently used
             //playerHPSlider.fillAmount = healthPercent;
 
             // code for the default image
-            if (healthSlider != null) {
-                healthSlider.GetComponent<LayoutElement>().preferredWidth = healthPercent * originalHealthSliderWidth;
-            }
-            if (healthText != null) {
-                string percentText = string.Empty;
-                if (healthPercent != 0f) {
-                    percentText = (healthPercent * 100).ToString("F0");
-                } 
-                healthText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentHealth, displayedMaxHealth, percentText);
+            if (primaryResourceSliderLayout != null) {
+                primaryResourceSliderLayout.preferredWidth = resourcePercent * originalPrimaryResourceSliderWidth;
+                if (primaryResourceSlider.color != powerResourceColor1) {
+                    primaryResourceSlider.color = powerResourceColor1;
+                }
             }
 
-            if (displayedCurrentHealth <= 0) {
+            if (primaryResourceText != null) {
+                string percentText = string.Empty;
+                if (resourcePercent != 0f) {
+                    percentText = (resourcePercent * 100).ToString("F0");
+                } 
+                primaryResourceText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentResource, displayedMaxResource, percentText);
+            }
+
+            if (displayedCurrentResource <= 0) {
                 Color tmp = Color.gray;
                 //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
                 tmp.a = 0.5f;
                 unitNameBackground.color = tmp;
+            }
+        }
+
+        public void HandleSecondaryResourceAmountChanged(int maxResourceAmount, int currentResourceAmount) {
+
+            // prevent division by zero
+            int displayedMaxResource = maxResourceAmount;
+            int displayedCurrentResource = currentResourceAmount;
+            if (displayedMaxResource == 0) {
+                displayedMaxResource = 1;
+                displayedCurrentResource = 1;
+            }
+
+            float resourcePercent = (float)displayedCurrentResource / displayedMaxResource;
+
+            // code for an actual image, not currently used
+            //playerManaSlider.fillAmount = manaPercent;
+
+            // code for the default image
+            if (secondaryResourceSliderLayout != null) {
+                secondaryResourceSliderLayout.preferredWidth = resourcePercent * originalSecondaryResourceSliderWidth;
+                if (secondaryResourceSlider.color != powerResourceColor2) {
+                    secondaryResourceSlider.color = powerResourceColor2;
+                }
+            }
+
+            if (secondaryResourceText != null) {
+                string percentText = string.Empty;
+                if (maxResourceAmount > 0) {
+                    percentText = " (" + (resourcePercent * 100).ToString("F0") + "%)";
+                }
+                secondaryResourceText.text = string.Format("{0} / {1}{2}", currentResourceAmount, maxResourceAmount, percentText);
             }
         }
 
@@ -405,31 +475,10 @@ namespace AnyRPG {
 
                 if (updateBar) {
                     if (counter == 0) {
-                        OnHealthChanged(maxResourceAmount, currentResourceAmount);
+                        HandlePrimaryResourceAmountChanged(maxResourceAmount, currentResourceAmount);
                     }
                     if (counter == 1) {
-                        float resourcePercent = (float)currentResourceAmount / maxResourceAmount;
-                        //Debug.Log("UnitFrameController: setting manaSlider width to " + (manaPercent * originalManaSliderWidth).ToString());
-
-                        // code for an actual image, not currently used
-                        //playerManaSlider.fillAmount = manaPercent;
-
-                        // code for the default image
-                        if (manaSlider != null) {
-                            manaSlider.GetComponent<LayoutElement>().preferredWidth = resourcePercent * originalManaSliderWidth;
-                            if (manaSlider.color != powerResourceColor2) {
-                                manaSlider.color = powerResourceColor2;
-                            }
-                        }
-
-                        if (manaText != null) {
-                            string percentText = string.Empty;
-                            if (maxResourceAmount > 0) {
-                                percentText = " (" + (resourcePercent * 100).ToString("F0") + "%)";
-                            }
-                            manaText.text = string.Format("{0} / {1}{2}", currentResourceAmount, maxResourceAmount, percentText);
-                        }
-
+                        HandleSecondaryResourceAmountChanged(maxResourceAmount, currentResourceAmount);
                     }
                 }
 

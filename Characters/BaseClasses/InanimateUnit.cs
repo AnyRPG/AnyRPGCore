@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         public event System.Action OnInitializeNamePlate = delegate { };
         public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        public event Action<int, int> HealthBarNeedsUpdate = delegate { };
+        public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
 
         public event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
@@ -57,7 +57,7 @@ namespace AnyRPG {
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => displayName; }
         public string Title { get => string.Empty; }
-        public Faction MyFaction { get => null; }
+        public Faction Faction { get => null; }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
@@ -71,6 +71,13 @@ namespace AnyRPG {
         }
 
         public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
+
+        public int Level {
+            get {
+                return 1;
+            }
+        }
+
 
         public bool HasHealth() {
             return false;

@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public event System.Action OnInitializeNamePlate = delegate { };
         public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        public event Action<int, int> HealthBarNeedsUpdate = delegate { };
+        public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public event System.Action<GameObject> OnDespawn = delegate { };
 
         [SerializeField]
@@ -83,7 +83,7 @@ namespace AnyRPG {
             }
         }
 
-        public Faction MyFaction { get => MyCharacter.MyFaction; }
+        public Faction Faction { get => MyCharacter.MyFaction; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.CharacterName : interactionPanelTitle); }
         public string Title { get => (MyCharacter != null ? MyCharacter.Title : string.Empty); }
@@ -111,6 +111,15 @@ namespace AnyRPG {
         public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
         public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
         public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
+
+        public int Level {
+            get {
+                if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                    return baseCharacter.CharacterStats.Level;
+                }
+                return 1;
+            }
+        }
 
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
@@ -201,9 +210,11 @@ namespace AnyRPG {
             //baseCharacter.MyCharacterStats.OnHealthChanged -= HealthBarNeedsUpdate;
         }
 
-        public void HandleHealthBarNeedsUpdate(int currentHealth, int maxHealth) {
+        public void HandleResourceBarNeedsUpdate(PowerResource powerResource, int currentHealth, int maxHealth) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleHealthBarNeedsUpdate(" + currentHealth + ", " + maxHealth + ")");
-            HealthBarNeedsUpdate(currentHealth, maxHealth);
+            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.PrimaryResource == powerResource) {
+                ResourceBarNeedsUpdate(currentHealth, maxHealth);
+            }
         }
 
         protected override void Start() {
@@ -272,8 +283,9 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 baseCharacter.CharacterStats.OnDie += HandleDie;
+
                 //Debug.Log(gameObject.name + ".CharacterUnit.CreateEventSubscriptions(): subscribing to HEALTH BAR NEEDS UPDATE");
-                baseCharacter.CharacterStats.OnHealthChanged += HandleHealthBarNeedsUpdate;
+                baseCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceBarNeedsUpdate;
                 baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
                 eventSubscriptionsInitialized = true;
             } else {
@@ -290,7 +302,7 @@ namespace AnyRPG {
 
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 baseCharacter.CharacterStats.OnDie -= HandleDie;
-                baseCharacter.CharacterStats.OnHealthChanged -= HandleHealthBarNeedsUpdate;
+                baseCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceBarNeedsUpdate;
                 baseCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
             }
             eventSubscriptionsInitialized = false;

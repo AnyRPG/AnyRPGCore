@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         event System.Action OnInitializeNamePlate;
         event System.Action<INamePlateUnit> NamePlateNeedsRemoval;
-        event System.Action<int, int> HealthBarNeedsUpdate;
+        event System.Action<int, int> ResourceBarNeedsUpdate;
 
         NamePlateController MyNamePlate { get; set; }
         string MyUnitFrameTarget { get; }
@@ -19,10 +19,11 @@ namespace AnyRPG {
         Vector3 MyUnitFrameCameraLookOffset { get; set; }
         string MyDisplayName { get; }
         string Title { get; }
-        Faction MyFaction { get; }
+        Faction Faction { get; }
         Transform MyNamePlateTransform { get; }
         Interactable MyInteractable { get; }
         bool SuppressFaction { get; }
+        int Level { get; }
 
         bool HasHealth();
         int CurrentHealth();

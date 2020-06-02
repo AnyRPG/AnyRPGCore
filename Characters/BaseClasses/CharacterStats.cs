@@ -7,7 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterStats : MonoBehaviour {
 
-        public event System.Action<int, int> OnHealthChanged = delegate { };
         public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<CharacterStats> OnDie = delegate { };
@@ -788,9 +787,6 @@ namespace AnyRPG {
 
         public virtual void ReducePowerResource(PowerResource powerResource, int usedResourceAmount) {
             UsePowerResource(powerResource, usedResourceAmount);
-            if (powerResource.IsHealth == true) {
-                PerformDeathCheck();
-            }
         }
 
         public void PerformDeathCheck() {
@@ -811,6 +807,9 @@ namespace AnyRPG {
                 powerResourceDictionary[powerResource].currentValue -= usedResourceAmount;
                 powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, int.MaxValue);
                 OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
+            }
+            if (powerResource.IsHealth == true) {
+                PerformDeathCheck();
             }
         }
 
@@ -930,7 +929,7 @@ namespace AnyRPG {
                 SetResourceAmount(PrimaryResource.MyName, 0f);
 
                 // notify subscribers that our health has changed
-                OnHealthChanged(MaxPrimaryResource, CurrentPrimaryResource);
+                OnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
 
