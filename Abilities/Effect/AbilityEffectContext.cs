@@ -19,6 +19,9 @@ namespace AnyRPG {
 
         public Vector3 prefabLocation = Vector3.zero;
 
+        // track the ability that was originally cast that resulted in this effect
+        public BaseAbility baseAbility = null;
+
         public void SetResourceAmount(string resourceName, float resourceValue) {
             bool foundResource = false;
             foreach (ResourceInputAmountNode resourceInputAmountNode in resourceAmounts) {

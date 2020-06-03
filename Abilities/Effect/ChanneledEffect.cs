@@ -39,8 +39,17 @@ namespace AnyRPG {
                         if (usedPrefabSourceBone != null) {
                             prefabParent = usedPrefabSourceBone.gameObject;
                         }
-                        Vector3 endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
-                        channeledObjectScript.Setup(prefabParent, prefabProfile.MyPosition, target, endPosition);
+                        Vector3 endPosition = Vector3.zero;
+                        GameObject usedTarget = target;
+                        if (abilityEffectInput.baseAbility.MyRequiresGroundTarget == true) {
+                            endPosition = abilityEffectInput.prefabLocation;
+                            usedTarget = null;
+                            //Debug.Log(MyName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+                        } else {
+                            endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
+                        }
+                        
+                        channeledObjectScript.Setup(prefabParent, prefabProfile.MyPosition, usedTarget, endPosition);
                         //channeledObjectScript.MyStartObject = prefabParent;
                         //channeledObjectScript.MyStartPosition = source.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;

@@ -17,9 +17,9 @@ namespace AnyRPG {
 
         protected bool isCasting = false;
 
-        private Vector3 groundTarget = Vector3.zero;
+        protected Vector3 groundTarget = Vector3.zero;
 
-        private bool targettingModeActive = false;
+        protected bool targettingModeActive = false;
 
         // does killing the player you are currently targetting stop your cast.  gets set to false when channeling aoe.
         private bool killStopCast = true;
@@ -357,7 +357,7 @@ namespace AnyRPG {
             ProcessLevelUnload();
         }
 
-        public override float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
+        public override float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {
             // this type of ability is allowed to interrupt other types of animations, so clear them all
             baseCharacter.AnimatedUnit.MyCharacterAnimator.ClearAnimationBlockers();
 
@@ -367,7 +367,7 @@ namespace AnyRPG {
             } else {
                 baseCharacter.CharacterCombat.SetWaitingForAutoAttack(true);
             }
-            return baseCharacter.AnimatedUnit.MyCharacterAnimator.HandleAbility(animationClip, animatedAbility, targetBaseCharacter);
+            return baseCharacter.AnimatedUnit.MyCharacterAnimator.HandleAbility(animationClip, animatedAbility, targetBaseCharacter, abilityEffectContext);
         }
 
         /// <summary>
@@ -810,10 +810,8 @@ namespace AnyRPG {
             return false;
         }
 
-        public void ActivateTargettingMode(BaseAbility baseAbility) {
+        public virtual void ActivateTargettingMode(BaseAbility baseAbility, GameObject target) {
             //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
-            targettingModeActive = true;
-            CastTargettingManager.MyInstance.EnableProjector(baseAbility);
         }
 
         public bool WaitingForTarget() {
@@ -921,9 +919,11 @@ namespace AnyRPG {
             } else {
                 KillStopCastNormal();
             }
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            abilityEffectContext.baseAbility = ability as BaseAbility;
             if (ability.MyRequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
-                ActivateTargettingMode(ability as BaseAbility);
+                ActivateTargettingMode(ability as BaseAbility, target);
                 while (WaitingForTarget() == true) {
                     //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() waiting for target");
                     yield return null;
@@ -932,6 +932,7 @@ namespace AnyRPG {
                     //Debug.Log("Ground Targetting: groundtarget is vector3.zero, cannot cast");
                     canCast = false;
                 }
+                abilityEffectContext.prefabLocation = GetGroundTarget();
             }
             if (canCast == true) {
                 // dismount if mounted
@@ -965,7 +966,7 @@ namespace AnyRPG {
                     OnCastTimeChanged(ability, currentCastTime);
 
                     // now call the ability on casttime changed (really only here for channeled stuff to do damage)
-                    nextTickTime = ability.OnCastTimeChanged(currentCastTime, nextTickTime, this, target);
+                    nextTickTime = ability.OnCastTimeChanged(currentCastTime, nextTickTime, this, target, abilityEffectContext);
                 }
                 //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ") Done casting with tag: " + startTime);
                 /*
@@ -986,7 +987,7 @@ namespace AnyRPG {
                     OnCastStop(BaseCharacter as BaseCharacter);
                     BaseCharacter.AnimatedUnit.MyCharacterAnimator.SetCasting(false);
                 }
-                PerformAbility(ability, target, GetGroundTarget());
+                PerformAbility(ability, target, abilityEffectContext);
 
             }
         }
@@ -994,8 +995,8 @@ namespace AnyRPG {
         public void SpawnAbilityObjects(int indexValue = -1) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
             BaseAbility usedBaseAbility = null;
-            if (BaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                usedBaseAbility = BaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+            if (BaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext != null) {
+                usedBaseAbility = BaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility;
             }
             if (usedBaseAbility == null) {
                 usedBaseAbility = currentCastAbility;
@@ -1195,7 +1196,9 @@ namespace AnyRPG {
             if (usedAbility.CanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
-                PerformAbility(usedAbility, finalTarget, GetGroundTarget());
+
+                // there is no ground target yet because that is handled in performabilitycast below
+                PerformAbility(usedAbility, finalTarget, null);
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
@@ -1313,8 +1316,12 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         /// <param name="target"></param>
-        public virtual void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
+        public virtual void PerformAbility(IAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
+            if (abilityEffectContext == null) {
+                abilityEffectContext = new AbilityEffectContext();
+                abilityEffectContext.baseAbility = ability as BaseAbility;
+            }
             GameObject finalTarget = target;
             if (finalTarget != null) {
                 //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + " on " + finalTarget.name);
@@ -1331,7 +1338,7 @@ namespace AnyRPG {
             }
 
             // cast the system manager version so we can track globally the spell cooldown
-            SystemAbilityManager.MyInstance.GetResource(ability.MyName).Cast(this, finalTarget, groundTarget);
+            SystemAbilityManager.MyInstance.GetResource(ability.MyName).Cast(this, finalTarget, abilityEffectContext);
             //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
         }
 

@@ -236,10 +236,7 @@ namespace AnyRPG {
 
         protected List<AbilityEffect> channeledAbilityEffects = new List<AbilityEffect>();
 
-
         protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
-
-        protected Vector3 groundTarget = Vector3.zero;
 
         public AnimationClip MyCastingAnimationClip {
             get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null);
@@ -362,17 +359,16 @@ namespace AnyRPG {
             return source.GetMeleeRange();
         }
 
-        public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target) {
+        public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
-                _abilityEffect.Cast(source, target, target, null);
+                _abilityEffect.Cast(source, target, target, abilityEffectContext);
             }
         }
-
 
         public bool CanCast(IAbilityCaster sourceCharacter) {
             if (weaponAffinityNames.Count == 0) {
@@ -393,7 +389,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual bool Cast(IAbilityCaster sourceCharacter, GameObject target, Vector3 groundTarget) {
+        public virtual bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
             if (!CanCast(sourceCharacter)) {
                 //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
@@ -517,7 +513,7 @@ namespace AnyRPG {
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
-        public virtual bool PerformAbilityEffects(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
+        public virtual bool PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
             if (abilityEffects.Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
@@ -539,7 +535,8 @@ namespace AnyRPG {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
                 AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
-                abilityEffectOutput.prefabLocation = groundTarget;
+                abilityEffectOutput.prefabLocation = abilityEffectContext.prefabLocation;
+                abilityEffectOutput.baseAbility = abilityEffectContext.baseAbility;
 
                 abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
@@ -614,11 +611,11 @@ namespace AnyRPG {
             //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
-        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target) {
+        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
             if (currentCastTime >= nextTickTime) {
-                PerformChanneledEffect(source, target);
+                PerformChanneledEffect(source, target, abilityEffectContext);
                 nextTickTime += tickRate;
             }
             return nextTickTime;

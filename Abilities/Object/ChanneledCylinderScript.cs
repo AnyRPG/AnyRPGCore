@@ -10,7 +10,7 @@ namespace AnyRPG {
         private float zRadius = 0.1f;
 
         // keep track if this has been set at least once
-        private bool objectInitialized = false;
+        //private bool objectInitialized = false;
 
         [Tooltip("The game object where the object will emit from. If null, StartPosition is used.")]
         [SerializeField]
@@ -28,8 +28,8 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 endPosition;
 
-        private Vector3 lastStartPosition = Vector3.zero;
-        private Vector3 lastEndPosition = Vector3.zero;
+        //private Vector3 lastStartPosition = Vector3.zero;
+        //private Vector3 lastEndPosition = Vector3.zero;
 
         public GameObject MyStartObject { get => startObject;
             set {
@@ -55,26 +55,38 @@ namespace AnyRPG {
         }
 
         private void Update() {
-            if (MyStartObject == null || MyEndObject == null) {
+
+            if (MyStartObject == null) {
+                //if (MyStartObject == null || MyEndObject == null) {
+
                 Destroy(gameObject);
                 return;
             }
             UpdateTransform();
+            /*
             if (objectInitialized == false || lastStartPosition != MyStartObject.transform.position || lastEndPosition != MyEndObject.transform.position) {
                 //UpdateTransform();
             }
-            lastStartPosition = MyStartObject.transform.position;
-            lastEndPosition = MyEndObject.transform.position;
+            */
+            //lastStartPosition = MyStartObject.transform.position;
+            //lastEndPosition = MyEndObject.transform.position;
         }
 
         private void UpdateTransform() {
-            if (MyStartObject == null || MyEndObject == null) {
+            if (MyStartObject == null) {
+                //if (MyStartObject == null || MyEndObject == null) {
                 // can't do anything without objects to connect
                 Destroy(gameObject);
                 return;
             }
             Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);
-            Vector3 absoluteEndPosition = MyEndObject.transform.TransformPoint(MyEndPosition);
+            Vector3 absoluteEndPosition = Vector3.zero;
+            if (MyEndObject == null) {
+                absoluteEndPosition = MyEndPosition;
+            } else {
+                absoluteEndPosition = MyEndObject.transform.TransformPoint(MyEndPosition);
+            }
+
             Vector3 directionVector = (absoluteStartPosition - absoluteEndPosition).normalized;
             //Vector3 midPoint = new Vector3((absoluteStartPosition.x - absoluteEndPosition.x) / 2f, (absoluteStartPosition.y - absoluteEndPosition.y) / 2f, (absoluteStartPosition.z - absoluteEndPosition.z) / 2f);
             Vector3 midPoint = new Vector3((absoluteStartPosition.x + absoluteEndPosition.x) / 2f, (absoluteStartPosition.y + absoluteEndPosition.y) / 2f, (absoluteStartPosition.z + absoluteEndPosition.z) / 2f);
@@ -85,10 +97,11 @@ namespace AnyRPG {
 
             transform.position = midPoint;
             transform.localScale = updatedLocalScale;
-            transform.rotation = Quaternion.LookRotation(directionVector);
+            //transform.rotation = Quaternion.LookRotation(directionVector);
+            transform.forward = directionVector;
             transform.Rotate(90, 0, 0);
 
-            objectInitialized = true;
+            //objectInitialized = true;
         }
     }
 }

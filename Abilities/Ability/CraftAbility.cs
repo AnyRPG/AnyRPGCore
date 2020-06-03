@@ -25,9 +25,9 @@ namespace AnyRPG {
             set => base.MyHoldableObjects = value;
         }
 
-        public override bool Cast(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
-            bool returnResult = base.Cast(source, target, groundTarget);
+            bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
                 CraftingUI.MyInstance.CraftNextItemWait();
             }

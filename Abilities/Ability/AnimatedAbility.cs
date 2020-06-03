@@ -54,9 +54,9 @@ namespace AnyRPG {
             return animationClips;
         }
 
-        public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
-            if (base.Cast(sourceCharacter, target, groundTarget)) {
+            if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
                 if (usedAnimationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
@@ -73,7 +73,7 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
                     if (usedAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter);
+                        float animationLength = sourceCharacter.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
 
                         //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
                         if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
@@ -106,9 +106,9 @@ namespace AnyRPG {
             //source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 
-        public bool HandleAbilityHit(IAbilityCaster source, GameObject target) {
+        public bool HandleAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
-            bool returnResult = PerformAbilityEffects(source, target, Vector3.zero);
+            bool returnResult = PerformAbilityEffects(source, target, abilityEffectContext);
             if (!returnResult) {
                 return false;
             }

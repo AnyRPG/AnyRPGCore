@@ -16,6 +16,12 @@ namespace AnyRPG {
                 SetGroundTarget(groundTarget);
             }
         }
+
+        public override void ActivateTargettingMode(BaseAbility baseAbility, GameObject target) {
+            base.ActivateTargettingMode(baseAbility, target);
+
+            groundTarget = target.transform.position;
+        }
     }
 
 }

@@ -344,10 +344,13 @@ namespace AnyRPG {
 
                 BaseAbility animatorCurrentAbility = null;
                 bool attackLanded = true;
-                if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    animatorCurrentAbility = MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility;
+                if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext != null) {
+                    animatorCurrentAbility = MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility;
                     if (animatorCurrentAbility is AnimatedAbility) {
-                        attackLanded = (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility as AnimatedAbility).HandleAbilityHit(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterController.MyTarget);
+                        attackLanded = (MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility as AnimatedAbility).HandleAbilityHit(
+                            MyBaseCharacter.CharacterAbilityManager,
+                            MyBaseCharacter.CharacterController.MyTarget,
+                            MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext);
                     }
                 }
 
@@ -385,8 +388,8 @@ namespace AnyRPG {
                 */
                 return true;
             } else {
-                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null && baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility != null) {
-                    if (baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbility.MyRequiresTarget == false) {
+                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null && baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext != null) {
+                    if (baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility.MyRequiresTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.CharacterController.MyTarget);
                         return true;
                     }

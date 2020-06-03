@@ -8,11 +8,11 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
     public class GatherAbility : DirectAbility {
 
-        public override bool Cast(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             if (target == null) {
                 return false;
             }
-            bool returnResult = base.Cast(source, target, groundTarget);
+            bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
                 if (target != null) {
                     target.GetComponent<GatheringNode>().DropLoot();

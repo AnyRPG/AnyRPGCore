@@ -8,14 +8,14 @@ namespace AnyRPG {
     public class InstantEffectAbility : BaseAbility {
 
 
-        public override bool Cast(IAbilityCaster source, GameObject target, Vector3 groundTarget) {
+        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".InstantEffectAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
 
             // this code could lead to a situation where an instanteffect was allowed to perform its ability effects even if the wrong weapon was equipped.
             // need to change cast to a bool to pass that success or not up the casting stack
-            bool castResult = base.Cast(source, target, groundTarget);
+            bool castResult = base.Cast(source, target, abilityEffectContext);
             if (castResult) {
-                PerformAbilityEffects(source, target, groundTarget);
+                PerformAbilityEffects(source, target, abilityEffectContext);
             }
             return castResult;
         }

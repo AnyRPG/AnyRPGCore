@@ -48,7 +48,7 @@ namespace AnyRPG {
         }
 
         public override void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -113,7 +113,9 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
                     //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
-                    SystemConfigurationManager.MyInstance.MyLootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, Vector3.zero);
+                    AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                    abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLootSparkleAbility;
+                    SystemConfigurationManager.MyInstance.MyLootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
                 }
             } else {
                 if (!characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {

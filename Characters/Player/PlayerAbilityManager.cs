@@ -28,6 +28,15 @@ namespace AnyRPG {
 
         }
 
+        public override void ActivateTargettingMode(BaseAbility baseAbility, GameObject target) {
+            //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
+
+            base.ActivateTargettingMode(baseAbility, target);
+
+            targettingModeActive = true;
+            CastTargettingManager.MyInstance.EnableProjector(baseAbility);
+        }
+
         public override void CleanupEventSubscriptions() {
             if (!eventSubscriptionsInitialized) {
                 return;
@@ -218,9 +227,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void PerformAbility(IAbility ability, GameObject target, Vector3 groundTarget) {
+        public override void PerformAbility(IAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + ")");
-            base.PerformAbility(ability, target, groundTarget);
+            base.PerformAbility(ability, target, abilityEffectContext);
             // DON'T DO GCD ON CASTS THAT HAVE TIME BECAUSE THEIR CAST TIME WAS ALREADY A TYPE OF GLOBAL COOLDOWN
             OnPerformAbility(ability);
             SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);

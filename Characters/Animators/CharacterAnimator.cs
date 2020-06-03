@@ -91,13 +91,13 @@ namespace AnyRPG {
         private Coroutine resurrectionCoroutine = null;
 
         // a reference to any current ability we are casting
-        private BaseAbility currentAbility = null;
+        private AbilityEffectContext currentAbilityEffectContext = null;
 
         protected bool componentReferencesInitialized = false;
 
         public bool applyRootMotion { get => (animator != null ? animator.applyRootMotion : false); }
         public Animator MyAnimator { get => animator; }
-        public BaseAbility MyCurrentAbility { get => currentAbility; set => currentAbility = value; }
+        public AbilityEffectContext MyCurrentAbilityEffectContext { get => currentAbilityEffectContext; set => currentAbilityEffectContext = value; }
         public RuntimeAnimatorController MyAnimatorController {
             get => animatorController;
             set => animatorController = value;
@@ -1130,7 +1130,7 @@ namespace AnyRPG {
         }
 
         // special melee attack
-        public virtual float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit) {
+        public virtual float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
             if (animator == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
@@ -1151,8 +1151,7 @@ namespace AnyRPG {
             lastAnimationHits = GetAnimationHitCount(animationClip);
 
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(): animationlength: " + animationLength);
-            currentAbility = baseAbility;
-
+            currentAbilityEffectContext = abilityEffectContext;
 
             float speedNormalizedAnimationLength = 1f;
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
@@ -1254,7 +1253,7 @@ namespace AnyRPG {
             characterUnit.MyCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
             (baseAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             SetAttacking(false);
-            currentAbility = null;
+            currentAbilityEffectContext = null;
             if (characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterEquipmentManager != null) {
                 characterUnit.MyCharacter.CharacterEquipmentManager.DespawnAbilityObjects();
             }
@@ -1274,9 +1273,9 @@ namespace AnyRPG {
         public virtual void ClearAnimationBlockers() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers()");
             ClearAutoAttack();
-            if (currentAbility is AnimatedAbility) {
+            if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE HAVE AN ANIMATED ABILITY");
-                ClearAnimatedAttack(currentAbility);
+                ClearAnimatedAttack(currentAbilityEffectContext.baseAbility);
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE DO NOT HAVE AN ANIMATED ABILITY");
             }
@@ -1306,8 +1305,8 @@ namespace AnyRPG {
 
         public virtual void HandleDeath(CharacterStats characterStats) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
-            if (currentAbility != null && currentAbility is AnimatedAbility) {
-                (currentAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
+            if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
+                (currentAbilityEffectContext.baseAbility as AnimatedAbility).CleanupEventSubscriptions(characterUnit.MyCharacter);
             }
 
             // add these to prevent characters from dying floating or upright

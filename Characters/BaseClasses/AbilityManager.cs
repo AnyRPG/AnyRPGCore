@@ -263,7 +263,7 @@ namespace AnyRPG {
         }
 
 
-        public virtual float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter) {
+        public virtual float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {
 
             // do nothing for now
             return 0f;

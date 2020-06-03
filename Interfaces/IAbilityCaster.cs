@@ -26,7 +26,7 @@ namespace AnyRPG {
         AudioClip GetAnimatedAbilityHitSound();
 
         GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target);
-        float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter);
+        float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
 
         /// <summary>
         /// return a list of auto-attack animations for the currently equipped weapon
