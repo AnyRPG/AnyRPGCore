@@ -25,6 +25,22 @@ namespace AnyRPG {
         bool SuppressFaction { get; }
         int Level { get; }
 
+        /// <summary>
+        /// true if the unit has a primary resource
+        /// </summary>
+        /// <returns></returns>
+        bool HasPrimaryResource();
+
+        /// <summary>
+        /// true if the unit has a secondary resource
+        /// </summary>
+        /// <returns></returns>
+        bool HasSecondaryResource();
+
+        /// <summary>
+        /// a special check to see if a resource exists that is a health resource
+        /// </summary>
+        /// <returns></returns>
         bool HasHealth();
         int CurrentHealth();
         int MaxHealth();

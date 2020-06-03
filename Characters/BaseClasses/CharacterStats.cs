@@ -102,6 +102,23 @@ namespace AnyRPG {
             }
         }
 
+        public bool HasPrimaryResource {
+            get {
+                if (PowerResourceDictionary.Count > 0) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool HasSecondaryResource {
+            get {
+                if (PowerResourceDictionary.Count > 1) {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         public int MaxPrimaryResource {
             get {
@@ -352,7 +369,7 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (PowerResource _powerResource in baseCharacter.CharacterClass.PowerResourceList) {
+            foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
                 ResourceAmountChangedNotificationHandler(_powerResource);
             }
         }

@@ -288,7 +288,15 @@ namespace AnyRPG {
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
             unitNameText.text = namePlateUnit.MyDisplayName;
 
-            if (namePlateUnit.HasHealth()) {
+            if (!namePlateUnit.HasPrimaryResource()) {
+                ClearPrimaryResourceBar();
+            }
+
+            if (!namePlateUnit.HasSecondaryResource()) {
+                ClearSecondaryResourceBar();
+            }
+
+            if (namePlateUnit.HasPrimaryResource()) {
                 BaseCharacter baseCharacter = followGameObject.GetComponent<CharacterUnit>().MyCharacter;
                 if (baseCharacter.CharacterStats == null) {
                     //Debug.Log("UnitFrameController: followGameObject(" + followGameObject.name + ") does not have a BaseCharacter component");
@@ -318,10 +326,7 @@ namespace AnyRPG {
                     Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + baseCharacter.name + " has no CharacterFactionManager");
                 }
 
-            } else {
-                ClearPrimaryResourceBar();
             }
-
 
             OnLevelChanged(namePlateUnit.Level);
         }

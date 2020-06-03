@@ -121,6 +121,22 @@ namespace AnyRPG {
             }
         }
 
+        public bool HasPrimaryResource() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                return baseCharacter.CharacterStats.HasPrimaryResource;
+            }
+            return false;
+        }
+
+        public bool HasSecondaryResource() {
+            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
+                return baseCharacter.CharacterStats.HasSecondaryResource;
+            }
+            return false;
+        }
+
         public bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {

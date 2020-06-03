@@ -78,8 +78,15 @@ namespace AnyRPG {
             }
         }
 
-
         public bool HasHealth() {
+            return false;
+        }
+
+        public bool HasPrimaryResource() {
+            return false;
+        }
+
+        public bool HasSecondaryResource() {
             return false;
         }
 
