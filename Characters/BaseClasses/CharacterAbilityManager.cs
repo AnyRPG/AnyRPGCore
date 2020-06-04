@@ -374,13 +374,13 @@ namespace AnyRPG {
         /// Return true if the ability hit, false if it missed
         /// </summary>
         /// <returns></returns>
-        public override bool AbilityHit(GameObject target) {
+        public override bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext) {
             if (baseCharacter.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
-                baseCharacter.CharacterCombat.ReceiveCombatMiss(target);
+                baseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
                 return false;
             }
-            return base.AbilityHit(target);
+            return base.AbilityHit(target, abilityEffectContext);
         }
 
         public override bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
@@ -449,6 +449,7 @@ namespace AnyRPG {
                 StopCoroutine(globalCoolDownCoroutine);
                 globalCoolDownCoroutine = null;
             }
+            StopAllCoroutines();
         }
 
         // this ability exists to allow a caster to auto-self cast
@@ -1334,12 +1335,22 @@ namespace AnyRPG {
             }
 
             if (ability.GetResourceCost(this) != 0 && ability.PowerResource != null) {
-                BaseCharacter.CharacterStats.UsePowerResource(ability.PowerResource, (int)ability.GetResourceCost(this));
+                // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
+                StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(this), ability.SpendDelay));
             }
 
             // cast the system manager version so we can track globally the spell cooldown
             SystemAbilityManager.MyInstance.GetResource(ability.MyName).Cast(this, finalTarget, abilityEffectContext);
             //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
+        }
+
+        public IEnumerator UsePowerResourceDelay(PowerResource powerResource, int amount, float delay) {
+            float elapsedTime = 0f;
+            while (elapsedTime < delay) {
+                yield return null;
+                elapsedTime += Time.deltaTime;
+            }
+            BaseCharacter.CharacterStats.UsePowerResource(powerResource, amount);
         }
 
         /// <summary>

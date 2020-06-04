@@ -30,6 +30,7 @@ namespace AnyRPG {
         PowerResource GeneratePowerResource { get; set; }
         int BaseResourceGain { get; set; }
         int ResourceGainPerLevel { get; set; }
+        float SpendDelay { get; set; }
 
 
         bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks);

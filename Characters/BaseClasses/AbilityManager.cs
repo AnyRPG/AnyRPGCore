@@ -269,7 +269,7 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual bool AbilityHit(GameObject target) {
+        public virtual bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext) {
             return true;
         }
 

@@ -158,7 +158,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        bool AbilityHit(GameObject target);
+        bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext);
 
         void AddPet(CharacterUnit target);
 

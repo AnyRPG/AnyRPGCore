@@ -67,26 +67,26 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public override bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
-            bool returnValue = base.WasImmuneToFreeze(statusEffect, sourceCharacter);
+        public override bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            bool returnValue = base.WasImmuneToFreeze(statusEffect, sourceCharacter, abilityEffectContext);
             if (returnValue == true) {
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
             }
             return false;
         }
 
-        public override bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
-            bool returnValue = base.WasImmuneToStun(statusEffect, sourceCharacter);
+        public override bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            bool returnValue = base.WasImmuneToStun(statusEffect, sourceCharacter, abilityEffectContext);
             if (returnValue == true) {
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
             }
             return false;
         }
 
-        public override bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
-            bool returnValue = base.WasImmuneToLevitate(statusEffect, sourceCharacter);
+        public override bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            bool returnValue = base.WasImmuneToLevitate(statusEffect, sourceCharacter, abilityEffectContext);
             if (returnValue == true) {
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
             }
             return false;
         }

@@ -20,7 +20,8 @@ namespace AnyRPG {
 
         public override void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
 
-            target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverResource(powerResource, finalAmount, source, true, combatMagnitude);
+            abilityEffectInput.powerResource = powerResource;
+            target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats.RecoverResource(abilityEffectInput, powerResource, finalAmount, source, true, combatMagnitude);
 
             base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectInput, powerResource);
         }

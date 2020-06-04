@@ -71,7 +71,7 @@ namespace AnyRPG {
                 // something died or despawned mid cast
                 return;
             }
-            if (!source.AbilityHit(target)) {
+            if (!source.AbilityHit(target, abilityEffectInput)) {
                 return;
             }
             AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();

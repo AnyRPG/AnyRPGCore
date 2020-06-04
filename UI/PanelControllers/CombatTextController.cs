@@ -41,6 +41,7 @@ namespace AnyRPG {
         private Color textColor;
         private CombatMagnitude combatMagnitude;
         private CombatTextType textType;
+        private AbilityEffectContext abilityEffectContext;
 
         private float randomXLimit = 100f;
         private float randomYLimit = 100f;
@@ -56,6 +57,7 @@ namespace AnyRPG {
         public CombatMagnitude MyCombatMagnitude { get => combatMagnitude; set => combatMagnitude = value; }
         public CombatTextType MyCombatType { get => textType; set => textType = value; }
         public Image MyImage { get => image; set => image = value; }
+        public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
 
         /*
         void Start() {
@@ -153,8 +155,12 @@ namespace AnyRPG {
                     //preText += "";
                     //text.fontSize = text.fontSize * 2;
                     break;
-                case CombatTextType.gainMana:
-                    textColor = Color.blue;
+                case CombatTextType.gainResource:
+                    if (abilityEffectContext != null && abilityEffectContext.powerResource != null) {
+                        textColor = abilityEffectContext.powerResource.DisplayColor;
+                    } else {
+                        textColor = Color.blue;
+                    }
                     preText += "+";
                     tmpProtext.fontSize = tmpProtext.fontSize * 2;
                     break;

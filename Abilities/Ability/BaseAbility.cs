@@ -119,6 +119,10 @@ namespace AnyRPG {
         [SerializeField]
         protected int resourceCostPerLevel = 5;
 
+        [Tooltip("Delay the spending of the resource by this many seconds when the ability is cast.  Useful if the ability can kill the caster to give time to complete final cast.")]
+        [SerializeField]
+        protected float spendDelay = 0f;
+
         [Header("Power Generation")]
 
         [Tooltip("The resource to refill when this ability hits the target")]
@@ -287,6 +291,7 @@ namespace AnyRPG {
         public PowerResource GeneratePowerResource { get => generatePowerResource; set => generatePowerResource = value; }
         public int BaseResourceGain { get => baseResourceGain; set => baseResourceGain = value; }
         public int ResourceGainPerLevel { get => resourceGainPerLevel; set => resourceGainPerLevel = value; }
+        public float SpendDelay { get => spendDelay; set => spendDelay = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -522,7 +527,7 @@ namespace AnyRPG {
 
             // perform hit / miss check only if baseability requires target and return false if miss
             if (requiresTarget) {
-                if (!source.AbilityHit(target)) {
+                if (!source.AbilityHit(target, abilityEffectContext)) {
                     return false;
                 }
             }

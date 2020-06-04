@@ -588,32 +588,32 @@ namespace AnyRPG {
             }
         }
 
-        public virtual bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+        public virtual bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (statusEffect.MyDisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 return true;
             }
             return false;
         }
 
-        public virtual bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+        public virtual bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
             if (statusEffect.MyStun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 return true;
             }
             return false;
         }
 
-        public virtual bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter) {
+        public virtual bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
             if (statusEffect.MyLevitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 return true;
             }
@@ -639,17 +639,17 @@ namespace AnyRPG {
             AttemptAgro(sourceCharacter, baseCharacter.CharacterUnit);
 
             // check for frozen
-            if (WasImmuneToFreeze(statusEffect, sourceCharacter)) {
+            if (WasImmuneToFreeze(statusEffect, sourceCharacter, abilityEffectInput)) {
                 return null;
             }
 
             // check for stun
-            if (WasImmuneToStun(statusEffect, sourceCharacter)) {
+            if (WasImmuneToStun(statusEffect, sourceCharacter, abilityEffectInput)) {
                 return null;
             }
 
             // check for levitate
-            if (WasImmuneToLevitate(statusEffect, sourceCharacter)) {
+            if (WasImmuneToLevitate(statusEffect, sourceCharacter, abilityEffectInput)) {
                 return null;
             }
             //Debug.Log("CharacterStats.ApplyStatusEffect(" + statusEffect.ToString() + ", " + source.name + ", " + target.name + ")");
@@ -755,7 +755,7 @@ namespace AnyRPG {
                 currentXP = overflowXP;
             }
 
-            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal);
+            CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
 
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }
@@ -872,21 +872,12 @@ namespace AnyRPG {
             }
         }
 
-        public void RecoverResource(PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
             AddResourceAmount(powerResource.MyName, amount);
             if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainMana, combatMagnitude);
-            }
-        }
-
-        public void RecoverPrimaryResource(int mana, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-
-            SetPrimaryResourceAmount(mana);
-            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
-                // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, mana, CombatTextType.gainMana, combatMagnitude);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
         }
 

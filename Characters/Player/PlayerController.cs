@@ -156,15 +156,20 @@ namespace AnyRPG {
                 return;
             }
 
-            CollectMoveInput();
-
             //CollectAimInput();
 
             HandleCancelButtonPressed();
 
-            ToggleRun();
-
             HandleMouseOver();
+
+            if (baseCharacter.CharacterStats.IsAlive == false) {
+                // can't interact, perform abilities or handle movement when dead
+                return;
+            }
+
+            // test move this below death check to prevent player getting up after death
+            ToggleRun();
+            CollectMoveInput();
 
             HandleLeftMouseClick();
 
