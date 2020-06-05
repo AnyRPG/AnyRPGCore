@@ -423,11 +423,17 @@ namespace AnyRPG {
 
         private void TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
 
-            damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
+            // perform check to see if this character has the resource to be reduced.  if not, it is immune to this type of damage
+            if (!baseCharacter.CharacterStats.WasImmuneToDamageType(powerResource, source, abilityEffectContext)) {
+                damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
 
-            ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect, reflectDamage);
-            //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
-            baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
+                ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect, reflectDamage);
+                //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
+                baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
+            } else {
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            }
+
         }
 
         public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {

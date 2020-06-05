@@ -42,7 +42,7 @@ namespace AnyRPG {
                         Vector3 endPosition = Vector3.zero;
                         GameObject usedTarget = target;
                         if (abilityEffectInput.baseAbility.MyRequiresGroundTarget == true) {
-                            endPosition = abilityEffectInput.prefabLocation;
+                            endPosition = abilityEffectInput.groundTargetLocation;
                             usedTarget = null;
                             //Debug.Log(MyName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         } else {
@@ -71,12 +71,12 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
                 return false;
             }
-            return base.CanUseOn(target, sourceCharacter);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext);
         }
 
     }

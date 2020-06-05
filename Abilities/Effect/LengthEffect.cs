@@ -88,10 +88,10 @@ namespace AnyRPG {
                 foreach (PrefabProfile prefabProfile in usedPrefabProfileList) {
                     Vector3 spawnLocation = Vector3.zero;
                     Transform prefabParent = null;
-                    if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
+                    if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                         //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         //spawnLocation = source.GetComponent<Collider>().bounds.center;
-                        spawnLocation = abilityEffectInput.prefabLocation;
+                        spawnLocation = abilityEffectInput.groundTargetLocation;
                         prefabParent = null;
                     }
                     if (prefabSpawnLocation == PrefabSpawnLocation.targetPoint) {
@@ -123,7 +123,7 @@ namespace AnyRPG {
                         spawnLocation = originalTarget.transform.position;
                         prefabParent = originalTarget.transform;
                     }
-                    if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.Point || requiresTarget == false)) {
+                    if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || requiresTarget == false)) {
                         //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);

@@ -273,29 +273,36 @@ namespace AnyRPG {
             return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility);
         }
 
-        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
+        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
-            return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect);
+            return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect, abilityEffectContext);
         }
 
         public override bool IsTargetInMeleeRange(GameObject target) {
             return baseCharacter.CharacterController.IsTargetInHitBox(target);
         }
 
-        public override bool PerformLOSCheck(GameObject target, ITargetable targetable) {
+        public override bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
 
             if (targetable.RequireLineOfSight == false) {
                 return true;
             }
 
-            // get initial positions in case of no collider
             Vector3 sourcePosition = transform.position;
-            Vector3 targetPosition = target.transform.position;
-
-            Collider sourceCollider = GetComponent<Collider>();
-            if (sourceCollider != null) {
-                sourcePosition = sourceCollider.bounds.center;
+            // get initial positions in case of no collider
+            if (targetable.LineOfSightSourceLocation == LineOfSightSourceLocation.Caster) {
+                sourcePosition = transform.position;
+                Collider sourceCollider = GetComponent<Collider>();
+                if (sourceCollider != null) {
+                    sourcePosition = sourceCollider.bounds.center;
+                }
+            } else if (targetable.LineOfSightSourceLocation == LineOfSightSourceLocation.GroundTarget && abilityEffectContext != null) {
+                sourcePosition = abilityEffectContext.groundTargetLocation;
+            } else if (targetable.LineOfSightSourceLocation == LineOfSightSourceLocation.OriginalTarget && abilityEffectContext != null) {
+                sourcePosition = abilityEffectContext.originalTarget.transform.position;
             }
+
+            Vector3 targetPosition = target.transform.position;
 
             Collider targetCollider = target.GetComponent<Collider>();
             if (targetCollider != null) {
@@ -319,10 +326,10 @@ namespace AnyRPG {
                 }
             }
             //Debug.Log(gameObject.name + ".PerformLOSCheck(): return true;");
-            return base.PerformLOSCheck(target, targetable);
+            return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
-        public bool IsTargetInRange(GameObject target, bool useMeleeRange, float maxRange, ITargetable targetable) {
+        public bool IsTargetInRange(GameObject target, bool useMeleeRange, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
             if (useMeleeRange) {
@@ -333,7 +340,7 @@ namespace AnyRPG {
                 if (!IsTargetInMaxRange(target, maxRange, targetable)) {
                     return false;
                 }
-                if (!PerformLOSCheck(target, targetable)) {
+                if (!PerformLOSCheck(target, targetable, abilityEffectContext)) {
                     return false;
                 }
             }
@@ -922,6 +929,7 @@ namespace AnyRPG {
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
             abilityEffectContext.baseAbility = ability as BaseAbility;
+            abilityEffectContext.originalTarget = target;
             if (ability.MyRequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
                 ActivateTargettingMode(ability as BaseAbility, target);
@@ -933,7 +941,7 @@ namespace AnyRPG {
                     //Debug.Log("Ground Targetting: groundtarget is vector3.zero, cannot cast");
                     canCast = false;
                 }
-                abilityEffectContext.prefabLocation = GetGroundTarget();
+                abilityEffectContext.groundTargetLocation = GetGroundTarget();
             }
             if (canCast == true) {
                 // dismount if mounted
@@ -1322,6 +1330,7 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability as BaseAbility;
+                abilityEffectContext.originalTarget = target;
             }
             GameObject finalTarget = target;
             if (finalTarget != null) {

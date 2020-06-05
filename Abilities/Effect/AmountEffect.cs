@@ -101,7 +101,7 @@ namespace AnyRPG {
             }
             
 
-            abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
+            abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
 
             abilityEffectInput.castTimeMultipler = 1f;
             base.PerformAbilityHit(source, target, abilityEffectInput);

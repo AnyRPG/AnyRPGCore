@@ -292,6 +292,7 @@ namespace AnyRPG {
         public int BaseResourceGain { get => baseResourceGain; set => baseResourceGain = value; }
         public int ResourceGainPerLevel { get => resourceGainPerLevel; set => resourceGainPerLevel = value; }
         public float SpendDelay { get => spendDelay; set => spendDelay = value; }
+        public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -540,12 +541,12 @@ namespace AnyRPG {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
                 AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
-                abilityEffectOutput.prefabLocation = abilityEffectContext.prefabLocation;
+                abilityEffectOutput.groundTargetLocation = abilityEffectContext.groundTargetLocation;
                 abilityEffectOutput.baseAbility = abilityEffectContext.baseAbility;
 
                 abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
-                if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source)) {
+                if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
                     //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);
@@ -790,6 +791,6 @@ namespace AnyRPG {
 
     }
 
-    public enum PrefabSpawnLocation { None, Caster, Target, Point, OriginalTarget, targetPoint }
+    public enum PrefabSpawnLocation { None, Caster, Target, GroundTarget, OriginalTarget, targetPoint }
 
 }

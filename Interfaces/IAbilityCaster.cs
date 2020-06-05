@@ -40,7 +40,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="targetable"></param>
         /// <returns></returns>
-        bool PerformLOSCheck(GameObject target, ITargetable targetable);
+        bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
 
         float GetMeleeRange();
 
@@ -105,7 +105,7 @@ namespace AnyRPG {
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target);
+        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// True if the target is in the correct range for the ability

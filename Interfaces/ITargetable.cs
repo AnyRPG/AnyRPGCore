@@ -12,6 +12,7 @@ namespace AnyRPG {
         bool CanCastOnEnemy { get; }
         bool CanCastOnFriendly { get; }
         bool RequireLineOfSight { get; }
+        LineOfSightSourceLocation LineOfSightSourceLocation { get; }
     }
 
 }

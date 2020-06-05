@@ -15,7 +15,7 @@ namespace AnyRPG {
         public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
             AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
-            abilityEffectOutput.prefabLocation = abilityEffectInput.prefabLocation;
+            abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
             ResurrectTarget(target);
             base.PerformAbilityHit(source, target, abilityEffectOutput);
         }
@@ -33,7 +33,7 @@ namespace AnyRPG {
             characterUnit.MyCharacter.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
             if (target == null) {
                 return false;
             }

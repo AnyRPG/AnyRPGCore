@@ -106,9 +106,9 @@ namespace AnyRPG {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnCenter = source.UnitGameObject.transform.position;
                 aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
-            } else if (prefabSpawnLocation == PrefabSpawnLocation.Point) {
+            } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
-                aoeSpawnCenter = abilityEffectInput.prefabLocation;
+                aoeSpawnCenter = abilityEffectInput.groundTargetLocation;
                 aoeSpawnCenter += aoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
@@ -131,7 +131,7 @@ namespace AnyRPG {
                 //Debug.Log(MyName + "AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                 bool canAdd = true;
                 foreach (AbilityEffect abilityEffect in abilityEffectList) {
-                    if (abilityEffect.CanUseOn(collider.gameObject, source) == false) {
+                    if (abilityEffect.CanUseOn(collider.gameObject, source, abilityEffectInput) == false) {
                         canAdd = false;
                     }
                 }
@@ -178,7 +178,7 @@ namespace AnyRPG {
                 modifiedOutput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
             }
 
-            modifiedOutput.prefabLocation = abilityEffectInput.prefabLocation;
+            modifiedOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
             return modifiedOutput;
         }
 

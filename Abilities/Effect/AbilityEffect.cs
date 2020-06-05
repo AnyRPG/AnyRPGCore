@@ -21,6 +21,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool requireLineOfSight;
 
+        [Tooltip("If line of sight is required, where should it be calculated from")]
+        [SerializeField]
+        protected LineOfSightSourceLocation lineOfSightSourceLocation;
+
         [Tooltip("If true, the target must be a character and must be alive.")]
         [SerializeField]
         protected bool requiresLiveTarget;
@@ -112,6 +116,7 @@ namespace AnyRPG {
         public IAbilityCaster SourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
+        public LineOfSightSourceLocation LineOfSightSourceLocation { get => lineOfSightSourceLocation; set => lineOfSightSourceLocation = value; }
 
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
@@ -133,7 +138,7 @@ namespace AnyRPG {
 
         
 
-        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".AbilityEffect.CanUseOn()");
 
             // create target booleans
@@ -193,7 +198,7 @@ namespace AnyRPG {
                     return true;
                 }
 
-                if (!sourceCharacter.IsTargetInAbilityEffectRange(this, target)) {
+                if (!sourceCharacter.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
                     return false;
                 }
             }
@@ -262,7 +267,7 @@ namespace AnyRPG {
 
             //Debug.Log("FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
-            if (abilityEffect.CanUseOn(finalTarget, source)) {
+            if (abilityEffect.CanUseOn(finalTarget, source, effectOutput)) {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
                 returnObjects = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
@@ -402,6 +407,7 @@ namespace AnyRPG {
 
         }
 
-
     }
+
+    public enum LineOfSightSourceLocation { Caster, GroundTarget, OriginalTarget }
 }

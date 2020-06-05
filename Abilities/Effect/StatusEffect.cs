@@ -273,11 +273,11 @@ namespace AnyRPG {
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (classTrait == true && sourceCharacter.Level >= requiredLevel) {
                 return true;
             }
-            return base.CanUseOn(target, sourceCharacter);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext);
         }
 
 

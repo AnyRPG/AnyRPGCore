@@ -17,7 +17,9 @@ namespace AnyRPG {
         // was this damage caused by a reflect?  Needed to stop infinite reflect loops
         public bool refectDamage = false;
 
-        public Vector3 prefabLocation = Vector3.zero;
+        public Vector3 groundTargetLocation = Vector3.zero;
+
+        public GameObject originalTarget;
 
         // track the ability that was originally cast that resulted in this effect
         public BaseAbility baseAbility = null;

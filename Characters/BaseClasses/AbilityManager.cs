@@ -62,7 +62,7 @@ namespace AnyRPG {
             return new List<AnimationClip>();
         }
 
-        public virtual bool PerformLOSCheck(GameObject target, ITargetable targetable) {
+        public virtual bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
 
@@ -235,7 +235,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target) {
+        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }

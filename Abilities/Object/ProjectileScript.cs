@@ -61,8 +61,8 @@ namespace AnyRPG {
         private void OnTriggerEnter(Collider other) {
             //Debug.Log("ProjectileScript.OnTriggerEnter(" + other.name + ")");
             if ((target != null && other.gameObject == target) || target == null) {
-                if (abilityEffectInput != null && abilityEffectInput.prefabLocation != null) {
-                    abilityEffectInput.prefabLocation = transform.position;
+                if (abilityEffectInput != null && abilityEffectInput.groundTargetLocation != null) {
+                    abilityEffectInput.groundTargetLocation = transform.position;
                 }
                 OnCollission(source, target, gameObject, abilityEffectInput);
             }

@@ -67,6 +67,14 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public override bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            bool returnValue = base.WasImmuneToDamageType(powerResource, sourceCharacter, abilityEffectContext);
+            if (returnValue == true) {
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            }
+            return false;
+        }
+
         public override bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             bool returnValue = base.WasImmuneToFreeze(statusEffect, sourceCharacter, abilityEffectContext);
             if (returnValue == true) {

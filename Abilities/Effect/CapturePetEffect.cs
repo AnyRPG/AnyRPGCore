@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (unitTypeRestrictionList != null && unitTypeRestrictionList.Count > 0) {
                 BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
                 if (targetCharacter == null) {
@@ -31,7 +31,7 @@ namespace AnyRPG {
                     return false;
                 }
             }
-            bool returnValue = base.CanUseOn(target, sourceCharacter);
+            bool returnValue = base.CanUseOn(target, sourceCharacter, abilityEffectContext);
             Debug.Log(MyName + ".CapturePetEffect.CanUseOn(): returning: " + returnValue);
             return returnValue;
         }
