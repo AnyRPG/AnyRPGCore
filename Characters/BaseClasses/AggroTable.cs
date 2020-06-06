@@ -89,6 +89,9 @@ namespace AnyRPG {
                 return false;
             }
 
+            // testing clamp agro amount to 1 or above to prevent getting no credit from bosses that are immune to damage
+            aggroAmount = (int)Mathf.Clamp(aggroAmount, 1f, Mathf.Infinity);
+
             bool isAlreadyInAggroTable = false;
 
             // if aggro table is empty, skip the table scan because the target must be added

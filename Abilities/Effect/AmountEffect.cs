@@ -99,7 +99,6 @@ namespace AnyRPG {
                     ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectInput, resourceAmountNode.PowerResource);
                 }
             }
-            
 
             abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
 

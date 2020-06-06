@@ -293,6 +293,7 @@ namespace AnyRPG {
         public int ResourceGainPerLevel { get => resourceGainPerLevel; set => resourceGainPerLevel = value; }
         public float SpendDelay { get => spendDelay; set => spendDelay = value; }
         public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
+        public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

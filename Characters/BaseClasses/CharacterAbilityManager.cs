@@ -337,7 +337,7 @@ namespace AnyRPG {
                     return false;
                 }
             } else {
-                if (!IsTargetInMaxRange(target, maxRange, targetable)) {
+                if (!IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext)) {
                     return false;
                 }
                 if (!PerformLOSCheck(target, targetable, abilityEffectContext)) {
@@ -347,12 +347,18 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable) {
+        public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
             if (target == null) {
                 return false;
             }
+            Vector3 sourcePosition = UnitGameObject.transform.position;
+            if (targetable.TargetRangeSourceLocation == TargetRangeSourceLocation.GroundTarget && abilityEffectContext != null) {
+                sourcePosition = abilityEffectContext.groundTargetLocation;
+            } else if (targetable.TargetRangeSourceLocation == TargetRangeSourceLocation.OriginalTarget && abilityEffectContext != null) {
+                sourcePosition = abilityEffectContext.originalTarget.transform.position;
+            }
             //Debug.Log(target.name + " range(" + maxRange + ": " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
-            if (maxRange > 0 && Vector3.Distance(UnitGameObject.transform.position, target.transform.position) > maxRange) {
+            if (maxRange > 0 && Vector3.Distance(sourcePosition, target.transform.position) > maxRange) {
                 //Debug.Log(target.name + " is out of range(" + maxRange + "): " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
                 return false;
             }

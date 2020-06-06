@@ -92,8 +92,8 @@ namespace AnyRPG {
             }
         }
 
-        public override bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable) {
-            bool returnResult = base.IsTargetInMaxRange(target, maxRange, targetable);
+        public override bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
+            bool returnResult = base.IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext);
             if (!returnResult) {
                 if (CombatLogUI.MyInstance != null) {
                     CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (targetable.MyName == null ? "null" : targetable.MyName));

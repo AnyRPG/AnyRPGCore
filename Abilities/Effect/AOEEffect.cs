@@ -39,13 +39,21 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
-            if (abilityEffectInput == null) {
-                abilityEffectInput = new AbilityEffectContext();
+            if (abilityEffectContext == null) {
+                abilityEffectContext = new AbilityEffectContext();
             }
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
-            TargetAOEHit(source, target, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
+            TargetAOEHit(source, target, abilityEffectContext);
+
+            // ground targeted spells should play the audio on the prefab object, not the character
+            if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
+                base.PlayAudioEffects(onHitAudioProfiles, null);
+            } else {
+                base.PlayAudioEffects(onHitAudioProfiles, target);
+            }
+
             return returnObjects;
         }
 
@@ -226,6 +234,12 @@ namespace AnyRPG {
                 accumulatedTime += Time.deltaTime;
             }
             PerformAbilityComplete(source, target, modifiedOutput);
+        }
+
+        public override void PlayAudioEffects(List<AudioProfile> audioProfiles, GameObject target) {
+            // aoe effects are special.  They are considered to have hit, whether or not they found any valid targets
+            // this override prevents the audio from playing multiple times if the aoe effects multiple targets
+            //base.PlayAudioEffects(audioProfiles, target);
         }
 
     }

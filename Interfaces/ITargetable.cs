@@ -13,6 +13,7 @@ namespace AnyRPG {
         bool CanCastOnFriendly { get; }
         bool RequireLineOfSight { get; }
         LineOfSightSourceLocation LineOfSightSourceLocation { get; }
+        TargetRangeSourceLocation TargetRangeSourceLocation { get; }
     }
 
 }

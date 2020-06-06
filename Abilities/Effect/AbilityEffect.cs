@@ -21,7 +21,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool requireLineOfSight;
 
-        [Tooltip("If line of sight is required, where should it be calculated from")]
+        [Tooltip("If line of sight is required, where should it be calculated from. Useful for splash damage and ground target explosions.")]
         [SerializeField]
         protected LineOfSightSourceLocation lineOfSightSourceLocation;
 
@@ -50,6 +50,10 @@ namespace AnyRPG {
         protected bool autoSelfCast;
 
         [Header("Range Settings")]
+
+        [Tooltip("Where to calculate max range from.  Useful for splash damage and ground target explosions.")]
+        [SerializeField]
+        protected TargetRangeSourceLocation targetRangeSourceLocation;
 
         [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
         [SerializeField]
@@ -117,6 +121,7 @@ namespace AnyRPG {
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
         public LineOfSightSourceLocation LineOfSightSourceLocation { get => lineOfSightSourceLocation; set => lineOfSightSourceLocation = value; }
+        public TargetRangeSourceLocation TargetRangeSourceLocation { get => targetRangeSourceLocation; set => targetRangeSourceLocation = value; }
 
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
@@ -277,9 +282,9 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public virtual void PerformAbilityHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
+        public virtual Dictionary<PrefabProfile, GameObject> PerformAbilityHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
+            return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, GameObject target) {
@@ -289,7 +294,8 @@ namespace AnyRPG {
                 UnitAudioController unitAudio = null;
                 if (target != null) {
                     unitAudio = target.GetComponent<UnitAudioController>();
-                } else {
+                }
+                if (unitAudio == null) {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
@@ -317,8 +323,8 @@ namespace AnyRPG {
         }
 
         public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            PerformAbilityHitEffects(source, target, abilityEffectInput);
+            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            Dictionary<PrefabProfile, GameObject> effectObjects = PerformAbilityHitEffects(source, target, abilityEffectInput);
 
             PlayAudioEffects(onHitAudioProfiles, target);
             //PerformMaterialChange(source, target);
@@ -410,4 +416,6 @@ namespace AnyRPG {
     }
 
     public enum LineOfSightSourceLocation { Caster, GroundTarget, OriginalTarget }
+
+    public enum TargetRangeSourceLocation { Caster, GroundTarget, OriginalTarget }
 }
