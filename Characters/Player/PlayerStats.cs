@@ -67,6 +67,11 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public override void CalculatePrimaryStats() {
+            //Debug.Log(gameObject.name + ".PlayerStats.CalculatePrimaryStats()");
+            base.CalculatePrimaryStats();
+        }
+
         public override bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             bool returnValue = base.WasImmuneToDamageType(powerResource, sourceCharacter, abilityEffectContext);
             if (returnValue == true) {

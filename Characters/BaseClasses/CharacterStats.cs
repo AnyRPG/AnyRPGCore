@@ -172,7 +172,7 @@ namespace AnyRPG {
             CreateLateSubscriptions();
         }
 
-        public void CalculatePrimaryStats() {
+        public virtual void CalculatePrimaryStats() {
             CalculateRunSpeed();
             foreach (string statName in primaryStats.Keys) {
                 CalculateStat(statName);
@@ -180,13 +180,13 @@ namespace AnyRPG {
             CalculateSecondaryStats();
         }
 
-        public void CalculateSecondaryStats() {
+        public virtual void CalculateSecondaryStats() {
             foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
                 CalculateSecondaryStat(secondaryStatType);
             }
         }
 
-        public void GetComponentReferences() {
+        public virtual void GetComponentReferences() {
             baseCharacter = GetComponent<BaseCharacter>();
         }
 
@@ -364,10 +364,12 @@ namespace AnyRPG {
             if (oldItem != null) {
                 armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
                 meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
-                foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
-                    primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(newItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                foreach (ItemPrimaryStatNode itemPrimaryStatNode in oldItem.PrimaryStats) {
+                    primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
                 }
             }
+
+            CalculatePrimaryStats();
 
             foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
                 ResourceAmountChangedNotificationHandler(_powerResource);
@@ -411,6 +413,11 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        /// <summary>
+        /// Add together additive stat modifiers from status effects and gear
+        /// </summary>
+        /// <param name="statName"></param>
+        /// <returns></returns>
         protected virtual float GetAddModifiers(string statName) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
@@ -420,11 +427,16 @@ namespace AnyRPG {
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
-                returnValue += primaryStats[statName].GetValue();
+                returnValue += primaryStats[statName].GetAddValue();
             }
             return returnValue;
         }
 
+        /// <summary>
+        /// Multiply together multiplicative stats modifers from status effects and gear
+        /// </summary>
+        /// <param name="statName"></param>
+        /// <returns></returns>
         protected virtual float GetMultiplyModifiers(string statName) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
@@ -433,6 +445,10 @@ namespace AnyRPG {
                     returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
                 }
             }
+            if (primaryStats.ContainsKey(statName)) {
+                returnValue *= primaryStats[statName].GetMultiplyValue();
+            }
+
             return returnValue;
         }
 
@@ -869,16 +885,6 @@ namespace AnyRPG {
                     (int)GetPowerResourceMaxAmount(tmpPowerResource));
                 OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
-            }
-        }
-
-        public void SetPrimaryResourceAmount(int newAmount) {
-            //Debug.Log(gameObject.name + ": setting mana: " + mana.ToString());
-            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            if (PrimaryResource != null && powerResourceDictionary.ContainsKey(PrimaryResource)) {
-                powerResourceDictionary[PrimaryResource].currentValue += newAmount;
-                powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
-                OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
 

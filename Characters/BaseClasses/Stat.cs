@@ -39,6 +39,13 @@ namespace AnyRPG {
             return (finalAddValue * finalMultiplyValue);
         }
 
+        public float GetAddValue() {
+            float finalAddValue = baseAddValue;
+            addModifiers.ForEach(x => finalAddValue += x);
+            //Debug.Log("Stat.GetValue() finalAddValue: " + finalAddValue);
+            return finalAddValue;
+        }
+
         public float GetMultiplyValue() {
             //Debug.Log("Stat.GetMultiplyValue()");
             float finalMultiplyValue = baseMultiplyValue;
