@@ -90,7 +90,7 @@ namespace AnyRPG {
         public string GetColoredDescription(Faction sourceFaction) {
             Color factionColor = GetFactionColor(sourceFaction);
             string colorString = ColorUtility.ToHtmlStringRGB(factionColor);
-            return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, MyName, GetExtendedSummary(sourceFaction));
+            return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, MyDisplayName, GetExtendedSummary(sourceFaction));
         }
 
         // return the summary of relationship between the player and the source faction
@@ -196,7 +196,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

@@ -73,7 +73,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         abilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         traitList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace AnyRPG {
                     if (weaponSkill != null) {
                         weaponSkillList.Add(weaponSkill);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -109,7 +109,7 @@ namespace AnyRPG {
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

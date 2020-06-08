@@ -241,14 +241,14 @@ namespace AnyRPG {
                 completeButton.GetComponent<Button>().enabled = true;
                 return;
             }
-            if (newQuest.GetStatus() == "available" && QuestLog.MyInstance.HasQuest(newQuest.MyName) == false) {
+            if (newQuest.GetStatus() == "available" && QuestLog.MyInstance.HasQuest(newQuest.MyDisplayName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.GetComponent<Button>().enabled = true;
                 completeButton.gameObject.SetActive(false);
                 return;
             }
 
-            if (newQuest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(newQuest.MyName) == true && questGiver != null && questGiver.EndsQuest(newQuest.MyName)) {
+            if (newQuest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(newQuest.MyDisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.MyDisplayName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 acceptButton.gameObject.SetActive(false);
@@ -428,8 +428,8 @@ namespace AnyRPG {
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
                     //Debug.Log("rewardButton.MyDescribable: " + rewardButton.MyDescribable.MyName);
-                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
-                        Item newItem = SystemItemManager.MyInstance.GetNewResource(rewardButton.Describable.MyName);
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyDisplayName != null && rewardButton.Describable.MyDisplayName != string.Empty) {
+                        Item newItem = SystemItemManager.MyInstance.GetNewResource(rewardButton.Describable.MyDisplayName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             InventoryManager.MyInstance.AddItem(newItem);
@@ -449,7 +449,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
-                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyDisplayName != null && rewardButton.Describable.MyDisplayName != string.Empty) {
                         PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
                     }
                 }
@@ -459,7 +459,7 @@ namespace AnyRPG {
             if (currentQuest.MyAbilityRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
-                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyDisplayName != null && rewardButton.Describable.MyDisplayName != string.Empty) {
                         PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
                     }
                 }
@@ -469,7 +469,7 @@ namespace AnyRPG {
             if (currentQuest.MySkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
-                    if (rewardButton.Describable != null && rewardButton.Describable.MyName != null && rewardButton.Describable.MyName != string.Empty) {
+                    if (rewardButton.Describable != null && rewardButton.Describable.MyDisplayName != null && rewardButton.Describable.MyDisplayName != string.Empty) {
                         PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
                     }
                 }
@@ -504,7 +504,7 @@ namespace AnyRPG {
             // clear first because open window handler could show a description
             ClearDescription();
             if (interactable != null) {
-                PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.MyName + " (Quests)");
+                PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.MyDisplayName + " (Quests)");
             }
             OnOpenWindow(this);
         }

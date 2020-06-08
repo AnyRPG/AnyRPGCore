@@ -97,13 +97,13 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
                     return;
                 }
-                if (questNode.MyQuest.MyName == null) {
+                if (questNode.MyQuest.MyDisplayName == null) {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
                     return;
                 } else {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
                 }
-                questNode.MyQuest = SystemQuestManager.MyInstance.GetResource(questNode.MyQuest.MyName);
+                questNode.MyQuest = SystemQuestManager.MyInstance.GetResource(questNode.MyQuest.MyDisplayName);
             }
             questGiverInitialized = true;
         }
@@ -231,7 +231,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in quests) {
                 if (questNode != null && questNode.MyQuest != null) {
-                    if (QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName)) {
+                    if (QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyDisplayName)) {
                         if (questNode.MyQuest.IsComplete && !questNode.MyQuest.TurnedIn && questNode.MyEndQuest) {
                             //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
@@ -322,7 +322,7 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in quests) {
-                if (SystemResourceManager.MatchResource(questNode.MyQuest.MyName, questName)) {
+                if (SystemResourceManager.MatchResource(questNode.MyQuest.MyDisplayName, questName)) {
                     if (questNode.MyEndQuest == true) {
                         return true;
                     } else {
@@ -345,7 +345,7 @@ namespace AnyRPG {
                     if (tmpQuestGiverProfile != null) {
                         questGiverProfiles.Add(tmpQuestGiverProfile);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

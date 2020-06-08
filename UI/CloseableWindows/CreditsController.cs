@@ -30,7 +30,7 @@ namespace AnyRPG {
                     go.GetComponent<CreditCategoryController>().MyTitleText.text = " ";
                 }
                 go = Instantiate(creditCategoryTemplate, creditsContainer);
-                go.GetComponent<CreditCategoryController>().MyTitleText.text = creditsCategory.MyName;
+                go.GetComponent<CreditCategoryController>().MyTitleText.text = creditsCategory.MyDisplayName;
                 firstCategoryPassed = true;
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
                     go = Instantiate(creditTemplate, creditsContainer);

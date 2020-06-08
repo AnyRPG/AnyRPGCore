@@ -268,7 +268,7 @@ namespace AnyRPG {
             }
             if (isAchievement) {
                 if (printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Achievement: {0} Complete!", MyName));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Achievement: {0} Complete!", MyDisplayName));
                 }
                 PlayerManager.MyInstance.PlayLevelUpEffects(0);
 
@@ -276,7 +276,7 @@ namespace AnyRPG {
                 turnedIn = true;
             } else {
                 if (printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0} Complete!", MyName));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0} Complete!", MyDisplayName));
                 }
             }
             markedComplete = true;
@@ -323,17 +323,17 @@ namespace AnyRPG {
                 return "completed";
             }
 
-            if (QuestLog.MyInstance.HasQuest(MyName) && IsComplete) {
+            if (QuestLog.MyInstance.HasQuest(MyDisplayName) && IsComplete) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
-            if (QuestLog.MyInstance.HasQuest(MyName)) {
+            if (QuestLog.MyInstance.HasQuest(MyDisplayName)) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
-            if (!QuestLog.MyInstance.HasQuest(MyName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
+            if (!QuestLog.MyInstance.HasQuest(MyDisplayName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -350,7 +350,7 @@ namespace AnyRPG {
         public string GetObjectiveDescription() {
 
             Color titleColor = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyExperienceLevel);
-            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), MyName, MyDescription, GetUnformattedObjectiveList());
+            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), MyDisplayName, MyDescription, GetUnformattedObjectiveList());
 
         }
 
@@ -390,7 +390,7 @@ namespace AnyRPG {
             }
             objectives = string.Join("\n", objectiveList);
             if (objectives == string.Empty) {
-                objectives = MyName;
+                objectives = MyDisplayName;
             }
             return objectives;
         }
@@ -423,7 +423,7 @@ namespace AnyRPG {
                 o.OnAcceptQuest(this, printMessages);
             }
             if (isAchievement == false && printMessages == true) {
-                MessageFeedManager.MyInstance.WriteMessage("Quest Accepted: " + MyName);
+                MessageFeedManager.MyInstance.WriteMessage("Quest Accepted: " + MyDisplayName);
             }
             if (!markedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
@@ -506,7 +506,7 @@ namespace AnyRPG {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
                 if (questNode.MyQuest != null) {
-                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
+                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyDisplayName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
                         //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
                         returnList.Add(questNode.MyQuest);
                     }
@@ -534,7 +534,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         abilityRewardList.Add(baseAbility);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -546,7 +546,7 @@ namespace AnyRPG {
                     if (skill != null) {
                         skillRewardList.Add(skill);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -558,7 +558,7 @@ namespace AnyRPG {
                     if (item != null) {
                         itemRewardList.Add(item);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -571,11 +571,11 @@ namespace AnyRPG {
 
             openingDialog = null;
             if (hasOpeningDialog) {
-                Dialog dialog = SystemDialogManager.MyInstance.GetResource(MyName);
+                Dialog dialog = SystemDialogManager.MyInstance.GetResource(MyDisplayName);
                 if (dialog != null) {
                     openingDialog = dialog;
                 } else {
-                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + MyName + " while inititalizing quest " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + MyDisplayName + " while inititalizing quest " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

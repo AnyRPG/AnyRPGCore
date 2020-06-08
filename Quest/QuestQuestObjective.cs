@@ -29,10 +29,10 @@ namespace AnyRPG {
                     quest.CheckCompletion(true, printMessages);
                     //questObjective.CheckCompletion(true, printMessages);
                     if (CurrentAmount <= MyAmount && !questObjective.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.MyName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                        MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.MyDisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                     }
                     if (completeBefore == false && IsComplete && !questObjective.MyIsAchievement && printMessages == true) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.MyName));
+                        MessageFeedManager.MyInstance.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.MyDisplayName));
                     }
                 }
             }

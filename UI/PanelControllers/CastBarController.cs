@@ -119,7 +119,7 @@ namespace AnyRPG {
 
             if (currentPercent <= 1f) {
                 // first set text because bar width is based on text size
-                castText.text = ability.MyName + " ( " + (currentPercent * ability.GetAbilityCastingTime(abilityCaster)).ToString("F1") + "s / " + ability.GetAbilityCastingTime(abilityCaster).ToString("F1") + "s )";
+                castText.text = ability.MyDisplayName + " ( " + (currentPercent * ability.GetAbilityCastingTime(abilityCaster)).ToString("F1") + "s / " + ability.GetAbilityCastingTime(abilityCaster).ToString("F1") + "s )";
 
                 // then get width of container that expands to the text
                 originalCastSliderWidth = castBackground.GetComponent<RectTransform>().rect.width;

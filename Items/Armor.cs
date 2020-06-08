@@ -29,6 +29,7 @@ namespace AnyRPG {
         }
 
         public override string GetSummary() {
+            //Debug.Log(MyName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
 
@@ -67,7 +68,7 @@ namespace AnyRPG {
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
-                MessageFeedManager.MyInstance.WriteMessage("You do not have the right armor proficiency to equip " + MyName);
+                MessageFeedManager.MyInstance.WriteMessage("You do not have the right armor proficiency to equip " + MyDisplayName);
                 return false;
             }
             return true;
@@ -82,7 +83,7 @@ namespace AnyRPG {
                 if (tmpArmorClass != null) {
                     armorClass = tmpArmorClass;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find armor class : " + armorClassName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find armor class : " + armorClassName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

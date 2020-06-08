@@ -29,7 +29,7 @@ namespace AnyRPG {
             if (skill != null) {
                 icon.sprite = skill.MyIcon;
                 icon.color = Color.white;
-                skillNameText.text = skill.MyName;
+                skillNameText.text = skill.MyDisplayName;
                 description.text = skill.GetSummary();
             } else {
                 //Debug.Log("SkillButton.AddSkill(): failed to get skill!!!");

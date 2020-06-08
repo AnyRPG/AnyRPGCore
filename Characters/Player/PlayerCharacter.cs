@@ -42,7 +42,7 @@ namespace AnyRPG {
             }
             if (notify) {
                 SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
-                MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.MyName);
+                MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.MyDisplayName);
             }
         }
 

@@ -33,7 +33,7 @@ namespace AnyRPG {
         public void Initalize(int slots, string title, Sprite bagIcon) {
             //Debug.Log("Bag.Initialize(" + slots + ", " + title + ")");
             this.slots = slots;
-            MyName = title;
+            MyDisplayName = title;
             if (bagIcon != null) {
                 //Debug.Log("Bag.Initialize(): loading icon from resources at: " + spriteLocation);
                 Sprite newIcon = bagIcon;

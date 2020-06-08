@@ -25,7 +25,7 @@ namespace AnyRPG {
             this.ability = ability as BaseAbility;
             icon.sprite = this.ability.MyIcon;
             icon.color = Color.white;
-            spellName.text = ability.MyName;
+            spellName.text = ability.MyDisplayName;
             description.text = ability.GetSummary();
         }
 

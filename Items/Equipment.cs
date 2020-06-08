@@ -56,6 +56,10 @@ namespace AnyRPG {
 
         [Header("Secondary Stats")]
 
+        [Tooltip("If true, the secondary stats will be chosen randomly up to a limit defined by the item quality")]
+        [SerializeField]
+        protected bool randomSecondaryStats = false;
+
         [Tooltip("When equipped, the wearer will have these secondary stats affected")]
         [SerializeField]
         protected List<ItemSecondaryStatNode> secondaryStats = new List<ItemSecondaryStatNode>();
@@ -77,6 +81,10 @@ namespace AnyRPG {
         private string equipmentSetName = string.Empty;
 
         private EquipmentSet equipmentSet = null;
+
+        private List<int> randomStatIndexes = new List<int>();
+
+        private List<ItemSecondaryStatNode> chosenSecondaryStats = new List<ItemSecondaryStatNode>();
 
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
@@ -133,7 +141,6 @@ namespace AnyRPG {
             return 0;
         }
 
-
         public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
@@ -143,7 +150,18 @@ namespace AnyRPG {
         public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
-        public List<ItemSecondaryStatNode> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
+
+        public List<ItemSecondaryStatNode> SecondaryStats {
+            get {
+                if (randomSecondaryStats == true) {
+                    return chosenSecondaryStats;
+                }
+                return secondaryStats;
+            }
+        }
+
+        public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
+        public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -184,13 +202,14 @@ namespace AnyRPG {
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
             if (!CharacterClassRequirementIsMet()) {
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyName);
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyDisplayName);
                 return false;
             }
             return true;
         }
 
         public override string GetSummary() {
+            //Debug.Log(MyName + ".Equipment.GetSummary()");
             //string stats = string.Empty;
             List<string> abilitiesList = new List<string>();
 
@@ -208,9 +227,12 @@ namespace AnyRPG {
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                abilitiesList.Add(string.Format(" +{0} {1}",
-                    GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter),
-                    itemPrimaryStatNode.StatName));
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter);
+                if (primaryStatModifier > 0f) {
+                    abilitiesList.Add(string.Format(" +{0} {1}",
+                        primaryStatModifier,
+                        itemPrimaryStatNode.StatName));
+                }
             }
 
             // secondary stats
@@ -222,21 +244,21 @@ namespace AnyRPG {
 
             // abilities
             if (onEquipAbility != null) {
-                abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyName));
+                abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyDisplayName));
             }
             foreach (BaseAbility learnedAbility in MyLearnedAbilities) {
-                abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.MyName));
+                abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.MyDisplayName));
             }
 
             if (equipmentSet != null) {
                 int equipmentCount = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
-                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyName, equipmentCount, equipmentSet.MyEquipmentList.Count));
+                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyDisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.MyName)) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.MyDisplayName)) {
                         colorName = "yellow";
                     }
-                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.MyName));
+                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.MyDisplayName));
                 }
                 abilitiesList.Add(string.Format(""));
                 for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
@@ -264,7 +286,7 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -275,7 +297,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -287,10 +309,10 @@ namespace AnyRPG {
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
             }
 
             equipmentSet = null;
@@ -299,7 +321,7 @@ namespace AnyRPG {
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -317,11 +339,41 @@ namespace AnyRPG {
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
 
+        }
+
+        public override void InitializeNewItem() {
+            base.InitializeNewItem();
+
+            if (randomSecondaryStats == false) {
+                return;
+            }
+            if (realItemQuality == null) {
+                return;
+            }
+            if (realItemQuality.RandomStatCount == 0) {
+                return;
+            }
+            // get the max number, and cycling through the list and adding them to our current list and index
+            int maxCount = Mathf.Min(secondaryStats.Count, realItemQuality.RandomStatCount);
+            while (RandomStatIndexes.Count < maxCount) {
+                int randomNumber = UnityEngine.Random.Range(0, secondaryStats.Count);
+                if (!RandomStatIndexes.Contains(randomNumber)) {
+                    RandomStatIndexes.Add(randomNumber);
+                }
+            }
+            InitializeRandomStatsFromIndex();
+        }
+
+        public void InitializeRandomStatsFromIndex() {
+            chosenSecondaryStats.Clear();
+            foreach (int randomIndex in RandomStatIndexes) {
+                chosenSecondaryStats.Add(secondaryStats[randomIndex]);
+            }
         }
 
     }

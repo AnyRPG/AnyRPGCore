@@ -25,7 +25,7 @@ namespace AnyRPG {
             this.faction = newFaction;
             icon.sprite = this.faction.MyIcon;
             icon.color = Color.white;
-            factionName.text = faction.MyName;
+            factionName.text = faction.MyDisplayName;
             //description.text = this.faction.GetSummary();
             description.text = faction.GetExtendedSummary(faction);
 

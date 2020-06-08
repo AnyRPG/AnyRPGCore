@@ -25,7 +25,7 @@ namespace AnyRPG {
             this.rawResource = quest;
             icon.sprite = this.rawResource.MyIcon;
             icon.color = Color.white;
-            resourceNameField.text = this.rawResource.MyName;
+            resourceNameField.text = this.rawResource.MyDisplayName;
             descriptionField.text = this.rawResource.GetSummary();
         }
 

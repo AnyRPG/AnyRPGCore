@@ -166,7 +166,7 @@ namespace AnyRPG {
                                 qs.MyQuest = quest;
                                 qs.MyQuestGiver = (_interactable as QuestGiver);
 
-                                displayText += quest.MyName;
+                                displayText += quest.MyDisplayName;
 
                                 qs.MyText.text = displayText;
 
@@ -176,7 +176,7 @@ namespace AnyRPG {
                                 questScripts.Add(qs);
                                 if (quest.IsComplete && !quest.TurnedIn) {
                                     go.transform.SetParent(completeQuestArea.transform);
-                                } else if (!quest.IsComplete && QuestLog.MyInstance.HasQuest(quest.MyName) == false) {
+                                } else if (!quest.IsComplete && QuestLog.MyInstance.HasQuest(quest.MyDisplayName) == false) {
                                     go.transform.SetParent(availableQuestArea.transform);
                                 }
 
@@ -187,7 +187,7 @@ namespace AnyRPG {
                 } else {
                     // this block used to be outside the else statement, but for now we don't want quests to show as an interaction option because they are handled separately above
                     // handle generic stuff
-                    if (_interactable.MyName != null && _interactable.MyName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
+                    if (_interactable.MyDisplayName != null && _interactable.MyDisplayName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
                         GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
                         InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
@@ -293,7 +293,7 @@ namespace AnyRPG {
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
             if (PopupWindowManager.MyInstance != null) {
-                PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.MyName);
+                PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.MyDisplayName);
             }
 
             ShowInteractables();

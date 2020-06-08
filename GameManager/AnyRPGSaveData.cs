@@ -129,7 +129,11 @@ namespace AnyRPG {
     public struct InventorySlotSaveData {
 
         public string MyName;
+        public string DisplayName;
+        public string itemQuality;
+
         public int stackCount;
+        public List<int> randomSecondaryStatIndexes;
     }
 
     [Serializable]
@@ -168,7 +172,10 @@ namespace AnyRPG {
     public struct EquipmentSaveData {
 
         public string MyName;
+        public string DisplayName;
+        public string itemQuality;
 
+        public List<int> randomSecondaryStatIndexes;
     }
 
     [Serializable]

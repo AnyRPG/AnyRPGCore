@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
         }
 
-        public string MyName { get => optionName; }
+        public string MyDisplayName { get => optionName; }
 
         private void Awake() {
         }

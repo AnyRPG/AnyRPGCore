@@ -21,7 +21,7 @@ namespace AnyRPG {
         public void SetQuest(Quest newQuest) {
             if (newQuest != null) {
                 quest = newQuest;
-                MyText.text = quest.MyName;
+                MyText.text = quest.MyDisplayName;
                 IsComplete();
             }
         }
@@ -47,10 +47,10 @@ namespace AnyRPG {
             if (quest.IsComplete && !markedComplete) {
                 markedComplete = true;
                 //Debug.Log("the quest is complete");
-                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyName + " (Complete)";
+                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyDisplayName + " (Complete)";
             } else if (!quest.IsComplete) {
                 markedComplete = false;
-                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyName;
+                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyDisplayName;
             }
             MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
         }

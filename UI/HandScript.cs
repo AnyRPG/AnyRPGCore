@@ -104,7 +104,7 @@ public class HandScript : MonoBehaviour {
                 }
             }
         }
-        CombatLogUI.MyInstance.WriteSystemMessage("Destroyed " + MyMoveable.MyName);
+        CombatLogUI.MyInstance.WriteSystemMessage("Destroyed " + MyMoveable.MyDisplayName);
         Drop();
         // done in drop... ?
         //InventoryManager.MyInstance.FromSlot = null;

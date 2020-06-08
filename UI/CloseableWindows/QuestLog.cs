@@ -121,7 +121,7 @@ namespace AnyRPG {
             quest.AcceptQuest(false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             quest.CheckCompletion(true, false);
-            string keyName = SystemResourceManager.prepareStringForMatch(quest.MyName);
+            string keyName = SystemResourceManager.prepareStringForMatch(quest.MyDisplayName);
             quests[keyName] = quest;
 
             // just in case one quest was complete but not turned in
@@ -137,7 +137,7 @@ namespace AnyRPG {
             // AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
             if (newQuest != null && (newQuest.TurnedIn == false || newQuest.MyRepeatableQuest == true)) {
                 // add first, then use acceptquest because it needs to be in the log for the accepquest completion check to pass
-                string keyName = SystemResourceManager.prepareStringForMatch(newQuest.MyName);
+                string keyName = SystemResourceManager.prepareStringForMatch(newQuest.MyDisplayName);
                 quests[keyName] = newQuest;
                 newQuest.AcceptQuest();
                 //CheckCompletion();
@@ -171,7 +171,7 @@ namespace AnyRPG {
 
         public void RemoveQuest(Quest oldQuest) {
             //Debug.Log("QuestLog.RemoveQuest()");
-            string keyName = SystemResourceManager.prepareStringForMatch(oldQuest.MyName);
+            string keyName = SystemResourceManager.prepareStringForMatch(oldQuest.MyDisplayName);
             if (quests.ContainsKey(keyName)) {
                 quests.Remove(keyName);
             }

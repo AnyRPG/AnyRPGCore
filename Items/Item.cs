@@ -1,4 +1,6 @@
 using AnyRPG;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -19,6 +21,10 @@ namespace AnyRPG {
         [Tooltip("The name of the item quality to use")]
         [SerializeField]
         protected string itemQuality = string.Empty;
+
+        [Tooltip("If true, a random item quality will be selected")]
+        [SerializeField]
+        protected bool randomItemQuality = false;
 
         [Header("Item Level")]
 
@@ -141,6 +147,7 @@ namespace AnyRPG {
         }
 
         public List<CharacterClass> MyCharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
+        public bool RandomItemQuality { get => randomItemQuality; set => randomItemQuality = value; }
 
         public virtual void Awake() {
         }
@@ -148,7 +155,7 @@ namespace AnyRPG {
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
             if (!CharacterClassRequirementIsMet()) {
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyName);
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyDisplayName);
                 return false;
             }
 
@@ -188,12 +195,13 @@ namespace AnyRPG {
 
         public override string GetDescription() {
             //Debug.Log(MyName + ".Item.GetDescription()");
-            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), MyName, GetSummary());
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), MyDisplayName, GetSummary());
             //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
         
         public override string GetSummary() {
+            //Debug.Log(MyDisplayName + ".Item.GetSummary()");
             //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
@@ -211,6 +219,55 @@ namespace AnyRPG {
             return string.Format("{0}", summaryString);
         }
 
+        public virtual void InitializeNewItem() {
+            //Debug.Log(MyDisplayName + ".Item.InitializeNewItem()");
+
+            // choose the random item quality
+            if (randomItemQuality == true) {
+                // get number of item qualities that are valid for random item quality creation
+                List<ItemQuality> validItemQualities = new List<ItemQuality>();
+                foreach (ItemQuality itemQuality in SystemItemQualityManager.MyInstance.GetResourceList()) {
+                    if (itemQuality.AllowRandomItems) {
+                        validItemQualities.Add(itemQuality);
+                    }
+                }
+                if (validItemQualities.Count > 0) {
+                    Debug.Log(MyName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
+
+                    int usedIndex = 0;
+
+                    int sum_of_weight = 0;
+
+                    int accumulatedWeight = 0;
+
+                    for (int i = 0; i < validItemQualities.Count; i++) {
+                        sum_of_weight += validItemQualities[i].RandomWeight;
+                    }
+                    Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                    int rnd = UnityEngine.Random.Range(0, sum_of_weight);
+                    Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                    for (int i = 0; i < validItemQualities.Count; i++) {
+                        Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                        accumulatedWeight += validItemQualities[i].RandomWeight;
+                        if (rnd < accumulatedWeight) {
+                            usedIndex = i;
+                            Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                            break;
+                        }
+                        //rnd -= validItemQualities[i].RandomWeight;
+                    }
+
+                    realItemQuality = validItemQualities[usedIndex];
+
+                    if (realItemQuality.RandomQualityPrefix != null && realItemQuality.RandomQualityPrefix != string.Empty) {
+                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + realItemQuality.RandomQualityPrefix + " " + MyDisplayName);
+                        displayName = realItemQuality.RandomQualityPrefix + " " + MyDisplayName;
+                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + displayName);
+                    }
+                }
+            }
+        }
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             currency = null;
@@ -219,7 +276,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -229,7 +286,7 @@ namespace AnyRPG {
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -240,7 +297,7 @@ namespace AnyRPG {
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

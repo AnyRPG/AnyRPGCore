@@ -16,7 +16,7 @@ namespace AnyRPG {
 
         public Sprite MyIcon { get => faction.MyIcon; }
 
-        public string MyName { get => faction.MyName; }
+        public string MyDisplayName { get => faction.MyDisplayName; }
 
         public string GetDescription() {
             return faction.GetDescription(); ;
@@ -33,7 +33,7 @@ namespace AnyRPG {
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("FactionNode.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing quest " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("FactionNode.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing quest " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

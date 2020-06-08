@@ -41,7 +41,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
             characterClass = newCharacterClass;
             characterClassButton.AddCharacterClass(characterClass);
-            PopupWindowManager.MyInstance.classChangeWindow.SetWindowTitle(characterClass.MyName);
+            PopupWindowManager.MyInstance.classChangeWindow.SetWindowTitle(characterClass.MyDisplayName);
             ShowAbilityRewards();
             ShowTraitRewards();
             PopupWindowManager.MyInstance.classChangeWindow.OpenWindow();

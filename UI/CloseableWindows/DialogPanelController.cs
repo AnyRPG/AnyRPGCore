@@ -168,7 +168,7 @@ namespace AnyRPG {
             acceptQuestButton.SetActive(false);
             continueButton.SetActive(true);
             dialogIndex = 0;
-            PopupWindowManager.MyInstance.dialogWindow.SetWindowTitle(interactable.MyName);
+            PopupWindowManager.MyInstance.dialogWindow.SetWindowTitle(interactable.MyDisplayName);
 
             // this one last because it does a layout rebuild
             DisplayNodeText();

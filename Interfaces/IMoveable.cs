@@ -5,6 +5,6 @@ namespace AnyRPG {
 public interface IMoveable{
 
     Sprite MyIcon { get; }
-    string MyName { get; }
+    string MyDisplayName { get; }
 }
 }

@@ -71,7 +71,7 @@ namespace AnyRPG {
         public void LearnSkill(Skill newSkill) {
             //Debug.Log("CharacterSkillManager.LearnSkill(" + skill.name + ")");
             if (!skillList.ContainsValue(newSkill)) {
-                skillList[SystemResourceManager.prepareStringForMatch(newSkill.MyName)] = newSkill;
+                skillList[SystemResourceManager.prepareStringForMatch(newSkill.MyDisplayName)] = newSkill;
                 foreach (BaseAbility ability in newSkill.MyAbilityList) {
                     MyBaseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
@@ -90,7 +90,7 @@ namespace AnyRPG {
 
         public void UnlearnSkill(Skill oldSkill) {
             if (skillList.ContainsValue(oldSkill)) {
-                skillList.Remove(SystemResourceManager.prepareStringForMatch(oldSkill.MyName));
+                skillList.Remove(SystemResourceManager.prepareStringForMatch(oldSkill.MyDisplayName));
                 foreach (BaseAbility ability in oldSkill.MyAbilityList) {
                     MyBaseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
                 }

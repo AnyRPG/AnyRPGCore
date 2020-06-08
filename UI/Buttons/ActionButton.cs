@@ -283,7 +283,7 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(IAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
-            while (Useable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName))) {
+            while (Useable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyDisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyDisplayName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
@@ -421,7 +421,7 @@ namespace AnyRPG {
                 }
 
 
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.MyName)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyDisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.MyDisplayName)) {
                     //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
                     coolDownIcon.enabled = true;
                     if (coolDownIcon.sprite != MyIcon.sprite) {
@@ -435,9 +435,9 @@ namespace AnyRPG {
                     //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
                     float abilityCoolDown = 0f;
                     float initialCoolDown = 0f;
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyName)) {
-                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).MyName].MyRemainingCoolDown;
-                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).MyName].MyInitialCoolDown;
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).MyDisplayName)) {
+                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).MyDisplayName].MyRemainingCoolDown;
+                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).MyDisplayName].MyInitialCoolDown;
                     } else {
                         initialCoolDown = (Useable as BaseAbility).abilityCoolDown;
                     }

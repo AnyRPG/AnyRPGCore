@@ -18,7 +18,23 @@ namespace AnyRPG {
         [SerializeField]
         private float statMultiplier;
 
+        [Header("Random Item Settings")]
 
+        [Tooltip("If true, random items of this quality can be created")]
+        [SerializeField]
+        private bool allowRandomItems = false;
+
+        [Tooltip("When a random item quality is chosen, all weights are added up before a random number is rolled.")]
+        [SerializeField]
+        private int randomWeight = 1;
+
+        [Tooltip("If an item of this quality is created randomly, this prefix will be appended to the item name")]
+        [SerializeField]
+        private string randomQualityPrefix = string.Empty;
+
+        [Tooltip("If an item of this quality is created with random stats, this is the number of random stats that will be chosen.")]
+        [SerializeField]
+        private int randomStatCount = 0;
 
         [Header("Item Level")]
 
@@ -58,6 +74,10 @@ namespace AnyRPG {
         public float BuyPriceMultiplier { get => buyPriceMultiplier; set => buyPriceMultiplier = value; }
         public float SellPriceMultiplier { get => sellPriceMultiplier; set => sellPriceMultiplier = value; }
         public bool TintBackgroundImage { get => tintBackgroundImage; set => tintBackgroundImage = value; }
+        public bool AllowRandomItems { get => allowRandomItems; set => allowRandomItems = value; }
+        public string RandomQualityPrefix { get => randomQualityPrefix; set => randomQualityPrefix = value; }
+        public int RandomStatCount { get => randomStatCount; set => randomStatCount = value; }
+        public int RandomWeight { get => randomWeight; set => randomWeight = value; }
     }
 
 }

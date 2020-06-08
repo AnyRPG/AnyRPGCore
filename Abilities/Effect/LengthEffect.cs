@@ -217,7 +217,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         tickAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -229,7 +229,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         completeAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -237,14 +237,14 @@ namespace AnyRPG {
             prefabProfileList = new List<PrefabProfile>();
             if (prefabNames != null) {
                 if (prefabNames.Count > 0 && prefabSpawnLocation == PrefabSpawnLocation.None) {
-                    Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + MyName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");
+                    Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");
                 }
                 foreach (string prefabName in prefabNames) {
                     PrefabProfile prefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabName);
                     if (prefabProfile != null) {
                         prefabProfileList.Add(prefabProfile);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -256,7 +256,7 @@ namespace AnyRPG {
                     if (audioProfile != null) {
                         onTickAudioProfiles.Add(audioProfile);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

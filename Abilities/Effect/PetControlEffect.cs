@@ -49,8 +49,8 @@ namespace AnyRPG {
                 List<AbilityEffect> castList = new List<AbilityEffect>();
                 foreach (AbilityEffect petEffect in realPetEffectList) {
                     //if (source.MyCharacterAbilityManager.HasAbility(petAbilityName)) {
-                        if (SystemResourceManager.MatchResource(petEffect.MyName, MyName)) {
-                            Debug.LogError(MyName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
+                        if (SystemResourceManager.MatchResource(petEffect.MyDisplayName, MyDisplayName)) {
+                            Debug.LogError(MyDisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                         } else {
                             //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                             castList.Add(petEffect);
@@ -93,7 +93,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         realPetEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

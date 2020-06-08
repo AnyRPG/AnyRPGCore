@@ -106,7 +106,7 @@ namespace AnyRPG {
                 if (qs == null) {
                     //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
                 }
-                qs.MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyName;
+                qs.MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.MyDisplayName;
                 if (quest.IsComplete) {
                     qs.MyText.text += " (Complete)";
                 }

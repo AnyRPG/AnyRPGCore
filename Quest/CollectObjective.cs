@@ -12,7 +12,7 @@ namespace AnyRPG {
         public void UpdateItemCount(Item item) {
 
             // change this with check reference to item prefab in the future
-            if (SystemResourceManager.MatchResource(MyType, item.MyName)) {
+            if (SystemResourceManager.MatchResource(MyType, item.MyDisplayName)) {
                 UpdateCompletionCount();
             }
         }

@@ -439,7 +439,7 @@ namespace AnyRPG {
         }
 
         public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + ")");
+            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyDisplayName) + ")");
             if (describable == null) {
                 HideToolTip();
                 return;

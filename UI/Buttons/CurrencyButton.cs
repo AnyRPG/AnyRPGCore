@@ -32,7 +32,7 @@ namespace AnyRPG {
             this.currency = currency as Currency;
             icon.sprite = this.currency.MyIcon;
             icon.color = Color.white;
-            currencyName.text = this.currency.MyName;
+            currencyName.text = this.currency.MyDisplayName;
             description.text = this.currency.GetSummary();
         }
 

@@ -71,15 +71,15 @@ namespace AnyRPG {
 
             // do this after the parent function so it's properly set
             foreach (UnityEngine.Object resource in rawResourceList) {
-                if ((resource as ResourceProfile).MyName == null) {
+                if ((resource as ResourceProfile).MyDisplayName == null) {
                     Debug.Log(resource.name + " had empty MyName value");
-                    (resource as ResourceProfile).MyName = resource.name;
+                    (resource as ResourceProfile).MyDisplayName = resource.name;
                 }
                 if ((resource as ResourceProfile).MyDescription == null) {
                     //Debug.Log(resource.name + " had empty description value");
                     (resource as ResourceProfile).MyDescription = string.Empty;
                 }
-                string keyName = prepareStringForMatch((resource as ResourceProfile).MyName);
+                string keyName = prepareStringForMatch((resource as ResourceProfile).MyDisplayName);
                 if (!resourceList.ContainsKey(keyName)) {
                     resourceList[keyName] = ScriptableObject.Instantiate(resource);
                 } else {

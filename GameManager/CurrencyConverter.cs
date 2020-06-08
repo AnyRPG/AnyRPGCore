@@ -14,12 +14,12 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                if (SystemResourceManager.MatchResource(currency.MyName, currencyGroup.MyBaseCurrency.MyName)) {
+                if (SystemResourceManager.MatchResource(currency.MyDisplayName, currencyGroup.MyBaseCurrency.MyDisplayName)) {
                     return currencyAmount;
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.MyName, currency.MyName)) {
+                    if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.MyDisplayName, currency.MyDisplayName)) {
                         return currencyGroupRate.MyBaseMultiple * currencyAmount;
                     }
                 }
@@ -108,7 +108,7 @@ namespace AnyRPG {
             string returnValue = string.Empty;
             Dictionary<Currency, int> tmpDict = RedistributeCurrency(currency, currencyAmount);
             foreach (KeyValuePair<Currency, int> dictEntry in tmpDict) {
-                returnValue += dictEntry.Value.ToString() + " " + dictEntry.Key.MyName + " ";
+                returnValue += dictEntry.Value.ToString() + " " + dictEntry.Key.MyDisplayName + " ";
             }
             return returnValue;
         }

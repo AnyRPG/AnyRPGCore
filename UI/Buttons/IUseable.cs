@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface IUseable {
         Sprite MyIcon { get; }
-        string MyName { get; }
+        string MyDisplayName { get; }
         bool Use();
     }
 }

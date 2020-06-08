@@ -91,7 +91,7 @@ namespace AnyRPG {
         }
 
         public bool AddItems(List<Item> newItems) {
-            if (IsEmpty || SystemResourceManager.MatchResource(newItems[0].MyName, MyItem.MyName)) {
+            if (IsEmpty || SystemResourceManager.MatchResource(newItems[0].MyDisplayName, MyItem.MyDisplayName)) {
                 int count = newItems.Count;
 
                 for (int i = 0; i < count; i++) {
@@ -299,7 +299,7 @@ namespace AnyRPG {
         }
 
         public bool StackItem(Item item) {
-            if (!IsEmpty && item.MyName == MyItem.MyName && MyItems.Count < MyItem.MyMaximumStackSize) {
+            if (!IsEmpty && item.MyDisplayName == MyItem.MyDisplayName && MyItems.Count < MyItem.MyMaximumStackSize) {
                 MyItems.Add(item);
                 UpdateSlot();
                 item.MySlot = this;
@@ -335,7 +335,7 @@ namespace AnyRPG {
                 //Debug.Log("This slot is empty, there is nothing to merge.");
                 return false;
             }
-            if (SystemResourceManager.MatchResource(from.MyItem.MyName, MyItem.MyName) && !IsFull) {
+            if (SystemResourceManager.MatchResource(from.MyItem.MyDisplayName, MyItem.MyDisplayName) && !IsFull) {
                 // how many free slots there are in the new stack
                 int free = MyItem.MyMaximumStackSize - MyCount;
                 if (free >= from.MyCount) {

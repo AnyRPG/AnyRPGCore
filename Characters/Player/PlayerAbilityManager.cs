@@ -79,7 +79,7 @@ namespace AnyRPG {
             bool returnresult = base.PerformAnimatedAbilityCheck(animatedAbility);
             if (!returnresult) {
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.MyName == null ? "null" : animatedAbility.MyName) + ". Waiting for another ability to finish.");
+                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.MyDisplayName == null ? "null" : animatedAbility.MyDisplayName) + ". Waiting for another ability to finish.");
                 }
             }
             return returnresult;
@@ -88,7 +88,7 @@ namespace AnyRPG {
         public void AbilityLearnedHandler(BaseAbility newAbility) {
             //Debug.Log("PlayerAbilityManager.AbilityLearnedHandler()");
             if (MessageFeedManager.MyInstance != null) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learned New Ability: {0}", newAbility.MyName));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learned New Ability: {0}", newAbility.MyDisplayName));
             }
         }
 
@@ -96,7 +96,7 @@ namespace AnyRPG {
             bool returnResult = base.IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext);
             if (!returnResult) {
                 if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (targetable.MyName == null ? "null" : targetable.MyName));
+                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (targetable.MyDisplayName == null ? "null" : targetable.MyDisplayName));
                 }
             }
             return returnResult;
@@ -105,7 +105,7 @@ namespace AnyRPG {
         public override bool PerformCombatCheck(IAbility ability) {
             bool returnResult = base.PerformCombatCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.MyName + " can only be cast while out of combat");
+                CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.MyDisplayName + " can only be cast while out of combat");
                 //Debug.Log("The ability " + ability.MyName + " can only be cast while out of combat");
             }
             return returnResult;
@@ -132,7 +132,7 @@ namespace AnyRPG {
         public override bool PerformLearnedCheck(IAbility ability) {
             bool returnResult = base.PerformLearnedCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.MyName + " yet");
+                CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.MyDisplayName + " yet");
                 //Debug.Log("You have not learned the ability " + ability.MyName + " yet");
                 //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
             }
@@ -142,7 +142,7 @@ namespace AnyRPG {
         public override bool PerformPowerResourceCheck(IAbility ability) {
             bool returnResult = base.PerformPowerResourceCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.MyName + " to perform " + ability.MyName + " at a cost of " + ability.GetResourceCost(this));
+                CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.MyDisplayName + " to perform " + ability.MyDisplayName + " at a cost of " + ability.GetResourceCost(this));
             }
             return returnResult;
         }

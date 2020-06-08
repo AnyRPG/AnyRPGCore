@@ -27,7 +27,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCurrencyManager.AddCurrency(" + currency.MyName + ", " + currencyAmount + ")");
             //bool foundReputation = false;
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyName);
+            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyDisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {
                 newCurrencyNode = new CurrencyNode();
                 newCurrencyNode.currency = MyCurrencyList[keyName].currency;
@@ -51,7 +51,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCurrencyManager.SpendCurrency(" + currency.MyName + ", " + currencyAmount + ")");
             //bool foundReputation = false;
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyName);
+            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyDisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {
                 if (CurrencyConverter.GetConvertedValue(currency, currencyAmount) <= GetBaseCurrencyValue(currency) ) {
                     //if (currencyAmount < MyCurrencyList[keyName].MyAmount) {
@@ -109,14 +109,14 @@ namespace AnyRPG {
                 }
                 newAmountList.Add(currencyGroup.MyBaseCurrency, baseCurrencyAmount);
                 foreach (KeyValuePair<Currency, int> newCurrencyValue in newAmountList) {
-                    if (MyCurrencyList.ContainsKey(SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyName))) {
-                        MyCurrencyList.Remove(SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyName));
+                    if (MyCurrencyList.ContainsKey(SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyDisplayName))) {
+                        MyCurrencyList.Remove(SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyDisplayName));
                     }
                     CurrencyNode newSaveData = new CurrencyNode();
                     newSaveData = new CurrencyNode();
                     newSaveData.currency = newCurrencyValue.Key;
                     newSaveData.MyAmount = newCurrencyValue.Value;
-                    MyCurrencyList[SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyName)] = newSaveData;
+                    MyCurrencyList[SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.MyDisplayName)] = newSaveData;
                 }
                 SystemEventManager.MyInstance.NotifyOnCurrencyChange();
             }
@@ -125,7 +125,7 @@ namespace AnyRPG {
         public int GetCurrencyAmount(Currency currency) {
             //Debug.Log(gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.MyName + ")");
             //bool foundReputation = false;
-            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyName);
+            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyDisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {
                 return MyCurrencyList[keyName].MyAmount;
             }

@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCompletionCount(Skill skill) {
-            if (!SystemResourceManager.MatchResource(skill.MyName, MyType)) {
+            if (!SystemResourceManager.MatchResource(skill.MyDisplayName, MyType)) {
                 // some other skill than this one was learned.  no need to check.
                 return;
             }
@@ -38,10 +38,10 @@ namespace AnyRPG {
                 quest.CheckCompletion(true, printMessages);
             }
             if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", skill.MyName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", skill.MyDisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.MyName));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.MyDisplayName));
             }
             base.UpdateCompletionCount(printMessages);
         }

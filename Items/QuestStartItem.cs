@@ -22,7 +22,7 @@ namespace AnyRPG {
                 return false;
             }
             if (MyQuests != null) {
-                if (QuestLog.MyInstance.HasQuest(MyQuests[0].MyQuest.MyName)) {
+                if (QuestLog.MyInstance.HasQuest(MyQuests[0].MyQuest.MyDisplayName)) {
                     MessageFeedManager.MyInstance.WriteMessage("You are already on that quest");
                 } else {
                     //Debug.Log("QuestStartItem.Use(): showing quests");
@@ -42,7 +42,7 @@ namespace AnyRPG {
         public bool QuestRequirementsAreMet() {
             if (MyQuests != null) {
                 foreach (QuestNode questNode in MyQuests) {
-                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyName)) {
+                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyDisplayName)) {
                         return true;
                     }
                 }
@@ -97,7 +97,7 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in quests) {
-                if (SystemResourceManager.MatchResource(questNode.MyQuest.MyName, questName)) {
+                if (SystemResourceManager.MatchResource(questNode.MyQuest.MyDisplayName, questName)) {
                     if (questNode.MyEndQuest == true) {
                         return true;
                     } else {

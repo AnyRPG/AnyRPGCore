@@ -17,7 +17,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemResourceManager.MatchResource(MyType, dialog.MyName)) {
+            if (SystemResourceManager.MatchResource(MyType, dialog.MyDisplayName)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {

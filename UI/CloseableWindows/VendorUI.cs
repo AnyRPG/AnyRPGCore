@@ -155,7 +155,7 @@ namespace AnyRPG {
             List<string> vendorCollectionNames = new List<string>();
             vendorCollectionNames.Add("Buy Back Items");
             foreach (VendorCollection vendorCollection in vendorCollections) {
-                vendorCollectionNames.Add(vendorCollection.MyName);
+                vendorCollectionNames.Add(vendorCollection.MyDisplayName);
             }
             dropdown.AddOptions(vendorCollectionNames);
             dropdown.value = dropDownIndex;

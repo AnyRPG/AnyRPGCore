@@ -55,6 +55,7 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
+            //Debug.Log("LootButton.OnPointerEnter()");
             UIManager.MyInstance.ShowToolTip(transform.position, MyLoot);
         }
 

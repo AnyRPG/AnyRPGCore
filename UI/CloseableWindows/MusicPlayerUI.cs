@@ -89,7 +89,7 @@ namespace AnyRPG {
             foreach (AudioProfile musicProfile in musicPlayer.MyMusicProfileList) {
                 GameObject go = Instantiate(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
-                qs.MyText.text = musicProfile.MyName;
+                qs.MyText.text = musicProfile.MyDisplayName;
                 qs.MyText.color = Color.white;
                 qs.SetMusicProfile(musicProfile);
                 musicPlayerHighlightButtons.Add(qs);
@@ -157,7 +157,7 @@ namespace AnyRPG {
 
             UpdateButtons(musicProfile);
 
-            musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.MyName, musicProfile.MyDescription);
+            musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.MyDisplayName, musicProfile.MyDescription);
             if (musicProfile.MyArtistName != null && musicProfile.MyArtistName != string.Empty) {
                 musicDescription.text += string.Format("\n\n<size=20><b>Author:</b></size> {0}\n\n", musicProfile.MyArtistName);
             }

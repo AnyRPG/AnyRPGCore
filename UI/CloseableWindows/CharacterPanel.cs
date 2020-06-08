@@ -208,8 +208,8 @@ namespace AnyRPG {
             }
             string updateString = string.Empty;
             updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.CharacterName + "\n";
-            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.MyName) + "\n";
-            updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyName) + "\n";
+            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.MyDisplayName) + "\n";
+            updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyDisplayName) + "\n";
             updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
             updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
 
@@ -226,7 +226,7 @@ namespace AnyRPG {
 
             updateString += "\n";
 
-            updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+            updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyDisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
 
             updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
             /*

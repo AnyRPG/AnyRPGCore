@@ -20,15 +20,15 @@ public class UseInteractableObjective : QuestObjective {
 
     public void CheckInteractionComplete(Interactable interactable) {
         //Debug.Log("UseInteractableObjective.CheckInteractableName()");
-        CheckInteractableName(interactable.MyName, true);
+        CheckInteractableName(interactable.MyDisplayName, true);
     }
 
     public void CheckInteractionComplete(InteractableOption interactable) {
-        CheckInteractableName(interactable.MyName, true);
+        CheckInteractableName(interactable.MyDisplayName, true);
     }
 
     public void CheckInteractionStart(InteractableOption interactable) {
-        CheckInteractableName(interactable.MyName, false);
+        CheckInteractableName(interactable.MyDisplayName, false);
     }
 
     public void CheckInteractableName(string interactableName, bool interactionComplete) {

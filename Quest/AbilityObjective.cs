@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         // for learning
         public void UpdateCompletionCount() {
-            Debug.Log("AbilityObjective.UpdateCompletionCount(" + (baseAbility == null ? "null" : baseAbility.MyName) + ")");
+            Debug.Log("AbilityObjective.UpdateCompletionCount(" + (baseAbility == null ? "null" : baseAbility.MyDisplayName) + ")");
             bool completeBefore = IsComplete;
             if (completeBefore) {
                 return;
@@ -38,10 +38,10 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.MyName, CurrentAmount, MyAmount));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.MyDisplayName, CurrentAmount, MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.MyName));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.MyDisplayName));
                 }
         }
 
@@ -56,10 +56,10 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.MyName, CurrentAmount, MyAmount));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.MyDisplayName, CurrentAmount, MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.MyName));
+                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.MyDisplayName));
                 }
             }
         }

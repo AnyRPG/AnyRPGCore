@@ -19,7 +19,7 @@ public class Scroll : CastableItem {
     public override string GetSummary() {
         string abilityName = "Ability Not Set In Inspector!";
         if (ability != null) {
-            abilityName = ability.MyName;
+            abilityName = ability.MyDisplayName;
         }
         return string.Format("{0}\n<color=green>Use: Cast {1}</color>", base.GetSummary(), abilityName);
     }

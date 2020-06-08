@@ -80,7 +80,7 @@ namespace AnyRPG {
                 if (tmpAmbientMusicProfile != null) {
                     realAmbientMusicProfile = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -90,7 +90,7 @@ namespace AnyRPG {
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -99,7 +99,7 @@ namespace AnyRPG {
                 if (tmpCutscene != null) {
                     autoPlayCutscene = tmpCutscene;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + autoPlayCutsceneName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + autoPlayCutsceneName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -109,7 +109,7 @@ namespace AnyRPG {
                     if (tmpProfile != null) {
                         environmentStates.Add(tmpProfile);
                     } else {
-                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find environment state : " + environmentStateName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find environment state : " + environmentStateName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

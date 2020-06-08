@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface ITargetable {
 
-        string MyName { get; }
+        string MyDisplayName { get; }
         bool CanCastOnEnemy { get; }
         bool CanCastOnFriendly { get; }
         bool RequireLineOfSight { get; }

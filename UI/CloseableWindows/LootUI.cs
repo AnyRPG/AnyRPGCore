@@ -75,7 +75,7 @@ namespace AnyRPG {
                         if (pages[pageIndex][i].MyItem.MyItemQuality != null) {
                             colorString = "#" + ColorUtility.ToHtmlStringRGB(pages[pageIndex][i].MyItem.MyItemQuality.MyQualityColor);
                         }
-                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].MyItem.MyName);
+                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].MyItem.MyDisplayName);
                         // set the title
                         lootButtons[i].MyTitle.text = title;
                     }
@@ -129,7 +129,7 @@ namespace AnyRPG {
         public void TakeLoot(Item loot) {
             //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
-            LootDrop lootDrop = pages[pageIndex].Find(x => x.MyItem.MyName == loot.MyName);
+            LootDrop lootDrop = pages[pageIndex].Find(x => x.MyItem.MyDisplayName == loot.MyDisplayName);
 
             pages[pageIndex].Remove(lootDrop);
             RemoveFromDroppedItems(loot);

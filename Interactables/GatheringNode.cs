@@ -22,7 +22,7 @@ namespace AnyRPG {
                 return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
             }
         }
-        public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyName : base.MyInteractionPanelTitle); }
+        public override string MyInteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyDisplayName : base.MyInteractionPanelTitle); }
 
         /// <summary>
         /// The ability to cast in order to mine this node

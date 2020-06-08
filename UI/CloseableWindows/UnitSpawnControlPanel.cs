@@ -123,7 +123,7 @@ namespace AnyRPG {
 
             options.Add("Default");
             foreach (UnitToughness unitToughness in SystemUnitToughnessManager.MyInstance.GetResourceList()) {
-                options.Add(unitToughness.MyName);
+                options.Add(unitToughness.MyDisplayName);
             }
             toughnessDropdown.AddOptions(options);
             //toughnessDropdown.value = currentHairIndex;
@@ -143,7 +143,7 @@ namespace AnyRPG {
                 //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
                 int counter = 0;
                 foreach (TMP_Dropdown.OptionData data in toughnessDropdown.options) {
-                    if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyName) {
+                    if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyDisplayName) {
                         toughnessDropdown.value = counter;
                         break;
                     }

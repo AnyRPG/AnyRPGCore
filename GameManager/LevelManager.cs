@@ -273,9 +273,9 @@ namespace AnyRPG {
                 spawnRotationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward;
                 spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
             }
-            returnSceneName = GetActiveSceneNode().MyName;
+            returnSceneName = GetActiveSceneNode().MyDisplayName;
             UIManager.MyInstance.MyCutSceneBarController.AssignCutScene(cutscene);
-            LoadLevel(cutscene.MyLoadScene.MyName);
+            LoadLevel(cutscene.MyLoadScene.MyDisplayName);
         }
 
         public void EndCutscene(Cutscene cutscene) {

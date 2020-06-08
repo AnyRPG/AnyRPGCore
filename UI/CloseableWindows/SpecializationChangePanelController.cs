@@ -41,7 +41,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
             classSpecialization = newClassSpecialization;
             classSpecializationButton.AddClassSpecialization(classSpecialization);
-            PopupWindowManager.MyInstance.specializationChangeWindow.SetWindowTitle(classSpecialization.MyName);
+            PopupWindowManager.MyInstance.specializationChangeWindow.SetWindowTitle(classSpecialization.MyDisplayName);
             ShowAbilityRewards();
             ShowTraitRewards();
             PopupWindowManager.MyInstance.specializationChangeWindow.OpenWindow();

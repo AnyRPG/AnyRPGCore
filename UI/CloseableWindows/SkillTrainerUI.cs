@@ -91,7 +91,7 @@ namespace AnyRPG {
                 if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     GameObject go = Instantiate(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
-                    qs.MyText.text = skill.MyName;
+                    qs.MyText.text = skill.MyDisplayName;
                     qs.MyText.color = Color.white;
                     qs.SetSkill(skill);
                     skillScripts.Add(qs);
@@ -166,7 +166,7 @@ namespace AnyRPG {
             UpdateButtons(describeSkill);
 
 
-            skillDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", currentSkill.MyName, currentSkill.MyDescription);
+            skillDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", currentSkill.MyDisplayName, currentSkill.MyDescription);
 
             skillDescription.text += "\n\n<size=20><b>Abilities Learned:</b></size>\n\n";
 

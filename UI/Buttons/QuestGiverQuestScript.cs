@@ -63,10 +63,10 @@ public class QuestGiverQuestScript : MonoBehaviour
         if (MyQuest.IsComplete && !markedComplete) {
             markedComplete = true;
             //Debug.Log("the quest is complete");
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyName + " (Complete)";
+            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyDisplayName + " (Complete)";
         } else if (!MyQuest.IsComplete) {
             markedComplete = false;
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyName;
+            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyDisplayName;
         }
         MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
     }

@@ -48,7 +48,7 @@ namespace AnyRPG {
         public Image Icon { get => icon; set => icon = value; }
 
         public Sprite MyIcon { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.MyIcon : null); }
-        public string MyName { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.MyName : null); }
+        public string MyDisplayName { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.MyDisplayName : null); }
 
         public void OnAddBag(Bag bag) {
             //Debug.Log("BagButton.OnAddBag: setting icon: " + bag.MyIcon.name);

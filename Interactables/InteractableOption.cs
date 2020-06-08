@@ -61,7 +61,7 @@ namespace AnyRPG {
         public virtual Sprite MyIcon { get => interactionPanelImage; }
         public virtual Sprite MyNamePlateImage { get => namePlateImage; }
 
-        public string MyName { get => (MyInteractionPanelTitle != null && MyInteractionPanelTitle != string.Empty ? MyInteractionPanelTitle : (interactable != null ? interactable.MyName : "interactable is null!")); }
+        public string MyDisplayName { get => (MyInteractionPanelTitle != null && MyInteractionPanelTitle != string.Empty ? MyInteractionPanelTitle : (interactable != null ? interactable.MyDisplayName : "interactable is null!")); }
         public UnitAudioController UnitAudio { get => unitAudio; set => unitAudio = value; }
 
         protected virtual void Awake() {
@@ -151,7 +151,7 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
-            return string.Format("{0}", MyName);
+            return string.Format("{0}", MyDisplayName);
         }
 
         public virtual void OnDisable() {

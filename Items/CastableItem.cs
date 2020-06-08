@@ -16,7 +16,7 @@ namespace AnyRPG {
         public override bool Use() {
             //Debug.Log("CastableItem.Use()");
             if (ability == null) {
-                Debug.LogError(MyName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");
+                Debug.LogError(MyDisplayName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");
                 return false;
             }
             bool returnValue = base.Use();
@@ -45,7 +45,7 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }
