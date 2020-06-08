@@ -142,6 +142,10 @@ namespace AnyRPG {
 
         [Header("Cast Time")]
 
+        [Tooltip("If true, after the cast time is calculated, it is affected by the Speed secondary stat.")]
+        [SerializeField]
+        protected bool useSpeedMultipliers = true;
+
         [Tooltip("If true, the cast time is based on the time of the animation played while casting.")]
         [SerializeField]
         protected bool useAnimationCastTime = true;
@@ -217,9 +221,6 @@ namespace AnyRPG {
         [SerializeField]
         protected int maxRange;
 
-        // this will be set to the ability casting length only for direct cast abilities
-        protected float castTimeMultiplier = 1f;
-
         [Header("Cast Complete Ability Effects")]
 
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
@@ -249,7 +250,19 @@ namespace AnyRPG {
         public bool MyAutoLearn { get => autoLearn; }
         public bool MyAutoAddToBars { get => autoAddToBars; }
         public bool MyUseableWithoutLearning { get => useableWithoutLearning; }
-        public virtual float MyAbilityCastingTime {
+
+
+        public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
+            if (useSpeedMultipliers) {
+                return BaseAbilityCastingTime * abilityCaster.GetSpeed();
+            }
+            return BaseAbilityCastingTime;
+        }
+
+        /// <summary>
+        /// return the casting time of the ability without any speed modifiers applied
+        /// </summary>
+        public virtual float BaseAbilityCastingTime {
             get {
                 if (useAnimationCastTime == false) {
                     return abilityCastingTime;
@@ -294,6 +307,7 @@ namespace AnyRPG {
         public float SpendDelay { get => spendDelay; set => spendDelay = value; }
         public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
+        public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -327,7 +341,7 @@ namespace AnyRPG {
                 costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager) + " " + powerResource.MyName;
             }
 
-            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", MyAbilityCastingTime.ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
+            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager).ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
         }
 
         public virtual float GetResourceCost(IAbilityCaster abilityCaster) {
@@ -425,7 +439,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessGCDManual(IAbilityCaster sourceCharacter, float usedCoolDown = 0f) {
-            if (CanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && MyAbilityCastingTime == 0f) {
+            if (CanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && GetAbilityCastingTime(sourceCharacter) == 0f) {
                 sourceCharacter.InitiateGlobalCooldown(usedCoolDown);
             } else {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
@@ -544,8 +558,7 @@ namespace AnyRPG {
                 AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
                 abilityEffectOutput.groundTargetLocation = abilityEffectContext.groundTargetLocation;
                 abilityEffectOutput.baseAbility = abilityEffectContext.baseAbility;
-
-                abilityEffectOutput.castTimeMultipler = castTimeMultiplier;
+                abilityEffectOutput.castTimeMultiplier = abilityEffectContext.castTimeMultiplier;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyName);
                 if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
@@ -618,14 +631,14 @@ namespace AnyRPG {
             //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
-        public virtual float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
-            if (currentCastTime >= nextTickTime) {
+            if (currentCastPercent >= nextTickPercent) {
                 PerformChanneledEffect(source, target, abilityEffectContext);
-                nextTickTime += tickRate;
+                nextTickPercent += (tickRate / BaseAbilityCastingTime);
             }
-            return nextTickTime;
+            return nextTickPercent;
         }
 
         public void NotifyOnLearn() {

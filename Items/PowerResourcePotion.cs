@@ -24,7 +24,7 @@ namespace AnyRPG {
                 }
                 return returnValue;
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.name + " is already full!");
+                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.MyName + " is already full!");
                 return false;
             }
         }

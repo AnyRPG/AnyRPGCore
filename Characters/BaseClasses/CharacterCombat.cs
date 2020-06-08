@@ -409,7 +409,7 @@ namespace AnyRPG {
 
         public bool DidAttackMiss() {
             int randomNumber = UnityEngine.Random.Range(0, 100);
-            int randomCutoff = (int)(100 * baseCharacter.CharacterStats.GetAccuracyModifiers());
+            int randomCutoff = (int)Mathf.Clamp(baseCharacter.CharacterStats.GetAccuracyModifiers(), 0, 100);
             //Debug.Log(gameObject.name + ".CharacterCombat.DidAttackMiss(): number: " + randomNumber + "; accuracy = " + randomCutoff);
             if (randomNumber >= randomCutoff) {
                 return true;
@@ -444,7 +444,7 @@ namespace AnyRPG {
                 // replace with hitbox check
                 bool canPerformAbility = true;
                 if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
-                    damage -= (int)baseCharacter.CharacterStats.Armor;
+                    damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.UseMeleeRange) {

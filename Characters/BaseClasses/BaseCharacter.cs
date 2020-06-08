@@ -266,10 +266,13 @@ namespace AnyRPG {
                 CharacterClass oldCharacterClass = characterClass;
                 characterClass = newCharacterClass;
                 characterStats.SetCharacterClass(newCharacterClass);
-                characterStats.SetLevel(characterStats.Level);
+                // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                 if (notify) {
                     OnClassChange(newCharacterClass, oldCharacterClass);
                 }
+
+                // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
+                characterStats.SetLevel(characterStats.Level);
             }
         }
 

@@ -1155,11 +1155,11 @@ namespace AnyRPG {
 
             float speedNormalizedAnimationLength = 1f;
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
-                speedNormalizedAnimationLength = characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() * animationLength;
+                speedNormalizedAnimationLength = (1f / (characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() / 100f)) * animationLength;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
             }
             if (ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", 1f / characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers());
+                animator.SetFloat("AnimationSpeed", (characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() / 100f));
             }
 
             // wait for the animation to play before allowing the character to attack again
@@ -1199,8 +1199,10 @@ namespace AnyRPG {
             } else {
                 characterUnit.SetUseRootMotion(false);
             }
-            if (baseAbility.MyAbilityCastingTime > 0f) {
-                SetCasting(true);
+
+
+            if (baseAbility.GetAbilityCastingTime(characterUnit.MyBaseCharacter.CharacterAbilityManager) > 0f) {
+                SetCasting(true, true, (baseAbility.UseSpeedMultipliers == true ? (characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() ability was instant cast, not setting casting variable");
             }
@@ -1367,10 +1369,13 @@ namespace AnyRPG {
             SetBool("Stunned", false);
         }
 
-        public virtual void SetCasting(bool varValue, bool swapAnimator = true) {
+        public virtual void SetCasting(bool varValue, bool swapAnimator = true, float castingSpeed = 1f) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
             if (animator == null) {
                 return;
+            }
+            if (ParameterExists("AnimationSpeed")) {
+                animator.SetFloat("AnimationSpeed", castingSpeed);
             }
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterAbilityManager != null) {
                 characterUnit.MyCharacter.CharacterAbilityManager.IsCasting = varValue;
@@ -1396,7 +1401,7 @@ namespace AnyRPG {
             if (varValue == true) {
                 float animationSpeed = 1f;
                 if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
-                    animationSpeed = 1f / characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers();
+                    animationSpeed = 1f / (characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() / 100f);
                 }
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to: " + animationSpeed);
                 //animator.SetFloat("AnimationSpeed", animationSpeed);

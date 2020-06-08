@@ -22,11 +22,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool useWeaponHitSound = false;
 
-        public override float MyAbilityCastingTime {
-            get {
-                return 0f;
-            }
-            set => abilityCastingTime = value;
+        public override float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
+            return 0f;
         }
 
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }

@@ -72,7 +72,7 @@ namespace AnyRPG {
         public bool MyUseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
         public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
 
-        public float MyDamagePerSecond() {
+        public float GetDamagePerSecond(int characterLevel) {
             if (!MyUseDamagePerSecond) {
                 return 0f;
             }
@@ -80,7 +80,7 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber() * MyEquipmentSlotType.MyStatWeight),
+                (float)GetItemLevel(characterLevel) * (SystemConfigurationManager.MyInstance.MyWeaponDPSBudgetPerLevel * GetItemQualityNumber() * MyEquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
@@ -91,7 +91,7 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             if (useDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", MyDamagePerSecond()));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)));
             }
             if (onHitEffect != null) {
                 abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitEffect.MyName));

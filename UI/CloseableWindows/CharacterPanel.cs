@@ -225,24 +225,70 @@ namespace AnyRPG {
             }
 
             updateString += "\n";
-            updateString += "Health: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n";
 
             updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
 
-            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Armor + "\n";
-            updateString += "Damage: " + (LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage != 0f) {
-                updateString += " ( " + LevelEquations.GetPhysicalPowerForCharacter(PlayerManager.MyInstance.MyCharacter) + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.PhysicalDamage + "</color> )";
-            }
+            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
             /*
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage != PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage + " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyMeleeDamage - PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyBaseMeleeDamage) + "</color> )";
+            updateString += "Armor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {
+                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].GetAddValue() + "</color> )";
             }
             */
+
+            updateString += "Physical Power: " +
+                (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue +
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue ||
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                updateString += " ( " +
+                    (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    " + <color=green>" +
+                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    "</color> )";
+            }
             updateString += "\n";
-            updateString += "SpellPower: " + LevelEquations.GetSpellPowerForCharacter(PlayerManager.MyInstance.MyCharacter);
+
+            updateString += "SpellPower: " +
+                (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue +
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue ||
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                updateString += " ( " +
+                    (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    " + <color=green>" +
+                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    "</color> )";
+            }
             updateString += "\n";
-            updateString += "Critical Hit Chance: " + LevelEquations.GetCritChanceForCharacter(PlayerManager.MyInstance.MyCharacter) + "%\n\n";
+
+            updateString += "Critical Hit Chance: " +
+                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue + "%";
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) {
+                updateString += " ( " +
+                    PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue +
+                    " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) + "</color> )";
+            }
+            updateString += "\n";
+
+            updateString += "Accuracy: " +
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, PlayerManager.MyInstance.MyCharacter) +"%";
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
+                updateString += " ( " +
+                    PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
+                    " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) + "</color> )";
+            }
+            updateString += "\n";
+
+            updateString += "Attack/Casting Speed: " +
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, PlayerManager.MyInstance.MyCharacter) + "%";
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
+                updateString += " ( " +
+                    PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
+                    " + <color=green>" + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) + "</color> )";
+            }
+            updateString += "\n";
+
             updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.RunSpeed, 0, PlayerManager.MyInstance.MyMaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
@@ -311,7 +357,7 @@ namespace AnyRPG {
             CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (characterEquipmentManager != null) {
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
-                    characterEquipmentManager.MyCurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment;
+                    characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
                     characterEquipmentManager.EquipCharacter();
                 }
             }

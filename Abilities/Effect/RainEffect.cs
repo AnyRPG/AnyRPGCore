@@ -45,7 +45,7 @@ namespace AnyRPG {
 
                 validTargetNode.abilityEffectInput.overrideDuration = abilityEffectInput.overrideDuration;
                 validTargetNode.abilityEffectInput.savedEffect = abilityEffectInput.savedEffect;
-                validTargetNode.abilityEffectInput.castTimeMultipler = abilityEffectInput.castTimeMultipler;
+                validTargetNode.abilityEffectInput.castTimeMultiplier = abilityEffectInput.castTimeMultiplier;
                 validTargetNode.abilityEffectInput.spellDamageMultiplier = abilityEffectInput.spellDamageMultiplier;
                 //validTargetNode.abilityEffectInput.prefabLocation = abilityEffectInput.prefabLocation;
                 //validTargetNode.abilityEffectInput = abilityEffectInput;

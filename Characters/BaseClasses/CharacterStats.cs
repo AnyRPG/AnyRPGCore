@@ -52,12 +52,6 @@ namespace AnyRPG {
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
 
-        // hitbox is now a function of character unit collider height
-        //private float hitBox = 1.5f;
-
-        protected Stat meleeDamageModifiers = new Stat("MeleeDamageModifiers");
-        protected Stat armorModifiers = new Stat("ArmorModifiers");
-
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter;
 
@@ -67,8 +61,6 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public float PhysicalDamage { get => meleeDamageModifiers.GetValue(); }
-        public float Armor { get => armorModifiers.GetValue(); }
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
@@ -181,6 +173,12 @@ namespace AnyRPG {
         }
 
         public virtual void CalculateSecondaryStats() {
+            // update base values
+            foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
+                secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, baseCharacter);
+            }
+
+            // calculate values that include base values plus modifiers
             foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
                 CalculateSecondaryStat(secondaryStatType);
             }
@@ -270,6 +268,10 @@ namespace AnyRPG {
                 secondaryStats.Add(secondaryStatType, new Stat(secondaryStatType.ToString()));
             }
 
+            // accuracy and speed are percentages so they need 100 as their base value
+            secondaryStats[SecondaryStatType.Accuracy].DefaultAddValue = 100;
+            secondaryStats[SecondaryStatType.Speed].DefaultAddValue = 100;
+
             // movement speed is a special case for now and needs to be passed onto thiry party controllers
             secondaryStats[SecondaryStatType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
@@ -342,18 +344,24 @@ namespace AnyRPG {
             HandleStatUpdateCommon(statName);
         }
 
-        void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
-
+        private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem, bool recalculate = true) {
             if (newItem != null) {
-                armorModifiers.AddModifier(newItem.MyArmorModifier);
-                meleeDamageModifiers.AddModifier(newItem.MyDamageModifier);
 
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
                     if (primaryStats.ContainsKey(itemPrimaryStatNode.StatName)) {
                         primaryStats[itemPrimaryStatNode.StatName].AddModifier(newItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
                     }
                 }
+
+                // armor is special because it can come from a base value and from secondary stats
+                // here we add the base value
+                secondaryStats[SecondaryStatType.Armor].AddModifier(newItem.GetArmorModifier(Level));
+
+                foreach (ItemSecondaryStatNode itemSecondaryStatNode in newItem.SecondaryStats) {
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddModifier(newItem.GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, Level));
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].AddMultiplyModifier(newItem.GetSecondaryStatMultiplyModifier(itemSecondaryStatNode.SecondaryStat));
+                }
+
             }
 
             // theres a bug here ?
@@ -362,18 +370,33 @@ namespace AnyRPG {
             // to fix this, we need to recalculate the modifiers for equipment, every time you level up
 
             if (oldItem != null) {
-                armorModifiers.RemoveModifier(oldItem.MyArmorModifier);
-                meleeDamageModifiers.RemoveModifier(oldItem.MyDamageModifier);
+                secondaryStats[SecondaryStatType.Armor].RemoveModifier(oldItem.GetArmorModifier(Level));
+
+                foreach (ItemSecondaryStatNode itemSecondaryStatNode in oldItem.SecondaryStats) {
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveModifier(oldItem.GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, Level));
+                    secondaryStats[itemSecondaryStatNode.SecondaryStat].RemoveMultiplyModifier(oldItem.GetSecondaryStatMultiplyModifier(itemSecondaryStatNode.SecondaryStat));
+                }
+
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in oldItem.PrimaryStats) {
                     primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
                 }
             }
 
-            CalculatePrimaryStats();
+            if (recalculate == true) {
+                CalculatePrimaryStats();
 
-            foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
-                ResourceAmountChangedNotificationHandler(_powerResource);
+                foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
+                    ResourceAmountChangedNotificationHandler(_powerResource);
+                }
             }
+        }
+
+        private void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
+            //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+
+            CalculateEquipmentChanged(newItem, oldItem);
+
+            
         }
 
         public virtual void CalculateStat(string statName) {
@@ -383,6 +406,8 @@ namespace AnyRPG {
         }
 
         public virtual void CalculateSecondaryStat(SecondaryStatType secondaryStatType) {
+            //Debug.Log(gameObject.name + ".CharacterStats.CalculateSecondaryStat(" + secondaryStatType.ToString() + ")");
+
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 secondaryStats[secondaryStatType].CurrentValue = (int)((secondaryStats[secondaryStatType].BaseValue + GetSecondaryAddModifiers(secondaryStatType)) * GetSecondaryMultiplyModifiers(secondaryStatType));
             }
@@ -397,7 +422,7 @@ namespace AnyRPG {
                 }
             }
             if (secondaryStats.ContainsKey(secondaryStatType)) {
-                returnValue += secondaryStats[secondaryStatType].GetValue();
+                returnValue += secondaryStats[secondaryStatType].GetAddValue();
             }
             return returnValue;
         }
@@ -409,6 +434,9 @@ namespace AnyRPG {
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
                 }
+            }
+            if (secondaryStats.ContainsKey(secondaryStatType)) {
+                returnValue *= secondaryStats[secondaryStatType].GetMultiplyValue();
             }
             return returnValue;
         }
@@ -471,31 +499,13 @@ namespace AnyRPG {
         }
 
         public virtual float GetSpeedModifiers() {
-            //Debug.Log("CharacterStats.GetDamageModifiers()");
-            float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MySpeedMultiplier != 1) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MySpeedMultiplier;
-                }
-            }
-            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
-            return returnValue;
+            //Debug.Log("CharacterStats.GetSpeedModifiers(): ");
+            return secondaryStats[SecondaryStatType.Speed].CurrentValue;
         }
 
         public virtual float GetAccuracyModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
-            float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MyAccuracyMultiplier != 1) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyAccuracyMultiplier;
-                }
-            }
-            //Debug.Log(gameObject.name + ".CharacterStats.GetAccuracyModifiers() returning: " + returnValue);
-            return returnValue;
+            return secondaryStats[SecondaryStatType.Accuracy].CurrentValue;
         }
 
         public virtual bool HasFreezeImmunity() {
@@ -567,20 +577,7 @@ namespace AnyRPG {
                     returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
                 }
             }
-            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
-            return returnValue;
-        }
-
-        public virtual float GetCriticalStrikeModifiers() {
-            //Debug.Log("CharacterStats.GetDamageModifiers()");
-            float returnValue = 0f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
-                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.CriticalStrike)) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
-                }
-            }
+            returnValue += secondaryStats[secondaryStatType].GetAddValue();
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
             return returnValue;
         }
@@ -748,15 +745,6 @@ namespace AnyRPG {
             }
         }
 
-        private void AddStatusEffectModifiers(StatusEffect statusEffect) {
-            //Debug.Log(gameObject.name + ".CharacterStats.AddStatusEffectModifiers()");
-            foreach (string statBuffType in statusEffect.StatBuffTypeNames) {
-                //Debug.Log(gameObject.name + ".CharacterStats.AddStatusEffectModifiers() statBuffType: " + statBuffType);
-                primaryStats[statBuffType].AddModifier(statusEffect.MyStatAmount);
-                primaryStats[statBuffType].AddMultiplyModifier(statusEffect.MyStatMultiplier);
-            }
-        }
-
         public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
             //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
             string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyName);
@@ -816,10 +804,34 @@ namespace AnyRPG {
                 primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * multiplierValues[statName]);
             }
 
+            // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values
+            CalculateEquipmentStats();
+
             // calculate current values that include modifiers
             CalculatePrimaryStats();
 
             ResetResourceAmounts();
+        }
+
+        public void CalculateEquipmentStats() {
+
+            // reset all primary stat equipment modifiers
+            foreach (Stat stat in primaryStats.Values) {
+                stat.ClearAddModifiers();
+                stat.ClearMultiplyModifiers();
+            }
+
+            // reset secondary stats
+            foreach (Stat stat in secondaryStats.Values) {
+                stat.ClearAddModifiers();
+                stat.ClearMultiplyModifiers();
+            }
+
+            if (baseCharacter.CharacterEquipmentManager != null) {
+                foreach (Equipment equipment in baseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                    CalculateEquipmentChanged(equipment, null, false);
+                }
+            }
         }
 
 
@@ -888,7 +900,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public virtual void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
             AddResourceAmount(powerResource.MyName, amount);
             if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {

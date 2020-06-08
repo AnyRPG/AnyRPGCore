@@ -613,7 +613,7 @@ namespace AnyRPG {
         public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquipmentData()");
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
-                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment.Values) {
+                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     EquipmentSaveData saveData = new EquipmentSaveData();
                     saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
                     anyRPGSaveData.equipmentSaveData.Add(saveData);
@@ -945,7 +945,10 @@ namespace AnyRPG {
             LoadAbilityData(anyRPGSaveData);
 
             // testing - character class needs to be set first before equipment load so primary stats can be applied
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
+            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
+            // testing allow notification so class trats can be applied
+            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), true);
+
             PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
             // testing - move here to prevent learning auto-attack ability twice
@@ -973,9 +976,9 @@ namespace AnyRPG {
 
             LoadPetData(anyRPGSaveData);
 
-            // necessary?  should be handled by setcharacterclass call
-            CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
-            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplyClassTraits(characterClass);
+            // class traits are applied here because we need the notification to happen
+            //CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
+            //PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplyClassTraits(characterClass);
 
             ClassSpecialization classSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization);
             PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySpecializationTraits(classSpecialization);

@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         public int overrideDuration = 0;
         public bool savedEffect = false;
-        public float castTimeMultipler = 1f;
+        public float castTimeMultiplier = 1f;
         public float spellDamageMultiplier = 1f;
 
         // was this damage caused by a reflect?  Needed to stop infinite reflect loops

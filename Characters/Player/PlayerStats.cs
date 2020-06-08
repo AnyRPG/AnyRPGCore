@@ -202,6 +202,16 @@ namespace AnyRPG {
             base.PerformResourceRegen();
         }
 
+        public override void GainXP(int xp) {
+            base.GainXP(xp);
+            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
+        }
+
+        public override void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+            base.RecoverResource(abilityEffectContext, powerResource, amount, source, showCombatText, combatMagnitude);
+            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.MyName);
+        }
+
     }
 
 }

@@ -221,6 +221,10 @@ namespace AnyRPG {
             return 0f;
         }
 
+        public virtual float GetSpeed() {
+            return 1f;
+        }
+
         public virtual bool IsTargetInMeleeRange(GameObject target) {
             return true;
         }

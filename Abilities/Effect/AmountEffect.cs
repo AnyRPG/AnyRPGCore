@@ -10,6 +10,10 @@ namespace AnyRPG {
 
         [Header("Amounts")]
 
+        [Tooltip("If true, this effect can do critical amounts")]
+        [SerializeField]
+        private bool allowCriticalStrike = true;
+
         [Tooltip("The resources to affect, and the amounts of the effects")]
         [SerializeField]
         private List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
@@ -19,7 +23,7 @@ namespace AnyRPG {
 
         public DamageType DamageType { get => damageType; set => damageType = value; }
 
-        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectInput) {
+        protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectInput, ResourceAmountNode resourceAmountNode) {
             //Debug.Log(MyName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
 
             float amountAddModifier = 0f;
@@ -29,19 +33,23 @@ namespace AnyRPG {
             float critChanceModifier = 0f;
             float critDamageModifier = 1f;
 
-            // stats
-            if (damageType == DamageType.physical) {
-                amountAddModifier = sourceCharacter.GetPhysicalPower();
-            } else if (damageType == DamageType.ability) {
-                amountAddModifier = sourceCharacter.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
+            // physical / spell power
+            if (resourceAmountNode.AddPower) {
+                if (damageType == DamageType.physical) {
+                    amountAddModifier = sourceCharacter.GetPhysicalPower();
+                } else if (damageType == DamageType.ability) {
+                    amountAddModifier = sourceCharacter.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
+                }
             }
 
-            // critical hit modifer
-            critChanceModifier = sourceCharacter.GetCritChance();
+            if (allowCriticalStrike == true) {
+                // critical hit modifer
+                critChanceModifier = sourceCharacter.GetCritChance();
 
-            int randomInt = Random.Range(0, 100);
-            if (randomInt <= critChanceModifier) {
-                critDamageModifier = 2f;
+                int randomInt = Random.Range(0, 100);
+                if (randomInt <= critChanceModifier) {
+                    critDamageModifier = 2f;
+                }
             }
 
             if (damageType == DamageType.physical) {
@@ -55,7 +63,7 @@ namespace AnyRPG {
 
             } else if (damageType == DamageType.ability) {
 
-                amountMultiplyModifier *= Mathf.Clamp(abilityEffectInput.castTimeMultipler, 1, Mathf.Infinity);
+                amountMultiplyModifier *= Mathf.Clamp(abilityEffectInput.castTimeMultiplier, 1, Mathf.Infinity);
             }
             // multiplicative damage modifiers
             amountMultiplyModifier *= sourceCharacter.GetOutgoingDamageModifiers();
@@ -81,7 +89,7 @@ namespace AnyRPG {
                 int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;
                 float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput);
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput, resourceAmountNode);
                 finalAmount = (int)abilityKeyValuePair.Key;
                 combatMagnitude = abilityKeyValuePair.Value;
                 float inputAmount = 0f;
@@ -102,7 +110,7 @@ namespace AnyRPG {
 
             abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
 
-            abilityEffectInput.castTimeMultipler = 1f;
+            abilityEffectInput.castTimeMultiplier = 1f;
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
@@ -127,6 +135,10 @@ namespace AnyRPG {
 
         private PowerResource powerResource = null;
 
+        [Tooltip("If true, add the appropriate power (spell/physical) to this ability amount")]
+        [SerializeField]
+        private bool addPower = true;
+
         [Tooltip("If the amount is lower than this value, it will be rasied to this value.")]
         [SerializeField]
         private int minAmount = 0;
@@ -149,6 +161,7 @@ namespace AnyRPG {
         public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
         public int MaxAmount { get => maxAmount; set => maxAmount = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
+        public bool AddPower { get => addPower; set => addPower = value; }
 
         public void SetupScriptableObjects() {
 

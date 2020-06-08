@@ -161,7 +161,7 @@ namespace AnyRPG {
             return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + (float)extraSystemStatPerLevel + (float)extraClassStatPerLevel;
         }
 
-        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+        public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
             float returnValue = 0f;
             if (sourceCharacter.CharacterClass != null) {
                 foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
@@ -176,78 +176,14 @@ namespace AnyRPG {
                     }
                 }
             }
-            returnValue += sourceCharacter.CharacterStats.GetSecondaryStatAddModifiers(secondaryStatType);
+            returnValue += sourceCharacter.CharacterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
             return returnValue;
         }
 
-        public static float GetCritChanceForCharacter(BaseCharacter sourceCharacter) {
-            float critChanceModifier = 0f;
-            if (sourceCharacter.CharacterClass != null) {
-                foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
-                    foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
-                        if (primaryToSecondaryStatNode.SecondaryStatType == SecondaryStatType.CriticalStrike) {
-                            if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                critChanceModifier += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
-                            } else {
-                                critChanceModifier += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
-                            }
-                        }
-                    }
-                }
-            }
-            critChanceModifier += sourceCharacter.CharacterStats.GetCriticalStrikeModifiers();
-            return critChanceModifier;
-        }
-
-        public static float GetSpellPowerForCharacter(BaseCharacter sourceCharacter) {
-            float amountModifier = 0f;
-            if (sourceCharacter.CharacterClass != null) {
-                if (sourceCharacter.CharacterClass != null) {
-                    foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
-
-                        // base damage modifer
-                        float totalDamageModifier = 0f;
-
-                        foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
-                            if (primaryToSecondaryStatNode.SecondaryStatType == SecondaryStatType.Damage || primaryToSecondaryStatNode.SecondaryStatType == SecondaryStatType.SpellDamage) {
-                                if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                    totalDamageModifier += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
-                                } else {
-                                    totalDamageModifier += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
-                                }
-                            }
-                        }
-
-                        amountModifier += totalDamageModifier;
-                    }
-                }
-            }
-            return amountModifier;
-        }
-
-        public static float GetPhysicalPowerForCharacter(BaseCharacter sourceCharacter) {
-
-            float amountModifier = 0f;
-            if (sourceCharacter.CharacterClass != null) {
-                if (sourceCharacter.CharacterClass != null) {
-                    foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
-
-                        // base damage modifer
-                        float totalDamageModifier = 0f;
-                        foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
-                            if (primaryToSecondaryStatNode.SecondaryStatType == SecondaryStatType.Damage || primaryToSecondaryStatNode.SecondaryStatType == SecondaryStatType.PhysicalDamage) {
-                                if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                    totalDamageModifier += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
-                                } else {
-                                    totalDamageModifier += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
-                                }
-                            }
-                        }
-                        amountModifier += totalDamageModifier;
-                    }
-                }
-            }
-            return amountModifier;
+        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+            float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, sourceCharacter);
+            returnValue += sourceCharacter.CharacterStats.GetSecondaryStatAddModifiers(secondaryStatType);
+            return returnValue;
         }
 
         public static float GetArmorForClass(ArmorClass armorClass) {

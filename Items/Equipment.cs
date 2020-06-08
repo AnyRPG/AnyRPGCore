@@ -31,42 +31,48 @@ namespace AnyRPG {
         [SerializeField]
         private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
 
+        [Header("Base Armor")]
+
+        [Tooltip("If true, this item will provide the wearer with armor")]
         [SerializeField]
         protected bool useArmorModifier = false;
 
+        [Tooltip("If true, the armor value must be input manually and will not be calculated based on the item level and armor class")]
         [SerializeField]
         protected bool useManualArmor = false;
 
-        [Tooltip("should the manual value be per level instead of a total")]
+        [Tooltip("If true, the manual value is per level instead of a total")]
         [SerializeField]
         protected bool manualValueIsScale = false;
 
         [SerializeField]
         protected float armorModifier = 0f;
 
-        [SerializeField]
-        protected bool useDamageModifier = false;
-
-        [SerializeField]
-        protected bool useManualDamage = false;
-
-        [SerializeField]
-        private int damageModifier = 0;
-
         [Header("Primary Stats")]
 
+        [Tooltip("When equipped, the wearer will have these primary stats affected")]
         [SerializeField]
         protected List<ItemPrimaryStatNode> primaryStats = new List<ItemPrimaryStatNode>();
 
+        [Header("Secondary Stats")]
+
+        [Tooltip("When equipped, the wearer will have these secondary stats affected")]
+        [SerializeField]
+        protected List<ItemSecondaryStatNode> secondaryStats = new List<ItemSecondaryStatNode>();
+
+        [Header("Abilities")]
+
+        [Tooltip("This ability will be cast when the item is equipped")]
         [SerializeField]
         private string onEquipAbilityName = string.Empty;
 
-        //[SerializeField]
         private BaseAbility onEquipAbility;
 
+        [Tooltip("These abilities will be learned when the item is equipped")]
         [SerializeField]
         private List<string> learnedAbilityNames = new List<string>();
 
+        [Tooltip("The name of the equipment set this item belongs to, if any")]
         [SerializeField]
         private string equipmentSetName = string.Empty;
 
@@ -75,58 +81,58 @@ namespace AnyRPG {
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
 
-        public virtual int MyDamageModifier {
-            get {
-                if (!useDamageModifier) {
-                    return 0;
-                }
-                if (useManualDamage) {
-                    return damageModifier;
-                }
-                return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)MyItemLevel * (SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
-                    0f,
-                    Mathf.Infinity
-                    ));
+        public virtual float GetArmorModifier(int characterLevel) {
+            if (!useArmorModifier) {
+                return 0f;
             }
-            set => damageModifier = value;
-        }
-        public virtual float MyArmorModifier {
-            get {
-                if (!useArmorModifier) {
-                    return 0;
-                }
-                if (useManualArmor) {
-                    if (manualValueIsScale) {
-                        return (int)Mathf.Ceil(Mathf.Clamp(
-                            (float)MyItemLevel * (armorModifier * GetItemQualityNumber()),
-                            0f,
-                            Mathf.Infinity
-                            ));
+            if (useManualArmor) {
+                if (manualValueIsScale) {
+                    return (int)Mathf.Ceil(Mathf.Clamp(
+                        (float)GetItemLevel(characterLevel) * (armorModifier * GetItemQualityNumber()),
+                        0f,
+                        Mathf.Infinity
+                        ));
 
-                    }
-                    return armorModifier;
                 }
-                return 0;
+                return armorModifier;
             }
-            set => armorModifier = value;
+            return 0f;
         }
 
-        public virtual int GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
+        public virtual float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
                 if (statName == itemPrimaryStatNode.StatName) {
                     if (itemPrimaryStatNode.UseManualValue) {
                         return itemPrimaryStatNode.ManualModifierValue;
                     }
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)MyItemLevel * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                         0f,
                         Mathf.Infinity
                         ));
                 }
             }
+            return 0f;
+        }
+
+        public virtual float GetSecondaryStatAddModifier(SecondaryStatType secondaryStatType, int characterLevel) {
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in secondaryStats) {
+                if (secondaryStatType == itemSecondaryStatNode.SecondaryStat) {
+                    return itemSecondaryStatNode.BaseAmount + (itemSecondaryStatNode.AmountPerLevel * GetItemLevel(characterLevel));
+                }
+            }
+            return 0f;
+        }
+
+        public virtual float GetSecondaryStatMultiplyModifier(SecondaryStatType secondaryStatType) {
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in secondaryStats) {
+                if (secondaryStatType == itemSecondaryStatNode.SecondaryStat) {
+                    return itemSecondaryStatNode.BaseMultiplier;
+                }
+            }
             return 0;
         }
+
 
         public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
@@ -137,6 +143,7 @@ namespace AnyRPG {
         public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public List<ItemSecondaryStatNode> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -146,6 +153,10 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        /// <summary>
+        /// return a multiplier value that is based on the item quality
+        /// </summary>
+        /// <returns></returns>
         public float GetItemQualityNumber() {
             float returnValue = 1;
             if (MyItemQuality != null) {
@@ -188,23 +199,28 @@ namespace AnyRPG {
             if (dynamicLevel == true) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemConfigurationManager.MyInstance.MyMaxLevel) + ")";
             }
-            abilitiesList.Add(string.Format(" Item Level: {0}{1}", MyItemLevel, itemRange));
+            abilitiesList.Add(string.Format(" Item Level: {0}{1}", GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level), itemRange));
 
-            // stats
+            // armor
             if (useArmorModifier) {
-                abilitiesList.Add(string.Format(" +{0} Armor", MyArmorModifier));
+                abilitiesList.Add(string.Format(" +{0} Armor", GetArmorModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)));
             }
-            if (useDamageModifier) {
-                abilitiesList.Add(string.Format(" +{0} Damage", MyDamageModifier));
-            }
+
+            // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
                 abilitiesList.Add(string.Format(" +{0} {1}",
                     GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter),
                     itemPrimaryStatNode.StatName));
             }
 
-            // abilities
+            // secondary stats
+            foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
+                abilitiesList.Add(string.Format("<color=green> +{0} {1}</color>",
+                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level),
+                                   itemSecondaryStatNode.SecondaryStat.ToString()));
+            }
 
+            // abilities
             if (onEquipAbility != null) {
                 abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyName));
             }
@@ -323,11 +339,36 @@ namespace AnyRPG {
 
         [Tooltip("If use manual value is true, the value in this field will be used instead of the automatically scaled value")]
         [SerializeField]
-        private int manualModifierValue = 0;
+        private float manualModifierValue = 0;
 
         public string StatName { get => statName; set => statName = value; }
-        public int ManualModifierValue { get => manualModifierValue; set => manualModifierValue = value; }
+        public float ManualModifierValue { get => manualModifierValue; set => manualModifierValue = value; }
         public bool UseManualValue { get => useManualValue; set => useManualValue = value; }
+    }
+
+    [System.Serializable]
+    public class ItemSecondaryStatNode {
+
+        [Tooltip("The secondary stat to increase when this item is equipped.")]
+        [SerializeField]
+        private SecondaryStatType secondaryStat;
+
+        [Tooltip("This value is constant, and does not scale with level")]
+        [SerializeField]
+        private float baseAmount = 0;
+
+        [Tooltip("The value will be multiplied by the item level of the equipment")]
+        [SerializeField]
+        private float amountPerLevel = 0;
+
+        [Tooltip("After amount values are added together, they will be multiplied by this number")]
+        [SerializeField]
+        private float baseMultiplier = 1f;
+
+        public SecondaryStatType SecondaryStat { get => secondaryStat; set => secondaryStat = value; }
+        public float BaseAmount { get => baseAmount; set => baseAmount = value; }
+        public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
+        public float BaseMultiplier { get => baseMultiplier; set => baseMultiplier = value; }
     }
 
     //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }

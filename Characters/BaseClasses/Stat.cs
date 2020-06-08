@@ -11,11 +11,15 @@ namespace AnyRPG {
 
         private string statName = string.Empty;
 
+        // this value is calculated every level and does not include modifiers
         private int baseValue = 0;
+
+        // this value is calculated every time modifiers are added or removed
         private int currentValue = 0;
 
+        // this value will be added to any calculated values
+        private int defaultAddValue = 0;
 
-        private int baseAddValue = 0;
         private float baseMultiplyValue = 1f;
 
         private List<float> addModifiers = new List<float>();
@@ -23,6 +27,7 @@ namespace AnyRPG {
 
         public int BaseValue { get => baseValue; set => baseValue = value; }
         public int CurrentValue { get => currentValue; set => currentValue = value; }
+        public int DefaultAddValue { get => defaultAddValue; set => defaultAddValue = value; }
 
         public Stat(string statName) {
             this.statName = statName;
@@ -30,7 +35,7 @@ namespace AnyRPG {
 
         public float GetValue() {
             //Debug.Log("Stat.GetValue()");
-            float finalAddValue = baseAddValue;
+            float finalAddValue = defaultAddValue;
             addModifiers.ForEach(x => finalAddValue += x);
             //Debug.Log("Stat.GetValue() finalAddValue: " + finalAddValue);
             float finalMultiplyValue = baseMultiplyValue;
@@ -40,7 +45,7 @@ namespace AnyRPG {
         }
 
         public float GetAddValue() {
-            float finalAddValue = baseAddValue;
+            float finalAddValue = 0;
             addModifiers.ForEach(x => finalAddValue += x);
             //Debug.Log("Stat.GetValue() finalAddValue: " + finalAddValue);
             return finalAddValue;
@@ -84,6 +89,14 @@ namespace AnyRPG {
                 multiplyModifiers.Remove(modifier);
                 OnModifierUpdate(statName);
             }
+        }
+
+        public void ClearAddModifiers() {
+            addModifiers.Clear();
+        }
+
+        public void ClearMultiplyModifiers() {
+            multiplyModifiers.Clear();
         }
     }
 

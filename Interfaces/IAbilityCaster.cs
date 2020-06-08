@@ -89,6 +89,12 @@ namespace AnyRPG {
         float GetCritChance();
 
         /// <summary>
+        /// return the casting speed multiplier. 1 is normal speed
+        /// </summary>
+        /// <returns></returns>
+        float GetSpeed();
+
+        /// <summary>
         /// True if the faction requirements of the caster and target are satisfied
         /// </summary>
         /// <returns></returns>

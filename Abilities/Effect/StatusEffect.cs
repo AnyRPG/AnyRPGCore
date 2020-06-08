@@ -75,27 +75,11 @@ namespace AnyRPG {
         [SerializeField]
         protected float secondaryStatMultiplier = 1;
 
-        [Tooltip("The values in this section will be applied to movement speed")]
-        [SerializeField]
-        protected bool buffMovementSpeed = false;
+        [Header("Damage Adjustments")]
 
         [Tooltip("Multiply outgoing damage by this amount.  1 = normal damage.")]
         [SerializeField]
         protected float outgoingDamageMultiplier = 1f;
-
-        [Tooltip("Multiply attack and casting speed by this amount.  1 = normal speed.")]
-        [SerializeField]
-        protected float speedMultiplier = 1f;
-
-        [Tooltip("Multiply attack and casting accuracy by this amount.  1 = normal accuracy.")]
-        [SerializeField]
-        protected float accuracyMultiplier = 1f;
-
-        [Tooltip("Add this amount as a flat percentage increase to the critical strike chance.")]
-        [SerializeField]
-        protected float extraCriticalStrikePercent;
-
-        [Header("Damage Adjustments")]
 
         [Tooltip("Multiply incoming damage by this amount.  1 = normal damage.")]
         [SerializeField]
@@ -174,10 +158,7 @@ namespace AnyRPG {
         public bool MyClassTrait { get => classTrait; set => classTrait = value; }
         public bool MyLimitedDuration { get => limitedDuration; set => limitedDuration = value; }
         public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
-        public float MySpeedMultiplier { get => speedMultiplier; set => speedMultiplier = value; }
-        public float MyExtraCriticalStrikePercent { get => extraCriticalStrikePercent; set => extraCriticalStrikePercent = value; }
         public float MyOutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
-        public float MyAccuracyMultiplier { get => accuracyMultiplier; set => accuracyMultiplier = value; }
         public bool MyImmuneDisableAnimator { get => immuneDisableAnimator; set => immuneDisableAnimator = value; }
         public bool MyImmuneStun { get => immuneStun; set => immuneStun = value; }
         public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
@@ -296,7 +277,7 @@ namespace AnyRPG {
             }
 
             // prevent status effect from sending scaled up damage to its ticks
-            abilityEffectInput.castTimeMultipler = 1f;
+            abilityEffectInput.castTimeMultiplier = 1f;
 
             StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(MyName) as StatusEffect, source, abilityEffectInput);
             if (_statusEffectNode == null) {

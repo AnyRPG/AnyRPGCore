@@ -13,7 +13,7 @@ namespace AnyRPG {
         bool MyUseableWithoutLearning { get; }
         bool MyIgnoreGlobalCoolDown { get; }
         bool CanSimultaneousCast { get; }
-        float MyAbilityCastingTime { get; set; }
+        float BaseAbilityCastingTime { get; }
         bool MyRequiresTarget { get; set; }
         bool MyRequiresGroundTarget { get; set; }
         Color MyGroundTargetColor { get; set; }
@@ -31,6 +31,9 @@ namespace AnyRPG {
         int BaseResourceGain { get; set; }
         int ResourceGainPerLevel { get; set; }
         float SpendDelay { get; set; }
+        bool UseSpeedMultipliers { get; set; }
+
+        float GetAbilityCastingTime(IAbilityCaster abilityCaster);
 
 
         bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks);

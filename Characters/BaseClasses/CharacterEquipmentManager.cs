@@ -32,7 +32,7 @@ namespace AnyRPG {
         [SerializeField]
         protected string equipmentProfileName;
 
-        public Dictionary<EquipmentSlotProfile, Equipment> MyCurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
+        public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public GameObject MyPlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
 
         protected virtual void Start() {
@@ -77,7 +77,7 @@ namespace AnyRPG {
             float returnValue = 0f;
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipment[equipmentSlotProfile] is Weapon) {
-                    returnValue += (MyCurrentEquipment[equipmentSlotProfile] as Weapon).MyDamagePerSecond();
+                    returnValue += (CurrentEquipment[equipmentSlotProfile] as Weapon).GetDamagePerSecond(baseCharacter.CharacterStats.Level);
                 }
             }
             return returnValue;
@@ -439,7 +439,7 @@ namespace AnyRPG {
             int equipmentCount = 0;
 
             if (equipmentSet != null) {
-                foreach (Equipment tmpEquipment in MyCurrentEquipment.Values) {
+                foreach (Equipment tmpEquipment in CurrentEquipment.Values) {
                     if (tmpEquipment != null && tmpEquipment.MyEquipmentSet != null && tmpEquipment.MyEquipmentSet == equipmentSet) {
                         equipmentCount++;
                     }

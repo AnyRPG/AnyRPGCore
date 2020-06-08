@@ -79,7 +79,7 @@ namespace AnyRPG {
             get {
 
                 if (dynamicCurrencyAmount) {
-                    return (int)(((pricePerLevel * MyItemLevel) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
                 }
                 return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
             }
@@ -93,7 +93,7 @@ namespace AnyRPG {
                     if (realItemQuality == null) {
                         //Debug.Log("realItemQuality was null");
                     }
-                    return (int)(((pricePerLevel * MyItemLevel) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
                 }
                 return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
             }
@@ -103,33 +103,22 @@ namespace AnyRPG {
         public bool MyUniqueItem { get => uniqueItem; }
         public Currency MyCurrency { get => currency; set => currency = value; }
         public ItemQuality MyItemQuality { get => realItemQuality; set => realItemQuality = value; }
-        public int MyItemLevel {
-            get {
-                int returnLevel = itemLevel;
-                if (dynamicLevel == true) {
-                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                        returnLevel = (int)Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
-                    } else {
-                        returnLevel = itemLevel;
-                    }
-                }
+        public int GetItemLevel(int characterLevel) {
+            int returnLevel = itemLevel;
+            if (dynamicLevel == true) {
+                returnLevel = (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
+            }
 
-                // item quality can override regular individual item scaling (example, heirlooms always scale)
-                if (MyItemQuality == null) {
-                    return returnLevel;
+            // item quality can override regular individual item scaling (example, heirlooms always scale)
+            if (MyItemQuality == null) {
+                return returnLevel;
+            } else {
+                if (MyItemQuality.MyDynamicItemLevel) {
+                    return (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
                 } else {
-                    if (MyItemQuality.MyDynamicItemLevel) {
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                            return (int)Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
-                        } else {
-                            return returnLevel;
-                        }
-                    } else {
-                        return returnLevel;
-                    }
+                    return returnLevel;
                 }
             }
-            set => itemLevel = value;
         }
 
         public KeyValuePair<Currency, int> MySellPrice {

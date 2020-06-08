@@ -10,9 +10,11 @@ namespace AnyRPG {
 
         public override bool PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
 
-            if (MyAbilityCastingTime > 1) {
-                castTimeMultiplier = MyAbilityCastingTime;
-            }
+            //float abilityCastingTime = GetAbilityCastingTime(source);
+            float abilityCastingTime = BaseAbilityCastingTime;
+            //if (abilityCastingTime > 1) {
+                abilityEffectContext.castTimeMultiplier = abilityCastingTime;
+            //}
             return base.PerformAbilityEffects(source, target, abilityEffectContext);
         }
 

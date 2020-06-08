@@ -114,25 +114,25 @@ namespace AnyRPG {
             DisableCastBar();
         }
 
-        public void OnCastTimeChanged(IAbility ability, float currentTime) {
+        public void OnCastTimeChanged(IAbilityCaster abilityCaster, IAbility ability, float currentPercent) {
             //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
 
-            if (currentTime <= ability.MyAbilityCastingTime) {
+            if (currentPercent <= 1f) {
                 // first set text because bar width is based on text size
-                castText.text = ability.MyName + " ( " + currentTime.ToString("F1") + "s / " + ability.MyAbilityCastingTime.ToString("F1") + "s )";
+                castText.text = ability.MyName + " ( " + (currentPercent * ability.GetAbilityCastingTime(abilityCaster)).ToString("F1") + "s / " + ability.GetAbilityCastingTime(abilityCaster).ToString("F1") + "s )";
 
                 // then get width of container that expands to the text
                 originalCastSliderWidth = castBackground.GetComponent<RectTransform>().rect.width;
                 //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(): cast slider width: " + originalCastSliderWidth);
 
                 this.gameObject.SetActive(true);
-                float castPercent = (float)currentTime / ability.MyAbilityCastingTime;
+                //float castPercent = (float)currentPercent / ability.GetAbilityCastingTime(abilityCaster);
 
                 // code for an actual image, not currently used
                 //playerCastSlider.fillAmount = castPercent;
 
                 // code for the default image
-                castSlider.GetComponent<LayoutElement>().preferredWidth = castPercent * originalCastSliderWidth;
+                castSlider.GetComponent<LayoutElement>().preferredWidth = currentPercent * originalCastSliderWidth;
                 if (castIcon.sprite != ability.MyIcon) {
                     castIcon.sprite = null;
                     castIcon.sprite = ability.MyIcon;

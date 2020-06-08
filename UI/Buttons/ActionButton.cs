@@ -358,7 +358,7 @@ namespace AnyRPG {
                 // auto-attack buttons are special and display the current weapon of the character
                 if ((Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.MyCurrentEquipment.Values) {
+                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                         if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
                             if (MyIcon.sprite != equipment.MyIcon) {
                                 MyIcon.sprite = equipment.MyIcon;

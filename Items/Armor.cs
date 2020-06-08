@@ -16,18 +16,16 @@ namespace AnyRPG {
 
         public ArmorClass MyArmorClass { get => armorClass; set => armorClass = value; }
 
-        public override float MyArmorModifier {
-            get {
-                float returnValue = base.MyArmorModifier;
-                if (useArmorModifier && !useManualArmor) {
-                    return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)MyItemLevel * (LevelEquations.GetArmorForClass(MyArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
-                        0f,
-                        Mathf.Infinity
-                        ));
-                }
-                return returnValue;
+        public override float GetArmorModifier(int characterLevel) {
+            float returnValue = base.GetArmorModifier(characterLevel);
+            if (useArmorModifier && !useManualArmor) {
+                return (int)Mathf.Ceil(Mathf.Clamp(
+                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(MyArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
+                    0f,
+                    Mathf.Infinity
+                    ));
             }
+            return returnValue;
         }
 
         public override string GetSummary() {

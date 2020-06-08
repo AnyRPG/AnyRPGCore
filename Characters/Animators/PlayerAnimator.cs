@@ -79,8 +79,8 @@ namespace AnyRPG {
         }
         */
 
-        public override void SetCasting(bool varValue, bool swapAnimator = true) {
-            //Debug.Log(gameObject.name + ".PlayerAnimator.SetCasting(" + varValue + ")");
+        public override void SetCasting(bool varValue, bool swapAnimator = true, float castingSpeed = 1f) {
+            //Debug.Log(gameObject.name + ".PlayerAnimator.SetCasting(" + varValue + ", " + swapAnimator + ", " + castingSpeed + ")");
             if (animator == null) {
                 return;
             }
@@ -93,7 +93,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
             }
 
-            base.SetCasting(varValue);
+            base.SetCasting(varValue, swapAnimator, castingSpeed);
 
             if (varValue == false) {
                 if (swapAnimator) {

@@ -12,9 +12,21 @@ namespace AnyRPG {
     [System.Serializable]
     public class ItemQuality : DescribableResource {
 
+        [Header("Stats")]
+
         [Tooltip("Multiply the base stats for an item at any level by this amount")]
         [SerializeField]
         private float statMultiplier;
+
+
+
+        [Header("Item Level")]
+
+        [Tooltip("Any items of this quality, will automatically scale, regardless of whether they individually have scaling set")]
+        [SerializeField]
+        private bool dynamicItemLevel;
+
+        [Header("Vendor")]
 
         [Tooltip("Multiply the base purchase price of an item by this amount")]
         [SerializeField]
@@ -23,11 +35,6 @@ namespace AnyRPG {
         [Tooltip("Multiply the base vendor sell price of an item by this amount")]
         [SerializeField]
         private float sellPriceMultiplier = 1f;
-
-
-        [Tooltip("Any items of this quality, will automatically scale, regardless of whether they individually have scaling set")]
-        [SerializeField]
-        private bool dynamicItemLevel;
 
         [Tooltip("A popup window will appear and ask for confirmation when you try to sell")]
         [SerializeField]
@@ -42,6 +49,7 @@ namespace AnyRPG {
         [Tooltip("If true, the background image will have its color set to this color, intead of black")]
         [SerializeField]
         private bool tintBackgroundImage = false;
+
 
         public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
         public Color MyQualityColor { get => qualityColor; set => qualityColor = value; }

@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class CharacterAbilityManager : AbilityManager, IAbilityCaster {
 
         public virtual event System.Action<BaseCharacter> OnAttack = delegate { };
-        public event System.Action<IAbility, float> OnCastTimeChanged = delegate { };
+        public event System.Action<IAbilityCaster, IAbility, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
 
         protected BaseCharacter baseCharacter;
@@ -150,6 +150,9 @@ namespace AnyRPG {
             base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            }
+            if (baseCharacter != null) {
+                baseCharacter.OnClassChange -= HandleClassChange;
             }
             if (baseCharacter != null && baseCharacter.CharacterCombat != null) {
                 baseCharacter.CharacterCombat.OnKillEvent -= ReceiveKillDetails;
@@ -519,7 +522,7 @@ namespace AnyRPG {
                 abilityCoolDown = coolDownLength;
             }
 
-            if (abilityCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false && baseAbility.MyAbilityCastingTime == 0f) {
+            if (abilityCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false && baseAbility.GetAbilityCastingTime(this) == 0f) {
                 // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown instant cast abilities
                 abilityCoolDown = Mathf.Clamp(abilityCoolDown, 1, Mathf.Infinity);
             }
@@ -639,6 +642,7 @@ namespace AnyRPG {
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleClassChange(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
             RemoveClassTraits(oldCharacterClass);
             UnLearnClassAbilities(oldCharacterClass);
             LearnClassAbilities(newCharacterClass);
@@ -957,8 +961,8 @@ namespace AnyRPG {
                     //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
                     ability.StartCasting(this);
                 }
-                float currentCastTime = 0f;
-                float nextTickTime = 0f;
+                float currentCastPercent = 0f;
+                float nextTickPercent = 0f;
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
                 if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && ability.MyHoldableObjects.Count != 0) {
@@ -972,16 +976,17 @@ namespace AnyRPG {
                     baseCharacter.CharacterUnit.UnitAudio.PlayCast(ability.MyCastingAudioClip);
                 }
                 
-                while (currentCastTime < ability.MyAbilityCastingTime) {
+
+                while (currentCastPercent < 1f) {
                     yield return null;
-                    currentCastTime += Time.deltaTime;
+                    currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(this));
 
                     // call this first because it updates the cast bar
                     //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
-                    OnCastTimeChanged(ability, currentCastTime);
+                    OnCastTimeChanged(this, ability, currentCastPercent);
 
                     // now call the ability on casttime changed (really only here for channeled stuff to do damage)
-                    nextTickTime = ability.OnCastTimeChanged(currentCastTime, nextTickTime, this, target, abilityEffectContext);
+                    nextTickPercent = ability.OnCastTimeChanged(currentCastPercent, nextTickPercent, this, target, abilityEffectContext);
                 }
                 //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ") Done casting with tag: " + startTime);
                 /*
@@ -1091,6 +1096,10 @@ namespace AnyRPG {
             BeginAbilityCommon(ability, target);
         }
 
+        public override float GetSpeed() {
+            return 1f / (baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue / 100f);
+        }
+
         public override float GetAnimationLengthMultiplier() {
             if (baseCharacter != null && baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
                 return (baseCharacter.AnimatedUnit.MyCharacterAnimator.LastAnimationLength / (float)baseCharacter.AnimatedUnit.MyCharacterAnimator.LastAnimationHits);
@@ -1125,7 +1134,7 @@ namespace AnyRPG {
         public override float GetPhysicalDamage() {
             if (baseCharacter != null  && baseCharacter.CharacterStats != null) {
                 // +damage stat from gear
-                float returnValue = baseCharacter.CharacterStats.PhysicalDamage;
+                float returnValue = GetPhysicalPower();
 
                 // weapon damage
                 if (baseCharacter.CharacterEquipmentManager != null) {
@@ -1139,21 +1148,21 @@ namespace AnyRPG {
 
         public override float GetPhysicalPower() {
             if (baseCharacter != null) {
-                return LevelEquations.GetPhysicalPowerForCharacter(baseCharacter);
+                return LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.PhysicalDamage, baseCharacter) + LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Damage, baseCharacter);
             }
             return base.GetPhysicalPower();
         }
 
         public override float GetSpellPower() {
             if (baseCharacter != null) {
-                return LevelEquations.GetSpellPowerForCharacter(baseCharacter);
+                return LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.SpellDamage, baseCharacter) + LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Damage, baseCharacter);
             }
             return base.GetSpellPower();
         }
 
         public override float GetCritChance() {
             if (baseCharacter != null) {
-                return LevelEquations.GetCritChanceForCharacter(baseCharacter);
+                return LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.CriticalStrike, baseCharacter);
             }
             return base.GetCritChance();
         }
@@ -1284,7 +1293,7 @@ namespace AnyRPG {
         }
 
         public virtual bool PerformMovementCheck(IAbility ability) {
-            if (ability.MyAbilityCastingTime == 0f) {
+            if (ability.GetAbilityCastingTime(this) == 0f) {
                 return true;
             }
             return !(baseCharacter.CharacterController.MyApparentVelocity > 0.1f);
