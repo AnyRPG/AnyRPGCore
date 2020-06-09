@@ -45,6 +45,10 @@ namespace AnyRPG {
             if (!CanUseOn(target, source)) {
                 return null;
             }
+            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                // we can't mount anything if the player unit is not spawned
+                return null;
+            }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             PrefabProfile prefabProfile = returnObjects.Keys.ElementAt(0);
             GameObject abilityEffectObject = returnObjects[prefabProfile];

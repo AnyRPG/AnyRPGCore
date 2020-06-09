@@ -1360,6 +1360,7 @@ namespace AnyRPG {
 
             if (ability.GetResourceCost(this) != 0 && ability.PowerResource != null) {
                 // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
+                abilityEffectContext.AddResourceAmount(ability.PowerResource.MyDisplayName, ability.GetResourceCost(this));
                 StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(this), ability.SpendDelay));
             }
 

@@ -15,7 +15,7 @@ namespace AnyRPG {
         public float spellDamageMultiplier = 1f;
 
         // was this damage caused by a reflect?  Needed to stop infinite reflect loops
-        public bool refectDamage = false;
+        public bool reflectDamage = false;
 
         public Vector3 groundTargetLocation = Vector3.zero;
 
@@ -26,6 +26,26 @@ namespace AnyRPG {
 
         // the last power resource affected
         public PowerResource powerResource = null;
+
+        public AbilityEffectContext GetCopy() {
+            // make a new ability effect context
+            AbilityEffectContext returnValue = new AbilityEffectContext();
+
+            // copy all properties
+            returnValue.resourceAmounts = resourceAmounts;
+            returnValue.overrideDuration = overrideDuration;
+            returnValue.savedEffect = savedEffect;
+            returnValue.castTimeMultiplier = castTimeMultiplier;
+            returnValue.spellDamageMultiplier = spellDamageMultiplier;
+            returnValue.reflectDamage = reflectDamage;
+            returnValue.groundTargetLocation = groundTargetLocation;
+            returnValue.originalTarget = originalTarget;
+            returnValue.baseAbility = baseAbility;
+            returnValue.powerResource = powerResource;
+
+            // return the new object
+            return returnValue;
+        }
 
         public void SetResourceAmount(string resourceName, float resourceValue) {
             bool foundResource = false;
@@ -42,6 +62,7 @@ namespace AnyRPG {
 
 
         public void AddResourceAmount(string resourceName, float resourceValue) {
+            Debug.Log("AbilityEffectContext.AddResourceAmount(" + resourceName + ", " + resourceValue + ")");
             bool foundResource = false;
             foreach (ResourceInputAmountNode resourceInputAmountNode in resourceAmounts) {
                 if (resourceInputAmountNode.resourceName == resourceName) {

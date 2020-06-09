@@ -94,7 +94,11 @@ namespace AnyRPG {
                 combatMagnitude = abilityKeyValuePair.Value;
                 float inputAmount = 0f;
                 foreach (ResourceInputAmountNode _resourceAmountNode in abilityEffectInput.resourceAmounts) {
-                    if (_resourceAmountNode.resourceName  == resourceAmountNode.ResourceName) {
+                    string matchName = resourceAmountNode.ResourceName;
+                    if (resourceAmountNode.InputRemap != null && resourceAmountNode.InputRemap != string.Empty) {
+                        matchName = resourceAmountNode.InputRemap;
+                    }
+                    if (_resourceAmountNode.resourceName  == matchName) {
                         inputAmount += _resourceAmountNode.amount;
                     }
                 }
@@ -135,6 +139,10 @@ namespace AnyRPG {
 
         private PowerResource powerResource = null;
 
+        [Tooltip("If this is not empty, the resource amount will receive input from the following resource, instead of the resource with the same name in the ability effect context.")]
+        [SerializeField]
+        private string inputRemap = string.Empty;
+
         [Tooltip("If true, add the appropriate power (spell/physical) to this ability amount")]
         [SerializeField]
         private bool addPower = true;
@@ -162,6 +170,7 @@ namespace AnyRPG {
         public int MaxAmount { get => maxAmount; set => maxAmount = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
         public bool AddPower { get => addPower; set => addPower = value; }
+        public string InputRemap { get => inputRemap; set => inputRemap = value; }
 
         public void SetupScriptableObjects() {
 

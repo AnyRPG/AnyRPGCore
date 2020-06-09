@@ -370,7 +370,7 @@ namespace AnyRPG {
 
 
         public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
-            effectOutput.refectDamage = true;
+            effectOutput.reflectDamage = true;
             PerformAbilityEffects(source, target, effectOutput, reflectAbilityEffectList);
         }
 

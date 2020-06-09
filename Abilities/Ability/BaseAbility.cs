@@ -555,10 +555,7 @@ namespace AnyRPG {
                 if (abilityEffect == null) {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
-                AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
-                abilityEffectOutput.groundTargetLocation = abilityEffectContext.groundTargetLocation;
-                abilityEffectOutput.baseAbility = abilityEffectContext.baseAbility;
-                abilityEffectOutput.castTimeMultiplier = abilityEffectContext.castTimeMultiplier;
+                AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyDisplayName);
                 if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);

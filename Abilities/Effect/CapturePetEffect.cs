@@ -22,7 +22,7 @@ namespace AnyRPG {
                     return false;
                 }
                 if (targetCharacter.MyUnitType == null || !unitTypeRestrictionList.Contains(targetCharacter.MyUnitType)) {
-                    Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
+                    //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                     return false;
                 }
                 if (targetCharacter.MyUnitProfile == null || targetCharacter.MyUnitProfile.MyIsPet == false) {
