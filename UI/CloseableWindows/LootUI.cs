@@ -64,18 +64,18 @@ namespace AnyRPG {
                 for (int i = 0; i < pages[pageIndex].Count; i++) {
                     if (pages[pageIndex][i] != null) {
                         // set the loot button icon
-                        lootButtons[i].MyIcon.sprite = pages[pageIndex][i].MyItem.MyIcon;
+                        lootButtons[i].MyIcon.sprite = pages[pageIndex][i].MyIcon;
 
-                        lootButtons[i].MyLoot = pages[pageIndex][i].MyItem;
+                        lootButtons[i].LootDrop = pages[pageIndex][i];
 
                         // make sure the loot button is visible
                         lootButtons[i].gameObject.SetActive(true);
 
                         string colorString = "white";
-                        if (pages[pageIndex][i].MyItem.MyItemQuality != null) {
-                            colorString = "#" + ColorUtility.ToHtmlStringRGB(pages[pageIndex][i].MyItem.MyItemQuality.MyQualityColor);
+                        if (pages[pageIndex][i].MyItemQuality != null) {
+                            colorString = "#" + ColorUtility.ToHtmlStringRGB(pages[pageIndex][i].MyItemQuality.MyQualityColor);
                         }
-                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].MyItem.MyDisplayName);
+                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].MyDisplayName);
                         // set the title
                         lootButtons[i].MyTitle.text = title;
                     }
@@ -116,23 +116,18 @@ namespace AnyRPG {
             }
         }
 
-        private void RemoveFromDroppedItems(Item removeItem) {
+        private void RemoveFromDroppedItems(LootDrop lootDrop) {
 
-            foreach (LootDrop lootDrop in droppedLoot) {
-                if (lootDrop.MyItem == removeItem) {
-                    droppedLoot.Remove(lootDrop);
-                    return;
-                }
+            if (droppedLoot.Contains(lootDrop)) {
+                droppedLoot.Remove(lootDrop);
             }
         }
 
-        public void TakeLoot(Item loot) {
+        public void TakeLoot(LootDrop lootDrop) {
             //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
-            LootDrop lootDrop = pages[pageIndex].Find(x => x.MyItem.MyDisplayName == loot.MyDisplayName);
-
             pages[pageIndex].Remove(lootDrop);
-            RemoveFromDroppedItems(loot);
+            RemoveFromDroppedItems(lootDrop);
             lootDrop.Remove();
             SystemEventManager.MyInstance.NotifyOnTakeLoot();
 

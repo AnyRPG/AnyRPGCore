@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+
         [SerializeField]
         private Image icon = null;
 
@@ -16,10 +17,10 @@ namespace AnyRPG {
 
         private LootUI lootWindow = null;
 
-        public Image MyIcon { get => icon; }
         public TextMeshProUGUI MyTitle { get => title; }
 
-        public Item MyLoot { get; set; }
+        public LootDrop LootDrop { get; set; }
+        public Image MyIcon { get => icon; set => icon = value; }
 
         private void Awake() {
             lootWindow = GetComponentInParent<LootUI>();
@@ -32,22 +33,14 @@ namespace AnyRPG {
 
         public bool TakeLoot() {
             //Debug.Log("LootButton.TakeLoot()");
-            bool result = InventoryManager.MyInstance.AddItem(MyLoot);
+            bool result = LootDrop.TakeLoot();
             if (result) {
                 //Debug.Log("LootButton.TakeLoot(): added item to inventory");
                 //Debug.Log("LootUI.TakeAllLoot(): Loot drop type is: " + MyLoot.GetType() + " and name is " + MyLoot.MyName);
-                if ((MyLoot as CurrencyItem) is CurrencyItem) {
-                    //Debug.Log("LootUI.TakeAllLoot(): item is currency: " + MyLoot.MyName);
-                    (MyLoot as CurrencyItem).Use();
-                } else if ((MyLoot as QuestStartItem) is QuestStartItem) {
-                    //Debug.Log("LootUI.TakeAllLoot(): item is questStartItem: " + MyLoot.MyName);
-                    (MyLoot as QuestStartItem).Use();
-                } else {
-                    //Debug.Log("LootUI.TakeAllLoot(): item is normal item");
-                }
+                LootDrop.AfterLoot();
 
                 gameObject.SetActive(false);
-                lootWindow.TakeLoot(MyLoot);
+                lootWindow.TakeLoot(LootDrop);
                 UIManager.MyInstance.HideToolTip();
                 return true;
             }
@@ -56,7 +49,7 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("LootButton.OnPointerEnter()");
-            UIManager.MyInstance.ShowToolTip(transform.position, MyLoot);
+            UIManager.MyInstance.ShowToolTip(transform.position, LootDrop);
         }
 
         public void OnPointerExit(PointerEventData eventData) {

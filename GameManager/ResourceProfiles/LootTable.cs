@@ -41,7 +41,10 @@ namespace AnyRPG {
         // used to prevent multiple copies of a unique item from dropping since the other check requires it to be in your bag, so multiple can still drop if you haven't looted a mob yet
         public bool droppedItemsContains(string itemName) {
             foreach (LootDrop lootDrop in droppedItems) {
-                if (SystemResourceManager.MatchResource(lootDrop.MyItem.MyDisplayName, itemName)) {
+                if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
+
+                }
+                if (SystemResourceManager.MatchResource((lootDrop as ItemLootDrop).MyItem.MyDisplayName, itemName)) {
                     return true;
                 }
             }
@@ -102,13 +105,13 @@ namespace AnyRPG {
             rolled = true;
         }
 
-        public List<LootDrop> GetLootDrop(Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
-            List<LootDrop> returnValue = new List<LootDrop>();
+        public List<ItemLootDrop> GetLootDrop(Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
+            List<ItemLootDrop> returnValue = new List<ItemLootDrop>();
             int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
                 //MyDroppedItems.Add(new LootDrop(Instantiate(_loot.MyItem), this));
-                droppedItems.Add(new LootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.MyDisplayName), this));
+                droppedItems.Add(new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.MyDisplayName), this));
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
                     if (lootGroupRemainingDrops <= 0) {

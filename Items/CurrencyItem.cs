@@ -13,7 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         private int gainCurrencyAmount = 0;
 
-        [SerializeField]
+        //[SerializeField]
         private CurrencyNode currencyNode;
 
         public CurrencyNode MyCurrencyNode { get => currencyNode; }

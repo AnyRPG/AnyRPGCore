@@ -21,7 +21,13 @@ namespace AnyRPG {
         [SerializeField]
         private LootTable lootTable;
         */
+        [Header("Loot")]
 
+        [Tooltip("If true, when killed, this unit will drop the system defined currency amount for its level and toughness")]
+        [SerializeField]
+        private bool automaticCurrency = false;
+
+        [Tooltip("Define items that can drop in this list")]
         [SerializeField]
         private List<string> lootTableNames = new List<string>();
 
@@ -29,8 +35,19 @@ namespace AnyRPG {
 
         private CharacterUnit characterUnit;
 
+        // keep track of whether or not currency for this character has been rolled.
+        private bool currencyRolled = false;
+        private bool currencyCollected = false;
+
+        // hold the rolled currency amount
+        private CurrencyNode currencyNode;
+
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public List<LootTable> MyLootTables { get => lootTables; set => lootTables = value; }
+        public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
+        public bool CurrencyRolled { get => currencyRolled; set => currencyRolled = value; }
+        public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
+        public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
 
         protected override void Awake() {
             base.Awake();
@@ -203,22 +220,61 @@ namespace AnyRPG {
             return validTargets;
         }
 
+        public void TakeCurrencyLoot() {
+            currencyCollected = true;
+            currencyNode = new CurrencyNode();
+        }
+
+        public CurrencyNode GetCurrencyLoot() {
+            //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot()");
+            if (currencyRolled == true) {
+                return currencyNode;
+            }
+            if (automaticCurrency == true) {
+                //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
+                currencyNode.currency = SystemConfigurationManager.MyInstance.KillCurrency;
+                if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
+                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Level;
+                    if ((namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.MyToughness != null) {
+                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.MyToughness.CurrencyMultiplier;
+                    }
+                }
+            }
+            currencyRolled = true;
+            //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): returning currency: " + currencyNode.currency.MyDisplayName + "; amount: " + currencyNode.MyAmount);
+            return currencyNode;
+        }
+
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.MyCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source);
+                // keep track of currency drops for combining after
+                CurrencyLootDrop droppedCurrencies = new CurrencyLootDrop();
 
                 List<LootDrop> drops = new List<LootDrop>();
+                List<LootDrop> itemDrops = new List<LootDrop>();
                 foreach (GameObject interactable in GetLootableTargets()) {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();
                     if (lootableCharacter != null) {
                         CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().MyCharacter.CharacterStats as CharacterStats;
                         if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.lootTables != null) {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
+
+                            // get currency loot
+                            if (lootableCharacter.AutomaticCurrency == true) {
+                                //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): automatic currency : true");
+                                CurrencyNode tmpNode = lootableCharacter.GetCurrencyLoot();
+                                if (tmpNode.currency != null) {
+                                    droppedCurrencies.AddCurrencyNode(lootableCharacter, tmpNode);
+                                }
+                            }
+
+                            // get item loot
                             foreach (LootTable lootTable in lootableCharacter.MyLootTables) {
-                                drops.AddRange(lootTable.GetLoot());
+                                itemDrops.AddRange(lootTable.GetLoot());
                                 lootableCharacter.MonitorLootTable();
                             }
                         }
@@ -228,6 +284,13 @@ namespace AnyRPG {
                 // this should take care of that situation
                 //drops.AddRange(MyLootTable.GetLoot());
                 // don't need anymore because of spherecast, not interactables
+
+                // combine all currencies from all lootable targets in range into a single currency lootdrop, and add that as the first lootdrop
+                // in the drops list so it shows up on the first page as the first item
+                if (droppedCurrencies.CurrencyNodes.Count > 0) {
+                    drops.Add(droppedCurrencies);
+                }
+                drops.AddRange(itemDrops);
 
                 if (drops.Count > 0) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);

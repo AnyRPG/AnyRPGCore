@@ -127,6 +127,28 @@ namespace AnyRPG {
         [SerializeField]
         private int xpRequiredPerLevel = 100;
 
+        [Header("Currency Scaling")]
+
+        [Tooltip("If automatic currency is enabled for a lootable character, this currency will be dropped")]
+        [SerializeField]
+        private string killCurrencyName = string.Empty;
+
+        private Currency killCurrency = null;
+
+        [Tooltip("If automatic currency is enabled for a lootable character, this currency amount will be multiplied by the character level")]
+        [SerializeField]
+        private int killCurrencyAmountPerLevel = 1;
+
+        [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
+        [SerializeField]
+        private string questCurrencyName = string.Empty;
+
+        private Currency questCurrency;
+
+        [Tooltip("If automatic currency is enabled for a quest, this currency amount will be multiplied by the quest level")]
+        [SerializeField]
+        private int questCurrencyAmountPerLevel = 1;
+
         [Header("Quest Experience Scaling")]
 
         [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
@@ -388,6 +410,12 @@ namespace AnyRPG {
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<string> PowerResources { get => powerResources; set => powerResources = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
+        public string KillCurrencyName { get => killCurrencyName; set => killCurrencyName = value; }
+        public int KillCurrencyAmountPerLevel { get => killCurrencyAmountPerLevel; set => killCurrencyAmountPerLevel = value; }
+        public string QuestCurrencyName { get => questCurrencyName; set => questCurrencyName = value; }
+        public int QuestCurrencyAmountPerLevel { get => questCurrencyAmountPerLevel; set => questCurrencyAmountPerLevel = value; }
+        public Currency KillCurrency { get => killCurrency; set => killCurrency = value; }
+        public Currency QuestCurrency { get => questCurrency; set => questCurrency = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -467,6 +495,26 @@ namespace AnyRPG {
                     } else {
                         Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + ". CHECK INSPECTOR");
                     }
+                }
+            }
+
+            if (KillCurrencyName != null && KillCurrencyName != string.Empty) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(KillCurrencyName);
+                if (tmpCurrency != null) {
+                    killCurrency = tmpCurrency;
+                    //currencyNode.MyAmount = gainCurrencyAmount;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find currency : " + KillCurrencyName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (questCurrencyName != null && questCurrencyName != string.Empty) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(questCurrencyName);
+                if (tmpCurrency != null) {
+                    questCurrency = tmpCurrency;
+                    //currencyNode.MyAmount = gainCurrencyAmount;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find currency : " + questCurrencyName + ".  CHECK INSPECTOR");
                 }
             }
 

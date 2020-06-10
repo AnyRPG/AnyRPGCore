@@ -232,7 +232,7 @@ namespace AnyRPG {
                     }
                 }
                 if (validItemQualities.Count > 0) {
-                    Debug.Log(MyName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
 
                     int usedIndex = 0;
 
@@ -243,15 +243,15 @@ namespace AnyRPG {
                     for (int i = 0; i < validItemQualities.Count; i++) {
                         sum_of_weight += validItemQualities[i].RandomWeight;
                     }
-                    Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
                     int rnd = UnityEngine.Random.Range(0, sum_of_weight);
-                    Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
                     for (int i = 0; i < validItemQualities.Count; i++) {
-                        Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                        //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
                         accumulatedWeight += validItemQualities[i].RandomWeight;
                         if (rnd < accumulatedWeight) {
                             usedIndex = i;
-                            Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
                             break;
                         }
                         //rnd -= validItemQualities[i].RandomWeight;

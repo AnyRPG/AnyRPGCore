@@ -62,7 +62,7 @@ namespace AnyRPG {
 
 
         public void AddResourceAmount(string resourceName, float resourceValue) {
-            Debug.Log("AbilityEffectContext.AddResourceAmount(" + resourceName + ", " + resourceValue + ")");
+            //Debug.Log("AbilityEffectContext.AddResourceAmount(" + resourceName + ", " + resourceValue + ")");
             bool foundResource = false;
             foreach (ResourceInputAmountNode resourceInputAmountNode in resourceAmounts) {
                 if (resourceInputAmountNode.resourceName == resourceName) {
