@@ -11,23 +11,35 @@ namespace AnyRPG {
 
         [Header("Equipment")]
 
+        [Tooltip("The equipment slot this item can be equippped in")]
         [SerializeField]
         protected string equipmentSlotType;
 
         private EquipmentSlotType realEquipmentSlotType;
 
+        [Tooltip("The name of the equipment set this item belongs to, if any")]
+        [SerializeField]
+        private string equipmentSetName = string.Empty;
+
+        // keep a reference to the actual equipment set
+        private EquipmentSet equipmentSet = null;
+
+        [Header("Equipment Models")]
+
+        [Tooltip("If true, the item will look for an UMA recipe with the same name as the item")]
+        [SerializeField]
+        private bool useUMARecipe = false;
+
+        [Tooltip("The name of an UMA recipe to manually search for")]
         [SerializeField]
         private string umaRecipeProfileName = string.Empty;
 
-        [SerializeField]
-        private UMA.UMATextRecipe UMARecipe = null;
-
-        [SerializeField]
+        // hold references to the uma recipes found in the uma recipe profile
         private List<UMA.UMATextRecipe> UMARecipes = new List<UMATextRecipe>();
 
-        // The next 5 fiels are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
-        // However, this will likely not happen and these should probably just be moved to weapon.
+        // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
 
+        [Tooltip("Physical prefabs to attach to bones on the character unit")]
         [SerializeField]
         private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
 
@@ -75,12 +87,6 @@ namespace AnyRPG {
         [Tooltip("These abilities will be learned when the item is equipped")]
         [SerializeField]
         private List<string> learnedAbilityNames = new List<string>();
-
-        [Tooltip("The name of the equipment set this item belongs to, if any")]
-        [SerializeField]
-        private string equipmentSetName = string.Empty;
-
-        private EquipmentSet equipmentSet = null;
 
         private List<int> randomStatIndexes = new List<int>();
 
@@ -146,7 +152,6 @@ namespace AnyRPG {
         public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
-        public UMATextRecipe MyUMARecipe { get => UMARecipe; set => UMARecipe = value; }
         public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
@@ -334,6 +339,9 @@ namespace AnyRPG {
                 }
             }
 
+            if (useUMARecipe == true && (umaRecipeProfileName == null || umaRecipeProfileName == string.Empty)) {
+                umaRecipeProfileName = MyName;
+            }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
                 UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
