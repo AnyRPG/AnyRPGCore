@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
     public static class CurrencyConverter {
@@ -37,6 +38,45 @@ namespace AnyRPG {
                 return currencyGroup.MyBaseCurrency;
             }
             return currency;
+        }
+
+        public static string RecalculateValues(List<CurrencyNode> usedCurrencyNodes, Image icon, bool setIcon = true) {
+            //Debug.Log("CurrencyConverter.RecalculateValues()");
+            List<string> returnStrings = new List<string>();
+            Dictionary<Currency, CurrencyNode> squishedNodes = new Dictionary<Currency, CurrencyNode>();
+            foreach (CurrencyNode currencyNode in usedCurrencyNodes) {
+                if (currencyNode.currency != null) {
+                    if (squishedNodes.ContainsKey(currencyNode.currency)) {
+                        CurrencyNode tmp = squishedNodes[currencyNode.currency];
+                        tmp.MyAmount += currencyNode.MyAmount;
+                        squishedNodes[currencyNode.currency] = tmp;
+                    } else {
+                        CurrencyNode tmp = new CurrencyNode();
+                        tmp.currency = currencyNode.currency;
+                        tmp.MyAmount = currencyNode.MyAmount;
+                        squishedNodes.Add(tmp.currency, tmp);
+                    }
+                }
+            }
+            if (squishedNodes.Count > 0) {
+                //Debug.Log("LootableDrop.RecalculateValues(): squishedNodes.count: " + squishedNodes.Count);
+                bool nonZeroFound = false;
+                foreach (KeyValuePair<Currency, int> keyValuePair in CurrencyConverter.RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.MyAmount)) {
+                    if (keyValuePair.Value > 0 && nonZeroFound == false) {
+                        nonZeroFound = true;
+                        if (setIcon) {
+                            //Debug.Log("LootableDrop.RecalculateValues(): setting icon: " + keyValuePair.Key.MyIcon.name);
+                            icon.sprite = keyValuePair.Key.MyIcon;
+                        }
+                    }
+                    if (nonZeroFound == true) {
+                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.MyDisplayName);
+                    }
+                }
+            }
+
+            //Debug.Log("LootableDrop.RecalculateValues(): " + summary);
+            return string.Join("\n", returnStrings);
         }
 
         // finds a currency group that the currency belongs to, or returns null if it does not belong to a group

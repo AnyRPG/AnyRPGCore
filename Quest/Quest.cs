@@ -57,6 +57,26 @@ namespace AnyRPG {
         [SerializeField]
         private int experienceRewardPerLevel = 0;
 
+        [Header("Currency Reward")]
+
+        [Tooltip("If true, the quest will reward currency based on the system quest currency reward settings")]
+        [SerializeField]
+        private bool automaticCurrencyReward = false;
+
+        [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
+        [SerializeField]
+        private string rewardCurrencyName = string.Empty;
+
+        private Currency rewardCurrency;
+
+        [Tooltip("The base currency reward for the quest, not scaled by level, and in addition to any automatic quest reward configured at the game level")]
+        [SerializeField]
+        private int baseCurrencyReward = 0;
+
+        [Tooltip("The currency for the quest, scaled by level, and in addition to any automatic quest currency configured at the game level")]
+        [SerializeField]
+        private int currencyRewardPerLevel = 0;
+
         [Header("Item Rewards")]
 
         [Tooltip("The maximum number of item rewards that can be chosen if there are more than 1 reward")]
@@ -255,11 +275,37 @@ namespace AnyRPG {
         public VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
         public int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
         public int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
+        public bool AutomaticCurrencyReward { get => automaticCurrencyReward; set => automaticCurrencyReward = value; }
+        public string RewardCurrencyName { get => rewardCurrencyName; set => rewardCurrencyName = value; }
+        public Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
+        public int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
+        public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
             SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
             OnQuestStatusUpdated();
+        }
+
+        public List<CurrencyNode> GetCurrencyReward() {
+            List<CurrencyNode> currencyNodes = new List<CurrencyNode>();
+
+            if (AutomaticCurrencyReward == true) {
+                if (SystemConfigurationManager.MyInstance.QuestCurrency != null) {
+                    CurrencyNode currencyNode = new CurrencyNode();
+                    currencyNode.currency = SystemConfigurationManager.MyInstance.QuestCurrency;
+                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.QuestCurrencyAmountPerLevel * MyExperienceLevel;
+                    currencyNodes.Add(currencyNode);
+                }
+            }
+            if (RewardCurrency != null) {
+                CurrencyNode currencyNode = new CurrencyNode();
+                currencyNode.MyAmount = BaseCurrencyReward + (CurrencyRewardPerLevel * MyExperienceLevel);
+                currencyNode.currency = RewardCurrency;
+                currencyNodes.Add(currencyNode);
+            }
+
+            return currencyNodes;
         }
 
         public void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
@@ -526,6 +572,16 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".Quest.SetupScriptableObjects(): ID: " + GetInstanceID());
         
             base.SetupScriptableObjects();
+
+            if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(rewardCurrencyName);
+                if (tmpCurrency != null) {
+                    rewardCurrency = tmpCurrency;
+                    //currencyNode.MyAmount = gainCurrencyAmount;
+                } else {
+                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find currency : " + rewardCurrencyName + ".  CHECK INSPECTOR");
+                }
+            }
 
             abilityRewardList = new List<BaseAbility>();
             if (abilityRewardNames != null) {

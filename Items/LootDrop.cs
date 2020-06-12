@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
     public class LootDrop : IDescribable {
@@ -43,14 +44,14 @@ namespace AnyRPG {
 
     public class CurrencyLootDrop : LootDrop {
 
-        private Sprite icon = null;
+        private Image icon = null;
 
         private string summary = string.Empty;
         private string logSummary = string.Empty;
 
         public override Sprite MyIcon {
             get {
-                return icon;
+                return icon.sprite;
             }
         }
 
@@ -72,7 +73,7 @@ namespace AnyRPG {
             foreach (CurrencyNode tmpCurrencyNode in currencyNodes.Values) {
                 usedCurrencyNodes.Add(tmpCurrencyNode);
             }
-            RecalculateValues(usedCurrencyNodes);
+            CurrencyConverter.RecalculateValues(usedCurrencyNodes, icon);
         }
 
         public override string GetDescription() {
@@ -87,48 +88,11 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
-                    CombatLogUI.MyInstance.WriteSystemMessage("Gained " + RecalculateValues(tmpCurrencyNode, false));
+                    CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, icon, false).Replace("\n", ", "));
                     lootableCharacter.TakeCurrencyLoot();
                 }
             }
             return true;
-        }
-
-        public string RecalculateValues(List<CurrencyNode> usedCurrencyNodes, bool setIcon = true) {
-            //Debug.Log("LootableDrop.RecalculateValues()");
-            List<string> returnStrings = new List<string>();
-            Dictionary<Currency, CurrencyNode> squishedNodes = new Dictionary<Currency, CurrencyNode>();
-            foreach (CurrencyNode currencyNode in usedCurrencyNodes) {
-                if (squishedNodes.ContainsKey(currencyNode.currency)) {
-                    CurrencyNode tmp = squishedNodes[currencyNode.currency];
-                    tmp.MyAmount += currencyNode.MyAmount;
-                    squishedNodes[currencyNode.currency] = tmp;
-                } else {
-                    CurrencyNode tmp = new CurrencyNode();
-                    tmp.currency = currencyNode.currency;
-                    tmp.MyAmount = currencyNode.MyAmount;
-                    squishedNodes.Add(tmp.currency, tmp);
-                }
-            }
-            if (squishedNodes.Count > 0) {
-                //Debug.Log("LootableDrop.RecalculateValues(): squishedNodes.count: " + squishedNodes.Count);
-                bool nonZeroFound = false;
-                foreach (KeyValuePair<Currency, int> keyValuePair in CurrencyConverter.RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.MyAmount)) {
-                    if (keyValuePair.Value > 0 && nonZeroFound == false) {
-                        nonZeroFound = true;
-                        if (setIcon) {
-                            icon = keyValuePair.Key.MyIcon;
-                        }
-                    }
-                    if (nonZeroFound == true) {
-                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.MyDisplayName);
-                    }
-                }
-            }
-
-            summary = string.Join("\n", returnStrings);
-            //Debug.Log("LootableDrop.RecalculateValues(): " + summary);
-            return string.Join(", ", returnStrings);
         }
 
         public override string GetSummary() {

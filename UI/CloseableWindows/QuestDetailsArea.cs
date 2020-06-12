@@ -16,6 +16,12 @@ namespace AnyRPG {
         private TextMeshProUGUI experienceReward = null;
 
         [SerializeField]
+        private GameObject currencyHeading = null;
+
+        [SerializeField]
+        private GameObject currencyArea = null;
+
+        [SerializeField]
         private GameObject itemsHeading = null;
 
         [SerializeField]
@@ -38,6 +44,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject skillIconsArea = null;
+
+        [SerializeField]
+        private LootButton currencyLootButton = null;
 
         [SerializeField]
         private GameObject rewardIconPrefab = null;
@@ -147,6 +156,23 @@ namespace AnyRPG {
             questDescription.text = quest.GetObjectiveDescription();
 
             experienceReward.text += LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest) + " XP";
+
+            // display currency rewards
+
+            List<CurrencyNode> currencyNodes = quest.GetCurrencyReward();
+
+            // currencies could be different
+            if (currencyNodes.Count > 0) {
+                currencyHeading.gameObject.SetActive(true);
+                currencyArea.gameObject.SetActive(true);
+                if (currencyLootButton != null) {
+                    currencyLootButton.MyTitle.text = CurrencyConverter.RecalculateValues(currencyNodes, currencyLootButton.MyIcon, true);
+                }
+            } else {
+                currencyHeading.gameObject.SetActive(false);
+                currencyArea.gameObject.SetActive(false);
+            }
+
 
             // show item rewards
             if (quest.MyItemRewards.Count > 0) {

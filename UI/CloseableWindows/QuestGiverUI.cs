@@ -419,6 +419,15 @@ namespace AnyRPG {
                 return;
             }
 
+            // currency rewards
+            List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
+            foreach (CurrencyNode currencyNode in currencyNodes) {
+                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
+                tmpCurrencyNode.Add(currencyNode);
+                CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, null, false).Replace("\n", ", "));
+            }
+
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
