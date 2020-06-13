@@ -20,8 +20,8 @@ namespace AnyRPG {
 
         private List<BaseAbility> abilityList = new List<BaseAbility>();
 
-        public int MyRequiredLevel { get => requiredLevel; }
-        public bool MyAutoLearn { get => autoLearn; }
+        public int RequiredLevel { get => requiredLevel; }
+        public bool AutoLearn { get => autoLearn; }
         public List<BaseAbility> MyAbilityList { get => abilityList; set => abilityList = value; }
 
         public override string GetDescription() {

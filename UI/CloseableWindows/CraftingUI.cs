@@ -123,8 +123,8 @@ namespace AnyRPG {
         public List<Recipe> GetRecipes() {
             //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
             List<Recipe> returnList = new List<Recipe>();
-            foreach (Recipe recipe in SystemRecipeManager.MyInstance.GetResourceList()) {
-                if (SystemResourceManager.MatchResource(recipe.MyCraftAbility.MyDisplayName, craftAbility.MyDisplayName)) {
+            foreach (Recipe recipe in PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.Values) {
+                if (craftAbility == recipe.CraftAbility) {
                     returnList.Add(recipe);
                 }
             }

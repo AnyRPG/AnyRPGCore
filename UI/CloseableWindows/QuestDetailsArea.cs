@@ -166,7 +166,9 @@ namespace AnyRPG {
                 currencyHeading.gameObject.SetActive(true);
                 currencyArea.gameObject.SetActive(true);
                 if (currencyLootButton != null) {
-                    currencyLootButton.MyTitle.text = CurrencyConverter.RecalculateValues(currencyNodes, currencyLootButton.MyIcon, true);
+                    KeyValuePair<Sprite, string> keyValuePair = CurrencyConverter.RecalculateValues(currencyNodes, true);
+                    currencyLootButton.MyIcon.sprite = keyValuePair.Key;
+                    currencyLootButton.MyTitle.text = keyValuePair.Value;
                 }
             } else {
                 currencyHeading.gameObject.SetActive(false);

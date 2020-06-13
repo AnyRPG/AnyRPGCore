@@ -44,14 +44,13 @@ namespace AnyRPG {
 
     public class CurrencyLootDrop : LootDrop {
 
-        private Image icon = null;
+        private Sprite icon = null;
 
         private string summary = string.Empty;
-        private string logSummary = string.Empty;
 
         public override Sprite MyIcon {
             get {
-                return icon.sprite;
+                return icon;
             }
         }
 
@@ -73,7 +72,9 @@ namespace AnyRPG {
             foreach (CurrencyNode tmpCurrencyNode in currencyNodes.Values) {
                 usedCurrencyNodes.Add(tmpCurrencyNode);
             }
-            CurrencyConverter.RecalculateValues(usedCurrencyNodes, icon);
+            KeyValuePair<Sprite, string> keyValuePair = CurrencyConverter.RecalculateValues(usedCurrencyNodes, true);
+            icon = keyValuePair.Key;
+            summary = keyValuePair.Value;
         }
 
         public override string GetDescription() {
@@ -88,7 +89,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
-                    CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, icon, false).Replace("\n", ", "));
+                    CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
                     lootableCharacter.TakeCurrencyLoot();
                 }
             }

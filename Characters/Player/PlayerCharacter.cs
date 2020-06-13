@@ -6,6 +6,10 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayerCharacter : BaseCharacter {
 
+        private CharacterRecipeManager playerRecipeManager;
+
+        public CharacterRecipeManager PlayerRecipeManager { get => playerRecipeManager; set => playerRecipeManager = value; }
+
         private PlayerCurrencyManager playerCurrencyManager;
 
         public PlayerCurrencyManager MyPlayerCurrencyManager { get => playerCurrencyManager; set => playerCurrencyManager = value; }
@@ -17,6 +21,11 @@ namespace AnyRPG {
             playerCurrencyManager = GetComponent<PlayerCurrencyManager>();
             if (playerCurrencyManager == null) {
                 Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): playerCurrencyManager is null!");
+            }
+
+            playerRecipeManager = GetComponent<CharacterRecipeManager>();
+            if (playerRecipeManager == null) {
+                Debug.Log(gameObject.name + ".PlayerCharcter.Awake(): playerRecipeManager is null!");
             }
 
         }

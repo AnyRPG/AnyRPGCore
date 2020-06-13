@@ -35,6 +35,7 @@ namespace AnyRPG {
         public List<EquippedBagSaveData> equippedBagSaveData;
         public List<AbilitySaveData> abilitySaveData;
         public List<SkillSaveData> skillSaveData;
+        public List<RecipeSaveData> recipeSaveData;
         public List<ReputationSaveData> reputationSaveData;
         public List<EquipmentSaveData> equipmentSaveData;
         public List<CurrencySaveData> currencySaveData;
@@ -182,7 +183,12 @@ namespace AnyRPG {
     public struct SkillSaveData {
 
         public string MyName;
+    }
 
+    [Serializable]
+    public struct RecipeSaveData {
+
+        public string MyName;
     }
 
     [Serializable]

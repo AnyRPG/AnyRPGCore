@@ -153,6 +153,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.skillSaveData == null || overWrite) {
                 anyRPGSaveData.skillSaveData = new List<SkillSaveData>();
             }
+            if (anyRPGSaveData.recipeSaveData == null || overWrite) {
+                anyRPGSaveData.recipeSaveData = new List<RecipeSaveData>();
+            }
             if (anyRPGSaveData.reputationSaveData == null || overWrite) {
                 anyRPGSaveData.reputationSaveData = new List<ReputationSaveData>();
             }
@@ -362,6 +365,7 @@ namespace AnyRPG {
             SaveEquippedBagData(anyRPGSaveData);
             SaveAbilityData(anyRPGSaveData);
             SaveSkillData(anyRPGSaveData);
+            SaveRecipeData(anyRPGSaveData);
             SaveReputationData(anyRPGSaveData);
             SaveEquipmentData(anyRPGSaveData);
             SaveCurrencyData(anyRPGSaveData);
@@ -646,6 +650,15 @@ namespace AnyRPG {
             }
         }
 
+        public void SaveRecipeData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveRecipeData()");
+            foreach (string recipeName in PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.Keys) {
+                RecipeSaveData saveData = new RecipeSaveData();
+                saveData.MyName = recipeName;
+                anyRPGSaveData.recipeSaveData.Add(saveData);
+            }
+        }
+
         public void LoadResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadQuestData()");
 
@@ -747,28 +760,27 @@ namespace AnyRPG {
 
         public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData, CharacterEquipmentManager characterEquipmentManager) {
             //Debug.Log("Savemanager.LoadEquipmentData()");
-            //int counter = 0;
             foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
                 //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment");
                 if (equipmentSaveData.MyName != string.Empty) {
                     //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment: using item: " + equipmentSaveData.MyName);
                     Equipment newItem = (SystemItemManager.MyInstance.GetNewResource(equipmentSaveData.MyName) as Equipment);
-                    newItem.MyDisplayName = equipmentSaveData.DisplayName;
-                    if (newItem.RandomItemQuality == true) {
-                        newItem.MyItemQuality = SystemItemQualityManager.MyInstance.GetResource(equipmentSaveData.itemQuality);
+                    if (newItem != null) {
+                        newItem.MyDisplayName = equipmentSaveData.DisplayName;
+                        if (newItem.RandomItemQuality == true) {
+                            newItem.MyItemQuality = SystemItemQualityManager.MyInstance.GetResource(equipmentSaveData.itemQuality);
+                        }
+                        if (equipmentSaveData.randomSecondaryStatIndexes != null) {
+                            newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
+                            newItem.InitializeRandomStatsFromIndex();
+                        }
+                        if (characterEquipmentManager != null) {
+                            characterEquipmentManager.Equip(newItem);
+                        } else {
+                            //Debug.Log("Issue with equipment manager on player");
+                        }
                     }
-                    if (equipmentSaveData.randomSecondaryStatIndexes != null) {
-                        newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
-                        newItem.InitializeRandomStatsFromIndex();
-                    }
-                    if (characterEquipmentManager != null) {
-                        characterEquipmentManager.Equip(newItem);
-                    } else {
-                        //Debug.Log("Issue with equipment manager on player");
-                    }
-                    //newItem.Use();
                 }
-                //counter++;
             }
         }
 
@@ -816,6 +828,13 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadSkillData()");
             foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
                 PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
+            }
+        }
+
+        public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadRecipeData()");
+            foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
+                PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LoadRecipe(recipeSaveData.MyName);
             }
         }
 
@@ -995,6 +1014,7 @@ namespace AnyRPG {
 
 
             LoadSkillData(anyRPGSaveData);
+            LoadRecipeData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);
             LoadQuestData(anyRPGSaveData);
             LoadDialogData(anyRPGSaveData);

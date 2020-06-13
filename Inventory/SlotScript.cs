@@ -117,6 +117,7 @@ namespace AnyRPG {
         }
 
         public void OnPointerClick(PointerEventData eventData) {
+            //Debug.Log("SlotScript.OnPointerClick()");
 
             // Detect a left click on a slot in a bag
             if (eventData.button == PointerEventData.InputButton.Left) {
@@ -220,6 +221,7 @@ namespace AnyRPG {
         }
 
         public void HandleRightClick() {
+            //Debug.Log("SlotScript.HandleRightClick()");
             // ignore right clicks when something is in the handscript
             if (HandScript.MyInstance.MyMoveable != null) {
                 return;
@@ -274,6 +276,7 @@ namespace AnyRPG {
 
             // WHY ARE WE DOING THAT IF WE DIDN'T RETURN EARLIER AFTER PUTTING THINGS IN THE BANK?
             // if we got to here, nothing left to do but use the item
+
             UseItem();
         }
 
@@ -290,6 +293,7 @@ namespace AnyRPG {
         /// Uses the item if it is useable
         /// </summary>
         public void UseItem() {
+            //Debug.Log("SlotScript.HandleRightClick()");
             if (MyItem is IUseable) {
                 (MyItem as IUseable).Use();
             } else if (MyItem is Equipment) {

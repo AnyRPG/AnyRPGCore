@@ -27,12 +27,20 @@ namespace AnyRPG {
         }
 
         public void OnPointerClick(PointerEventData eventData) {
+            if (LootDrop == null) {
+                return;
+            }
+
             // loot the item
             TakeLoot();
         }
 
         public bool TakeLoot() {
             //Debug.Log("LootButton.TakeLoot()");
+            if (LootDrop == null) {
+                return false;
+            }
+
             bool result = LootDrop.TakeLoot();
             if (result) {
                 //Debug.Log("LootButton.TakeLoot(): added item to inventory");
@@ -49,6 +57,10 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("LootButton.OnPointerEnter()");
+            if (LootDrop == null) {
+                return;
+            }
+
             UIManager.MyInstance.ShowToolTip(transform.position, LootDrop);
         }
 

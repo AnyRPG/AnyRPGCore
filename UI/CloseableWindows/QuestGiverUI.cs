@@ -425,7 +425,7 @@ namespace AnyRPG {
                 PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
-                CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, null, false).Replace("\n", ", "));
+                CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
             }
 
             // item rewards first in case not enough space in inventory

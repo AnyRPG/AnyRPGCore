@@ -54,7 +54,7 @@ namespace AnyRPG {
         public void UpdateSkillList(int newLevel) {
             //Debug.Log("CharacterSkillManager.UpdateSkillList()");
             foreach (Skill skill in SystemSkillManager.MyInstance.GetResourceList()) {
-                if (!HasSkill(skill) && skill.MyRequiredLevel <= newLevel && skill.MyAutoLearn == true) {
+                if (!HasSkill(skill) && skill.RequiredLevel <= newLevel && skill.AutoLearn == true) {
                     LearnSkill(skill);
                 }
             }
@@ -75,6 +75,12 @@ namespace AnyRPG {
                 foreach (BaseAbility ability in newSkill.MyAbilityList) {
                     MyBaseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
+                foreach (Recipe recipe in SystemRecipeManager.MyInstance.GetResourceList()) {
+                    if (MyBaseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
+                        PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LearnRecipe(recipe);
+                    }
+                }
+
                 SystemEventManager.MyInstance.NotifyOnSkillListChanged(newSkill);
             }
         }

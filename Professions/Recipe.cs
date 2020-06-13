@@ -7,6 +7,18 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Recipe", menuName = "AnyRPG/Recipes/Recipe")]
     public class Recipe : DescribableResource {
 
+        [Header("Recipe")]
+
+        [Tooltip("If true, this recipe is automatically learned at the appropriate level")]
+        [SerializeField]
+        private bool autoLearn = false;
+
+        [Tooltip("The level that is required to learn this recipe")]
+        [SerializeField]
+        private int requiredLevel = 1;
+
+        [Header("Crafting")]
+
         [SerializeField]
         private List<CraftingMaterial> craftingMaterials = new List<CraftingMaterial>();
 
@@ -37,8 +49,10 @@ namespace AnyRPG {
         public Item MyOutput { get => output; set => output = value; }
         public List<CraftingMaterial> MyCraftingMaterials { get => craftingMaterials; set => craftingMaterials = value; }
         public int MyOutputCount { get => outputCount; set => outputCount = value; }
-        public CraftAbility MyCraftAbility { get => craftAbility; set => craftAbility = value; }
+        public CraftAbility CraftAbility { get => craftAbility; set => craftAbility = value; }
         public List<PrefabProfile> HoldableObjects { get => holdableObjects; set => holdableObjects = value; }
+        public bool AutoLearn { get => autoLearn; set => autoLearn = value; }
+        public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

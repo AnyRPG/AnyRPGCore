@@ -40,8 +40,9 @@ namespace AnyRPG {
             return currency;
         }
 
-        public static string RecalculateValues(List<CurrencyNode> usedCurrencyNodes, Image icon, bool setIcon = true) {
+        public static KeyValuePair<Sprite, string> RecalculateValues(List<CurrencyNode> usedCurrencyNodes, bool setIcon = true) {
             //Debug.Log("CurrencyConverter.RecalculateValues()");
+            Sprite returnSprite = null;
             List<string> returnStrings = new List<string>();
             Dictionary<Currency, CurrencyNode> squishedNodes = new Dictionary<Currency, CurrencyNode>();
             foreach (CurrencyNode currencyNode in usedCurrencyNodes) {
@@ -66,7 +67,8 @@ namespace AnyRPG {
                         nonZeroFound = true;
                         if (setIcon) {
                             //Debug.Log("LootableDrop.RecalculateValues(): setting icon: " + keyValuePair.Key.MyIcon.name);
-                            icon.sprite = keyValuePair.Key.MyIcon;
+                            returnSprite = keyValuePair.Key.MyIcon;
+                            
                         }
                     }
                     if (nonZeroFound == true) {
@@ -76,7 +78,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log("LootableDrop.RecalculateValues(): " + summary);
-            return string.Join("\n", returnStrings);
+            return new KeyValuePair<Sprite, string>(returnSprite, string.Join("\n", returnStrings));
         }
 
         // finds a currency group that the currency belongs to, or returns null if it does not belong to a group
