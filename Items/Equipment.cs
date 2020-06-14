@@ -182,8 +182,8 @@ namespace AnyRPG {
         /// <returns></returns>
         public float GetItemQualityNumber() {
             float returnValue = 1;
-            if (MyItemQuality != null) {
-                returnValue = MyItemQuality.MyStatMultiplier;
+            if (ItemQuality != null) {
+                returnValue = ItemQuality.MyStatMultiplier;
             }
             return returnValue;
         }

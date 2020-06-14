@@ -158,8 +158,8 @@ namespace AnyRPG {
             UpdateButtons(musicProfile);
 
             musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.MyDisplayName, musicProfile.MyDescription);
-            if (musicProfile.MyArtistName != null && musicProfile.MyArtistName != string.Empty) {
-                musicDescription.text += string.Format("\n\n<size=20><b>Author:</b></size> {0}\n\n", musicProfile.MyArtistName);
+            if (musicProfile.ArtistName != null && musicProfile.ArtistName != string.Empty) {
+                musicDescription.text += string.Format("\n\n<size=20><b>Author:</b></size> {0}\n\n", musicProfile.ArtistName);
             }
 
         }
@@ -202,8 +202,8 @@ namespace AnyRPG {
 
         public void PlayMusic() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
-            if (currentMusicProfile != null && currentMusicProfile.MyAudioClip != null) {
-                AudioManager.MyInstance.PlayMusic(currentMusicProfile.MyAudioClip);
+            if (currentMusicProfile != null && currentMusicProfile.AudioClip != null) {
+                AudioManager.MyInstance.PlayMusic(currentMusicProfile.AudioClip);
             }
         }
 

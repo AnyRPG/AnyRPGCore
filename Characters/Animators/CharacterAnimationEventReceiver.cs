@@ -3,10 +3,13 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class CharacterAnimationEventReceiver : MonoBehaviour {
+
         [SerializeField]
         private CharacterUnit characterUnit;
 
         private Animator animator;
+
+        private int stepIndex = 0;
 
         private void Awake() {
             if (characterUnit == null) {
@@ -70,19 +73,40 @@ namespace AnyRPG {
         }
 
         public void PlayStep() {
-
+            PlayFootStep();
         }
 
         public void Shoot() {
         }
 
         public void FootR() {
+            PlayFootStep();
         }
 
         public void FootL() {
+            PlayFootStep();
         }
 
         public void Land() {
+        }
+
+        private void PlayFootStep() {
+            //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            if (characterUnit.BaseCharacter.MyUnitProfile == null ||
+                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles == null ||
+                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles.Count == 0 ||
+                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips.Count == 0 ||
+                characterUnit.BaseCharacter.MyUnitProfile.PlayOnFootstep == false) {
+                //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
+                return;
+            }
+
+            //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
+            characterUnit.UnitAudio.PlayMovement(characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips[stepIndex], false);
+            stepIndex++;
+            if (stepIndex >= characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips.Count) {
+                stepIndex = 0;
+            }
         }
 
     }

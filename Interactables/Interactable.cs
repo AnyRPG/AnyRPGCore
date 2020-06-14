@@ -116,7 +116,7 @@ namespace AnyRPG {
 
         public Sprite MyIcon { get => interactableIcon; }
 
-        public string MyDisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.MyDisplayName : gameObject.name)); }
+        public string MyDisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.UnitDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
@@ -211,8 +211,8 @@ namespace AnyRPG {
             // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
             if (namePlateUnit != null) {
-                if (namePlateUnit.MyDisplayName != null && namePlateUnit.MyDisplayName != string.Empty) {
-                    interactableName = namePlateUnit.MyDisplayName;
+                if (namePlateUnit.UnitDisplayName != null && namePlateUnit.UnitDisplayName != string.Empty) {
+                    interactableName = namePlateUnit.UnitDisplayName;
                 }
             } else {
                 //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
@@ -807,7 +807,7 @@ namespace AnyRPG {
                 CharacterUnit baseCharacter = GetComponent<CharacterUnit>();
                 if (baseCharacter != null) {
                     //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
-                    nameString = baseCharacter.MyDisplayName;
+                    nameString = baseCharacter.UnitDisplayName;
                 }
             }
             Color textColor = Color.white;

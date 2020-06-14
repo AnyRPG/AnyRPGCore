@@ -211,16 +211,16 @@ namespace AnyRPG {
             } else {
                 characterUnit = null;
             }
-            if (characterUnit != null && characterUnit.MyBaseCharacter != null && characterUnit.MyBaseCharacter.CharacterClass != null) {
-                if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 0) {
-                    primaryPowerResource = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[0];
-                    powerResourceColor1 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[0].DisplayColor;
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterClass != null) {
+                if (characterUnit.BaseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                    primaryPowerResource = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[0];
+                    powerResourceColor1 = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[0].DisplayColor;
                 } else {
                     primaryPowerResource = null;
                 }
-                if (characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList.Count > 1) {
-                    secondaryPowerResource = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[1];
-                    powerResourceColor2 = characterUnit.MyBaseCharacter.CharacterClass.PowerResourceList[1].DisplayColor;
+                if (characterUnit.BaseCharacter.CharacterClass.PowerResourceList.Count > 1) {
+                    secondaryPowerResource = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[1];
+                    powerResourceColor2 = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[1].DisplayColor;
                 } else {
                     secondaryPowerResource = null;
                 }
@@ -286,7 +286,7 @@ namespace AnyRPG {
 
             HandleReputationChange();
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
-            unitNameText.text = namePlateUnit.MyDisplayName;
+            unitNameText.text = namePlateUnit.UnitDisplayName;
 
             if (!namePlateUnit.HasPrimaryResource()) {
                 ClearPrimaryResourceBar();

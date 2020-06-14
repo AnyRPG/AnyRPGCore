@@ -138,7 +138,7 @@ namespace AnyRPG {
                 return;
             }
             if (characterNameText != null) {
-                characterNameText.text = MyInteractable.GetComponent<INamePlateUnit>().MyDisplayName;
+                characterNameText.text = MyInteractable.GetComponent<INamePlateUnit>().UnitDisplayName;
             }
             
             if (dialogText != null) {
@@ -146,8 +146,8 @@ namespace AnyRPG {
             }
 
             CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
-            if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.MyAudioClips != null && MyDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayVoice(MyDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+            if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.AudioClips != null && MyDialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
+                AudioManager.MyInstance.PlayVoice(MyDialog.MyAudioProfile.AudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {

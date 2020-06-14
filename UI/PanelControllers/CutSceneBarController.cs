@@ -164,8 +164,8 @@ namespace AnyRPG {
             captionText.color = new Color32(255, 255, 255, 0);
             dialogCoroutine = StartCoroutine(FadeInText());
 
-            if (AudioManager.MyInstance != null && currentDialog.MyAudioProfile != null && currentDialog.MyAudioProfile.MyAudioClips != null && currentDialog.MyAudioProfile.MyAudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayVoice(currentDialog.MyAudioProfile.MyAudioClips[dialogIndex]);
+            if (AudioManager.MyInstance != null && currentDialog.MyAudioProfile != null && currentDialog.MyAudioProfile.AudioClips != null && currentDialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
+                AudioManager.MyInstance.PlayVoice(currentDialog.MyAudioProfile.AudioClips[dialogIndex]);
             }
 
 

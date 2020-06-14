@@ -590,11 +590,11 @@ namespace AnyRPG {
         public virtual void AttemptAgro(IAbilityCaster sourceCharacter, CharacterUnit target) {
             if (target != null && (sourceCharacter as CharacterAbilityManager) is CharacterAbilityManager) {
                 CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
-                if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
-                    if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, (sourceCharacter as CharacterAbilityManager).BaseCharacter) <= -1) {
-                        if (targetCharacterUnit.MyBaseCharacter.CharacterCombat != null) {
+                if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
+                    if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, (sourceCharacter as CharacterAbilityManager).BaseCharacter) <= -1) {
+                        if (targetCharacterUnit.BaseCharacter.CharacterCombat != null) {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                            targetCharacterUnit.MyBaseCharacter.CharacterController.Agro((sourceCharacter as CharacterAbilityManager).BaseCharacter.CharacterUnit);
+                            targetCharacterUnit.BaseCharacter.CharacterController.Agro((sourceCharacter as CharacterAbilityManager).BaseCharacter.CharacterUnit);
                         }
                     }
                 }

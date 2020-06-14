@@ -64,7 +64,7 @@ namespace AnyRPG {
                     }
                     BaseCharacter targetBaseCharacter = null;
                     if (targetCharacterUnit != null) {
-                        targetBaseCharacter = targetCharacterUnit.MyBaseCharacter;
+                        targetBaseCharacter = targetCharacterUnit.BaseCharacter;
                     }
 
                     int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);

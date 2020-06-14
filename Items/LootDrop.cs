@@ -108,7 +108,7 @@ namespace AnyRPG {
         public override ItemQuality MyItemQuality {
             get {
                 if (MyItem != null) {
-                    return MyItem.MyItemQuality;
+                    return MyItem.ItemQuality;
                 }
                 return base.MyItemQuality;
             }

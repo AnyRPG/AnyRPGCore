@@ -59,8 +59,8 @@ namespace AnyRPG {
                 return;
             }
             if (phaseMusicProfile != null) {
-                if (phaseMusicProfile.MyAudioClip != null) {
-                    AudioManager.MyInstance.PlayMusic(phaseMusicProfile.MyAudioClip);
+                if (phaseMusicProfile.AudioClip != null) {
+                    AudioManager.MyInstance.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
             phaseStarted = true;

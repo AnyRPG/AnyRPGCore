@@ -15,26 +15,19 @@ namespace AnyRPG {
         private string artistName;
 
         [SerializeField]
-        private AudioClip audioClip;
-
-        [SerializeField]
         private List<AudioClip> audioClips = new List<AudioClip>();
 
-        public string MyArtistName { get => artistName; set => artistName = value; }
-        public AudioClip MyAudioClip {
+        public string ArtistName { get => artistName; set => artistName = value; }
+        public AudioClip AudioClip {
             get {
-                if (audioClip !=null) {
-                    return audioClip;
-                }
                 if (audioClips.Count > 0) {
                     return audioClips[0];
                 }
                 return null;
             }
-            set => audioClip = value;
         }
 
-        public List<AudioClip> MyAudioClips { get => audioClips; }
+        public List<AudioClip> AudioClips { get => audioClips; }
     }
 
 }

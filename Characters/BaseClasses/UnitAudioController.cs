@@ -21,6 +21,13 @@ namespace AnyRPG {
             }
         }
 
+        public bool MovementIsPlaying() {
+            if (unitAudioEmitter == null) {
+                return false;
+            }
+            return unitAudioEmitter.MovementIsPlaying();
+        }
+
         public void PlayCast(AudioClip audioClip) {
             if (audioClip == null) {
                 return;
@@ -52,6 +59,16 @@ namespace AnyRPG {
             }
         }
 
+        public void PlayMovement(AudioClip audioClip, bool loop) {
+            //Debug.Log(gameObject.name + "UnitAudio.PlayMovement()");
+            if (audioClip == null) {
+                return;
+            }
+            if (unitAudioEmitter != null) {
+                unitAudioEmitter.PlayMovement(audioClip, loop);
+            }
+        }
+
         public void StopCast() {
             //Debug.Log(gameObject.name + "UnitAudio.StopCast()");
             if (unitAudioEmitter != null) {
@@ -70,6 +87,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "UnitAudio.StopVoice()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopVoice();
+            }
+        }
+
+        public void StopMovement() {
+            Debug.Log(gameObject.name + "UnitAudio.StopMovement()");
+            if (unitAudioEmitter != null) {
+                unitAudioEmitter.StopMovement();
             }
         }
 

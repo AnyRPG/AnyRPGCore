@@ -182,6 +182,28 @@ namespace AnyRPG {
             if (apparentVelocity > 0.1f) {
                 baseCharacter.CharacterAbilityManager.HandleManualMovement();
             }
+
+            HandleMovementAudio();
+        }
+
+        private void HandleMovementAudio() {
+            //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            if (baseCharacter.MyUnitProfile == null || baseCharacter.MyUnitProfile.MovementAudioProfiles == null || baseCharacter.MyUnitProfile.MovementAudioProfiles.Count == 0 || baseCharacter.MyUnitProfile.PlayOnFootstep == true) {
+                //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
+                return;
+            }
+
+            if (apparentVelocity >= (baseCharacter.CharacterStats.RunSpeed / 2f)) {
+                //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
+                if (!baseCharacter.CharacterUnit.UnitAudio.MovementIsPlaying()) {
+                    baseCharacter.CharacterUnit.UnitAudio.PlayMovement(baseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClip, true);
+                }
+            } else {
+                //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");
+                if (baseCharacter.CharacterUnit.UnitAudio.MovementIsPlaying()) {
+                    baseCharacter.CharacterUnit.UnitAudio.StopMovement();
+                }
+            }
         }
 
         private Vector3 NormalizedVelocity(Vector3 inputVelocity) {

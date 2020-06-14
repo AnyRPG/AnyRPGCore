@@ -216,14 +216,14 @@ namespace AnyRPG {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             SceneNode activeSceneNode = GetActiveSceneNode();
             if (activeSceneNode != null) {
-                if (activeSceneNode.MyAmbientMusicProfile != null && activeSceneNode.MyAmbientMusicProfile.MyAudioClip != null) {
-                    AudioManager.MyInstance.PlayAmbientSound(activeSceneNode.MyAmbientMusicProfile.MyAudioClip);
+                if (activeSceneNode.MyAmbientMusicProfile != null && activeSceneNode.MyAmbientMusicProfile.AudioClip != null) {
+                    AudioManager.MyInstance.PlayAmbientSound(activeSceneNode.MyAmbientMusicProfile.AudioClip);
                 } else {
                     AudioManager.MyInstance.StopAmbientSound();
                 }
-                if (activeSceneNode.MyBackgroundMusicProfile != null && activeSceneNode.MyBackgroundMusicProfile.MyAudioClip != null) {
+                if (activeSceneNode.MyBackgroundMusicProfile != null && activeSceneNode.MyBackgroundMusicProfile.AudioClip != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
-                    AudioManager.MyInstance.PlayMusic(activeSceneNode.MyBackgroundMusicProfile.MyAudioClip);
+                    AudioManager.MyInstance.PlayMusic(activeSceneNode.MyBackgroundMusicProfile.AudioClip);
                 } else {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
                     AudioManager.MyInstance.StopMusic();

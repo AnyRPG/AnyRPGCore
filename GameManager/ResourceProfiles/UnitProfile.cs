@@ -42,13 +42,26 @@ namespace AnyRPG {
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
 
+        [Header("Movement")]
+
+        [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
+        [SerializeField]
+        private bool playOnFootstep = false;
+
+        [Tooltip("These profiles will be played when the unit is in motion.  If footsteps are used, the next sound on the list will be played on every footstep.")]
+        [SerializeField]
+        private List<string> movementAudioProfileNames = new List<string>();
+
+        private List<AudioProfile> movementAudioProfiles = new List<AudioProfile>();
+
         public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness MyDefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility MyDefaultAutoAttackAbility { get => realDefaultAutoAttackAbility; set => realDefaultAutoAttackAbility = value; }
         public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool MyIsPet { get => isPet; set => isPet = value; }
         public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
-
+        public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
+        public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -75,7 +88,18 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (movementAudioProfileNames != null) {
+                foreach (string movementAudioProfileName in movementAudioProfileNames) {
+                    AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(movementAudioProfileName);
+                    if (tmpAudioProfile != null) {
+                        movementAudioProfiles.Add(tmpAudioProfile);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

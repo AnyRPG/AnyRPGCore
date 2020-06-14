@@ -85,14 +85,14 @@ namespace AnyRPG {
 
         public Faction Faction { get => MyCharacter.MyFaction; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
-        public string MyDisplayName { get => (MyCharacter != null ? MyCharacter.CharacterName : interactionPanelTitle); }
+        public string UnitDisplayName { get => (MyCharacter != null ? MyCharacter.CharacterName : interactionPanelTitle); }
         public string Title { get => (MyCharacter != null ? MyCharacter.Title : string.Empty); }
         public string MyUnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
-        public BaseCharacter MyBaseCharacter { get => MyCharacter; }
+        public BaseCharacter BaseCharacter { get => MyCharacter; }
         public Transform MyNamePlateTransform {
             get {
                 if (mounted) {
@@ -414,7 +414,7 @@ namespace AnyRPG {
                 return false;
             }
             */
-            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, MyBaseCharacter) <= -1 && baseCharacter.CharacterStats.IsAlive == true) {
+            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, BaseCharacter) <= -1 && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }
@@ -497,7 +497,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription()");
             if (interactionPanelTitle == null || interactionPanelTitle == string.Empty) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription(): returning " + MyDisplayName);
-                return MyDisplayName;
+                return UnitDisplayName;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription(): returning " + interactionPanelTitle);
                 return interactionPanelTitle;

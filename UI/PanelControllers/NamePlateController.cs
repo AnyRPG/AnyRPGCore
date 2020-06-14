@@ -222,7 +222,7 @@ namespace AnyRPG {
                             // nothing for now
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): not showing name");
                         } else {
-                            nameString = namePlateUnit.MyDisplayName;
+                            nameString = namePlateUnit.UnitDisplayName;
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): showing name");
                         }
                         if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
@@ -255,7 +255,7 @@ namespace AnyRPG {
                         if (PlayerPrefs.GetInt("ShowPlayerName") == 0 && isPlayerUnitNamePlate) {
                             // nothing
                         } else {
-                            MyCharacterName.text = string.Format("<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGB(textColor), namePlateUnit.MyDisplayName);
+                            MyCharacterName.text = string.Format("<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGB(textColor), namePlateUnit.UnitDisplayName);
                         }
                     }
                 } else {
@@ -280,9 +280,9 @@ namespace AnyRPG {
                 namePlateUnit.ResourceBarNeedsUpdate += ProcessHealthChanged;
                 ProcessHealthChanged(namePlateUnit.MaxHealth(), namePlateUnit.CurrentHealth());
                 if (namePlateUnit is CharacterUnit) {
-                    if ((namePlateUnit as CharacterUnit).MyBaseCharacter != null) {
-                        if ((namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager != null) {
-                            (namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
+                    if ((namePlateUnit as CharacterUnit).BaseCharacter != null) {
+                        if ((namePlateUnit as CharacterUnit).BaseCharacter.CharacterFactionManager != null) {
+                            (namePlateUnit as CharacterUnit).BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
                         } else {
                             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.MyDisplayName + ") nameplate unit has no character faction manager!");
                         }
@@ -444,7 +444,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
                 namePlateUnit.ResourceBarNeedsUpdate -= ProcessHealthChanged;
                 if (namePlateUnit.HasHealth()) {
-                    (namePlateUnit as CharacterUnit).MyBaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                    (namePlateUnit as CharacterUnit).BaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
                 namePlateUnit.MyNamePlate = null;
             }

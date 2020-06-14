@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
-        public string MyDisplayName { get => displayName; }
+        public string UnitDisplayName { get => displayName; }
         public string Title { get => string.Empty; }
         public Faction Faction { get => null; }
         public string MyUnitFrameTarget { get => unitFrameTarget; }

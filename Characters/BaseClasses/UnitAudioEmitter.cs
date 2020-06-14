@@ -19,6 +19,11 @@ namespace AnyRPG {
         [SerializeField]
         private AudioSource voiceSource = null;
 
+        [Tooltip("Play movement sounds like footsteps or engines through this audio source")]
+        [SerializeField]
+        private AudioSource movementSource = null;
+
+
         public void PlayCast(AudioClip audioClip) {
             if (audioClip == null) {
                 return;
@@ -51,6 +56,22 @@ namespace AnyRPG {
             }
         }
 
+        public void PlayMovement(AudioClip audioClip, bool loop) {
+            if (audioClip == null) {
+                return;
+            }
+            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayMovement(" + audioClip.name + ")");
+            if (movementSource != null) {
+                if (loop) {
+                    movementSource.loop = true;
+                    movementSource.clip = audioClip;
+                    movementSource.Play();
+                } else {
+                    movementSource.PlayOneShot(audioClip);
+                }
+            }
+        }
+
         public void StopCast() {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopCast()");
             if (castSource != null) {
@@ -70,6 +91,24 @@ namespace AnyRPG {
             if (voiceSource != null) {
                 voiceSource.Stop();
             }
+        }
+
+        public void StopMovement() {
+            //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopVoice()");
+            if (movementSource != null) {
+                movementSource.Stop();
+            }
+        }
+
+        public bool MovementIsPlaying() {
+            if (movementSource == null) {
+                return false;
+            }
+            if (movementSource.isPlaying == true) {
+                return true;
+            }
+
+            return false;
         }
 
     }

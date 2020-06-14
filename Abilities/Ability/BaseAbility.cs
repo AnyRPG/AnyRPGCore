@@ -284,8 +284,8 @@ namespace AnyRPG {
         public bool CanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool MyRequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool MyIgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
-        public AudioClip MyCastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.MyAudioClip); }
-        public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.MyAudioClip); }
+        public AudioClip MyCastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
+        public AudioClip MyAnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public virtual List<PrefabProfile> MyHoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool MyAnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }

@@ -262,7 +262,7 @@ namespace AnyRPG {
             } else if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == true && PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
-                    if (MyItem.MyItemQuality != null && MyItem.MyItemQuality.MyRequireSellConfirmation) {
+                    if (MyItem.ItemQuality != null && MyItem.ItemQuality.MyRequireSellConfirmation) {
                         SystemWindowManager.MyInstance.confirmSellItemMenuWindow.OpenWindow();
                         (SystemWindowManager.MyInstance.confirmSellItemMenuWindow.MyCloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;
@@ -378,15 +378,15 @@ namespace AnyRPG {
                 backGroundImage.sprite = null;
             } else {
                 // check if the item has a quality.  if not, just do the default color
-                if (MyItem.MyItemQuality != null) {
-                    if (MyItem.MyItemQuality.IconBackgroundImage != null) {
+                if (MyItem.ItemQuality != null) {
+                    if (MyItem.ItemQuality.IconBackgroundImage != null) {
                         if (MyItem.IconBackgroundImage != null) {
                             backGroundImage.sprite = MyItem.IconBackgroundImage;
                         } else {
-                            backGroundImage.sprite = MyItem.MyItemQuality.IconBackgroundImage;
+                            backGroundImage.sprite = MyItem.ItemQuality.IconBackgroundImage;
                         }
-                        if (MyItem.MyItemQuality.TintBackgroundImage == true) {
-                            finalColor = MyItem.MyItemQuality.MyQualityColor;
+                        if (MyItem.ItemQuality.TintBackgroundImage == true) {
+                            finalColor = MyItem.ItemQuality.MyQualityColor;
                         } else {
                             finalColor = Color.white;
                         }

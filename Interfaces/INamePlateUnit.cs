@@ -17,7 +17,7 @@ namespace AnyRPG {
         string MyUnitFrameTarget { get; }
         Vector3 MyUnitFrameCameraPositionOffset { get; set; }
         Vector3 MyUnitFrameCameraLookOffset { get; set; }
-        string MyDisplayName { get; }
+        string UnitDisplayName { get; }
         string Title { get; }
         Faction Faction { get; }
         Transform MyNamePlateTransform { get; }

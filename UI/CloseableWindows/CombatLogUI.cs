@@ -317,7 +317,7 @@ namespace AnyRPG {
             if (target == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 textColor = Color.red;
             }
-            string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.MyDisplayName, damage, source.Name, abilityName);
+            string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.UnitDisplayName, damage, source.Name, abilityName);
 
             WriteCombatMessage(combatMessage);
         }

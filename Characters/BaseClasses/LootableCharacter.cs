@@ -167,9 +167,9 @@ namespace AnyRPG {
                 List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.MyLootSparkleAbility.MyAbilityEffects;
                 foreach (AbilityEffect abilityEffect in sparkleEffects) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
-                    if (characterUnit.MyBaseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName))) {
+                    if (characterUnit.BaseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName))) {
                         //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                        characterUnit.MyBaseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName)].CancelStatusEffect();
+                        characterUnit.BaseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName)].CancelStatusEffect();
                     }
                 }
 

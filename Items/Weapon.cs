@@ -169,7 +169,7 @@ namespace AnyRPG {
                 defaultHitSoundEffect = null;
                 AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(defaultHitAudioProfile);
                 if (audioProfile != null) {
-                    defaultHitSoundEffect = audioProfile.MyAudioClip;
+                    defaultHitSoundEffect = audioProfile.AudioClip;
                 } else {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }

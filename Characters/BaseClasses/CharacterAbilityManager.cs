@@ -1184,9 +1184,9 @@ namespace AnyRPG {
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
             }
-            if (targetCharacterUnit != null && targetCharacterUnit.MyBaseCharacter != null) {
-                if (Faction.RelationWith(targetCharacterUnit.MyBaseCharacter, baseCharacter) <= -1) {
-                    if (targetCharacterUnit.MyBaseCharacter.CharacterCombat != null && usedAbility.CanCastOnEnemy == true && targetCharacterUnit.MyBaseCharacter.CharacterStats.IsAlive == true) {
+            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
+                if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {
+                    if (targetCharacterUnit.BaseCharacter.CharacterCombat != null && usedAbility.CanCastOnEnemy == true && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
 
                         // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
@@ -1196,7 +1196,7 @@ namespace AnyRPG {
                         }
                         */
                         baseCharacter.CharacterCombat.ActivateAutoAttack();
-                        OnAttack(targetCharacterUnit.MyBaseCharacter);
+                        OnAttack(targetCharacterUnit.BaseCharacter);
                     }
                 }
             }

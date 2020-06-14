@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -8,11 +9,13 @@ namespace AnyRPG {
     [System.Serializable]
     public class LootTable : DescribableResource {
 
+        [Header("Loot Table")]
+
         [Tooltip("If set to true, the items on this list will ignore any parent drop limits.")]
         [SerializeField]
         private bool ignoreGlobalDropLimit = false;
 
-        [Tooltip("The maximum amount of items that can drop")]
+        [Tooltip("The maximum amount of items that can drop. 0 is unlimited")]
         [SerializeField]
         protected int dropLimit = 0;
 
@@ -57,53 +60,90 @@ namespace AnyRPG {
             bool lootTableUnlimitedDrops = (dropLimit == 0);
 
             foreach (LootGroup lootGroup in lootGroups) {
-                // unlimited drops settins for this loot group
-                int lootGroupRemainingDrops = lootGroup.DropLimit;
-                bool lootGroupUnlimitedDrops = (lootGroup.DropLimit == 0);
 
-                // ignore drop limit settings for this loot group
-                bool ignoreDropLimit = ignoreGlobalDropLimit;
-                if (lootGroup.IgnoreGlobalDropLimit == true) {
-                    ignoreDropLimit = true;
-                }
-                if (lootGroup.GuaranteedDrop == true) {
-                    List<int> randomItemIndexes = new List<int>();
-                    int maxCount = Mathf.Min(lootGroup.DropLimit, lootGroup.Loot.Count);
-                    while (randomItemIndexes.Count < maxCount) {
-                        int randomNumber = UnityEngine.Random.Range(0, lootGroup.Loot.Count);
-                        if (!randomItemIndexes.Contains(randomNumber)) {
-                            randomItemIndexes.Add(randomNumber);
-                        }
+                // check if this group can drop an item
+                float randomInt = UnityEngine.Random.Range(0, 100);
+                if (lootGroup.GroupChance > randomInt) {
+                    // unlimited drops settins for this loot group
+                    int lootGroupRemainingDrops = lootGroup.DropLimit;
+                    bool lootGroupUnlimitedDrops = (lootGroup.DropLimit == 0);
+
+                    // ignore drop limit settings for this loot group
+                    bool ignoreDropLimit = ignoreGlobalDropLimit;
+                    if (lootGroup.IgnoreGlobalDropLimit == true) {
+                        ignoreDropLimit = true;
                     }
-                    foreach (int randomItemIndex in randomItemIndexes) {
-                        droppedItems.AddRange(GetLootDrop(lootGroup.Loot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
-                    }
-                } else {
-                    foreach (Loot item in lootGroup.Loot) {
-                        if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) > 0) {
-                            //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
-                        }
-                        if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) == 0 && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyDisplayName) == false))) {
-                            int roll = Random.Range(0, 100);
-                            if (roll <= item.MyDropChance) {
-                                droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                    if (lootGroup.GuaranteedDrop == true) {
+                        List<int> randomItemIndexes = new List<int>();
+                        int maxCount = Mathf.Min(lootGroup.DropLimit, lootGroup.Loot.Count);
+                        while (randomItemIndexes.Count < maxCount) {
+
+                            // pure random
+                            //int randomNumber = UnityEngine.Random.Range(0, lootGroup.Loot.Count);
+
+                            // weighted
+                            int usedIndex = 0;
+                            int sum_of_weight = 0;
+                            int accumulatedWeight = 0;
+
+                            for (int i = 0; i < lootGroup.Loot.Count; i++) {
+                                sum_of_weight += (int)lootGroup.Loot[i].MyDropChance;
                             }
-                        } else {
-                            //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " prereqs not met");
+                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                            int rnd = UnityEngine.Random.Range(0, sum_of_weight);
+                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                            for (int i = 0; i < lootGroup.Loot.Count; i++) {
+                                //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                                accumulatedWeight += (int)lootGroup.Loot[i].MyDropChance;
+                                if (rnd < accumulatedWeight) {
+                                    usedIndex = i;
+                                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                                    break;
+                                }
+                                //rnd -= validItemQualities[i].RandomWeight;
+                            }
+
+                            if (lootGroup.UniqueLimit > 0) {
+                                int foundCount = randomItemIndexes.Where(x => x.Equals(usedIndex)).Count();
+                                if (foundCount < lootGroup.UniqueLimit) {
+                                    randomItemIndexes.Add(usedIndex);
+                                }
+
+                            } else {
+                                randomItemIndexes.Add(usedIndex);
+                            }
                         }
-                        if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
-                            break;
+                        foreach (int randomItemIndex in randomItemIndexes) {
+                            droppedItems.AddRange(GetLootDrop(lootGroup.Loot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                        }
+                    } else {
+                        foreach (Loot item in lootGroup.Loot) {
+                            if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) > 0) {
+                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
+                            }
+                            if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) == 0 && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyDisplayName) == false))) {
+                                int roll = Random.Range(0, 100);
+                                if (roll <= item.MyDropChance) {
+                                    droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                                }
+                            } else {
+                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " prereqs not met");
+                            }
+                            if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0) {
-                    break;
+                    if (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0) {
+                        break;
+                    }
                 }
             }
 
             rolled = true;
         }
+
 
         public List<ItemLootDrop> GetLootDrop(Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
             List<ItemLootDrop> returnValue = new List<ItemLootDrop>();
@@ -111,7 +151,9 @@ namespace AnyRPG {
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
                 //MyDroppedItems.Add(new LootDrop(Instantiate(_loot.MyItem), this));
-                droppedItems.Add(new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.MyDisplayName), this));
+                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.MyDisplayName), this);
+                droppedItem.MyItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                droppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
                     if (lootGroupRemainingDrops <= 0) {
@@ -154,13 +196,21 @@ namespace AnyRPG {
         [System.Serializable]
         public class LootGroup {
 
-            [Tooltip("If true, <dropLimit> items will be randomly chosen from the list, ignoring their individual drop chances")]
+            [Tooltip("If true, <dropLimit> items will be randomly chosen from the list, using their drop chances as weights")]
             [SerializeField]
             private bool guaranteedDrop = false;
+
+            [Tooltip("The chance that this group can attempt to drop items")]
+            [SerializeField]
+            private float groupChance = 100f;
 
             [Tooltip("The amount of items that can drop from this list.  0 is unlimited.")]
             [SerializeField]
             private int dropLimit = 0;
+
+            [Tooltip("The limit to the number of times the same item can drop.  0 is unlimited.")]
+            [SerializeField]
+            private int uniqueLimit = 0;
 
             [Tooltip("If set to true, the items on this list will ignore any parent drop limits.")]
             [SerializeField]
@@ -173,6 +223,8 @@ namespace AnyRPG {
             public int DropLimit { get => dropLimit; set => dropLimit = value; }
             public bool IgnoreGlobalDropLimit { get => ignoreGlobalDropLimit; set => ignoreGlobalDropLimit = value; }
             public bool GuaranteedDrop { get => guaranteedDrop; set => guaranteedDrop = value; }
+            public float GroupChance { get => groupChance; set => groupChance = value; }
+            public int UniqueLimit { get => uniqueLimit; set => uniqueLimit = value; }
         }
 
     }

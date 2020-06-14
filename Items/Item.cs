@@ -32,6 +32,12 @@ namespace AnyRPG {
         [SerializeField]
         protected bool dynamicLevel = false;
 
+        [Tooltip("If true, and dynamic level is true, the item level will be frozen at the level it dropped at")]
+        [SerializeField]
+        protected bool freezeDropLevel = false;
+
+        protected int dropLevel = 1;
+
         [Tooltip("If dynamic level is true and this value is greater than zero, the item scaling will be capped at this level")]
         [SerializeField]
         protected int levelCap = 0;
@@ -108,18 +114,23 @@ namespace AnyRPG {
 
         public bool MyUniqueItem { get => uniqueItem; }
         public Currency MyCurrency { get => currency; set => currency = value; }
-        public ItemQuality MyItemQuality { get => realItemQuality; set => realItemQuality = value; }
+        public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int GetItemLevel(int characterLevel) {
             int returnLevel = itemLevel;
+            
+            // frozen drop level overrides all other calculations
+            if (freezeDropLevel == true) {
+                return dropLevel;
+            }
             if (dynamicLevel == true) {
                 returnLevel = (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
             }
 
             // item quality can override regular individual item scaling (example, heirlooms always scale)
-            if (MyItemQuality == null) {
+            if (ItemQuality == null) {
                 return returnLevel;
             } else {
-                if (MyItemQuality.MyDynamicItemLevel) {
+                if (ItemQuality.MyDynamicItemLevel) {
                     return (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
                 } else {
                     return returnLevel;
@@ -148,6 +159,8 @@ namespace AnyRPG {
 
         public List<CharacterClass> MyCharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
         public bool RandomItemQuality { get => randomItemQuality; set => randomItemQuality = value; }
+        public bool FreezeDropLevel { get => freezeDropLevel; set => freezeDropLevel = value; }
+        public int DropLevel { get => dropLevel; set => dropLevel = value; }
 
         public virtual void Awake() {
         }

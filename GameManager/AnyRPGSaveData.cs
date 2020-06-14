@@ -132,6 +132,7 @@ namespace AnyRPG {
         public string MyName;
         public string DisplayName;
         public string itemQuality;
+        public int dropLevel;
 
         public int stackCount;
         public List<int> randomSecondaryStatIndexes;
@@ -175,6 +176,7 @@ namespace AnyRPG {
         public string MyName;
         public string DisplayName;
         public string itemQuality;
+        public int dropLevel;
 
         public List<int> randomSecondaryStatIndexes;
     }

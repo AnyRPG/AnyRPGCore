@@ -403,10 +403,10 @@ namespace AnyRPG {
                     if (LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
                         AudioProfile musicProfile = LevelManager.MyInstance.GetActiveSceneNode().MyBackgroundMusicProfile;
-                        if (musicProfile != null && musicProfile.MyAudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.MyAudioClip) {
+                        if (musicProfile != null && musicProfile.AudioClip != null && AudioManager.MyInstance.MyMusicAudioSource.clip != musicProfile.AudioClip) {
                             //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
 
-                            AudioManager.MyInstance.PlayMusic(musicProfile.MyAudioClip);
+                            AudioManager.MyInstance.PlayMusic(musicProfile.AudioClip);
                         }
                     }
                 }

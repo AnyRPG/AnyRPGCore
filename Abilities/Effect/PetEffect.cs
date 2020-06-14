@@ -18,10 +18,10 @@ namespace AnyRPG {
             if (characterUnit == null) {
                 return false;
             }
-            if (characterUnit.MyBaseCharacter == null || characterUnit.MyBaseCharacter.MyUnitProfile == null) {
+            if (characterUnit.BaseCharacter == null || characterUnit.BaseCharacter.MyUnitProfile == null) {
                 return false;
             }
-            if (!characterUnit.MyBaseCharacter.MyUnitProfile.MyIsPet) {
+            if (!characterUnit.BaseCharacter.MyUnitProfile.MyIsPet) {
                 return false;
             }
 

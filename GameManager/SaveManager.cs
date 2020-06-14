@@ -561,8 +561,8 @@ namespace AnyRPG {
                 saveData.stackCount = (slotScript.MyItem == null ? 0 : slotScript.MyCount);
                 saveData.DisplayName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.MyDisplayName);
                 if (slotScript.MyItem != null) {
-                    if (slotScript.MyItem.MyItemQuality != null) {
-                        saveData.itemQuality = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.MyItemQuality.MyName);
+                    if (slotScript.MyItem.ItemQuality != null) {
+                        saveData.itemQuality = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ItemQuality.MyName);
                     }
                     if ((slotScript.MyItem as Equipment is Equipment)) {
                         saveData.randomSecondaryStatIndexes = (slotScript.MyItem == null ? null : (slotScript.MyItem as Equipment).RandomStatIndexes);
@@ -631,8 +631,8 @@ namespace AnyRPG {
                     saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
                     saveData.DisplayName = (equipment == null ? string.Empty : equipment.MyDisplayName);
                     if (equipment != null) {
-                        if (equipment.MyItemQuality != null) {
-                            saveData.itemQuality = (equipment == null ? string.Empty : equipment.MyItemQuality.MyName);
+                        if (equipment.ItemQuality != null) {
+                            saveData.itemQuality = (equipment == null ? string.Empty : equipment.ItemQuality.MyName);
                         }
                         saveData.randomSecondaryStatIndexes = (equipment == null ? null : equipment.RandomStatIndexes);
                     }
@@ -735,8 +735,9 @@ namespace AnyRPG {
                                 Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.MyName);
                             } else {
                                 newItem.MyDisplayName = inventorySlotSaveData.DisplayName;
+                                newItem.DropLevel = inventorySlotSaveData.dropLevel;
                                 if (newItem.RandomItemQuality == true) {
-                                    newItem.MyItemQuality = SystemItemQualityManager.MyInstance.GetResource(inventorySlotSaveData.itemQuality);
+                                    newItem.ItemQuality = SystemItemQualityManager.MyInstance.GetResource(inventorySlotSaveData.itemQuality);
                                 }
                                 if ((newItem as Equipment) is Equipment) {
                                     if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
@@ -767,8 +768,9 @@ namespace AnyRPG {
                     Equipment newItem = (SystemItemManager.MyInstance.GetNewResource(equipmentSaveData.MyName) as Equipment);
                     if (newItem != null) {
                         newItem.MyDisplayName = equipmentSaveData.DisplayName;
+                        newItem.DropLevel = equipmentSaveData.dropLevel;
                         if (newItem.RandomItemQuality == true) {
-                            newItem.MyItemQuality = SystemItemQualityManager.MyInstance.GetResource(equipmentSaveData.itemQuality);
+                            newItem.ItemQuality = SystemItemQualityManager.MyInstance.GetResource(equipmentSaveData.itemQuality);
                         }
                         if (equipmentSaveData.randomSecondaryStatIndexes != null) {
                             newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;

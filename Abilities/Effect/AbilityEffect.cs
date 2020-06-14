@@ -309,12 +309,12 @@ namespace AnyRPG {
                         usedAudioProfiles = audioProfiles;
                     }
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                        if (audioProfile.MyAudioClip != null) {
+                        if (audioProfile.AudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
                             if (unitAudio != null) {
-                                unitAudio.PlayEffect(audioProfile.MyAudioClip);
+                                unitAudio.PlayEffect(audioProfile.AudioClip);
                             } else {
-                                audioSource.PlayOneShot(audioProfile.MyAudioClip);
+                                audioSource.PlayOneShot(audioProfile.AudioClip);
                             }
                         }
                     }

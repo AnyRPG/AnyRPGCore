@@ -1201,7 +1201,7 @@ namespace AnyRPG {
             }
 
 
-            if (baseAbility.GetAbilityCastingTime(characterUnit.MyBaseCharacter.CharacterAbilityManager) > 0f) {
+            if (baseAbility.GetAbilityCastingTime(characterUnit.BaseCharacter.CharacterAbilityManager) > 0f) {
                 SetCasting(true, true, (baseAbility.UseSpeedMultipliers == true ? (characterUnit.MyCharacter.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() ability was instant cast, not setting casting variable");

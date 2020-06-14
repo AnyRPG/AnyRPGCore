@@ -62,8 +62,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
 
             AudioSource audioSource = interactable.MySpawnReference.GetComponent<AudioSource>();
-            if (audioSource != null && audioProfile != null && audioProfile.MyAudioClip != null) {
-                audioSource.PlayOneShot(audioProfile.MyAudioClip);
+            if (audioSource != null && audioProfile != null && audioProfile.AudioClip != null) {
+                audioSource.PlayOneShot(audioProfile.AudioClip);
             }
 
             // testing doing this first to allow an object to reverse before it's animation has completed
