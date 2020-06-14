@@ -234,6 +234,14 @@ namespace AnyRPG {
 
         private BaseAbility lootSparkleAbility = null;
 
+        [Header("SYSTEM AUDIO")]
+
+        [Tooltip("This audio will play whenever buying from or selling to a vendor")]
+        [SerializeField]
+        private string vendorAudioProfileName = string.Empty;
+
+        private AudioProfile vendorAudioProfile;
+
         [Header("INTERACTABLE CONFIGURATION")]
 
         [SerializeField]
@@ -416,6 +424,7 @@ namespace AnyRPG {
         public int QuestCurrencyAmountPerLevel { get => questCurrencyAmountPerLevel; set => questCurrencyAmountPerLevel = value; }
         public Currency KillCurrency { get => killCurrency; set => killCurrency = value; }
         public Currency QuestCurrency { get => questCurrency; set => questCurrency = value; }
+        public AudioProfile VendorAudioProfile { get => vendorAudioProfile; set => vendorAudioProfile = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -521,6 +530,16 @@ namespace AnyRPG {
             foreach (StatScalingNode statScalingNode in primaryStats) {
                 statScalingNode.SetupScriptableObjects();
             }
+
+            if (vendorAudioProfileName != null && vendorAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(vendorAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    vendorAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + vendorAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
 
         }
 

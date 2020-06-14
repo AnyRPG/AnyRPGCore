@@ -26,6 +26,9 @@ namespace AnyRPG {
         public void AddCurrency(Currency currency, int currencyAmount) {
             //Debug.Log(gameObject.name + ".PlayerCurrencyManager.AddCurrency(" + currency.MyName + ", " + currencyAmount + ")");
             //bool foundReputation = false;
+            if (currency == null) {
+                return;
+            }
             CurrencyNode newCurrencyNode = new CurrencyNode();
             string keyName = SystemResourceManager.prepareStringForMatch(currency.MyDisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {

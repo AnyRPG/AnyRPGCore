@@ -20,8 +20,6 @@ namespace AnyRPG {
 
         private AudioProfile movementHitProfile;
 
-        private BoxCollider boxCollider = null;
-
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
 
@@ -32,47 +30,6 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
-            boxCollider = GetComponent<BoxCollider>();
-        }
-
-        protected virtual List<AOETargetNode> GetValidTargets() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets()");
-
-            Vector3 aoeSpawnCenter = transform.position;
-
-            Collider[] colliders = new Collider[0];
-            int playerMask = 1 << LayerMask.NameToLayer("Player");
-            int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-            int validMask = (playerMask | characterMask);
-
-            //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
-            colliders = Physics.OverlapBox(aoeSpawnCenter, boxCollider.bounds.extents, Quaternion.identity, validMask);
-
-            //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
-            List<AOETargetNode> validTargets = new List<AOETargetNode>();
-            foreach (Collider collider in colliders) {
-                //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
-
-                bool canAdd = true;
-                if (collider.gameObject.GetComponent<CharacterUnit>() == null) {
-                    canAdd = false;
-                }
-                /*
-                foreach (AbilityEffect abilityEffect in abilityEffects) {
-                    if (abilityEffect.CanUseOn(collider.gameObject, source) == false) {
-                        canAdd = false;
-                    }
-                }
-                */
-                //Debug.Log(MyName + "performing AOE ability  on " + collider.gameObject);
-                if (canAdd) {
-                    AOETargetNode validTargetNode = new AOETargetNode();
-                    validTargetNode.targetGameObject = collider.gameObject;
-                    validTargets.Add(validTargetNode);
-                }
-            }
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets(). Valid targets count: " + validTargets.Count);
-            return validTargets;
         }
 
         public void OnTriggerEnter(Collider other) {

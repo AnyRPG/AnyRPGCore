@@ -192,7 +192,8 @@ namespace AnyRPG {
         
 
         public bool SellItem(Item item) {
-            if (item.BuyPrice <= 0) {
+            if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
+                MessageFeedManager.MyInstance.WriteMessage("The vendor does not want to buy the " + item.MyDisplayName);
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
@@ -201,6 +202,14 @@ namespace AnyRPG {
             AddToBuyBackCollection(item);
             //InventoryManager.MyInstance.RemoveItem(item);
             item.MySlot.RemoveItem(item);
+
+            if (SystemConfigurationManager.MyInstance.VendorAudioProfile != null && SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip != null) {
+                AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip);
+            }
+            string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
+            MessageFeedManager.MyInstance.WriteMessage("Sold " + item.MyDisplayName + " for " + priceString);
+
+
             if (dropDownIndex == 0) {
                 CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
                 LoadPage(pageIndex);
