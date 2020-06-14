@@ -13,9 +13,13 @@ namespace AnyRPG {
 
         public event System.Action OnVisitZone = delegate { };
 
+        [Header("Scene")]
+
         [Tooltip("If there is no object in the scene tagged with DefaultSpawnLocation, then the player will spawn at these coordinates by default.")]
         [SerializeField]
         private Vector3 defaultSpawnPosition = Vector3.zero;
+
+        [Header("Audio")]
 
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
         [SerializeField]
@@ -28,6 +32,18 @@ namespace AnyRPG {
         private string backgroundMusicProfile = string.Empty;
 
         private AudioProfile realBackgroundMusicProfile;
+
+        [Tooltip("This audio will override the movement sound loop for a character in this zone")]
+        [SerializeField]
+        private string movementLoopProfileName = string.Empty;
+
+        private AudioProfile movementLoopProfile;
+
+        [Tooltip("This audio will override the movement hit (footstep) sound for a character in this zone")]
+        [SerializeField]
+        private string movementHitProfileName = string.Empty;
+
+        private AudioProfile movementHitProfile;
 
         [Tooltip("Prevent the player unit from spawning in this scene.  Useful for cutscenes that are separate scenes or menu / game over scenes.")]
         [SerializeField]
@@ -63,6 +79,8 @@ namespace AnyRPG {
         public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene MyAutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
         public bool Visited { get => visited; set => visited = value; }
+        public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
+        public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
 
         public void Visit() {
             if (visited == false) {
@@ -74,15 +92,34 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
 
+            if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
+                AudioProfile tmpMovementLoop = SystemAudioProfileManager.MyInstance.GetResource(movementLoopProfileName);
+                if (tmpMovementLoop != null) {
+                    movementLoopProfile = tmpMovementLoop;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + movementLoopProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
+                AudioProfile tmpMovementHit = SystemAudioProfileManager.MyInstance.GetResource(movementHitProfileName);
+                if (tmpMovementHit != null) {
+                    movementHitProfile = tmpMovementHit;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + movementHitProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
                 AudioProfile tmpAmbientMusicProfile = SystemAudioProfileManager.MyInstance.GetResource(ambientMusicProfile);
                 if (tmpAmbientMusicProfile != null) {
                     realAmbientMusicProfile = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
+
 
             realBackgroundMusicProfile = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
@@ -90,7 +127,7 @@ namespace AnyRPG {
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

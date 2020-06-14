@@ -196,7 +196,7 @@ namespace AnyRPG {
             if (apparentVelocity >= (baseCharacter.CharacterStats.RunSpeed / 2f)) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
                 if (!baseCharacter.CharacterUnit.UnitAudio.MovementIsPlaying()) {
-                    baseCharacter.CharacterUnit.UnitAudio.PlayMovement(baseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClip, true);
+                    baseCharacter.CharacterUnit.UnitAudio.PlayMovement(baseCharacter.CharacterUnit.MovementLoopProfile.AudioClip, true);
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");

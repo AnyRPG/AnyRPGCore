@@ -69,6 +69,9 @@ namespace AnyRPG {
 
         private bool startHasRun = false;
 
+        // track the current movement sound overrides
+        private MovementSoundArea movementSoundArea = null;
+
         private BaseCharacter baseCharacter = null;
         private AnimatedUnit animatedUnit = null;
 
@@ -118,6 +121,48 @@ namespace AnyRPG {
                     return baseCharacter.CharacterStats.Level;
                 }
                 return 1;
+            }
+        }
+
+        public AudioProfile MovementLoopProfile {
+            get {
+                if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
+                    return movementSoundArea.MovementLoopProfile;
+                }
+                if (LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile != null) {
+                    return LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile;
+                }
+                if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MovementAudioProfiles != null && baseCharacter.MyUnitProfile.MovementAudioProfiles.Count > 0) {
+                    return baseCharacter.MyUnitProfile.MovementAudioProfiles[0];
+                }
+                return null;
+            }
+        }
+
+        public AudioProfile MovementHitProfile {
+            get {
+                if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
+                    return movementSoundArea.MovementHitProfile;
+                }
+                if (LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile != null) {
+                    return LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile;
+                }
+                if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MovementAudioProfiles != null && baseCharacter.MyUnitProfile.MovementAudioProfiles.Count > 0) {
+                    return baseCharacter.MyUnitProfile.MovementAudioProfiles[0];
+                }
+                return null;
+            }
+        }
+
+        public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
+            if (movementSoundArea != this.movementSoundArea) {
+                this.movementSoundArea = movementSoundArea;
+            }
+        }
+
+        public void UnsetMovementSoundArea(MovementSoundArea movementSoundArea) {
+            if (movementSoundArea == this.movementSoundArea) {
+                this.movementSoundArea = null;
             }
         }
 

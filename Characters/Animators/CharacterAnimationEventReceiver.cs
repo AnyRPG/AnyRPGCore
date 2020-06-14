@@ -93,18 +93,21 @@ namespace AnyRPG {
         private void PlayFootStep() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
             if (characterUnit.BaseCharacter.MyUnitProfile == null ||
-                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles == null ||
-                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles.Count == 0 ||
-                characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips.Count == 0 ||
+                characterUnit.MovementHitProfile == null ||
+                characterUnit.MovementHitProfile.AudioClips == null || 
+                characterUnit.MovementHitProfile.AudioClips.Count == 0 ||
                 characterUnit.BaseCharacter.MyUnitProfile.PlayOnFootstep == false) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
 
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
-            characterUnit.UnitAudio.PlayMovement(characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips[stepIndex], false);
+            if (stepIndex >= characterUnit.MovementHitProfile.AudioClips.Count) {
+                stepIndex = 0;
+            }
+            characterUnit.UnitAudio.PlayMovement(characterUnit.MovementHitProfile.AudioClips[stepIndex], false);
             stepIndex++;
-            if (stepIndex >= characterUnit.BaseCharacter.MyUnitProfile.MovementAudioProfiles[0].AudioClips.Count) {
+            if (stepIndex >= characterUnit.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;
             }
         }
