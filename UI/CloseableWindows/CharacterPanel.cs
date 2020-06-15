@@ -226,7 +226,9 @@ namespace AnyRPG {
 
             updateString += "\n";
 
-            updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyDisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource != null) {
+                updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyDisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+            }
 
             updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
             /*
@@ -299,7 +301,7 @@ namespace AnyRPG {
 
 
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyCharacter.MyUnitProfile);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyCharacter.UnitProfile);
 
             // testing do this earlier
             LoadUMARecipe();

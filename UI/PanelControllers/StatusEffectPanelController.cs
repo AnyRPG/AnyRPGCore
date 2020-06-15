@@ -23,7 +23,7 @@ namespace AnyRPG {
             this.targetCharacterUnit = characterUnit;
             if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
-                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.CharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.CharacterStats.StatusEffects.Values) {
                     SpawnStatusNode(statusEffectNode, characterUnit);
                 }
                 CreateEventSubscriptions(targetCharacterUnit.MyCharacter.CharacterStats as CharacterStats);

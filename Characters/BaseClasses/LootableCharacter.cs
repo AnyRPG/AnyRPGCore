@@ -117,7 +117,7 @@ namespace AnyRPG {
                 // game is exiting
                 return;
             }
-            if (lootTableNames != null && characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+            if (lootTableNames != null && characterStats.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
                 int lootCount = GetLootCount();
                 if (lootCount > 0) {
@@ -129,7 +129,7 @@ namespace AnyRPG {
                     SystemConfigurationManager.MyInstance.MyLootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
                 }
             } else {
-                if (!characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+                if (!characterStats.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): Player not in agro table, no reason to drop loot.");
                 }
                 //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): MyLootTable == null. can't drop loot");
@@ -158,9 +158,9 @@ namespace AnyRPG {
                 List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.MyLootSparkleAbility.MyAbilityEffects;
                 foreach (AbilityEffect abilityEffect in sparkleEffects) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
-                    if (characterUnit.BaseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName))) {
+                    if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName))) {
                         //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                        characterUnit.BaseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName)].CancelStatusEffect();
+                        characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName)].CancelStatusEffect();
                     }
                 }
 
@@ -236,8 +236,8 @@ namespace AnyRPG {
                 currencyNode.currency = SystemConfigurationManager.MyInstance.KillCurrency;
                 if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
                     currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Level;
-                    if ((namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.MyToughness != null) {
-                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.MyToughness.CurrencyMultiplier;
+                    if ((namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Toughness != null) {
+                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Toughness.CurrencyMultiplier;
                     }
                 }
             }

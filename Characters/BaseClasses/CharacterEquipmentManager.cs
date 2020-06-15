@@ -542,8 +542,19 @@ namespace AnyRPG {
                 }
             }
             if (weaponCount == 0) {
+                // there are no weapons equipped
+                // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.CharacterClass != null) {
                     if (baseCharacter.CharacterClass.MyWeaponSkillList.Contains(weaponAffinity)) {
+                        if (weaponAffinity.MyDefaultWeaponSkill) {
+                            return true;
+                        }
+                    }
+                }
+
+                // check if the unit profile is set and contains a weapon skill that is considered to be active when no weapon is equipped
+                if (baseCharacter.UnitProfile != null) {
+                    if (baseCharacter.UnitProfile.WeaponSkillList.Contains(weaponAffinity)) {
                         if (weaponAffinity.MyDefaultWeaponSkill) {
                             return true;
                         }

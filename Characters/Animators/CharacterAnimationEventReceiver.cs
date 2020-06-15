@@ -92,11 +92,11 @@ namespace AnyRPG {
 
         private void PlayFootStep() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            if (characterUnit.BaseCharacter.MyUnitProfile == null ||
+            if (characterUnit.BaseCharacter.UnitProfile == null ||
                 characterUnit.MovementHitProfile == null ||
                 characterUnit.MovementHitProfile.AudioClips == null || 
                 characterUnit.MovementHitProfile.AudioClips.Count == 0 ||
-                characterUnit.BaseCharacter.MyUnitProfile.PlayOnFootstep == false) {
+                characterUnit.BaseCharacter.UnitProfile.PlayOnFootstep == false) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }

@@ -1386,7 +1386,7 @@ namespace AnyRPG {
 
             if (varValue == true) {
                 SetTrigger("CastingTrigger");
-                characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
+                //characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
             }
         }
 
@@ -1406,7 +1406,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAttacking(): setting speed to: " + animationSpeed);
                 //animator.SetFloat("AnimationSpeed", animationSpeed);
                 SetTrigger("AttackTrigger");
-                characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
+                //characterUnit.MyCharacter.CharacterCombat.ResetAttackCoolDown();
             } else {
                 //animator.SetFloat("AnimationSpeed", 1f);
             }

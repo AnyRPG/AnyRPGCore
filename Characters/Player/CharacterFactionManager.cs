@@ -86,8 +86,8 @@ namespace AnyRPG {
 
             // checking status effects next
             //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): no match disposition dictionary, checking status effect buffs");
-            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.MyStatusEffects != null) {
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.MyStatusEffects.Values) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
                     /*
                     if (statusEffectNode.MyStatusEffect == null) {
                         Debug.LogError("STATUS EFFECT IS NULL");
@@ -123,9 +123,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.MyStatusEffects != null) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
                 // checking status effect disposition modifiers
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
                     foreach (FactionDisposition factionDisposition in statusEffectNode.MyStatusEffect.MyFactionModifiers) {
                         //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                         if (factionDisposition.MyFaction == faction) {

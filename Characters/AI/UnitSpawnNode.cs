@@ -312,9 +312,9 @@ namespace AnyRPG {
                 _characterUnit.OnDespawn += HandleDespawn;
             }
             // don't override an existing toughness
-            if (_characterUnit.MyCharacter.CharacterStats.MyToughness == null) {
+            if (_characterUnit.MyCharacter.CharacterStats.Toughness == null) {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
-                _characterUnit.MyCharacter.CharacterStats.MyToughness = toughness;
+                _characterUnit.MyCharacter.CharacterStats.Toughness = toughness;
             }
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             _characterUnit.MyCharacter.CharacterStats.SetLevel(_unitLevel);

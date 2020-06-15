@@ -101,6 +101,8 @@ namespace AnyRPG {
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
+        Color reputationColor;
+
         public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
 
 
@@ -211,24 +213,7 @@ namespace AnyRPG {
             } else {
                 characterUnit = null;
             }
-            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterClass != null) {
-                if (characterUnit.BaseCharacter.CharacterClass.PowerResourceList.Count > 0) {
-                    primaryPowerResource = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[0];
-                    powerResourceColor1 = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[0].DisplayColor;
-                } else {
-                    primaryPowerResource = null;
-                }
-                if (characterUnit.BaseCharacter.CharacterClass.PowerResourceList.Count > 1) {
-                    secondaryPowerResource = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[1];
-                    powerResourceColor2 = characterUnit.BaseCharacter.CharacterClass.PowerResourceList[1].DisplayColor;
-                } else {
-                    secondaryPowerResource = null;
-                }
-            }
-            if (namePlateUnit.HasHealth()) {
-                castBarController.SetTarget(target);
-                statusEffectPanelController.SetTarget(characterUnit);
-            }
+            CalculateResourceColors(target);
             if (isActiveAndEnabled) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + "):  WE ARE NOW ACTIVE AND ENABLED");
                 TargetInitialization();
@@ -241,6 +226,29 @@ namespace AnyRPG {
                 //previewCamera.Render();
                 StartCoroutine(WaitForCamera());
             }
+        }
+
+        public void CalculateResourceColors(GameObject target) {
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
+                if (characterUnit.BaseCharacter.CharacterStats.PowerResourceList.Count > 0) {
+                    primaryPowerResource = characterUnit.BaseCharacter.CharacterStats.PowerResourceList[0];
+                    powerResourceColor1 = characterUnit.BaseCharacter.CharacterStats.PowerResourceList[0].DisplayColor;
+                } else {
+                    primaryPowerResource = null;
+                }
+                if (characterUnit.BaseCharacter.CharacterStats.PowerResourceList.Count > 1) {
+                    secondaryPowerResource = characterUnit.BaseCharacter.CharacterStats.PowerResourceList[1];
+                    powerResourceColor2 = characterUnit.BaseCharacter.CharacterStats.PowerResourceList[1].DisplayColor;
+                } else {
+                    secondaryPowerResource = null;
+                }
+            }
+
+            if (namePlateUnit.HasHealth()) {
+                castBarController.SetTarget(target);
+                statusEffectPanelController.SetTarget(characterUnit);
+            }
+
         }
 
         private IEnumerator WaitForCamera() {
@@ -296,37 +304,35 @@ namespace AnyRPG {
                 ClearSecondaryResourceBar();
             }
 
-            if (namePlateUnit.HasPrimaryResource()) {
-                BaseCharacter baseCharacter = followGameObject.GetComponent<CharacterUnit>().MyCharacter;
-                if (baseCharacter.CharacterStats == null) {
-                    //Debug.Log("UnitFrameController: followGameObject(" + followGameObject.name + ") does not have a BaseCharacter component");
-                    return;
-                }
+            characterUnit = followGameObject.GetComponent<CharacterUnit>();
+            if (characterUnit == null || characterUnit.BaseCharacter == null || characterUnit.BaseCharacter.CharacterStats == null) {
+                //Debug.Log("UnitFrameController: followGameObject(" + followGameObject.name + ") does not have a BaseCharacter component");
+                return;
+            }
 
-                // set initial resource values in character display
-                int counter = 0;
-                if (characterUnit.MyCharacter.CharacterClass != null) {
-                    foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterClass.PowerResourceList) {
-                        OnResourceAmountChanged(_powerResource, (int)baseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)baseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
-                        counter++;
-                        if (counter > 1) {
-                            break;
-                        }
+            // set initial resource values in character display
+            int counter = 0;
+            if (characterUnit.MyCharacter.CharacterStats != null) {
+                foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterStats.PowerResourceList) {
+                    OnResourceAmountChanged(_powerResource, (int)characterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)characterUnit.BaseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
+                    counter++;
+                    if (counter > 1) {
+                        break;
                     }
                 }
-
-                // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
-                baseCharacter.CharacterStats.OnResourceAmountChanged += OnResourceAmountChanged;
-                baseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
-                baseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
-
-                if (baseCharacter.CharacterFactionManager != null) {
-                    baseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
-                } else {
-                    Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + baseCharacter.name + " has no CharacterFactionManager");
-                }
-
             }
+
+            // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
+            characterUnit.BaseCharacter.CharacterStats.OnResourceAmountChanged += OnResourceAmountChanged;
+            characterUnit.BaseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
+            characterUnit.BaseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
+
+            if (characterUnit.BaseCharacter.CharacterFactionManager != null) {
+                characterUnit.BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
+            } else {
+                Debug.LogError("UnitFrameController.InitializeStats(): baseCharacter: " + characterUnit.BaseCharacter.name + " has no CharacterFactionManager");
+            }
+
 
             OnLevelChanged(namePlateUnit.Level);
         }
@@ -415,6 +421,10 @@ namespace AnyRPG {
                 //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
                 tmp.a = 0.5f;
                 unitNameBackground.color = tmp;
+            } else {
+                if (unitNameBackground.color != reputationColor) {
+                    unitNameBackground.color = reputationColor;
+                }
             }
         }
 
@@ -451,6 +461,7 @@ namespace AnyRPG {
         }
 
         public void OnLevelChanged(int _level) {
+            CalculateResourceColors(followGameObject);
             unitLevelText.text = _level.ToString();
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
                 unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, _level);
@@ -464,10 +475,10 @@ namespace AnyRPG {
         /// <param name="currentResourceAmount"></param>
         public void OnResourceAmountChanged(PowerResource powerResource, int maxResourceAmount, int currentResourceAmount) {
             //Debug.Log("Updating resource bar");
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterClass != null) {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
                 int counter = 0;
                 bool updateBar = false;
-                foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterClass.PowerResourceList) {
+                foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterStats.PowerResourceList) {
                     if (powerResource == _powerResource) {
                         updateBar = true;
                         break;
@@ -504,10 +515,10 @@ namespace AnyRPG {
             if (namePlateUnit == null) {
                 return;
             }
-            Color tmp = Faction.GetFactionColor(namePlateUnit);
+            reputationColor = Faction.GetFactionColor(namePlateUnit);
             //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
-            tmp.a = 0.5f;
-            unitNameBackground.color = tmp;
+            reputationColor.a = 0.5f;
+            unitNameBackground.color = reputationColor;
 
         }
 

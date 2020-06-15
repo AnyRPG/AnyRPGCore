@@ -41,7 +41,7 @@ namespace AnyRPG {
             if (characterUnit == null) {
                 return false;
             }
-            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false && characterUnit.MyCharacter.CharacterStats.MyIsReviving == false) {
+            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false && characterUnit.MyCharacter.CharacterStats.IsReviving == false) {
                 return true;
             }
             return false;

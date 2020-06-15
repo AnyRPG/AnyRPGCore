@@ -132,8 +132,8 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile;
                 }
-                if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MovementAudioProfiles != null && baseCharacter.MyUnitProfile.MovementAudioProfiles.Count > 0) {
-                    return baseCharacter.MyUnitProfile.MovementAudioProfiles[0];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MovementAudioProfiles != null && baseCharacter.UnitProfile.MovementAudioProfiles.Count > 0) {
+                    return baseCharacter.UnitProfile.MovementAudioProfiles[0];
                 }
                 return null;
             }
@@ -147,8 +147,8 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile;
                 }
-                if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MovementAudioProfiles != null && baseCharacter.MyUnitProfile.MovementAudioProfiles.Count > 0) {
-                    return baseCharacter.MyUnitProfile.MovementAudioProfiles[0];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MovementAudioProfiles != null && baseCharacter.UnitProfile.MovementAudioProfiles.Count > 0) {
+                    return baseCharacter.UnitProfile.MovementAudioProfiles[0];
                 }
                 return null;
             }
@@ -212,7 +212,7 @@ namespace AnyRPG {
             if (MyMounted == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
 
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
                     if (statusEffectNode.MyStatusEffect is MountEffect) {
                         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");

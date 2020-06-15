@@ -435,8 +435,8 @@ namespace AnyRPG {
 
         public virtual void LearnUnitProfileAbilities() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnUnitProfileAbilities()");
-            if (baseCharacter != null && baseCharacter.MyUnitProfile != null) {
-                foreach (BaseAbility baseAbility in baseCharacter.MyUnitProfile.MyLearnedAbilities) {
+            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                foreach (BaseAbility baseAbility in baseCharacter.UnitProfile.MyLearnedAbilities) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
@@ -600,13 +600,13 @@ namespace AnyRPG {
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
-                        if (!baseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
+                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
                             ApplyStatusEffect(statusEffect);
                         }
                     } else {
                         // we are not allowed to have this buff
-                        if (baseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
-                            baseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName)].CancelStatusEffect();
+                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
+                            baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName)].CancelStatusEffect();
                         }
                     }
                 }
@@ -616,8 +616,8 @@ namespace AnyRPG {
 
 
         public virtual void UnLearnDefaultAutoAttackAbility() {
-            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null) {
-                UnlearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
+            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MyDefaultAutoAttackAbility != null) {
+                UnlearnAbility(baseCharacter.UnitProfile.MyDefaultAutoAttackAbility);
             }
         }
 
@@ -628,9 +628,9 @@ namespace AnyRPG {
                 // can't learn two auto-attacks at the same time
                 return;
             }
-            if (baseCharacter != null && baseCharacter.MyUnitProfile != null && baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility != null) {
+            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MyDefaultAutoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
-                LearnAbility(baseCharacter.MyUnitProfile.MyDefaultAutoAttackAbility);
+                LearnAbility(baseCharacter.UnitProfile.MyDefaultAutoAttackAbility);
             }
         }
 
@@ -694,8 +694,8 @@ namespace AnyRPG {
         }
 
         public override void AddPet(CharacterUnit target) {
-            if (baseCharacter.MyCharacterPetManager != null && target.MyCharacter != null && target.MyCharacter.MyUnitProfile != null) {
-                baseCharacter.MyCharacterPetManager.AddPet(target.MyCharacter.MyUnitProfile);
+            if (baseCharacter.MyCharacterPetManager != null && target.MyCharacter != null && target.MyCharacter.UnitProfile != null) {
+                baseCharacter.MyCharacterPetManager.AddPet(target.MyCharacter.UnitProfile);
             }
         }
 
@@ -706,8 +706,8 @@ namespace AnyRPG {
         public void RemoveClassTraits(CharacterClass oldCharacterClass) {
             if (oldCharacterClass !=null && oldCharacterClass.MyTraitList != null && oldCharacterClass.MyTraitList.Count > 0) {
                 foreach (AbilityEffect classTrait in oldCharacterClass.MyTraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
-                        baseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
+                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
+                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
                     }
                 }
             }
@@ -716,8 +716,8 @@ namespace AnyRPG {
         public void RemoveSpecializationTraits(ClassSpecialization oldClassSpecialization) {
             if (oldClassSpecialization != null && oldClassSpecialization.MyTraitList != null && oldClassSpecialization.MyTraitList.Count > 0) {
                 foreach (AbilityEffect classTrait in oldClassSpecialization.MyTraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.MyStatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
-                        baseCharacter.CharacterStats.MyStatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
+                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
+                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
                     }
                 }
             }

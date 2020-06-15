@@ -116,7 +116,7 @@ namespace AnyRPG {
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
-        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
         public string MyCharacterClassName { get => characterClassName; set => characterClassName = value; }
         public string MyClassSpecializationName { get => classSpecializationName; set => classSpecializationName = value; }
@@ -162,9 +162,17 @@ namespace AnyRPG {
         }
 
         public virtual void SetUnitProfile(string unitProfileName) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
+
             unitProfile = null;
             this.unitProfileName = unitProfileName;
             GetUnitProfile();
+            if (characterStats != null) {
+                characterStats.HandleSetUnitProfile();
+            }
+
+            // cause stats to be recalculated
+            characterStats.SetLevel(characterStats.Level);
         }
 
         /// <summary>

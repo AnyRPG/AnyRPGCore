@@ -15,27 +15,18 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        [Tooltip("Attack speed is based on animation speed.  This is a limiter in case animations are too fast")]
-        public float attackSpeed = 1f;
-
-        [Tooltip("If true, this character will perform the current auto-attack ability in combat whenever it is off cooldown.")]
-        public bool autoAttack = true;
-
         private bool autoAttackActive = false;
 
-        [Tooltip("The amount of seconds after the last combat event to wait before dropping combat")]
-        public float combatCooldown = 10f;
+        //[Tooltip("The amount of seconds after the last combat event to wait before dropping combat")]
+        protected float combatCooldown = 10f;
 
         protected float lastCombatEvent;
 
         //public bool isAttacking { get; private set; }
         protected bool inCombat = false;
 
-        protected float attackCooldown = 0f;
-
         // components
         protected BaseCharacter baseCharacter;
-        //protected CharacterCombat opponentCombat;
 
         protected AbilityEffect onHitEffect = null;
 
@@ -144,10 +135,10 @@ namespace AnyRPG {
             }
 
             // reduce the autoattack cooldown
-            if (attackCooldown > 0f) {
+            //if (attackCooldown > 0f) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.Update(): attackCooldown: " + attackCooldown);
-                attackCooldown -= Time.deltaTime;
-            }
+                //attackCooldown -= Time.deltaTime;
+            //}
 
             if (inCombat && baseCharacter.CharacterController.MyTarget == null) {
                 TryToDropCombat();
@@ -184,7 +175,7 @@ namespace AnyRPG {
 
             // prevent infinite reflect loops
             if (reflectDamage != false) {
-                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
@@ -370,7 +361,7 @@ namespace AnyRPG {
                 }
 
                 AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
-                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.MyStatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.MyStatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
@@ -417,9 +408,11 @@ namespace AnyRPG {
             return false;
         }
 
+        /*
         public void ResetAttackCoolDown() {
             attackCooldown = attackSpeed;
         }
+        */
 
         private void TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
 

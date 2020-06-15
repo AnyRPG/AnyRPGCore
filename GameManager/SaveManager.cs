@@ -530,7 +530,7 @@ namespace AnyRPG {
         public void SaveStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
-            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.MyClassTrait == false
                     && statusEffectNode.MyStatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();

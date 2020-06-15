@@ -17,16 +17,8 @@ namespace AnyRPG {
         public event System.Action OnStatChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
 
-        [Tooltip("starting level")]
-        [SerializeField]
-        private int level = 0;
+        private int level = 1;
 
-        [Tooltip("a stat and resource multiplier to make creatures more difficult")]
-        [SerializeField]
-        protected string toughness = string.Empty;
-
-        [Tooltip("Run speed is multiplied by this amount when sprinting")]
-        [SerializeField]
         protected float sprintSpeedModifier = 1.5f;
 
         protected UnitToughness unitToughness;
@@ -66,15 +58,38 @@ namespace AnyRPG {
         public float SprintSpeed { get => currentSprintSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
-        public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         public int Level { get => currentLevel; }
         public int CurrentXP { get => currentXP; set => currentXP = value; }
+
+        public List<PowerResource> PowerResourceList {
+            get {
+                List<PowerResource> returnList = new List<PowerResource>();
+                if (baseCharacter.UnitProfile != null) {
+                    returnList.AddRange(baseCharacter.UnitProfile.PowerResourceList);
+                }
+                if (baseCharacter.CharacterClass != null) {
+                    foreach (PowerResource powerResource in baseCharacter.CharacterClass.PowerResourceList) {
+                        if (!returnList.Contains(powerResource)) {
+                            returnList.Add(powerResource);
+                        }
+                    }
+                }
+                return returnList;
+            }
+        }
+
         public PowerResource PrimaryResource {
             get {
                 if (baseCharacter != null && baseCharacter.CharacterClass != null) {
                     if (baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
                         return baseCharacter.CharacterClass.PowerResourceList[0];
+                    }
+                }
+                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                    if (baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
+                        return baseCharacter.UnitProfile.PowerResourceList[0];
                     }
                 }
                 return null;
@@ -115,7 +130,12 @@ namespace AnyRPG {
         public int MaxPrimaryResource {
             get {
                 if (PrimaryResource != null) {
-                    return (int)GetPowerResourceMaxAmount(baseCharacter.CharacterClass.PowerResourceList[0]);
+                    if (baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PowerResourceList != null && baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
+                        return (int)GetPowerResourceMaxAmount(baseCharacter.UnitProfile.PowerResourceList[0]);
+                    }
+                    if (baseCharacter.CharacterClass != null && baseCharacter.CharacterClass.PowerResourceList != null && baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                        return (int)GetPowerResourceMaxAmount(baseCharacter.CharacterClass.PowerResourceList[0]);
+                    }
                 }
                 return 0;
             }
@@ -125,16 +145,21 @@ namespace AnyRPG {
             get {
                 if (PrimaryResource != null) {
                     if (powerResourceDictionary.Count > 0) {
-                        return (int)powerResourceDictionary[baseCharacter.CharacterClass.PowerResourceList[0]].currentValue;
+                        if (baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PowerResourceList != null && baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
+                            return (int)powerResourceDictionary[baseCharacter.UnitProfile.PowerResourceList[0]].currentValue;
+                        }
+                        if (baseCharacter.CharacterClass != null && baseCharacter.CharacterClass.PowerResourceList != null && baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
+                            return (int)powerResourceDictionary[baseCharacter.CharacterClass.PowerResourceList[0]].currentValue;
+                        }
                     }
                 }
                 return 0;
             }
         }
 
-        public Dictionary<string, StatusEffectNode> MyStatusEffects { get => statusEffects; }
-        public UnitToughness MyToughness { get => unitToughness; set => unitToughness = value; }
-        public bool MyIsReviving { get => isReviving; set => isReviving = value; }
+        public Dictionary<string, StatusEffectNode> StatusEffects { get => statusEffects; }
+        public UnitToughness Toughness { get => unitToughness; set => unitToughness = value; }
+        public bool IsReviving { get => isReviving; set => isReviving = value; }
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
@@ -217,6 +242,38 @@ namespace AnyRPG {
             return false;
         }
 
+        public void HandleSetUnitProfile() {
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
+            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                AddUnitProfileModifiers(baseCharacter.UnitProfile);
+            }
+        }
+
+        /// <summary>
+        /// Add primary stats from the unit profile
+        /// </summary>
+        /// <param name="unitProfile"></param>
+        public void AddUnitProfileModifiers(UnitProfile unitProfile) {
+            //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers()");
+
+            // setup primary stats dictionary with character class defined stats
+            foreach (StatScalingNode statScalingNode in unitProfile.PrimaryStats) {
+                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
+                    //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding stat: " + statScalingNode.StatName);
+                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
+                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+                }
+            }
+
+            // setup power resource dictionary with character class defined resources
+            foreach (PowerResource powerResource in unitProfile.PowerResourceList) {
+                if (!powerResourceDictionary.ContainsKey(powerResource)) {
+                    //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding resource: " + powerResource.MyDisplayName);
+                    powerResourceDictionary.Add(powerResource, new PowerResourceNode());
+                }
+            }
+        }
+
         /// <summary>
         /// Add primary stats from the character class
         /// </summary>
@@ -227,6 +284,7 @@ namespace AnyRPG {
             foreach (StatScalingNode statScalingNode in characterClass.PrimaryStats) {
                 if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
                     primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
+                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
                 }
             }
 
@@ -256,6 +314,11 @@ namespace AnyRPG {
                 if (!powerResourceDictionary.ContainsKey(powerResource)) {
                     powerResourceDictionary.Add(powerResource, new PowerResourceNode());
                 }
+            }
+
+            // if this character has a unit profile, add primary stats and power resources from their unit profile
+            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                AddUnitProfileModifiers(baseCharacter.UnitProfile);
             }
 
             // if this character has a class, add primary stats and power resources from their class
@@ -416,7 +479,7 @@ namespace AnyRPG {
         protected virtual float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
                 }
@@ -430,7 +493,7 @@ namespace AnyRPG {
         protected virtual float GetSecondaryMultiplyModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
                 }
@@ -449,7 +512,7 @@ namespace AnyRPG {
         protected virtual float GetAddModifiers(string statName) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
                     returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
                 }
@@ -468,7 +531,7 @@ namespace AnyRPG {
         protected virtual float GetMultiplyModifiers(string statName) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
                     returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
                 }
@@ -483,7 +546,7 @@ namespace AnyRPG {
         public virtual float GetIncomingDamageModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.MyStatusEffect != null) {
                     if (statusEffectNode.MyStatusEffect.IncomingDamageMultiplier != 1) {
@@ -510,7 +573,7 @@ namespace AnyRPG {
 
         public virtual bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.MyImmuneDisableAnimator == true) {
                     return true;
                 }
@@ -520,7 +583,7 @@ namespace AnyRPG {
 
         public virtual bool HasStunImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.MyImmuneStun == true) {
                     return true;
                 }
@@ -530,7 +593,7 @@ namespace AnyRPG {
 
         public virtual bool HasLevitateImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.MyImmuneLevitate == true) {
                     return true;
                 }
@@ -542,7 +605,7 @@ namespace AnyRPG {
         public virtual float GetThreatModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.MyStatusEffect.ThreatMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
@@ -556,7 +619,7 @@ namespace AnyRPG {
         public virtual float GetOutGoingDamageModifiers() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 1f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.MyStatusEffect.MyOutgoingDamageMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
@@ -570,7 +633,7 @@ namespace AnyRPG {
         public virtual float GetSecondaryStatAddModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             float returnValue = 0f;
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
@@ -801,7 +864,7 @@ namespace AnyRPG {
 
             // calculate base values independent of any modifiers
             foreach (string statName in primaryStats.Keys) {
-                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass) * multiplierValues[statName]);
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass, baseCharacter.UnitProfile) * multiplierValues[statName]);
             }
 
             // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values
@@ -1030,7 +1093,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects()");
             //List<string> RemoveList = new List<string>();
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
                 if (statusEffectNode.MyStatusEffect.RequireDeadTarget == true) {
                     //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
@@ -1098,15 +1161,7 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".CharacterStats.SetupScriptableObjects(): looking for unit toughness");
-            if (unitToughness == null && toughness != null && toughness != string.Empty) {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(toughness);
-                if (tmpToughness != null) {
-                    //Debug.Log(gameObject.name + ".CharacterStats.SetupScriptableObjects(): looking for unit toughness: found unit toughness");
-                    unitToughness = tmpToughness;
-                } else {
-                    Debug.LogError(gameObject.name + "; Unit Toughness: " + toughness + " not found while initializing character stats.  Check Inspector!");
-                }
-            }
+            
 
         }
 
@@ -1124,7 +1179,12 @@ namespace AnyRPG {
         public float GetPowerResourceMaxAmount(PowerResource powerResource) {
             float returnValue = 0f;
             if (powerResourceDictionary.ContainsKey(powerResource)) {
-                returnValue = baseCharacter.CharacterClass.GetResourceMaximum(powerResource, this);
+                if (baseCharacter.CharacterClass != null) {
+                    returnValue += baseCharacter.CharacterClass.GetResourceMaximum(powerResource, this);
+                }
+                if (baseCharacter.UnitProfile != null) {
+                    returnValue += baseCharacter.UnitProfile.GetResourceMaximum(powerResource, this);
+                }
             }
             if (resourceMultipliers.ContainsKey(powerResource.MyDisplayName)) {
                 returnValue *= resourceMultipliers[powerResource.MyDisplayName];

@@ -56,8 +56,8 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.UseKillXPLevelMultiplierDemoninator == true) {
                 multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap > 0 ? SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap : Mathf.Infinity));
             }
-            if (targetCharacter.CharacterStats.MyToughness != null) {
-                toughnessMultiplierValue = targetCharacter.CharacterStats.MyToughness.ExperienceMultiplier;
+            if (targetCharacter.CharacterStats.Toughness != null) {
+                toughnessMultiplierValue = targetCharacter.CharacterStats.Toughness.ExperienceMultiplier;
             }
 
             int baseXP = (int)((((sourceLevel * SystemConfigurationManager.MyInstance.KillXPPerLevel) * multiplierValue) + SystemConfigurationManager.MyInstance.BaseKillXP) * toughnessMultiplierValue);
@@ -138,9 +138,19 @@ namespace AnyRPG {
             return 100;
         }
 
-        public static float GetPrimaryStatForLevel(string statName, int level, CharacterClass characterClass) {
+        public static float GetPrimaryStatForLevel(string statName, int level, CharacterClass characterClass, UnitProfile unitProfile) {
             int extraClassStatPerLevel = 0;
+            int extraUnitProfileStatPerLevel = 0;
             int extraSystemStatPerLevel = 0;
+
+            if (unitProfile != null) {
+                foreach (StatScalingNode statScalingNode in unitProfile.PrimaryStats) {
+                    if (statScalingNode.StatName == statName) {
+                        extraUnitProfileStatPerLevel = (int)statScalingNode.BudgetPerLevel;
+                        break;
+                    }
+                }
+            }
 
             if (characterClass != null) {
                 foreach (StatScalingNode statScalingNode in characterClass.PrimaryStats) {
@@ -158,11 +168,24 @@ namespace AnyRPG {
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + (float)extraSystemStatPerLevel + (float)extraClassStatPerLevel;
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + (float)extraSystemStatPerLevel + (float)extraClassStatPerLevel + (float)extraUnitProfileStatPerLevel;
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
             float returnValue = 0f;
+            if (sourceCharacter.UnitProfile != null) {
+                foreach (StatScalingNode statScalingNode in sourceCharacter.UnitProfile.PrimaryStats) {
+                    foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
+                        if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
+                            if (primaryToSecondaryStatNode.RatedConversion == true) {
+                                returnValue += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
+                            } else {
+                                returnValue += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
+                            }
+                        }
+                    }
+                }
+            }
             if (sourceCharacter.CharacterClass != null) {
                 foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
                     foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {

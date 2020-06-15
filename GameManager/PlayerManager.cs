@@ -391,7 +391,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): playerConnectionObject is null, instantiating connection!");
                 SpawnPlayerConnection();
             }
-            if (MyCharacter.MyUnitProfile == null) {
+            if (MyCharacter.UnitProfile == null) {
                 MyCharacter.SetUnitProfile(defaultPlayerUnitProfileName);
             }
 
@@ -399,7 +399,7 @@ namespace AnyRPG {
             //playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(Vector3.forward), playerUnitParent.transform);
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
             //Debug.Log("PlayerManager.SpawnPlayerUnit(): spawning player unit at location: " + playerUnitParent.transform.position + " with rotation: " + spawnRotation);
-            playerUnitObject = Instantiate(MyCharacter.MyUnitProfile.MyUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);
+            playerUnitObject = Instantiate(MyCharacter.UnitProfile.MyUnitPrefab, spawnLocation, Quaternion.LookRotation(spawnRotation), playerUnitParent.transform);
 
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
             MyCharacter.CharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
@@ -430,7 +430,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (MyCharacter.MyUnitProfile.MyIsUMAUnit == true) {
+            if (MyCharacter.UnitProfile.MyIsUMAUnit == true) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 InitializeUMA();
             } else {

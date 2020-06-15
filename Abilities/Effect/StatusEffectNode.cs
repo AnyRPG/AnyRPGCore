@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public void CancelStatusEffect() {
             //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + MyStatusEffect.MyName);
-            MyStatusEffect.CancelEffect(characterStats.MyBaseCharacter as BaseCharacter);
+            MyStatusEffect.CancelEffect(characterStats.BaseCharacter as BaseCharacter);
             characterStats.HandleStatusEffectRemoval(statusEffect);
         }
     }

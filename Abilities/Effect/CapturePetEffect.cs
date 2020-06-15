@@ -25,7 +25,7 @@ namespace AnyRPG {
                     //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                     return false;
                 }
-                if (targetCharacter.MyUnitProfile == null || targetCharacter.MyUnitProfile.MyIsPet == false) {
+                if (targetCharacter.UnitProfile == null || targetCharacter.UnitProfile.MyIsPet == false) {
                     // has to be the right unit type plus needs to be capturable specifically
                     Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
                     return false;
@@ -50,8 +50,8 @@ namespace AnyRPG {
                 (targetCharacter.CharacterStats as AIStats).ApplyControlEffects(source);
             }
 
-            if (targetCharacter != null && targetCharacter.MyUnitProfile != null) {
-                source.CapturePet(targetCharacter.MyUnitProfile, target);
+            if (targetCharacter != null && targetCharacter.UnitProfile != null) {
+                source.CapturePet(targetCharacter.UnitProfile, target);
             }
 
             return returnValue;

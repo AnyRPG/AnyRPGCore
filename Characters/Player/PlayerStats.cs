@@ -162,21 +162,21 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitSpawn()");
-            if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
-                MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
+            if (BaseCharacter != null && BaseCharacter.AnimatedUnit != null && BaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                BaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete += ReviveComplete;
             }
 
             //code to re-apply visual effects when the player loads into a new level
-            foreach (StatusEffectNode statusEffectNode in MyStatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.MyStatusEffect.RawCast(MyBaseCharacter.CharacterAbilityManager, MyBaseCharacter.CharacterUnit.gameObject, MyBaseCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
+                statusEffectNode.MyStatusEffect.RawCast(BaseCharacter.CharacterAbilityManager, BaseCharacter.CharacterUnit.gameObject, BaseCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
             }
         }
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("PlayerStats.HandlePlayerUnitDespawn()");
-            if (MyBaseCharacter != null && MyBaseCharacter.AnimatedUnit != null && MyBaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
-                MyBaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
+            if (BaseCharacter != null && BaseCharacter.AnimatedUnit != null && BaseCharacter.AnimatedUnit.MyCharacterAnimator != null) {
+                BaseCharacter.AnimatedUnit.MyCharacterAnimator.OnReviveComplete -= ReviveComplete;
             }
         }
 

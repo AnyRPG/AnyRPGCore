@@ -188,7 +188,7 @@ namespace AnyRPG {
 
         private void HandleMovementAudio() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            if (baseCharacter.MyUnitProfile == null || baseCharacter.MyUnitProfile.MovementAudioProfiles == null || baseCharacter.MyUnitProfile.MovementAudioProfiles.Count == 0 || baseCharacter.MyUnitProfile.PlayOnFootstep == true) {
+            if (baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.MovementAudioProfiles == null || baseCharacter.UnitProfile.MovementAudioProfiles.Count == 0 || baseCharacter.UnitProfile.PlayOnFootstep == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
