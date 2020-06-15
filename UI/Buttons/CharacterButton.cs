@@ -130,22 +130,27 @@ namespace AnyRPG {
                 equippedEquipment = null;
             }
 
-            if (equippedEquipment != null) {
-                if (fullBackGroundColor != null) {
-                    backGroundImage.color = fullBackGroundColor;
-                }
-                emptySlotImage.color = new Color32(0, 0, 0, 0);
-                icon.enabled = true;
-                icon.color = Color.white;
-                icon.sprite = equippedEquipment.MyIcon;
-            } else {
+            if (equippedEquipment == null) {
                 if (emptyBackGroundColor != null) {
                     backGroundImage.color = emptyBackGroundColor;
                 }
-                emptySlotImage.color = Color.white;
+                emptySlotImage.sprite = null;
+                if (MyEquipmentSlotProfile != null && MyEquipmentSlotProfile.MyIcon != null) {
+                    emptySlotImage.sprite = MyEquipmentSlotProfile.MyIcon;
+                    emptySlotImage.color = Color.white;
+                } else {
+                    emptySlotImage.color = new Color32(0, 0, 0, 0);
+                }
                 icon.color = new Color32(0, 0, 0, 0);
                 icon.sprite = null;
                 icon.enabled = false;
+            } else {
+                //emptySlotImage.color = new Color32(0, 0, 0, 0);
+                icon.enabled = true;
+                icon.color = Color.white;
+                icon.sprite = equippedEquipment.MyIcon;
+
+                UIManager.MyInstance.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }
 
             if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {

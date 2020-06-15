@@ -9,7 +9,7 @@ namespace AnyRPG {
 public class TransparencyButton : MonoBehaviour {
 
     [SerializeField]
-    private Image backGroundImage;
+    protected Image backGroundImage;
 
     protected bool eventSubscriptionsInitialized = false;
 

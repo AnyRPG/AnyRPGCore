@@ -63,9 +63,7 @@ namespace AnyRPG {
 
                 for (int i = 0; i < pages[pageIndex].Count; i++) {
                     if (pages[pageIndex][i] != null) {
-                        // set the loot button icon
-                        lootButtons[i].MyIcon.sprite = pages[pageIndex][i].MyIcon;
-
+                        // set the loot drop
                         lootButtons[i].LootDrop = pages[pageIndex][i];
 
                         // make sure the loot button is visible

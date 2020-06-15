@@ -42,6 +42,7 @@ namespace AnyRPG {
 
             if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited) {
                 icon.sprite = vendorItem.MyItem.MyIcon;
+                UIManager.MyInstance.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
                 //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
                 title.text = string.Format("{0}", vendorItem.MyItem.MyDisplayName);
 
@@ -85,6 +86,7 @@ namespace AnyRPG {
                 Item tmpItem = SystemItemManager.MyInstance.GetNewResource(vendorItem.MyItem.MyDisplayName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 if (InventoryManager.MyInstance.AddItem(tmpItem)) {
+                    tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                     SellItem();
                     if (tmpItem is CurrencyItem) {
                         (tmpItem as CurrencyItem).Use();

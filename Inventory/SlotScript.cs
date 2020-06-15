@@ -376,34 +376,18 @@ namespace AnyRPG {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
                 backGroundImage.sprite = null;
+                if (backGroundImage != null) {
+                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                    backGroundImage.color = finalColor;
+                } else {
+                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                }
             } else {
                 // check if the item has a quality.  if not, just do the default color
-                if (MyItem.ItemQuality != null) {
-                    if (MyItem.ItemQuality.IconBackgroundImage != null) {
-                        if (MyItem.IconBackgroundImage != null) {
-                            backGroundImage.sprite = MyItem.IconBackgroundImage;
-                        } else {
-                            backGroundImage.sprite = MyItem.ItemQuality.IconBackgroundImage;
-                        }
-                        if (MyItem.ItemQuality.TintBackgroundImage == true) {
-                            finalColor = MyItem.ItemQuality.MyQualityColor;
-                        } else {
-                            finalColor = Color.white;
-                        }
-                    } else {
-                        finalColor = new Color32(0, 0, 0, 255);
-                    }
-                } else {
-                    finalColor = new Color32(0, 0, 0, 255);
-                }
+                UIManager.MyInstance.SetItemBackground(MyItem, backGroundImage, new Color32(0, 0, 0, 255));
+
             }
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
-            if (backGroundImage != null) {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
-                backGroundImage.color = finalColor;
-            } else {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
-            }
         }
 
         public override void ShowToolTip(IDescribable describable) {

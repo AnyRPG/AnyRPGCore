@@ -441,6 +441,7 @@ namespace AnyRPG {
                         Item newItem = SystemItemManager.MyInstance.GetNewResource(rewardButton.Describable.MyDisplayName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
+                            newItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                             InventoryManager.MyInstance.AddItem(newItem);
                         }
                     }

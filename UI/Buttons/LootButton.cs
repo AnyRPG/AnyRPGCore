@@ -19,8 +19,17 @@ namespace AnyRPG {
 
         public TextMeshProUGUI MyTitle { get => title; }
 
-        public LootDrop LootDrop { get; set; }
-        public Image MyIcon { get => icon; set => icon = value; }
+        private LootDrop lootDrop = null;
+
+        public Image MyIcon { get => icon; }
+        public LootDrop LootDrop {
+            get => lootDrop;
+            set {
+                lootDrop = value;
+                MyIcon.sprite = lootDrop.MyIcon;
+                lootDrop.SetBackgroundImage(backGroundImage);
+            }
+        }
 
         private void Awake() {
             lootWindow = GetComponentInParent<LootUI>();

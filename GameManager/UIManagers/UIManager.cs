@@ -395,6 +395,41 @@ namespace AnyRPG {
             //clickable.MyIcon.color = Color.white;
         }
 
+        /// <summary>
+        /// set the background image for an item based on the item quality settings
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="backgroundImage"></param>
+        /// <param name="defaultColor"></param>
+        public void SetItemBackground(Item item, Image backgroundImage, Color defaultColor) {
+            Color finalColor;
+            if (item.ItemQuality != null) {
+                if (item.ItemQuality.IconBackgroundImage != null) {
+                    if (item.IconBackgroundImage != null) {
+                        backgroundImage.sprite = item.IconBackgroundImage;
+                    } else {
+                        backgroundImage.sprite = item.ItemQuality.IconBackgroundImage;
+                    }
+                    if (item.ItemQuality.TintBackgroundImage == true) {
+                        finalColor = item.ItemQuality.MyQualityColor;
+                    } else {
+                        finalColor = Color.white;
+                    }
+                } else {
+                    finalColor = defaultColor;
+                }
+            } else {
+                finalColor = defaultColor;
+            }
+            if (backgroundImage != null) {
+                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                backgroundImage.color = finalColor;
+            } else {
+                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+            }
+
+        }
+
         public void ShowToolTip(Vector3 position, IDescribable describable) {
             ShowToolTip(position, describable, string.Empty);
         }

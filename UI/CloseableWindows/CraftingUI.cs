@@ -321,23 +321,27 @@ namespace AnyRPG {
             }
 
             // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
-            if (GetMaxCraftAmount(craftingQueue[0]) > 0 && InventoryManager.MyInstance.AddItem(SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.MyDisplayName))) {
-                //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
-                foreach (CraftingMaterial craftingMaterial in craftingQueue[0].MyCraftingMaterials) {
-                    //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
-                    for (int i = 0; i < craftingMaterial.MyCount; i++) {
-                        //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                        InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.MyDisplayName, 1)[0]);
+            if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
+                Item tmpItem = SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.MyDisplayName);
+                tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                if (InventoryManager.MyInstance.AddItem(tmpItem)) {
+                    //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
+                    foreach (CraftingMaterial craftingMaterial in craftingQueue[0].MyCraftingMaterials) {
+                        //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
+                        for (int i = 0; i < craftingMaterial.MyCount; i++) {
+                            //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
+                            InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.MyDisplayName, 1)[0]);
+                        }
                     }
-                }
-                craftingQueue.RemoveAt(0);
-                //UpdateCraftAmountArea();
-                if (craftingQueue.Count > 0) {
-                    //Debug.Log("CraftingUI.CraftNextItem(): count: " + craftingQueue.Count);
-                    // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
-                    //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
+                    craftingQueue.RemoveAt(0);
+                    //UpdateCraftAmountArea();
+                    if (craftingQueue.Count > 0) {
+                        //Debug.Log("CraftingUI.CraftNextItem(): count: " + craftingQueue.Count);
+                        // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
+                        //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
 
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                        PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                    }
                 }
             } else {
                 // empty the queue to prevent repeated loop trying to craft something you don't have materials for

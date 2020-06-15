@@ -17,7 +17,11 @@ namespace AnyRPG {
                 return null;
             }
         }
-         
+
+        public virtual void SetBackgroundImage(Image backgroundImage) {
+            // do nothing, only used in child classes
+        }
+
 
         public virtual bool TakeLoot() {
             // need a fake value by default
@@ -139,6 +143,11 @@ namespace AnyRPG {
         public ItemLootDrop(Item item, LootTable lootTable) {
             MyLootTable = lootTable;
             MyItem = item;
+        }
+
+        public override void SetBackgroundImage(Image backgroundImage) {
+            base.SetBackgroundImage(backgroundImage);
+            UIManager.MyInstance.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
         public override bool TakeLoot() {
