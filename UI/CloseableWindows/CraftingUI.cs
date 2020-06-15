@@ -155,7 +155,9 @@ namespace AnyRPG {
             //MySelectedRecipeScript.Select();
             //} else {
             MySelectedRecipeScript = firstScript;
-            firstScript.Select();
+            if (firstScript != null) {
+                firstScript.Select();
+            }
             //}
         }
 
