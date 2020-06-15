@@ -160,7 +160,12 @@ namespace AnyRPG {
         public List<CharacterClass> MyCharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
         public bool RandomItemQuality { get => randomItemQuality; set => randomItemQuality = value; }
         public bool FreezeDropLevel { get => freezeDropLevel; set => freezeDropLevel = value; }
-        public int DropLevel { get => dropLevel; set => dropLevel = value; }
+        public int DropLevel {
+            get => dropLevel;
+            set {
+                dropLevel = Mathf.Min(value, (levelCap > 0 ? levelCap : value));
+            }
+        }
 
         public virtual void Awake() {
         }
