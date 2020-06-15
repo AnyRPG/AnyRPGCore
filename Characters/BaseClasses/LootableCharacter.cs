@@ -119,13 +119,7 @@ namespace AnyRPG {
             }
             if (lootTableNames != null && characterStats.MyBaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
-                int lootCount = 0;
-                foreach (LootTable lootTable in lootTables) {
-                    if (lootTable != null) {
-                        lootTable.GetLoot();
-                        lootCount += lootTable.MyDroppedItems.Count;
-                    }
-                }
+                int lootCount = GetLootCount();
                 if (lootCount > 0) {
                     //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
@@ -155,10 +149,7 @@ namespace AnyRPG {
                 Despawn();
                 return;
             }
-            int lootCount = 0;
-            foreach (LootTable lootTable in lootTables) {
-                lootCount += lootTable.MyDroppedItems.Count;
-            }
+            int lootCount = GetLootCount();
             if (lootCount == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table had no dropped items, despawning");
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
@@ -200,7 +191,17 @@ namespace AnyRPG {
         public int GetLootCount() {
             int lootCount = 0;
             foreach (LootTable lootTable in lootTables) {
-                lootCount += lootTable.MyDroppedItems.Count;
+                if (lootTable != null) {
+                    lootTable.GetLoot();
+                    lootCount += lootTable.MyDroppedItems.Count;
+                }
+            }
+            if (AutomaticCurrency == true) {
+                //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): automatic currency : true");
+                CurrencyNode tmpNode = GetCurrencyLoot();
+                if (tmpNode.currency != null) {
+                    lootCount += 1;
+                }
             }
             return lootCount;
         }
