@@ -65,11 +65,12 @@ namespace AnyRPG {
         }
 
         public override void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
+            Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();
+            Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions(): subscribing to handledeath");
             characterUnit.MyCharacter.CharacterStats.BeforeDie += HandleDeath;
             characterUnit.MyCharacter.CharacterStats.OnReviveComplete += HandleRevive;
         }
@@ -112,7 +113,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath(CharacterStats characterStats) {
-            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
+            Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
             if (PlayerManager.MyInstance == null) {
                 // game is exiting
                 return;
@@ -125,8 +126,8 @@ namespace AnyRPG {
 
                     //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
                     AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-                    abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLootSparkleAbility;
-                    SystemConfigurationManager.MyInstance.MyLootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
+                    abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LootSparkleAbility;
+                    SystemConfigurationManager.MyInstance.LootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
                 }
             } else {
                 if (!characterStats.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
@@ -155,7 +156,7 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
 
                 // cancel loot sparkle here because despawn takes a while
-                List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.MyLootSparkleAbility.MyAbilityEffects;
+                List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.LootSparkleAbility.MyAbilityEffects;
                 foreach (AbilityEffect abilityEffect in sparkleEffects) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
                     if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.MyDisplayName))) {

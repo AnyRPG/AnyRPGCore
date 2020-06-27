@@ -436,7 +436,7 @@ namespace AnyRPG {
         public virtual void LearnUnitProfileAbilities() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnUnitProfileAbilities()");
             if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                foreach (BaseAbility baseAbility in baseCharacter.UnitProfile.MyLearnedAbilities) {
+                foreach (BaseAbility baseAbility in baseCharacter.UnitProfile.LearnedAbilities) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
@@ -616,8 +616,8 @@ namespace AnyRPG {
 
 
         public virtual void UnLearnDefaultAutoAttackAbility() {
-            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MyDefaultAutoAttackAbility != null) {
-                UnlearnAbility(baseCharacter.UnitProfile.MyDefaultAutoAttackAbility);
+            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.DefaultAutoAttackAbility != null) {
+                UnlearnAbility(baseCharacter.UnitProfile.DefaultAutoAttackAbility);
             }
         }
 
@@ -628,9 +628,9 @@ namespace AnyRPG {
                 // can't learn two auto-attacks at the same time
                 return;
             }
-            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MyDefaultAutoAttackAbility != null) {
+            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.DefaultAutoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
-                LearnAbility(baseCharacter.UnitProfile.MyDefaultAutoAttackAbility);
+                LearnAbility(baseCharacter.UnitProfile.DefaultAutoAttackAbility);
             }
         }
 
@@ -661,8 +661,8 @@ namespace AnyRPG {
 
         public void ApplySpecializationTraits(ClassSpecialization newClassSpecialization) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
-            if (newClassSpecialization != null && newClassSpecialization.MyTraitList != null && newClassSpecialization.MyTraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in newClassSpecialization.MyTraitList) {
+            if (newClassSpecialization != null && newClassSpecialization.TraitList != null && newClassSpecialization.TraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in newClassSpecialization.TraitList) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
                     ApplyStatusEffect(classTrait);
                 }
@@ -714,8 +714,8 @@ namespace AnyRPG {
         }
 
         public void RemoveSpecializationTraits(ClassSpecialization oldClassSpecialization) {
-            if (oldClassSpecialization != null && oldClassSpecialization.MyTraitList != null && oldClassSpecialization.MyTraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in oldClassSpecialization.MyTraitList) {
+            if (oldClassSpecialization != null && oldClassSpecialization.TraitList != null && oldClassSpecialization.TraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in oldClassSpecialization.TraitList) {
                     if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
                         baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
                     }
@@ -744,7 +744,7 @@ namespace AnyRPG {
             if (classSpecialization == null) {
                 return;
             }
-            foreach (BaseAbility baseAbility in classSpecialization.MyAbilityList) {
+            foreach (BaseAbility baseAbility in classSpecialization.AbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
                 if (baseAbility.MyRequiredLevel <= PlayerManager.MyInstance.MyCharacter.CharacterStats.Level && PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
@@ -768,7 +768,7 @@ namespace AnyRPG {
             if (classSpecialization == null) {
                 return;
             }
-            foreach (BaseAbility oldAbility in classSpecialization.MyAbilityList) {
+            foreach (BaseAbility oldAbility in classSpecialization.AbilityList) {
                 UnlearnAbility(oldAbility);
             }
         }

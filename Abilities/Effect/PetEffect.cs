@@ -21,7 +21,7 @@ namespace AnyRPG {
             if (characterUnit.BaseCharacter == null || characterUnit.BaseCharacter.UnitProfile == null) {
                 return false;
             }
-            if (!characterUnit.BaseCharacter.UnitProfile.MyIsPet) {
+            if (!characterUnit.BaseCharacter.UnitProfile.IsPet) {
                 return false;
             }
 

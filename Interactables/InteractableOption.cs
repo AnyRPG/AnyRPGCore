@@ -172,11 +172,6 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance == null) {
                 Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
                 return;
-            } else {
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
-                    //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
-                    //HandlePlayerUnitSpawn();
-                }
             }
             eventSubscriptionsInitialized = true;
         }

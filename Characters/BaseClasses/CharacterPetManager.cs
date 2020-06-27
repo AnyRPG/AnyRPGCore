@@ -121,7 +121,7 @@ namespace AnyRPG {
             //Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
             Vector3 finalSpawnLocation = spawnLocation;
             Vector3 usedForwardDirection = baseCharacter.CharacterUnit.transform.forward;
-            GameObject prefabObject = Instantiate(unitProfile.MyUnitPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection), prefabParent);
+            GameObject prefabObject = Instantiate(unitProfile.UnitPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection), prefabParent);
             activeUnitProfiles.Add(unitProfile, prefabObject);
             HandlePetSpawn(prefabObject);
         }

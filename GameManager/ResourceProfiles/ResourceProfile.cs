@@ -25,12 +25,19 @@ namespace AnyRPG {
         protected string description;
 
         public Sprite MyIcon { get => icon; set => icon = value; }
-        //public string MyName { get => displayName; set => displayName = value; }
+
+        /// <summary>
+        /// return the resourceName
+        /// </summary>
         public string MyName {
             get {
                 return resourceName;
             }
         }
+
+        /// <summary>
+        /// return the displayName
+        /// </summary>
         public string RawDisplayName {
             get {
                 return displayName;
@@ -38,6 +45,9 @@ namespace AnyRPG {
             set => displayName = value;
         }
 
+        /// <summary>
+        /// return the displayName if set, otherwise return the resourceName
+        /// </summary>
         public string MyDisplayName {
             get {
                 if (displayName != null && displayName != string.Empty) {
@@ -47,6 +57,7 @@ namespace AnyRPG {
             }
             set => displayName = value;
         }
+
         public string MyDescription { get => description; set => description = value; }
         public Sprite IconBackgroundImage { get => iconBackgroundImage; set => iconBackgroundImage = value; }
 

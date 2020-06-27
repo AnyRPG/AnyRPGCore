@@ -334,8 +334,8 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyCharacter.CharacterClass != null) {
                 anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.CharacterClass.MyDisplayName;
             }
-            if (PlayerManager.MyInstance.MyCharacter.MyClassSpecialization != null) {
-                anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.MyClassSpecialization.MyDisplayName;
+            if (PlayerManager.MyInstance.MyCharacter.ClassSpecialization != null) {
+                anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.ClassSpecialization.MyDisplayName;
             }
             anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
 

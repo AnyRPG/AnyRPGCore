@@ -139,11 +139,11 @@ namespace AnyRPG {
 
             ClearPreviewTarget();
             SetPreviewTarget();
-            if (unitSpawnButton.MyUnitProfile.MyDefaultToughness != null) {
+            if (unitSpawnButton.MyUnitProfile.DefaultToughness != null) {
                 //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
                 int counter = 0;
                 foreach (TMP_Dropdown.OptionData data in toughnessDropdown.options) {
-                    if (data.text == unitSpawnButton.MyUnitProfile.MyDefaultToughness.MyDisplayName) {
+                    if (data.text == unitSpawnButton.MyUnitProfile.DefaultToughness.MyDisplayName) {
                         toughnessDropdown.value = counter;
                         break;
                     }
@@ -344,7 +344,7 @@ namespace AnyRPG {
         public void SpawnUnit() {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
                 bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
-                GameObject spawnPrefab = MySelectedUnitSpawnButton.MyUnitProfile.MyUnitPrefab;
+                GameObject spawnPrefab = MySelectedUnitSpawnButton.MyUnitProfile.UnitPrefab;
                 if (spawnPrefab != null && unitSpawnNode != null) {
                     unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, spawnPrefab, unitToughness);
                 }

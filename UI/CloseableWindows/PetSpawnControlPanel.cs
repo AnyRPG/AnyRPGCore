@@ -87,8 +87,8 @@ namespace AnyRPG {
 
         public void UpdateUnitInformation() {
             BaseCharacter baseCharacter = PetPreviewManager.MyInstance.MyPreviewUnit.GetComponent<BaseCharacter>();
-            if (baseCharacter != null) {
-                classText.text = baseCharacter.MyCharacterClassName;
+            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+                classText.text = baseCharacter.CharacterClass.MyDisplayName;
             }
         }
 
@@ -238,7 +238,7 @@ namespace AnyRPG {
         */
 
         public void SpawnUnit() {
-            GameObject spawnPrefab = MySelectedPetSpawnButton.MyUnitProfile.MyUnitPrefab;
+            GameObject spawnPrefab = MySelectedPetSpawnButton.MyUnitProfile.UnitPrefab;
             if (spawnPrefab != null) {
                 PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             }

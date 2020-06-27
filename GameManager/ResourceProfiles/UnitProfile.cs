@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
     [System.Serializable]
-    public class UnitProfile : DescribableResource {
+    public class UnitProfile : DescribableResource, IStatProvider {
 
         [Header("Unit")]
 
@@ -30,6 +30,44 @@ namespace AnyRPG {
         private string defaultToughness = string.Empty;
 
         protected UnitToughness unitToughness = null;
+
+        [Header("Character")]
+
+        [Tooltip("The name that will show over the character head and in unit frames")]
+        [SerializeField]
+        protected string characterName;
+
+        [Tooltip("The name of the faction this character belongs to")]
+        [SerializeField]
+        protected string factionName;
+
+        protected Faction faction;
+
+        [Tooltip("If set, this will show in the nameplate instead of the faction")]
+        [SerializeField]
+        protected string title = string.Empty;
+
+        [Tooltip("The name of the character class")]
+        [SerializeField]
+        protected string characterClassName;
+
+        protected CharacterClass characterClass;
+
+        [Tooltip("The name of the unit type")]
+        [SerializeField]
+        protected string unitTypeName;
+
+        protected UnitType unitType;
+
+        [Tooltip("The name of the class specialization")]
+        [SerializeField]
+        protected string classSpecializationName;
+
+        protected ClassSpecialization classSpecialization;
+
+        [Tooltip("should this character start the game dead")]
+        [SerializeField]
+        protected bool spawnDead = false;
 
         [Header("Abilities")]
 
@@ -55,6 +93,19 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
+        [Header("Combat")]
+
+        [Tooltip("If true, a combat strategy matching the unit name will be looked up and used if found")]
+        [SerializeField]
+        private bool automaticCombatStrategy = false;
+
+        [Tooltip("The strategy that will be used when this unit is in combat")]
+        [SerializeField]
+        private string combatStrategyName = string.Empty;
+
+        // reference to the actual combat strategy
+        private CombatStrategy combatStrategy;
+
         [Header("Stats and Scaling")]
 
         [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
@@ -71,6 +122,12 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
+        [Header("Equipment")]
+
+        [Tooltip("This equipment will be equipped by default on this unit")]
+        [SerializeField]
+        private List<string> equipmentNameList = new List<string>();
+
         [Header("Movement")]
 
         [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
@@ -83,39 +140,26 @@ namespace AnyRPG {
 
         private List<AudioProfile> movementAudioProfiles = new List<AudioProfile>();
 
-        public GameObject MyUnitPrefab { get => unitPrefab; set => unitPrefab = value; }
-        public UnitToughness MyDefaultToughness { get => unitToughness; set => unitToughness = value; }
-        public BaseAbility MyDefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
-        public bool MyIsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
-        public bool MyIsPet { get => isPet; set => isPet = value; }
-        public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
+        public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
+        public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
+        public bool IsPet { get => isPet; set => isPet = value; }
+        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
-
-        /// <summary>
-        /// Return the maximum value for a power resource
-        /// </summary>
-        /// <param name="powerResource"></param>
-        /// <param name="characterStats"></param>
-        /// <returns></returns>
-        public float GetResourceMaximum(PowerResource powerResource, CharacterStats characterStats) {
-
-            float returnValue = powerResource.MaximumAmount;
-
-            foreach (StatScalingNode statScalingNode in primaryStats) {
-                if (characterStats.PrimaryStats.ContainsKey(statScalingNode.StatName)) {
-                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
-                        if (characterStatToResourceNode.PowerResource == powerResource) {
-                            returnValue += (characterStatToResourceNode.ResourcePerPoint * characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue);
-                        }
-                    }
-                }
-            }
-            return returnValue;
-        }
+        public List<string> EquipmentNameList { get => equipmentNameList; set => equipmentNameList = value; }
+        public CombatStrategy CombatStrategy { get => combatStrategy; set => combatStrategy = value; }
+        public string CharacterName { get => characterName; set => characterName = value; }
+        public string Title { get => title; set => title = value; }
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public Faction Faction { get => faction; set => faction = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
+        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -186,8 +230,48 @@ namespace AnyRPG {
                 statScalingNode.SetupScriptableObjects();
             }
 
+            if (automaticCombatStrategy == true) {
+                combatStrategyName = MyName;
+            }
+            if (combatStrategyName != null && combatStrategyName != string.Empty) {
+                CombatStrategy tmpCombatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(combatStrategyName);
+                if (tmpCombatStrategy != null) {
+                    combatStrategy = tmpCombatStrategy;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                }
 
+            }
+
+            if (faction == null && factionName != null && factionName != string.Empty) {
+                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                if (tmpFaction != null) {
+                    faction = tmpFaction;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+            if (characterClass == null && characterClassName != null && characterClassName != string.Empty) {
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                if (tmpCharacterClass != null) {
+                    characterClass = tmpCharacterClass;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+            if (unitType == null && unitTypeName != null && unitTypeName != string.Empty) {
+                UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
+                if (tmpUnitType != null) {
+                    unitType = tmpUnitType;
+                    //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
         }
-    }
 
+    }
 }

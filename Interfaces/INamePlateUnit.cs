@@ -12,6 +12,7 @@ namespace AnyRPG {
         event System.Action OnInitializeNamePlate;
         event System.Action<INamePlateUnit> NamePlateNeedsRemoval;
         event System.Action<int, int> ResourceBarNeedsUpdate;
+        event System.Action OnNameChange;
 
         NamePlateController MyNamePlate { get; set; }
         string MyUnitFrameTarget { get; }

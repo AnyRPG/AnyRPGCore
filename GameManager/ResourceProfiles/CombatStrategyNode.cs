@@ -41,9 +41,6 @@ namespace AnyRPG {
 
         private List<BaseAbility> attackAbilityList = new List<BaseAbility>();
 
-        // track phase for music etc
-        private bool phaseStarted = false;
-
         public int MyMaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
         public int MyMinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
         public string MyPhaseMusicProfileName { get => phaseMusicProfileName; set => phaseMusicProfileName = value; }
@@ -55,15 +52,11 @@ namespace AnyRPG {
         public List<BaseAbility> MyMaintainBuffList { get => maintainBuffList; set => maintainBuffList = value; }
 
         public void StartPhase() {
-            if (phaseStarted) {
-                return;
-            }
             if (phaseMusicProfile != null) {
                 if (phaseMusicProfile.AudioClip != null) {
                     AudioManager.MyInstance.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
-            phaseStarted = true;
         }
 
         public void SetupScriptableObjects() {

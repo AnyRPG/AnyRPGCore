@@ -214,6 +214,11 @@ namespace AnyRPG {
                 characterUnit = null;
             }
             CalculateResourceColors(target);
+            if (namePlateUnit.HasHealth()) {
+                castBarController.SetTarget(target);
+                statusEffectPanelController.SetTarget(characterUnit);
+            }
+
             if (isActiveAndEnabled) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + "):  WE ARE NOW ACTIVE AND ENABLED");
                 TargetInitialization();
@@ -244,11 +249,6 @@ namespace AnyRPG {
                 }
             }
 
-            if (namePlateUnit.HasHealth()) {
-                castBarController.SetTarget(target);
-                statusEffectPanelController.SetTarget(characterUnit);
-            }
-
         }
 
         private IEnumerator WaitForCamera() {
@@ -261,8 +261,9 @@ namespace AnyRPG {
             if (followGameObject != null) {
 
                 if (characterUnit != null) {
-                    characterUnit.MyCharacter.CharacterStats.OnResourceAmountChanged -= OnResourceAmountChanged;
-                    characterUnit.MyCharacter.CharacterStats.OnLevelChanged -= OnLevelChanged;
+                    characterUnit.MyCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
+                    characterUnit.MyCharacter.OnNameChange -= HandleNameChange;
+                    characterUnit.MyCharacter.CharacterStats.OnLevelChanged -= HandleLevelChanged;
                     characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
                     characterUnit.MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
@@ -314,7 +315,7 @@ namespace AnyRPG {
             int counter = 0;
             if (characterUnit.MyCharacter.CharacterStats != null) {
                 foreach (PowerResource _powerResource in characterUnit.MyCharacter.CharacterStats.PowerResourceList) {
-                    OnResourceAmountChanged(_powerResource, (int)characterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)characterUnit.BaseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
+                    HandleResourceAmountChanged(_powerResource, (int)characterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)characterUnit.BaseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
                     counter++;
                     if (counter > 1) {
                         break;
@@ -323,8 +324,9 @@ namespace AnyRPG {
             }
 
             // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
-            characterUnit.BaseCharacter.CharacterStats.OnResourceAmountChanged += OnResourceAmountChanged;
-            characterUnit.BaseCharacter.CharacterStats.OnLevelChanged += OnLevelChanged;
+            characterUnit.BaseCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
+            characterUnit.MyCharacter.OnNameChange += HandleNameChange;
+            characterUnit.BaseCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
             characterUnit.BaseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
 
             if (characterUnit.BaseCharacter.CharacterFactionManager != null) {
@@ -334,7 +336,7 @@ namespace AnyRPG {
             }
 
 
-            OnLevelChanged(namePlateUnit.Level);
+            HandleLevelChanged(namePlateUnit.Level);
         }
 
         public void ClearPrimaryResourceBar() {
@@ -460,7 +462,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OnLevelChanged(int _level) {
+        public void HandleLevelChanged(int _level) {
             CalculateResourceColors(followGameObject);
             unitLevelText.text = _level.ToString();
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
@@ -468,12 +470,17 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleNameChange(string newName) {
+            unitNameText.text = newName;
+        }
+
+
         /// <summary>
         /// accept a resource amount changed message
         /// </summary>
         /// <param name="maxResourceAmount"></param>
         /// <param name="currentResourceAmount"></param>
-        public void OnResourceAmountChanged(PowerResource powerResource, int maxResourceAmount, int currentResourceAmount) {
+        public void HandleResourceAmountChanged(PowerResource powerResource, int maxResourceAmount, int currentResourceAmount) {
             //Debug.Log("Updating resource bar");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
                 int counter = 0;

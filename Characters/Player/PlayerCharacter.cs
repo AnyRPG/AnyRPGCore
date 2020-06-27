@@ -40,11 +40,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true) {
+        public override void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.SetCharacterFaction(" + newFaction + ")");
 
             CharacterClass oldCharacterClass = characterClass;
-            base.SetCharacterClass(newCharacterClass, notify);
+            base.SetCharacterClass(newCharacterClass, notify, resetStats);
             if (newCharacterClass == null) {
                 // don't print messages for no reason
                 return;
@@ -76,7 +76,6 @@ namespace AnyRPG {
                 SetCharacterClass(newCharacterClass);
             }
         }
-
 
         public void LearnFactionAbilities(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");

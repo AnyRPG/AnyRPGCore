@@ -345,7 +345,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public BaseAbility MyLootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
+        public BaseAbility LootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
         public Material MyTemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
         public BaseAbility MyLevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
         public Sprite MyQuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }

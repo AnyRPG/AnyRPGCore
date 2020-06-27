@@ -138,67 +138,52 @@ namespace AnyRPG {
             return 100;
         }
 
-        public static float GetPrimaryStatForLevel(string statName, int level, CharacterClass characterClass, UnitProfile unitProfile) {
-            int extraClassStatPerLevel = 0;
-            int extraUnitProfileStatPerLevel = 0;
-            int extraSystemStatPerLevel = 0;
+        public static float GetPrimaryStatForLevel(string statName, int level, BaseCharacter baseCharacter) {
 
-            if (unitProfile != null) {
-                foreach (StatScalingNode statScalingNode in unitProfile.PrimaryStats) {
-                    if (statScalingNode.StatName == statName) {
-                        extraUnitProfileStatPerLevel = (int)statScalingNode.BudgetPerLevel;
-                        break;
-                    }
-                }
-            }
+            float extraStatPerLevel = 0;
 
-            if (characterClass != null) {
-                foreach (StatScalingNode statScalingNode in characterClass.PrimaryStats) {
-                    if (statScalingNode.StatName == statName) {
-                        extraClassStatPerLevel = (int)statScalingNode.BudgetPerLevel;
-                        break;
+            if (baseCharacter != null) {
+                foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                    if (statProvider != null) {
+                        foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
+                            if (statScalingNode.StatName == statName) {
+                                extraStatPerLevel += statScalingNode.BudgetPerLevel;
+                                break;
+                            }
+                        }
                     }
                 }
             }
 
             foreach (StatScalingNode statScalingNode in SystemConfigurationManager.MyInstance.PrimaryStats) {
                 if (statScalingNode.StatName == statName) {
-                    extraSystemStatPerLevel = (int)statScalingNode.BudgetPerLevel;
+                    extraStatPerLevel += statScalingNode.BudgetPerLevel;
                     break;
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + (float)extraSystemStatPerLevel + (float)extraClassStatPerLevel + (float)extraUnitProfileStatPerLevel;
+            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + extraStatPerLevel;
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
             float returnValue = 0f;
-            if (sourceCharacter.UnitProfile != null) {
-                foreach (StatScalingNode statScalingNode in sourceCharacter.UnitProfile.PrimaryStats) {
-                    foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
-                        if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
-                            if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                returnValue += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
-                            } else {
-                                returnValue += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
+
+            foreach (IStatProvider statProvider in sourceCharacter.StatProviders) {
+                if (statProvider != null) {
+                    foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
+                        foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
+                            if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
+                                if (primaryToSecondaryStatNode.RatedConversion == true) {
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
+                                } else {
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
+                                }
                             }
                         }
                     }
                 }
             }
-            if (sourceCharacter.CharacterClass != null) {
-                foreach (StatScalingNode statScalingNode in sourceCharacter.CharacterClass.PrimaryStats) {
-                    foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
-                        if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
-                            if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                returnValue += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
-                            } else {
-                                returnValue += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
-                            }
-                        }
-                    }
-                }
-            }
+
             returnValue += sourceCharacter.CharacterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
             return returnValue;
         }

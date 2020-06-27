@@ -106,7 +106,9 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventSubscriptions;
-            SystemEventManager.MyInstance.OnPlayerNameChanged -= SetCharacterName;
+            if (namePlateUnit != null) {
+                namePlateUnit.OnNameChange += SetCharacterName;
+            }
 
             eventSubscriptionsInitialized = false;
         }
@@ -170,7 +172,6 @@ namespace AnyRPG {
                 namePlateCanvasGroup.blocksRaycasts = false;
                 UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
                 isPlayerUnitNamePlate = true;
-                SystemEventManager.MyInstance.OnPlayerNameChanged += SetCharacterName;
             } else {
                 namePlateCanvasGroup.blocksRaycasts = true;
             }
@@ -296,6 +297,8 @@ namespace AnyRPG {
                 MyHealthBar.SetActive(false);
             }
             namePlateUnit.MyNamePlate = this;
+
+            namePlateUnit.OnNameChange += SetCharacterName;
         }
 
         public void HandleReputationChange() {

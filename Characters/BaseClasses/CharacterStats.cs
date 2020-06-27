@@ -51,6 +51,8 @@ namespace AnyRPG {
         private bool isAlive = true;
         private int currentXP = 0;
 
+        private List<PowerResource> powerResourceList = new List<PowerResource>();
+
         protected bool eventSubscriptionsInitialized = false;
 
         public float WalkSpeed { get => walkSpeed; }
@@ -65,32 +67,38 @@ namespace AnyRPG {
 
         public List<PowerResource> PowerResourceList {
             get {
-                List<PowerResource> returnList = new List<PowerResource>();
-                if (baseCharacter.UnitProfile != null) {
-                    returnList.AddRange(baseCharacter.UnitProfile.PowerResourceList);
-                }
-                if (baseCharacter.CharacterClass != null) {
-                    foreach (PowerResource powerResource in baseCharacter.CharacterClass.PowerResourceList) {
-                        if (!returnList.Contains(powerResource)) {
-                            returnList.Add(powerResource);
+                return powerResourceList;
+            }
+        }
+
+        public void UpdatePowerResourceList() {
+
+            // since this is just a list and contains no values, it is safe to overwrite
+            powerResourceList = new List<PowerResource>();
+
+            // add from system
+            powerResourceList.AddRange(SystemConfigurationManager.MyInstance.PowerResourceList);
+
+            if (baseCharacter == null || baseCharacter.StatProviders == null) {
+                return;
+            }
+
+            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                if (statProvider != null) {
+                    foreach (PowerResource powerResource in statProvider.PowerResourceList) {
+                        if (!powerResourceList.Contains(powerResource)) {
+                            powerResourceList.Add(powerResource);
                         }
                     }
                 }
-                return returnList;
             }
+
         }
 
         public PowerResource PrimaryResource {
             get {
-                if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                    if (baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
-                        return baseCharacter.CharacterClass.PowerResourceList[0];
-                    }
-                }
-                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                    if (baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
-                        return baseCharacter.UnitProfile.PowerResourceList[0];
-                    }
+                if (PowerResourceList.Count > 0) {
+                    return PowerResourceList[0];
                 }
                 return null;
             }
@@ -130,11 +138,8 @@ namespace AnyRPG {
         public int MaxPrimaryResource {
             get {
                 if (PrimaryResource != null) {
-                    if (baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PowerResourceList != null && baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
-                        return (int)GetPowerResourceMaxAmount(baseCharacter.UnitProfile.PowerResourceList[0]);
-                    }
-                    if (baseCharacter.CharacterClass != null && baseCharacter.CharacterClass.PowerResourceList != null && baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
-                        return (int)GetPowerResourceMaxAmount(baseCharacter.CharacterClass.PowerResourceList[0]);
+                    if (PowerResourceList.Count > 0) {
+                        return (int)GetPowerResourceMaxAmount(PowerResourceList[0]);
                     }
                 }
                 return 0;
@@ -145,11 +150,8 @@ namespace AnyRPG {
             get {
                 if (PrimaryResource != null) {
                     if (powerResourceDictionary.Count > 0) {
-                        if (baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PowerResourceList != null && baseCharacter.UnitProfile.PowerResourceList.Count > 0) {
-                            return (int)powerResourceDictionary[baseCharacter.UnitProfile.PowerResourceList[0]].currentValue;
-                        }
-                        if (baseCharacter.CharacterClass != null && baseCharacter.CharacterClass.PowerResourceList != null && baseCharacter.CharacterClass.PowerResourceList.Count > 0) {
-                            return (int)powerResourceDictionary[baseCharacter.CharacterClass.PowerResourceList[0]].currentValue;
+                        if (PowerResourceList.Count > 0) {
+                            return (int)powerResourceDictionary[PowerResourceList[0]].currentValue;
                         }
                     }
                 }
@@ -180,7 +182,9 @@ namespace AnyRPG {
 
         public void OrchestratorStart() {
             GetComponentReferences();
+            //temporarily disabled since unit profile will still be null at this point
             SetPrimaryStatModifiers();
+            InitializeSecondaryStats();
             CreateEventSubscriptions();
             SetupScriptableObjects();
         }
@@ -213,21 +217,6 @@ namespace AnyRPG {
             baseCharacter = GetComponent<BaseCharacter>();
         }
 
-        public void SetCharacterClass(CharacterClass characterClass) {
-            //Debug.Log(gameObject.name + ".CharacterStats.SetCharacterClass(" + (characterClass == null ? "null" : characterClass.MyName) + ")");
-
-            // add primary stats from the character class
-            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                AddCharacterClassModifiers(baseCharacter.CharacterClass);
-            }
-
-            // add power resources from the character class
-            powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
-            foreach (PowerResource powerResource in characterClass.PowerResourceList) {
-                powerResourceDictionary.Add(powerResource, new PowerResourceNode());
-            }
-        }
-
         public virtual bool PerformPowerResourceCheck(IAbility ability, float resourceCost) {
             //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.MyName) + ", " + resourceCost + ")");
             if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
@@ -242,93 +231,82 @@ namespace AnyRPG {
             return false;
         }
 
-        public void HandleSetUnitProfile() {
-            //Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
-            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                AddUnitProfileModifiers(baseCharacter.UnitProfile);
-            }
+        public void HandleUpdateStatProviders() {
+            Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
+            SetPrimaryStatModifiers();
         }
 
-        /// <summary>
-        /// Add primary stats from the unit profile
-        /// </summary>
-        /// <param name="unitProfile"></param>
-        public void AddUnitProfileModifiers(UnitProfile unitProfile) {
-            //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers()");
-
-            // setup primary stats dictionary with character class defined stats
-            foreach (StatScalingNode statScalingNode in unitProfile.PrimaryStats) {
-                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
-                    //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding stat: " + statScalingNode.StatName);
-                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
-                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+        public void AddPrimaryStatModifiers(List<StatScalingNode> primaryStatList, bool updatePowerResourceDictionary = true) {
+            if (primaryStatList != null) {
+                foreach (StatScalingNode statScalingNode in primaryStatList) {
+                    if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
+                        //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding stat: " + statScalingNode.StatName);
+                        primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
+                        primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+                    }
                 }
             }
 
-            // setup power resource dictionary with character class defined resources
-            foreach (PowerResource powerResource in unitProfile.PowerResourceList) {
+            if (updatePowerResourceDictionary) {
+                UpdatePowerResourceDictionary();
+            }
+
+        }
+
+        /// <summary>
+        /// add power resources which are needed.  remove power resources which are no longer available
+        /// </summary>
+        public void UpdatePowerResourceDictionary() {
+            //Debug.Log(gameObject.name + ".CharacterStats.UpdatePowerResourceDictionary()");
+
+            UpdatePowerResourceList();
+
+            // remove power resources which are no longer available
+            List<PowerResource> removeList = new List<PowerResource>();
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                if (!PowerResourceList.Contains(powerResource)) {
+                    removeList.Add(powerResource);
+                }
+            }
+            foreach (PowerResource powerResource in removeList) {
+                powerResourceDictionary.Remove(powerResource);
+            }
+
+            // add power resources that need to be added
+            foreach (PowerResource powerResource in PowerResourceList) {
                 if (!powerResourceDictionary.ContainsKey(powerResource)) {
                     //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding resource: " + powerResource.MyDisplayName);
                     powerResourceDictionary.Add(powerResource, new PowerResourceNode());
                 }
             }
-        }
 
-        /// <summary>
-        /// Add primary stats from the character class
-        /// </summary>
-        /// <param name="characterClass"></param>
-        public void AddCharacterClassModifiers(CharacterClass characterClass) {
-
-            // setup primary stats dictionary with character class defined stats
-            foreach (StatScalingNode statScalingNode in characterClass.PrimaryStats) {
-                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
-                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
-                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
-                }
-            }
-
-            // setup power resource dictionary with character class defined resources
-            foreach (PowerResource powerResource in characterClass.PowerResourceList) {
-                if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                    powerResourceDictionary.Add(powerResource, new PowerResourceNode());
-                }
-            }
         }
 
         /// <summary>
         /// setup the dictionaries that keep track of the current values for stats and resources
         /// </summary>
         public void SetPrimaryStatModifiers() {
-
+            //Debug.Log(gameObject.name + ".CharacterStats.SetPrimaryStatModifiers()");
             // setup the primary stats dictionary with system defined stats
-            foreach (StatScalingNode statScalingNode in SystemConfigurationManager.MyInstance.PrimaryStats) {
-                if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
-                    primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
-                    primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+            AddPrimaryStatModifiers(SystemConfigurationManager.MyInstance.PrimaryStats, false);
+
+            if (baseCharacter != null && baseCharacter.StatProviders != null) {
+                foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                    if (statProvider != null && statProvider.PrimaryStats != null) {
+                        AddPrimaryStatModifiers(statProvider.PrimaryStats, false);
+                    }
                 }
             }
 
-            // setup power resource dictionary with system defined power resources
-            foreach (PowerResource powerResource in SystemConfigurationManager.MyInstance.PowerResourceList) {
-                if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                    powerResourceDictionary.Add(powerResource, new PowerResourceNode());
-                }
-            }
+            UpdatePowerResourceDictionary();
+        }
 
-            // if this character has a unit profile, add primary stats and power resources from their unit profile
-            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                AddUnitProfileModifiers(baseCharacter.UnitProfile);
-            }
-
-            // if this character has a class, add primary stats and power resources from their class
-            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                AddCharacterClassModifiers(baseCharacter.CharacterClass);
-            }
-            
+        public void InitializeSecondaryStats() { 
             // setup the secondary stats from the system defined enum
             foreach (SecondaryStatType secondaryStatType in Enum.GetValues(typeof(SecondaryStatType))) {
-                secondaryStats.Add(secondaryStatType, new Stat(secondaryStatType.ToString()));
+                if (!secondaryStats.ContainsKey(secondaryStatType)) {
+                    secondaryStats.Add(secondaryStatType, new Stat(secondaryStatType.ToString()));
+                }
             }
 
             // accuracy and speed are percentages so they need 100 as their base value
@@ -864,7 +842,7 @@ namespace AnyRPG {
 
             // calculate base values independent of any modifiers
             foreach (string statName in primaryStats.Keys) {
-                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter.CharacterClass, baseCharacter.UnitProfile) * multiplierValues[statName]);
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * multiplierValues[statName]);
             }
 
             // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values
@@ -1002,18 +980,18 @@ namespace AnyRPG {
         /// Set resources to maximum
         /// </summary>
         public void ResetResourceAmounts() {
-            //Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
+            Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
 
-            if (baseCharacter == null || baseCharacter.CharacterClass == null || baseCharacter.CharacterClass.PowerResourceList == null) {
+            if (PowerResourceList == null) {
                 return;
             }
 
             // loop through and update the resources.
-            foreach (PowerResource _powerResource in baseCharacter.CharacterClass.PowerResourceList) {
+            foreach (PowerResource _powerResource in PowerResourceList) {
                 if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
                     powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
                 }
-                OnResourceAmountChanged(_powerResource, (int)baseCharacter.CharacterStats.GetPowerResourceMaxAmount(_powerResource), (int)baseCharacter.CharacterStats.PowerResourceDictionary[_powerResource].currentValue);
+                OnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
 
             
@@ -1176,14 +1154,38 @@ namespace AnyRPG {
             return 0f;
         }
 
+        /// <summary>
+        /// Return the maximum value for a power resource
+        /// </summary>
+        /// <param name="powerResource"></param>
+        /// <param name="characterStats"></param>
+        /// <returns></returns>
+        public float GetResourceMaximum(PowerResource powerResource, IStatProvider statProvider) {
+
+            float returnValue = 0f;
+
+            foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
+                if (PrimaryStats.ContainsKey(statScalingNode.StatName)) {
+                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
+                        if (characterStatToResourceNode.PowerResource == powerResource) {
+                            returnValue += (characterStatToResourceNode.ResourcePerPoint * PrimaryStats[statScalingNode.StatName].CurrentValue);
+                        }
+                    }
+                }
+            }
+            return returnValue;
+        }
+
         public float GetPowerResourceMaxAmount(PowerResource powerResource) {
             float returnValue = 0f;
             if (powerResourceDictionary.ContainsKey(powerResource)) {
-                if (baseCharacter.CharacterClass != null) {
-                    returnValue += baseCharacter.CharacterClass.GetResourceMaximum(powerResource, this);
-                }
-                if (baseCharacter.UnitProfile != null) {
-                    returnValue += baseCharacter.UnitProfile.GetResourceMaximum(powerResource, this);
+                if (baseCharacter != null) {
+                    returnValue += powerResource.MaximumAmount;
+                    foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                        if (statProvider != null) {
+                            returnValue += GetResourceMaximum(powerResource, statProvider);
+                        }
+                    }
                 }
             }
             if (resourceMultipliers.ContainsKey(powerResource.MyDisplayName)) {

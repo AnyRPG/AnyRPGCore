@@ -29,7 +29,6 @@ namespace AnyRPG {
         protected bool componentReferencesInitialized = false;
         protected bool subscribedToCombatEvents = false;
 
-        [SerializeField]
         protected string equipmentProfileName;
 
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
@@ -86,16 +85,14 @@ namespace AnyRPG {
 
         public virtual void LoadDefaultEquipment() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
-            if (equipmentProfileName != null && equipmentProfileName != string.Empty && SystemEquipmentProfileManager.MyInstance != null) {
-                EquipmentProfile equipmentProfile = SystemEquipmentProfileManager.MyInstance.GetResource(equipmentProfileName);
-                if (equipmentProfile != null) {
-                    //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment() found equipment profile for: " + equipmentProfileName);
-                    foreach (string equipmentName in equipmentProfile.MyEquipmentNameList) {
-                        Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
-                        if (equipment != null) {
-                            Equip(equipment);
-                        }
-                    }
+            if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentNameList == null) {
+                return;
+            }
+
+            foreach (string equipmentName in baseCharacter.UnitProfile.EquipmentNameList) {
+                Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
+                if (equipment != null) {
+                    Equip(equipment);
                 }
             }
         }
@@ -140,7 +137,7 @@ namespace AnyRPG {
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
                 foreach (UMATextRecipe uMARecipe in newItem.MyUMARecipes) {
-                    if (uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
                         dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
                     }
                 }

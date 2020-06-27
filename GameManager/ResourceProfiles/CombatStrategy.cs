@@ -25,7 +25,7 @@ namespace AnyRPG {
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
 
-                    validPhaseNode.StartPhase();
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
 
                     // ATTEMPT BUFF AND IMMEDIATELY RETURN ANY BUFF THAT NEEDS CASTING
                     foreach (BaseAbility baseAbility in validPhaseNode.MyMaintainBuffList) {
@@ -78,7 +78,7 @@ namespace AnyRPG {
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
 
-                    validPhaseNode.StartPhase();
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
 
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
@@ -102,6 +102,12 @@ namespace AnyRPG {
 
         }
 
+        public void AttempStartPhase(BaseCharacter sourceCharacter, CombatStrategyNode validPhaseNode) {
+            if ((sourceCharacter.CharacterController as AIController).StartCombatPhase(validPhaseNode)) {
+                validPhaseNode.StartPhase();
+            }
+        }
+
         public List<BaseAbility> GetAttackRangeAbilityList(BaseCharacter sourceCharacter) {
 
             List<BaseAbility> returnList = new List<BaseAbility>();
@@ -112,7 +118,7 @@ namespace AnyRPG {
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
 
-                    validPhaseNode.StartPhase();
+                    AttempStartPhase(sourceCharacter, validPhaseNode);
 
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {

@@ -14,6 +14,7 @@ namespace AnyRPG {
         public event System.Action OnInitializeNamePlate = delegate { };
         public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
         public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
+        public event Action OnNameChange = delegate { };
 
         public event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 

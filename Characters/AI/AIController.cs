@@ -1,4 +1,6 @@
 using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,16 +14,16 @@ namespace AnyRPG {
 
         //private bool isDead = false;
 
-        [SerializeField]
+        //[SerializeField]
         private float evadeSpeed = 5f;
 
-        [SerializeField]
+        //[SerializeField]
         private float leashDistance = 40f;
 
-        [SerializeField]
+        //[SerializeField]
         private float maxDistanceFromMasterOnMove = 3f;
 
-        [SerializeField]
+        //[SerializeField]
         private float maxCombatDistanceFromMasterOnMove = 15f;
 
         /// <summary>
@@ -30,18 +32,13 @@ namespace AnyRPG {
         [SerializeField]
         private AggroRange aggroRange = null;
 
-        [SerializeField]
-        private string combatStrategyName = string.Empty;
-
-        private CombatStrategy combatStrategy;
-
         private Vector3 startPosition = Vector3.zero;
 
         private float distanceToTarget = 0f;
 
         private IState currentState;
 
-        //private SphereCollider sphereCollider;
+        private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
 
         public Vector3 MyStartPosition {
             get {
@@ -61,7 +58,14 @@ namespace AnyRPG {
         public IState MyCurrentState { get => currentState; set => currentState = value; }
         public float MyLeashDistance { get => leashDistance; }
         public AIPatrol MyAiPatrol { get => aiPatrol; }
-        public CombatStrategy MyCombatStrategy { get => combatStrategy; set => combatStrategy = value; }
+        public CombatStrategy MyCombatStrategy {
+            get {
+                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                    return baseCharacter.UnitProfile.CombatStrategy;
+                }
+                return null;
+            }
+        }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".AIController.Awake()");
@@ -72,42 +76,11 @@ namespace AnyRPG {
 
             MyAggroRange = initialAggroRange;
 
-            GetCombatStrategy();
-
             if (aggroRange != null) {
                 //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
                 aggroRange.SetAgroRange(initialAggroRange);
             }
 
-        }
-
-        public void GetCombatStrategy() {
-            //Debug.Log(gameObject.name + ".AIController.GetCombatStategy()");
-            string usedStrategyName = combatStrategyName;
-            // automatic combat strategy by name is no longer in use to prevent units from accidentally picking up a strategy they shouldn't have just because it has the same name as the unit
-            /*
-            if (usedStrategyName == null || usedStrategyName == string.Empty) {
-                //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured");
-                if (baseCharacter != null && baseCharacter.MyCharacterName != null && baseCharacter.MyCharacterName != string.Empty) {
-                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured: using characterName: " + baseCharacter.MyCharacterName);
-                    usedStrategyName = baseCharacter.MyCharacterName;
-                }
-            }
-            */
-            if (usedStrategyName != null && usedStrategyName != string.Empty) {
-                //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): no strategy configured: using usedStrategyName: " + usedStrategyName);
-                combatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(usedStrategyName);
-                if (combatStrategy == null) {
-                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): " + usedStrategyName + " was null");
-                } else {
-                    //Debug.Log(gameObject.name + ".AIController.GetCombatStategy(): " + usedStrategyName + " GOT COMBAT STRATEGY");
-                }
-                /*
-                if (combatStrategy == null) {
-                    Debug.LogError("Unable to get combat strategy: " + usedStrategyName);
-                }
-                */
-            }
         }
 
         protected override void Start() {
@@ -134,6 +107,14 @@ namespace AnyRPG {
                 ChangeState(new IdleState());
             }
 
+        }
+
+        public bool StartCombatPhase(CombatStrategyNode combatStrategyNode) {
+            if (!startedPhaseNodes.Contains(combatStrategyNode)) {
+                startedPhaseNodes.Add(combatStrategyNode);
+                return true;
+            }
+            return false;
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
@@ -410,8 +391,12 @@ namespace AnyRPG {
                         }
                     }
                 }
-                GetCombatStrategy();
+                ResetCombatStrategy();
             }
+        }
+
+        public void ResetCombatStrategy() {
+            startedPhaseNodes.Clear();
         }
 
         public float GetMinAttackRange() {

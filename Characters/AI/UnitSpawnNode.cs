@@ -281,8 +281,8 @@ namespace AnyRPG {
             }
             if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
-                if (unitProfiles[spawnIndex].MyUnitPrefab != null) {
-                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].MyUnitPrefab, unitToughness);
+                if (unitProfiles[spawnIndex].UnitPrefab != null) {
+                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].UnitPrefab, unitToughness);
                 }
             }
         }

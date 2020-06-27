@@ -19,7 +19,7 @@ namespace AnyRPG {
         public int MyEffectLimit { get => effectLimit; set => effectLimit = value; }
 
         public void SetTarget(CharacterUnit characterUnit) {
-            //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
+            Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
             this.targetCharacterUnit = characterUnit;
             if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
@@ -46,12 +46,12 @@ namespace AnyRPG {
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            //Debug.Log("StatusEffectPanelController.HandleStatusEffectUpdate()");
+            Debug.Log("StatusEffectPanelController.HandleStatusEffectAdd(): character: " + (targetCharacterUnit == null ? "null" : targetCharacterUnit.MyDisplayName));
             SpawnStatusNode(statusEffectNode, targetCharacterUnit);
         }
 
         public void CreateEventSubscriptions(CharacterStats characterStats) {
-            //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions()");
+            Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): character: " + (targetCharacterUnit == null ? "null" : targetCharacterUnit.MyDisplayName));
             if (characterStats != null) {
                 //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): characterStats is not null.");
                 characterStats.OnStatusEffectAdd += HandleStatusEffectAdd;

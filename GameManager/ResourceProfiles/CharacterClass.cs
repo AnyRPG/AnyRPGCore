@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Character Class", menuName = "AnyRPG/CharacterClass")]
     [System.Serializable]
-    public class CharacterClass : DescribableResource {
+    public class CharacterClass : DescribableResource, IStatProvider {
 
         [Header("Abilities and Traits")]
 
@@ -118,28 +118,6 @@ namespace AnyRPG {
                 statScalingNode.SetupScriptableObjects();
             }
 
-        }
-
-        /// <summary>
-        /// Return the maximum value for a power resource
-        /// </summary>
-        /// <param name="powerResource"></param>
-        /// <param name="characterStats"></param>
-        /// <returns></returns>
-        public float GetResourceMaximum(PowerResource powerResource, CharacterStats characterStats) {
-
-            float returnValue = powerResource.MaximumAmount;
-
-            foreach (StatScalingNode statScalingNode in primaryStats) {
-                if (characterStats.PrimaryStats.ContainsKey(statScalingNode.StatName)) {
-                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
-                        if (characterStatToResourceNode.PowerResource == powerResource) {
-                            returnValue += (characterStatToResourceNode.ResourcePerPoint * characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue);
-                        }
-                    }
-                }
-            }
-            return returnValue;
         }
 
     }

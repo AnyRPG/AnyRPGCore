@@ -40,7 +40,7 @@ namespace AnyRPG {
             // format the button text
             string descriptionText = string.Empty;
             descriptionText += "Description: " + unitProfile.MyDescription + "\n";
-            descriptionText += "Default Toughness: " + unitProfile.MyDefaultToughness + "\n";
+            descriptionText += "Default Toughness: " + unitProfile.DefaultToughness + "\n";
 
             // set the text on the button
             description.text = descriptionText;

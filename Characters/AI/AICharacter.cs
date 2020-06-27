@@ -6,12 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class AICharacter : BaseCharacter {
 
-        /// <summary>
-        ///  the prefab for the actual character modeel
-        /// </summary>
-        [SerializeField]
-        private GameObject characterModelPrefab;
-
         [SerializeField]
         private GameObject characterModelGameObject = null;
 
@@ -22,8 +16,6 @@ namespace AnyRPG {
         private bool preventAutoDespawn = false;
 
         private bool animationEnabled = false;
-
-        public GameObject MyCharacterModelPrefab { get => characterModelPrefab; set => characterModelPrefab = value; }
 
         public GameObject MyCharacterModelGameObject { get => characterModelGameObject; set => characterModelGameObject = value; }
         public LootableCharacter MyLootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
@@ -97,10 +89,13 @@ namespace AnyRPG {
             if (animationEnabled == true) {
                 return;
             }
+            /*
+             * saved code for maybe using with unit profile in the future?
             if (characterModelGameObject == null && characterModelPrefab != null) {
                 //Debug.Log(gameObject.name + ".AICharacter.Start(): Could not find character model gameobject, instantiating one");
                 characterModelGameObject = Instantiate(characterModelPrefab, CharacterUnit.transform);
             }
+            */
             if (previewCharacter == false && AnimatedUnit != null) {
                 AnimatedUnit.EnableAgent();
             }

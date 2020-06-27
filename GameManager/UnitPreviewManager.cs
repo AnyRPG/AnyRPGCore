@@ -57,7 +57,7 @@ namespace AnyRPG {
         public void HandleOpenWindow() {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
-           cloneSource = UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile.MyUnitPrefab;
+           cloneSource = UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile.UnitPrefab;
 
             if (cloneSource == null) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");

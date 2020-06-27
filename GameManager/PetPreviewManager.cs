@@ -56,7 +56,7 @@ namespace AnyRPG {
         public void HandleOpenWindow() {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
-           cloneSource = PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile.MyUnitPrefab;
+           cloneSource = PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile.UnitPrefab;
 
             if (cloneSource == null) {
                 //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");

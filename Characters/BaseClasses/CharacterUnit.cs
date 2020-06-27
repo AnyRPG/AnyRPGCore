@@ -15,6 +15,7 @@ namespace AnyRPG {
         public event System.Action OnInitializeNamePlate = delegate { };
         public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
         public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
+        public event Action OnNameChange = delegate { };
         public event System.Action<GameObject> OnDespawn = delegate { };
 
         [SerializeField]
@@ -122,6 +123,10 @@ namespace AnyRPG {
                 }
                 return 1;
             }
+        }
+
+        public void HandleNameChange() {
+            OnNameChange();
         }
 
         public AudioProfile MovementLoopProfile {
