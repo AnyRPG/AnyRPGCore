@@ -202,6 +202,8 @@ namespace AnyRPG {
         }
 
         public virtual void CalculateSecondaryStats() {
+            //Debug.Log(gameObject.name + ".CharacterStats.CalculateSecondaryStats()");
+
             // update base values
             foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
                 secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, baseCharacter);
@@ -454,12 +456,12 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
+        public virtual float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
+                    returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
                 }
             }
             if (secondaryStats.ContainsKey(secondaryStatType)) {
@@ -468,17 +470,20 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        protected virtual float GetSecondaryMultiplyModifiers(SecondaryStatType secondaryStatType) {
-            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
+        public virtual float GetSecondaryMultiplyModifiers(SecondaryStatType secondaryStatType) {
+            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + ")");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
+                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatMultiplier;
+                    //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue + "; stack: " + statusEffectNode.MyStatusEffect.MyCurrentStacks + "; multiplier: " + statusEffectNode.MyStatusEffect.MyStatMultiplier);
                 }
             }
+            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue);
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 returnValue *= secondaryStats[secondaryStatType].GetMultiplyValue();
             }
+            //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue);
             return returnValue;
         }
 
@@ -545,7 +550,7 @@ namespace AnyRPG {
         }
 
         public virtual float GetAccuracyModifiers() {
-            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            //Debug.Log("CharacterStats.GetAccuracyModifiers()");
             return secondaryStats[SecondaryStatType.Accuracy].CurrentValue;
         }
 
@@ -604,21 +609,6 @@ namespace AnyRPG {
                     returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyOutgoingDamageMultiplier;
                 }
             }
-            //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
-            return returnValue;
-        }
-
-        public virtual float GetSecondaryStatAddModifiers(SecondaryStatType secondaryStatType) {
-            //Debug.Log("CharacterStats.GetDamageModifiers()");
-            float returnValue = 0f;
-            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue += (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
-                }
-            }
-            returnValue += secondaryStats[secondaryStatType].GetAddValue();
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
             return returnValue;
         }
@@ -776,6 +766,9 @@ namespace AnyRPG {
 
             if (statusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.MovementSpeed)) {
                 CalculateRunSpeed();
+            }
+            if (statusEffect.SecondaryStatBuffsTypes.Count > 0) {
+                CalculateSecondaryStats();
                 StatChangedNotificationHandler();
             }
 

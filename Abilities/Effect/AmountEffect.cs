@@ -79,8 +79,13 @@ namespace AnyRPG {
                 // something died or despawned mid cast
                 return;
             }
-            if (!source.AbilityHit(target, abilityEffectInput)) {
-                return;
+
+            // check ability context ?  if base ability was animated, then no need to check because we already checked
+            if (!((abilityEffectInput.baseAbility as AnimatedAbility) is AnimatedAbility)) {
+                if (!source.AbilityHit(target, abilityEffectInput)) {
+                    return;
+                }
+
             }
             AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
 

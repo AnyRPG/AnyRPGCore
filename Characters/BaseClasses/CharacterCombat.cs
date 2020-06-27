@@ -399,6 +399,7 @@ namespace AnyRPG {
         }
 
         public bool DidAttackMiss() {
+            //Debug.Log(gameObject.name + ".CharacterCombat.DidAttackMiss()");
             int randomNumber = UnityEngine.Random.Range(0, 100);
             int randomCutoff = (int)Mathf.Clamp(baseCharacter.CharacterStats.GetAccuracyModifiers(), 0, 100);
             //Debug.Log(gameObject.name + ".CharacterCombat.DidAttackMiss(): number: " + randomNumber + "; accuracy = " + randomCutoff);

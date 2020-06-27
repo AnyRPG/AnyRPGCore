@@ -189,8 +189,10 @@ namespace AnyRPG {
         }
 
         public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + sourceCharacter.CharacterName + ")");
             float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, sourceCharacter);
-            returnValue += sourceCharacter.CharacterStats.GetSecondaryStatAddModifiers(secondaryStatType);
+            returnValue += sourceCharacter.CharacterStats.GetSecondaryAddModifiers(secondaryStatType);
+            returnValue *= sourceCharacter.CharacterStats.GetSecondaryMultiplyModifiers(secondaryStatType);
             return returnValue;
         }
 

@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         [Tooltip("The stats will be multiplied by this amount (after addition)")]
         [SerializeField]
-        protected float statMultiplier = 1;
+        protected float statMultiplier = 1f;
 
         [Header("Primary Stat Buffs and Debuffs")]
 

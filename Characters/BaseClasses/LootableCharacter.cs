@@ -113,7 +113,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath(CharacterStats characterStats) {
-            Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
+            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
             if (PlayerManager.MyInstance == null) {
                 // game is exiting
                 return;
