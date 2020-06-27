@@ -232,7 +232,7 @@ namespace AnyRPG {
         }
 
         public void HandleUpdateStatProviders() {
-            Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
             SetPrimaryStatModifiers();
         }
 
@@ -980,7 +980,7 @@ namespace AnyRPG {
         /// Set resources to maximum
         /// </summary>
         public void ResetResourceAmounts() {
-            Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
+            //Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
 
             if (PowerResourceList == null) {
                 return;

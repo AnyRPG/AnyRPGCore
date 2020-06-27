@@ -65,12 +65,12 @@ namespace AnyRPG {
         }
 
         public override void CreateEventSubscriptions() {
-            Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             base.CreateEventSubscriptions();
-            Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions(): subscribing to handledeath");
+            //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions(): subscribing to handledeath");
             characterUnit.MyCharacter.CharacterStats.BeforeDie += HandleDeath;
             characterUnit.MyCharacter.CharacterStats.OnReviveComplete += HandleRevive;
         }

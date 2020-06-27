@@ -12,9 +12,6 @@ namespace AnyRPG {
         [SerializeField]
         private LootableCharacter lootableCharacter = null;
 
-        [SerializeField]
-        private bool preventAutoDespawn = false;
-
         private bool animationEnabled = false;
 
         public GameObject MyCharacterModelGameObject { get => characterModelGameObject; set => characterModelGameObject = value; }
@@ -137,7 +134,7 @@ namespace AnyRPG {
 
         public void TryToDespawn() {
             //Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
-            if (preventAutoDespawn == true) {
+            if (unitProfile != null && unitProfile.PreventAutoDespawn == true) {
                 return;
             }
             if (lootableCharacter != null) {

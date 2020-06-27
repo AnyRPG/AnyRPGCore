@@ -69,6 +69,10 @@ namespace AnyRPG {
         [SerializeField]
         protected bool spawnDead = false;
 
+        [Tooltip("If true, the character will not despawn when dead")]
+        [SerializeField]
+        private bool preventAutoDespawn = false;
+
         [Header("Abilities")]
 
         [Tooltip("When no weapons are equippped to learn auto-attack abilities from, this auto-attack ability will be used")]
@@ -160,6 +164,7 @@ namespace AnyRPG {
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
+        public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

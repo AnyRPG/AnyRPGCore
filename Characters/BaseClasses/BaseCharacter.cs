@@ -172,7 +172,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetUnitProfile(string unitProfileName) {
-            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             unitProfile = null;
             this.unitProfileName = unitProfileName;
