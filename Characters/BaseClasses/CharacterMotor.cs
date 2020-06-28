@@ -572,7 +572,7 @@ namespace AnyRPG {
         }
 
         public void StartNavAgent() {
-            Debug.Log(gameObject.name + ".CharacterMotor.StartNavAgent()");
+            //Debug.Log(gameObject.name + ".CharacterMotor.StartNavAgent()");
             if (!animatedUnit.MyAgent.enabled) {
                 animatedUnit.EnableAgent();
                 animatedUnit.MyRigidBody.isKinematic = true;

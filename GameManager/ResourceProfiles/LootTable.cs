@@ -77,9 +77,21 @@ namespace AnyRPG {
                     if (lootGroup.IgnoreGlobalDropLimit == true) {
                         ignoreDropLimit = true;
                     }
+
+                    // get list of loot that is currenly valid to be rolled so that weights can be properly calculated based on only valid loot
+                    List<Loot> validLoot = new List<Loot>();
+                    foreach (Loot loot in lootGroup.Loot) {
+                        if (loot.MyPrerequisitesMet == true &&
+                            (loot.MyItem.MyUniqueItem == false ||
+                            (InventoryManager.MyInstance.GetItemCount(loot.MyItem.MyDisplayName) == 0 &&
+                            PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.MyDisplayName) == false))) {
+                            validLoot.Add(loot);
+                        }
+                    }
+
                     if (lootGroup.GuaranteedDrop == true) {
                         List<int> randomItemIndexes = new List<int>();
-                        int maxCount = Mathf.Min(lootGroup.DropLimit, lootGroup.Loot.Count);
+                        int maxCount = Mathf.Min(lootGroup.DropLimit, validLoot.Count);
                         while (randomItemIndexes.Count < maxCount) {
 
                             // pure random
@@ -90,15 +102,15 @@ namespace AnyRPG {
                             int sum_of_weight = 0;
                             int accumulatedWeight = 0;
 
-                            for (int i = 0; i < lootGroup.Loot.Count; i++) {
-                                sum_of_weight += (int)lootGroup.Loot[i].MyDropChance;
+                            for (int i = 0; i < validLoot.Count; i++) {
+                                sum_of_weight += (int)validLoot[i].MyDropChance;
                             }
                             //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
                             int rnd = UnityEngine.Random.Range(0, sum_of_weight);
                             //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
-                            for (int i = 0; i < lootGroup.Loot.Count; i++) {
+                            for (int i = 0; i < validLoot.Count; i++) {
                                 //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
-                                accumulatedWeight += (int)lootGroup.Loot[i].MyDropChance;
+                                accumulatedWeight += (int)validLoot[i].MyDropChance;
                                 if (rnd < accumulatedWeight) {
                                     usedIndex = i;
                                     //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
@@ -118,29 +130,14 @@ namespace AnyRPG {
                             }
                         }
                         foreach (int randomItemIndex in randomItemIndexes) {
-                            if (lootGroup.Loot[randomItemIndex].MyPrerequisitesMet == true &&
-                                (lootGroup.Loot[randomItemIndex].MyItem.MyUniqueItem == false ||
-                                (InventoryManager.MyInstance.GetItemCount(lootGroup.Loot[randomItemIndex].MyItem.MyDisplayName) == 0 &&
-                                PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(lootGroup.Loot[randomItemIndex].MyItem.MyDisplayName) == false))) {
-                                droppedItems.AddRange(GetLootDrop(lootGroup.Loot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
-                            }
+                            droppedItems.AddRange(GetLootDrop(validLoot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
                         }
                     } else {
-                        foreach (Loot item in lootGroup.Loot) {
-                            if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) > 0) {
-                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
-                            }
-                            if (item.MyPrerequisitesMet == true &&
-                                (item.MyItem.MyUniqueItem == false ||
-                                (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) == 0 &&
-                                PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyDisplayName) == false))) {
-                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " rolling");
-                                int roll = Random.Range(0, 100);
-                                if (roll <= item.MyDropChance) {
-                                    droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
-                                }
-                            } else {
-                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " prereqs not met");
+                        foreach (Loot item in validLoot) {
+                            //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " rolling");
+                            int roll = Random.Range(0, 100);
+                            if (roll <= item.MyDropChance) {
+                                droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
                             }
                             if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
                                 break;
