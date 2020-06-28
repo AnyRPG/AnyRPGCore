@@ -21,8 +21,6 @@ namespace AnyRPG {
 
         protected float sprintSpeedModifier = 1.5f;
 
-        protected UnitToughness unitToughness;
-
         // keep track of current level
         private int currentLevel;
 
@@ -160,7 +158,14 @@ namespace AnyRPG {
         }
 
         public Dictionary<string, StatusEffectNode> StatusEffects { get => statusEffects; }
-        public UnitToughness Toughness { get => unitToughness; set => unitToughness = value; }
+        public UnitToughness Toughness {
+            get {
+                if (baseCharacter != null) {
+                    return baseCharacter.UnitToughness;
+                }
+                return null;
+            }
+        }
         public bool IsReviving { get => isReviving; set => isReviving = value; }
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
@@ -759,7 +764,8 @@ namespace AnyRPG {
             //statusEffect.StatBuffTypeNames
             if (statusEffect.StatBuffTypeNames.Count > 0) {
                 foreach (string statName in statusEffect.StatBuffTypeNames) {
-                    HandleStatUpdate(statName, false);
+                    //HandleStatUpdate(statName, false);
+                    HandleStatUpdate(statName, true);
                 }
                 StatChangedNotificationHandler();
             }
@@ -823,12 +829,12 @@ namespace AnyRPG {
             }
 
             currentLevel = newLevel;
-            if (unitToughness != null) {
-                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in unitToughness.PrimaryStatMultipliers) {
+            if (baseCharacter != null && baseCharacter.UnitToughness != null) {
+                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
                     multiplierValues[primaryStatMultiplierNode.StatName] = primaryStatMultiplierNode.StatMultiplier;
                 }
                 resourceMultipliers = new Dictionary<string, float>();
-                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in unitToughness.PrimaryStatMultipliers) {
+                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
                     resourceMultipliers.Add(primaryStatMultiplierNode.StatName, primaryStatMultiplierNode.StatMultiplier);
                 }
             }

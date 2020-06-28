@@ -26,6 +26,7 @@ namespace AnyRPG {
         protected CharacterClass characterClass;
         protected ClassSpecialization classSpecialization;
         protected bool spawnDead = false;
+        protected UnitToughness unitToughness;
 
         protected UnitProfile unitProfile = null;
 
@@ -83,6 +84,7 @@ namespace AnyRPG {
         public bool PreviewCharacter { get => previewCharacter; set => previewCharacter = value; }
         public string Title { get => title; set => title = value; }
         public List<IStatProvider> StatProviders { get => statProviders; set => statProviders = value; }
+        public UnitToughness UnitToughness { get => unitToughness; set => unitToughness = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
@@ -217,6 +219,9 @@ namespace AnyRPG {
                 if (unitProfile.UnitType != null) {
                     SetUnitType(unitProfile.UnitType, true, false);
                 }
+                if (unitProfile.DefaultToughness != null) {
+                    SetUnitToughness(unitProfile.DefaultToughness);
+                }
                 spawnDead = unitProfile.SpawnDead;
             }
 
@@ -251,6 +256,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
+        }
+
+        public virtual void SetUnitToughness(UnitToughness newUnitToughness) {
+            unitToughness = newUnitToughness;
         }
 
         public virtual void SetCharacterName(string newName) {
