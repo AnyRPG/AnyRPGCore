@@ -31,9 +31,9 @@ namespace AnyRPG {
 
         public List<LootDrop> MyDroppedItems { get => droppedItems; set => droppedItems = value; }
 
-        public List<LootDrop> GetLoot() {
+        public List<LootDrop> GetLoot(bool rollLoot = true) {
             //Debug.Log("LootTable.GetLoot().");
-            if (!rolled) {
+            if (!rolled && rollLoot == true) {
                 //Debug.Log("LootTable.GetLoot() !rolled. rolling...");
                 RollLoot();
             }
@@ -41,7 +41,11 @@ namespace AnyRPG {
             return MyDroppedItems;
         }
 
-        // used to prevent multiple copies of a unique item from dropping since the other check requires it to be in your bag, so multiple can still drop if you haven't looted a mob yet
+        /// <summary>
+        /// used to prevent multiple copies of a unique item from dropping since the other check requires it to be in your bag, so multiple can still drop if you haven't looted a mob yet 
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <returns></returns>
         public bool droppedItemsContains(string itemName) {
             foreach (LootDrop lootDrop in droppedItems) {
                 if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
@@ -114,14 +118,23 @@ namespace AnyRPG {
                             }
                         }
                         foreach (int randomItemIndex in randomItemIndexes) {
-                            droppedItems.AddRange(GetLootDrop(lootGroup.Loot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                            if (lootGroup.Loot[randomItemIndex].MyPrerequisitesMet == true &&
+                                (lootGroup.Loot[randomItemIndex].MyItem.MyUniqueItem == false ||
+                                (InventoryManager.MyInstance.GetItemCount(lootGroup.Loot[randomItemIndex].MyItem.MyDisplayName) == 0 &&
+                                PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(lootGroup.Loot[randomItemIndex].MyItem.MyDisplayName) == false))) {
+                                droppedItems.AddRange(GetLootDrop(lootGroup.Loot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                            }
                         }
                     } else {
                         foreach (Loot item in lootGroup.Loot) {
                             if (item.MyItem.MyUniqueItem == true && InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) > 0) {
                                 //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " skipping due to uniqueness");
                             }
-                            if (item.MyPrerequisitesMet == true && (item.MyItem.MyUniqueItem == false || (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) == 0 && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyDisplayName) == false))) {
+                            if (item.MyPrerequisitesMet == true &&
+                                (item.MyItem.MyUniqueItem == false ||
+                                (InventoryManager.MyInstance.GetItemCount(item.MyItem.MyDisplayName) == 0 &&
+                                PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(item.MyItem.MyDisplayName) == false))) {
+                                //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " rolling");
                                 int roll = Random.Range(0, 100);
                                 if (roll <= item.MyDropChance) {
                                     droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));

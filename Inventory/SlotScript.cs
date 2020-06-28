@@ -343,7 +343,8 @@ namespace AnyRPG {
                 // how many free slots there are in the new stack
                 int free = MyItem.MyMaximumStackSize - MyCount;
                 if (free >= from.MyCount) {
-                    for (int i = 0; i < free; i++) {
+                    int maxCount = from.MyCount;
+                    for (int i = 0; i < maxCount; i++) {
                         AddItem(from.MyItems[0]);
                         from.RemoveItem(from.MyItems[0]);
                     }

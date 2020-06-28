@@ -1022,7 +1022,11 @@ namespace AnyRPG {
                 usedBaseAbility = currentCastAbility;
             }
 
-            if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && usedBaseAbility.MyHoldableObjects.Count != 0) {
+            if (baseCharacter != null &&
+                baseCharacter.CharacterEquipmentManager != null &&
+                usedBaseAbility != null &&
+                usedBaseAbility.MyHoldableObjects != null &&
+                usedBaseAbility.MyHoldableObjects.Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.MyAnimatorCreatePrefabs) {

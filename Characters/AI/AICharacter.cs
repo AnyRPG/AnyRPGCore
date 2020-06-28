@@ -83,7 +83,9 @@ namespace AnyRPG {
         }
 
         public void EnableAnimation() {
+            //Debug.Log(gameObject.name + ".AICharacter.EnableAnimation() preview: " + previewCharacter + "; animatedunit: " + (AnimatedUnit == null ? "null" : AnimatedUnit.name));
             if (animationEnabled == true) {
+                //Debug.Log(gameObject.name + ".AICharacter.EnableAnimation(): animation already enabled.  returning");
                 return;
             }
             /*

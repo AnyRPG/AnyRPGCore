@@ -39,13 +39,15 @@ namespace AnyRPG {
         private bool currencyRolled = false;
         private bool currencyCollected = false;
 
+        private bool lootCalculated = false;
+
         // hold the rolled currency amount
         private CurrencyNode currencyNode;
 
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public List<LootTable> MyLootTables { get => lootTables; set => lootTables = value; }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
-        public bool CurrencyRolled { get => currencyRolled; set => currencyRolled = value; }
+        public bool CurrencyRolled { get => currencyRolled; }
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
 
@@ -118,22 +120,21 @@ namespace AnyRPG {
                 // game is exiting
                 return;
             }
-            if (lootTableNames != null && characterStats.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
-                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
-                int lootCount = GetLootCount();
-                if (lootCount > 0) {
-                    //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
+            int lootCount = 0;
+            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
+            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
+            if (lootTables != null && characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
+                lootCount = GetLootCount();
+            }
+            lootCalculated = true;
+            if (lootCount > 0) {
+                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
-                    //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
-                    AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-                    abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LootSparkleAbility;
-                    SystemConfigurationManager.MyInstance.LootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
-                }
-            } else {
-                if (!characterStats.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): Player not in agro table, no reason to drop loot.");
-                }
-                //Debug.Log(gameObject.name + ".LootableCharacter.HandleDeath(): MyLootTable == null. can't drop loot");
+                //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LootSparkleAbility;
+                SystemConfigurationManager.MyInstance.LootSparkleAbility.Cast(SystemAbilityController.MyInstance, gameObject, new AbilityEffectContext());
             }
             TryToDespawn();
         }
@@ -175,14 +176,14 @@ namespace AnyRPG {
 
         public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
-            if (base.CanInteract() == false) {
+            if (base.CanInteract() == false || GetCurrentOptionCount() == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }
 
             int lootCount = GetLootCount();
             // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
-            if (lootTables != null && lootCount > 0 && GetCurrentOptionCount() > 0) {
+            if (lootTables != null && lootCount > 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
                 return true;
             }
@@ -190,11 +191,14 @@ namespace AnyRPG {
         }
 
         public int GetLootCount() {
+            //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount()");
             int lootCount = 0;
+            
             foreach (LootTable lootTable in lootTables) {
                 if (lootTable != null) {
-                    lootTable.GetLoot();
+                    lootTable.GetLoot(!lootCalculated);
                     lootCount += lootTable.MyDroppedItems.Count;
+                    //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount(): after loot table count: " + lootCount);
                 }
             }
             if (AutomaticCurrency == true) {
@@ -202,6 +206,7 @@ namespace AnyRPG {
                 CurrencyNode tmpNode = GetCurrencyLoot();
                 if (tmpNode.currency != null) {
                     lootCount += 1;
+                    //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount(): after currency count: " + lootCount);
                 }
             }
             return lootCount;
@@ -229,7 +234,8 @@ namespace AnyRPG {
 
         public CurrencyNode GetCurrencyLoot() {
             //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot()");
-            if (currencyRolled == true) {
+            if (currencyRolled == true || lootCalculated == true) {
+                //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): currencyRolled: " + currencyRolled + "; lootCalculated: " + lootCalculated);
                 return currencyNode;
             }
             if (automaticCurrency == true) {
@@ -242,6 +248,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): setting currency rolled to true");
             currencyRolled = true;
             //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): returning currency: " + currencyNode.currency.MyDisplayName + "; amount: " + currencyNode.MyAmount);
             return currencyNode;
@@ -362,8 +369,11 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
+            if (GetValidOptionCount() == 0) {
+                return 0;
+            }
             int lootCount = GetLootCount();
-            return ((GetValidOptionCount() == 1 && lootCount > 0) ? 1 : 0);
+            return ((lootCount > 0) ? 1 : 0);
         }
 
         public void HandleRevive() {
