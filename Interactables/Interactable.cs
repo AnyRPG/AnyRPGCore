@@ -28,6 +28,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool glowOnMouseOver = true;
 
+        [Tooltip("If true, the glow emits light on objects around it.")]
+        [SerializeField]
+        private bool lightEmission = false;
+
         [Tooltip("The time period in seconds between high and low intensity of the glow strength")]
         [SerializeField]
         private float glowFlashSpeed = 1.5f;
@@ -223,6 +227,7 @@ namespace AnyRPG {
 
         private void Update() {
             // if the item is highlighted, we will continue a pulsing glow
+            //return;
             if (isFlashing) {
                 //Debug.Log("Interactable.Update(): isflashing == true");
                 float emission = glowMinIntensity + Mathf.PingPong(Time.time * glowFlashSpeed, glowMaxIntensity - glowMinIntensity);
@@ -233,8 +238,12 @@ namespace AnyRPG {
                         // added this condition because of infestor effect adding extra renderers as child objects under the character unit
                         foreach (Material flashingMaterial in renderer.materials) {
                             //Debug.Log("Interactable.Update(): flashingmaterial: " + flashingMaterial.name + "; color: " + (glowColor * emission) + "; enabled? " + flashingMaterial.IsKeywordEnabled("_EMISSION"));
-                            flashingMaterial.SetColor("_EmissionColor", glowColor * emission);
-                            flashingMaterial.SetColor("_Color", glowColor * emission);
+                            Color usedColor = glowColor;
+                            if (lightEmission) {
+                                usedColor = glowColor * emission;
+                                flashingMaterial.SetColor("_EmissionColor", usedColor);
+                            }
+                            flashingMaterial.SetColor("_Color", usedColor);
                         }
                     }
                 }
@@ -242,6 +251,7 @@ namespace AnyRPG {
         }
 
         public override bool CanSpawn() {
+            //Debug.Log(gameObject.name + ".Interactable.CanSpawn()");
             bool returnResult = base.CanSpawn();
             if (returnResult == true && spawnRequiresValidOption) {
                 if (GetCurrentInteractables().Count == 0) {
@@ -319,9 +329,19 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
-            if (namePlateUnit == null || namePlateUnit.MyNamePlate == null) {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.MyNamePlate != null ? namePlateUnit.MyNamePlate.name : "null"));
+            if (namePlateUnit == null) {
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.UnitDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.MyNamePlate != null ? namePlateUnit.MyNamePlate.name : "null"));
                 return;
+            }
+
+            // if there is a nameplate unit give it a chance to initialize its nameplate.
+            // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
+            // this means the only way they can spawn their nameplate is through a direct call
+            if (namePlateUnit.MyNamePlate == null) {
+                namePlateUnit.InitializeNamePlate();
+                if (namePlateUnit.MyNamePlate == null) {
+                    return;
+                }
             }
             int currentInteractableCount = GetCurrentInteractables().Count;
             //Debug.Log(gameObject.name + ".Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
@@ -720,8 +740,6 @@ namespace AnyRPG {
                 isFlashing = false;
                 RevertMaterialChange();
                 // return emission enabled, emission color, and emission texture to their previous values
-                //RevertMaterialChangeOld();
-
             }
         }
 
@@ -904,8 +922,12 @@ namespace AnyRPG {
                     //temporaryMaterials[i] = originalMaterials[renderer][i];
                     temporaryMaterials[i] = temporaryMaterial;
                     //enable emission and set the emission texture to none in case this item already had some type of glow mask or effect
-                    temporaryMaterials[i].EnableKeyword("_EMISSION");
-                    temporaryMaterials[i].SetTexture("_EmissionMap", null);
+                    //Debug.Log("Interactable.Update(): flashingmaterial: " + temporaryMaterial.name + "; emission enabled? " + temporaryMaterial.IsKeywordEnabled("_EMISSION"));
+                    if (lightEmission) {
+                        Debug.Log(gameObject.name + ".Interactable.PerformMaterialChange(): enabling emission");
+                        temporaryMaterials[i].EnableKeyword("_EMISSION");
+                        temporaryMaterials[i].SetTexture("_EmissionMap", null);
+                    }
                 }
                 renderer.materials = temporaryMaterials;
             }
@@ -929,44 +951,6 @@ namespace AnyRPG {
             originalMaterials.Clear();
 
             //Destroy(this);
-        }
-
-        public void RevertMaterialChangeOld() {
-            //Debug.Log(gameObject.name + ".Interactable.RevertMaterialsChangeOld()");
-            for (int i = 0; i < temporaryMaterials.Length; i++) {
-                temporaryMaterials[i].shader = shaderList[i];
-                temporaryMaterials[i].SetTexture("_EmissionMap", emissionTextureList[i]);
-                temporaryMaterials[i].SetColor("_EmissionColor", emissionColorList[i]);
-                if (!emissionEnabledList[i]) {
-                    temporaryMaterials[i].DisableKeyword("_EMISSION");
-                }
-            }
-        }
-
-        public void InitializeMaterialsOld() {
-            //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsOld()");
-            //avatar = transform.GetChild(0);
-            /*
-            if (meshRenderer != null) {
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterials(). MeshRenderer was not null");
-                hasMeshRenderer = true;
-                avatar = meshRenderer.transform.gameObject;
-                temporaryMaterials = avatar.GetComponent<Renderer>().materials;
-            }
-            */
-            for (int i = 0; i < temporaryMaterials.Length; i++) {
-                //Debug.Log(gameObject.name + " shader: " + materialList[i].shader);
-                shaderList.Add(temporaryMaterials[i].shader);
-                temporaryMaterials[i].shader = Shader.Find("Standard");
-                Color tempColor = temporaryMaterials[i].GetColor("_EmissionColor");
-                emissionColorList.Add(tempColor);
-                //Debug.Log("Got color" + emissionColorList[i].ToString() + " on object " + transform.name);
-                Texture tempTexture = temporaryMaterials[i].GetTexture("_EmissionMap");
-                emissionTextureList.Add(tempTexture);
-                bool tempEnabled = temporaryMaterials[i].IsKeywordEnabled("_EMISSION");
-                emissionEnabledList.Add(tempEnabled);
-
-            }
         }
 
         #endregion

@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public NamePlateController SpawnNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.MyDisplayName + ")");
+            //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
@@ -72,7 +72,7 @@ namespace AnyRPG {
         }
 
         public NamePlateController AddNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.MyDisplayName + ")");
+            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit) == false) {
                 NamePlateController namePlate = SpawnNamePlate(namePlateUnit, usePositionOffset);
                 namePlateUnit.NamePlateNeedsRemoval += RemoveNamePlate;

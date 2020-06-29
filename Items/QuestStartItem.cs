@@ -42,7 +42,7 @@ namespace AnyRPG {
         public bool QuestRequirementsAreMet() {
             if (MyQuests != null) {
                 foreach (QuestNode questNode in MyQuests) {
-                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyDisplayName)) {
+                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.IsComplete == false && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.MyDisplayName)) {
                         return true;
                     }
                 }

@@ -45,7 +45,11 @@ namespace AnyRPG {
         bool HasHealth();
         int CurrentHealth();
         int MaxHealth();
-        //void StopInteract();
+
+        /// <summary>
+        /// Attempt to Initialize a nameplate
+        /// </summary>
+        void InitializeNamePlate();
 
     }
 

@@ -100,12 +100,19 @@ namespace AnyRPG {
         //private BoxCollider boxCollider;
         public bool MyPrerequisitesMet {
             get {
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                    //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
+                    return false;
+                }
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                    //Debug.Log(gameObject.name + ".MyPrerequisitesMet: checking prerequisite");
                     if (!prerequisiteCondition.IsMet()) {
+                        //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false");
                         return false;
                     }
                 }
                 // there are no prerequisites, or all prerequisites are complete
+                //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning true");
                 return true;
             }
         }

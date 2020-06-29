@@ -151,7 +151,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
+            //Debug.Log(gameObject.name + ".InanimateUnit.CreateEventSubscriptions(): subscribing to player unit spawn");
             if (SystemEventManager.MyInstance == null) {
                 Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
                 return;
@@ -235,6 +235,7 @@ namespace AnyRPG {
         }
 
         public void ProcessPlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".InanimateUnit.ProcessPlayerUnitSpawn()");
             HandlePrerequisiteUpdates();
         }
 
