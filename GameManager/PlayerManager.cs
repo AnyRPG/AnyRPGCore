@@ -185,7 +185,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            SystemEventManager.MyInstance.OnLevelLoad += OnLevelLoad;
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
             SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
@@ -199,7 +199,7 @@ namespace AnyRPG {
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-                SystemEventManager.MyInstance.OnLevelLoad -= OnLevelLoad;
+                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
                 SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
                 SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
@@ -288,7 +288,7 @@ namespace AnyRPG {
             */
         }
 
-        public void OnLevelLoad() {
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("PlayerManager.OnLevelLoad()");
             bool loadCharacter = true;
             SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();

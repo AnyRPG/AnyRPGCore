@@ -350,7 +350,7 @@ namespace AnyRPG {
             anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.PlayerUMARecipe = recipeString;
-            anyRPGSaveData.CurrentScene = LevelManager.MyInstance.GetActiveSceneNode().MySceneName;
+            anyRPGSaveData.CurrentScene = LevelManager.MyInstance.GetActiveSceneNode().SceneName;
 
             // shared code to setup resource lists on load of old version file or save of new one
             anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, true);

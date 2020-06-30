@@ -69,6 +69,28 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+
+            // remove scene specific status effects that are not valid in this scene
+            List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                if (statusEffectNode.MyStatusEffect.SceneNames.Count > 0) {
+                    bool sceneFound = false;
+                    foreach (string sceneName in statusEffectNode.MyStatusEffect.SceneNames) {
+                        if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.MyInstance.GetActiveSceneNode().SceneName)) {
+                            sceneFound = true;
+                        }
+                    }
+                    if (!sceneFound) {
+                        removeNodes.Add(statusEffectNode);
+                    }
+                }
+            }
+            foreach (StatusEffectNode statusEffectNode in removeNodes) {
+                statusEffectNode.CancelStatusEffect();
+            }
+        }
+
         public void UpdatePowerResourceList() {
 
             // since this is just a list and contains no values, it is safe to overwrite
@@ -336,13 +358,14 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".CharacterStats.CreateEventSubscriptions(): could not subscribe to onequipmentchanged event");
             }
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
         }
 
         public virtual void CleanupEventSubscriptions() {
             if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
                 baseCharacter.CharacterEquipmentManager.OnEquipmentChanged -= OnEquipmentChanged;
             }
-
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
             ClearStatusEffects();
         }
 

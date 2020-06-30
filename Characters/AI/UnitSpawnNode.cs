@@ -100,10 +100,13 @@ namespace AnyRPG {
         //private BoxCollider boxCollider;
         public bool MyPrerequisitesMet {
             get {
+                // disabled next bit because it interferes with spawning in cutscenes
+                /*
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
                     //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
                     return false;
                 }
+                */
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     //Debug.Log(gameObject.name + ".MyPrerequisitesMet: checking prerequisite");
                     if (!prerequisiteCondition.IsMet()) {
@@ -295,8 +298,7 @@ namespace AnyRPG {
         }
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness = null) {
-            //GetSpawnLocation();
-            //Debug.Log(gameObject.name + "UnitSpawnNode.Spawn(): Spawning index: " + spawnIndex + "; :" + spawnPrefabs[spawnIndex].name);
+            //Debug.Log(gameObject.name + "UnitSpawnNode.CommonSpawn()");
             if (spawnPrefab == null || PlayerManager.MyInstance.MyCharacter == null) {
                 return;
             }

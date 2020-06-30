@@ -65,7 +65,6 @@ namespace AnyRPG {
         public event System.Action OnPlayerNameChanged = delegate { };
 
         // Level manager
-        public event System.Action OnLevelLoad = delegate { };
         public event System.Action OnExitGame = delegate { };
 
         // loot UI
@@ -165,10 +164,6 @@ namespace AnyRPG {
 
         public void NotifyOnTakeLoot() {
             OnTakeLoot();
-        }
-
-        public void NotifyOnLevelLoad() {
-            OnLevelLoad();
         }
 
         public void NotifyOnExitGame() {

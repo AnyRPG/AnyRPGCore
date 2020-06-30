@@ -69,7 +69,7 @@ namespace AnyRPG {
 
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
-        public string MySceneName { get => resourceName; set => resourceName = value; }
+        public string SceneName { get => resourceName; set => resourceName = value; }
         public Vector3 MyDefaultSpawnPosition { get => defaultSpawnPosition; set => defaultSpawnPosition = value; }
         public bool MySuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
         public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }

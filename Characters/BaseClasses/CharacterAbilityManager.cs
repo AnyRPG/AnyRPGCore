@@ -351,7 +351,7 @@ namespace AnyRPG {
         }
 
         public virtual bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
-            if (target == null) {
+            if (target == null || UnitGameObject == null) {
                 return false;
             }
             Vector3 sourcePosition = UnitGameObject.transform.position;

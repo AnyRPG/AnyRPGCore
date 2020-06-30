@@ -228,7 +228,7 @@ namespace AnyRPG {
                 return;
             }
             if (animator == null) {
-                Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
+                //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             } else {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): found animator attached to: " + animator.gameObject.name);

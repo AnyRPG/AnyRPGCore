@@ -206,7 +206,9 @@ namespace AnyRPG {
             PlayLevelSounds();
 
             // send messages to subscribers
-            SystemEventManager.MyInstance.NotifyOnLevelLoad();
+            EventParamProperties eventParamProperties = new EventParamProperties();
+            eventParamProperties.simpleParams.StringParam = activeSceneNode.SceneName;
+            SystemEventManager.TriggerEvent("OnLevelLoad", eventParamProperties);
 
             // activate the correct camera
             ActivateSceneCamera();

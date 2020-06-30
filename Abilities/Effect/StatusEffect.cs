@@ -9,6 +9,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect {
 
+        [Header("Status Effect")]
+
         [SerializeField]
         private StatusEffectAlignment statusEffectAlignment = StatusEffectAlignment.None;
 
@@ -26,6 +28,12 @@ namespace AnyRPG {
         [Tooltip("The required level to automatically cast this if it is a trait")]
         [SerializeField]
         private int requiredLevel = 1;
+
+        [Header("Restrictions")]
+
+        [Tooltip("Scenes this effect can be active in")]
+        [SerializeField]
+        protected List<string> sceneNames = new List<string>();
 
         [Header("Duration")]
 
@@ -129,7 +137,7 @@ namespace AnyRPG {
         // list of status effect nodes to send updates to so multiple effects panels and bars can access this
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
-        [Tooltip("Additional Effects")]
+        [Header("Additional Effects")]
 
         [SerializeField]
         protected List<string> reflectAbilityEffectNames = new List<string>();
@@ -168,6 +176,7 @@ namespace AnyRPG {
         public List<SecondaryStatType> SecondaryStatBuffsTypes { get => secondaryStatBuffsTypes; set => secondaryStatBuffsTypes = value; }
         public int SecondaryStatAmount { get => secondaryStatAmount; set => secondaryStatAmount = value; }
         public float SecondaryStatMultiplier { get => secondaryStatMultiplier; set => secondaryStatMultiplier = value; }
+        public List<string> SceneNames { get => sceneNames; set => sceneNames = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
@@ -258,7 +267,25 @@ namespace AnyRPG {
             if (classTrait == true && sourceCharacter.Level >= requiredLevel) {
                 return true;
             }
+            if (!ZoneRequirementMet()) {
+                return false;
+            }
             return base.CanUseOn(target, sourceCharacter, abilityEffectContext);
+        }
+
+        public bool ZoneRequirementMet() {
+            if (SceneNames.Count > 0) {
+                bool sceneFound = false;
+                foreach (string sceneName in SceneNames) {
+                    if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.MyInstance.GetActiveSceneNode().SceneName)) {
+                        sceneFound = true;
+                    }
+                }
+                if (!sceneFound) {
+                    return false;
+                }
+            }
+            return true;
         }
 
 

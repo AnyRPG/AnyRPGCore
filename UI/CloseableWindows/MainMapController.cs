@@ -90,7 +90,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnLevelLoad += InitializeMap;
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             eventSubscriptionsInitialized = true;
         }
 
@@ -99,9 +99,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelLoad -= InitializeMap;
-            }
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
             eventSubscriptionsInitialized = false;
         }
 
@@ -109,6 +107,10 @@ namespace AnyRPG {
         public void OnDestroy() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
+        }
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            InitializeMap();
         }
 
         public void InitializeMap() {
