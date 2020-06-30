@@ -42,7 +42,7 @@ namespace AnyRPG {
 
         protected UnitAudioController unitAudio = null;
 
-        public virtual string MyInteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
+        public virtual string InteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
         public virtual bool MyPrerequisitesMet {
@@ -61,7 +61,7 @@ namespace AnyRPG {
         public virtual Sprite MyIcon { get => interactionPanelImage; }
         public virtual Sprite MyNamePlateImage { get => namePlateImage; }
 
-        public string MyDisplayName { get => (MyInteractionPanelTitle != null && MyInteractionPanelTitle != string.Empty ? MyInteractionPanelTitle : (interactable != null ? interactable.MyDisplayName : "interactable is null!")); }
+        public string MyDisplayName { get => (InteractionPanelTitle != null && InteractionPanelTitle != string.Empty ? InteractionPanelTitle : (interactable != null ? interactable.MyDisplayName : "interactable is null!")); }
         public UnitAudioController UnitAudio { get => unitAudio; set => unitAudio = value; }
 
         protected virtual void Awake() {

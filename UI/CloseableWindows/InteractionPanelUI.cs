@@ -191,7 +191,7 @@ namespace AnyRPG {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
                         GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
                         InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
-                        iPS.MyText.text = _interactable.MyInteractionPanelTitle;
+                        iPS.MyText.text = _interactable.InteractionPanelTitle;
                         iPS.MyText.color = Color.white;
                         iPS.MyInteractableOption = _interactable;
                         //Interactables.Add(go);

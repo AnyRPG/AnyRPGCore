@@ -14,13 +14,23 @@ namespace AnyRPG {
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
 
-        private BoxCollider boxCollider;
+        public override string InteractionPanelTitle {
+            get {
+                List<Dialog> currentList = GetCurrentOptionList();
+                if (currentList.Count > 0) {
+                    return currentList[0].MyDisplayName;
+                }
+                return base.InteractionPanelTitle;
+            }
+            set => base.InteractionPanelTitle = value;
+        }
+
+        [Header("Dialog")]
 
         [Tooltip("The names of the dialogs available to this interactable")]
         [SerializeField]
         private List<string> dialogNames = new List<string>();
 
-        //[SerializeField]
         private List<Dialog> dialogList = new List<Dialog>();
 
         private int dialogIndex = 0;
@@ -28,6 +38,8 @@ namespace AnyRPG {
         private float maxDialogTime = 300f;
 
         private Coroutine dialogCoroutine = null;
+
+        private BoxCollider boxCollider;
 
         public int MyDialogIndex { get => dialogIndex; }
         public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }

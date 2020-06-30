@@ -10,7 +10,7 @@ namespace AnyRPG {
     public interface IInteractable : IDescribable {
 
         event System.Action<IInteractable> MiniMapStatusUpdateHandler;
-        string MyInteractionPanelTitle { get; set; }
+        string InteractionPanelTitle { get; set; }
         Interactable MyInteractable { get; set; }
         bool MyPrerequisitesMet { get; }
         Sprite MyNamePlateImage { get; }
