@@ -39,10 +39,10 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
 
     public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target) {
         //Debug.Log("StatusEffectNodeScript.Initialize()");
-        icon.sprite = statusEffectNode.MyStatusEffect.MyIcon;
+        icon.sprite = statusEffectNode.StatusEffect.MyIcon;
         this.statusEffectNode = statusEffectNode;
         this.target = target;
-        statusEffectNode.MyStatusEffect.SetStatusNode(this);
+        statusEffectNode.StatusEffect.SetStatusNode(this);
     }
 
     public void OnPointerClick(PointerEventData eventData) {
@@ -55,7 +55,7 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
 
     public void HandleRightClick() {
         //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
-        if (statusEffectNode != null && statusEffectNode.MyStatusEffect.MyStatusEffectAlignment != StatusEffectAlignment.Harmful) {
+        if (statusEffectNode != null && statusEffectNode.StatusEffect.MyStatusEffectAlignment != StatusEffectAlignment.Harmful) {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
             statusEffectNode.CancelStatusEffect();
         }
@@ -66,7 +66,7 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
         //Debug.Log("StatusEffectNodeScript.OnPointerEnter()");
 
         // show tooltip
-        UIManager.MyInstance.ShowToolTip(transform.position, statusEffectNode.MyStatusEffect);
+        UIManager.MyInstance.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
     }
 
     public void OnPointerExit(PointerEventData eventData) {

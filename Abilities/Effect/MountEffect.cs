@@ -74,9 +74,9 @@ namespace AnyRPG {
             PrefabProfile prefabProfile = prefabObjects.Keys.ElementAt(0);
             GameObject abilityEffectObject = prefabObjects[prefabProfile];
 
-            string originalPrefabSourceBone = prefabProfile.MyTargetBone;
+            string originalPrefabSourceBone = prefabProfile.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
-            Vector3 originalPrefabOffset = prefabProfile.MySheathedPosition;
+            Vector3 originalPrefabOffset = prefabProfile.SheathedPosition;
 
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
@@ -84,7 +84,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabProfile.MySheathedRotation;
+                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabProfile.SheathedRotation;
                     ActivateMountedState();
                 }
             }

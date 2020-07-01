@@ -74,9 +74,9 @@ namespace AnyRPG {
             // remove scene specific status effects that are not valid in this scene
             List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.SceneNames.Count > 0) {
+                if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
                     bool sceneFound = false;
-                    foreach (string sceneName in statusEffectNode.MyStatusEffect.SceneNames) {
+                    foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
                         if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.MyInstance.GetActiveSceneNode().SceneName)) {
                             sceneFound = true;
                         }
@@ -392,15 +392,32 @@ namespace AnyRPG {
         }
 
         public virtual void HandleStatUpdateCommon(string statName) {
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleStatUpdateCommon(" + statName + ")");
+
             // check if the stat that was just updated contributes to any resource in any way
             // if it does, throw out a resource changed notification handler
-            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                foreach (StatScalingNode statScalingNode in baseCharacter.CharacterClass.PrimaryStats) {
-                    foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
-                        if (statScalingNode.StatName == statName) {
-                            ResourceAmountChangedNotificationHandler(characterStatToResourceNode.PowerResource);
+
+            if (baseCharacter != null && baseCharacter.StatProviders != null) {
+
+                // make a list since each provider could contribute and we want to avoid multiple notifications for the same resource
+                List<PowerResource> affectedResources = new List<PowerResource>();
+
+                foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                    if (statProvider != null && statProvider.PrimaryStats != null) {
+                        foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
+                            foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
+                                if (statScalingNode.StatName == statName) {
+                                    if (!affectedResources.Contains(characterStatToResourceNode.PowerResource)) {
+                                        affectedResources.Add(characterStatToResourceNode.PowerResource);
+                                    }
+                                }
+                            }
                         }
                     }
+                }
+
+                foreach (PowerResource powerResource in affectedResources) {
+                    ResourceAmountChangedNotificationHandler(powerResource);
                 }
             }
         }
@@ -488,8 +505,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatAmount;
+                if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
+                    returnValue += statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
                 }
             }
             if (secondaryStats.ContainsKey(secondaryStatType)) {
@@ -502,8 +519,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + ")");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.SecondaryStatMultiplier;
+                if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
+                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
                     //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue + "; stack: " + statusEffectNode.MyStatusEffect.MyCurrentStacks + "; multiplier: " + statusEffectNode.MyStatusEffect.MyStatMultiplier);
                 }
             }
@@ -524,8 +541,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue += statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatAmount;
+                if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
+                    returnValue += statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyStatAmount;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -543,8 +560,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyStatMultiplier;
+                if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
+                    returnValue *= statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyStatMultiplier;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -559,10 +576,10 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect != null) {
-                    if (statusEffectNode.MyStatusEffect.IncomingDamageMultiplier != 1) {
+                if (statusEffectNode.StatusEffect != null) {
+                    if (statusEffectNode.StatusEffect.IncomingDamageMultiplier != 1) {
                         //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                        returnValue *= statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.IncomingDamageMultiplier;
+                        returnValue *= statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.IncomingDamageMultiplier;
                     }
                 } else {
                     Debug.Log(gameObject.name + "CharacterStats.GetIncomingDamageModifiers(): statusEffectNode.MyStatusEffect is null!!!");
@@ -585,7 +602,7 @@ namespace AnyRPG {
         public virtual bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyImmuneDisableAnimator == true) {
+                if (statusEffectNode.StatusEffect.MyImmuneDisableAnimator == true) {
                     return true;
                 }
             }
@@ -595,7 +612,7 @@ namespace AnyRPG {
         public virtual bool HasStunImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyImmuneStun == true) {
+                if (statusEffectNode.StatusEffect.MyImmuneStun == true) {
                     return true;
                 }
             }
@@ -605,7 +622,7 @@ namespace AnyRPG {
         public virtual bool HasLevitateImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyImmuneLevitate == true) {
+                if (statusEffectNode.StatusEffect.MyImmuneLevitate == true) {
                     return true;
                 }
             }
@@ -618,9 +635,9 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.ThreatMultiplier != 1) {
+                if (statusEffectNode.StatusEffect.ThreatMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.ThreatMultiplier;
+                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.ThreatMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -632,9 +649,9 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.MyStatusEffect.MyOutgoingDamageMultiplier != 1) {
+                if (statusEffectNode.StatusEffect.MyOutgoingDamageMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.MyStatusEffect.MyCurrentStacks * statusEffectNode.MyStatusEffect.MyOutgoingDamageMultiplier;
+                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyOutgoingDamageMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -703,7 +720,7 @@ namespace AnyRPG {
         }
 
         public virtual StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyAbilityEffectName + ", " + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyDisplayName + ", " + sourceCharacter.Name + ")");
             if (IsAlive == false && statusEffect.RequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
@@ -740,7 +757,7 @@ namespace AnyRPG {
             StatusEffect comparedStatusEffect = null;
             string peparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName);
             if (statusEffects.ContainsKey(peparedString)) {
-                comparedStatusEffect = statusEffects[peparedString].MyStatusEffect;
+                comparedStatusEffect = statusEffects[peparedString].StatusEffect;
             }
 
             //Debug.Log("comparedStatusEffect: " + comparedStatusEffect);
@@ -776,9 +793,9 @@ namespace AnyRPG {
         }
 
         private void HandleAddNotifications(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNOtifications(" + statusEffect.MyName + "): NOTIFYING STATUS EFFECT UPDATE");
+            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.MyName + "): NOTIFYING STATUS EFFECT UPDATE");
             OnStatusEffectAdd(statusEffectNode);
-            HandleChangedNotifications(statusEffectNode.MyStatusEffect);
+            HandleChangedNotifications(statusEffectNode.StatusEffect);
         }
 
         public void HandleChangedNotifications(StatusEffect statusEffect) {
@@ -976,6 +993,7 @@ namespace AnyRPG {
         /// allows to cap the resource amount if the resource cap has been lowered due to stat debuff etc
         /// </summary>
         public void ResourceAmountChangedNotificationHandler(PowerResource powerResource) {
+            //Debug.Log(gameObject.name + ".CharacterStats.ResourceAmountChangedNotificationHandler()");
 
             if (powerResource != null && powerResourceDictionary.ContainsKey(powerResource)) {
                 powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, GetPowerResourceMaxAmount(powerResource));
@@ -1011,7 +1029,9 @@ namespace AnyRPG {
             // loop through and update the resources.
             foreach (PowerResource _powerResource in PowerResourceList) {
                 if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
-                    powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                    if (_powerResource.FillOnReset == true) {
+                        powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                    }
                 }
                 OnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
@@ -1078,13 +1098,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                if (clearAll == true || statusEffectNode.MyStatusEffect.MyClassTrait == false) {
+                if (clearAll == true || statusEffectNode.StatusEffect.MyClassTrait == false) {
                     statusEffectNodes.Add(statusEffectNode);
                 }
             }
             foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
                 statusEffectNode.CancelStatusEffect();
-                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.MyStatusEffect.MyDisplayName));
+                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.StatusEffect.MyDisplayName));
             }
             //statusEffects.Clear();
         }
@@ -1095,7 +1115,7 @@ namespace AnyRPG {
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
-                if (statusEffectNode.MyStatusEffect.RequireDeadTarget == true) {
+                if (statusEffectNode.StatusEffect.RequireDeadTarget == true) {
                     //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
                     statusEffectNodes.Add(statusEffectNode);
                 }
@@ -1232,7 +1252,7 @@ namespace AnyRPG {
 
                 if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
-                    if ((powerResource.RegenPerTick > 0f || powerResource.CombatRegenPerTick > 0f) && powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)) {
+                    if ((powerResource.RegenPerTick != 0f || powerResource.CombatRegenPerTick != 0f) && powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)) {
                         float usedRegenAmount = 0f;
                         if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
                             // perform combat regen

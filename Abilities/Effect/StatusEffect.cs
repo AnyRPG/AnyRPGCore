@@ -313,7 +313,7 @@ namespace AnyRPG {
                 returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
                 if (returnObjects != null) {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                    _statusEffectNode.MyStatusEffect.MyPrefabObjects = returnObjects;
+                    _statusEffectNode.StatusEffect.MyPrefabObjects = returnObjects;
                 }
                 PerformAbilityHit(source, target, abilityEffectInput);
             }

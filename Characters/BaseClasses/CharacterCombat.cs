@@ -178,8 +178,8 @@ namespace AnyRPG {
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
-                    if (statusEffectNode.MyStatusEffect.MyReflectAbilityEffectList.Count > 0) {
-                        statusEffectNode.MyStatusEffect.CastReflect(MyBaseCharacter.CharacterAbilityManager, target.UnitGameObject, abilityEffectContext);
+                    if (statusEffectNode.StatusEffect.MyReflectAbilityEffectList.Count > 0) {
+                        statusEffectNode.StatusEffect.CastReflect(MyBaseCharacter.CharacterAbilityManager, target.UnitGameObject, abilityEffectContext);
                     }
                 }
             }
@@ -364,8 +364,8 @@ namespace AnyRPG {
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
-                    if (statusEffectNode.MyStatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
-                        statusEffectNode.MyStatusEffect.CastWeaponHit(MyBaseCharacter.CharacterAbilityManager as IAbilityCaster, targetCharacterUnit.gameObject, abilityAffectInput);
+                    if (statusEffectNode.StatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
+                        statusEffectNode.StatusEffect.CastWeaponHit(MyBaseCharacter.CharacterAbilityManager as IAbilityCaster, targetCharacterUnit.gameObject, abilityAffectInput);
                     }
                 }
 

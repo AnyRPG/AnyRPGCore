@@ -33,8 +33,8 @@ namespace AnyRPG {
                     if (channeledObjectScript != null) {
                         GameObject prefabParent = source.UnitGameObject;
                         Transform usedPrefabSourceBone = null;
-                        if (prefabProfile.MyTargetBone != null && prefabProfile.MyTargetBone != string.Empty) {
-                            usedPrefabSourceBone = prefabParent.transform.FindChildByRecursive(prefabProfile.MyTargetBone);
+                        if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
+                            usedPrefabSourceBone = prefabParent.transform.FindChildByRecursive(prefabProfile.TargetBone);
                         }
                         if (usedPrefabSourceBone != null) {
                             prefabParent = usedPrefabSourceBone.gameObject;

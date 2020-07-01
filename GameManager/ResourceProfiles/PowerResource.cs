@@ -52,6 +52,12 @@ namespace AnyRPG {
         [SerializeField]
         private bool isHealth = false;
 
+        [Header("Resets")]
+
+        [Tooltip("If true, when the character evades, levels up, or spawns, this resource will be filled.")]
+        [SerializeField]
+        private bool fillOnReset = false;
+
 
         public Color DisplayColor { get => displayColor; set => displayColor = value; }
         public float RegenPerTick { get => regenPerTick; set => regenPerTick = value; }
@@ -61,6 +67,7 @@ namespace AnyRPG {
         public bool RegenIsPercent { get => regenIsPercent; set => regenIsPercent = value; }
         public bool CombatRegenIsPercent { get => combatRegenIsPercent; set => combatRegenIsPercent = value; }
         public bool IsHealth { get => isHealth; set => isHealth = value; }
+        public bool FillOnReset { get => fillOnReset; set => fillOnReset = value; }
     }
 
 }

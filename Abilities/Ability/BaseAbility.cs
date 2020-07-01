@@ -459,7 +459,7 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
-                return abilityEffects[0].CanUseOn(target, sourceCharacter);
+                return abilityEffects[0].CanUseOn(target, sourceCharacter, abilityEffectContext);
             }
 
             // create target booleans
@@ -479,7 +479,10 @@ namespace AnyRPG {
             // deal with targetting
             if (target == null && autoSelfCast != true) {
                 //Debug.Log(resourceName + " requires a target!");
-                CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a target!");
+
+                // if this message is needed, it should be moved to the sourceCaster so it can be called from playerabilitymanager to prevent npcs putting entries in the log
+                //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a target!");
+
                 return false;
             }
 

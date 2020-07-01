@@ -531,11 +531,11 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
             foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.StatusEffects.Values) {
-                if (statusEffectNode.MyStatusEffect.MyClassTrait == false
-                    && statusEffectNode.MyStatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                if (statusEffectNode.StatusEffect.MyClassTrait == false
+                    && statusEffectNode.StatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
-                    statusEffectSaveData.MyName = statusEffectNode.MyStatusEffect.MyDisplayName;
-                    statusEffectSaveData.remainingSeconds = (int)statusEffectNode.MyStatusEffect.GetRemainingDuration();
+                    statusEffectSaveData.MyName = statusEffectNode.StatusEffect.MyDisplayName;
+                    statusEffectSaveData.remainingSeconds = (int)statusEffectNode.StatusEffect.GetRemainingDuration();
                     anyRPGSaveData.statusEffectSaveData.Add(statusEffectSaveData);
                 }
             }

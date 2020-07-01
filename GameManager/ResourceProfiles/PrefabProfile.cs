@@ -82,13 +82,13 @@ namespace AnyRPG {
         public Vector3 MyPosition { get => position; }
         public Vector3 MyRotation { get => rotation; }
         public Vector3 MyScale { get => scale; }
-        public string MyTargetBone { get => targetBone; }
+        public string TargetBone { get => targetBone; }
 
-        public Vector3 MySheathedPosition { get => sheathedPosition; }
-        public Vector3 MySheathedRotation { get => sheathedRotation; }
-        public Vector3 MySheathedScale { get => sheathedScale; }
-        public string MySheathedTargetBone { get => sheathedTargetBone; }
-        public bool MyRotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
+        public Vector3 SheathedPosition { get => sheathedPosition; }
+        public Vector3 SheathedRotation { get => sheathedRotation; }
+        public Vector3 SheathedScale { get => sheathedScale; }
+        public string SheathedTargetBone { get => sheathedTargetBone; }
+        public bool RotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
         public AudioProfile UnsheathAudioProfile { get => unsheathAudioProfile; set => unsheathAudioProfile = value; }
         public AudioProfile SheathAudioProfile { get => sheathAudioProfile; set => sheathAudioProfile = value; }
 

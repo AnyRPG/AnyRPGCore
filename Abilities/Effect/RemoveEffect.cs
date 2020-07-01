@@ -28,7 +28,7 @@ namespace AnyRPG {
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
                 foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.CharacterStats.StatusEffects.Values) {
-                    if (statusEffectNode.MyStatusEffect.MyStatusEffectType != null && effectTypes.Contains(statusEffectNode.MyStatusEffect.MyStatusEffectType)) {
+                    if (statusEffectNode.StatusEffect.MyStatusEffectType != null && effectTypes.Contains(statusEffectNode.StatusEffect.MyStatusEffectType)) {
                         removeEffects.Add(statusEffectNode);
                     }
                     if (maxClearEffects != 0 && removeEffects.Count >= maxClearEffects) {

@@ -49,7 +49,7 @@ namespace AnyRPG {
             if (objectOpen) {
                 coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MyRotation, interactable.MyPrefabProfile.MyPosition, interactable.MyPrefabProfile.UnsheathAudioProfile));
             } else {
-                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MySheathedRotation, interactable.MyPrefabProfile.MySheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
+                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.SheathedRotation, interactable.MyPrefabProfile.SheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 

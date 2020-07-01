@@ -169,7 +169,7 @@ namespace AnyRPG {
             //code to re-apply visual effects when the player loads into a new level
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.MyStatusEffect.RawCast(BaseCharacter.CharacterAbilityManager, BaseCharacter.CharacterUnit.gameObject, BaseCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
+                statusEffectNode.StatusEffect.RawCast(BaseCharacter.CharacterAbilityManager, BaseCharacter.CharacterUnit.gameObject, BaseCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
             }
         }
 

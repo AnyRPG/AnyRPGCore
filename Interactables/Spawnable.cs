@@ -187,7 +187,10 @@ namespace AnyRPG {
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.MyPosition), Quaternion.LookRotation(transform.forward), transform);
-                spawnReference.transform.localScale = prefabProfile.MyScale;
+                
+                // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
+                spawnReference.transform.localScale = prefabProfile.SheathedScale;
+
                 spawnReference.transform.Rotate(prefabProfile.MyRotation);
             } else {
                 if (spawnReference != null) {

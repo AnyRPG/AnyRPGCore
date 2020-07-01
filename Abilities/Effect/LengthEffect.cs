@@ -106,8 +106,8 @@ namespace AnyRPG {
                         spawnLocation = source.UnitGameObject.transform.position;
                         prefabParent = source.UnitGameObject.transform;
                         Transform usedPrefabSourceBone = null;
-                        if (prefabProfile.MyTargetBone != null && prefabProfile.MyTargetBone != string.Empty) {
-                            usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabProfile.MyTargetBone);
+                        if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
+                            usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabProfile.TargetBone);
                         }
                         if (usedPrefabSourceBone != null) {
                             prefabParent = usedPrefabSourceBone;

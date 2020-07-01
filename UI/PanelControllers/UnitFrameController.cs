@@ -388,6 +388,7 @@ namespace AnyRPG {
         }
 
         public void HandlePrimaryResourceAmountChanged(int maxResourceAmount, int currentResourceAmount) {
+            // Debug.Log(gameObject.name + ".UnitFrameController.HandlePrimaryResourceAmountChanged(" + maxResourceAmount + ", " + currentResourceAmount + ")");
 
             // prevent division by zero
             int displayedMaxResource = maxResourceAmount;
@@ -481,7 +482,7 @@ namespace AnyRPG {
         /// <param name="maxResourceAmount"></param>
         /// <param name="currentResourceAmount"></param>
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxResourceAmount, int currentResourceAmount) {
-            //Debug.Log("Updating resource bar");
+            //Debug.Log(gameObject.name + ".UnitFrameController.HandleResourceAmountChanged()");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
                 int counter = 0;
                 bool updateBar = false;
