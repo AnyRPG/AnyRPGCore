@@ -455,7 +455,7 @@ namespace AnyRPG {
             sourceCharacter.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true) {
+        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
@@ -524,7 +524,7 @@ namespace AnyRPG {
                     return true;
                 }
 
-                if (!sourceCharacter.IsTargetInAbilityRange(this, target)) {
+                if (!sourceCharacter.IsTargetInAbilityRange(this, target, abilityEffectContext)) {
                     return false;
                 }
             }
@@ -572,7 +572,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
-        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target, bool performCooldownChecks = true) {
+        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
@@ -583,7 +583,7 @@ namespace AnyRPG {
             }
 
             // perform ability dependent checks
-            if (CanUseOn(target, sourceCharacter, performCooldownChecks) == false) {
+            if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext) == false) {
                 //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
                     target = sourceCharacter.UnitGameObject;

@@ -117,7 +117,7 @@ namespace AnyRPG {
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target);
+        bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// Put an ability on cooldown and prevent it from being cast for x seconds

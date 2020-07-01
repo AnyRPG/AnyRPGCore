@@ -36,11 +36,11 @@ namespace AnyRPG {
         float GetAbilityCastingTime(IAbilityCaster abilityCaster);
 
 
-        bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks);
+        bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks, AbilityEffectContext abilityEffectContext = null);
         bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext);
         string GetDescription();
         string GetSummary();
-        GameObject ReturnTarget(IAbilityCaster source, GameObject target, bool performCooldownChecks = true);
+        GameObject ReturnTarget(IAbilityCaster source, GameObject target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null);
         bool Use();
         void StartCasting(IAbilityCaster source);
         float OnCastTimeChanged(float currentCastTime, float nextTickTime, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext);

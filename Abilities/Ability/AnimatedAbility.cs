@@ -124,7 +124,7 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
             if (performCooldownChecks && !source.PerformAnimatedAbilityCheck(this)) {
                 return false;

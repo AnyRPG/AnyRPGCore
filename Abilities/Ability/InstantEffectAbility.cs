@@ -20,9 +20,9 @@ namespace AnyRPG {
             return castResult;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("DirectAbility.CanUseOn(" + (target != null ? target.name : "null") + ")");
-            if (!base.CanUseOn(target, source, performCooldownChecks)) {
+            if (!base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext)) {
                 return false;
             }
             if (!CanSimultaneousCast) {

@@ -23,14 +23,14 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true) {
+        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ")");
             if (target != null) {
                 //Debug.Log("GatherAbility.CanUseOn(" + target.name + ")");
             } else {
                 //Debug.Log("GatherAbility.CanUseOn(null)");
             }
-            if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks)) {
+            if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext)) {
                 return false;
             }
             // distance from center of character to whereever the raycast hit the object

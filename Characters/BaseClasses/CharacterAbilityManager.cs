@@ -271,9 +271,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target) {
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
-            return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility);
+            return IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility, abilityEffectContext);
         }
 
         public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null) {
@@ -927,7 +927,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformAbilityCast(IAbility ability, GameObject target) {
+        public IEnumerator PerformAbilityCast(IAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
             float startTime = Time.time;
             //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
@@ -937,8 +937,6 @@ namespace AnyRPG {
             } else {
                 KillStopCastNormal();
             }
-            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            abilityEffectContext.baseAbility = ability as BaseAbility;
             abilityEffectContext.originalTarget = target;
             if (ability.MyRequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
@@ -1207,8 +1205,11 @@ namespace AnyRPG {
 
             NotifyAttemptPerformAbility(usedAbility);
 
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            abilityEffectContext.baseAbility = ability as BaseAbility;
+
             // get final target before beginning casting
-            GameObject finalTarget = usedAbility.ReturnTarget(this, target);
+            GameObject finalTarget = usedAbility.ReturnTarget(this, target, true, abilityEffectContext);
 
             if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
@@ -1226,7 +1227,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
 
                 // there is no ground target yet because that is handled in performabilitycast below
-                PerformAbility(usedAbility, finalTarget, null);
+                PerformAbility(usedAbility, finalTarget, abilityEffectContext);
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
@@ -1238,7 +1239,7 @@ namespace AnyRPG {
                     }
 
                     // start the cast (or cast targetting projector)
-                    currentCastCoroutine = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget));
+                    currentCastCoroutine = StartCoroutine(PerformAbilityCast(usedAbility, finalTarget, abilityEffectContext));
                     currentCastAbility = usedAbility as BaseAbility;
                 } else {
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));

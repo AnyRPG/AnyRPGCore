@@ -92,13 +92,18 @@ namespace AnyRPG {
             }
         }
 
-        public override bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
-            bool returnResult = base.IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext);
-            if (!returnResult) {
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null) {
+            bool returnResult = base.IsTargetInAbilityRange(baseAbility, target, abilityEffectContext);
+            if (!returnResult && abilityEffectContext != null && abilityEffectContext.baseAbility != null) {
                 if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (targetable.MyDisplayName == null ? "null" : targetable.MyDisplayName));
+                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.MyDisplayName == null ? "null" : baseAbility.MyDisplayName));
                 }
             }
+            return returnResult;
+        }
+
+        public override bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
+            bool returnResult = base.IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext);
             return returnResult;
         }
 
