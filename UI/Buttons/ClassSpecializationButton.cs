@@ -25,7 +25,7 @@ namespace AnyRPG {
             classSpecialization = newClassSpecialization;
             icon.sprite = this.classSpecialization.MyIcon;
             icon.color = Color.white;
-            classSpecializationName.text = classSpecialization.MyDisplayName;
+            classSpecializationName.text = classSpecialization.DisplayName;
             //description.text = this.faction.GetSummary();
             description.text = classSpecialization.GetSummary();
 

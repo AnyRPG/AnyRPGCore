@@ -100,7 +100,7 @@ namespace AnyRPG {
                 if (tmpAudioProfile != null) {
                     sheathAudioProfile = tmpAudioProfile;
                 } else {
-                    Debug.LogError("PrefabProfile.SetupScriptableObjects():UNABLE TO FIND AudioProfile " + sheathAudioProfile + " while initializing " + MyDisplayName + ". CHECK INSPECTOR!");
+                    Debug.LogError("PrefabProfile.SetupScriptableObjects():UNABLE TO FIND AudioProfile " + sheathAudioProfile + " while initializing " + DisplayName + ". CHECK INSPECTOR!");
                 }
             }
 
@@ -109,7 +109,7 @@ namespace AnyRPG {
                 if (tmpAudioProfile != null) {
                     unsheathAudioProfile = tmpAudioProfile;
                 } else {
-                    Debug.LogError("PrefabProfile.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + unsheathAudioProfile + " while initializing " + MyDisplayName + ". CHECK INSPECTOR!");
+                    Debug.LogError("PrefabProfile.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + unsheathAudioProfile + " while initializing " + DisplayName + ". CHECK INSPECTOR!");
                 }
             }
         }

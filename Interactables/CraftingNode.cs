@@ -35,7 +35,7 @@ namespace AnyRPG {
             }
         }
 
-        public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.MyDisplayName : base.InteractionPanelTitle); }
+        public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.DisplayName : base.InteractionPanelTitle); }
         public BaseAbility MyAbility { get => ability; }
 
         public override bool Interact(CharacterUnit source) {

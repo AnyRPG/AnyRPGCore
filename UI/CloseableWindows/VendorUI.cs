@@ -155,7 +155,7 @@ namespace AnyRPG {
             List<string> vendorCollectionNames = new List<string>();
             vendorCollectionNames.Add("Buy Back Items");
             foreach (VendorCollection vendorCollection in vendorCollections) {
-                vendorCollectionNames.Add(vendorCollection.MyDisplayName);
+                vendorCollectionNames.Add(vendorCollection.DisplayName);
             }
             dropdown.AddOptions(vendorCollectionNames);
             dropdown.value = dropDownIndex;
@@ -193,7 +193,7 @@ namespace AnyRPG {
 
         public bool SellItem(Item item) {
             if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
-                MessageFeedManager.MyInstance.WriteMessage("The vendor does not want to buy the " + item.MyDisplayName);
+                MessageFeedManager.MyInstance.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
@@ -207,7 +207,7 @@ namespace AnyRPG {
                 AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
-            MessageFeedManager.MyInstance.WriteMessage("Sold " + item.MyDisplayName + " for " + priceString);
+            MessageFeedManager.MyInstance.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {

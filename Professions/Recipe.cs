@@ -62,7 +62,7 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     craftAbility = baseAbility as CraftAbility;
                 } else {
-                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find ability : " + craftAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find ability : " + craftAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -73,7 +73,7 @@ namespace AnyRPG {
                     if (holdableObject != null) {
                         holdableObjects.Add(holdableObject);
                     } else {
-                        Debug.LogError("Recipe.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Recipe.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace AnyRPG {
                 if (item != null) {
                     output = item;
                 } else {
-                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find item : " + itemOutputName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find item : " + itemOutputName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

@@ -399,7 +399,7 @@ namespace AnyRPG {
             if (interactable.Interact(baseCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 if (interactable != null) {
-                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.MyDisplayName);
+                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.DisplayName);
                     interactable = null;
                 }
                 return true;
@@ -581,7 +581,7 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(baseCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.MyDisplayName);
+                SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
                 interactable = null;
                 return true;

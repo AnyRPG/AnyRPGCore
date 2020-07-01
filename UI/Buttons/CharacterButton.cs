@@ -40,10 +40,10 @@ namespace AnyRPG {
         public Sprite MyIcon { get => icon.sprite; set => icon.sprite = value; }
         public Image MyEmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
 
-        public string MyDisplayName {
+        public string DisplayName {
             get {
                 if (equippedEquipment != null) {
-                    return equippedEquipment.MyDisplayName;
+                    return equippedEquipment.DisplayName;
                 } else {
                     return "Empty Equipment Slot";
                 }
@@ -207,7 +207,7 @@ namespace AnyRPG {
                 return equippedEquipment.GetDescription();
             }
             // cyan
-            return string.Format("<color=#00FFFF>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlotProfile.MyDisplayName, GetSummary());
+            return string.Format("<color=#00FFFF>Empty Equipment Slot</color>\n{0}\n{1}", equipmentSlotProfile.DisplayName, GetSummary());
         }
 
         public string GetSummary() {

@@ -24,7 +24,7 @@ namespace AnyRPG {
                 }
                 return returnValue;
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.MyDisplayName + " is already full!");
+                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
                 return false;
             }
         }
@@ -45,7 +45,7 @@ namespace AnyRPG {
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

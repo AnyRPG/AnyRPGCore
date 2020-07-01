@@ -31,7 +31,7 @@ namespace AnyRPG {
             //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
             faction = newFaction;
             factionButton.AddFaction(faction);
-            PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(faction.MyDisplayName);
+            PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(faction.DisplayName);
             ShowAbilityRewards();
             PopupWindowManager.MyInstance.factionChangeWindow.OpenWindow();
         }

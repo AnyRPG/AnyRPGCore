@@ -73,7 +73,7 @@ namespace AnyRPG {
                         if (pages[pageIndex][i].MyItemQuality != null) {
                             colorString = "#" + ColorUtility.ToHtmlStringRGB(pages[pageIndex][i].MyItemQuality.MyQualityColor);
                         }
-                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].MyDisplayName);
+                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].DisplayName);
                         // set the title
                         lootButtons[i].MyTitle.text = title;
                     }

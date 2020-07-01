@@ -157,7 +157,7 @@ namespace AnyRPG {
 
             if (target == null && autoSelfCast != true) {
                 if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(MyDisplayName + " requires a target");
+                    CombatLogUI.MyInstance.WriteCombatMessage(DisplayName + " requires a target");
                 }
                 return false;
             }
@@ -240,8 +240,8 @@ namespace AnyRPG {
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
                 if (abilityEffect != null) {
                     //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.MyName : "null") + "; MyName: " + (MyName == null ? "null" : MyName));
-                    if (SystemResourceManager.MatchResource(abilityEffect.MyDisplayName, MyDisplayName)) {
-                        Debug.LogError(MyDisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
+                    if (SystemResourceManager.MatchResource(abilityEffect.DisplayName, DisplayName)) {
+                        Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
                         if (!(abilityEffect is AmountEffect)) {
                             effectOutput.spellDamageMultiplier = 1f;
@@ -274,7 +274,7 @@ namespace AnyRPG {
 
             if (abilityEffect.CanUseOn(finalTarget, source, effectOutput)) {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyDisplayName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
                 returnObjects = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
             } else {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
@@ -384,7 +384,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         hitAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -396,7 +396,7 @@ namespace AnyRPG {
                     if (audioProfile != null) {
                         onHitAudioProfiles.Add(audioProfile);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -407,7 +407,7 @@ namespace AnyRPG {
                 if (tmpMaterialProfile != null) {
                     effectMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

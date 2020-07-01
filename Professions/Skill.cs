@@ -37,7 +37,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         abilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

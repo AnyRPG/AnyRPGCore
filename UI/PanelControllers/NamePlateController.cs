@@ -230,7 +230,7 @@ namespace AnyRPG {
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): not showing faction");
                         } else {
                             if (namePlateUnit.SuppressFaction == false) {
-                                factionString = "<" + namePlateUnit.Faction.MyDisplayName + ">";
+                                factionString = "<" + namePlateUnit.Faction.DisplayName + ">";
                             }
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): showing faction");
                         }

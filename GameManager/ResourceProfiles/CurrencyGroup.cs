@@ -30,13 +30,13 @@ namespace AnyRPG {
                 return false;
             }
             if (baseCurrency == null) {
-                Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.MyDisplayName) + "): basecurrency is null");
+                Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.DisplayName) + "): basecurrency is null");
             }
-            if (SystemResourceManager.MatchResource(baseCurrency.MyDisplayName, currency.MyDisplayName)) {
+            if (SystemResourceManager.MatchResource(baseCurrency.DisplayName, currency.DisplayName)) {
                 return true;
             }
             foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
-                if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.MyDisplayName, currency.MyDisplayName)) {
+                if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
                     return true;
                 }
             }
@@ -51,7 +51,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     baseCurrency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + baseCurrencyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + baseCurrencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

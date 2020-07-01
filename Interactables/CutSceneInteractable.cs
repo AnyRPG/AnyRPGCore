@@ -124,7 +124,7 @@ namespace AnyRPG {
                 if (tmpCutscene != null) {
                     cutscene = tmpCutscene;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + cutsceneName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + cutsceneName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

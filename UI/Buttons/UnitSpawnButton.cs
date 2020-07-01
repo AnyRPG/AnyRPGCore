@@ -35,13 +35,13 @@ namespace AnyRPG {
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
             //Debug.Log("LoadGameButton.AddSaveData(): Setting DataFileName: " + mySaveData.DataFileName);
-            unitName.text = unitProfile.MyDisplayName;
+            unitName.text = unitProfile.DisplayName;
 
             // format the button text
             string descriptionText = string.Empty;
             //descriptionText += "Description: " + unitProfile.MyDescription + "\n";
             descriptionText += unitProfile.MyDescription + "\n";
-            descriptionText += "Default Toughness: " + (unitProfile.DefaultToughness == null ? "Normal" : unitProfile.DefaultToughness.MyDisplayName) + "\n";
+            descriptionText += "Default Toughness: " + (unitProfile.DefaultToughness == null ? "Normal" : unitProfile.DefaultToughness.DisplayName) + "\n";
 
             // set the text on the button
             description.text = descriptionText;

@@ -34,7 +34,7 @@ namespace AnyRPG {
                     if (tmpSlotType != null) {
                         realEquipmentSlotTypeList.Add(tmpSlotType);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotType: " + equipmentSlotTypeName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotType: " + equipmentSlotTypeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

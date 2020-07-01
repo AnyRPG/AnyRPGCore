@@ -15,12 +15,12 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                if (SystemResourceManager.MatchResource(currency.MyDisplayName, currencyGroup.MyBaseCurrency.MyDisplayName)) {
+                if (SystemResourceManager.MatchResource(currency.DisplayName, currencyGroup.MyBaseCurrency.DisplayName)) {
                     return currencyAmount;
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.MyDisplayName, currency.MyDisplayName)) {
+                    if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
                         return currencyGroupRate.MyBaseMultiple * currencyAmount;
                     }
                 }
@@ -72,7 +72,7 @@ namespace AnyRPG {
                         }
                     }
                     if (nonZeroFound == true) {
-                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.MyDisplayName);
+                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.DisplayName);
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace AnyRPG {
             string returnValue = string.Empty;
             Dictionary<Currency, int> tmpDict = RedistributeCurrency(currency, currencyAmount);
             foreach (KeyValuePair<Currency, int> dictEntry in tmpDict) {
-                returnValue += dictEntry.Value.ToString() + " " + dictEntry.Key.MyDisplayName + " ";
+                returnValue += dictEntry.Value.ToString() + " " + dictEntry.Key.DisplayName + " ";
             }
             return returnValue;
         }

@@ -79,7 +79,7 @@ namespace AnyRPG {
             bool returnresult = base.PerformAnimatedAbilityCheck(animatedAbility);
             if (!returnresult) {
                 if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.MyDisplayName == null ? "null" : animatedAbility.MyDisplayName) + ". Waiting for another ability to finish.");
+                    CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
                 }
             }
             return returnresult;
@@ -88,7 +88,7 @@ namespace AnyRPG {
         public void AbilityLearnedHandler(BaseAbility newAbility) {
             //Debug.Log("PlayerAbilityManager.AbilityLearnedHandler()");
             if (MessageFeedManager.MyInstance != null) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learned New Ability: {0}", newAbility.MyDisplayName));
+                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learned New Ability: {0}", newAbility.DisplayName));
             }
         }
 
@@ -96,7 +96,7 @@ namespace AnyRPG {
             bool returnResult = base.IsTargetInAbilityRange(baseAbility, target, abilityEffectContext);
             if (!returnResult && abilityEffectContext != null && abilityEffectContext.baseAbility != null) {
                 if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.MyDisplayName == null ? "null" : baseAbility.MyDisplayName));
+                    CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
                 }
             }
             return returnResult;
@@ -110,7 +110,7 @@ namespace AnyRPG {
         public override bool PerformCombatCheck(IAbility ability) {
             bool returnResult = base.PerformCombatCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.MyDisplayName + " can only be cast while out of combat");
+                CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
                 //Debug.Log("The ability " + ability.MyName + " can only be cast while out of combat");
             }
             return returnResult;
@@ -137,7 +137,7 @@ namespace AnyRPG {
         public override bool PerformLearnedCheck(IAbility ability) {
             bool returnResult = base.PerformLearnedCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.MyDisplayName + " yet");
+                CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
                 //Debug.Log("You have not learned the ability " + ability.MyName + " yet");
                 //Debug.Log("ability.MyUseableWithoutLearning: " + ability.MyUseableWithoutLearning + "; abilityList.Contains(" + keyName + "): " + abilityList.ContainsKey(keyName));
             }
@@ -147,7 +147,7 @@ namespace AnyRPG {
         public override bool PerformPowerResourceCheck(IAbility ability) {
             bool returnResult = base.PerformPowerResourceCheck(ability);
             if (!returnResult) {
-                CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.MyDisplayName + " to perform " + ability.MyDisplayName + " at a cost of " + ability.GetResourceCost(this));
+                CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(this));
             }
             return returnResult;
         }
@@ -283,6 +283,12 @@ namespace AnyRPG {
         protected override void BeginAbilityCommon(IAbility ability, GameObject target) {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginAbilityCommon(" + ability.MyName + ", " + (target == null ? "null" : target.name) + ")");
             base.BeginAbilityCommon(ability, target);
+        }
+
+        public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !baseAbility.IsAutoAttack) {
+                base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
+            }
         }
 
     }

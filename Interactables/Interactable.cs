@@ -120,7 +120,7 @@ namespace AnyRPG {
 
         public Sprite MyIcon { get => interactableIcon; }
 
-        public string MyDisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.UnitDisplayName : gameObject.name)); }
+        public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.UnitDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
@@ -820,8 +820,8 @@ namespace AnyRPG {
         public virtual string GetDescription() {
             //Debug.Log(gameObject.name + ".Interactable.GetDescription()");
 
-            string nameString = MyDisplayName;
-            if (MyDisplayName == string.Empty) {
+            string nameString = DisplayName;
+            if (DisplayName == string.Empty) {
                 CharacterUnit baseCharacter = GetComponent<CharacterUnit>();
                 if (baseCharacter != null) {
                     //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
@@ -833,7 +833,7 @@ namespace AnyRPG {
             if (namePlateUnit != null && namePlateUnit.Faction != null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
                 textColor = Faction.GetFactionColor(namePlateUnit);
-                factionString = "\n" + namePlateUnit.Faction.MyDisplayName;
+                factionString = "\n" + namePlateUnit.Faction.DisplayName;
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription():  namePlateUnit is null: " + (namePlateUnit == null));
             }

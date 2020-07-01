@@ -173,7 +173,7 @@ namespace AnyRPG {
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
             if (!CharacterClassRequirementIsMet()) {
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + MyDisplayName);
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
 
@@ -213,7 +213,7 @@ namespace AnyRPG {
 
         public override string GetDescription() {
             //Debug.Log(MyName + ".Item.GetDescription()");
-            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), MyDisplayName, GetSummary());
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), DisplayName, GetSummary());
             //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
@@ -279,7 +279,7 @@ namespace AnyRPG {
 
                     if (realItemQuality.RandomQualityPrefix != null && realItemQuality.RandomQualityPrefix != string.Empty) {
                         //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + realItemQuality.RandomQualityPrefix + " " + MyDisplayName);
-                        displayName = realItemQuality.RandomQualityPrefix + " " + MyDisplayName;
+                        displayName = realItemQuality.RandomQualityPrefix + " " + DisplayName;
                         //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + displayName);
                     }
                 }
@@ -294,7 +294,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -304,7 +304,7 @@ namespace AnyRPG {
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -315,7 +315,7 @@ namespace AnyRPG {
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

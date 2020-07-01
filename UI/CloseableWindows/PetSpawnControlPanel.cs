@@ -88,7 +88,7 @@ namespace AnyRPG {
         public void UpdateUnitInformation() {
             BaseCharacter baseCharacter = PetPreviewManager.MyInstance.MyPreviewUnit.GetComponent<BaseCharacter>();
             if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                classText.text = baseCharacter.CharacterClass.MyDisplayName;
+                classText.text = baseCharacter.CharacterClass.DisplayName;
             }
         }
 

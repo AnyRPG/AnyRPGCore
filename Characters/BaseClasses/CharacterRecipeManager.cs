@@ -82,9 +82,9 @@ namespace AnyRPG {
         public void LearnRecipe(Recipe newRecipe) {
             //Debug.Log("CharacterRecipeManager.LearnRecipe(" + newRecipe.name + ")");
             if (!recipeList.ContainsValue(newRecipe)) {
-                recipeList[SystemResourceManager.prepareStringForMatch(newRecipe.MyDisplayName)] = newRecipe;
+                recipeList[SystemResourceManager.prepareStringForMatch(newRecipe.DisplayName)] = newRecipe;
                 EventParamProperties eventParamProperties = new EventParamProperties();
-                eventParamProperties.simpleParams.StringParam = newRecipe.MyDisplayName;
+                eventParamProperties.simpleParams.StringParam = newRecipe.DisplayName;
                 SystemEventManager.TriggerEvent("OnRecipeListChanged", eventParamProperties);
             }
         }
@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         public void UnlearnRecipe(Recipe oldRecipe) {
             if (recipeList.ContainsValue(oldRecipe)) {
-                recipeList.Remove(SystemResourceManager.prepareStringForMatch(oldRecipe.MyDisplayName));
+                recipeList.Remove(SystemResourceManager.prepareStringForMatch(oldRecipe.DisplayName));
             }
         }
 

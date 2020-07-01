@@ -66,7 +66,7 @@ namespace AnyRPG {
                 if (tmpDialog != null) {
                     dialog = tmpDialog;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialogName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find dialog : " + dialogName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -75,7 +75,7 @@ namespace AnyRPG {
                 if (tmpSceneNode != null) {
                     loadScene = tmpSceneNode;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find sceneNode : " + loadSceneName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find sceneNode : " + loadSceneName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

@@ -306,7 +306,7 @@ namespace AnyRPG {
             // prevent status effect from sending scaled up damage to its ticks
             abilityEffectInput.castTimeMultiplier = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(MyDisplayName) as StatusEffect, source, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(DisplayName) as StatusEffect, source, abilityEffectInput);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
@@ -521,7 +521,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -533,7 +533,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -543,7 +543,7 @@ namespace AnyRPG {
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectTypeName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectTypeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

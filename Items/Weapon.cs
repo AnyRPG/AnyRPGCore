@@ -94,7 +94,7 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)));
             }
             if (onHitEffect != null) {
-                abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitEffect.MyDisplayName));
+                abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", onHitEffect.DisplayName));
             }
             string abilitiesString = string.Empty;
             if (abilitiesList.Count > 0) {
@@ -112,7 +112,7 @@ namespace AnyRPG {
                 if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
-                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, realWeaponSkill.MyDisplayName);
+                abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, realWeaponSkill.DisplayName);
             }
             return base.GetSummary() + abilitiesString;
         }
@@ -137,7 +137,7 @@ namespace AnyRPG {
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
-                MessageFeedManager.MyInstance.WriteMessage("You do not have the right weapon skill to equip " + MyDisplayName);
+                MessageFeedManager.MyInstance.WriteMessage("You do not have the right weapon skill to equip " + DisplayName);
                 return false;
             }
             return true;
@@ -151,7 +151,7 @@ namespace AnyRPG {
                 if (abilityEffect != null) {
                     onHitEffect = abilityEffect;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -161,7 +161,7 @@ namespace AnyRPG {
                 if (animationProfile != null) {
                     defaultAttackAnimationProfile = animationProfile;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -171,7 +171,7 @@ namespace AnyRPG {
                 if (audioProfile != null) {
                     defaultHitSoundEffect = audioProfile.AudioClip;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -181,7 +181,7 @@ namespace AnyRPG {
                 if (tmpWeaponSkill != null) {
                     realWeaponSkill = tmpWeaponSkill;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find weapon skill : " + weaponSkill + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find weapon skill : " + weaponSkill + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

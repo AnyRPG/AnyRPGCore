@@ -26,7 +26,7 @@ namespace AnyRPG {
                 // learn recipe if the character has the right skill
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.ContainsValue(recipe.CraftAbility)) {
                     PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LearnRecipe(recipe);
-                    MessageFeedManager.MyInstance.WriteMessage("You learned the recipe " + recipe.MyDisplayName);
+                    MessageFeedManager.MyInstance.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
                 } else {
                     MessageFeedManager.MyInstance.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility + "!");
@@ -47,9 +47,9 @@ namespace AnyRPG {
                 }
                 string abilityKnownString = string.Empty;
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.ContainsValue(recipe.CraftAbility)) {
-                    abilityKnownString = "<color=white>requires: " + recipe.CraftAbility.MyDisplayName  + "</color>\n";
+                    abilityKnownString = "<color=white>requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
-                    abilityKnownString = "<color=red>requires: " + recipe.CraftAbility.MyDisplayName + "</color>\n";
+                    abilityKnownString = "<color=red>requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
                 }
                 returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.MyOutput.GetSummary());
             }
@@ -65,7 +65,7 @@ namespace AnyRPG {
                 if (tmpRecipe != null) {
                     recipe = tmpRecipe;
                 } else {
-                    Debug.LogError("RecipeItem.SetupScriptableObjects(): Could not find recipe : " + recipeName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("RecipeItem.SetupScriptableObjects(): Could not find recipe : " + recipeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

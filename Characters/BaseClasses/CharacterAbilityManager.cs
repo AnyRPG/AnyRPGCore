@@ -179,7 +179,7 @@ namespace AnyRPG {
             base.GeneratePower(ability);
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 //Debug.Log(gameObject.name + ".GeneratePower(" + ability.MyName + "): name " + ability.GeneratePowerResource.MyName  + "; " + ability.GetResourceGain(this));
-                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.MyDisplayName, ability.GetResourceGain(this));
+                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.DisplayName, ability.GetResourceGain(this));
             }
         }
 
@@ -533,7 +533,7 @@ namespace AnyRPG {
             }
 
             AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
-            abilityCoolDownNode.MyAbilityName = baseAbility.MyDisplayName;
+            abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
             if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
@@ -544,12 +544,12 @@ namespace AnyRPG {
 
             abilityCoolDownNode.MyInitialCoolDown = abilityCoolDownNode.MyRemainingCoolDown;
 
-            if (!abilityCoolDownDictionary.ContainsKey(baseAbility.MyDisplayName)) {
-                abilityCoolDownDictionary[baseAbility.MyDisplayName] = abilityCoolDownNode;
+            if (!abilityCoolDownDictionary.ContainsKey(baseAbility.DisplayName)) {
+                abilityCoolDownDictionary[baseAbility.DisplayName] = abilityCoolDownNode;
             }
 
             // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
-            Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.MyDisplayName));
+            Coroutine coroutine = StartCoroutine(PerformAbilityCoolDown(baseAbility.DisplayName));
             abilityCoolDownNode.MyCoroutine = coroutine;
 
         }
@@ -600,13 +600,13 @@ namespace AnyRPG {
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
-                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
+                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
                             ApplyStatusEffect(statusEffect);
                         }
                     } else {
                         // we are not allowed to have this buff
-                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
-                            baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName)].CancelStatusEffect();
+                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+                            baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                         }
                     }
                 }
@@ -675,7 +675,7 @@ namespace AnyRPG {
                 abilityEffectOutput.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
                 abilityEffectOutput.savedEffect = true;
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyDisplayName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName);
                 if (_abilityEffect != null) {
                     _abilityEffect.Cast(this, null, null, abilityEffectOutput);
                 }
@@ -706,8 +706,8 @@ namespace AnyRPG {
         public void RemoveClassTraits(CharacterClass oldCharacterClass) {
             if (oldCharacterClass !=null && oldCharacterClass.MyTraitList != null && oldCharacterClass.MyTraitList.Count > 0) {
                 foreach (AbilityEffect classTrait in oldCharacterClass.MyTraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
-                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
+                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
+                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
                     }
                 }
             }
@@ -716,8 +716,8 @@ namespace AnyRPG {
         public void RemoveSpecializationTraits(ClassSpecialization oldClassSpecialization) {
             if (oldClassSpecialization != null && oldClassSpecialization.TraitList != null && oldClassSpecialization.TraitList.Count > 0) {
                 foreach (AbilityEffect classTrait in oldClassSpecialization.TraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName))) {
-                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.MyDisplayName)].CancelStatusEffect();
+                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
+                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
                     }
                 }
             }
@@ -890,7 +890,7 @@ namespace AnyRPG {
                 return false;
             }
             if (!HasAbility(newAbility) && newAbility.MyRequiredLevel <= BaseCharacter.CharacterStats.Level) {
-                abilityList[SystemResourceManager.prepareStringForMatch(newAbility.MyDisplayName)] = newAbility;
+                abilityList[SystemResourceManager.prepareStringForMatch(newAbility.DisplayName)] = newAbility;
                 if (isAutoAttack) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + "): setting auto-attack ability");
                     autoAttackAbility = newAbility;
@@ -908,7 +908,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnlearnAbility(BaseAbility oldAbility, bool updateActionBars = true) {
-            string keyName = SystemResourceManager.prepareStringForMatch(oldAbility.MyDisplayName);
+            string keyName = SystemResourceManager.prepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 bool isAutoAttack = false;
                 if (oldAbility is AnimatedAbility && (oldAbility as AnimatedAbility).IsAutoAttack) {
@@ -1119,7 +1119,7 @@ namespace AnyRPG {
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
             // handle weapon on hit effects
-            if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.MyOnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.MyOnHitEffect.MyDisplayName != attackEffect.MyDisplayName) {
+            if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.MyOnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.MyOnHitEffect.DisplayName != attackEffect.DisplayName) {
                 List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
                 onHitEffectList.Add(baseCharacter.CharacterCombat.MyOnHitEffect);
                 attackEffect.PerformAbilityEffects(this, target, abilityEffectOutput, onHitEffectList);
@@ -1171,9 +1171,9 @@ namespace AnyRPG {
 
         protected virtual void BeginAbilityCommon(IAbility ability, GameObject target) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyName) + ", " + (target == null ? "null" : target.name) + ")");
-            IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.MyDisplayName);
+            IAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.DisplayName);
             if (usedAbility == null) {
-                Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.MyDisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
+                Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
             }
 
@@ -1306,7 +1306,7 @@ namespace AnyRPG {
 
         public virtual bool PerformLearnedCheck(IAbility ability) {
 
-            string keyName = SystemResourceManager.prepareStringForMatch(ability.MyDisplayName);
+            string keyName = SystemResourceManager.prepareStringForMatch(ability.DisplayName);
 
             if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
                 return false;
@@ -1315,7 +1315,9 @@ namespace AnyRPG {
         }
 
         public virtual bool PerformCooldownCheck(IAbility ability) {
-            if (abilityCoolDownDictionary.ContainsKey(ability.MyDisplayName) || (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformCooldownCheck(" + ability.DisplayName + ") : global: " + MyRemainingGlobalCoolDown);
+            if (abilityCoolDownDictionary.ContainsKey(ability.DisplayName) ||
+                (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
                 return false;
             }
             return true;
@@ -1346,7 +1348,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         public virtual void PerformAbility(IAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ")");
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability as BaseAbility;
@@ -1365,12 +1367,12 @@ namespace AnyRPG {
 
             if (ability.GetResourceCost(this) != 0 && ability.PowerResource != null) {
                 // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
-                abilityEffectContext.AddResourceAmount(ability.PowerResource.MyDisplayName, ability.GetResourceCost(this));
+                abilityEffectContext.AddResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(this));
                 StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(this), ability.SpendDelay));
             }
 
             // cast the system manager version so we can track globally the spell cooldown
-            SystemAbilityManager.MyInstance.GetResource(ability.MyDisplayName).Cast(this, finalTarget, abilityEffectContext);
+            SystemAbilityManager.MyInstance.GetResource(ability.DisplayName).Cast(this, finalTarget, abilityEffectContext);
             //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
         }
 
@@ -1462,7 +1464,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.BeginGlobalCoolDown(" + coolDownTime + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginGlobalCoolDown(" + coolDownTime + ")");
             // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
             // the current longest animated attack is ground slam at around 4 seconds
             remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
@@ -1471,9 +1473,16 @@ namespace AnyRPG {
                 yield return null;
                 remainingGlobalCoolDown -= Time.deltaTime;
                 // we want to end immediately if the time is up or the cooldown coroutine will not be nullifed until the next frame
-                //Debug.Log("BaseAbility.BeginAbilityCooldown():" + MyName + ". time: " + remainingCoolDown);
+                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginGlobalCoolDown(): in loop; remaining time: " + remainingGlobalCoolDown);
             }
             globalCoolDownCoroutine = null;
+        }
+
+        public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
+            base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
+            //Debug.Log(baseAbility.MyName + ".Cast(): Setting GCD for length: " + animationLength);
+            baseAbility.ProcessGCDManual(this, Mathf.Min(animationLength, abilityCoolDown));
+            BeginAbilityCoolDown(baseAbility, Mathf.Max(animationLength, abilityCoolDown));
         }
 
     }

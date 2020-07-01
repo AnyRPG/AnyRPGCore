@@ -191,7 +191,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace AnyRPG {
                     if (tmpAudioProfile != null) {
                         movementAudioProfiles.Add(tmpAudioProfile);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -214,7 +214,7 @@ namespace AnyRPG {
                     if (weaponSkill != null) {
                         weaponSkillList.Add(weaponSkill);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -226,7 +226,7 @@ namespace AnyRPG {
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -243,7 +243,7 @@ namespace AnyRPG {
                 if (tmpCombatStrategy != null) {
                     combatStrategy = tmpCombatStrategy;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
 
             }

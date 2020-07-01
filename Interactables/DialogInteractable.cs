@@ -18,7 +18,7 @@ namespace AnyRPG {
             get {
                 List<Dialog> currentList = GetCurrentOptionList();
                 if (currentList.Count > 0) {
-                    return currentList[0].MyDisplayName;
+                    return currentList[0].DisplayName;
                 }
                 return base.InteractionPanelTitle;
             }

@@ -32,7 +32,7 @@ namespace AnyRPG {
                         if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].MyDisplayName))
+                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.MyAbilityEffects[0].DisplayName))
                                 && sourceCharacter.CharacterAbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.CharacterUnit.gameObject, sourceCharacter.CharacterAbilityManager)) {
                                 //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
@@ -54,7 +54,7 @@ namespace AnyRPG {
                                 returnList.Add(baseAbility);
                             }
                         } else {
-                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyDisplayName);
+                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
                         }
                     }
 
@@ -91,7 +91,7 @@ namespace AnyRPG {
                                 return baseAbility;
                             }
                         } else {
-                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyDisplayName);
+                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
                         }
                     }
 
@@ -124,7 +124,7 @@ namespace AnyRPG {
                         if (sourceCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                             returnList.Add(baseAbility);
                         } else {
-                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.MyDisplayName);
+                            Debug.Log(sourceCharacter.MyName + ".AICombat.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
                         }
                     }
                 }

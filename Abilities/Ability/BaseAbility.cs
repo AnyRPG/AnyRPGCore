@@ -321,7 +321,7 @@ namespace AnyRPG {
             } else {
                 List<string> requireWeaponSkills = new List<string>();
                 foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
-                    requireWeaponSkills.Add(_weaponAffinity.MyDisplayName);
+                    requireWeaponSkills.Add(_weaponAffinity.DisplayName);
                     if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
@@ -338,7 +338,7 @@ namespace AnyRPG {
 
             string costString = string.Empty;
             if (powerResource != null) {
-                costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager) + " " + powerResource.MyDisplayName;
+                costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager) + " " + powerResource.DisplayName;
             }
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager).ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
@@ -383,7 +383,7 @@ namespace AnyRPG {
         public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyDisplayName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
@@ -411,7 +411,7 @@ namespace AnyRPG {
         }
 
         public virtual bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
+            //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.Name + ", " + (target == null ? "null" : target.name) + ")");
             if (!CanCast(sourceCharacter)) {
                 //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
                 //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
@@ -435,10 +435,12 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
+            Debug.Log(MyName + ".BaseAbility.ProcessGCDManual()");
             ProcessGCDManual(sourceCharacter);
         }
 
         public virtual void ProcessGCDManual(IAbilityCaster sourceCharacter, float usedCoolDown = 0f) {
+            Debug.Log(MyName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
             if (CanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && GetAbilityCastingTime(sourceCharacter) == 0f) {
                 sourceCharacter.InitiateGlobalCooldown(usedCoolDown);
             } else {
@@ -447,7 +449,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
-            //Debug.Log(MyName + ".BaseAbilitiy.ProcessAbilityPrefabs()");
+            //Debug.Log(MyName + ".BaseAbility.ProcessAbilityPrefabs()");
             if (MyHoldableObjects.Count == 0) {
                 return;
             }
@@ -559,7 +561,7 @@ namespace AnyRPG {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
                 AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.MyDisplayName);
+                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
                 if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
@@ -698,7 +700,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         abilityEffects.Add(abilityEffect);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -709,7 +711,7 @@ namespace AnyRPG {
                     if (holdableObject != null) {
                         holdableObjects.Add(holdableObject);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -720,7 +722,7 @@ namespace AnyRPG {
                     if (tmpWeaponSkill != null) {
                         weaponAffinityList.Add(tmpWeaponSkill);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find weapon skill: " + weaponAffinityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find weapon skill: " + weaponAffinityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -731,7 +733,7 @@ namespace AnyRPG {
                 if (audioProfile != null) {
                     castingAudioProfile = audioProfile;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + castingAudioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + castingAudioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -741,7 +743,7 @@ namespace AnyRPG {
                 if (audioProfile != null) {
                     animationHitAudioProfile = audioProfile;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + animationHitAudioProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + animationHitAudioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -751,7 +753,7 @@ namespace AnyRPG {
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -761,7 +763,7 @@ namespace AnyRPG {
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -771,7 +773,7 @@ namespace AnyRPG {
                 if (tmpPowerResource != null) {
                     generatePowerResource = tmpPowerResource;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find power resource: " + powerResourceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -783,7 +785,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         channeledAbilityEffects.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -795,7 +797,7 @@ namespace AnyRPG {
                     if (tmpCharacterClass != null) {
                         characterClassRequirementList.Add(tmpCharacterClass);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

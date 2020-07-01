@@ -120,6 +120,11 @@ namespace AnyRPG {
             // do nothing
         }
 
+        public virtual void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
+            // do nothing
+        }
+
+
         public virtual void AddPet(CharacterUnit target) {
             // do nothing, we can't have pets
         }

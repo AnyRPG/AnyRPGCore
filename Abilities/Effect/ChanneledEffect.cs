@@ -57,7 +57,7 @@ namespace AnyRPG {
                         //channeledObjectScript.MyEndObject = target.gameObject;
                         //channeledObjectScript.MyEndPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                     } else {
-                        Debug.LogError(MyDisplayName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): CHECK INSPECTOR, IChanneledObject NOT FOUND");
+                        Debug.LogError(DisplayName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): CHECK INSPECTOR, IChanneledObject NOT FOUND");
                     }
                 }
 

@@ -208,9 +208,9 @@ namespace AnyRPG {
             }
             string updateString = string.Empty;
             updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.CharacterName + "\n";
-            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.MyDisplayName) + "\n";
-            updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.ClassSpecialization.MyDisplayName) + "\n";
-            updateString += "Unit Type: " + (PlayerManager.MyInstance.MyCharacter.UnitType == null ? "None" : PlayerManager.MyInstance.MyCharacter.UnitType.MyDisplayName) + "\n";
+            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.DisplayName) + "\n";
+            updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.ClassSpecialization.DisplayName) + "\n";
+            updateString += "Unit Type: " + (PlayerManager.MyInstance.MyCharacter.UnitType == null ? "None" : PlayerManager.MyInstance.MyCharacter.UnitType.DisplayName) + "\n";
             updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
             updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
 
@@ -228,7 +228,7 @@ namespace AnyRPG {
             updateString += "\n";
 
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource != null) {
-                updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.MyDisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+                updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.DisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
             }
 
             updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";

@@ -143,7 +143,7 @@ namespace AnyRPG {
                     if (firstScript == null) {
                         firstScript = qs;
                     }
-                    qs.MyText.text = recipe.MyOutput.MyDisplayName;
+                    qs.MyText.text = recipe.MyOutput.DisplayName;
                     qs.SetRecipe(recipe);
                     recipeScripts.Add(qs);
                 } else {
@@ -189,7 +189,7 @@ namespace AnyRPG {
             }
             currentRecipe = newRecipe;
 
-            recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.MyOutput.MyDisplayName, newRecipe.MyDescription);
+            recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.MyOutput.DisplayName, newRecipe.MyDescription);
 
             outputIcon.SetDescribable(newRecipe.MyOutput, newRecipe.MyOutputCount);
 
@@ -211,7 +211,7 @@ namespace AnyRPG {
         private bool CanCraft(Recipe recipe) {
             //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
             for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
-                if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.MyDisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
+                if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.DisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
                     return false;
                 }
             }
@@ -266,7 +266,7 @@ namespace AnyRPG {
             ClearDescription();
             OnOpenWindow(this);
             UpdateCraftAmountArea();
-            PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.MyDisplayName);
+            PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
 
         }
 
@@ -281,7 +281,7 @@ namespace AnyRPG {
 
             int maxAmount = -1;
             for (int i = 0; i < checkRecipe.MyCraftingMaterials.Count; i++) {
-                int possibleAmount = InventoryManager.MyInstance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.MyDisplayName) / checkRecipe.MyCraftingMaterials[i].MyCount;
+                int possibleAmount = InventoryManager.MyInstance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.DisplayName) / checkRecipe.MyCraftingMaterials[i].MyCount;
                 if (maxAmount == -1) {
                     maxAmount = possibleAmount;
                 }
@@ -324,7 +324,7 @@ namespace AnyRPG {
 
             // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
-                Item tmpItem = SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.MyDisplayName);
+                Item tmpItem = SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.DisplayName);
                 tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                 if (InventoryManager.MyInstance.AddItem(tmpItem)) {
                     //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
@@ -332,7 +332,7 @@ namespace AnyRPG {
                         //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                         for (int i = 0; i < craftingMaterial.MyCount; i++) {
                             //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                            InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.MyDisplayName, 1)[0]);
+                            InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.DisplayName, 1)[0]);
                         }
                     }
                     craftingQueue.RemoveAt(0);

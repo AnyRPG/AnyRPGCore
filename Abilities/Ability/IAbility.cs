@@ -8,7 +8,7 @@ namespace AnyRPG {
     public interface IAbility {
         bool MyAutoLearn { get; }
         Sprite MyIcon { get; }
-        string MyDisplayName { get; }
+        string DisplayName { get; }
         int MyRequiredLevel { get; }
         bool MyUseableWithoutLearning { get; }
         bool MyIgnoreGlobalCoolDown { get; }

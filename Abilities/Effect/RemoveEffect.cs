@@ -51,7 +51,7 @@ namespace AnyRPG {
                     if (tmpStatusEffectType != null) {
                         effectTypes.Add(tmpStatusEffectType);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectType + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

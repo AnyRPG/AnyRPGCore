@@ -171,7 +171,7 @@ namespace AnyRPG {
                 abilityEffectContext = new AbilityEffectContext();
             }
             abilityEffectContext.powerResource = powerResource;
-            abilityEffectContext.SetResourceAmount(powerResource.MyDisplayName, damage);
+            abilityEffectContext.SetResourceAmount(powerResource.DisplayName, damage);
 
             // prevent infinite reflect loops
             if (reflectDamage != false) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
                         combatTextType = CombatTextType.ability;
                     }
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, damage, combatTextType, combatMagnitude, abilityEffectContext);
-                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.CharacterUnit, damage, abilityEffect.MyDisplayName);
+                    SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
                 float totalThreat = damage;

@@ -43,7 +43,7 @@ namespace AnyRPG {
                     if (tmpSlotProfile != null) {
                         realExclusiveSlotProfileList.Add(tmpSlotProfile);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

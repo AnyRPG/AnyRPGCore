@@ -107,7 +107,7 @@ namespace AnyRPG {
             if (combatTextController != null) {
                 combatTextController.MyMainTarget = target;
                 combatTextController.MyImage.sprite = statusEffect.MyIcon;
-                combatTextController.MyDisplayText = statusEffect.MyDisplayName;
+                combatTextController.MyDisplayText = statusEffect.DisplayName;
                 if (gainEffect) {
                     combatTextController.MyCombatType = CombatTextType.gainBuff;
                 } else {

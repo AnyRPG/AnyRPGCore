@@ -207,7 +207,7 @@ namespace AnyRPG {
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
             if (!CharacterClassRequirementIsMet()) {
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + MyDisplayName);
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + DisplayName);
                 return false;
             }
             return true;
@@ -249,21 +249,21 @@ namespace AnyRPG {
 
             // abilities
             if (onEquipAbility != null) {
-                abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.MyDisplayName));
+                abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
             }
             foreach (BaseAbility learnedAbility in MyLearnedAbilities) {
-                abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.MyDisplayName));
+                abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
             if (equipmentSet != null) {
                 int equipmentCount = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
-                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.MyDisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
+                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.MyDisplayName)) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
                     }
-                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.MyDisplayName));
+                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
                 }
                 abilitiesList.Add(string.Format(""));
                 for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
@@ -291,7 +291,7 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -302,7 +302,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -314,10 +314,10 @@ namespace AnyRPG {
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
             }
 
             equipmentSet = null;
@@ -326,7 +326,7 @@ namespace AnyRPG {
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -347,7 +347,7 @@ namespace AnyRPG {
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

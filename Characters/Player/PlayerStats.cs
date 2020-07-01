@@ -209,7 +209,7 @@ namespace AnyRPG {
 
         public override void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
             base.RecoverResource(abilityEffectContext, powerResource, amount, source, showCombatText, combatMagnitude);
-            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.MyDisplayName);
+            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
         }
 
     }

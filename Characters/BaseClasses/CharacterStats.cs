@@ -755,7 +755,7 @@ namespace AnyRPG {
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
             StatusEffect comparedStatusEffect = null;
-            string peparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName);
+            string peparedString = SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(peparedString)) {
                 comparedStatusEffect = statusEffects[peparedString].StatusEffect;
             }
@@ -772,14 +772,14 @@ namespace AnyRPG {
             } else {
 
                 // add to effect list since it was not in there
-                StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.MyDisplayName) as StatusEffect;
+                StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName) as StatusEffect;
                 if (_statusEffect == null) {
-                    Debug.LogError(gameObject.name + ".CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.MyDisplayName);
+                    Debug.LogError(gameObject.name + ".CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.DisplayName);
                     return null;
                 }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
 
-                statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.MyDisplayName), newStatusEffectNode);
+                statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.DisplayName), newStatusEffectNode);
 
                 _statusEffect.Initialize(sourceCharacter, baseCharacter, abilityEffectInput);
                 newStatusEffectNode.Setup(this, _statusEffect);
@@ -827,7 +827,7 @@ namespace AnyRPG {
 
         public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
             //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
-            string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName);
+            string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(preparedString)) {
                 if (statusEffects[preparedString].MyMonitorCoroutine != null) {
                     StopCoroutine(statusEffects[preparedString].MyMonitorCoroutine);
@@ -982,7 +982,7 @@ namespace AnyRPG {
 
         public virtual void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
 
-            AddResourceAmount(powerResource.MyDisplayName, amount);
+            AddResourceAmount(powerResource.DisplayName, amount);
             if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
@@ -1045,7 +1045,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
 
-                SetResourceAmount(PrimaryResource.MyDisplayName, 0f);
+                SetResourceAmount(PrimaryResource.DisplayName, 0f);
 
                 // notify subscribers that our health has changed
                 OnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
@@ -1104,7 +1104,7 @@ namespace AnyRPG {
             }
             foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
                 statusEffectNode.CancelStatusEffect();
-                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.StatusEffect.MyDisplayName));
+                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.StatusEffect.DisplayName));
             }
             //statusEffects.Clear();
         }
@@ -1173,9 +1173,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName))) {
+            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; cancelling ");
-                statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.MyDisplayName)].CancelStatusEffect();
+                statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
             }
         }
 
@@ -1230,15 +1230,15 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (resourceMultipliers.ContainsKey(powerResource.MyDisplayName)) {
-                returnValue *= resourceMultipliers[powerResource.MyDisplayName];
+            if (resourceMultipliers.ContainsKey(powerResource.DisplayName)) {
+                returnValue *= resourceMultipliers[powerResource.DisplayName];
             }
             return returnValue;
         }
 
         protected virtual void ClearPowerAmounts() {
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
-                SetResourceAmount(powerResource.MyDisplayName, 0f);
+                SetResourceAmount(powerResource.DisplayName, 0f);
             }
         }
 

@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public virtual Sprite MyIcon => null;
 
-        public virtual string MyDisplayName => string.Empty;
+        public virtual string DisplayName => string.Empty;
 
         public virtual ItemQuality MyItemQuality {
             get {
@@ -58,7 +58,7 @@ namespace AnyRPG {
             }
         }
 
-        public override string MyDisplayName {
+        public override string DisplayName {
             get {
                 return GetDescription();
             }
@@ -127,12 +127,12 @@ namespace AnyRPG {
             }
         }
 
-        public override string MyDisplayName {
+        public override string DisplayName {
             get {
                 if (MyItem != null) {
-                    return MyItem.MyDisplayName;
+                    return MyItem.DisplayName;
                 }
-                return base.MyDisplayName;
+                return base.DisplayName;
             }
         }
 

@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.MyName + ")");
+            //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.Name + ")");
             if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
                 if (usedAnimationClips.Count > 0) {
@@ -72,12 +72,7 @@ namespace AnyRPG {
                         // perform the actual animation
                         float animationLength = sourceCharacter.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
 
-                        //sourceCharacter.MyCharacterUnit.MyCharacter.MyCharacterCombat.OnHitEvent += HandleAbilityHit;
-                        if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false || !isAutoAttack) {
-                            //Debug.Log(MyName + ".Cast(): Setting GCD for length: " + animationLength);
-                            ProcessGCDManual(sourceCharacter, Mathf.Min(animationLength, abilityCoolDown));
-                            base.BeginAbilityCoolDown(sourceCharacter, Mathf.Max(animationLength, abilityCoolDown));
-                        }
+                        sourceCharacter.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
                     }
 
                 }

@@ -51,7 +51,7 @@ namespace AnyRPG {
                 if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
 
                 }
-                if (SystemResourceManager.MatchResource((lootDrop as ItemLootDrop).MyItem.MyDisplayName, itemName)) {
+                if (SystemResourceManager.MatchResource((lootDrop as ItemLootDrop).MyItem.DisplayName, itemName)) {
                     return true;
                 }
             }
@@ -83,8 +83,8 @@ namespace AnyRPG {
                     foreach (Loot loot in lootGroup.Loot) {
                         if (loot.MyPrerequisitesMet == true &&
                             (loot.MyItem.MyUniqueItem == false ||
-                            (InventoryManager.MyInstance.GetItemCount(loot.MyItem.MyDisplayName) == 0 &&
-                            PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.MyDisplayName) == false))) {
+                            (InventoryManager.MyInstance.GetItemCount(loot.MyItem.DisplayName) == 0 &&
+                            PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
                         }/* else {
                             Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
@@ -163,7 +163,7 @@ namespace AnyRPG {
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
                 //MyDroppedItems.Add(new LootDrop(Instantiate(_loot.MyItem), this));
-                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.MyDisplayName), this);
+                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.DisplayName), this);
                 droppedItem.MyItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                 droppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {

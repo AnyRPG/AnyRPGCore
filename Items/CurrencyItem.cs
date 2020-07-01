@@ -35,7 +35,7 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".CurrencyItem.GetSummary();");
             string tmpCurrencyName = string.Empty;
             if (currencyNode.currency != null) {
-                tmpCurrencyName = currencyNode.currency.MyDisplayName;
+                tmpCurrencyName = currencyNode.currency.DisplayName;
             }
             return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.MyAmount);
         }
@@ -48,7 +48,7 @@ namespace AnyRPG {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.MyAmount = gainCurrencyAmount;
                 } else {
-                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + MyDisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

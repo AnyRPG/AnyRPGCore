@@ -48,7 +48,7 @@ namespace AnyRPG {
         /// <summary>
         /// return the displayName if set, otherwise return the resourceName
         /// </summary>
-        public string MyDisplayName {
+        public string DisplayName {
             get {
                 if (displayName != null && displayName != string.Empty) {
                     return displayName;
@@ -62,7 +62,7 @@ namespace AnyRPG {
         public Sprite IconBackgroundImage { get => iconBackgroundImage; set => iconBackgroundImage = value; }
 
         public virtual string GetDescription() {
-            return string.Format("<color=yellow>{0}</color>\n{1}", MyDisplayName, GetSummary());
+            return string.Format("<color=yellow>{0}</color>\n{1}", DisplayName, GetSummary());
         }
 
         public virtual string GetSummary() {

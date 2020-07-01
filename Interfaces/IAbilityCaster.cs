@@ -133,6 +133,14 @@ namespace AnyRPG {
         void InitiateGlobalCooldown(float coolDownToUse);
 
         /// <summary>
+        /// start cooldowns for gcd and ability on animated abilities
+        /// </summary>
+        /// <param name="baseAbility"></param>
+        /// <param name="animationLength"></param>
+        /// <param name="abilityCoolDown"></param>
+        void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown);
+
+        /// <summary>
         /// despawn the ability objects
         /// </summary>
         void DespawnAbilityObjects();

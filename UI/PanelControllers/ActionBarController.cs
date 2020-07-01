@@ -51,7 +51,7 @@ namespace AnyRPG {
         public bool AddSavedAbility(BaseAbility newAbility) {
             //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
             for (int i = 0; i < actionButtons.Count; i++) {
-                if (actionButtons[i].Useable == null && actionButtons[i].SavedUseable != null && actionButtons[i].SavedUseable.MyDisplayName == newAbility.MyDisplayName) {
+                if (actionButtons[i].Useable == null && actionButtons[i].SavedUseable != null && actionButtons[i].SavedUseable.DisplayName == newAbility.DisplayName) {
                     //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
                     actionButtons[i].SetUseable(newAbility);
                     return true;
