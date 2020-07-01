@@ -439,6 +439,10 @@ namespace AnyRPG {
                 return;
             }
             if (baseCharacter != null) {
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.IsAlive == false && baseCharacter.MySpawnDead == false) {
+                    // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
+                    return;
+                }
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(this, (namePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;

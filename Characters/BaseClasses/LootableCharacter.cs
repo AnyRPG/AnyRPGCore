@@ -167,10 +167,14 @@ namespace AnyRPG {
                 }
 
                 Despawn();
+            } else {
+                // 2. moved here from below to prevent dead units that have been looted from re-displaying their health bar
+                HandlePrerequisiteUpdates();
+
             }
 
-            // this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon
-            HandlePrerequisiteUpdates();
+            // 1. this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon
+            //HandlePrerequisiteUpdates();
 
         }
 

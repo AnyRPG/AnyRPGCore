@@ -8,6 +8,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Armor", menuName = "AnyRPG/Inventory/Equipment/Armor", order = 2)]
     public class Armor : Equipment {
 
+        [Header("Armor")]
+
         // the armor class required to wear this item
         [SerializeField]
         private string armorClassName = string.Empty;

@@ -1232,32 +1232,35 @@ namespace AnyRPG {
 
                 if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
-                    float usedRegenAmount = 0f;
-                    if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
-                        // perform combat regen
-                        if (powerResource.CombatRegenIsPercent) {
-                            usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.CombatRegenPerTick / 100);
+                    if ((powerResource.RegenPerTick > 0f || powerResource.CombatRegenPerTick > 0f) && powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)) {
+                        float usedRegenAmount = 0f;
+                        if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
+                            // perform combat regen
+                            if (powerResource.CombatRegenIsPercent) {
+                                usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.CombatRegenPerTick / 100);
+                            } else {
+                                usedRegenAmount = powerResource.CombatRegenPerTick;
+                            }
                         } else {
-                            usedRegenAmount = powerResource.CombatRegenPerTick;
+                            // perform out of combat regen
+                            if (powerResource.RegenIsPercent) {
+                                usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.RegenPerTick / 100);
+                            } else {
+                                usedRegenAmount = powerResource.RegenPerTick;
+                            }
                         }
-                    } else {
-                        // perform out of combat regen
-                        if (powerResource.RegenIsPercent) {
-                            usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.RegenPerTick / 100);
-                        } else {
-                            usedRegenAmount = powerResource.RegenPerTick;
+                        powerResourceDictionary[powerResource].currentValue += usedRegenAmount;
+                        powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(
+                            powerResourceDictionary[powerResource].currentValue,
+                            0,
+                            (int)GetPowerResourceMaxAmount(powerResource));
+
+                        // this is notifying on primary resource, but for now, we don't have multiples, so its ok
+                        // this will need to be fixed when we add secondary resources
+                        if (usedRegenAmount > 0) {
+                            OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
                         }
                     }
-                    powerResourceDictionary[powerResource].currentValue += usedRegenAmount;
-                    powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(
-                        powerResourceDictionary[powerResource].currentValue,
-                        0,
-                        (int)GetPowerResourceMaxAmount(powerResource));
-
-                    // this is notifying on primary resource, but for now, we don't have multiples, so its ok
-                    // this will need to be fixed when we add secondary resources
-                    OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
-
                 }
             }
         }

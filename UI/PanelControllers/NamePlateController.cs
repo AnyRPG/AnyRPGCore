@@ -306,7 +306,7 @@ namespace AnyRPG {
         }
 
         public void CheckForDisabledHealthBar() {
-            //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
+            //Debug.Log(namePlateUnit.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (namePlateUnit.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
@@ -336,6 +336,7 @@ namespace AnyRPG {
         }
 
         void ProcessHealthChanged(int maxHealth, int currentHealth) {
+            //Debug.Log("NamePlateController.ProcessHealthChanged()");
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
             if (MyHealthSlider == null) {
