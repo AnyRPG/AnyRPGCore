@@ -435,12 +435,12 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
-            Debug.Log(MyName + ".BaseAbility.ProcessGCDManual()");
+            //Debug.Log(MyName + ".BaseAbility.ProcessGCDManual()");
             ProcessGCDManual(sourceCharacter);
         }
 
         public virtual void ProcessGCDManual(IAbilityCaster sourceCharacter, float usedCoolDown = 0f) {
-            Debug.Log(MyName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
+            //Debug.Log(MyName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
             if (CanSimultaneousCast == false && MyIgnoreGlobalCoolDown == false && GetAbilityCastingTime(sourceCharacter) == 0f) {
                 sourceCharacter.InitiateGlobalCooldown(usedCoolDown);
             } else {

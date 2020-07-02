@@ -1352,8 +1352,8 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability as BaseAbility;
-                abilityEffectContext.originalTarget = target;
             }
+            abilityEffectContext.originalTarget = target;
             GameObject finalTarget = target;
             if (finalTarget != null) {
                 //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + " on " + finalTarget.name);

@@ -37,6 +37,7 @@ namespace AnyRPG {
 
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(DisplayName + ".KnockBackEffect.Cast()");
             if (target == null) {
                 return null;
             }
@@ -65,10 +66,10 @@ namespace AnyRPG {
 
             if (isExplosion) {
                 Collider[] colliders = new Collider[0];
-                int playerMask = 1 << LayerMask.NameToLayer("Default");
+                //int playerMask = 1 << LayerMask.NameToLayer("Default");
                 //int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
                 //int validMask = (playerMask | characterMask);
-                int validMask = playerMask;
+                //int validMask = playerMask;
                 //colliders = Physics.OverlapSphere(targetPosition, explosionRadius, validMask);
                 colliders = Physics.OverlapSphere(targetPosition, explosionRadius, explosionMask);
                 foreach (Collider collider in colliders) {
