@@ -81,7 +81,7 @@ namespace AnyRPG {
 
 
         public void SetupMiniMap() {
-            //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap()");
+            //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
             if (setupComplete == true) {
                 return;
             }
@@ -107,17 +107,17 @@ namespace AnyRPG {
                     miniMapLayers.Add(_interactable, go);
                 }
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
-                    //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): adding minimap status handler");
+                    //Debug.Log(interactable.name + ".MiniMapIndicatorController.SetupMiniMap(): adding minimap status handler");
                     _interactable.MiniMapStatusUpdateHandler += HandleMiniMapStatusUpdate;
                 } else {
-                    //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): unit had no icon or text, not setting up status handler");
+                    //Debug.Log(interactable.name + ".MiniMapIndicatorController.SetupMiniMap(): unit had no icon or text, not setting up status handler");
                 }
             }
             setupComplete = true;
         }
 
         public void SetInteractable(Interactable interactable) {
-            //Debug.Log("MiniMapIndicatorController.SetNamePlateUnit(" + characterUnit.MyDisplayName + ")");
+            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.name + ")");
             this.interactable = interactable;
             SetupMiniMap();
         }
@@ -135,15 +135,15 @@ namespace AnyRPG {
         }
 
         public void HandleMiniMapStatusUpdate(IInteractable _interactable) {
-            //Debug.Log(_interactable.MyName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
+            //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
             if (miniMapLayers[_interactable] == null) {
-                //Debug.Log(_interactable.MyName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");
+                //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");
                 return;
             }
             // this only supports one or the other too - prioritizing images
             //if (_interactable.GetCurrentOptionCount() > 0) {
             if (_interactable.HasMiniMapIcon()) {
-                //Debug.Log(_interactable.MyName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate() : hasicon");
+                //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate() : hasicon");
                 _interactable.SetMiniMapIcon(miniMapLayers[_interactable].GetComponent<Image>());
             } else if (_interactable.HasMiniMapText()) {
                 //Debug.Log(_interactable.MyName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate() : hastext");

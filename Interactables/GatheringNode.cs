@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class GatheringNode : LootableNode {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        //public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         // gathering nodes are special.  The image is based on what ability it supports
         public override Sprite MyIcon {
@@ -61,7 +61,8 @@ namespace AnyRPG {
             */
             //if (lootCount > 0) {
             if (lootDropped == true) {
-                PickUp();
+                // this call is safe, it will internally check if loot is already dropped and just pickup instead
+                Gather();
             } else {
                 source.GetComponent<CharacterUnit>().MyCharacter.CharacterAbilityManager.BeginAbility(MyAbility, gameObject);
             }
@@ -70,14 +71,24 @@ namespace AnyRPG {
             //return PickUp();
         }
 
-        public override void DropLoot() {
-            base.DropLoot();
-            PickUp();
+        public void Gather() {
+            //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
+            base.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+
         }
+
+        /*
+        public override void DropLoot() {
+            Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
+            base.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+            //base.DropLoot();
+            //PickUp();
+        }
+        */
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(MyAbility) == true && interactable.MySpawnReference != null ? 1 : 0);
+            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(MyAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
         }
 
         /*

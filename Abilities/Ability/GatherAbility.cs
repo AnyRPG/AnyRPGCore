@@ -15,7 +15,7 @@ namespace AnyRPG {
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
                 if (target != null) {
-                    target.GetComponent<GatheringNode>().DropLoot();
+                    target.GetComponent<GatheringNode>().Gather();
                 } else {
                     //Debug.Log(MyName + ".GatherAbility.Cast(): target was null");
                 }

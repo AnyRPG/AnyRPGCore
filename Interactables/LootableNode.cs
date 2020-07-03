@@ -76,6 +76,10 @@ namespace AnyRPG {
 
 
         public virtual void DropLoot() {
+            if (lootDropped) {
+                // add this to prevent double drops from child classes like GatheringNode
+                return;
+            }
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in lootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
@@ -88,7 +92,7 @@ namespace AnyRPG {
         /// Pick an item up off the ground and put it in the inventory
         /// </summary>
         public void PickUp() {
-            //Debug.Log("GatheringNode.Pickup()");
+            //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
             LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
@@ -96,6 +100,7 @@ namespace AnyRPG {
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
+            //Debug.Log(gameObject.name + ".LootableNode.ClearTakeLootHandler()");
             CleanupWindowEventSubscriptions();
         }
 
@@ -110,10 +115,12 @@ namespace AnyRPG {
         }
 
         public void CreateWindowEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".LootableNode.CreateWindowEventSubscriptions()");
             SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
         }
 
         public void CleanupWindowEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
             }
@@ -215,11 +222,13 @@ namespace AnyRPG {
         */
 
         public override void HandlePrerequisiteUpdates() {
+            //Debug.Log(gameObject.name + ".LootableNode.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
 
         public override void HandlePlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".LootableNode.HandlePlayerUnitSpawn()");
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
         }
