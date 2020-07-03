@@ -426,6 +426,9 @@ namespace AnyRPG {
                     if (tmpPrerequisiteConditions != null) {
                         //Debug.Log(gameObject.name + ".SetupScriptableObjects(): setting up prerequisites");
                         tmpPrerequisiteConditions.SetupScriptableObjects(this);
+
+                        // add this so unit spawn nodes can have their prerequisites properly set on the first check
+                        tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
                 }
             }
