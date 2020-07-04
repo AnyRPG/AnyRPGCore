@@ -154,6 +154,7 @@ namespace AnyRPG {
         }
 
         protected virtual bool CanDespawn() {
+            //Debug.Log(gameObject.name + ".Spawnable.CanDespawn()");
             if (!MyPrerequisitesMet) {
                 return true;
             }
@@ -161,6 +162,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanSpawn() {
+            //Debug.Log(gameObject.name + ".Spawnable.CanSpawn()");
             if (MyPrerequisitesMet) {
                 return true;
             }

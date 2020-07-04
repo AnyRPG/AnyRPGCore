@@ -23,7 +23,10 @@ namespace AnyRPG {
 
         protected bool lootDropped = false;
 
-        private Coroutine spawnCoroutine = null;
+        // track the number of times this item has been picked up
+        protected int pickupCount = 0;
+
+        protected Coroutine spawnCoroutine = null;
 
         public override bool MyPrerequisitesMet {
             get {
@@ -44,6 +47,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
+            //Debug.Log(gameObject.name + ".LootableNode.Interact(" + source.name + ")");
             if (lootTableNames == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
@@ -58,8 +62,10 @@ namespace AnyRPG {
 
         protected IEnumerator StartSpawnCountdown() {
             //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
+
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
             HandlePrerequisiteUpdates();
+
             currentTimer = spawnTimer;
             while (currentTimer > 0) {
                 //Debug.Log("Spawn Timer: " + currentTimer);
@@ -70,12 +76,14 @@ namespace AnyRPG {
 
             //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown(): countdown complete");
             //interactable.Spawn();
+
             // ENABLE MINIMAP ICON AFTER SPAWN
             HandlePrerequisiteUpdates();
         }
 
 
         public virtual void DropLoot() {
+            //Debug.Log(gameObject.name + ".LootableNode.DropLoot()");
             if (lootDropped) {
                 // add this to prevent double drops from child classes like GatheringNode
                 return;
@@ -175,6 +183,9 @@ namespace AnyRPG {
                 lootCount += lootTable.MyDroppedItems.Count;
             }
             if (lootCount == 0) {
+                // since this method is only called on take loot, we can consider everything picked up if there is no loot left
+                pickupCount++;
+
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
                 (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
@@ -183,7 +194,9 @@ namespace AnyRPG {
                     lootTable.Reset();
                 }
 
-                if (spawnCoroutine == null) {
+                // spawn timer of -1 means don't spawn again
+                if (spawnCoroutine == null && spawnTimer >= 0f) {
+                    //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize(): starting countdown; spawnTimer: " + spawnTimer);
                     spawnCoroutine = StartCoroutine(StartSpawnCountdown());
                 }
 

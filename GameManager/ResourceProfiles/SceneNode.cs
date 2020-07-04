@@ -19,7 +19,7 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 defaultSpawnPosition = Vector3.zero;
 
-        [Header("Audio")]
+        [Header("Scene Audio")]
 
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
         [SerializeField]
@@ -33,6 +33,8 @@ namespace AnyRPG {
 
         private AudioProfile realBackgroundMusicProfile;
 
+        [Header("Movement Audio")]
+
         [Tooltip("This audio will override the movement sound loop for a character in this zone")]
         [SerializeField]
         private string movementLoopProfileName = string.Empty;
@@ -44,6 +46,8 @@ namespace AnyRPG {
         private string movementHitProfileName = string.Empty;
 
         private AudioProfile movementHitProfile;
+
+        [Header("Scene Options")]
 
         [Tooltip("Prevent the player unit from spawning in this scene.  Useful for cutscenes that are separate scenes or menu / game over scenes.")]
         [SerializeField]
@@ -59,11 +63,13 @@ namespace AnyRPG {
 
         private Cutscene autoPlayCutscene = null;
 
-        private bool visited = false;
+        [Header("Environmental Settings")]
 
         [Tooltip("A list of environment state names available to this scene.  Used for swapping environment states with unity timeline.")]
         [SerializeField]
         private List<string> environmentStateNames = new List<string>();
+
+        private bool visited = false;
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
 
