@@ -116,11 +116,11 @@ namespace AnyRPG {
         public Currency MyCurrency { get => currency; set => currency = value; }
         public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int GetItemLevel(int characterLevel) {
-            int returnLevel = itemLevel;
+            int returnLevel = (int)Mathf.Clamp(itemLevel, 1, Mathf.Infinity);
             
             // frozen drop level overrides all other calculations
             if (freezeDropLevel == true) {
-                return dropLevel;
+                return (int)Mathf.Clamp(dropLevel, 1, Mathf.Infinity);
             }
             if (dynamicLevel == true) {
                 returnLevel = (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
@@ -163,7 +163,7 @@ namespace AnyRPG {
         public int DropLevel {
             get => dropLevel;
             set {
-                dropLevel = Mathf.Min(value, (levelCap > 0 ? levelCap : value));
+                dropLevel = (int)Mathf.Clamp(Mathf.Min(value, (levelCap > 0 ? levelCap : value)), 1, Mathf.Infinity);
             }
         }
 

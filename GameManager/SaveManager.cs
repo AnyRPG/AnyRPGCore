@@ -567,6 +567,7 @@ namespace AnyRPG {
                     if ((slotScript.MyItem as Equipment is Equipment)) {
                         saveData.randomSecondaryStatIndexes = (slotScript.MyItem == null ? null : (slotScript.MyItem as Equipment).RandomStatIndexes);
                     }
+                    saveData.dropLevel = (slotScript.MyItem == null ? 0 : slotScript.MyItem.DropLevel);
                 }
 
                 anyRPGSaveData.inventorySlotSaveData.Add(saveData);
@@ -634,6 +635,7 @@ namespace AnyRPG {
                         if (equipment.ItemQuality != null) {
                             saveData.itemQuality = (equipment == null ? string.Empty : equipment.ItemQuality.MyName);
                         }
+                        saveData.dropLevel = equipment.DropLevel;
                         saveData.randomSecondaryStatIndexes = (equipment == null ? null : equipment.RandomStatIndexes);
                     }
                     anyRPGSaveData.equipmentSaveData.Add(saveData);
