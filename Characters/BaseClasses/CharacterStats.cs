@@ -1252,7 +1252,10 @@ namespace AnyRPG {
 
                 if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
-                    if ((powerResource.RegenPerTick != 0f || powerResource.CombatRegenPerTick != 0f) && powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)) {
+                    if (
+                        ((powerResource.RegenPerTick > 0f || powerResource.CombatRegenPerTick > 0f) && (powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)))
+                        || ((powerResource.RegenPerTick < 0f || powerResource.CombatRegenPerTick < 0f) && (powerResourceDictionary[powerResource].currentValue > 0f))
+                        ) {
                         float usedRegenAmount = 0f;
                         if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
                             // perform combat regen
