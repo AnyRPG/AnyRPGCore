@@ -1277,7 +1277,7 @@ namespace AnyRPG {
 
                         // this is notifying on primary resource, but for now, we don't have multiples, so its ok
                         // this will need to be fixed when we add secondary resources
-                        if (usedRegenAmount > 0) {
+                        if (usedRegenAmount != 0f) {
                             OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
                         }
                     }
