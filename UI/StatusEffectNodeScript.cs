@@ -78,7 +78,7 @@ public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPoin
 
     public void UpdateFillIcon(float fillAmount) {
         //Debug.Log("StatusEffectNodeScript.UpdateFillIcon(" + fillAmount + ")");
-        if (fillAmount == 0) {
+        if (fillAmount == 0 && coolDownIcon.enabled == true) {
             coolDownIcon.enabled = false;
             return;
         }

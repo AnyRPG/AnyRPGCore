@@ -160,7 +160,15 @@ namespace AnyRPG {
         public bool MyDisableAnimator { get => disableAnimator; set => disableAnimator = value; }
         public bool MyStun { get => stun; set => stun = value; }
         public bool MyLevitate { get => levitate; set => levitate = value; }
-        public float MyDuration { get => duration; set => duration = value; }
+        public float Duration {
+            get {
+                if (limitedDuration == false) {
+                    return 0f;
+                }
+                return duration;
+            }
+            set => duration = value;
+        }
         public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
         public List<AbilityEffect> MyWeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
         public bool MyClassTrait { get => classTrait; set => classTrait = value; }
@@ -251,7 +259,7 @@ namespace AnyRPG {
                             statusEffectNodeScript.MyStackCount.gameObject.SetActive(false);
                         }
                     }
-                    float usedFillAmount = remainingDuration / duration;
+                    float usedFillAmount = remainingDuration / Duration;
                     statusEffectNodeScript.UpdateFillIcon((usedFillAmount * -1f) + 1f);
                 }
             }
@@ -334,7 +342,7 @@ namespace AnyRPG {
                 returnValue = true;
             }
             if (refreshableDuration) {
-                SetRemainingDuration(duration);
+                SetRemainingDuration(Duration);
             }
             return returnValue;
         }
@@ -359,7 +367,7 @@ namespace AnyRPG {
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
         public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
-            abilityEffectInput.spellDamageMultiplier = tickRate / duration;
+            abilityEffectInput.spellDamageMultiplier = tickRate / Duration;
             base.CastTick(source, target, abilityEffectInput);
             PerformAbilityTick(source, target, abilityEffectInput);
         }
@@ -453,7 +461,7 @@ namespace AnyRPG {
                     printedDuration = (int)remainingDuration;
                 } else {
                     durationLabel = "Duration: ";
-                    printedDuration = (int)duration;
+                    printedDuration = (int)Duration;
                 }
                 if (printedDuration < 60 && printedDuration >= 0) {
                     // less than 1 minute

@@ -1126,15 +1126,15 @@ namespace AnyRPG {
 
         }
 
-        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectInput, StatusEffect statusEffect) {
+        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffect statusEffect) {
             //Debug.Log(gameObject.name + ".StatusEffect.Tick() start");
             float elapsedTime = 0f;
 
             statusEffect.ApplyControlEffects(baseCharacter);
-            if (abilityEffectInput.overrideDuration != 0) {
-                statusEffect.SetRemainingDuration(abilityEffectInput.overrideDuration);
+            if (abilityEffectContext.overrideDuration != 0) {
+                statusEffect.SetRemainingDuration(abilityEffectContext.overrideDuration);
             } else {
-                statusEffect.SetRemainingDuration(statusEffect.MyDuration);
+                statusEffect.SetRemainingDuration(statusEffect.Duration);
             }
             //Debug.Log("duration: " + duration);
             //nextTickTime = remainingDuration - tickRate;
@@ -1145,7 +1145,7 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
             if (statusEffect.MyCastZeroTick) {
                 if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
-                    statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
+                    statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
                 }
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
@@ -1160,7 +1160,7 @@ namespace AnyRPG {
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
                     //Debug.Log(MyName + ".StatusEffect.Tick() TickTime!");
                     if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
-                        statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
+                        statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
                         elapsedTime -= statusEffect.TickRate;
                     }
                 }
@@ -1169,7 +1169,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             if (baseCharacter != null) {
                 if (characterSource != null & baseCharacter.CharacterUnit != null) {
-                    statusEffect.CastComplete(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectInput);
+                    statusEffect.CastComplete(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
                 }
             }
 

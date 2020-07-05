@@ -167,14 +167,20 @@ namespace AnyRPG {
                 }
 
                 Despawn();
-            } else {
+            }/* else {
                 // 2. moved here from below to prevent dead units that have been looted from re-displaying their health bar
                 HandlePrerequisiteUpdates();
 
-            }
+            }*/
 
             // 1. this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon
             //HandlePrerequisiteUpdates();
+
+            // 3. re-enabled because this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon or hide it (if no loot left)
+            // also, there is now code in the healthbar update that detects if the unit spawns dead, and if not, will not re-enable the healthbar
+            // having it in the else block caused units that had been looted and have no loot left, and are now on despawn countdown to still display the minimap icon
+            HandlePrerequisiteUpdates();
+
 
         }
 
