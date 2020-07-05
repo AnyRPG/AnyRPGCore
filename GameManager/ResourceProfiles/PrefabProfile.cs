@@ -10,6 +10,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Prefab Profile", menuName = "AnyRPG/PrefabProfile")]
     public class PrefabProfile : DescribableResource {
 
+        [Header("Prefab")]
+
         /// <summary>
         /// The prefab object to attach to the character when equipping this item
         /// </summary>
@@ -17,6 +19,8 @@ namespace AnyRPG {
         [FormerlySerializedAs("physicalPrefab")]
         [SerializeField]
         private GameObject prefab = null;
+
+        [Header("Held")]
 
         /// <summary>
         /// The transform position of the physical prefab in relation to the target bone
@@ -55,6 +59,7 @@ namespace AnyRPG {
         private string unsheathAudioProfileName = string.Empty;
         private AudioProfile unsheathAudioProfile = null;
 
+        [Header("Sheathed")]
 
         [FormerlySerializedAs("sheathedPhysicalPosition")]
         [SerializeField]
