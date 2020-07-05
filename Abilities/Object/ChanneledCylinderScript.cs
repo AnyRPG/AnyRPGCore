@@ -28,6 +28,9 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 endPosition;
 
+        // keep track of whether the end object was originally null
+        private bool nullEndObject = false;
+
         //private Vector3 lastStartPosition = Vector3.zero;
         //private Vector3 lastEndPosition = Vector3.zero;
 
@@ -51,14 +54,16 @@ namespace AnyRPG {
             MyStartObject = startObject;
             MyStartPosition = startPosition;
             MyEndObject = endObject;
+            if (endObject == null) {
+                nullEndObject = true;
+            }
             MyEndPosition = endPosition;
         }
 
         private void Update() {
 
-            if (MyStartObject == null) {
-                //if (MyStartObject == null || MyEndObject == null) {
-
+            if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
+                // need to be able to shoot at ground, but should still exit if we had an actual original target
                 Destroy(gameObject);
                 return;
             }
@@ -73,9 +78,8 @@ namespace AnyRPG {
         }
 
         private void UpdateTransform() {
-            if (MyStartObject == null) {
-                //if (MyStartObject == null || MyEndObject == null) {
-                // can't do anything without objects to connect
+            if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
+                // need to be able to shoot at ground, but should still exit if we had an actual original target
                 Destroy(gameObject);
                 return;
             }

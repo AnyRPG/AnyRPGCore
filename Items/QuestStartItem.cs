@@ -7,6 +7,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "QuestStartItem", menuName = "AnyRPG/Inventory/Items/QuestStartItem", order = 1)]
     public class QuestStartItem : Item, IUseable, IQuestGiver {
 
+        [Header("Quests")]
+
         [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 

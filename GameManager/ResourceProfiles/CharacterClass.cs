@@ -56,10 +56,10 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
-        public List<BaseAbility> MyAbilityList { get => abilityList; set => abilityList = value; }
-        public List<string> MyArmorClassList { get => armorClassList; set => armorClassList = value; }
-        public List<WeaponSkill> MyWeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<AbilityEffect> MyTraitList { get => traitList; set => traitList = value; }
+        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
+        public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
+        public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
+        public List<AbilityEffect> TraitList { get => traitList; set => traitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 

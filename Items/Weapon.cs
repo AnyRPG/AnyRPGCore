@@ -120,9 +120,9 @@ namespace AnyRPG {
         public List<CharacterClass> GetAllowedCharacterClasses() {
             List<CharacterClass> returnValue = new List<CharacterClass>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.MyWeaponSkillList != null && characterClass.MyWeaponSkillList.Count > 0) {
+                if (characterClass.WeaponSkillList != null && characterClass.WeaponSkillList.Count > 0) {
                     //bool foundMatch = false;
-                    if (characterClass.MyWeaponSkillList.Contains(realWeaponSkill)) {
+                    if (characterClass.WeaponSkillList.Contains(realWeaponSkill)) {
                         returnValue.Add(characterClass);
                     }
                 }

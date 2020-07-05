@@ -96,6 +96,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool canSimultaneousCast = false;
 
+        [Tooltip("This ability can be cast while moving.")]
+        [SerializeField]
+        protected bool canCastWhileMoving = false;
+
         [Tooltip("This spell can be cast while the global cooldown is active. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
         private bool ignoreGlobalCoolDown = false;
@@ -308,6 +312,7 @@ namespace AnyRPG {
         public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
+        public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;

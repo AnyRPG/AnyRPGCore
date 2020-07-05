@@ -542,7 +542,7 @@ namespace AnyRPG {
                 // there are no weapons equipped
                 // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.CharacterClass != null) {
-                    if (baseCharacter.CharacterClass.MyWeaponSkillList.Contains(weaponAffinity)) {
+                    if (baseCharacter.CharacterClass.WeaponSkillList.Contains(weaponAffinity)) {
                         if (weaponAffinity.MyDefaultWeaponSkill) {
                             return true;
                         }

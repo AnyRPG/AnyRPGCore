@@ -53,9 +53,9 @@ namespace AnyRPG {
         public List<CharacterClass> GetAllowedCharacterClasses() {
             List<CharacterClass> returnValue = new List<CharacterClass>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.MyArmorClassList != null && characterClass.MyArmorClassList.Count > 0) {
+                if (characterClass.ArmorClassList != null && characterClass.ArmorClassList.Count > 0) {
                     //bool foundMatch = false;
-                    if (characterClass.MyArmorClassList.Contains(armorClassName)) {
+                    if (characterClass.ArmorClassList.Contains(armorClassName)) {
                         returnValue.Add(characterClass);
                     }
                 }

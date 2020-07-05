@@ -18,6 +18,7 @@ namespace AnyRPG {
         bool MyRequiresGroundTarget { get; set; }
         Color MyGroundTargetColor { get; set; }
         bool CanCastOnEnemy { get; }
+        bool CanCastWhileMoving { get; }
         bool MyCanCastOnSelf { get; }
         bool CanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
