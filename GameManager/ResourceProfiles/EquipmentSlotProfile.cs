@@ -11,18 +11,31 @@ namespace AnyRPG {
     [System.Serializable]
     public class EquipmentSlotProfile : DescribableResource {
 
-        
-        // a weighted value to control distribution of stats among gear
+        [Header("Equipment Slot")]
+
+        [Tooltip("a weighted value to control distribution of stats among gear")]
         [SerializeField]
         private float statWeight = 1;
-        
+
+        [Tooltip("Names of equipment slot types that can be equippped in this slot")]
         [SerializeField]
         private List<string> equipmentSlotTypeList = new List<string>();
+
+        [Header("Audio")]
+
+        [Tooltip("If true, items in this slot will set on hit audio sounds if they have one.")]
+        [SerializeField]
+        private bool setOnHitAudio = false;
 
         private List<EquipmentSlotType> realEquipmentSlotTypeList = new List<EquipmentSlotType>();
 
         public List<EquipmentSlotType> MyEquipmentSlotTypeList { get => realEquipmentSlotTypeList; set => realEquipmentSlotTypeList = value; }
         public float MyStatWeight { get => statWeight; set => statWeight = value; }
+
+        /// <summary>
+        /// If true, items in this slot will set on hit audio sounds if they have one
+        /// </summary>
+        public bool SetOnHitAudio { get => setOnHitAudio; set => setOnHitAudio = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

@@ -35,9 +35,12 @@ namespace AnyRPG {
         /// <param name="abilityCaster"></param>
         /// <returns></returns>
         public override AudioClip GetHitSound(IAbilityCaster abilityCaster) {
+            //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
             if (useWeaponHitSound == true) {
+                //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
                 return abilityCaster.GetAnimatedAbilityHitSound();
             }
+            //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): not using weapon hit sound");
             return base.GetHitSound(abilityCaster);
         }
 

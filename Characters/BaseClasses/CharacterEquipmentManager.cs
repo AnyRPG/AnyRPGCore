@@ -446,6 +446,11 @@ namespace AnyRPG {
             return equipmentCount;
         }
 
+        /// <summary>
+        /// return the equipment slot that a piece of equipment is currently equipped in, or null if not equipped
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
         public virtual EquipmentSlotProfile FindEquipmentSlotForEquipment(Equipment equipment) {
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] == equipment) {

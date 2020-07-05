@@ -1466,8 +1466,9 @@ namespace AnyRPG {
         }
 
         public override AudioClip GetAnimatedAbilityHitSound() {
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.GetAnimatedAbilityHitSound()");
             if (baseCharacter != null && baseCharacter.CharacterCombat != null) {
-                return baseCharacter.CharacterCombat.MyDefaultHitSoundEffect;
+                return baseCharacter.CharacterCombat.DefaultHitSoundEffect;
             }
             return base.GetAnimatedAbilityHitSound();
         }

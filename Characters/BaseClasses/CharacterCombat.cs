@@ -58,7 +58,7 @@ namespace AnyRPG {
             }
         }
 
-        public AudioClip MyDefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
+        public AudioClip DefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
         public BaseCharacter MySwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool MyAutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
         public AbilityEffect MyOnHitEffect { get => onHitEffect; set => onHitEffect = value; }
@@ -495,26 +495,35 @@ namespace AnyRPG {
         }
 
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
-            if (oldItem != null) {
-                if (oldItem is Weapon && (oldItem as Weapon).MyOnHitEffect != null) {
+            //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
+
+            if (oldItem != null && oldItem is Weapon) {
+                if ((oldItem as Weapon).MyOnHitEffect != null) {
                     onHitEffect = null;
                 }
+                EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(oldItem);
+                if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                    defaultHitSoundEffect = null;
+                }
             }
+
             if (newItem != null) {
                 if (newItem is Weapon) {
                     onHitEffect = null;
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
-                    if (newItem is Weapon && (newItem as Weapon).MyOnHitEffect != null) {
+                    if ((newItem as Weapon).MyOnHitEffect != null) {
                         //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
                         onHitEffect = (newItem as Weapon).MyOnHitEffect;
                     }
-                    defaultHitSoundEffect = null;
-                    if (newItem is Weapon && (newItem as Weapon).MyDefaultHitSoundEffect != null) {
-                        //Debug.Log("New item is a weapon and has the on hit ability " + (newItem as Weapon).OnHitAbility.name);
-                        defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
+                    EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
+                    if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                        defaultHitSoundEffect = null;
+                        if ((newItem as Weapon).MyDefaultHitSoundEffect != null) {
+                            //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): setting default hit sound");
+                            defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
+                        }
                     }
                 }
             }
