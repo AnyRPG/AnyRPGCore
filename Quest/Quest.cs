@@ -173,9 +173,14 @@ namespace AnyRPG {
         public bool IsComplete {
             get {
                 //Debug.Log("Quest.IsComplete: " + MyTitle);
+                // disabled because if a quest is raw completable (not required to be in log), it shouldn't have objectives anyway since there is no way to track them
+                // therefore the default true at the bottom should return true anyway
+                /*
                 if (MyAllowRawComplete == true) {
                     return true;
                 }
+                */
+
                 foreach (QuestObjective o in collectObjectives) {
                     if (!o.IsComplete) {
                         return false;

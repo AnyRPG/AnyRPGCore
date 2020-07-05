@@ -181,19 +181,25 @@ namespace AnyRPG {
         }
 
         public bool CharacterClassRequirementIsMet() {
+            //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet()");
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
                 if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
+                    //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return false");
                     return false;
                 }
             }
+            //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return true");
             return true;
         }
 
         public virtual bool RequirementsAreMet() {
+            //Debug.Log(DisplayName + ".Item.RequirementsAreMet()");
             if (!CharacterClassRequirementIsMet()) {
+                //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
                 return false;
             }
 
+            //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return true");
             return true;
         }
 

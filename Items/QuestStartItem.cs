@@ -42,22 +42,34 @@ namespace AnyRPG {
         }
 
         public bool QuestRequirementsAreMet() {
+            Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet()");
             if (MyQuests != null) {
                 foreach (QuestNode questNode in MyQuests) {
-                    if (questNode.MyQuest.MyPrerequisitesMet && questNode.MyQuest.IsComplete == false && questNode.MyQuest.TurnedIn == false && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.DisplayName)) {
+                    if (questNode.MyQuest.MyPrerequisitesMet
+                        // the next condition is failing on raw complete quest start items because they are always considered complete
+                        //&& questNode.MyQuest.IsComplete == false
+                        && questNode.MyQuest.TurnedIn == false
+                        && !QuestLog.MyInstance.HasQuest(questNode.MyQuest.DisplayName)) {
+                        Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                         return true;
+                    } else {
+                        Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): prereqs: " + questNode.MyQuest.MyPrerequisitesMet + "; complete: " + questNode.MyQuest.IsComplete + "; " + questNode.MyQuest.TurnedIn + "; has: " + QuestLog.MyInstance.HasQuest(questNode.MyQuest.DisplayName));
                     }
                 }
             } else {
+                Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                 return true;
             }
+            Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return false");
             return false;
         }
 
         public override bool RequirementsAreMet() {
+            Debug.Log(DisplayName + ".QuestStartItem.RequirementsAreMet()");
             bool returnValue = base.RequirementsAreMet();
             if (returnValue == true) {
                 if (!QuestRequirementsAreMet()) {
+                    Debug.Log(DisplayName + ".QuestStartItem.RequirementsAreMet(): return false");
                     return false;
                 }
             }
