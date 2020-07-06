@@ -93,16 +93,18 @@ namespace AnyRPG {
                 copyGameMenuWindow.CloseWindow();
                 confirmDestroyMenuWindow.CloseWindow();
                 confirmSellItemMenuWindow.CloseWindow();
+                inGameMainMenuWindow.CloseWindow();
+
+                // testing - do not allow accidentally closing this while dead
+                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
+                    playerOptionsMenuWindow.CloseWindow();
+                }
             }
 
             if (InputManager.MyInstance.KeyBindWasPressed("MAINMENU")) {
                 inGameMainMenuWindow.ToggleOpenClose();
             }
 
-            if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
-                inGameMainMenuWindow.CloseWindow();
-                playerOptionsMenuWindow.CloseWindow();
-            }
         }
 
         public void CloseAllWindows() {
