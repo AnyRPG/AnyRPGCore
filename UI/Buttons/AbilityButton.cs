@@ -27,6 +27,7 @@ namespace AnyRPG {
             icon.color = Color.white;
             spellName.text = ability.DisplayName;
             description.text = ability.GetSummary();
+            description.text = ability.GetShortDescription();
         }
 
         public void ClearAbility() {

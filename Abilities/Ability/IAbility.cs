@@ -40,6 +40,7 @@ namespace AnyRPG {
         bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks, AbilityEffectContext abilityEffectContext = null);
         bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext);
         string GetDescription();
+        string GetShortDescription();
         string GetSummary();
         GameObject ReturnTarget(IAbilityCaster source, GameObject target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null);
         bool Use();

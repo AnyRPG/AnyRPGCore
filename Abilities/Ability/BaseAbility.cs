@@ -349,6 +349,10 @@ namespace AnyRPG {
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager).ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
         }
 
+        public string GetShortDescription() {
+            return description;
+        }
+
         public virtual float GetResourceCost(IAbilityCaster abilityCaster) {
             if (abilityCaster != null && powerResource != null) {
                 return baseResourceCost + (abilityCaster.Level * resourceCostPerLevel);
