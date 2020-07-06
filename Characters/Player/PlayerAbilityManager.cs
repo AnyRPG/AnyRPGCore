@@ -65,6 +65,10 @@ namespace AnyRPG {
         /// </summary>
         public void OnEscapeKeyPressedHandler() {
             //Debug.Log("Received Escape Key Pressed Handler");
+            if (baseCharacter.CharacterStats.IsAlive == false) {
+                // prevent character from swapping to third party controller while dead
+                return;
+            }
             baseCharacter.CharacterAbilityManager.StopCasting();
 
         }
