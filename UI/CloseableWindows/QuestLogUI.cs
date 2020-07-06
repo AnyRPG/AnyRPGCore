@@ -57,7 +57,7 @@ namespace AnyRPG {
 
         //private string currentQuestName = null;
 
-        private Quest currentQuest = null;
+        //private Quest currentQuest = null;
 
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
@@ -189,7 +189,7 @@ namespace AnyRPG {
         }
 
         public void AbandonQuest() {
-            QuestLog.MyInstance.AbandonQuest(currentQuest);
+            QuestLog.MyInstance.AbandonQuest(MySelectedQuestScript.MyQuest);
             ShowQuestsCommon();
         }
     }
