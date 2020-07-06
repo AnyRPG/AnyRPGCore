@@ -93,7 +93,8 @@ namespace AnyRPG {
 
                     if (lootGroup.GuaranteedDrop == true) {
                         List<int> randomItemIndexes = new List<int>();
-                        int maxCount = Mathf.Min(lootGroup.DropLimit, validLoot.Count);
+                        // guaranteed drops can never have a 0 drop limit, but shouldn't be unlimited because the chance is not random per item like non guaranteed drops
+                        int maxCount = (int)Mathf.Min(Mathf.Clamp(lootGroup.DropLimit, 1, Mathf.Infinity), validLoot.Count);
                         while (randomItemIndexes.Count < maxCount) {
 
                             // pure random
