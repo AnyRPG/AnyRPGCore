@@ -165,8 +165,9 @@ namespace AnyRPG {
             MyWaitingForAutoAttack = newValue;
         }
 
-        public virtual void ProcessTakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
+        public virtual void ProcessTakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+            //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.Name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
+
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
             }
@@ -174,7 +175,7 @@ namespace AnyRPG {
             abilityEffectContext.SetResourceAmount(powerResource.DisplayName, damage);
 
             // prevent infinite reflect loops
-            if (reflectDamage != false) {
+            if (abilityEffectContext.reflectDamage == false) {
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
@@ -415,13 +416,13 @@ namespace AnyRPG {
         }
         */
 
-        private void TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        private void TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
 
             // perform check to see if this character has the resource to be reduced.  if not, it is immune to this type of damage
             if (!baseCharacter.CharacterStats.WasImmuneToDamageType(powerResource, source, abilityEffectContext)) {
                 damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
 
-                ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect, reflectDamage);
+                ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect);
                 //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
                 baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
             } else {
@@ -430,7 +431,7 @@ namespace AnyRPG {
 
         }
 
-        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
@@ -451,7 +452,7 @@ namespace AnyRPG {
                 // MAY WANT TO CHANGE THIS IF DODGE MECHANICS ARE A IMPORTANT PART OF GAMEPLAY
 
                 if (canPerformAbility) {
-                    TakeDamageCommon(abilityEffectContext, powerResource, damage, sourceCharacter, combatMagnitude, abilityEffect, reflectDamage);
+                    TakeDamageCommon(abilityEffectContext, powerResource, damage, sourceCharacter, combatMagnitude, abilityEffect);
                     return true;
                 }
             } else {

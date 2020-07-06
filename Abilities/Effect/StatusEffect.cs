@@ -137,13 +137,14 @@ namespace AnyRPG {
         // list of status effect nodes to send updates to so multiple effects panels and bars can access this
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
-        [Header("Additional Effects")]
+        [Header("Reflect Effects")]
 
         [SerializeField]
         protected List<string> reflectAbilityEffectNames = new List<string>();
 
-        [SerializeField]
         protected List<AbilityEffect> reflectAbilityEffectList = new List<AbilityEffect>();
+
+        [Header("Weapon Hit Effects")]
 
         [SerializeField]
         protected List<string> weaponHitAbilityEffectNames = new List<string>();
@@ -388,25 +389,25 @@ namespace AnyRPG {
             PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
         }
 
-
         public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
         }
 
-        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.name + ", " + (target ? target.name : "null") + ")");
-            PerformAbilityReflect(source, target, abilityEffectInput);
+        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.Name + ", " + (target ? target.name : "null") + ")");
+            PerformAbilityReflect(source, target, abilityEffectContext);
         }
 
-        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            PerformAbilityReflectEffects(source, target, abilityEffectInput);
+        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflect(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            PerformAbilityReflectEffects(source, target, abilityEffectContext);
         }
 
 
-        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
-            effectOutput.reflectDamage = true;
-            PerformAbilityEffects(source, target, effectOutput, reflectAbilityEffectList);
+        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            abilityEffectContext.reflectDamage = true;
+            PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
         }
 
         public override string GetSummary() {

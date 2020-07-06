@@ -23,10 +23,10 @@ namespace AnyRPG {
             source.ProcessWeaponHitEffects(this, target, abilityEffectInput);
         }
 
-        public override void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
-            target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(abilityEffectInput, powerResource, finalAmount, source, combatMagnitude, this, abilityEffectInput.reflectDamage);
+        public override void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+            target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
 
-            base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectInput, powerResource);
+            base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
         }
 
         public override bool CanUseOn(GameObject target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {

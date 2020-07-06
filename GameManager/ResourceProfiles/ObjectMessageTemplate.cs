@@ -14,10 +14,14 @@ namespace AnyRPG {
     [System.Serializable]
     public class ObjectMessageTemplate : DescribableResource {
 
+        [Header("System Events")]
+
         [Tooltip("Subscribe to events emmitted by the SystemEventManager")]
         [FormerlySerializedAs("eventList")]
         [SerializeField]
         private List<SystemEventResponseNode> systemEventList = new List<SystemEventResponseNode>();
+
+        [Header("Local Events")]
 
         [Tooltip("Subscribe to events on a monobehavior on the gameObject this script is attached to")]
         [SerializeField]

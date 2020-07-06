@@ -233,7 +233,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput, List<AbilityEffect> abilityEffectList) {
+        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
@@ -244,9 +244,9 @@ namespace AnyRPG {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
                         if (!(abilityEffect is AmountEffect)) {
-                            effectOutput.spellDamageMultiplier = 1f;
+                            abilityEffectContext.spellDamageMultiplier = 1f;
                         }
-                        Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, effectOutput, abilityEffect);
+                        Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectContext, abilityEffect);
                         if (tmpObjects != null) {
                             //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
                             foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in tmpObjects) {
@@ -259,7 +259,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput, AbilityEffect abilityEffect) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext, AbilityEffect abilityEffect) {
             //Debug.Log("AbilityEffect.PerformAbilityEffect(" + source.MyCharacterName + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.MyName + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
@@ -272,10 +272,10 @@ namespace AnyRPG {
 
             //Debug.Log("FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
-            if (abilityEffect.CanUseOn(finalTarget, source, effectOutput)) {
+            if (abilityEffect.CanUseOn(finalTarget, source, abilityEffectContext)) {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
-                returnObjects = _abilityEffect.Cast(source, finalTarget, target, effectOutput);
+                returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext);
             } else {
                 //Debug.Log("AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
             }

@@ -57,20 +57,20 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityAffectInput) {
+        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".AOEEffect.CastTick(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
-            base.CastTick(source, target, abilityAffectInput);
-            TargetAOETick(source, target, abilityAffectInput);
+            base.CastTick(source, target, abilityEffectContext);
+            TargetAOETick(source, target, abilityEffectContext);
         }
 
-        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityAffectInput) {
+        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".AOEEffect.CastComplete(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
-            TargetAOEComplete(source, target, abilityAffectInput);
+            TargetAOEComplete(source, target, abilityEffectContext);
         }
 
-        protected virtual float TargetAOEHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        protected virtual float TargetAOEHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
-            List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectInput, hitAbilityEffectList);
+            List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectContext, hitAbilityEffectList);
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
                 PerformAOEHit(source, validTarget.targetGameObject, 1f / validTargets.Count, validTarget.abilityEffectInput, accumulatedDelay);
@@ -103,7 +103,7 @@ namespace AnyRPG {
             return validTargets.Count;
         }
 
-        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".AOEEffect.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
@@ -116,7 +116,7 @@ namespace AnyRPG {
                 aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
-                aoeSpawnCenter = abilityEffectInput.groundTargetLocation;
+                aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
                 aoeSpawnCenter += aoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
@@ -139,7 +139,7 @@ namespace AnyRPG {
                 //Debug.Log(MyName + "AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                 bool canAdd = true;
                 foreach (AbilityEffect abilityEffect in abilityEffectList) {
-                    if (abilityEffect.CanUseOn(collider.gameObject, source, abilityEffectInput) == false) {
+                    if (abilityEffect.CanUseOn(collider.gameObject, source, abilityEffectContext) == false) {
                         canAdd = false;
                     }
                 }
@@ -150,7 +150,7 @@ namespace AnyRPG {
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
                     validTargetNode.targetGameObject = collider.gameObject;
-                    validTargetNode.abilityEffectInput = abilityEffectInput;
+                    validTargetNode.abilityEffectInput = abilityEffectContext;
                     validTargets.Add(validTargetNode);
                 }
                 //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);

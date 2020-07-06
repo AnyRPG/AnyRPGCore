@@ -145,7 +145,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, bool reflectDamage = false) {
+        public override bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log("PlayerCombat.TakeDamage(" + damage + ", " + source.name + ")");
             // enter combat first because if we die from this hit, we don't want to enter combat when dead
             EnterCombat(source);
@@ -154,7 +154,7 @@ namespace AnyRPG {
             bool damageTaken = base.TakeDamage(damage, sourcePosition, source, combatMagnitude, abilityEffect, reflectDamage = false);
             return damageTaken;
             */
-            return base.TakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect, reflectDamage = false);
+            return base.TakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect);
         }
 
         /*
