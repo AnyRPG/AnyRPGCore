@@ -247,11 +247,15 @@ namespace AnyRPG {
 
         private void ToggleRun() {
             if (InputManager.MyInstance.KeyBindWasPressed("TOGGLERUN")) {
+                EventParamProperties eventParamProperties = new EventParamProperties();
                 if (walking == false) {
                     walking = true;
+                    eventParamProperties.simpleParams.BoolParam = true;
                 } else {
                     walking = false;
+                    eventParamProperties.simpleParams.BoolParam = false;
                 }
+                SystemEventManager.TriggerEvent("OnToggleRun", eventParamProperties);
                 MessageFeedManager.MyInstance.WriteMessage("Walk: " + walking.ToString());
                 ToggleRunHandler(walking);
             }
