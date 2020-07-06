@@ -11,6 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class VendorCollection : DescribableResource {
 
+        [Header("Vendor Collection")]
+
+        [Tooltip("List of items in this collection")]
         [SerializeField]
         private List<VendorItem> vendorItems = new List<VendorItem>();
 

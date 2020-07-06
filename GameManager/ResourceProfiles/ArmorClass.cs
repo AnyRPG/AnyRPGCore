@@ -11,6 +11,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class ArmorClass : DescribableResource {
 
+        [Header("Armor")]
+
         [SerializeField]
         private float armorPerLevel;
 

@@ -7,41 +7,44 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Patrol Profile", menuName = "AnyRPG/PatrolProfile")]
     public class PatrolProfile : DescribableResource {
 
-        // whether a unit that has this patrol should begin it automatically upon spawning or entering patrol state
+        [Header("Patrol")]
+
+        [Tooltip("whether a unit that has this patrol should begin it automatically upon spawning or entering patrol state")]
         [SerializeField]
         private bool autoStart = false;
 
         [SerializeField]
         private List<Vector3> destinationList = new List<Vector3>();
 
-        // If randomDestinations is set to false, they are followed in order.  Otherwise, they are chosen randomly from the destinationList
+        [Tooltip("If randomDestinations is set to false, they are followed in order.  Otherwise, they are chosen randomly from the destinationList")]
         [SerializeField]
         private bool randomDestinations = false;
 
-        // after travelling to all destinations, restart from the first and continue patrolling
+        [Tooltip("after travelling to all destinations, restart from the first and continue patrolling")]
         [SerializeField]
         private bool loopDestinations = true;
 
-        // should the character despawn when the patrol is complete
+        [Tooltip("should the character despawn when the patrol is complete")]
         [SerializeField]
         private bool despawnOnCompletion = false;
 
-        // 0 for infinite, any other number and the patrol will end after that number is reached
+        [Tooltip("0 for infinite, any other number and the patrol will end after that number is reached")]
         [SerializeField]
         private int maxDestinations = 0;
 
-        // used when the destination list is empty and a random destination needs to be chosen
+        [Tooltip("used when the destination list is empty and a random destination needs to be chosen")]
         [SerializeField]
         private float maxDistanceFromSpawnPoint = 1f;
 
-        // how long to pause at each destination before going to the next one
+        [Tooltip("how long to pause at each destination before going to the next one")]
         [SerializeField]
         private float destinationPauseTime = 0f;
 
-        // zero will not override current movement speed, anything else will
+        [Tooltip("zero will not override current movement speed, anything else will")]
         [SerializeField]
         private float movementSpeed = 0f;
 
+        [Tooltip("If true, the unit will attempt to save it's position when it reaches the destination.")]
         [SerializeField]
         private bool savePositionAtDestination = false;
 

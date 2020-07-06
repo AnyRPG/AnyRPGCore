@@ -11,9 +11,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class AudioProfile : DescribableResource {
 
+        [Header("Audio")]
+
         [SerializeField]
         private string artistName;
 
+        [Tooltip("List of sound files")]
         [SerializeField]
         private List<AudioClip> audioClips = new List<AudioClip>();
 

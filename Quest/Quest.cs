@@ -14,10 +14,13 @@ namespace AnyRPG {
 
         public event System.Action OnQuestStatusUpdated = delegate { };
 
+        [Header("Quest")]
 
+        [Tooltip("Achievements are automatically tracked and automatically completed by the system without being in the player quest log")]
         [SerializeField]
         private bool isAchievement = false;
 
+        [Tooltip("If true, this quest can this quest be completed more than once")]
         [SerializeField]
         private bool repeatableQuest = false;
 
@@ -26,6 +29,7 @@ namespace AnyRPG {
         //private Dialog openingDialog;
 
         // replaces the above setting to avoid issues with scriptableObjects
+        [Tooltip("If true a dialog with the same name as the quest will be used (if found) and will be required to be completed before the quest can be accepted")]
         [SerializeField]
         private bool hasOpeningDialog;
 

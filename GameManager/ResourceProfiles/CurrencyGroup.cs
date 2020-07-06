@@ -11,12 +11,16 @@ namespace AnyRPG {
     [System.Serializable]
     public class CurrencyGroup : DescribableResource {
 
-        // the smallest currency in this group
+        [Header("Currency Group")]
+
+        [Tooltip("the smallest currency in this group")]
         [SerializeField]
         private string baseCurrencyName = string.Empty;
 
         [SerializeField]
         private Currency baseCurrency = null;
+
+        [Header("Exchange Rates")]
 
         [SerializeField]
         private List<CurrencyGroupRate> currencyGroupRates = new List<CurrencyGroupRate>();

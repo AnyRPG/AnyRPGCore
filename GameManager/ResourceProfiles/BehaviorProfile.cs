@@ -13,12 +13,18 @@ namespace AnyRPG {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
 
+        [Header("Behavior")]
+
         [SerializeField]
         private List<BehaviorNode> behaviorNodes = new List<BehaviorNode>();
+
+        [Header("Conditions")]
 
         [Tooltip("Game conditions that must be satisfied for this behavior to be available.")]
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+
+        [Header("Options")]
 
         [Tooltip("Should this behavior automatically play when the object that is referencing it is activated.")]
         [SerializeField]

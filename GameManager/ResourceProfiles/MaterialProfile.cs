@@ -10,7 +10,9 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Material Profile", menuName = "AnyRPG/MaterialProfile")]
     public class MaterialProfile : DescribableResource {
 
-        // a material to temporarily assign to the target we hit
+        [Header("Material")]
+
+        [Tooltip("a material to temporarily assign to the target we hit")]
         [SerializeField]
         private Material effectMaterial;
 

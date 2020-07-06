@@ -9,12 +9,15 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Skill", menuName = "AnyRPG/Skills/Skill")]
     public class Skill : DescribableResource {
 
+        [Header("Skill")]
+
         [SerializeField]
         private int requiredLevel = 1;
 
         [SerializeField]
         private bool autoLearn = false;
 
+        [Tooltip("List of abilities that are learned when this skill is learned")]
         [SerializeField]
         private List<string> abilityNames = new List<string>();
 

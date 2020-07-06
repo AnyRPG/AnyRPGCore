@@ -6,19 +6,23 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Factions/Faction")]
     public class Faction : DescribableResource {
 
+        [Header("Faction Dispositions")]
+
+        [Tooltip("The disposition that this faction has toward any faction not specificially in its disposition list")]
         public float defaultDisposition = 0f;
 
-        //public Dictionary<Faction, float> dispositionDictionary = new Dictionary<Faction, float>();
+        [Tooltip("Specific dispositions toward other factions")]
         public List<FactionDisposition> dispositionList = new List<FactionDisposition>();
 
-        // abilities learned when joining this faction
+        [Header("Capabilities")]
+
+        [Tooltip("abilities learned when joining this faction")]
         [SerializeField]
         private List<string> learnedAbilityNames = new List<string>();
 
-        //[SerializeField]
         private List<BaseAbility> learnedAbilityList = new List<BaseAbility>();
 
-        public List<BaseAbility> MyLearnedAbilityList { get => learnedAbilityList; set => learnedAbilityList = value; }
+        public List<BaseAbility> LearnedAbilityList { get => learnedAbilityList; set => learnedAbilityList = value; }
 
         public static Color GetFactionColor(INamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");

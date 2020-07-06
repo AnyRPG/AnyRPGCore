@@ -11,10 +11,15 @@ namespace AnyRPG {
     [System.Serializable]
     public class EquipmentSlotType : DescribableResource {
 
-        // a weighted value to control distribution of stats among gear
+        [Header("Equipment Slot Type")]
+
+        [Tooltip("a weighted value to control distribution of stats among gear")]
         [SerializeField]
         private float statWeight = 1f;
 
+        [Header("Exclusivity")]
+
+        [Tooltip("If this slot type takes up more than one physical slots, the slots listed below will be unequipped to make room for the item in this slot")]
         [SerializeField]
         private List<string> exclusiveSlotProfileList = new List<string>();
 

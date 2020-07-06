@@ -172,7 +172,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
+            //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
             panelLayoutElement.preferredWidth = Screen.width;
             panelLayoutElement.preferredHeight = Screen.height;
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);

@@ -11,7 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class CreditsCategory : DescribableResource {
 
-        // this skill is considered to be in use by an unarmed character if set to true
+        [Header("Credits")]
+
+        [Tooltip("this skill is considered to be in use by an unarmed character if set to true")]
         [SerializeField]
         private List<CreditsNode> creditsNodes = new List<CreditsNode>();
 

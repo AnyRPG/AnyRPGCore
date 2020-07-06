@@ -11,6 +11,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class Cutscene : DescribableResource {
 
+        [Header("Cutscene")]
+
         [Tooltip("Can this cutscene be viewed more than once.")]
         [SerializeField]
         private bool repeatable = false;
@@ -24,9 +26,6 @@ namespace AnyRPG {
         [Tooltip("Set to true if at the end of this cutscene, the previous scene should be loaded.")]
         [SerializeField]
         private bool unloadSceneOnEnd = false;
-
-        //[SerializeField]
-        //private bool allowCutSceneNamePlates = false;
 
         [SerializeField]
         private bool viewed = false;

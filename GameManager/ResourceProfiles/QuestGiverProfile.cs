@@ -11,6 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class QuestGiverProfile : DescribableResource {
 
+        [Header("Quest Giver")]
+
+        [Tooltip("List of quests that this questgiver offers or finishes")]
         [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 

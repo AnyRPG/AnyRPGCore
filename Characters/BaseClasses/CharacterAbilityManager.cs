@@ -758,7 +758,7 @@ namespace AnyRPG {
 
         public void LearnFactionAbilities(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
-            foreach (BaseAbility baseAbility in newFaction.MyLearnedAbilityList) {
+            foreach (BaseAbility baseAbility in newFaction.LearnedAbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
                 if (baseAbility.MyRequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");

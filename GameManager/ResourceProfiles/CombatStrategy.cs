@@ -11,6 +11,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class CombatStrategy : DescribableResource {
 
+        [Header("Combat Strategy")]
+
         [SerializeField]
         private List<CombatStrategyNode> phaseNodes = new List<CombatStrategyNode>();
 

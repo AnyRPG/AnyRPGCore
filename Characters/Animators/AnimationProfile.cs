@@ -8,10 +8,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Animation Profile", menuName = "AnyRPG/Animation/Profile")]
     public class AnimationProfile : DescribableResource {
 
-        /*
-        [SerializeField]
-        private string profileName;
-    */
+        [Header("Animation")]
 
         [SerializeField]
         private bool useRootMotion = false;

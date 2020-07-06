@@ -11,7 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class EnvironmentStateProfile : DescribableResource {
 
+        [Header("Environment State")]
         
+        [Tooltip("The skybox that should be used when this environment state is active")]
         [SerializeField]
         private Material skyBoxMaterial;
 

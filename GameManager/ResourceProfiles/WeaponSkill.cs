@@ -11,7 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class WeaponSkill : DescribableResource {
 
-        // this skill is considered to be in use by an unarmed character if set to true
+        [Header("Weapon Skill")]
+
+        [Tooltip("this skill is considered to be in use by an unarmed character if set to true")]
         [SerializeField]
         private bool defaultWeaponSkill;
 

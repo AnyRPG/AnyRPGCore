@@ -11,12 +11,16 @@ namespace AnyRPG {
     [System.Serializable]
     public class EquipmentSet : DescribableResource {
 
+        [Header("Equipment Set")]
+
         [SerializeField]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
 
-        // the name of the trait should be associated with the list spot that matches the number of gear pieces required
+        [Header("Set Bonuses")]
+
+        [Tooltip("the name of the trait should be associated with the list spot that matches the number of gear pieces required")]
         [SerializeField]
         private List<string> traitNames = new List<string>();
 

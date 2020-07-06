@@ -13,6 +13,8 @@ namespace AnyRPG {
 
         public event System.Action OnDialogCompleted = delegate { };
 
+        [Header("Dialog")]
+
         [Tooltip("This should be set to true for cutscene subtitles and npc speech bubble monologues to allow them to advance on a timer")]
         [SerializeField]
         private bool automatic = false;

@@ -12,6 +12,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class UnitToughness : DescribableResource {
 
+        [Header("Unit Toughness")]
+
+        [Tooltip("List of special projector cookies to use for units with this toughness")]
         [SerializeField]
         private List<ProjectorColorMapNode> focusProjectorOverrideMap = new List<ProjectorColorMapNode>();
 
