@@ -381,8 +381,12 @@ namespace AnyRPG {
         public void UpdateStackSize(IClickable clickable, int count, bool alwaysDisplayCount = false) {
             //Debug.Log("UpdateStackSize(" + count + ", " + alwaysDisplayCount + ")");
             if (count > 1 || alwaysDisplayCount == true) {
-                clickable.StackSizeText.text = count.ToString();
-                clickable.StackSizeText.color = Color.white;
+                if (clickable.StackSizeText.text != count.ToString()) {
+                    clickable.StackSizeText.text = count.ToString();
+                }
+                if (clickable.StackSizeText.color != Color.white) {
+                    clickable.StackSizeText.color = Color.white;
+                }
                 //clickable.MyIcon.color = Color.white;
             } else {
                 ClearStackCount(clickable);
@@ -391,7 +395,9 @@ namespace AnyRPG {
 
         public void ClearStackCount(IClickable clickable) {
             //Debug.Log("UIManager.ClearStackCount(" + clickable.ToString() + ")");
-            clickable.StackSizeText.color = new Color(0, 0, 0, 0);
+            if (clickable.StackSizeText.color != new Color(0, 0, 0, 0)) {
+                clickable.StackSizeText.color = new Color(0, 0, 0, 0);
+            }
             //clickable.MyIcon.color = Color.white;
         }
 

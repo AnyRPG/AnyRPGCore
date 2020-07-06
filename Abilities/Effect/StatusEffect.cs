@@ -260,8 +260,12 @@ namespace AnyRPG {
                             statusEffectNodeScript.MyStackCount.gameObject.SetActive(false);
                         }
                     }
-                    float usedFillAmount = remainingDuration / Duration;
-                    statusEffectNodeScript.UpdateFillIcon((usedFillAmount * -1f) + 1f);
+                    if (Duration == 0f) {
+                        statusEffectNodeScript.UpdateFillIcon(0f);
+                    } else {
+                        float usedFillAmount = remainingDuration / Duration;
+                        statusEffectNodeScript.UpdateFillIcon(usedFillAmount);
+                    }
                 }
             }
         }

@@ -304,9 +304,11 @@ namespace AnyRPG {
         }
 
         private void DisableCoolDownIcon() {
-            coolDownIcon.sprite = null;
-            coolDownIcon.color = new Color32(0, 0, 0, 0);
-            coolDownIcon.enabled = false;
+            if (coolDownIcon.isActiveAndEnabled != false) {
+                coolDownIcon.sprite = null;
+                coolDownIcon.color = new Color32(0, 0, 0, 0);
+                coolDownIcon.enabled = false;
+            }
         }
 
         /// <summary>
@@ -334,9 +336,12 @@ namespace AnyRPG {
                 return;
             }
 
-
-            MyIcon.sprite = Useable.MyIcon;
-            MyIcon.color = Color.white;
+            if (MyIcon.sprite != Useable.MyIcon) {
+                MyIcon.sprite = Useable.MyIcon;
+            }
+            if (MyIcon.color != Color.white) {
+                MyIcon.color = Color.white;
+            }
 
             //Debug.Log("ActionButton.UpdateVisual(): about to get useable count");
             if (Useable is Item) {
@@ -378,7 +383,9 @@ namespace AnyRPG {
                     }
                     */
                     if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
-                        coolDownIcon.enabled = true;
+                        if (coolDownIcon.isActiveAndEnabled == false) {
+                            coolDownIcon.enabled = true;
+                        }
                         /*
                         if (coolDownIcon.sprite != MyIcon.sprite) {
                             Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match MyIcon");
@@ -391,12 +398,20 @@ namespace AnyRPG {
                             coolDownIcon.color = new Color32(255, 0, 0, 155);
                         }
 
-                        coolDownIcon.fillMethod = Image.FillMethod.Radial360;
-                        coolDownIcon.fillAmount = 1f;
+                        if (coolDownIcon.fillMethod != Image.FillMethod.Radial360) {
+                            coolDownIcon.fillMethod = Image.FillMethod.Radial360;
+                        }
+                        if (coolDownIcon.fillAmount != 1f) {
+                            coolDownIcon.fillAmount = 1f;
+                        }
                     } else {
                         //Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
-                        coolDownIcon.sprite = null;
-                        coolDownIcon.enabled = false;
+                        if (coolDownIcon.sprite != null) {
+                            coolDownIcon.sprite = null;
+                        }
+                        if (coolDownIcon.enabled != false) {
+                            coolDownIcon.enabled = false;
+                        }
                     }
                     // don't need to continue on and do radial fill on auto-attack icons
                     return;
@@ -423,7 +438,9 @@ namespace AnyRPG {
 
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
                     //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
-                    coolDownIcon.enabled = true;
+                    if (coolDownIcon.isActiveAndEnabled != true) {
+                        coolDownIcon.enabled = true;
+                    }
                     if (coolDownIcon.sprite != MyIcon.sprite) {
                         //Debug.Log("Setting coolDownIcon to match MyIcon");
                         coolDownIcon.sprite = MyIcon.sprite;
@@ -445,10 +462,16 @@ namespace AnyRPG {
                     float fillAmount = Mathf.Max(abilityCoolDown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
                         (abilityCoolDown > PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
                     //Debug.Log("Setting fill amount to: " + fillAmount);
-                    coolDownIcon.fillAmount = fillAmount;
+                    if (coolDownIcon.fillAmount != fillAmount) {
+                        coolDownIcon.fillAmount = fillAmount;
+                    }
                 } else {
-                    coolDownIcon.sprite = null;
-                    coolDownIcon.enabled = false;
+                    if (coolDownIcon.sprite != null) {
+                        coolDownIcon.sprite = null;
+                    }
+                    if (coolDownIcon.enabled != false) {
+                        coolDownIcon.enabled = false;
+                    }
                 }
 
             }
@@ -456,7 +479,9 @@ namespace AnyRPG {
         }
 
         public void EnableFullCoolDownIcon() {
-            coolDownIcon.enabled = true;
+            if (coolDownIcon.isActiveAndEnabled == false) {
+                coolDownIcon.enabled = true;
+            }
             if (coolDownIcon.sprite != MyIcon.sprite) {
                 //Debug.Log("Setting coolDownIcon to match MyIcon");
                 coolDownIcon.sprite = MyIcon.sprite;
@@ -466,7 +491,9 @@ namespace AnyRPG {
                 coolDownIcon.fillClockwise = false;
             }
             float fillAmount = 1f;
-            coolDownIcon.fillAmount = fillAmount;
+            if (coolDownIcon.fillAmount != fillAmount) {
+                coolDownIcon.fillAmount = fillAmount;
+            }
         }
 
         public void UpdateItemCount(Item item) {
