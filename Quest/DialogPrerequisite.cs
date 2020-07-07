@@ -20,7 +20,9 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (prerequisiteDialog.TurnedIn == true);
+            //bool checkResult = (prerequisiteDialog.TurnedIn == true);
+            // updated to prevent repeatable dialogs from trigger prerequisites in cutscenes and doing things before they should.
+            bool checkResult = (prerequisiteDialog.TurnedIn == true && prerequisiteDialog.Repeatable == false);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
