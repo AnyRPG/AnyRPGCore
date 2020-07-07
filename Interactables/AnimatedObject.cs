@@ -47,9 +47,9 @@ namespace AnyRPG {
                 return false;
             }
             if (objectOpen) {
-                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MyRotation, interactable.MyPrefabProfile.MyPosition, interactable.MyPrefabProfile.UnsheathAudioProfile));
-            } else {
                 coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.SheathedRotation, interactable.MyPrefabProfile.SheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
+            } else {
+                coroutine = StartCoroutine(animateObject(interactable.MyPrefabProfile.MyRotation, interactable.MyPrefabProfile.MyPosition, interactable.MyPrefabProfile.UnsheathAudioProfile));
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 
