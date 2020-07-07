@@ -428,7 +428,16 @@ namespace AnyRPG {
         public SecondaryStatType SecondaryStat { get => secondaryStat; set => secondaryStat = value; }
         public float BaseAmount { get => baseAmount; set => baseAmount = value; }
         public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
-        public float BaseMultiplier { get => baseMultiplier; set => baseMultiplier = value; }
+        public float BaseMultiplier {
+            get {
+                if (baseMultiplier == 0f) {
+                    // equipment should not be able to reduce stats to zero, so ignore zero values
+                    return 1f;
+                }
+                return baseMultiplier;
+            }
+            set => baseMultiplier = value;
+        }
     }
 
     //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }
