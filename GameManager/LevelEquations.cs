@@ -166,6 +166,7 @@ namespace AnyRPG {
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + secondaryStatType.ToString() + ", " + sourceCharacter.CharacterName + ")");
             float returnValue = 0f;
 
             foreach (IStatProvider statProvider in sourceCharacter.StatProviders) {

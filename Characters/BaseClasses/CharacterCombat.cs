@@ -410,25 +410,30 @@ namespace AnyRPG {
             return false;
         }
 
-        /*
-        public void ResetAttackCoolDown() {
-            attackCooldown = attackSpeed;
-        }
-        */
-
-        private void TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        /// <summary>
+        /// return true if damage was taken, false if not
+        /// </summary>
+        /// <param name="abilityEffectContext"></param>
+        /// <param name="powerResource"></param>
+        /// <param name="damage"></param>
+        /// <param name="source"></param>
+        /// <param name="combatMagnitude"></param>
+        /// <param name="abilityEffect"></param>
+        /// <returns></returns>
+        private bool TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+            //Debug.Log(gameObject.name + ".TakeDamageCommon(" + damage + ")");
 
             // perform check to see if this character has the resource to be reduced.  if not, it is immune to this type of damage
-            if (!baseCharacter.CharacterStats.WasImmuneToDamageType(powerResource, source, abilityEffectContext)) {
-                damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
-
-                ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect);
-                //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
-                baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
-            } else {
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            if (baseCharacter.CharacterStats.WasImmuneToDamageType(powerResource, source, abilityEffectContext)) {
+                return false;
             }
 
+            damage = (int)(damage * MyBaseCharacter.CharacterStats.GetIncomingDamageModifiers());
+
+            ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect);
+            //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
+            baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
+            return true;
         }
 
         public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
@@ -452,8 +457,7 @@ namespace AnyRPG {
                 // MAY WANT TO CHANGE THIS IF DODGE MECHANICS ARE A IMPORTANT PART OF GAMEPLAY
 
                 if (canPerformAbility) {
-                    TakeDamageCommon(abilityEffectContext, powerResource, damage, sourceCharacter, combatMagnitude, abilityEffect);
-                    return true;
+                    return TakeDamageCommon(abilityEffectContext, powerResource, damage, sourceCharacter, combatMagnitude, abilityEffect);
                 }
             } else {
                 //Debug.Log("Something is trying to damage our dead character!!!");

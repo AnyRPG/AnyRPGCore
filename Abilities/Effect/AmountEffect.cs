@@ -73,7 +73,7 @@ namespace AnyRPG {
 
         public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             if (abilityEffectInput == null) {
-                //Debug.Log("AttackEffect.PerformAbilityEffect() abilityEffectInput is null!");
+                //Debug.Log("AttackEffect.PerformAbilityHit() abilityEffectInput is null!");
             }
             if (source == null || target == null) {
                 // something died or despawned mid cast
@@ -108,12 +108,16 @@ namespace AnyRPG {
                     }
                 }
                 finalAmount += (int)(inputAmount * inputMultiplier);
+                //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit() input: " + inputAmount + "; multiplier: " + inputMultiplier + "; final: " + finalAmount);
 
                 abilityEffectOutput.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
 
                 if (finalAmount > 0) {
                     // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                    ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectInput, resourceAmountNode.PowerResource);
+                    if (!ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectInput, resourceAmountNode.PowerResource)) {
+                        // if we didn't successfully hit, we can't continue on 
+                        return;
+                    }
                 }
             }
 
@@ -123,8 +127,9 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
-        public virtual void ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+        public virtual bool ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
             // nothing here for now, override by heal or attack
+            return true;
         }
 
         public override void SetupScriptableObjects() {

@@ -330,7 +330,9 @@ namespace AnyRPG {
             UpdatePowerResourceDictionary();
         }
 
-        public void InitializeSecondaryStats() { 
+        public void InitializeSecondaryStats() {
+            //Debug.Log(gameObject.name + ".CharacterStats.InitializeSecondaryStats()");
+
             // setup the secondary stats from the system defined enum
             foreach (SecondaryStatType secondaryStatType in Enum.GetValues(typeof(SecondaryStatType))) {
                 if (!secondaryStats.ContainsKey(secondaryStatType)) {
@@ -433,6 +435,7 @@ namespace AnyRPG {
         }
 
         private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem, bool recalculate = true) {
+            //Debug.Log(gameObject.name + ".CharacterStats.CalculateEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (newItem != null) {
 
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
@@ -679,9 +682,6 @@ namespace AnyRPG {
 
         public virtual bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
-                }
                 return true;
             }
             return false;
@@ -964,11 +964,18 @@ namespace AnyRPG {
             }
         }
 
-        public void AddResourceAmount(string resourceName, float newAmount) {
+        /// <summary>
+        /// return true if resource could be added, false if not
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="newAmount"></param>
+        /// <returns></returns>
+        public bool AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
             PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
 
+            bool returnValue = false;
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
                 powerResourceDictionary[tmpPowerResource].currentValue += newAmount;
                 powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
@@ -976,17 +983,24 @@ namespace AnyRPG {
                     0,
                     (int)GetPowerResourceMaxAmount(tmpPowerResource));
                 OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
+                returnValue = true;
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             }
+            return returnValue;
         }
 
-        public virtual void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+        public virtual bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+            //Debug.Log(gameObject.name + ".CharacterStats.RecoverResource(" + amount + ")");
 
-            AddResourceAmount(powerResource.DisplayName, amount);
+            bool returnValue = AddResourceAmount(powerResource.DisplayName, amount);
+            if (returnValue == false) {
+                return false;
+            }
             if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
+            return true;
         }
 
         /// <summary>

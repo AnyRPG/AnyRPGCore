@@ -365,13 +365,16 @@ namespace AnyRPG {
             }
         }
 
-        public AbilityEffectContext ApplyInputMultiplier(AbilityEffectContext abilityEffectInput) {
+        public AbilityEffectContext ApplyInputMultiplier(AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier()");
 
-            foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
+            foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectContext.resourceAmounts) {
+                //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier(): before: " + resourceInputAmountNode.amount);
                 resourceInputAmountNode.amount = (int)(resourceInputAmountNode.amount * inputMultiplier);
+                //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier(): after: " + resourceInputAmountNode.amount);
             }
 
-            return abilityEffectInput;
+            return abilityEffectContext;
         }
 
         public override void SetupScriptableObjects() {

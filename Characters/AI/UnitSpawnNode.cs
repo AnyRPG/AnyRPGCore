@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         [Tooltip("a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units")]
         [SerializeField]
-        private int DespawnTimer = 0;
+        private int despawnTimer = 60;
 
         [Tooltip("The maximum number of units that can be active at once.  Once this limit is reached, spawns will be paused until a unit dies. set to -1 to do infinite spawns")]
         [SerializeField]
@@ -332,7 +332,7 @@ namespace AnyRPG {
         }
 
         private void SpawnWithDelay() {
-            //Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
+            Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
 
             if (suppressAutoSpawn) {
                 return;
@@ -353,7 +353,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator StartSpawnDelayCountDown() {
-            //Debug.Log(gameObject.name + "UnitSpawnNode.StartSpawnDelayCountDown()");
+            Debug.Log(gameObject.name + "UnitSpawnNode.StartSpawnDelayCountDown()");
             float currentDelayTimer = spawnDelay;
             while (currentDelayTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
@@ -374,7 +374,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator StartSpawnCountdown(int countdownTime) {
-            //Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
+            Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
             float currentTimer = countdownTime;
             while (currentTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
@@ -387,14 +387,14 @@ namespace AnyRPG {
         }
 
         public void HandleDespawn(GameObject _gameObject) {
-            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + DespawnTimer);
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + despawnTimer);
             if (spawnReferences.Contains(_gameObject)) {
                 spawnReferences.Remove(_gameObject);
             }
-            if (DespawnTimer > -1) {
+            if (despawnTimer > -1) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + DespawnTimer + "; starting despawn countdown");
                 if (countDownRoutine == null) {
-                    countDownRoutine = StartCoroutine(StartSpawnCountdown(DespawnTimer));
+                    countDownRoutine = StartCoroutine(StartSpawnCountdown(despawnTimer));
                 } else {
                     //Debug.Log("Countdown routine already in progress, not starting new countdown");
                 }

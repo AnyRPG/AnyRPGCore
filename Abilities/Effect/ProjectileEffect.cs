@@ -10,9 +10,9 @@ namespace AnyRPG {
 
         public float projectileSpeed = 0;
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".ProjectileEffect.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             if (returnObjects != null) {
                 foreach (GameObject go in returnObjects.Values) {
                     //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name);
@@ -20,8 +20,8 @@ namespace AnyRPG {
                     ProjectileScript projectileScript = go.GetComponent<ProjectileScript>();
                     if (projectileScript != null) {
                         //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
-                        abilityEffectInput = ApplyInputMultiplier(abilityEffectInput);
-                        projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), abilityEffectInput);
+                        abilityEffectContext = ApplyInputMultiplier(abilityEffectContext);
+                        projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), abilityEffectContext);
                         projectileScript.OnCollission += HandleCollission;
                     }
                 }

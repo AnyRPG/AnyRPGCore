@@ -34,6 +34,16 @@ namespace AnyRPG {
             (baseCharacter.CharacterController as AIController).ApplyControlEffects((source as CharacterAbilityManager).BaseCharacter);
         }
 
+        public override bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            bool returnValue =  base.WasImmuneToDamageType(powerResource, sourceCharacter, abilityEffectContext);
+            if (returnValue == true) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                }
+            }
+            return returnValue;
+        }
+
     }
 
 }

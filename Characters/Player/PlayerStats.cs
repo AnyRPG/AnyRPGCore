@@ -207,9 +207,13 @@ namespace AnyRPG {
             CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
         }
 
-        public override void RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            base.RecoverResource(abilityEffectContext, powerResource, amount, source, showCombatText, combatMagnitude);
+        public override bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
+            bool returnValue = base.RecoverResource(abilityEffectContext, powerResource, amount, source, showCombatText, combatMagnitude);
+            if (returnValue == false) {
+                return false;
+            }
             CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+            return returnValue;
         }
 
     }
