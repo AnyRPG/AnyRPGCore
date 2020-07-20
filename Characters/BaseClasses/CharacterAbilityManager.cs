@@ -1180,8 +1180,12 @@ namespace AnyRPG {
         /// <returns></returns>
         public override float GetPhysicalDamage() {
             if (baseCharacter != null  && baseCharacter.CharacterStats != null) {
+
+                // not needed anymore after stat system upgrade ?
                 // +damage stat from gear
-                float returnValue = GetPhysicalPower();
+                //float returnValue = GetPhysicalPower();
+
+                float returnValue = 0f;
 
                 // weapon damage
                 if (baseCharacter.CharacterEquipmentManager != null) {
