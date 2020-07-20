@@ -367,7 +367,7 @@ namespace AnyRPG {
         /// spawn a unit if the trigger conditions are met, then start the countdown for the next spawn
         /// </summary>
         private void SpawnWithDelay() {
-            Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
+            //Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
 
             if (suppressAutoSpawn) {
                 return;
@@ -396,7 +396,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         private IEnumerator StartSpawnDelayCountDown() {
-            Debug.Log(gameObject.name + "UnitSpawnNode.StartSpawnDelayCountDown()");
+            //Debug.Log(gameObject.name + "UnitSpawnNode.StartSpawnDelayCountDown()");
             float currentDelayTimer = spawnDelay;
             while (currentDelayTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
@@ -422,7 +422,7 @@ namespace AnyRPG {
         /// <param name="countdownTime"></param>
         /// <returns></returns>
         private IEnumerator StartSpawnCountdown(int countdownTime) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
             float currentTimer = countdownTime;
             while (currentTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
@@ -451,14 +451,14 @@ namespace AnyRPG {
         }
 
         public void HandleDespawn(GameObject _gameObject) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
             if (respawnOn != respawnCondition.Despawn) {
                 return;
             }
         }
 
         public void HandleLootComplete(GameObject _gameObject) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + respawnTimer);
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleLootComplete(): timer: " + respawnTimer);
             if (respawnOn != respawnCondition.Loot) {
                 return;
             }
@@ -466,7 +466,7 @@ namespace AnyRPG {
         }
 
         public void HandleDie(CharacterStats characterStats) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + respawnTimer);
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDie(): timer: " + respawnTimer);
             if (respawnOn != respawnCondition.Death) {
                 return;
             }

@@ -466,7 +466,10 @@ namespace AnyRPG {
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
                 if (targetCharacterUnit != null) {
-                    bool targetIsSelf = (target == baseCharacter.CharacterUnit.gameObject);
+                    bool targetIsSelf = false;
+                    if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
+                        targetIsSelf = (target == baseCharacter.CharacterUnit.gameObject);
+                    }
                     if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
                         target = null;
                     }
