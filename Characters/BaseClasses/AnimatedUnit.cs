@@ -31,6 +31,8 @@ namespace AnyRPG {
 
         private CharacterUnit characterUnit;
 
+        protected INamePlateTarget namePlateTarget;
+
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
 
         /*
@@ -46,6 +48,8 @@ namespace AnyRPG {
         public Rigidbody MyRigidBody { get => rigidBody; set => rigidBody = value; }
         public CharacterMotor MyCharacterMotor { get => characterMotor; set => characterMotor = value; }
         public CharacterAnimator MyCharacterAnimator { get => characterAnimator; set => characterAnimator = value; }
+        public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
+
         //public BaseCharacter MyBaseCharacter { get => MyCharacter; }
 
         protected virtual void Awake() {
@@ -126,6 +130,7 @@ namespace AnyRPG {
             characterMotor = GetComponent<CharacterMotor>();
             characterAnimator = GetComponent<CharacterAnimator>();
             characterUnit = GetComponent<CharacterUnit>();
+            namePlateTarget = GetComponent<INamePlateTarget>();
             /*
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();

@@ -14,6 +14,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        public event System.Action<GameObject> OnLootComplete = delegate { };
+
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
 
@@ -148,6 +150,7 @@ namespace AnyRPG {
             }
             if (lootTables == null || lootTables.Count == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table was null, despawning");
+                OnLootComplete(gameObject);
                 Despawn();
                 return;
             }
@@ -165,7 +168,7 @@ namespace AnyRPG {
                         characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.DisplayName)].CancelStatusEffect();
                     }
                 }
-
+                OnLootComplete(gameObject);
                 Despawn();
             }/* else {
                 // 2. moved here from below to prevent dead units that have been looted from re-displaying their health bar

@@ -4,10 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
     public class UnitSpawnNode : MonoBehaviour, IPrerequisiteOwner {
+
+        [Header("Spawn GameObject")]
 
         [SerializeField]
         private List<string> unitProfileNames = new List<string>();
@@ -16,6 +19,8 @@ namespace AnyRPG {
 
         [SerializeField]
         private List<GameObject> spawnPrefabs = new List<GameObject>();
+
+        [Header("Unit Level and Toughness")]
 
         [SerializeField]
         private bool dynamicLevel = true;
@@ -27,7 +32,13 @@ namespace AnyRPG {
         [SerializeField]
         private int extraLevels = 0;
 
-        [Tooltip("spawn time for regular mob spawns")]
+        [Tooltip("If a unit has no toughness set, this toughness will be used.")]
+        [SerializeField]
+        private string defaultToughness = string.Empty;
+
+        [Header("Timers")]
+
+        [Tooltip("spawn time for regular mob spawns, such as when prerequisites are updated, or the spawner supports multiple units and they should not all spawn at once")]
         [SerializeField]
         private int spawnTimer = 0;
 
@@ -35,11 +46,20 @@ namespace AnyRPG {
         [SerializeField]
         private int spawnDelay = 0;
 
-        //private int defaultSpawnDelay = 0;
+        [Tooltip("An extra delay from the time the Destroy GameObject call is made before it is actually destroyed.")]
+        [SerializeField]
+        private float despawnDelay = 0f;
 
         [Tooltip("a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units")]
+        [FormerlySerializedAs("despawnTimer")]
         [SerializeField]
-        private int despawnTimer = 60;
+        private int respawnTimer = 60;
+
+        [Tooltip("On which event should the respawn timer be started.")]
+        [SerializeField]
+        private respawnCondition respawnOn;
+
+        [Header("Options")]
 
         [Tooltip("The maximum number of units that can be active at once.  Once this limit is reached, spawns will be paused until a unit dies. set to -1 to do infinite spawns")]
         [SerializeField]
@@ -68,12 +88,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool forceDespawnUnits = false;
 
-        [SerializeField]
-        private float despawnDelay = 0f;
+        [Header("Prerequisites")]
 
-        [Tooltip("If a unit has no toughness set, this toughness will be used.")]
+        [Tooltip("conditions must be met for spawner to spawn nodes")]
         [SerializeField]
-        private string defaultToughness = string.Empty;
+        private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         protected UnitToughness unitToughness = null;
 
@@ -84,16 +103,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        /*
-        private float currentTimer = 0f;
-        private float currentDelayTimer = 0f;
-        */
-
         private List<GameObject> spawnReferences = new List<GameObject>();
-
-        // conditions must be met for spawner to spawn nodes
-        [SerializeField]
-        private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
 
         // later on make this spawn mob as player walks into collider ;>
@@ -155,7 +165,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            
+
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
@@ -289,7 +299,7 @@ namespace AnyRPG {
             if (unitProfiles.Count == 0) {
                 return;
             }
-            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
+            if (CanTriggerSpawn()) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
                 if (unitProfiles[spawnIndex].UnitPrefab != null) {
                     CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].UnitPrefab, unitToughness);
@@ -317,8 +327,19 @@ namespace AnyRPG {
             spawnReference.transform.forward = transform.forward;
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
             CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
-            if (_characterUnit != null) {
-                _characterUnit.OnDespawn += HandleDespawn;
+            if (respawnOn == respawnCondition.Despawn) {
+                if (_characterUnit != null) {
+                    _characterUnit.OnDespawn += HandleDespawn;
+                }
+            } else if (respawnOn == respawnCondition.Loot) {
+                LootableCharacter _lootableCharacter = spawnReference.GetComponent<LootableCharacter>();
+                if (_lootableCharacter != null) {
+                    _lootableCharacter.OnLootComplete += HandleLootComplete;
+                }
+            } else if (respawnOn == respawnCondition.Death) {
+                if (_characterUnit != null && _characterUnit.MyCharacter != null && _characterUnit.MyCharacter.CharacterStats != null) {
+                    _characterUnit.MyCharacter.CharacterStats.OnDie += HandleDie;
+                }
             }
             // don't override an existing toughness
             if (_characterUnit.MyCharacter.UnitToughness == null) {
@@ -331,6 +352,20 @@ namespace AnyRPG {
             spawnReferences.Add(spawnReference);
         }
 
+        /// <summary>
+        /// if the maximum unit count is not exceeded and the prerequisites are met, return true
+        /// </summary>
+        /// <returns></returns>
+        private bool CanTriggerSpawn() {
+            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// spawn a unit if the trigger conditions are met, then start the countdown for the next spawn
+        /// </summary>
         private void SpawnWithDelay() {
             Debug.Log(gameObject.name + "UnitSpawnNode.SpawnWithDelay()");
 
@@ -341,17 +376,25 @@ namespace AnyRPG {
                 return;
             }
             // this method is necessary to ensure that the main spawn count cycle is followed and the delay does not get directly added to the restart time
-            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
+            if (CanTriggerSpawn()) {
+                // if the countdown routine is not null, then there is already a regular spawn count or respawn count in progress
                 if (countDownRoutine == null) {
-                    countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
-                    // AVOID MULTIPLE SPAWNS DUE TO TRIGGER BY PREREQUISITES ON A NODE WITH A ZERO DELAY TIME -- MOVED INSIDE OUTER ROUTINE CHECK
+
+                    // if the delay routine is not null, then there is already a spawn delay in progress so we do not want to start another one
                     if (delayRoutine == null) {
                         delayRoutine = StartCoroutine(StartSpawnDelayCountDown());
                     }
+
+                    // now that we have spawned the mob (or at least started its additional delay timer), we will start the regular countdown
+                    countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
                 }
             }
         }
 
+        /// <summary>
+        /// Perform a spawn delay after Spawn() is called and before the unit actually spawns
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator StartSpawnDelayCountDown() {
             Debug.Log(gameObject.name + "UnitSpawnNode.StartSpawnDelayCountDown()");
             float currentDelayTimer = spawnDelay;
@@ -373,6 +416,11 @@ namespace AnyRPG {
             spawnReferences.Clear();
         }
 
+        /// <summary>
+        /// perform a countdown before calling Spawn()
+        /// </summary>
+        /// <param name="countdownTime"></param>
+        /// <returns></returns>
         private IEnumerator StartSpawnCountdown(int countdownTime) {
             Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
             float currentTimer = countdownTime;
@@ -386,21 +434,44 @@ namespace AnyRPG {
             SpawnWithDelay();
         }
 
-        public void HandleDespawn(GameObject _gameObject) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + despawnTimer);
+        public void ProcessRespawn(GameObject _gameObject) {
             if (spawnReferences.Contains(_gameObject)) {
                 spawnReferences.Remove(_gameObject);
             }
-            if (despawnTimer > -1) {
+            if (respawnTimer > -1) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + DespawnTimer + "; starting despawn countdown");
                 if (countDownRoutine == null) {
-                    countDownRoutine = StartCoroutine(StartSpawnCountdown(despawnTimer));
+                    countDownRoutine = StartCoroutine(StartSpawnCountdown(respawnTimer));
                 } else {
                     //Debug.Log("Countdown routine already in progress, not starting new countdown");
                 }
             } else {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + DespawnTimer + "; NOT STARTING DESPAWN COUNTDOWN");
             }
+        }
+
+        public void HandleDespawn(GameObject _gameObject) {
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
+            if (respawnOn != respawnCondition.Despawn) {
+                return;
+            }
+        }
+
+        public void HandleLootComplete(GameObject _gameObject) {
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + respawnTimer);
+            if (respawnOn != respawnCondition.Loot) {
+                return;
+            }
+            ProcessRespawn(_gameObject);
+        }
+
+        public void HandleDie(CharacterStats characterStats) {
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + respawnTimer);
+            if (respawnOn != respawnCondition.Death) {
+                return;
+            }
+            // this works because unit spawn nodes do not spawn players.  If they ever do, this will need to reference stats->unit->gameobject instead
+            ProcessRespawn(characterStats.gameObject);
         }
 
         public void OnTriggerEnter(Collider other) {
@@ -467,5 +538,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum respawnCondition { Despawn, Loot, Death };
 
 }

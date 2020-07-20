@@ -91,15 +91,18 @@ namespace AnyRPG {
         public NamePlateController MyNamePlate { get => namePlate; set => namePlate = value; }
         public string UnitDisplayName { get => (MyCharacter != null ? MyCharacter.CharacterName : interactionPanelTitle); }
         public string Title { get => (MyCharacter != null ? MyCharacter.Title : string.Empty); }
-        public string MyUnitFrameTarget { get => unitFrameTarget; }
+        public string UnitFrameTarget { get => unitFrameTarget; }
         public string MyPlayerPreviewTarget { get => playerPreviewTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
         public BaseCharacter BaseCharacter { get => MyCharacter; }
-        public Transform MyNamePlateTransform {
+        public Transform NamePlateTransform {
             get {
                 if (mounted) {
+                    if (baseCharacter.AnimatedUnit.NamePlateTarget != null) {
+                        return baseCharacter.AnimatedUnit.NamePlateTarget.NamePlateTransform;
+                    }
                     return baseCharacter.AnimatedUnit.transform;
                 }
                 if (namePlateTransform != null) {
@@ -521,8 +524,6 @@ namespace AnyRPG {
             if (despawnCoroutine == null && gameObject.activeSelf == true && isActiveAndEnabled) {
                 despawnCoroutine = StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
             }
-            // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
-            OnDespawn(gameObject);
         }
 
         public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
@@ -541,7 +542,10 @@ namespace AnyRPG {
             if (baseCharacter.CharacterStats.IsAlive == false || forceDespawn == true) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
+                // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
+                OnDespawn(gameObject);
                 Destroy(gameObject);
+
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }

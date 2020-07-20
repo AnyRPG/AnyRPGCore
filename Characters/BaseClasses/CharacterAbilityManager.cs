@@ -198,36 +198,7 @@ namespace AnyRPG {
             return base.GetMeleeRange();
         }
 
-        /// <summary>
-        /// Return false if the target does not meet the faction requirements
-        /// </summary>
-        /// <param name="baseAbility"></param>
-        /// <param name="targetCharacterUnit"></param>
-        /// <param name="targetIsSelf"></param>
-        /// <returns></returns>
-        public override bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
-
-            if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
-                //targetIsEnemy = true;
-                if (!targetableEffect.CanCastOnEnemy) {
-                    //Debug.Log(MyName + ": Can't cast on enemy. return false");
-                    return false;
-                }
-            }
-
-            // this if statement is needed because self will return as a friendly target
-            if (!targetIsSelf) {
-                if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) >= 0) {
-                    //targetIsFriendly = true;
-                    if (!targetableEffect.CanCastOnFriendly) {
-                        //Debug.Log(MyName + ": Can't cast on friendly. return false");
-                        return false;
-                    }
-                }
-            }
-
-            return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
-        }
+        
 
         public override float GetThreatModifiers() {
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
@@ -455,6 +426,39 @@ namespace AnyRPG {
             StopAllCoroutines();
         }
 
+        /// <summary>
+        /// Return false if the target does not meet the faction requirements
+        /// </summary>
+        /// <param name="baseAbility"></param>
+        /// <param name="targetCharacterUnit"></param>
+        /// <param name="targetIsSelf"></param>
+        /// <returns></returns>
+        public override bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
+
+            if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
+                //targetIsEnemy = true;
+                if (!targetableEffect.CanCastOnEnemy) {
+                    //Debug.Log(MyName + ": Can't cast on enemy. return false");
+                    return false;
+                }
+            }
+
+            // this if statement is needed because self will return as a friendly target
+            if (!targetIsSelf) {
+                // set to > 0 to prevent neutral characters from failing this check
+                // monitor for breakage such as not being able to ressurect neutral characters
+                if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) > 0) {
+                    //targetIsFriendly = true;
+                    if (!targetableEffect.CanCastOnFriendly) {
+                        //Debug.Log(MyName + ": Can't cast on friendly. return false");
+                        return false;
+                    }
+                }
+            }
+
+            return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
+        }
+
         // this ability exists to allow a caster to auto-self cast
         public override GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
             //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ", " + (target == null ? "null" : target.name) + ")");
@@ -462,6 +466,12 @@ namespace AnyRPG {
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
                 if (targetCharacterUnit != null) {
+                    bool targetIsSelf = (target == baseCharacter.CharacterUnit.gameObject);
+                    if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
+                        target = null;
+                    }
+                    // swapped out the below code with the faction check routine.  monitor for breakage
+                    /*
                     if (!abilityEffect.CanCastOnEnemy) {
                         if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
                             //Debug.Log("we cannot cast this on an enemy but the target was an enemy.  set target to null");
@@ -469,11 +479,14 @@ namespace AnyRPG {
                         }
                     }
                     if (!abilityEffect.CanCastOnFriendly) {
-                        if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) >= 0) {
+                        // change from >= 0 to > 0 to prevent this from failing on a neutral character
+                        // monitor for breakage such as attempt to ressurect neutral character
+                        if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) > 0) {
                             //Debug.Log("we cannot cast this on a friendly target but the target was friendly.  set target to null");
                             target = null;
                         }
                     }
+                    */
                 } else {
                     //Debug.Log("target did not have a characterUnit.  set target to null");
                     target = null;

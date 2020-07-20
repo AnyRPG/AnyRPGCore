@@ -59,10 +59,10 @@ namespace AnyRPG {
         public string UnitDisplayName { get => displayName; }
         public string Title { get => string.Empty; }
         public Faction Faction { get => null; }
-        public string MyUnitFrameTarget { get => unitFrameTarget; }
+        public string UnitFrameTarget { get => unitFrameTarget; }
         public Vector3 MyUnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
         public Vector3 MyUnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
-        public Transform MyNamePlateTransform {
+        public Transform NamePlateTransform {
             get {
                 if (namePlateTransform != null) {
                     return namePlateTransform;

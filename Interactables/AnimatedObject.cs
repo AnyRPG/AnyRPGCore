@@ -59,10 +59,11 @@ namespace AnyRPG {
         private IEnumerator animateObject(Vector3 newAngle, Vector3 newPosition, AudioProfile audioProfile) {
             Quaternion originalRotation = interactable.MySpawnReference.transform.localRotation;
             Vector3 originalPosition = interactable.MySpawnReference.transform.localPosition;
-            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
+            Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
 
             AudioSource audioSource = interactable.MySpawnReference.GetComponent<AudioSource>();
             if (audioSource != null && audioProfile != null && audioProfile.AudioClip != null) {
+                Debug.Log(gameObject.name + ".AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
                 audioSource.PlayOneShot(audioProfile.AudioClip);
             }
 

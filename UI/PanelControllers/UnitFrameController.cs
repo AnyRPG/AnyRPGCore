@@ -369,7 +369,7 @@ namespace AnyRPG {
         private void GetFollowTarget() {
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForFollowTarget()");
             Transform targetBone = followGameObject.transform;
-            string unitFrameTarget = followGameObject.GetComponent<INamePlateUnit>().MyUnitFrameTarget;
+            string unitFrameTarget = followGameObject.GetComponent<INamePlateUnit>().UnitFrameTarget;
             //Debug.Log("Unit Frame: Searching for target: " + unitFrameTarget);
             if (unitFrameTarget != string.Empty) {
                 if (followGameObject != null) {

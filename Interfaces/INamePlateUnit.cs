@@ -15,13 +15,13 @@ namespace AnyRPG {
         event System.Action OnNameChange;
 
         NamePlateController MyNamePlate { get; set; }
-        string MyUnitFrameTarget { get; }
+        string UnitFrameTarget { get; }
         Vector3 MyUnitFrameCameraPositionOffset { get; set; }
         Vector3 MyUnitFrameCameraLookOffset { get; set; }
         string UnitDisplayName { get; }
         string Title { get; }
         Faction Faction { get; }
-        Transform MyNamePlateTransform { get; }
+        Transform NamePlateTransform { get; }
         Interactable MyInteractable { get; }
         bool SuppressFaction { get; }
         int Level { get; }

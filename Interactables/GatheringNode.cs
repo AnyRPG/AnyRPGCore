@@ -42,6 +42,32 @@ namespace AnyRPG {
             }
         }
 
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+
+            // because the skill is a special type of prerequisite, we need to be notified when it changes
+            SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChange;
+        }
+
+        public override void CleanupEventSubscriptions() {
+            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CleanupEventSubscriptions();
+
+            SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChange;
+        }
+
+        public void HandleAbilityListChange(BaseAbility baseAbility) {
+            HandlePrerequisiteUpdates();
+        }
+
+
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
             if (lootTableNames == null) {
