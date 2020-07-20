@@ -60,7 +60,9 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChange;
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChange;
+            }
         }
 
         public void HandleAbilityListChange(BaseAbility baseAbility) {
