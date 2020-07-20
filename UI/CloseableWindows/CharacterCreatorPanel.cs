@@ -176,7 +176,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.MyPreviewUnit.transform);
+                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnit.transform);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -186,7 +186,7 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
                 //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
             } else {
