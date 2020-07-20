@@ -38,6 +38,7 @@ namespace AnyRPG {
                 if (damageType == DamageType.physical) {
                     amountAddModifier = sourceCharacter.GetPhysicalPower();
                 } else if (damageType == DamageType.ability) {
+                    //spells can tick so a spell damage multiplier is additionally calculated for the tick share of damage based on tick rate
                     amountAddModifier = sourceCharacter.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
                 }
             }
@@ -54,7 +55,7 @@ namespace AnyRPG {
 
             if (damageType == DamageType.physical) {
                 
-                // additive damage modifiers from gear +damage stat and weapons
+                // additive damage from weapons
                 amountAddModifier += sourceCharacter.GetPhysicalDamage();
 
                 // since all damage so far is DPS, we need to multiply it by the attack length.
