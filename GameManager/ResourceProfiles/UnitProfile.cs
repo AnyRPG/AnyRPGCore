@@ -13,8 +13,15 @@ namespace AnyRPG {
 
         [Header("Unit")]
 
-        [Tooltip("The physical game object to spawn for this unit")]
+        [Tooltip("If true, the unit prefab is loaded by searching for prefabProfile with the same name as this resource name and the word Unit appended.  Eg: BabyCornPlantUnit")]
         [SerializeField]
+        private bool automaticPrefabProfile = true;
+
+        [Tooltip("The name of the prefab profile that contains the gameObject that represents the unit")]
+        [SerializeField]
+        private string prefabProfileName = string.Empty;
+
+        // The physical game object to spawn for this unit
         private GameObject unitPrefab = null;
 
         [Tooltip("Mark this if true is the unit is an UMA unit")]
@@ -253,29 +260,42 @@ namespace AnyRPG {
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
-
             }
+
             if (characterClass == null && characterClassName != null && characterClassName != string.Empty) {
                 CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
-
             }
+
             if (unitType == null && unitTypeName != null && unitTypeName != string.Empty) {
                 UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
                 if (tmpUnitType != null) {
                     unitType = tmpUnitType;
                     //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (automaticPrefabProfile == true) {
+                prefabProfileName = RawDisplayName + "unit";
+            }
+            if (prefabProfileName != null && prefabProfileName != string.Empty) {
+                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
+                if (tmpPrefabProfile != null) {
+                    unitPrefab = tmpPrefabProfile.MyPrefab;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
 
             }
+
         }
 
     }
