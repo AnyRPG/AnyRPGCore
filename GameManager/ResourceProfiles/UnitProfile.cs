@@ -284,7 +284,7 @@ namespace AnyRPG {
             }
 
             if (automaticPrefabProfile == true) {
-                prefabProfileName = RawDisplayName + "unit";
+                prefabProfileName = MyName + "unit";
             }
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
