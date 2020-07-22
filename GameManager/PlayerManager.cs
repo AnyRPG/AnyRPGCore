@@ -55,8 +55,8 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultCharacterCreatorUnitProfileName = string.Empty;
 
-        [SerializeField]
-        private List<string> defaultUMARaceProfiles = new List<string>();
+        //[SerializeField]
+        //private List<string> defaultUMARaceProfiles = new List<string>();
 
         [SerializeField]
         private string defaultPlayerName = "Player";

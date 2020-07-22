@@ -13,11 +13,28 @@ namespace AnyRPG {
 
         [Header("Environment State")]
         
-        [Tooltip("The skybox that should be used when this environment state is active")]
+        [Tooltip("The name of the material profile that contains the skybox that should be used when this environment state is active")]
         [SerializeField]
+        private string skyBoxMaterialProfileName;
+
+        // reference to the actual material
         private Material skyBoxMaterial;
 
         public Material MySkyBoxMaterial { get => skyBoxMaterial; set => skyBoxMaterial = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (skyBoxMaterialProfileName != null && skyBoxMaterialProfileName != string.Empty) {
+                MaterialProfile tmpMaterialProfile = SystemMaterialProfileManager.MyInstance.GetResource(skyBoxMaterialProfileName);
+                if (tmpMaterialProfile != null && tmpMaterialProfile.MyEffectMaterial != null) {
+                    skyBoxMaterial = tmpMaterialProfile.MyEffectMaterial;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find material profile : " + skyBoxMaterialProfileName + " or its material while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+
+            }
+        }
     }
 
 }
