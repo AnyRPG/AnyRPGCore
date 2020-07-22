@@ -165,7 +165,7 @@ namespace AnyRPG {
                 if (tmpUnitProfile != null) {
                     defaultCharacterCreatorUnitProfile = tmpUnitProfile;
                 } else {
-                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultCharacterCreatorUnitProfileName + ".  Check Inspector");
                 }
             } else {
                 Debug.LogError("PlayerManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
