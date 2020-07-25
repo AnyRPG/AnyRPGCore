@@ -122,8 +122,6 @@ namespace AnyRPG {
                             return defaultspawnLocationMarker.transform.position;
                         }
                     }
-                    //Debug.Log("Levelmanager.GetSpawnLocation(). Could Not Find a tagged DefaultSpawnLocation.  returning scene node default" + activeSceneNode.MyDefaultSpawnPosition);
-                    return activeSceneNode.MyDefaultSpawnPosition;
                 }
             }
 
@@ -171,7 +169,21 @@ namespace AnyRPG {
         }
 
         public void SetActiveSceneNode() {
-            activeSceneNode = SystemSceneNodeManager.MyInstance.GetResource(SceneManager.GetActiveScene().name);
+
+            string activeSceneName = SceneManager.GetActiveScene().name;
+
+            // first attempt quick dictionary lookup in case this scene is not regionalized
+            activeSceneNode = SystemSceneNodeManager.MyInstance.GetResource(activeSceneName);
+
+            if (activeSceneNode == null) {
+                // attempt regional display name lookup if nothing was found in the initial lookup
+                foreach (SceneNode sceneNode in SystemSceneNodeManager.MyInstance.GetResourceList()) {
+                    if (SystemResourceManager.MatchResource(sceneNode.DisplayName, activeSceneName)) {
+                        activeSceneNode = sceneNode;
+                        return;
+                    }
+                }
+            }
         }
 
         public void PerformLevelLoadActivities() {
@@ -181,7 +193,8 @@ namespace AnyRPG {
             if (activeSceneNode != null) {
                 activeSceneNode.Visit();
             }
-            if (SceneManager.GetActiveScene().name == initializationScene) {
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            if (activeSceneName == initializationScene) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Loading Main Menu");
                 LoadLevel(mainMenuScene);
                 return;
@@ -191,7 +204,7 @@ namespace AnyRPG {
             UIManager.MyInstance.ActivateInGameUI();
             UIManager.MyInstance.DeactivatePlayerUI();
             UIManager.MyInstance.ActivateSystemMenuUI();
-            if (SceneManager.GetActiveScene().name == mainMenuScene) {
+            if (activeSceneName == mainMenuScene) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): This is the main menu scene.  Activating Main Menu");
                 SystemWindowManager.MyInstance.OpenMainMenu();
             } else {
@@ -207,7 +220,7 @@ namespace AnyRPG {
 
             // send messages to subscribers
             EventParamProperties eventParamProperties = new EventParamProperties();
-            eventParamProperties.simpleParams.StringParam = activeSceneNode.SceneName;
+            eventParamProperties.simpleParams.StringParam = (activeSceneNode == null ? activeSceneName : activeSceneNode.SceneName);
             SystemEventManager.TriggerEvent("OnLevelLoad", eventParamProperties);
 
             // activate the correct camera

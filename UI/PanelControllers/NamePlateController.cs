@@ -363,6 +363,7 @@ namespace AnyRPG {
                 } else {
                     currentCamera = CameraManager.MyInstance.MyActiveMainCamera;
                 }
+                //Debug.Log("NamePlateController.LateUpdate(): namePlateUnit: " + (namePlateUnit as MonoBehaviour).gameObject.name + "; currentcamera: " + (currentCamera == null ? "null" : currentCamera.name));
                 Vector3 relativePosition = currentCamera.WorldToViewportPoint(namePlateUnit.NamePlateTransform.position);
                 //Debug.Log("NamePlateController.LateUpdate(): the relative position of the character(" + (namePlateUnit as MonoBehaviour).gameObject.name + ") is " + relativePosition);
                 if (!(relativePosition.z >= 0 && (relativePosition.x >= 0 && relativePosition.x <= 1) && (relativePosition.y >= 0 && relativePosition.y <= 1))) {

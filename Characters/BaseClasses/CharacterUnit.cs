@@ -61,7 +61,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressFaction = false;
 
-        // the transform to use for the nameplate anchor
         [Tooltip("Drag an object in the heirarchy here and the nameplate will show at its transform location")]
         [SerializeField]
         private Transform namePlateTransform = null;

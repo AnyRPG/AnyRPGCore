@@ -13,12 +13,6 @@ namespace AnyRPG {
 
         public event System.Action OnVisitZone = delegate { };
 
-        [Header("Scene")]
-
-        [Tooltip("If there is no object in the scene tagged with DefaultSpawnLocation, then the player will spawn at these coordinates by default.")]
-        [SerializeField]
-        private Vector3 defaultSpawnPosition = Vector3.zero;
-
         [Header("Scene Audio")]
 
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
@@ -76,7 +70,6 @@ namespace AnyRPG {
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string SceneName { get => resourceName; set => resourceName = value; }
-        public Vector3 MyDefaultSpawnPosition { get => defaultSpawnPosition; set => defaultSpawnPosition = value; }
         public bool MySuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
         public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
         public AudioProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }

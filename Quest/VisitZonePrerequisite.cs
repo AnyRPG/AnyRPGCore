@@ -52,9 +52,14 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteSceneNode = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteSceneNode = SystemSceneNodeManager.MyInstance.GetResource(prerequisiteName);
+                SceneNode tmpPrerequisiteSceneNode = SystemSceneNodeManager.MyInstance.GetResource(prerequisiteName);
+                if (tmpPrerequisiteSceneNode != null) {
+                    prerequisiteSceneNode = tmpPrerequisiteSceneNode;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find scene node : " + prerequisiteName + " while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
+                }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find scene node : " + prerequisiteName + " while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): prerequisite empty while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
             }
             prerequisiteSceneNode.OnVisitZone += HandleSceneNodeVisisted;
         }

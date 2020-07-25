@@ -243,7 +243,7 @@ namespace AnyRPG {
             }
 
             if (automaticCombatStrategy == true) {
-                combatStrategyName = MyName;
+                combatStrategyName = ResourceName;
             }
             if (combatStrategyName != null && combatStrategyName != string.Empty) {
                 CombatStrategy tmpCombatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(combatStrategyName);
@@ -284,7 +284,7 @@ namespace AnyRPG {
             }
 
             if (automaticPrefabProfile == true) {
-                prefabProfileName = MyName + "unit";
+                prefabProfileName = ResourceName + "unit";
             }
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);

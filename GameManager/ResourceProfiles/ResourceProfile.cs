@@ -29,9 +29,12 @@ namespace AnyRPG {
         /// <summary>
         /// return the resourceName
         /// </summary>
-        public string MyName {
+        public string ResourceName {
             get {
                 return resourceName;
+            }
+            set {
+                resourceName = value;
             }
         }
 

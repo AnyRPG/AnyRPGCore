@@ -557,12 +557,12 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveInventorySlotData()");
             foreach (SlotScript slotScript in InventoryManager.MyInstance.GetSlots()) {
                 InventorySlotSaveData saveData = new InventorySlotSaveData();
-                saveData.MyName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.MyName);
+                saveData.MyName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ResourceName);
                 saveData.stackCount = (slotScript.MyItem == null ? 0 : slotScript.MyCount);
                 saveData.DisplayName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.DisplayName);
                 if (slotScript.MyItem != null) {
                     if (slotScript.MyItem.ItemQuality != null) {
-                        saveData.itemQuality = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ItemQuality.MyName);
+                        saveData.itemQuality = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ItemQuality.ResourceName);
                     }
                     if ((slotScript.MyItem as Equipment is Equipment)) {
                         saveData.randomSecondaryStatIndexes = (slotScript.MyItem == null ? null : (slotScript.MyItem as Equipment).RandomStatIndexes);
@@ -629,11 +629,11 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                 foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     EquipmentSaveData saveData = new EquipmentSaveData();
-                    saveData.MyName = (equipment == null ? string.Empty : equipment.MyName);
+                    saveData.MyName = (equipment == null ? string.Empty : equipment.ResourceName);
                     saveData.DisplayName = (equipment == null ? string.Empty : equipment.DisplayName);
                     if (equipment != null) {
                         if (equipment.ItemQuality != null) {
-                            saveData.itemQuality = (equipment == null ? string.Empty : equipment.ItemQuality.MyName);
+                            saveData.itemQuality = (equipment == null ? string.Empty : equipment.ItemQuality.ResourceName);
                         }
                         saveData.dropLevel = equipment.DropLevel;
                         saveData.randomSecondaryStatIndexes = (equipment == null ? null : equipment.RandomStatIndexes);

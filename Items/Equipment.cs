@@ -340,7 +340,7 @@ namespace AnyRPG {
             }
 
             if (useUMARecipe == true && (umaRecipeProfileName == null || umaRecipeProfileName == string.Empty)) {
-                umaRecipeProfileName = MyName;
+                umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
                 UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
