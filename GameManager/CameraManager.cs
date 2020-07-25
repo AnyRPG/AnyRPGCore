@@ -89,6 +89,8 @@ namespace AnyRPG {
 
         private void Awake() {
             //Debug.Log("CameraManager.Awake()");
+            CheckConfiguration();
+
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
 
@@ -100,6 +102,12 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("CameraManager.Start()");
             CreateEventSubscriptions();
+        }
+
+        private void CheckConfiguration() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
+                Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
+            }
         }
 
         public void ActivateMainCamera() {
