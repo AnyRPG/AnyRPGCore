@@ -308,14 +308,15 @@ namespace AnyRPG {
         }
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness = null) {
-            //Debug.Log(gameObject.name + "UnitSpawnNode.CommonSpawn()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
             if (spawnPrefab == null || PlayerManager.MyInstance.MyCharacter == null) {
                 return;
             }
             //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
-            GameObject spawnReference = Instantiate(spawnPrefab);
+            // testing, re-enable transform position so mobs don't spawn way above the map if their prefab has a location set
+            GameObject spawnReference = Instantiate(spawnPrefab, gameObject.transform.position, gameObject.transform.rotation);
             spawnReference.name = spawnReference.name + SystemGameManager.MyInstance.GetSpawnCount();
-            //Debug.Log("UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
             Vector3 newSpawnLocation = GetSpawnLocation();
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
             NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
