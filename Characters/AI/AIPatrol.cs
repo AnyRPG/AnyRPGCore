@@ -6,9 +6,6 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class AIPatrol : MonoBehaviour {
 
-        [SerializeField]
-        private List<string> patrolNames = new List<string>();
-
         private List<PatrolProfile> patrolProfiles = new List<PatrolProfile>();
 
         //private PatrolProfile automaticPatrol = null;
@@ -29,20 +26,21 @@ namespace AnyRPG {
         protected void Awake() {
             //Debug.Log(gameObject.name + ".AIPatrol.Awake()");
             characterUnit = GetComponent<CharacterUnit>();
-            SetupScriptableObjects();
-            FindAutomaticPatrol();
         }
 
         void Start() {
             //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);
+            // testing moved these 2 from start in case they wake-up earlier than characterUnit and can't find the unit profile to get the patrol from
+            SetupScriptableObjects();
+            FindAutomaticPatrol();
         }
 
         public void BeginPatrolByIndex(int patrolIndex) {
-            if (patrolIndex < 0 || patrolIndex >= patrolNames.Count) {
+            if (patrolIndex < 0 || patrolIndex >= patrolProfiles.Count) {
                 Debug.Log(gameObject.name + ".AIPatrol.BeginPatrolByIndex(" + patrolIndex + "): invalid index");
                 return;
             }
-            string patrolName = patrolNames[patrolIndex];
+            string patrolName = patrolProfiles[patrolIndex].DisplayName;
             BeginPatrol(patrolName);
         }
 
@@ -71,13 +69,15 @@ namespace AnyRPG {
         }
 
         private void SetupScriptableObjects() {
-            foreach (string patrolName in patrolNames) {
-                if (patrolName != null && patrolName != string.Empty) {
-                    PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
-                    if (_tmpPatrolProfile != null) {
-                        patrolProfiles.Add(_tmpPatrolProfile);
-                    } else {
-                        Debug.LogError("AIPatrol.SetupScriptableObjects: could not find patrol name: " + patrolName);
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null && characterUnit.MyCharacter.UnitProfile.PatrolNames != null) {
+                foreach (string patrolName in characterUnit.MyCharacter.UnitProfile.PatrolNames) {
+                    if (patrolName != null && patrolName != string.Empty) {
+                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+                        if (_tmpPatrolProfile != null) {
+                            patrolProfiles.Add(_tmpPatrolProfile);
+                        } else {
+                            Debug.LogError(gameObject.name + ".AIPatrol.SetupScriptableObjects: could not find patrol name: " + patrolName);
+                        }
                     }
                 }
             }

@@ -151,6 +151,13 @@ namespace AnyRPG {
 
         private List<AudioProfile> movementAudioProfiles = new List<AudioProfile>();
 
+        [Header("Patrol")]
+
+        [Tooltip("If the unit has a 'Patrol' component attached, use these patrol profiles")]
+        [SerializeField]
+        private List<string> patrolNames = new List<string>();
+
+
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
@@ -172,6 +179,7 @@ namespace AnyRPG {
         public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
+        public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
