@@ -55,7 +55,21 @@ namespace AnyRPG {
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
             CreateEventSubscriptions();
+            AddUnitProfileSettings();
+
             Spawn();
+        }
+
+        public void AddUnitProfileSettings() {
+            CharacterUnit characterUnit = GetComponent<CharacterUnit>();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
+                if (characterUnit.MyCharacter.UnitProfile.DialogList != null) {
+                    foreach (Dialog dialog in characterUnit.MyCharacter.UnitProfile.DialogList) {
+                        dialog.RegisterPrerequisiteOwner(this);
+                        dialogList.Add(dialog);
+                    }
+                }
+            }
         }
 
         public override void CreateEventSubscriptions() {

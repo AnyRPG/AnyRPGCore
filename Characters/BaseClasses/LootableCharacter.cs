@@ -19,10 +19,7 @@ namespace AnyRPG {
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
 
-        /*
-        [SerializeField]
-        private LootTable lootTable;
-        */
+        
         [Header("Loot")]
 
         [Tooltip("If true, when killed, this unit will drop the system defined currency amount for its level and toughness")]
@@ -59,8 +56,18 @@ namespace AnyRPG {
 
         protected override void Start() {
             base.Start();
-            CreateEventSubscriptions();
+            AddUnitProfileSettings();
         }
+
+        public void AddUnitProfileSettings() {
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
+                if (characterUnit.MyCharacter.UnitProfile.LootTables != null) {
+                    lootTables.AddRange(characterUnit.MyCharacter.UnitProfile.LootTables);
+                }
+                automaticCurrency = characterUnit.MyCharacter.UnitProfile.AutomaticCurrency;
+            }
+        }
+
 
         public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".LootableCharacter.GetComponentReferences()");

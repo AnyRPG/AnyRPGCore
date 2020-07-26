@@ -157,6 +157,56 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> patrolNames = new List<string>();
 
+        [Header("Loot")]
+
+        [Tooltip("If true, when killed, this unit will drop the system defined currency amount for its level and toughness")]
+        [SerializeField]
+        private bool automaticCurrency = false;
+
+        [Tooltip("Define items that can drop in this list")]
+        [SerializeField]
+        private List<string> lootTableNames = new List<string>();
+
+        private List<LootTable> lootTables = new List<LootTable>();
+
+        [Header("Dialog")]
+
+        [Tooltip("The names of the dialogs available to this character")]
+        [SerializeField]
+        private List<string> dialogNames = new List<string>();
+
+        private List<Dialog> dialogList = new List<Dialog>();
+
+        [Header("QuestGiver")]
+
+        [Tooltip("The names of the questgiver profiles available to this character")]
+        [SerializeField]
+        private List<string> questGiverProfileNames = new List<string>();
+
+        private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();
+
+        private List<QuestNode> quests = new List<QuestNode>();
+
+        [Header("Vendor")]
+
+        [Tooltip("The names of the vendor collections available to this character")]
+        [SerializeField]
+        private List<string> vendorCollectionNames = new List<string>();
+
+        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
+
+        [Header("Behavior")]
+
+        [Tooltip("The names of the behavior (profiles) available to this character")]
+        [SerializeField]
+        private List<string> behaviorNames = new List<string>();
+
+        [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
+        [SerializeField]
+        private bool useBehaviorCopy = false;
+
+        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
+
 
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
@@ -180,6 +230,12 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
+        public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
+        public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
+        public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
+        public List<QuestNode> Quests { get => quests; set => quests = value; }
+        public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
+        public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -301,8 +357,75 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
-
             }
+
+            if (lootTableNames != null) {
+                foreach (string lootTableName in lootTableNames) {
+                    LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                    if (lootTable != null) {
+                        lootTables.Add(lootTable);
+                    }
+                }
+            }
+
+            if (dialogNames != null) {
+                foreach (string dialogName in dialogNames) {
+                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+                    if (tmpDialog != null) {
+                        dialogList.Add(tmpDialog);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
+                    }
+                }
+            }
+
+            if (questGiverProfileNames != null) {
+                foreach (string questGiverProfileName in questGiverProfileNames) {
+                    QuestGiverProfile tmpQuestGiverProfile = SystemQuestGiverProfileManager.MyInstance.GetResource(questGiverProfileName);
+                    if (tmpQuestGiverProfile != null) {
+                        questGiverProfiles.Add(tmpQuestGiverProfile);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
+                if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
+                    foreach (QuestNode questNode in questGiverProfile.MyQuests) {
+                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
+                        quests.Add(questNode);
+                    }
+                }
+            }
+
+            if (vendorCollectionNames != null) {
+                foreach (string vendorCollectionName in vendorCollectionNames) {
+                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
+                    if (tmpVendorCollection != null) {
+                        vendorCollections.Add(tmpVendorCollection);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (behaviorNames != null) {
+                foreach (string behaviorName in behaviorNames) {
+                    BehaviorProfile tmpBehaviorProfile = null;
+                    if (useBehaviorCopy == true) {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                    } else {
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                    }
+                    if (tmpBehaviorProfile != null) {
+                        behaviorList.Add(tmpBehaviorProfile);
+                    }
+                }
+            }
+
+
+
 
         }
 

@@ -12,19 +12,30 @@ namespace AnyRPG {
         public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.MyIcon); }
         public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.MyNamePlateImage); }
 
-        [SerializeField]
-        private VendorItem[] items;
-
-        [SerializeField]
-        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
+        [Header("Vendor")]
 
         [SerializeField]
         private List<string> vendorCollectionNames = new List<string>();
 
+        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
+
         protected override void Start() {
             base.Start();
             interactionPanelTitle = "Purchase Items";
+
+            AddUnitProfileSettings();
+
         }
+
+        public void AddUnitProfileSettings() {
+            CharacterUnit characterUnit = GetComponent<CharacterUnit>();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
+                if (characterUnit.MyCharacter.UnitProfile.VendorCollections != null) {
+                    vendorCollections.AddRange(characterUnit.MyCharacter.UnitProfile.VendorCollections);
+                }
+            }
+        }
+
 
         public void InitWindow(ICloseableWindowContents vendorUI) {
             (vendorUI as VendorUI).PopulateDropDownList(vendorCollections);
@@ -63,7 +74,6 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (vendorCollectionNames != null && vendorCollectionNames.Count > 0) {
-                vendorCollections = new List<VendorCollection>();
                 foreach (string vendorCollectionName in vendorCollectionNames) {
                     VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
                     if (tmpVendorCollection != null) {

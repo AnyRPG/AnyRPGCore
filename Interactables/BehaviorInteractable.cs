@@ -16,14 +16,15 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider;
 
+        [Header("Behavior")]
+
         [SerializeField]
         private List<string> behaviorNames = new List<string>();
 
-        // instantiate a new behavior profile or not when loading behavior profiles
+        [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
         [SerializeField]
         private bool useBehaviorCopy = false;
 
-        //[SerializeField]
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
         private int behaviorIndex = 0;
@@ -48,9 +49,23 @@ namespace AnyRPG {
             base.Start();
             boxCollider = GetComponent<BoxCollider>();
             CreateEventSubscriptions();
+            AddUnitProfileSettings();
             Spawn();
             HandlePrerequisiteUpdates();
         }
+
+        public void AddUnitProfileSettings() {
+            CharacterUnit characterUnit = GetComponent<CharacterUnit>();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
+                if (characterUnit.MyCharacter.UnitProfile.BehaviorList != null) {
+                    foreach (BehaviorProfile behaviorProfile in characterUnit.MyCharacter.UnitProfile.BehaviorList) {
+                        behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+                        behaviorList.Add(behaviorProfile);
+                    }
+                }
+            }
+        }
+
 
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");

@@ -11,6 +11,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        [Header("QuestGiver")]
+
         [SerializeField]
         private List<string> questGiverProfileNames = new List<string>();
 
@@ -39,9 +41,24 @@ namespace AnyRPG {
 
             CreateEventSubscriptions();
 
+            AddUnitProfileSettings();
+
             // this could run after the character spawn.  check it just in case
             UpdateQuestStatus();
         }
+
+        public void AddUnitProfileSettings() {
+            CharacterUnit characterUnit = GetComponent<CharacterUnit>();
+            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
+                if (characterUnit.MyCharacter.UnitProfile.Quests != null) {
+                    foreach (QuestNode quest in characterUnit.MyCharacter.UnitProfile.Quests) {
+                        quest.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
+                        quests.Add(quest);
+                    }
+                }
+            }
+        }
+
 
         public override void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
