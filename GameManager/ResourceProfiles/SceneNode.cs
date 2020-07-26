@@ -13,6 +13,16 @@ namespace AnyRPG {
 
         public event System.Action OnVisitZone = delegate { };
 
+        [Header("Scene File")]
+
+        [Tooltip("If true, look for the resource description with the same name as this resource, plus the string 'Scene' and use the Display Name field as the file name.")]
+        [SerializeField]
+        private bool useRegionalFile = false;
+
+        [Tooltip("The name of the scene, without a path, as it is found in the Unity Build settings")]
+        [SerializeField]
+        private string sceneFile = string.Empty;
+
         [Header("Scene Audio")]
 
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
@@ -80,6 +90,7 @@ namespace AnyRPG {
         public bool Visited { get => visited; set => visited = value; }
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
+        public string SceneFile { get => sceneFile; set => sceneFile = value; }
 
         public void Visit() {
             if (visited == false) {
@@ -149,6 +160,16 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (useRegionalFile == true) {
+                ResourceDescription tmpResourceDescription = SystemResourceDescriptionManager.MyInstance.GetResource(resourceName + "Scene");
+                if (tmpResourceDescription != null) {
+                    sceneFile = tmpResourceDescription.DisplayName;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find scene file resource description : " + resourceName + "Scene while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
 
         }
 

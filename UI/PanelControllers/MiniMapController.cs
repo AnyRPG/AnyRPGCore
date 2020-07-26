@@ -146,7 +146,12 @@ namespace AnyRPG {
         }
 
         private void CommonInitialization() {
-            zoneNameText.text = SceneManager.GetActiveScene().name;
+            SceneNode sceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+            if (sceneNode != null) {
+                zoneNameText.text = sceneNode.DisplayName;
+            } else {
+                zoneNameText.text = SceneManager.GetActiveScene().name;
+            }
             this.gameObject.SetActive(true);
             StartCoroutine(WaitForFollowTarget());
         }

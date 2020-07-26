@@ -110,7 +110,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.CurrentScene == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
-                anyRPGSaveData.CurrentScene = LevelManager.MyInstance.MyDefaultStartingZone;
+                anyRPGSaveData.CurrentScene = LevelManager.MyInstance.DefaultStartingZone;
             }
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);

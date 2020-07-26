@@ -69,7 +69,7 @@ namespace AnyRPG {
                     if (tmpVendorCollection != null) {
                         vendorCollections.Add(tmpVendorCollection);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError(gameObject.name + ".Vendor.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
