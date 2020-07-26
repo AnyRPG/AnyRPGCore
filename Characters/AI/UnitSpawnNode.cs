@@ -57,7 +57,7 @@ namespace AnyRPG {
 
         [Tooltip("On which event should the respawn timer be started.")]
         [SerializeField]
-        private respawnCondition respawnOn;
+        private respawnCondition respawnOn = respawnCondition.Despawn;
 
         [Header("Options")]
 
