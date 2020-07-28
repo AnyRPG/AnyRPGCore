@@ -167,7 +167,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> lootTableNames = new List<string>();
 
-        private List<LootTable> lootTables = new List<LootTable>();
+        //private List<LootTable> lootTables = new List<LootTable>();
 
         [Header("Dialog")]
 
@@ -230,12 +230,13 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
-        public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
+        //public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
         public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
         public List<QuestNode> Quests { get => quests; set => quests = value; }
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
         public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
+        public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -356,15 +357,6 @@ namespace AnyRPG {
                     unitPrefab = tmpPrefabProfile.MyPrefab;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
-                }
-            }
-
-            if (lootTableNames != null) {
-                foreach (string lootTableName in lootTableNames) {
-                    LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
-                    if (lootTable != null) {
-                        lootTables.Add(lootTable);
-                    }
                 }
             }
 

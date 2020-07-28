@@ -61,8 +61,13 @@ namespace AnyRPG {
 
         public void AddUnitProfileSettings() {
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.LootTables != null) {
-                    lootTables.AddRange(characterUnit.MyCharacter.UnitProfile.LootTables);
+                if (characterUnit.MyCharacter.UnitProfile.LootTableNames != null) {
+                    foreach (string lootTableName in characterUnit.MyCharacter.UnitProfile.LootTableNames) {
+                        LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                        if (lootTable != null) {
+                            lootTables.Add(lootTable);
+                        }
+                    }
                 }
                 automaticCurrency = characterUnit.MyCharacter.UnitProfile.AutomaticCurrency;
             }
