@@ -162,7 +162,9 @@ namespace AnyRPG {
             }
             if (lootTables == null || lootTables.Count == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table was null, despawning");
-                OnLootComplete(gameObject);
+                if (gameObject != null) {
+                    OnLootComplete(gameObject);
+                }
                 Despawn();
                 return;
             }
