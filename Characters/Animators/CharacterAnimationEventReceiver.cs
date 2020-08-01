@@ -90,7 +90,7 @@ namespace AnyRPG {
         public void Land() {
         }
 
-        private void PlayFootStep() {
+        public void PlayFootStep() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
             if (characterUnit.BaseCharacter.UnitProfile == null ||
                 characterUnit.MovementHitProfile == null ||
