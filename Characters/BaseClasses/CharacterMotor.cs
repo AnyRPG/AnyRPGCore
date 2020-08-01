@@ -590,7 +590,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath() in frame: " + Time.frameCount);
             if (animatedUnit.MyAgent.enabled == true) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending);
-                animatedUnit.MyAgent.ResetPath();
+                if (animatedUnit.MyAgent.isOnNavMesh == true) {
+                    animatedUnit.MyAgent.ResetPath();
+                }
                 lastResetFrame = Time.frameCount;
                 //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): AFTER RESETPATH: current location: " + transform.position + "; NavMeshAgentDestination: " + animatedUnit.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + animatedUnit.MyAgent.pathPending + "; pathstatus: " + animatedUnit.MyAgent.pathStatus + "; hasPath: " + animatedUnit.MyAgent.hasPath);
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): after reset: navhaspath: " + animatedUnit.MyAgent.hasPath + "; isOnNavMesh: " + animatedUnit.MyAgent.isOnNavMesh + "; pathpending: " + animatedUnit.MyAgent.pathPending);
