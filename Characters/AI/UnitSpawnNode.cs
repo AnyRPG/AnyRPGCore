@@ -452,10 +452,11 @@ namespace AnyRPG {
         }
 
         public void HandleDespawn(GameObject _gameObject) {
-            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
             if (respawnOn != respawnCondition.Despawn) {
                 return;
             }
+            ProcessRespawn(_gameObject);
         }
 
         public void HandleLootComplete(GameObject _gameObject) {
