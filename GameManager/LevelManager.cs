@@ -195,22 +195,11 @@ namespace AnyRPG {
 
             string activeSceneName = SceneManager.GetActiveScene().name;
 
-            // first attempt quick dictionary lookup in case this scene is not regionalized
-            //activeSceneNode = SystemSceneNodeManager.MyInstance.GetResource(activeSceneName);
-
-            activeSceneNode = sceneDictionary[activeSceneName];
-
-            /*
-            if (activeSceneNode == null) {
-                // attempt regional display name lookup if nothing was found in the initial lookup
-                foreach (SceneNode sceneNode in SystemSceneNodeManager.MyInstance.GetResourceList()) {
-                    if (SystemResourceManager.MatchResource(sceneNode.DisplayName, activeSceneName)) {
-                        activeSceneNode = sceneNode;
-                        return;
-                    }
-                }
+            if (sceneDictionary.ContainsKey(activeSceneName)) {
+                activeSceneNode = sceneDictionary[activeSceneName];
+            } else {
+                activeSceneNode = null;
             }
-            */
         }
 
         public void PerformLevelLoadActivities() {

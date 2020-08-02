@@ -226,7 +226,7 @@ namespace AnyRPG {
                         AIController _aiController = aggroNode.aggroTarget.MyCharacter.CharacterController as AIController;
                         // since players don't have an agro radius, we can skip the check and drop combat automatically
                         if (_aiController != null) {
-                            if (Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, aggroNode.aggroTarget.transform.position) < _aiController.MyAggroRange) {
+                            if (Vector3.Distance(MyBaseCharacter.CharacterUnit.transform.position, aggroNode.aggroTarget.transform.position) < _aiController.AggroRadius) {
                                 // fail if we are inside the agro radius of an AI on our agro table
                                 return;
                             }
