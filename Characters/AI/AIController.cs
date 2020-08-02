@@ -3,14 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     public class AIController : BaseController {
 
-        [SerializeField]
-        private float initialAggroRange = 20f;
+        public float AggroRadius {
+            get {
+                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
+                    return baseCharacter.UnitProfile.AggroRadius;
+                }
+                return 20f;
+            }
+            set {
 
-        public float MyAggroRange { get; set; }
+            }
+        }
 
         //private bool isDead = false;
 
@@ -29,8 +37,9 @@ namespace AnyRPG {
         /// <summary>
         /// A reference to the agro range script 
         /// </summary>
+        [FormerlySerializedAs("aggroRange")]
         [SerializeField]
-        private AggroRange aggroRange = null;
+        private AggroRange aggroRangeController = null;
 
         private Vector3 startPosition = Vector3.zero;
 
@@ -71,16 +80,19 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIController.Awake()");
             base.Awake();
 
+            GetComponentReferences();
+        }
+
+        public void GetComponentReferences() {
             baseCharacter = GetComponent<AICharacter>();
             aiPatrol = GetComponent<AIPatrol>();
+        }
 
-            MyAggroRange = initialAggroRange;
-
-            if (aggroRange != null) {
+        public void SetAggroRange() {
+            if (aggroRangeController != null) {
                 //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
-                aggroRange.SetAgroRange(initialAggroRange);
+                aggroRangeController.SetAgroRange(AggroRadius);
             }
-
         }
 
         protected override void Start() {
@@ -107,6 +119,7 @@ namespace AnyRPG {
                 ChangeState(new IdleState());
             }
 
+            SetAggroRange();
         }
 
         public bool StartCombatPhase(CombatStrategyNode combatStrategyNode) {
@@ -333,7 +346,8 @@ namespace AnyRPG {
         public void Reset() {
             //Debug.Log(gameObject.name + ".AIController.Reset()");
             target = null;
-            MyAggroRange = initialAggroRange;
+            // testing - comment out below.  is there any time we ever expand or reduce it?  if not, then below line is not necessary ?
+            //AggroRadius = initialAggroRange;
             if (baseCharacter != null) {
                 baseCharacter.CharacterStats.ResetResourceAmounts();
                 if (baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterMotor != null) {
@@ -349,8 +363,8 @@ namespace AnyRPG {
 
         public void DisableAggro() {
             //Debug.Log(gameObject.name + "AIController.DisableAggro()");
-            if (aggroRange != null) {
-                aggroRange.DisableAggro();
+            if (aggroRangeController != null) {
+                aggroRangeController.DisableAggro();
                 return;
             }
             //Debug.Log(gameObject.name + "AIController.DisableAggro(): AGGRORANGE IS NULL!");
@@ -358,14 +372,14 @@ namespace AnyRPG {
 
         public void EnableAggro() {
             //Debug.Log(gameObject.name + "AIController.EnableAggro()");
-            if (aggroRange != null) {
-                aggroRange.EnableAggro();
+            if (aggroRangeController != null) {
+                aggroRangeController.EnableAggro();
             }
         }
 
         public bool AggroEnabled() {
-            if (aggroRange != null) {
-                return aggroRange.AggroEnabled();
+            if (aggroRangeController != null) {
+                return aggroRangeController.AggroEnabled();
             }
             return false;
         }

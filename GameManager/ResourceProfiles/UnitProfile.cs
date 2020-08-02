@@ -104,6 +104,13 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
+        [Header("Control")]
+
+        [Tooltip("The radius of the aggro sphere around the unit.  If any hostile characters enter this range, the character will attack them.")]
+        [FormerlySerializedAs("aggroRange")]
+        [SerializeField]
+        private float aggroRadius = 20f;
+
         [Header("Combat")]
 
         [Tooltip("If true, a combat strategy matching the unit name will be looked up and used if found")]
@@ -237,6 +244,7 @@ namespace AnyRPG {
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
         public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
+        public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
