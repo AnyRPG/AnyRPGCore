@@ -117,7 +117,9 @@ namespace AnyRPG {
             */
             ClearCoRoutine();
             gameObject.SetActive(false);
-            currentCutscene.Viewed = true;
+            if (currentCutscene != null) {
+                currentCutscene.Viewed = true;
+            }
             // if this is not a cutscene that should return, then do not, else do
             //if (currentCutscene.MyUnloadSceneOnEnd) {
             LevelManager.MyInstance.EndCutscene(currentCutscene);
