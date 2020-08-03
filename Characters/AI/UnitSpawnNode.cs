@@ -330,8 +330,13 @@ namespace AnyRPG {
             PersistentObject persistentObject = spawnReference.GetComponent<PersistentObject>();
             if (persistentObject != null) {
                 PersistentState persistentState = persistentObject.GetPersistentState();
-                newSpawnLocation = persistentState.Position;
-                newSpawnForward = persistentState.Forward;
+                if (persistentState != null) {
+                    newSpawnLocation = persistentState.Position;
+                    newSpawnForward = persistentState.Forward;
+                } else {
+                    newSpawnLocation = GetSpawnLocation();
+                    newSpawnForward = transform.forward;
+                }
             } else {
                 newSpawnLocation = GetSpawnLocation();
                 newSpawnForward = transform.forward;
@@ -498,19 +503,26 @@ namespace AnyRPG {
             if (!triggerBased) {
                 return;
             }
+
+            // only players can activate trigger based unit spawn nodes.  we don't want npcs wandering around patrolling to activate these
+            CharacterUnit _characterUnit = other.gameObject.GetComponent<CharacterUnit>();
+            if (_characterUnit == null || _characterUnit != PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
+                return;
+            }
+
             if (triggerLimit > 0 && triggerCount >= triggerLimit) {
                 // this has already been activated the number of allowed times
                 return;
             }
             triggerCount++;
 
+            // already in the middle of spawning.  do nothing
             if (countDownRoutine != null) {
                 return;
             }
-            CharacterUnit _characterUnit = other.gameObject.GetComponent<CharacterUnit>();
-            if (_characterUnit != null && _characterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
-                Spawn();
-            }
+
+            // all check passed, safe to spawn
+            Spawn();
         }
 
         public void SetupScriptableObjects() {

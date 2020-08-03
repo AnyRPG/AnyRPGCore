@@ -53,7 +53,7 @@ namespace AnyRPG {
         public Dialog MyDialog { get => dialog; set => dialog = value; }
         public bool MyUnloadSceneOnEnd { get => unloadSceneOnEnd; set => unloadSceneOnEnd = value; }
         public SceneNode MyLoadScene { get => loadScene; set => loadScene = value; }
-        public string MyTimelineName { get => timelineName; set => timelineName = value; }
+        public string TimelineName { get => timelineName; set => timelineName = value; }
         public bool RequirePlayerUnitSpawn { get => requirePlayerUnitSpawn; set => requirePlayerUnitSpawn = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }
 

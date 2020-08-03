@@ -149,6 +149,7 @@ namespace AnyRPG {
         public void EnableCutsceneCamera() {
             //Debug.Log("CameraManager.EnableCutsceneCamera()");
             if (CutsceneCameraController.MyInstance != null) {
+                //Debug.Log("CameraManager.EnableCutsceneCamera(): enabling");
                 CutsceneCameraController.MyInstance.gameObject.SetActive(true);
             }
         }
@@ -156,6 +157,7 @@ namespace AnyRPG {
         public void DisableCutsceneCamera() {
             //Debug.Log("CameraManager.DisableCutsceneCamera()");
             if (CutsceneCameraController.MyInstance != null) {
+                //Debug.Log("CameraManager.DisableCutsceneCamera(): disabling");
                 CutsceneCameraController.MyInstance.gameObject.SetActive(false);
             }
         }

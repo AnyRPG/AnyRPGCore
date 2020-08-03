@@ -496,7 +496,7 @@ namespace AnyRPG {
         /// </summary>
         Vector3 CameraRelativeInput(float inputX, float inputZ) {
             //Forward vector relative to the camera along the x-z plane   
-            Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
+            Vector3 forward = CameraManager.MyInstance.MyActiveMainCamera.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
             forward = forward.normalized;
             //Right vector relative to the camera always orthogonal to the forward vector.

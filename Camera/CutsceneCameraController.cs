@@ -22,15 +22,19 @@ namespace AnyRPG {
         // public variables
 
         private void Awake() {
-            //Debug.Log("AnyRPGCutsceneCameraController.Awake()");
+            //Debug.Log("CutsceneCameraController.Awake()");
         }
 
         private void Start() {
-            //Debug.Log("AnyRPGCutsceneCameraController.Start()");
+            //Debug.Log("CutsceneCameraController.Start()");
+        }
+
+        public void OnEnable() {
+            //Debug.Log("CutsceneCameraController.OnEnable()");
         }
 
         private void OnDisable() {
-            //Debug.Log("AnyRPGCutsceneCameraController.OnDisable()");
+            //Debug.Log("CutsceneCameraController.OnDisable()");
         }
 
         private void OnDestroy() {
@@ -45,6 +49,7 @@ namespace AnyRPG {
         }
 
         public void EndCutScene() {
+            //Debug.Log("CutsceneCameraController.EndCutScene()");
             if (UIManager.MyInstance != null && UIManager.MyInstance.MyCutSceneBarController != null) {
                 UIManager.MyInstance.MyCutSceneBarController.EndCutScene();
             }

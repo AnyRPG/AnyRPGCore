@@ -62,9 +62,6 @@ namespace AnyRPG {
                             LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
                         } else {
                             UIManager.MyInstance.MyCutSceneBarController.StartCutScene(cutscene);
-                            if (cutscene.MyTimelineName != null && cutscene.MyTimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.MyTimelineName)) {
-                                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.MyTimelineName].Play();
-                            }
                         }
                     }
                 }

@@ -238,8 +238,8 @@ namespace AnyRPG {
             //Debug.Log("UIManager.ActivateInGameUI()");
             DeactivateLoadingUI();
             inGameUI.SetActive(true);
-            if (CutsceneCameraController.MyInstance != null) {
-                CutsceneCameraController.MyInstance.gameObject.SetActive(false);
+            if (CameraManager.MyInstance != null) {
+                CameraManager.MyInstance.DisableCutsceneCamera();
             }
             if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);

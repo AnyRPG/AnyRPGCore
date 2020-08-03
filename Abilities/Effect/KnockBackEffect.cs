@@ -86,10 +86,10 @@ namespace AnyRPG {
                 }
                 colliders = Physics.OverlapSphere(explosionCenter, explosionRadius, explosionMask);
                 foreach (Collider collider in colliders) {
-                    Debug.Log(DisplayName + ".KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                    //Debug.Log(DisplayName + ".KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                     Rigidbody rigidbody = collider.gameObject.GetComponent<Rigidbody>();
                     if (rigidbody != null) {
-                        Debug.Log(DisplayName + ".KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                        //Debug.Log(DisplayName + ".KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
 
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
 

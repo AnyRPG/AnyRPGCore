@@ -402,7 +402,6 @@ namespace AnyRPG {
                     namePlateCanvasGroup.alpha = 0;
                     namePlateCanvasGroup.blocksRaycasts = false;
                 }
-                //transform.position = Camera.main.WorldToScreenPoint(characterStats.transform.position);
             } else {
                 //Debug.Log("charcterstats is null in nameplate on lateupdate in instanceid " + GetInstanceID().ToString());
             }

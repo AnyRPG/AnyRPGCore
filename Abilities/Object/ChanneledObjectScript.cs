@@ -257,14 +257,14 @@ namespace AnyRPG {
         }
 
         private void Start() {
-            orthographic = (Camera.main != null && Camera.main.orthographic);
+            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
             UpdateFromMaterialChange();
         }
 
         private void Update() {
-            orthographic = (Camera.main != null && Camera.main.orthographic);
+            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
             if (timer <= 0.0f) {
                 if (ManualMode) {
                     timer = Duration;

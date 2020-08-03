@@ -78,6 +78,10 @@ namespace AnyRPG {
         public void StartCutScene(Cutscene cutscene) {
             //Debug.Log("CutSceneBarController.StartCutScene()");
 
+            if (cutscene.TimelineName != null && cutscene.TimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.TimelineName)) {
+                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.TimelineName].Play();
+            }
+
             CameraManager.MyInstance.DeactivateMainCamera();
             CameraManager.MyInstance.EnableCutsceneCamera();
 
@@ -104,7 +108,12 @@ namespace AnyRPG {
         }
 
         public void EndCutScene() {
-            //Debug.Log("CutSceneBarController.EndCutScene()");
+            Debug.Log("CutSceneBarController.EndCutScene()");
+
+            if (currentCutscene != null && currentCutscene.TimelineName != null && currentCutscene.TimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
+                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[currentCutscene.TimelineName].Stop();
+            }
+
             topBar.gameObject.SetActive(false);
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);
