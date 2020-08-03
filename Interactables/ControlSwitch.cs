@@ -8,22 +8,28 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        [Header("Control Switch")]
+
+        [Tooltip("When successfully activated, this switch will call Interact() on the following interactables")]
         [SerializeField]
         List<InteractableOption> controlObjects = new List<InteractableOption>();
 
-        // all these switches must be in the onState for this switch to activate
+        [Tooltip("all these switches must be in the onState for this switch to activate")]
         [SerializeField]
         private List<ControlSwitch> switchGroup = new List<ControlSwitch>();
+
+        [Tooltip("The number of times this object can be activated.  0 is unlimited")]
+        [SerializeField]
+        private int activationLimit = 0;
+
+        // keep track of the number of times this switch has been activated
+        private int activationCount = 0;
 
         // can be on or off
         protected bool onState = false;
 
         public bool MyOnState { get => onState; set => onState = value; }
 
-        /*
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyAnimatedObjectInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyAnimatedObjectInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyAnimatedObjectNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyAnimatedObjectNamePlateImage : base.MyNamePlateImage); }
-        */
 
         protected override void Start() {
             base.Start();
@@ -34,6 +40,11 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            if (activationLimit > 0 && activationCount >= activationLimit) {
+                // this has already been activated the number of allowed times
+                return false;
+            }
+            activationCount++;
             if (switchGroup != null && switchGroup.Count > 0) {
                 int activeSwitches = 0;
                 foreach (ControlSwitch controlSwitch in switchGroup) {
