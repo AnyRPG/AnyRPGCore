@@ -73,6 +73,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool triggerBased = false;
 
+        [Tooltip("The number of times this object can be triggered.  0 is unlimited")]
+        [SerializeField]
+        private int triggerLimit = 0;
+
+        // keep track of the number of times this switch has been activated
+        private int triggerCount = 0;
+
+
         //[SerializeField]
         //private bool areaBased = false;
 
@@ -317,7 +325,17 @@ namespace AnyRPG {
             GameObject spawnReference = Instantiate(spawnPrefab, gameObject.transform.position, gameObject.transform.rotation);
             spawnReference.name = spawnReference.name + SystemGameManager.MyInstance.GetSpawnCount();
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
-            Vector3 newSpawnLocation = GetSpawnLocation();
+            Vector3 newSpawnLocation = Vector3.zero;
+            Vector3 newSpawnForward = Vector3.forward;
+            PersistentObject persistentObject = spawnReference.GetComponent<PersistentObject>();
+            if (persistentObject != null) {
+                PersistentState persistentState = persistentObject.GetPersistentState();
+                newSpawnLocation = persistentState.Position;
+                newSpawnForward = persistentState.Forward;
+            } else {
+                newSpawnLocation = GetSpawnLocation();
+                newSpawnForward = transform.forward;
+            }
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
             NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
             AIController aIController = spawnReference.GetComponent<AIController>();
@@ -325,7 +343,7 @@ namespace AnyRPG {
             //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
             //spawnReference.transform.position = newSpawnLocation;
             navMeshAgent.Warp(newSpawnLocation);
-            spawnReference.transform.forward = transform.forward;
+            spawnReference.transform.forward = newSpawnForward;
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
             CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
             if (respawnOn == respawnCondition.Despawn) {
@@ -452,7 +470,7 @@ namespace AnyRPG {
         }
 
         public void HandleDespawn(GameObject _gameObject) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
             if (respawnOn != respawnCondition.Despawn) {
                 return;
             }
@@ -480,6 +498,12 @@ namespace AnyRPG {
             if (!triggerBased) {
                 return;
             }
+            if (triggerLimit > 0 && triggerCount >= triggerLimit) {
+                // this has already been activated the number of allowed times
+                return;
+            }
+            triggerCount++;
+
             if (countDownRoutine != null) {
                 return;
             }

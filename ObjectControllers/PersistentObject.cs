@@ -14,6 +14,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool saveOnGameSave = false;
 
+        // should this object be moved to its new position on start.  set to false for things with navmeshagent and let the unit spawn node warp them instead
+        private bool moveOnStart = true;
+
         private Vector3 storedPosition;
 
         private Vector3 storedForwardDirection;
@@ -22,31 +25,47 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
+
         private void Awake() {
             OrchestratorStart();
         }
 
         // Start is called before the first frame update
         void Start() {
-            LoadPersistentState();
+            if (moveOnStart == true) {
+                LoadPersistentState();
+            }
         }
 
-        public void LoadPersistentState() {
-            //Debug.Log(gameObject.name + "PersistentObject.LoadPersistentState()");
+        public PersistentState GetPersistentState() {
+            //Debug.Log(gameObject.name + "PersistentObject.GetPersistentState()");
             UUID uuid = GetComponent<UUID>();
             if (uuid != null) {
                 if (LevelManager.MyInstance != null) {
-                    SceneNode activeSceneNode =  LevelManager.MyInstance.GetActiveSceneNode();
+                    SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.MyPersistentObjects != null) {
                         if (activeSceneNode.MyPersistentObjects.ContainsKey(uuid.ID)) {
                             storedUUID = activeSceneNode.MyPersistentObjects[uuid.ID].UUID;
                             storedPosition = new Vector3(activeSceneNode.MyPersistentObjects[uuid.ID].LocationX, activeSceneNode.MyPersistentObjects[uuid.ID].LocationY, activeSceneNode.MyPersistentObjects[uuid.ID].LocationZ);
                             storedForwardDirection = new Vector3(activeSceneNode.MyPersistentObjects[uuid.ID].DirectionX, activeSceneNode.MyPersistentObjects[uuid.ID].DirectionY, activeSceneNode.MyPersistentObjects[uuid.ID].DirectionZ);
-                            transform.position = storedPosition;
-                            transform.forward = storedForwardDirection;
+                            PersistentState persistentState = new PersistentState();
+                            persistentState.Position = storedPosition;
+                            persistentState.Forward = storedForwardDirection;
+                            return persistentState;
                         }
                     }
                 }
+            }
+            return null;
+        }
+
+        public void LoadPersistentState() {
+            //Debug.Log(gameObject.name + "PersistentObject.LoadPersistentState()");
+            PersistentState persistentState = GetPersistentState();
+            if (persistentState != null) {
+                transform.position = persistentState.Position;
+                transform.forward = persistentState.Forward;
             }
         }
 
@@ -130,6 +149,11 @@ namespace AnyRPG {
 
             return returnValue;
         }
+    }
+
+    public class PersistentState {
+        public Vector3 Position;
+        public Vector3 Forward;
     }
 }
 
