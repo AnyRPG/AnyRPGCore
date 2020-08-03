@@ -9,6 +9,12 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New KnockBackEffect", menuName = "AnyRPG/Abilities/Effects/KnockBackEffect")]
     public class KnockBackEffect : InstantEffect {
 
+        [Header("Knockback Type")]
+
+        [Tooltip("If knockback, calculate direction from source to target.  If explosion, calculate from point.")]
+        [SerializeField]
+        private KnockbackType knockbackType = KnockbackType.Knockback;
+
         [Header("Knockback Effect")]
 
         [SerializeField]
@@ -19,30 +25,30 @@ namespace AnyRPG {
 
         [Header("Explosion")]
 
-        [Tooltip("If true, all rigidbodies in a set radius will be affected by the knockback")]
-        [SerializeField]
-        private bool isExplosion = false;
-
         [Tooltip("The radius of the explosion.  All rigidbodies in this radius will have the force applied.")]
         [SerializeField]
         private float explosionRadius = 5f;
 
         [Tooltip("The force of the explosion.  All rigidbodies in this radius will have the force applied.")]
         [SerializeField]
-        private float explosionForce = 200f;
+        private float explosionForce = 10f;
+
+        [Tooltip("Modify the explosion to throw objects updward instead of directly sideways.")]
+        [SerializeField]
+        private float upwardModifier = 5f;
 
         [Tooltip("The layers to hit when performing the explosion.")]
         [SerializeField]
         private LayerMask explosionMask = 0;
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".KnockBackEffect.Cast()");
             if (target == null) {
                 return null;
             }
 
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
 
             Vector3 sourcePosition = source.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
@@ -53,37 +59,55 @@ namespace AnyRPG {
                 //Debug.Log("KnockBackEffect.Cast(): stop casting");
                 targetCharacterUnit.MyCharacter.CharacterAbilityManager.StopCasting();
             }
-            if (animatedUnit != null && animatedUnit.MyCharacterMotor != null) {
-                //Debug.Log("KnockBackEffect.Cast(): casting on character");
-                animatedUnit.MyCharacterMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
-            } else {
-                Rigidbody rigidbody = target.GetComponent<Rigidbody>();
-                if (rigidbody != null) {
-                    rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-                    rigidbody.AddForce(GetKnockBackVelocity(sourcePosition, targetPosition), ForceMode.VelocityChange);
-                }
-            }
 
-            if (isExplosion) {
+            if (knockbackType == KnockbackType.Knockback) {
+                if (animatedUnit != null && animatedUnit.MyCharacterMotor != null) {
+                    //Debug.Log("KnockBackEffect.Cast(): casting on character");
+                    animatedUnit.MyCharacterMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+                } else {
+                    Rigidbody rigidbody = target.GetComponent<Rigidbody>();
+                    if (rigidbody != null) {
+                        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                        rigidbody.AddForce(GetKnockBackVelocity(sourcePosition, targetPosition), ForceMode.VelocityChange);
+                    }
+                }
+            } else {
                 Collider[] colliders = new Collider[0];
                 //int playerMask = 1 << LayerMask.NameToLayer("Default");
                 //int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
                 //int validMask = (playerMask | characterMask);
                 //int validMask = playerMask;
                 //colliders = Physics.OverlapSphere(targetPosition, explosionRadius, validMask);
-                colliders = Physics.OverlapSphere(targetPosition, explosionRadius, explosionMask);
+                Vector3 explosionCenter = Vector3.zero;
+                if (abilityEffectContext.groundTargetLocation != Vector3.zero) {
+                    explosionCenter = abilityEffectContext.groundTargetLocation;
+                } else {
+                    explosionCenter = targetPosition;
+                }
+                colliders = Physics.OverlapSphere(explosionCenter, explosionRadius, explosionMask);
                 foreach (Collider collider in colliders) {
-                    //Debug.Log(MyName + "KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                    Debug.Log(DisplayName + ".KnockBackEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                     Rigidbody rigidbody = collider.gameObject.GetComponent<Rigidbody>();
                     if (rigidbody != null) {
-                        //Debug.Log(MyName + "KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                        Debug.Log(DisplayName + ".KnockBackEffect.Cast() rigidbody was not null on : " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
 
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
-                        rigidbody.AddExplosionForce(explosionForce, targetPosition, 0, 0, ForceMode.VelocityChange);
+
+                        // we have to handle player knockback specially, as they need to be in knockback state or the idle update will freeze them in place
+                        PlayerUnitMovementController playerUnitMovementController = collider.gameObject.GetComponent<PlayerUnitMovementController>();
+                        if (playerUnitMovementController != null) {
+                            playerUnitMovementController.KnockBack();
+                        }
+
+                        // if this is a character, we want to freeze their rotation.  for inanimate objects, we want rotation
+                        targetCharacterUnit = collider.gameObject.GetComponent<CharacterUnit>();
+                        if (targetCharacterUnit != null) {
+                            rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                        }
+                        rigidbody.AddExplosionForce(explosionForce, explosionCenter, 0, upwardModifier, ForceMode.VelocityChange);
                     }
                 }
             }
-
 
             return returnObjects;
         }
@@ -110,5 +134,7 @@ namespace AnyRPG {
 
 
     }
+
+    public enum KnockbackType { Knockback, Explosion };
 
 }
