@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
         public void EndCutScene() {
-            Debug.Log("CutSceneBarController.EndCutScene()");
+            //Debug.Log("CutSceneBarController.EndCutScene()");
 
             if (currentCutscene != null && currentCutscene.TimelineName != null && currentCutscene.TimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
                 SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[currentCutscene.TimelineName].Stop();

@@ -33,6 +33,7 @@ namespace AnyRPG {
         }
 
         public void OnTriggerEnter(Collider other) {
+            //Debug.Log(gameObject.name + ".MovementSoundArea.OnTriggerEnter()");
             CharacterUnit characterUnit = other.gameObject.GetComponent<CharacterUnit>();
             if (characterUnit != null) {
                 characterUnit.SetMovementSoundArea(this);

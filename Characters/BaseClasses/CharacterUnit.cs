@@ -149,6 +149,7 @@ namespace AnyRPG {
         public AudioProfile MovementHitProfile {
             get {
                 if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
                     return movementSoundArea.MovementHitProfile;
                 }
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile != null) {
@@ -162,12 +163,14 @@ namespace AnyRPG {
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
+            //Debug.Log(gameObject.name + ".CharacterUnit.SetMovementSoundArea()");
             if (movementSoundArea != this.movementSoundArea) {
                 this.movementSoundArea = movementSoundArea;
             }
         }
 
         public void UnsetMovementSoundArea(MovementSoundArea movementSoundArea) {
+            //Debug.Log(gameObject.name + ".CharacterUnit.UnsetMovementSoundArea()");
             if (movementSoundArea == this.movementSoundArea) {
                 this.movementSoundArea = null;
             }
