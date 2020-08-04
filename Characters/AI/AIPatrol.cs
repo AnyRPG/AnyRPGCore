@@ -6,6 +6,12 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class AIPatrol : MonoBehaviour {
 
+        // NOTE: these are allowed locally so multiple units on screen of the same type can use different profiles
+
+        [Tooltip("use these patrol profiles")]
+        [SerializeField]
+        private List<string> patrolNames = new List<string>();
+
         private List<PatrolProfile> patrolProfiles = new List<PatrolProfile>();
 
         //private PatrolProfile automaticPatrol = null;
@@ -69,6 +75,23 @@ namespace AnyRPG {
         }
 
         private void SetupScriptableObjects() {
+
+
+            // local patrols
+            if (patrolNames != null) {
+                foreach (string patrolName in patrolNames) {
+                    if (patrolName != null && patrolName != string.Empty) {
+                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+                        if (_tmpPatrolProfile != null) {
+                            patrolProfiles.Add(_tmpPatrolProfile);
+                        } else {
+                            Debug.LogError(gameObject.name + ".AIPatrol.SetupScriptableObjects: could not find patrol name: " + patrolName);
+                        }
+                    }
+                }
+            }
+
+            // patrols from unit profile
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null && characterUnit.MyCharacter.UnitProfile.PatrolNames != null) {
                 foreach (string patrolName in characterUnit.MyCharacter.UnitProfile.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
@@ -81,6 +104,7 @@ namespace AnyRPG {
                     }
                 }
             }
+
         }
 
     }
