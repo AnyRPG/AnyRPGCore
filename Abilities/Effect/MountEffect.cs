@@ -19,6 +19,10 @@ namespace AnyRPG {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
+            if (PlayerManager.MyInstance == null) {
+                // game is in the middle of exiting
+                return;
+            }
             if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
                 PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
 
