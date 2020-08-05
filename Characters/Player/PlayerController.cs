@@ -278,7 +278,8 @@ namespace AnyRPG {
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
-            int layerMask = ~(playerMask | ignoreMask | spellMask);
+            int waterMask = 1 << LayerMask.NameToLayer("Water");
+            int layerMask = ~(playerMask | ignoreMask | spellMask | waterMask);
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;

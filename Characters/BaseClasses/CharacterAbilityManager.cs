@@ -862,7 +862,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
             //string keyName = SystemResourceManager.prepareStringForMatch(baseAbility);
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + "): keyname: " + keyName);
-            if (MyAbilityList.ContainsValue(baseAbility)) {
+            if (MyAbilityList.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.DisplayName))) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }

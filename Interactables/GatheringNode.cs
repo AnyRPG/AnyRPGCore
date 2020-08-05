@@ -37,9 +37,6 @@ namespace AnyRPG {
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
             base.Awake();
-            if (abilityName != null && abilityName != string.Empty) {
-                realAbility = SystemAbilityManager.MyInstance.GetResource(abilityName) as GatherAbility;
-            }
         }
 
         public override void CreateEventSubscriptions() {
@@ -66,6 +63,7 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChange(BaseAbility baseAbility) {
+            //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
 
@@ -120,10 +118,6 @@ namespace AnyRPG {
         }
 
         /*
-        public override void HandlePrerequisiteUpdates() {
-            base.HandlePrerequisiteUpdates();
-            MiniMapStatusUpdateHandler(this);
-        }
 
         public override bool CanInteract(CharacterUnit source) {
             bool returnValue = base.CanInteract(source);
@@ -133,6 +127,19 @@ namespace AnyRPG {
             return (GetCurrentOptionCount() == 0 ? false : true);
         }
         */
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (abilityName != null && abilityName != string.Empty) {
+                GatherAbility tmpBaseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName) as GatherAbility;
+                if (tmpBaseAbility != null) {
+                    realAbility = tmpBaseAbility;
+                } else {
+                    Debug.LogError(gameObject.name + ".GatheringNode.SetupScriptableObjects(): could not find ability " + abilityName);
+                }
+            }
+
+        }
     }
 
 }
