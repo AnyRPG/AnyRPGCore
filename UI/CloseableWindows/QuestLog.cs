@@ -155,9 +155,7 @@ namespace AnyRPG {
 
         public void AbandonQuest(Quest oldQuest) {
             //Debug.Log("QuestLog.AbandonQuest(" + quest.name + ")");
-            oldQuest.OnAbandonQuest();
             RemoveQuest(oldQuest);
-            SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
         }
 
         public void TurnInQuest(Quest oldQuest) {
@@ -165,7 +163,6 @@ namespace AnyRPG {
             // REMOVE FIRST SO WHEN TURNEDIN TRIGGERS STATUSUPDATED CALL, QUEST DOES NOT EXIST IN LOG SO SUBSCRIBERS GET CORRECT STATUS
             RemoveQuest(oldQuest);
             oldQuest.SetTurnedIn(true);
-            oldQuest.OnAbandonQuest();
             // moved here from questgiverUI
         }
 
@@ -175,6 +172,7 @@ namespace AnyRPG {
             if (quests.ContainsKey(keyName)) {
                 quests.Remove(keyName);
             }
+            oldQuest.RemoveQuest();
         }
 
         public void ClearLog() {

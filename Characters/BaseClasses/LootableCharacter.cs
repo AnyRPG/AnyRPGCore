@@ -71,6 +71,8 @@ namespace AnyRPG {
                 }
                 automaticCurrency = characterUnit.MyCharacter.UnitProfile.AutomaticCurrency;
             }
+            HandlePrerequisiteUpdates();
+
         }
 
 

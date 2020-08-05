@@ -57,6 +57,8 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            HandlePrerequisiteUpdates();
         }
 
 

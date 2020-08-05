@@ -291,7 +291,8 @@ namespace AnyRPG {
         public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
 
         public void RemoveQuest() {
-            //Debug.Log("Quest.RemoveQuest(): " + MyTitle + " calling OnQuestStatusUpdated()");
+            //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
+            OnAbandonQuest();
             SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
             OnQuestStatusUpdated();
         }

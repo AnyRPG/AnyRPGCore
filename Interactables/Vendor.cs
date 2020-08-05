@@ -34,6 +34,8 @@ namespace AnyRPG {
                     vendorCollections.AddRange(characterUnit.MyCharacter.UnitProfile.VendorCollections);
                 }
             }
+            HandlePrerequisiteUpdates();
+
         }
 
 

@@ -70,6 +70,10 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            // testing - add handle prerequisiteupdates here
+            // this is necessary because addUnitProfileSettings is called late in startup order
+            HandlePrerequisiteUpdates();
         }
 
         public override void CreateEventSubscriptions() {
