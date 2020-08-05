@@ -212,9 +212,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool useBehaviorCopy = false;
 
-        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
-
-
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
@@ -237,14 +234,14 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
-        //public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
         public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
         public List<QuestNode> Quests { get => quests; set => quests = value; }
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
-        public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
+        public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
+        public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -409,22 +406,6 @@ namespace AnyRPG {
                     }
                 }
             }
-
-            if (behaviorNames != null) {
-                foreach (string behaviorName in behaviorNames) {
-                    BehaviorProfile tmpBehaviorProfile = null;
-                    if (useBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
-                    } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
-                    }
-                    if (tmpBehaviorProfile != null) {
-                        behaviorList.Add(tmpBehaviorProfile);
-                    }
-                }
-            }
-
-
 
 
         }

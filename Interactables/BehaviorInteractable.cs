@@ -57,15 +57,22 @@ namespace AnyRPG {
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.BehaviorList != null) {
-                    foreach (BehaviorProfile behaviorProfile in characterUnit.MyCharacter.UnitProfile.BehaviorList) {
-                        behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
-                        behaviorList.Add(behaviorProfile);
+                if (characterUnit.MyCharacter.UnitProfile.BehaviorNames != null) {
+                    foreach (string behaviorName in characterUnit.MyCharacter.UnitProfile.BehaviorNames) {
+                        BehaviorProfile tmpBehaviorProfile = null;
+                        if (characterUnit.MyCharacter.UnitProfile.UseBehaviorCopy == true) {
+                            tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                        } else {
+                            tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                        }
+                        if (tmpBehaviorProfile != null) {
+                            tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+                            behaviorList.Add(tmpBehaviorProfile);
+                        }
                     }
                 }
             }
             HandlePrerequisiteUpdates();
-
         }
 
 
