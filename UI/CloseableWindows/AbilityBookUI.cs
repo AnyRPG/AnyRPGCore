@@ -14,6 +14,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<AbilityButton> abilityButtons = new List<AbilityButton>();
 
+        [SerializeField]
+        private List<GameObject> abilityButtonHolders = new List<GameObject>();
+
         private List<List<IAbility>> pages = new List<List<IAbility>>();
 
         private int pageSize = 10;
@@ -74,21 +77,21 @@ namespace AnyRPG {
                     //Debug.Log("AbilityBookUI.AddAbilities(): i: " + i);
                     if (i < pages[pageIndex].Count) {
                         //Debug.Log("adding ability");
-                        abilityButtons[i].gameObject.SetActive(true);
+                        abilityButtonHolders[i].SetActive(true);
                         abilityButtons[i].AddAbility(pages[pageIndex][i]);
                         abilityButtons[i].SetBackGroundTransparency();
                     } else {
                         //Debug.Log("clearing ability");
                         abilityButtons[i].ClearAbility();
-                        abilityButtons[i].gameObject.SetActive(false);
+                        abilityButtonHolders[i].SetActive(false);
                     }
                 }
             }
         }
 
         public void ClearButtons() {
-            foreach (AbilityButton btn in abilityButtons) {
-                btn.gameObject.SetActive(false);
+            foreach (GameObject go in abilityButtonHolders) {
+                go.SetActive(false);
             }
         }
 
