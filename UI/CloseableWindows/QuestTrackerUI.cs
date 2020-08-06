@@ -23,20 +23,13 @@ namespace AnyRPG {
 
         #endregion
 
+        [Tooltip("The gameobject to use for each quest item")]
         [SerializeField]
         private GameObject questPrefab = null;
 
+        [Tooltip("Quests will be spawned under this transform")]
         [SerializeField]
         private Transform questParent = null;
-
-        //[SerializeField]
-        //private GameObject inProgressHeading = null;
-
-        [SerializeField]
-        private GameObject inProgressArea = null;
-
-        // delete me
-        //private List<QuestNode> questNodes = new List<QuestNode>();
 
         private bool referencesInitialized = false;
 
@@ -118,7 +111,6 @@ namespace AnyRPG {
                 qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
-                go.transform.SetParent(inProgressArea.transform);
 
             }
 

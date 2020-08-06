@@ -46,6 +46,26 @@ namespace AnyRPG {
 
         }
 
+        public void ClickMainMenu() {
+            SystemWindowManager.MyInstance.inGameMainMenuWindow.ToggleOpenClose();
+        }
+
+        public void ClickAbilityBook() {
+            PopupWindowManager.MyInstance.abilityBookWindow.ToggleOpenClose();
+        }
+
+        public void ClickCharacter() {
+            PopupWindowManager.MyInstance.characterPanelWindow.ToggleOpenClose();
+        }
+
+        public void ClickQuestLog() {
+            PopupWindowManager.MyInstance.questLogWindow.ToggleOpenClose();
+        }
+
+        public void ClickMap() {
+            PopupWindowManager.MyInstance.mainMapWindow.ToggleOpenClose();
+        }
+
 
 
     }

@@ -70,8 +70,11 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
 
-            panelLayoutElement.preferredWidth = Screen.width;
-            panelLayoutElement.preferredHeight = Screen.height;
+            // testing disable this block of width / height because it now stretches
+            //panelLayoutElement.preferredWidth = Screen.width;
+            //panelLayoutElement.preferredHeight = Screen.height;
+
+
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             ShowLoadButtonsCommon();
