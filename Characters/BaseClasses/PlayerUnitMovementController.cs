@@ -227,8 +227,8 @@ namespace AnyRPG {
             if (characterUnit.MyCharacter.CharacterStats.IsAlive && (characterUnit.MyCharacter.CharacterController as PlayerController).canMove) {
                 // code to prevent turning when clicking on UI elements
                 if (InputManager.MyInstance.rightMouseButtonDown && (characterUnit.MyCharacter.CharacterController as PlayerController).HasMoveInput() && (!InputManager.MyInstance.rightMouseButtonClickedOverUI || (NamePlateManager.MyInstance != null ? NamePlateManager.MyInstance.MouseOverNamePlate() : false))) {
-                    transform.forward = new Vector3(CameraManager.MyInstance.MyMainCameraController.MyWantedDirection.x, 0, CameraManager.MyInstance.MyMainCameraController.MyWantedDirection.z);
-                    CameraManager.MyInstance.MyMainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
+                    transform.forward = new Vector3(CameraManager.MyInstance.MainCameraController.MyWantedDirection.x, 0, CameraManager.MyInstance.MainCameraController.MyWantedDirection.z);
+                    CameraManager.MyInstance.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
                 }
 
                 if ((characterUnit.MyCharacter.CharacterController as PlayerController).inputTurn != 0) {

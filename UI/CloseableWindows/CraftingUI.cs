@@ -51,18 +51,6 @@ namespace AnyRPG {
         [SerializeField]
         private Transform recipeParent = null;
 
-        //[SerializeField]
-        //private GameObject availableArea = null;
-
-        //[SerializeField]
-        //private GameObject hiddenHeading = null;
-
-        //[SerializeField]
-        //private GameObject hiddenArea = null;
-
-        //[SerializeField]
-        //private GameObject recipeDetailsArea = null;
-
         [SerializeField]
         private TextMeshProUGUI recipeDescription = null;
 

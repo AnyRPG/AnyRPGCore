@@ -36,7 +36,7 @@ namespace AnyRPG {
             //Debug.Log("MiniMapIndicatorController.Awake()");
             canvas = GetComponent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
-            canvas.worldCamera = CameraManager.MyInstance.MyMiniMapCamera;
+            canvas.worldCamera = CameraManager.MyInstance.MiniMapCamera;
             canvas.planeDistance = 1f;
             uiOffset = new Vector2((float)rectTransform.sizeDelta.x / 2f, (float)rectTransform.sizeDelta.y / 2f);
             //Debug.Log("MiniMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
@@ -128,7 +128,7 @@ namespace AnyRPG {
                 //Debug.Log("MiniMapIndicatorController.LateUpdate(): namePlateUnit: " + (interactable == null ? "null" : interactable.MyName) + ": setup has not completed yet!");
                 return;
             }
-            Vector2 viewportPosition = CameraManager.MyInstance.MyMiniMapCamera.WorldToViewportPoint(interactable.gameObject.transform.position);
+            Vector2 viewportPosition = CameraManager.MyInstance.MiniMapCamera.WorldToViewportPoint(interactable.gameObject.transform.position);
             Vector2 proportionalPosition = new Vector2(viewportPosition.x * rectTransform.sizeDelta.x, viewportPosition.y * rectTransform.sizeDelta.y);
             //Debug.Log(interactable.gameObject.name + ".MiniMapIndicatorController.LateUpdate(). interactable position: " + interactable.gameObject.transform.position + "; viewportPosition: " + viewportPosition + "; proportionalPosition: " + proportionalPosition);
             contentParent.localPosition = proportionalPosition - uiOffset;

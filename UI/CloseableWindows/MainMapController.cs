@@ -72,7 +72,7 @@ namespace AnyRPG {
             base.Awake();
             //instantiate singleton
             MainMapController tempcontroller = MyInstance;
-            CameraManager.MyInstance.MyMainMapCamera.enabled = false;
+            CameraManager.MyInstance.MainMapCamera.enabled = false;
         }
 
         protected void Start() {
@@ -118,7 +118,7 @@ namespace AnyRPG {
             SetSceneBounds();
             UpdateCameraSize();
             UpdateCameraPosition();
-            CameraManager.MyInstance.MyMainMapCamera.Render();
+            CameraManager.MyInstance.MainMapCamera.Render();
         }
 
         private void SetSceneBounds() {
@@ -159,7 +159,7 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
             cameraSize = Mathf.Max(sceneBounds.extents.x, sceneBounds.extents.z);
-            CameraManager.MyInstance.MyMainMapCamera.orthographicSize = cameraSize;
+            CameraManager.MyInstance.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
@@ -168,8 +168,8 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
             Vector3 wantedLookPosition = new Vector3(sceneBounds.center.x, sceneBounds.center.y, sceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
-            CameraManager.MyInstance.MyMainMapCamera.transform.position = wantedPosition;
-            CameraManager.MyInstance.MyMainMapCamera.transform.LookAt(wantedLookPosition);
+            CameraManager.MyInstance.MainMapCamera.transform.position = wantedPosition;
+            CameraManager.MyInstance.MainMapCamera.transform.LookAt(wantedLookPosition);
         }
 
         private void CommonInitialization() {
@@ -181,7 +181,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("MainMapController.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            CameraManager.MyInstance.MyMainMapCamera.enabled = false;
+            CameraManager.MyInstance.MainMapCamera.enabled = false;
         }
 
         public override void ReceiveOpenWindowNotification() {

@@ -306,7 +306,7 @@ namespace AnyRPG {
                 //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
                 CameraManager.MyInstance.ActivateMainCamera();
-                CameraManager.MyInstance.MyMainCameraController.SetTargetPositionRaw(spawnLocation, MyPlayerUnitObject.transform.forward);
+                CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, MyPlayerUnitObject.transform.forward);
             }
         }
 

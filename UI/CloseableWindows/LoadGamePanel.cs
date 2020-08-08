@@ -154,7 +154,7 @@ namespace AnyRPG {
             // testing avoid naked spawn
             LoadUMARecipe();
 
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
+            if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnit.transform);

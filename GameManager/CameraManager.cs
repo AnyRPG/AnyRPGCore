@@ -62,25 +62,25 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public Camera MyMainCamera { get => mainCamera; set => mainCamera = value; }
-        public GameObject MyMainCameraGameObject { get => mainCameraGameObject; }
-        public Camera MyMiniMapCamera { get => miniMapCamera; set => miniMapCamera = value; }
-        public Camera MyMainMapCamera { get => mainMapCamera; set => mainMapCamera = value; }
-        public Camera MyCharacterPortraitCamera { get => characterPortraitCamera; set => characterPortraitCamera = value; }
-        public Camera MyFocusPortraitCamera { get => focusPortraitCamera; set => focusPortraitCamera = value; }
-        public Camera MyCharacterCreatorCamera { get => characterCreatorCamera; set => characterCreatorCamera = value; }
-        public Camera MyCharacterPreviewCamera { get => characterPreviewCamera; set => characterPreviewCamera = value; }
-        public AnyRPGCameraController MyMainCameraController { get => mainCameraController; set => mainCameraController = value; }
-        public Camera MyUnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
-        public Camera MyPetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
-        public GameObject MyThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
+        public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
+        public GameObject MainCameraGameObject { get => mainCameraGameObject; }
+        public Camera MiniMapCamera { get => miniMapCamera; set => miniMapCamera = value; }
+        public Camera MainMapCamera { get => mainMapCamera; set => mainMapCamera = value; }
+        public Camera CharacterPortraitCamera { get => characterPortraitCamera; set => characterPortraitCamera = value; }
+        public Camera FocusPortraitCamera { get => focusPortraitCamera; set => focusPortraitCamera = value; }
+        public Camera CharacterCreatorCamera { get => characterCreatorCamera; set => characterCreatorCamera = value; }
+        public Camera CharacterPreviewCamera { get => characterPreviewCamera; set => characterPreviewCamera = value; }
+        public AnyRPGCameraController MainCameraController { get => mainCameraController; set => mainCameraController = value; }
+        public Camera UnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
+        public Camera PetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
+        public GameObject ThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
 
         public Camera MyActiveMainCamera {
             get {
-                if (MyMainCameraGameObject != null && MyMainCameraGameObject.activeSelf == true && MyMainCamera != null) {
-                    return MyMainCamera;
+                if (MainCameraGameObject != null && MainCameraGameObject.activeSelf == true && MainCamera != null) {
+                    return MainCamera;
                 }
-                if (MyThirdPartyCamera != null && MyThirdPartyCamera.activeSelf == true && thirdPartyCamera != null) {
+                if (ThirdPartyCamera != null && ThirdPartyCamera.activeSelf == true && thirdPartyCamera != null) {
                     return thirdPartyCamera;
                 }
                 return null;
@@ -118,7 +118,7 @@ namespace AnyRPG {
             }
             SceneNode activeScene = LevelManager.MyInstance.GetActiveSceneNode();
             if (activeScene == LevelManager.MyInstance.MainMenuSceneNode || activeScene == LevelManager.MyInstance.InitializationSceneNode || activeScene == LevelManager.MyInstance.CharacterCreatorSceneNode || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
-                MyMainCameraGameObject.SetActive(true);
+                MainCameraGameObject.SetActive(true);
                 return;
             }
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
@@ -127,7 +127,7 @@ namespace AnyRPG {
             }
 
             // fallback in case no camera found
-            MyMainCameraGameObject.SetActive(true);
+            MainCameraGameObject.SetActive(true);
         }
 
         public void SwitchToMainCamera() {
@@ -135,12 +135,12 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
-            MyMainCameraGameObject.SetActive(true);
+            MainCameraGameObject.SetActive(true);
         }
 
         public void DeactivateMainCamera() {
             //Debug.Log("CameraManager.DeactivateMainCamera()");
-            MyMainCameraGameObject.SetActive(false);
+            MainCameraGameObject.SetActive(false);
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
@@ -166,7 +166,7 @@ namespace AnyRPG {
             //Debug.Log("CameraManager.EnableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
                 if (mainCameraGameObject != null) {
-                    MyMainCameraGameObject.SetActive(false);
+                    MainCameraGameObject.SetActive(false);
                 }
                 thirdPartyCameraGameObject.SetActive(true);
             }

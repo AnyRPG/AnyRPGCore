@@ -264,7 +264,7 @@ namespace AnyRPG {
         }
 
         public void InitializeMainCamera() {
-            CameraManager.MyInstance.MyMainCameraController.InitializeCamera(PlayerManager.MyInstance.MyPlayerUnitObject.transform);
+            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyPlayerUnitObject.transform);
         }
 
         public void DeactivatePlayerUI() {

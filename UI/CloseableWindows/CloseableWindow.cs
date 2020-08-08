@@ -13,6 +13,8 @@ namespace AnyRPG {
 
         protected ICloseableWindowContents windowContents;
 
+        [Header("Closeable Window")]
+
         [SerializeField]
         protected GameObject contentParent;
 

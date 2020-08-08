@@ -104,11 +104,15 @@ namespace AnyRPG {
         }
 
         public virtual void DisableCamera() {
-            currentCamera.enabled = false;
+            if (currentCamera != null) {
+                currentCamera.enabled = false;
+            }
         }
 
         public virtual void EnableCamera() {
-            currentCamera.enabled = true;
+            if (currentCamera != null) {
+                currentCamera.enabled = true;
+            }
         }
 
         public void SetTarget(Transform newTarget) {

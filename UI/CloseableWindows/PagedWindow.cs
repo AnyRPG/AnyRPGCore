@@ -8,6 +8,9 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
     public class PagedWindow : CloseableWindow, IScrollHandler {
+
+        [Header("Paged Window")]
+
         [SerializeField]
         private TextMeshProUGUI pageNumber = null;
 
@@ -21,7 +24,11 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
-            (windowContents as IPagedWindowContents).OnPageCountUpdate += UpdateNavigationArea;
+            if (windowContents != null) {
+                (windowContents as IPagedWindowContents).OnPageCountUpdate += UpdateNavigationArea;
+            } else {
+                Debug.Log(gameObject.name + ".PagedWindow.Awake(): Could not find window contents.  Check inspector.");
+            }
         }
 
         public override void OpenWindow() {

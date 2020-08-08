@@ -120,7 +120,7 @@ namespace AnyRPG {
             //spawn correct preview unit
             PetPreviewManager.MyInstance.HandleOpenWindow();
 
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyUnitPreviewCamera != null) {
+            if (CameraManager.MyInstance != null && CameraManager.MyInstance.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.InitializeCamera(PetPreviewManager.MyInstance.PreviewUnit.transform);

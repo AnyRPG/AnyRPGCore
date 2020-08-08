@@ -117,7 +117,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyCharacterAnimator.SetRiding(false);
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
                     CameraManager.MyInstance.ActivateMainCamera();
-                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.CharacterUnit.transform);
+                    CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.CharacterUnit.transform);
 
 
                 }
@@ -155,7 +155,7 @@ namespace AnyRPG {
 
                     playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
                     CameraManager.MyInstance.SwitchToMainCamera();
-                    CameraManager.MyInstance.MyMainCameraController.InitializeCamera(go.transform);
+                    CameraManager.MyInstance.MainCameraController.InitializeCamera(go.transform);
                 }
             }
         }

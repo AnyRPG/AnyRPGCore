@@ -134,7 +134,7 @@ namespace AnyRPG {
 
         }
         private void UpdateCameraSize() {
-            CameraManager.MyInstance.MyMiniMapCamera.orthographicSize = cameraSize;
+            CameraManager.MyInstance.MiniMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {

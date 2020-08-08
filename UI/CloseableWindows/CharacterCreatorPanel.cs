@@ -172,7 +172,7 @@ namespace AnyRPG {
             // testing do this earlier
             LoadUMARecipe();
 
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.MyCharacterPreviewCamera != null) {
+            if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;

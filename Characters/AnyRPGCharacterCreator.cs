@@ -31,7 +31,7 @@ public class AnyRPGCharacterCreator : MonoBehaviour {
     public SharedColorTable ClothingColor;
 
     private void Start() {
-        CameraManager.MyInstance.MyMainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(Avatar.transform);
+        CameraManager.MyInstance.MainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(Avatar.transform);
     }
 
     /// <summary>
