@@ -1160,7 +1160,7 @@ namespace AnyRPG {
                 UIManager.MyInstance.MySidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
 
             if (PlayerPrefs.HasKey("MouseOverWindowX") && PlayerPrefs.HasKey("MouseOverWindowY"))
-                UIManager.MyInstance.MyMouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
+                UIManager.MyInstance.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
 
         }
 
@@ -1236,8 +1236,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("SidePanelX", UIManager.MyInstance.MySidePanel.transform.position.x);
             PlayerPrefs.SetFloat("SidePanelY", UIManager.MyInstance.MySidePanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.MyInstance.MyMouseOverWindow.transform.position.x);
-            PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.MyInstance.MyMouseOverWindow.transform.position.y);
+            PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.MyInstance.MouseOverWindow.transform.position.x);
+            PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.MyInstance.MouseOverWindow.transform.position.y);
 
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("SaveManager.SaveWindowPositions(): " + i);

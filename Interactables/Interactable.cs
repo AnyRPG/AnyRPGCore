@@ -684,7 +684,7 @@ namespace AnyRPG {
 
             // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
             // added pivot so the tooltip doesn't bounce around
-            UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MyMouseOverWindow.transform.position, this);
+            UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MouseOverWindow.transform.position, this);
 
             if (GetCurrentInteractables().Count == 0) {
                 //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {

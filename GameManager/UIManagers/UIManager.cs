@@ -128,8 +128,8 @@ namespace AnyRPG {
         public XPBarController MyXPBarController { get => xpBarController; set => xpBarController = value; }
         public GameObject MyBottomPanel { get => bottomPanel; set => bottomPanel = value; }
         public GameObject MySidePanel { get => sidePanel; set => sidePanel = value; }
-        public GameObject MyMouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
-        public GameObject MyMouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
+        public GameObject MouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
+        public GameObject MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
         public GameObject MyToolTip { get => toolTip; set => toolTip = value; }
         public CutSceneBarController MyCutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
         public GameObject MyPlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
