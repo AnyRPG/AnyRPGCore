@@ -95,9 +95,6 @@ namespace AnyRPG {
         [SerializeField]
         private CharacterPreviewCameraController previewCameraController = null;
 
-        [SerializeField]
-        private LayoutElement panelLayoutElement = null;
-
         public GameObject ColorPrefab;
 
         public SharedColorTable HairColor;
@@ -132,8 +129,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OnOpenWindow()");
 
             SetPreviewTarget();
-            panelLayoutElement.preferredWidth = Screen.width;
-            panelLayoutElement.preferredHeight = Screen.height;
+
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());

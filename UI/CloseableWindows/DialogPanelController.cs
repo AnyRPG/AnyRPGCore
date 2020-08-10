@@ -153,7 +153,11 @@ namespace AnyRPG {
             if (buttonText != null) {
                 buttonText.text = MyDialog.MyDialogNodes[dialogIndex].MyNextOption;
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is not null, rebuilding layout");
-                LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+                //LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(continueButton.GetComponent<RectTransform>());
+
+                // testing to see if this helps button resize properly
+                //LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponentInParent<RectTransform>());
             } else {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
             }

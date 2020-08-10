@@ -45,8 +45,8 @@ namespace AnyRPG {
         //[SerializeField]
         //private float zoomSpeed = 4f;
 
-        [SerializeField]
-        private LayoutElement panelLayoutElement = null;
+        //[SerializeField]
+        //private LayoutElement panelLayoutElement = null;
 
         [SerializeField]
         private LayoutElement graphicLayoutElement = null;
@@ -190,8 +190,10 @@ namespace AnyRPG {
             // re-adding this back here.  Not sure why, but possible the level objects aren't rendered by the time this gets called in onlevelload.  Trying on every open window
             InitializeMap();
             //CameraManager.MyInstance.MyMainMapCamera.enabled = true;
-            panelLayoutElement.preferredWidth = Screen.width - 50;
-            panelLayoutElement.preferredHeight = Screen.height - 50;
+
+            //panelLayoutElement.preferredWidth = Screen.width - 50;
+            //panelLayoutElement.preferredHeight = Screen.height - 50;
+
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);

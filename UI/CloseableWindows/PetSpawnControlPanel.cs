@@ -43,9 +43,6 @@ namespace AnyRPG {
         private PetPreviewCameraController previewCameraController = null;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement = null;
-
-        [SerializeField]
         private Button spawnButton = null;
 
         [SerializeField]
@@ -173,8 +170,11 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
-            panelLayoutElement.preferredWidth = Screen.width;
-            panelLayoutElement.preferredHeight = Screen.height;
+
+            // removed this functionality and replaced with stretch
+            //panelLayoutElement.preferredWidth = Screen.width;
+            //panelLayoutElement.preferredHeight = Screen.height;
+
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
             //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());

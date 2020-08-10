@@ -249,6 +249,14 @@ namespace AnyRPG {
                 }
             }
 
+            if (primaryResourceSlider.color != powerResourceColor1) {
+                primaryResourceSlider.color = powerResourceColor1;
+            }
+            if (secondaryResourceSlider.color != powerResourceColor2) {
+                secondaryResourceSlider.color = powerResourceColor2;
+            }
+
+
         }
 
         private IEnumerator WaitForCamera() {
@@ -263,6 +271,7 @@ namespace AnyRPG {
                 if (characterUnit != null) {
                     characterUnit.MyCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
                     characterUnit.MyCharacter.OnNameChange -= HandleNameChange;
+                    characterUnit.BaseCharacter.OnClassChange -= HandleClassChange;
                     characterUnit.MyCharacter.CharacterStats.OnLevelChanged -= HandleLevelChanged;
                     characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
                     characterUnit.MyCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
@@ -328,6 +337,7 @@ namespace AnyRPG {
             characterUnit.MyCharacter.OnNameChange += HandleNameChange;
             characterUnit.BaseCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
             characterUnit.BaseCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
+            characterUnit.BaseCharacter.OnClassChange += HandleClassChange;
 
             if (characterUnit.BaseCharacter.CharacterFactionManager != null) {
                 characterUnit.BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
@@ -337,6 +347,10 @@ namespace AnyRPG {
 
 
             HandleLevelChanged(namePlateUnit.Level);
+        }
+
+        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            CalculateResourceColors(followGameObject);
         }
 
         public void ClearPrimaryResourceBar() {
@@ -406,9 +420,6 @@ namespace AnyRPG {
             // code for the default image
             if (primaryResourceSliderLayout != null) {
                 primaryResourceSliderLayout.preferredWidth = resourcePercent * originalPrimaryResourceSliderWidth;
-                if (primaryResourceSlider.color != powerResourceColor1) {
-                    primaryResourceSlider.color = powerResourceColor1;
-                }
             }
 
             if (primaryResourceText != null) {
@@ -449,9 +460,6 @@ namespace AnyRPG {
             // code for the default image
             if (secondaryResourceSliderLayout != null) {
                 secondaryResourceSliderLayout.preferredWidth = resourcePercent * originalSecondaryResourceSliderWidth;
-                if (secondaryResourceSlider.color != powerResourceColor2) {
-                    secondaryResourceSlider.color = powerResourceColor2;
-                }
             }
 
             if (secondaryResourceText != null) {
