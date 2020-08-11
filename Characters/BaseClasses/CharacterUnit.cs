@@ -231,6 +231,11 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            // update apparent velocity so any spellcast that caused the cancel mount is not interrupted
+            if (baseCharacter != null) {
+                baseCharacter.CharacterController.LastPosition = transform.position;
+            }
         }
 
         public int CurrentHealth() {

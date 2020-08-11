@@ -1356,7 +1356,7 @@ namespace AnyRPG {
             if (ability.CanCastWhileMoving || ability.GetAbilityCastingTime(this) == 0f) {
                 return true;
             }
-            return !(baseCharacter.CharacterController.MyApparentVelocity > 0.1f);
+            return !(baseCharacter.CharacterController.ApparentVelocity > 0.1f);
         }
 
         public virtual bool PerformLearnedCheck(IAbility ability) {
@@ -1446,7 +1446,7 @@ namespace AnyRPG {
         public void HandleManualMovement() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
-            if (BaseCharacter.CharacterController.MyApparentVelocity > 0.1f) {
+            if (BaseCharacter.CharacterController.ApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
                 if (currentCastAbility != null && currentCastAbility.MyRequiresGroundTarget == true && CastTargettingManager.MyInstance.ProjectorIsActive() == true) {
                     // do nothing

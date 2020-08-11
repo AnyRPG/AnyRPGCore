@@ -56,8 +56,8 @@ namespace AnyRPG {
             }
         }
 
-        public Vector3 MyLastPosition { get => lastPosition; set => lastPosition = value; }
-        public float MyApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
+        public Vector3 LastPosition { get => lastPosition; set => lastPosition = value; }
+        public float ApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
 
         protected virtual void Awake() {
             // overwrite me
