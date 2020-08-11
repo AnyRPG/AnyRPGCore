@@ -293,8 +293,11 @@ namespace AnyRPG {
             // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
             if (Mathf.Abs(animatedUnit.MyRigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
                 currentMoveVelocity = new Vector3(0, 0, 0);
+                
                 // disable gravity while this close to the ground so we don't slide down slight inclines
-                animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                // freezing y position was causing character to not get lifted by bridges
+                animatedUnit.FreezePositionXZ();
+                //animatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
             } else {
 
                 // allow the character to fall until they reach the ground
@@ -525,6 +528,7 @@ namespace AnyRPG {
         }
 
         public bool MaintainingGround() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
             return tempGrounded;
         }
 
@@ -722,13 +726,13 @@ namespace AnyRPG {
         }
 
         private void CheckGround() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround()");
             // downward cast for grounding
-            //Debug.Log("CheckGround()");
             if (Physics.Raycast(transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, rayCastHeight, groundMask)) {
-                //Debug.Log("CheckGround(): grounded is true");
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
                 tempGrounded = true;
             } else {
-                //Debug.Log("CheckGround(): grounded is false");
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
                 tempGrounded = false;
             }
 
@@ -737,17 +741,25 @@ namespace AnyRPG {
 
             if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0 || backwardContactPoints.Count > 0) {
                 // extra check to catch contact points below maximum step height in case the character is halfway off a slope
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from contact points; bottom: " + bottomContactPoints.Count + "; front: " + forwardContactPoints.Count + "; back: " + backwardContactPoints.Count);
                 tempGrounded = true;
             }
 
-            Collider[] hitColliders = Physics.OverlapBox(transform.position, maintainingGroundExtents, Quaternion.identity);
+            Collider[] hitColliders = Physics.OverlapBox(transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
+            if (hitColliders.Length > 0) {
+                //foreach (Collider collider in hitColliders) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from overlapbox (" + maintainingGroundExtents + "): " + collider.gameObject.name);
+                //}
+                tempGrounded = true;
+            }
+            /*
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
                 if (((1 << hitCollider.gameObject.layer) & groundMask) != 0) {
                     tempGrounded = true;
                 }
             }
-
+            */
 
             // forward cast
             Vector3 directionOfTravel = transform.forward;
