@@ -53,9 +53,6 @@ namespace AnyRPG {
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
-        //private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
-
-
         private List<PetSpawnButton> petSpawnButtons = new List<PetSpawnButton>();
 
         private DynamicCharacterAvatar umaAvatar;
@@ -171,13 +168,6 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
 
-            // removed this functionality and replaced with stretch
-            //panelLayoutElement.preferredWidth = Screen.width;
-            //panelLayoutElement.preferredHeight = Screen.height;
-
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());
             if (PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager != null) {
                 unitProfileList = PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.MyUnitProfiles;
             }

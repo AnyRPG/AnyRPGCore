@@ -60,13 +60,9 @@ namespace AnyRPG {
         [SerializeField]
         private UnitPreviewCameraController previewCameraController;
 
-        [SerializeField]
-        private LayoutElement panelLayoutElement = null;
-
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
-
 
         private List<UnitSpawnButton> unitSpawnButtons = new List<UnitSpawnButton>();
 
@@ -224,11 +220,6 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
             PopulateDropDownValues();
-            panelLayoutElement.preferredWidth = Screen.width;
-            panelLayoutElement.preferredHeight = Screen.height;
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());
             ShowPreviewButtonsCommon();
             SetLevelType(0);
 

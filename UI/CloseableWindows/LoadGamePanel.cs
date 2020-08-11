@@ -36,9 +36,6 @@ namespace AnyRPG {
         private CharacterPreviewCameraController previewCameraController = null;
 
         [SerializeField]
-        private LayoutElement panelLayoutElement = null;
-
-        [SerializeField]
         private GameObject buttonPrefab = null;
 
         [SerializeField]
@@ -70,16 +67,7 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
 
-            // testing disable this block of width / height because it now stretches
-            //panelLayoutElement.preferredWidth = Screen.width;
-            //panelLayoutElement.preferredHeight = Screen.height;
-
-
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             ShowLoadButtonsCommon();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponent<RectTransform>());
-
         }
 
         public void ShowSavedGame(LoadGameButton loadGameButton) {
