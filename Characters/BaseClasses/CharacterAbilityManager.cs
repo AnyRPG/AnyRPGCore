@@ -435,28 +435,30 @@ namespace AnyRPG {
         /// <returns></returns>
         public override bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
 
-            if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
-                //targetIsEnemy = true;
-                if (!targetableEffect.CanCastOnEnemy) {
-                    //Debug.Log(MyName + ": Can't cast on enemy. return false");
-                    return false;
-                }
+            // if this ability has no faction requirements, we can cast it on anyone
+            if (targetableEffect.CanCastOnEnemy == false
+                && targetableEffect.CanCastOnNeutral == false
+                && targetableEffect.CanCastOnFriendly == false) {
+                return true;
             }
 
-            // this if statement is needed because self will return as a friendly target
-            if (!targetIsSelf) {
-                // set to > 0 to prevent neutral characters from failing this check
-                // monitor for breakage such as not being able to ressurect neutral characters
-                if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) > 0) {
-                    //targetIsFriendly = true;
-                    if (!targetableEffect.CanCastOnFriendly) {
-                        //Debug.Log(MyName + ": Can't cast on friendly. return false");
-                        return false;
-                    }
-                }
+            float relationValue = Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter);
+
+            if (targetableEffect.CanCastOnEnemy == true && relationValue <= -1) {
+                return true;
             }
 
-            return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
+            if (targetableEffect.CanCastOnNeutral == true && relationValue > -1 && targetableEffect.CanCastOnNeutral == true && relationValue < 1) {
+                return true;
+            }
+
+            if (targetableEffect.CanCastOnFriendly == true && relationValue >= 1) {
+                return true;
+            }
+
+            return false;
+
+            //return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
         }
 
         // this ability exists to allow a caster to auto-self cast
@@ -473,23 +475,6 @@ namespace AnyRPG {
                     if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
                         target = null;
                     }
-                    // swapped out the below code with the faction check routine.  monitor for breakage
-                    /*
-                    if (!abilityEffect.CanCastOnEnemy) {
-                        if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) <= -1) {
-                            //Debug.Log("we cannot cast this on an enemy but the target was an enemy.  set target to null");
-                            target = null;
-                        }
-                    }
-                    if (!abilityEffect.CanCastOnFriendly) {
-                        // change from >= 0 to > 0 to prevent this from failing on a neutral character
-                        // monitor for breakage such as attempt to ressurect neutral character
-                        if (Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter) > 0) {
-                            //Debug.Log("we cannot cast this on a friendly target but the target was friendly.  set target to null");
-                            target = null;
-                        }
-                    }
-                    */
                 } else {
                     //Debug.Log("target did not have a characterUnit.  set target to null");
                     target = null;
@@ -525,7 +510,7 @@ namespace AnyRPG {
                 abilityCoolDown = coolDownLength;
             }
 
-            if (abilityCoolDown <= 0f && baseAbility.MyIgnoreGlobalCoolDown == false && baseAbility.GetAbilityCastingTime(this) == 0f) {
+            if (abilityCoolDown <= 0f && baseAbility.IgnoreGlobalCoolDown == false && baseAbility.GetAbilityCastingTime(this) == 0f) {
                 // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown instant cast abilities
                 abilityCoolDown = Mathf.Clamp(abilityCoolDown, 1, Mathf.Infinity);
             }
@@ -973,14 +958,14 @@ namespace AnyRPG {
             float startTime = Time.time;
             //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
-            if (ability.MyRequiresTarget == false || ability.CanCastOnEnemy == false) {
+            if (ability.RequiresTarget == false || ability.CanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
                 KillStopCastOverride();
             } else {
                 KillStopCastNormal();
             }
             abilityEffectContext.originalTarget = target;
-            if (ability.MyRequiresGroundTarget == true) {
+            if (ability.RequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
                 ActivateTargettingMode(ability as BaseAbility, target);
                 while (WaitingForTarget() == true) {
@@ -1005,21 +990,21 @@ namespace AnyRPG {
                 float nextTickPercent = 0f;
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && ability.MyHoldableObjects.Count != 0) {
+                if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && ability.HoldableObjects.Count != 0) {
                     //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
-                    if (!ability.MyAnimatorCreatePrefabs) {
-                        baseCharacter.CharacterEquipmentManager.SpawnAbilityObjects(ability.MyHoldableObjects);
+                    if (!ability.AnimatorCreatePrefabs) {
+                        baseCharacter.CharacterEquipmentManager.SpawnAbilityObjects(ability.HoldableObjects);
                     }
                 }
-                if (ability.MyCastingAudioClip != null) {
-                    baseCharacter.CharacterUnit.UnitAudio.PlayCast(ability.MyCastingAudioClip);
+                if (ability.CastingAudioClip != null) {
+                    baseCharacter.CharacterUnit.UnitAudio.PlayCast(ability.CastingAudioClip);
                 }
                 
 
                 // added target condition to allow channeled spells to stop casting if target disappears
                 while (currentCastPercent < 1f
-                    && (ability.MyRequiresTarget == false
+                    && (ability.RequiresTarget == false
                     || (target != null && target.activeInHierarchy == true))) {
                     yield return null;
                     currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(this));
@@ -1068,16 +1053,16 @@ namespace AnyRPG {
             if (baseCharacter != null &&
                 baseCharacter.CharacterEquipmentManager != null &&
                 usedBaseAbility != null &&
-                usedBaseAbility.MyHoldableObjects != null &&
-                usedBaseAbility.MyHoldableObjects.Count != 0) {
+                usedBaseAbility.HoldableObjects != null &&
+                usedBaseAbility.HoldableObjects.Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
-                if (usedBaseAbility.MyAnimatorCreatePrefabs) {
+                if (usedBaseAbility.AnimatorCreatePrefabs) {
                     if (indexValue == -1) {
-                        baseCharacter.CharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.MyHoldableObjects);
+                        baseCharacter.CharacterEquipmentManager.SpawnAbilityObjects(usedBaseAbility.HoldableObjects);
                     } else {
                         List<PrefabProfile> passList = new List<PrefabProfile>();
-                        passList.Add(usedBaseAbility.MyHoldableObjects[indexValue - 1]);
+                        passList.Add(usedBaseAbility.HoldableObjects[indexValue - 1]);
                         baseCharacter.CharacterEquipmentManager.SpawnAbilityObjects(passList);
                     }
                 }
@@ -1231,9 +1216,16 @@ namespace AnyRPG {
                 return;
             }
 
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            abilityEffectContext.baseAbility = ability as BaseAbility;
+
+            // get final target before beginning casting
+            GameObject finalTarget = usedAbility.ReturnTarget(this, target, true, abilityEffectContext);
+
+
             CharacterUnit targetCharacterUnit = null;
-            if (target != null) {
-                targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            if (finalTarget != null) {
+                targetCharacterUnit = finalTarget.GetComponent<CharacterUnit>();
             }
             if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
                 if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {
@@ -1254,17 +1246,12 @@ namespace AnyRPG {
 
             NotifyAttemptPerformAbility(usedAbility);
 
-            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            abilityEffectContext.baseAbility = ability as BaseAbility;
 
-            // get final target before beginning casting
-            GameObject finalTarget = usedAbility.ReturnTarget(this, target, true, abilityEffectContext);
-
-            if (finalTarget == null && usedAbility.MyRequiresTarget == true) {
+            if (finalTarget == null && usedAbility.RequiresTarget == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 return;
             }
-            if (finalTarget != null && PerformLOSCheck(target, usedAbility as ITargetable) == false) {
+            if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
                 Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): LOS check failed. exiting");
                 return;
             }
@@ -1372,14 +1359,14 @@ namespace AnyRPG {
         public virtual bool PerformCooldownCheck(IAbility ability) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformCooldownCheck(" + ability.DisplayName + ") : global: " + MyRemainingGlobalCoolDown);
             if (abilityCoolDownDictionary.ContainsKey(ability.DisplayName) ||
-                (MyRemainingGlobalCoolDown > 0f && ability.MyIgnoreGlobalCoolDown == false)) {
+                (MyRemainingGlobalCoolDown > 0f && ability.IgnoreGlobalCoolDown == false)) {
                 return false;
             }
             return true;
         }
 
         public virtual bool PerformCombatCheck(IAbility ability) {
-            if (ability.MyRequireOutOfCombat == true && BaseCharacter.CharacterCombat.GetInCombat() == true) {
+            if (ability.RequireOutOfCombat == true && BaseCharacter.CharacterCombat.GetInCombat() == true) {
                 return false;
             }
             return true;
@@ -1448,7 +1435,7 @@ namespace AnyRPG {
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (BaseCharacter.CharacterController.ApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
-                if (currentCastAbility != null && currentCastAbility.MyRequiresGroundTarget == true && CastTargettingManager.MyInstance.ProjectorIsActive() == true) {
+                if (currentCastAbility != null && currentCastAbility.RequiresGroundTarget == true && CastTargettingManager.MyInstance.ProjectorIsActive() == true) {
                     // do nothing
                     //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
                 } else {

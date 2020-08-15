@@ -219,7 +219,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToCombatEvents() {
-            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).MyRequireOutOfCombat == true) {
+            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
                 PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
                 PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
             }
@@ -417,7 +417,7 @@ namespace AnyRPG {
                     return;
                 }
 
-                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).MyRequireOutOfCombat) {
+                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                         //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
                         EnableFullCoolDownIcon();
@@ -425,7 +425,7 @@ namespace AnyRPG {
                     }
                 }
 
-                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).MyWeaponAffinityNames.Count > 0) {
+                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).WeaponAffinityNames.Count > 0) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
                         if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager))) {
                             //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
@@ -523,7 +523,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromCombatEvents() {
-            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).MyRequireOutOfCombat == true) {
+            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
                 PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
                 PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             }

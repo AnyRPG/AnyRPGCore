@@ -15,11 +15,11 @@ namespace AnyRPG {
 
         [Tooltip("If true, the character must have a target selected to cast this ability.")]
         [SerializeField]
-        protected bool requiresTarget;
+        protected bool requiresTarget = false;
 
         [Tooltip("If true, the character must have an uninterrupted line of sight to the target.")]
         [SerializeField]
-        private bool requireLineOfSight;
+        private bool requireLineOfSight = false;
 
         [Tooltip("If line of sight is required, where should it be calculated from. Useful for splash damage and ground target explosions.")]
         [SerializeField]
@@ -27,27 +27,35 @@ namespace AnyRPG {
 
         [Tooltip("If true, the target must be a character and must be alive.")]
         [SerializeField]
-        protected bool requiresLiveTarget;
+        protected bool requiresLiveTarget = false;
 
         [Tooltip("If true, the target must be a character and must be dead.")]
         [SerializeField]
-        protected bool requireDeadTarget;
+        protected bool requireDeadTarget = false;
 
         [Tooltip("Can the character cast this ability on itself?")]
         [SerializeField]
-        protected bool canCastOnSelf;
+        protected bool canCastOnSelf = false;
+
+        [Tooltip("Can the character cast this ability on others?")]
+        [SerializeField]
+        protected bool canCastOnOthers = false;
 
         [Tooltip("Can the character cast this ability on a character belonging to an enemy faction?")]
         [SerializeField]
-        protected bool canCastOnEnemy;
+        protected bool canCastOnEnemy = false;
+
+        [Tooltip("Can the character cast this ability on a character with no relationship?")]
+        [SerializeField]
+        protected bool canCastOnNeutral = false;
 
         [Tooltip("Can the character cast this ability on a character belonging to a friendly faction?")]
         [SerializeField]
-        protected bool canCastOnFriendly;
+        protected bool canCastOnFriendly = false;
 
         [Tooltip("If no target is given, automatically cast on the caster")]
         [SerializeField]
-        protected bool autoSelfCast;
+        protected bool autoSelfCast = false;
 
         [Header("Range Settings")]
 
@@ -57,7 +65,7 @@ namespace AnyRPG {
 
         [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
         [SerializeField]
-        protected bool useMeleeRange;
+        protected bool useMeleeRange = false;
 
         [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
         [SerializeField]
@@ -122,6 +130,8 @@ namespace AnyRPG {
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
         public LineOfSightSourceLocation LineOfSightSourceLocation { get => lineOfSightSourceLocation; set => lineOfSightSourceLocation = value; }
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => targetRangeSourceLocation; set => targetRangeSourceLocation = value; }
+        public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
+        public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
 
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
@@ -150,15 +160,13 @@ namespace AnyRPG {
             bool targetIsSelf = false;
             CharacterUnit targetCharacterUnit = null;
 
+            // if this ability effect requires no target, then we can always cast it
             if (requiresTarget == false) {
-                //Debug.Log("BaseAbility.CanUseOn(): target not required, returning true");
                 return true;
             }
 
-            if (target == null && autoSelfCast != true) {
-                if (CombatLogUI.MyInstance != null) {
-                    CombatLogUI.MyInstance.WriteCombatMessage(DisplayName + " requires a target");
-                }
+            // if we got here, we require a target, therefore if we don't have one, we can't cast
+            if (target == null) {
                 return false;
             }
 
@@ -166,13 +174,26 @@ namespace AnyRPG {
                 targetIsSelf = true;
             }
 
+            // first check if the target is ourself
+            if (targetIsSelf == true) {
+                if (canCastOnSelf == false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            // if we made it this far, the target is not ourself
+
+            // the target is another unit, but this ability cannot be cast on others
+            if (canCastOnOthers == false) {
+                return false;
+            }
+
+
             if (target != null) {
                 targetCharacterUnit = target.GetComponent<CharacterUnit>();
                 if (targetCharacterUnit != null) {
-
-                    if (!sourceCharacter.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
-                        return false;
-                    }
 
                     // liveness checks
                     if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
@@ -185,27 +206,29 @@ namespace AnyRPG {
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
+
+                    if (!sourceCharacter.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
+                        return false;
+                    }
+
                 } else {
                     if (requiresLiveTarget == true || requireDeadTarget == true) {
                         // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
                         return false;
                     }
+                    if (canCastOnFriendly == true || CanCastOnNeutral == true || canCastOnEnemy == true) {
+                        // something that is not a character unit cannot satisfy the relationship conditions because it is inanimate
+                        return false;
+                    }
+
                 }
             }
 
-            if (!canCastOnSelf && targetIsSelf) {
-                //Debug.Log(MyName + ": Can't cast on self. return false");
+            // if we made it this far we passed liveness and relationship checks.
+            // since the target is not ourself, and it is valid, we should perform a range check
+
+            if (!sourceCharacter.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
                 return false;
-            }
-
-            if (target != null) {
-                if (canCastOnSelf && targetIsSelf) {
-                    return true;
-                }
-
-                if (!sourceCharacter.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
-                    return false;
-                }
             }
 
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(): returning true");

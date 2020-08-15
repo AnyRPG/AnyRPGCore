@@ -383,7 +383,7 @@ namespace AnyRPG {
                 return true;
             } else {
                 if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.AnimatedUnit.MyCharacterAnimator != null && baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext != null) {
-                    if (baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility.MyRequiresTarget == false) {
+                    if (baseCharacter.AnimatedUnit.MyCharacterAnimator.MyCurrentAbilityEffectContext.baseAbility.RequiresTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.CharacterController.MyTarget);
                         return true;
                     }

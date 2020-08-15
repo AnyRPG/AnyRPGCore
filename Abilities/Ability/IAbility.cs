@@ -11,22 +11,22 @@ namespace AnyRPG {
         string DisplayName { get; }
         int MyRequiredLevel { get; }
         bool MyUseableWithoutLearning { get; }
-        bool MyIgnoreGlobalCoolDown { get; }
+        bool IgnoreGlobalCoolDown { get; }
         bool CanSimultaneousCast { get; }
         float BaseAbilityCastingTime { get; }
-        bool MyRequiresTarget { get; set; }
-        bool MyRequiresGroundTarget { get; set; }
-        Color MyGroundTargetColor { get; set; }
+        bool RequiresTarget { get; set; }
+        bool RequiresGroundTarget { get; set; }
+        Color GroundTargetColor { get; set; }
         bool CanCastOnEnemy { get; }
         bool CanCastWhileMoving { get; }
-        bool MyCanCastOnSelf { get; }
+        bool CanCastOnSelf { get; }
         bool CanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
         AnimationClip MyCastingAnimationClip { get; }
-        List<PrefabProfile> MyHoldableObjects { get; set; }
-        AudioClip MyCastingAudioClip { get; }
-        bool MyAnimatorCreatePrefabs { get; set; }
-        bool MyRequireOutOfCombat { get; set; }
+        List<PrefabProfile> HoldableObjects { get; set; }
+        AudioClip CastingAudioClip { get; }
+        bool AnimatorCreatePrefabs { get; set; }
+        bool RequireOutOfCombat { get; set; }
         PowerResource PowerResource { get; }
         PowerResource GeneratePowerResource { get; set; }
         int BaseResourceGain { get; set; }
