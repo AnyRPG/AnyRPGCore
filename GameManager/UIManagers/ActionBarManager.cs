@@ -80,6 +80,10 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
+
+            // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
+            HandleClearTarget();
+
             PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget -= HandleSetTarget;
             PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget -= HandleClearTarget;
         }
