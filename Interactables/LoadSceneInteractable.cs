@@ -20,8 +20,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
-            PlayerManager.MyInstance.MyCharacter.CharacterUnit.CancelMountEffects();
-
             LevelManager.MyInstance.LoadLevel(sceneName);
             return true;
         }

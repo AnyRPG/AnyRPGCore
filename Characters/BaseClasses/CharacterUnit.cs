@@ -367,6 +367,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.Start(): baseCharacter is null");
             }
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 
         public override void CleanupEventSubscriptions() {
@@ -381,8 +382,15 @@ namespace AnyRPG {
                 baseCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceBarNeedsUpdate;
                 baseCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
             }
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+
             eventSubscriptionsInitialized = false;
         }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            CancelMountEffects();
+        }
+
 
         private void OnEnable() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OnEnable()");
