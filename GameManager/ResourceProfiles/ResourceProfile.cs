@@ -64,8 +64,12 @@ namespace AnyRPG {
         public string MyDescription { get => description; set => description = value; }
         public Sprite IconBackgroundImage { get => iconBackgroundImage; set => iconBackgroundImage = value; }
 
+        public virtual string GetName() {
+            return string.Format("<color=yellow>{0}</color>", DisplayName);
+        }
+
         public virtual string GetDescription() {
-            return string.Format("<color=yellow>{0}</color>\n{1}", DisplayName, GetSummary());
+            return string.Format("{0}\n{1}", GetName(), GetSummary());
         }
 
         public virtual string GetSummary() {

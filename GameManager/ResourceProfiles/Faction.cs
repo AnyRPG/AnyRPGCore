@@ -94,13 +94,13 @@ namespace AnyRPG {
         public string GetColoredDescription(Faction sourceFaction) {
             Color factionColor = GetFactionColor(sourceFaction);
             string colorString = ColorUtility.ToHtmlStringRGB(factionColor);
-            return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, DisplayName, GetExtendedSummary(sourceFaction));
+            return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, DisplayName, GetReputationSummary(sourceFaction));
         }
 
         // return the summary of relationship between the player and the source faction
-        public string GetExtendedSummary(Faction sourceFaction) {
+        public string GetReputationSummary(Faction sourceFaction) {
             float relationValue = RelationWith(PlayerManager.MyInstance.MyCharacter, sourceFaction);
-            return string.Format("{0}\nCurrent Reputation: {1}", base.GetSummary(), relationValue);
+            return string.Format("Reputation: {0}", relationValue);
         }
 
         // return the relationship between the target characters faction and the source characters faction

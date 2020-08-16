@@ -400,7 +400,8 @@ namespace AnyRPG {
         }
 
         public override string GetSummary() {
-            return string.Format("{0}\n{1} Points", description, baseExperienceReward);
+            //return string.Format("{0}\n{1} Points", description, baseExperienceReward);
+            return string.Format("{0}", description);
         }
 
         public string GetObjectiveDescription() {
