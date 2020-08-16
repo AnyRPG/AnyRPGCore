@@ -23,7 +23,7 @@ public class SoundMenuController : WindowContentController {
 
     private void Start() {
         //Debug.Log("SoundMenuController.Start()");
-        float rawValue = AudioManager.MyInstance.GetVolume(AudioManager.MyInstance.MyMasterVolume);
+        float rawValue = AudioManager.MyInstance.GetVolume(AudioManager.MyInstance.MasterVolume);
         float adjustedValue = Mathf.Pow(10, (rawValue / 20));
         //Debug.Log("SoundMenuController.Start() adjusted value: " + adjustedValue);
         masterVolumeSlider.value = adjustedValue;

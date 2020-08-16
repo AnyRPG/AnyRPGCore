@@ -60,19 +60,18 @@ namespace AnyRPG {
 
         private bool musicPaused = false;
 
-        public string MyMasterVolume { get => masterVolume; }
-        public string MyMusicVolume { get => musicVolume; }
-        public string MyEffectsVolume { get => effectsVolume; }
-        public string MyAmbientVolume { get => ambientVolume; }
-        public AudioClip MyUIClickSound { get => uiClickSound; set => uiClickSound = value; }
-        public AudioSource MyMusicAudioSource { get => musicAudioSource; set => musicAudioSource = value; }
-        public AudioSource MyEffectsAudioSource { get => effectsAudioSource; set => effectsAudioSource = value; }
-        public AudioSource MyAmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
-        public AudioSource MyUiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
-        public AudioClip UiClickSound { get => uiClickSound; set => uiClickSound = value; }
-        public AudioSource MyVoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
-        public string MyUiVolume { get => uiVolume; set => uiVolume = value; }
-        public string MyVoiceVolume { get => voiceVolume; set => voiceVolume = value; }
+        public string MasterVolume { get => masterVolume; }
+        public string MusicVolume { get => musicVolume; }
+        public string EffectsVolume { get => effectsVolume; }
+        public string AmbientVolume { get => ambientVolume; }
+        public string UiVolume { get => uiVolume; set => uiVolume = value; }
+        public string VoiceVolume { get => voiceVolume; set => voiceVolume = value; }
+        public AudioClip UIClickSound { get => uiClickSound; set => uiClickSound = value; }
+        public AudioSource MusicAudioSource { get => musicAudioSource; set => musicAudioSource = value; }
+        public AudioSource EffectsAudioSource { get => effectsAudioSource; set => effectsAudioSource = value; }
+        public AudioSource AmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
+        public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
+        public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
         private void Awake() {
             //Debug.Log("AudioManager.Awake()");
@@ -94,35 +93,35 @@ namespace AnyRPG {
 
         private void SetDefaultVolume() {
             //Debug.Log("AudioManager.SetDefaultVolume()");
-            if (PlayerPrefs.HasKey(MyMasterVolume) == true) {
-                SetVolume(MyMasterVolume, PlayerPrefs.GetFloat(MyMasterVolume));
+            if (PlayerPrefs.HasKey(MasterVolume) == true) {
+                SetVolume(MasterVolume, PlayerPrefs.GetFloat(MasterVolume));
             } else {
                 SetMasterVolume(defaultMasterVolume);
             }
-            if (PlayerPrefs.HasKey(MyMusicVolume) == true) {
-                SetVolume(MyMusicVolume, PlayerPrefs.GetFloat(MyMusicVolume));
+            if (PlayerPrefs.HasKey(MusicVolume) == true) {
+                SetVolume(MusicVolume, PlayerPrefs.GetFloat(MusicVolume));
             } else {
                 SetMusicVolume(defaultMusicVolume);
             }
-            if (PlayerPrefs.HasKey(MyAmbientVolume) == true) {
-                SetVolume(MyAmbientVolume, PlayerPrefs.GetFloat(MyAmbientVolume));
+            if (PlayerPrefs.HasKey(AmbientVolume) == true) {
+                SetVolume(AmbientVolume, PlayerPrefs.GetFloat(AmbientVolume));
             } else {
                 SetAmbientVolume(defaultAmbientVolume);
             }
-            if (PlayerPrefs.HasKey(MyEffectsVolume) == true) {
-                SetVolume(MyEffectsVolume, PlayerPrefs.GetFloat(MyEffectsVolume));
+            if (PlayerPrefs.HasKey(EffectsVolume) == true) {
+                SetVolume(EffectsVolume, PlayerPrefs.GetFloat(EffectsVolume));
             } else {
-                SetMusicVolume(defaultEffectsVolume);
+                SetEffectsVolume(defaultEffectsVolume);
             }
-            if (PlayerPrefs.HasKey(MyUiVolume) == true) {
-                SetVolume(MyUiVolume, PlayerPrefs.GetFloat(MyUiVolume));
+            if (PlayerPrefs.HasKey(UiVolume) == true) {
+                SetVolume(UiVolume, PlayerPrefs.GetFloat(UiVolume));
             } else {
-                SetMusicVolume(defaultUIVolume);
+                SetUIVolume(defaultUIVolume);
             }
-            if (PlayerPrefs.HasKey(MyVoiceVolume) == true) {
-                SetVolume(MyVoiceVolume, PlayerPrefs.GetFloat(MyVoiceVolume));
+            if (PlayerPrefs.HasKey(VoiceVolume) == true) {
+                SetVolume(VoiceVolume, PlayerPrefs.GetFloat(VoiceVolume));
             } else {
-                SetMusicVolume(defaultVoiceVolume);
+                SetVoiceVolume(defaultVoiceVolume);
             }
         }
 
@@ -145,38 +144,38 @@ namespace AnyRPG {
 
         public void SetMasterVolume(float volume) {
             //Debug.Log("AudioManager.SetMasterVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyMasterVolume, volume);
-            audioMixer.SetFloat(MyMasterVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(MasterVolume, volume);
+            audioMixer.SetFloat(MasterVolume, GetLogVolume(volume));
         }
 
         public void SetMusicVolume(float volume) {
             //Debug.Log("AudioManager.SetMusicVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyMusicVolume, volume);
-            audioMixer.SetFloat(MyMusicVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(MusicVolume, volume);
+            audioMixer.SetFloat(MusicVolume, GetLogVolume(volume));
         }
 
         public void SetAmbientVolume(float volume) {
             //Debug.Log("AudioManager.SetAmbientVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyAmbientVolume, volume);
-            audioMixer.SetFloat(MyAmbientVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(AmbientVolume, volume);
+            audioMixer.SetFloat(AmbientVolume, GetLogVolume(volume));
         }
 
         public void SetEffectsVolume(float volume) {
             //Debug.Log("AudioManager.SetEffectsVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyEffectsVolume, volume);
-            audioMixer.SetFloat(MyEffectsVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(EffectsVolume, volume);
+            audioMixer.SetFloat(EffectsVolume, GetLogVolume(volume));
         }
 
         public void SetUIVolume(float volume) {
             //Debug.Log("AudioManager.SetEffectsVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyUiVolume, volume);
-            audioMixer.SetFloat(MyUiVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(UiVolume, volume);
+            audioMixer.SetFloat(UiVolume, GetLogVolume(volume));
         }
 
         public void SetVoiceVolume(float volume) {
             //Debug.Log("AudioManager.SetEffectsVolume(" + volume + ")");
-            PlayerPrefs.SetFloat(MyVoiceVolume, volume);
-            audioMixer.SetFloat(MyVoiceVolume, GetLogVolume(volume));
+            PlayerPrefs.SetFloat(VoiceVolume, volume);
+            audioMixer.SetFloat(VoiceVolume, GetLogVolume(volume));
         }
 
         public float GetVolume(string volumeType) {

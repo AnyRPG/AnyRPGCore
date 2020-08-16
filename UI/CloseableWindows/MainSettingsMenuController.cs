@@ -694,12 +694,12 @@ namespace AnyRPG {
         }
 
         private void LoadVolumeSliderValues() {
-            masterSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyMasterVolume);
-            musicSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyMusicVolume);
-            ambientSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyAmbientVolume);
-            effectsSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyEffectsVolume);
-            uiSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyUiVolume);
-            voiceSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MyVoiceVolume);
+            masterSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MasterVolume);
+            musicSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MusicVolume);
+            ambientSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.AmbientVolume);
+            effectsSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.EffectsVolume);
+            uiSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.UiVolume);
+            voiceSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.VoiceVolume);
         }
 
         private void LoadDifficultySettings() {

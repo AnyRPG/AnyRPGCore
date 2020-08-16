@@ -438,7 +438,7 @@ namespace AnyRPG {
                 audioSource.rolloffMode = AudioRolloffMode.Linear;
                 audioSource.minDistance = 1f;
                 audioSource.maxDistance = 50f;
-                audioSource.outputAudioMixerGroup = AudioManager.MyInstance.MyEffectsAudioSource.outputAudioMixerGroup;
+                audioSource.outputAudioMixerGroup = AudioManager.MyInstance.EffectsAudioSource.outputAudioMixerGroup;
             }
             // ADD SOME CODE IN THE FUTURE TO AUTO-CONFIGURE THIS AUDIO SOURCE IN CASE IT HAS NOT BEEN ADDED TO THE UNIT PREFAB
 
