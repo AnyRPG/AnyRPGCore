@@ -15,7 +15,7 @@ namespace AnyRPG {
         protected override void Update() {
             //Debug.Log(gameObject.name + ".AICombat.Update()");
             base.Update();
-            if (!baseCharacter.CharacterStats.IsAlive) {
+            if (baseCharacter == null || !baseCharacter.CharacterStats.IsAlive) {
                 return;
             }
         }

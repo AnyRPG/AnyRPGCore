@@ -180,6 +180,12 @@ namespace AnyRPG {
                 return;
             }
 
+            // testing: do nothing if idle state to prevent resetting movement to zero and interfering with moving platforms
+            if (rpgCharacterState == AnyRPGCharacterState.Idle) {
+                //Debug.Log("Idle state active, not moving");
+                return;
+            }
+
             //Move the player by our velocity every frame.
             // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
             Vector3 relativeMovement = CharacterRelativeInput(currentMoveVelocity);
@@ -292,7 +298,9 @@ namespace AnyRPG {
             // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
             // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
             if (Mathf.Abs(animatedUnit.MyRigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
-                currentMoveVelocity = new Vector3(0, 0, 0);
+
+                // note: disabled this to test if it was causing issues with moving platforms
+                //currentMoveVelocity = new Vector3(0, 0, 0);
                 
                 // disable gravity while this close to the ground so we don't slide down slight inclines
                 // freezing y position was causing character to not get lifted by bridges
@@ -302,7 +310,9 @@ namespace AnyRPG {
 
                 // allow the character to fall until they reach the ground
                 animatedUnit.FreezePositionXZ();
-                currentMoveVelocity = new Vector3(0, Mathf.Clamp(animatedUnit.MyRigidBody.velocity.y, -53, 0), 0);
+
+                // note: disabled this to test if it was causing issues with moving platforms
+                //currentMoveVelocity = new Vector3(0, Mathf.Clamp(animatedUnit.MyRigidBody.velocity.y, -53, 0), 0);
             }
         }
 
