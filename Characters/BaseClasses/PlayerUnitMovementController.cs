@@ -264,6 +264,10 @@ namespace AnyRPG {
             isMoving = false;
             animatedUnit.MyCharacterAnimator.SetMoving(false);
             animatedUnit.MyCharacterAnimator.SetStrafing(false);
+
+            // testing stop turning animation from playing
+            animatedUnit.MyCharacterAnimator.SetTurnVelocity(0f);
+
             animatedUnit.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
 
         }
