@@ -186,6 +186,10 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         protected virtual void GetUnitProfileReference() {
+            if (SystemUnitProfileManager.MyInstance == null) {
+                Debug.LogError(gameObject.name + ".GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
+                return;
+            }
             if (unitProfileName != null && unitProfileName != string.Empty) {
                 UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
                 if (tmpUnitProfile != null) {
