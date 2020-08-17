@@ -11,10 +11,8 @@ namespace AnyRPG {
 
         [Tooltip("Ignore these layers when checking if walls are in the way of the camera view of the character")]
         [SerializeField]
-        private LayerMask ignoreMask;
+        private LayerMask ignoreMask = ~0;
 
-        //public Vector3 offset;
-        //public float rightMouseLookSpeed = 10f;
         public float cameraFollowSpeed = 10f;
         public float zoomSpeed = 4f;
         public float minZoom = 2f;
