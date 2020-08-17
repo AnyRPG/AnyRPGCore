@@ -62,7 +62,9 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
-            prerequisiteDialog.OnDialogCompleted -= HandleDialogCompleted;
+            if (prerequisiteDialog != null) {
+                prerequisiteDialog.OnDialogCompleted -= HandleDialogCompleted;
+            }
         }
     }
 
