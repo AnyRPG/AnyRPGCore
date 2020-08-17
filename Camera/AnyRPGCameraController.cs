@@ -9,6 +9,10 @@ namespace AnyRPG {
         [SerializeField]
         private Transform target = null;
 
+        [Tooltip("Ignore these layers when checking if walls are in the way of the camera view of the character")]
+        [SerializeField]
+        private LayerMask ignoreMask;
+
         //public Vector3 offset;
         //public float rightMouseLookSpeed = 10f;
         public float cameraFollowSpeed = 10f;
@@ -178,13 +182,7 @@ namespace AnyRPG {
             //Debug.Log("drawing Camera debug line from targetPosition: " + targetPosition + " to wantedPosition: " + wantedPosition);
             Debug.DrawLine(targetPosition, wantedPosition, Color.cyan);
             RaycastHit wallHit = new RaycastHit();
-            int playerMask = 1 << LayerMask.NameToLayer("Player");
-            // added characterUnit to prevent enemies from surrounding the player and forcing his camera inward so he can't see out of the crowd
-            int characterUnitMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-            int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
-            int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
-            int layerMask = ~(playerMask | ignoreMask | spellMask | characterUnitMask);
-            if (Physics.Linecast(targetPosition, wantedPosition, out wallHit, layerMask)) {
+            if (Physics.Linecast(targetPosition, wantedPosition, out wallHit, ~ignoreMask)) {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
                 wantedPosition = new Vector3(wallHit.point.x, wallHit.point.y, wallHit.point.z);
