@@ -6,15 +6,41 @@ using UnityEngine;
 namespace AnyRPG {
     public class CameraShader : MonoBehaviour {
 
+        [Header("Base layer")]
+
+        [Tooltip("If true, the base layer will be rendered")]
+        [SerializeField]
+        private bool renderBase = true;
+
+        [Tooltip("The base layers that will be rendered")]
+        [SerializeField]
+        private LayerMask miniMapMask = ~0;
+
+        [Tooltip("The shader that will be used to render the layers on the minimap mask. Leave blank to render with the default shader.")]
         [SerializeField]
         private Shader miniMapShader = null;
 
+        [Header("Overlay layer")]
+
+        [Tooltip("If true, the overlay layer will be rendered")]
+        [SerializeField]
+        private bool renderOverlay = true;
+
+        [Tooltip("The overlay layers that will be rendered")]
+        [SerializeField]
+        private LayerMask overlayMask = ~0;
+
+        [Tooltip("The shader that will be used to render the layers on the overlay mask. Leave blank to render with the default shader.")]
         [SerializeField]
         private Shader overlayShader = null;
 
+        [Header("Performance")]
+
+        [Tooltip("If true, the minimap will update at a set frame rate, instead of every frame")]
         [SerializeField]
         private bool limitFrameRates = false;
 
+        [Tooltip("If frame rates are limited, this is the number of times per second the minimap will refresh")]
         [SerializeField]
         private int targetFrameRate = 10;
 
@@ -23,20 +49,10 @@ namespace AnyRPG {
 
         private Camera miniMapCamera;
 
-        private int defaultLayer;
-        private int walkableLayer;
-        private int waterLayer;
-        private int minimapLayer;
-
         // Start is called before the first frame update
         void Start() {
             miniMapCamera = GetComponent<Camera>();
             miniMapCamera.enabled = false;
-
-            defaultLayer = LayerMask.NameToLayer("Default");
-            walkableLayer = LayerMask.NameToLayer("Walkable");
-            waterLayer = LayerMask.NameToLayer("Water");
-            minimapLayer = LayerMask.NameToLayer("MiniMap");
 
             if (limitFrameRates == true) {
                 frameLength = 1f / targetFrameRate;
@@ -57,17 +73,27 @@ namespace AnyRPG {
         }
 
         public void CaptureFrame() {
-            if (miniMapShader != null) {
-                miniMapCamera.cullingMask = ((1 << defaultLayer) | (1 << walkableLayer) | (1 << waterLayer));
+            if (renderBase == true) {
+                miniMapCamera.cullingMask = miniMapMask;
                 miniMapCamera.clearFlags = CameraClearFlags.Skybox;
-                miniMapCamera.RenderWithShader(miniMapShader, "");
+                if (miniMapShader != null) {
+                    miniMapCamera.RenderWithShader(miniMapShader, "");
+                } else {
+                    miniMapCamera.Render();
+                }
             }
-            if (overlayShader != null) {
-                miniMapCamera.cullingMask = (1 << minimapLayer);
+
+            if (renderOverlay == true) {
+                miniMapCamera.cullingMask = overlayMask;
                 miniMapCamera.clearFlags = CameraClearFlags.Nothing;
-                miniMapCamera.RenderWithShader(overlayShader, "");
+                if (overlayShader != null) {
+                    miniMapCamera.RenderWithShader(overlayShader, "");
+                } else {
+                    miniMapCamera.Render();
+                }
             }
         }
+
     }
 
 }

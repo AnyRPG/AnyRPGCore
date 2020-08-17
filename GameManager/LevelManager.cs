@@ -246,14 +246,14 @@ namespace AnyRPG {
         public void PlayLevelSounds() {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             if (activeSceneNode != null) {
-                if (activeSceneNode.MyAmbientMusicProfile != null && activeSceneNode.MyAmbientMusicProfile.AudioClip != null) {
-                    AudioManager.MyInstance.PlayAmbientSound(activeSceneNode.MyAmbientMusicProfile.AudioClip);
+                if (activeSceneNode.AmbientMusicProfile != null && activeSceneNode.AmbientMusicProfile.AudioClip != null) {
+                    AudioManager.MyInstance.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
                 } else {
                     AudioManager.MyInstance.StopAmbientSound();
                 }
-                if (activeSceneNode.MyBackgroundMusicProfile != null && activeSceneNode.MyBackgroundMusicProfile.AudioClip != null) {
+                if (activeSceneNode.BackgroundMusicProfile != null && activeSceneNode.BackgroundMusicProfile.AudioClip != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
-                    AudioManager.MyInstance.PlayMusic(activeSceneNode.MyBackgroundMusicProfile.AudioClip);
+                    AudioManager.MyInstance.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
                 } else {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
                     AudioManager.MyInstance.StopMusic();
@@ -266,8 +266,8 @@ namespace AnyRPG {
 
             if (activeSceneNode != null) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): GetActiveSceneNode is not null");
-                if (activeSceneNode.MyAutoPlayCutscene != null) {
-                    if (activeSceneNode.MyAutoPlayCutscene.Viewed == true && activeSceneNode.MyAutoPlayCutscene.Repeatable == false) {
+                if (activeSceneNode.AutoPlayCutscene != null) {
+                    if (activeSceneNode.AutoPlayCutscene.Viewed == true && activeSceneNode.AutoPlayCutscene.Repeatable == false) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
                         CameraManager.MyInstance.ActivateMainCamera();
                         return;
@@ -275,7 +275,7 @@ namespace AnyRPG {
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                         //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(activeSceneNode.MyAutoPlayCutscene);
+                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
                     //}
                 } else {
                     CameraManager.MyInstance.ActivateMainCamera();

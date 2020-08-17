@@ -69,8 +69,8 @@ namespace AnyRPG {
         public void ActivateEnvironmentStateByIndex(int index) {
 
             SceneNode currentNode = LevelManager.MyInstance.GetActiveSceneNode();
-            if (currentNode != null && currentNode.MyEnvironmentStates != null && currentNode.MyEnvironmentStates.Count > index && currentNode.MyEnvironmentStates[index].MySkyBoxMaterial != null) {
-                SystemEnvironmentManager.MyInstance.SetSkyBox(currentNode.MyEnvironmentStates[index].MySkyBoxMaterial);
+            if (currentNode != null && currentNode.EnvironmentStates != null && currentNode.EnvironmentStates.Count > index && currentNode.EnvironmentStates[index].MySkyBoxMaterial != null) {
+                SystemEnvironmentManager.MyInstance.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
             }
         }
 

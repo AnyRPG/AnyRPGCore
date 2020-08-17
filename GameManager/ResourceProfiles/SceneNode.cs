@@ -80,13 +80,13 @@ namespace AnyRPG {
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string SceneName { get => resourceName; set => resourceName = value; }
-        public bool MySuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
-        public bool MySuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
-        public AudioProfile MyAmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
-        public AudioProfile MyBackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
-        public Dictionary<string, PersistentObjectSaveData> MyPersistentObjects { get => persistentObjects; set => persistentObjects = value; }
-        public List<EnvironmentStateProfile> MyEnvironmentStates { get => environmentStates; set => environmentStates = value; }
-        public Cutscene MyAutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
+        public bool SuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
+        public bool SuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
+        public AudioProfile AmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
+        public AudioProfile BackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
+        public Dictionary<string, PersistentObjectSaveData> PersistentObjects { get => persistentObjects; set => persistentObjects = value; }
+        public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
+        public Cutscene AutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
         public bool Visited { get => visited; set => visited = value; }
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }

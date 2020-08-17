@@ -75,8 +75,8 @@ namespace AnyRPG {
             sceneNode.Visited = sceneNodeSaveData.visited;
             if (sceneNodeSaveData.persistentObjects != null) {
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNodeSaveData.persistentObjects) {
-                    if (sceneNode.MyPersistentObjects.ContainsKey(persistentObjectSaveData.UUID) == false) {
-                        sceneNode.MyPersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
+                    if (sceneNode.PersistentObjects.ContainsKey(persistentObjectSaveData.UUID) == false) {
+                        sceneNode.PersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
                     }
                 }
             }
