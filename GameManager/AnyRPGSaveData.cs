@@ -28,7 +28,6 @@ namespace AnyRPG {
         public string DataSavedOn;
         public string DataFileName;
 
-        public List<QuestSaveData> questSaveData;
         public List<ResourcePowerSaveData> resourcePowerSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
         public List<InventorySlotSaveData> inventorySlotSaveData;
@@ -39,12 +38,17 @@ namespace AnyRPG {
         public List<ReputationSaveData> reputationSaveData;
         public List<EquipmentSaveData> equipmentSaveData;
         public List<CurrencySaveData> currencySaveData;
-        public List<DialogSaveData> dialogSaveData;
-        public List<BehaviorSaveData> behaviorSaveData;
-        public List<SceneNodeSaveData> sceneNodeSaveData;
-        public List<CutsceneSaveData> cutsceneSaveData;
         public List<StatusEffectSaveData> statusEffectSaveData;
         public List<PetSaveData> petSaveData;
+        public List<BehaviorSaveData> behaviorSaveData;
+
+        // the properties below currently overwrite properties of scriptableObjects
+        // this is undesired and if any similar data is added, it needs to be intentionally cleared between game loads
+        public List<QuestSaveData> questSaveData;
+        public List<DialogSaveData> dialogSaveData;
+        public List<SceneNodeSaveData> sceneNodeSaveData;
+        public List<CutsceneSaveData> cutsceneSaveData;
+
     }
 
     [Serializable]

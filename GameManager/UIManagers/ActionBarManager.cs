@@ -41,7 +41,7 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearActionBars;
+                SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
                 SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = true;
@@ -55,10 +55,14 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearActionBars;
+                SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandlePlayerConnectionDespawn() {
+            ClearActionBars(true);
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -231,11 +235,11 @@ namespace AnyRPG {
             return false;
         }
 
-        public void ClearActionBars() {
+        public void ClearActionBars(bool clearSavedUseables = false) {
             //Debug.Log("ActionBarManager.AddNewAbility()");
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                actionBarController.ClearActionBar();
+                actionBarController.ClearActionBar(clearSavedUseables);
             }
         }
 

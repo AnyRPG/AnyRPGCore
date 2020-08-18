@@ -40,11 +40,14 @@ namespace AnyRPG {
         }
         */
 
-        public void ClearActionBar() {
+        public void ClearActionBar(bool clearSavedUseables = false) {
             //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar()");
             for (int i = 0; i < actionButtons.Count; i++) {
                 //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar(): clearing button: " + i);
                 actionButtons[i].ClearUseable();
+                if (clearSavedUseables) {
+                    actionButtons[i].SavedUseable = null;
+                }
             }
         }
 
