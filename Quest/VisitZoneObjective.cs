@@ -35,6 +35,14 @@ namespace AnyRPG {
             }
         }
 
+        public override void UpdateCompletionCount(bool printMessages = true) {
+            base.UpdateCompletionCount(printMessages);
+            SceneNode sceneNode = SystemSceneNodeManager.MyInstance.GetResource(MyType);
+            if (sceneNode != null && sceneNode.Visited == true) {
+                CurrentAmount++;
+            }
+        }
+
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
             base.OnAcceptQuest(quest, printMessages);
@@ -44,7 +52,9 @@ namespace AnyRPG {
                 objectiveSceneNode = SystemSceneNodeManager.MyInstance.GetResource(MyType);
             } else {
                 Debug.LogError("VisitZoneObjective.OnAcceptQuest(): Could not find scene node : " + MyType + " while inititalizing a visit zone objective.  CHECK INSPECTOR");
+                return;
             }
+            UpdateCompletionCount(printMessages);
             objectiveSceneNode.OnVisitZone += CheckCompletionCount;
 
             // don't forget to remove these later

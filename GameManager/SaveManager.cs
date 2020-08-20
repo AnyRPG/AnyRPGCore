@@ -1172,11 +1172,13 @@ namespace AnyRPG {
             LoadRecipeData(anyRPGSaveData);
             LoadReputationData(anyRPGSaveData);
 
-            LoadQuestData(anyRPGSaveData);
             LoadDialogData(anyRPGSaveData);
             LoadBehaviorData(anyRPGSaveData);
             LoadSceneNodeData(anyRPGSaveData);
             LoadCutsceneData(anyRPGSaveData);
+
+            // quest data gets loaded last because it could rely on other data such as dialog completion status, which don't get saved because they are inferred
+            LoadQuestData(anyRPGSaveData);
 
             LoadActionBarData(anyRPGSaveData);
             LoadCurrencyData(anyRPGSaveData);

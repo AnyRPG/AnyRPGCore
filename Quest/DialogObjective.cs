@@ -35,9 +35,19 @@ namespace AnyRPG {
             }
         }
 
+        public override void UpdateCompletionCount(bool printMessages = true) {
+            base.UpdateCompletionCount(printMessages);
+            Dialog dialog = SystemDialogManager.MyInstance.GetResource(MyType);
+            if (dialog != null && dialog.TurnedIn == true) {
+                CurrentAmount++;
+            }
+        }
+
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
             base.OnAcceptQuest(quest, printMessages);
+
+            UpdateCompletionCount(printMessages);
 
             // don't forget to remove these later
             SystemEventManager.MyInstance.OnDialogCompleted += CheckCompletionCount;
