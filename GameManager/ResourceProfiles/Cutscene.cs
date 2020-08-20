@@ -50,7 +50,7 @@ namespace AnyRPG {
                 return SaveManager.MyInstance.GetCutsceneSaveData(this).isCutSceneViewed;
             }
             set {
-                Debug.Log(DisplayName + ".Viewed: setting to: " + value);
+                //Debug.Log(DisplayName + ".Viewed: setting to: " + value);
                 //SaveManager.MyInstance.GetCutsceneSaveData(this).IsCutSceneViewed = value;
                 CutsceneSaveData saveData = SaveManager.MyInstance.GetCutsceneSaveData(this);
                 saveData.isCutSceneViewed = value;

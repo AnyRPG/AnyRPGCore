@@ -53,6 +53,7 @@ namespace AnyRPG {
         public Dictionary<string, DialogSaveData> DialogSaveDataDictionary { get => dialogSaveDataDictionary; set => dialogSaveDataDictionary = value; }
         public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
+        public Dictionary<string, Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -584,7 +585,8 @@ namespace AnyRPG {
                     finalSaveData.tradeSkillObjectives = tradeSkillObjectiveSaveDataList;
                     finalSaveData.abilityObjectives = abilityObjectiveSaveDataList;
                 }
-                anyRPGSaveData.questSaveData.Add(questSaveData);
+                finalSaveData.inLog = QuestLog.MyInstance.HasQuest(questSaveData.MyName);
+                anyRPGSaveData.questSaveData.Add(finalSaveData);
             }
 
         }

@@ -127,10 +127,8 @@ namespace AnyRPG {
             ClearCoRoutine();
             gameObject.SetActive(false);
             if (currentCutscene != null) {
-                Debug.Log("CutSceneBarController.EndCutScene(): setting currentcutscene viewed to true");
+                //Debug.Log("CutSceneBarController.EndCutScene(): setting currentcutscene viewed to true");
                 currentCutscene.Viewed = true;
-            } else {
-                Debug.Log("CutSceneBarController.EndCutScene(): currentCutscene is null");
             }
             // if this is not a cutscene that should return, then do not, else do
             //if (currentCutscene.MyUnloadSceneOnEnd) {

@@ -43,6 +43,7 @@ namespace AnyRPG {
             set {
                 QuestObjectiveSaveData saveData = SaveManager.MyInstance.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
                 saveData.MyAmount = value;
+                SaveManager.MyInstance.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
             }
         }
 
