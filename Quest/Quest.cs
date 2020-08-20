@@ -35,8 +35,6 @@ namespace AnyRPG {
 
         private Dialog openingDialog;
 
-        private bool markedComplete = false;
-
         [Header("Quest Level")]
 
         [Tooltip("The level that is considered appropriate for the quest.  Used to calculate xp reduction")]
@@ -163,9 +161,6 @@ namespace AnyRPG {
 
         private Quest questTemplate = null;
 
-        // Track whether this quest has been turned in
-        private bool turnedIn = false;
-
         public CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
         public KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
         public TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
@@ -236,12 +231,18 @@ namespace AnyRPG {
 
         public bool TurnedIn {
             get {
-                return turnedIn;
+                return SaveManager.MyInstance.GetQuestSaveData(this).turnedIn;
+                //return false;
+            }
+            set {
+                QuestSaveData saveData = SaveManager.MyInstance.GetQuestSaveData(this);
+                saveData.turnedIn = value;
+                SaveManager.MyInstance.QuestSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
         public void SetTurnedIn(bool turnedIn, bool notify = true) {
-            this.turnedIn = turnedIn;
+            this.TurnedIn = turnedIn;
             //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
             if (notify) {
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
@@ -289,6 +290,17 @@ namespace AnyRPG {
         public Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
         public int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
         public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
+        public bool MarkedComplete {
+            get {
+                return SaveManager.MyInstance.GetQuestSaveData(this).markedComplete;
+                //return false;
+            }
+            set {
+                QuestSaveData saveData = SaveManager.MyInstance.GetQuestSaveData(this);
+                saveData.markedComplete = value;
+                SaveManager.MyInstance.QuestSaveDataDictionary[saveData.MyName] = saveData;
+            }
+        }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
@@ -319,7 +331,7 @@ namespace AnyRPG {
         }
 
         public void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
-            if (markedComplete == true) {
+            if (MarkedComplete == true) {
                 return;
             }
             if (isAchievement) {
@@ -328,14 +340,14 @@ namespace AnyRPG {
                 }
                 PlayerManager.MyInstance.PlayLevelUpEffects(0);
 
-                markedComplete = true;
-                turnedIn = true;
+                MarkedComplete = true;
+                TurnedIn = true;
             } else {
                 if (printMessages == true) {
                     MessageFeedManager.MyInstance.WriteMessage(string.Format("{0} Complete!", DisplayName));
                 }
             }
-            markedComplete = true;
+            MarkedComplete = true;
             if (notifyOnUpdate == true) {
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
                 OnQuestStatusUpdated();
@@ -482,7 +494,7 @@ namespace AnyRPG {
             if (isAchievement == false && printMessages == true) {
                 MessageFeedManager.MyInstance.WriteMessage("Quest Accepted: " + DisplayName);
             }
-            if (!markedComplete) {
+            if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
                 SystemEventManager.MyInstance.NotifyOnQuestStatusUpdated();
                 OnQuestStatusUpdated();
@@ -491,7 +503,7 @@ namespace AnyRPG {
 
         public void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
             //Debug.Log("QuestLog.CheckCompletion()");
-            if (markedComplete) {
+            if (MarkedComplete) {
                 // no need to waste cycles checking, we are already done
                 return;
             }
@@ -648,27 +660,35 @@ namespace AnyRPG {
 
             foreach (QuestObjective objective in collectObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in killObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in tradeSkillObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in abilityObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in useInteractableObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in questQuestObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in dialogObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             foreach (QuestObjective objective in visitZoneObjectives) {
                 objective.SetupScriptableObjects();
+                objective.SetQuest(this);
             }
             //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {

@@ -41,20 +41,22 @@ namespace AnyRPG {
         /// <summary>
         /// Track whether this dialog has been turned in
         /// </summary>
-        private bool turnedIn = false;
-
         public bool TurnedIn {
             get {
-                return turnedIn;
+                return SaveManager.MyInstance.GetDialogSaveData(this).turnedIn;
+                //return false;
             }
-
             set {
-                turnedIn = value;
-                if (turnedIn == true) {
+                DialogSaveData saveData = SaveManager.MyInstance.GetDialogSaveData(this);
+                saveData.turnedIn = value;
+                SaveManager.MyInstance.DialogSaveDataDictionary[saveData.MyName] = saveData;
+                if (saveData.turnedIn == true) {
+                    Debug.Log(DisplayName + ".Dialog.TurnedIn = true");
                     // these events are for things that need the dialog turned in as a prerequisite
                     SystemEventManager.MyInstance.NotifyOnDialogCompleted(this);
                     OnDialogCompleted();
                 }
+
             }
         }
 
@@ -63,7 +65,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdatePrerequisites(bool notify = true) {
-            //Debug.Log(gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
+            //Debug.Log(gameObject.name + ".Dialog.UpdatePrerequisites()");
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -102,7 +104,7 @@ namespace AnyRPG {
             if (repeatable == false) {
                 return;
             }
-            turnedIn = false;
+            TurnedIn = false;
             foreach (DialogNode dialogNode in dialogNodes) {
                 dialogNode.ResetStatus();
             }

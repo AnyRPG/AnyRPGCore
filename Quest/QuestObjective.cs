@@ -11,8 +11,6 @@ namespace AnyRPG {
         [SerializeField]
         private int amount;
 
-        private int currentAmount;
-
         protected Quest quest;
 
         [SerializeField]
@@ -31,7 +29,23 @@ namespace AnyRPG {
             }
         }
 
-        public int CurrentAmount { get => currentAmount; set => currentAmount = value; }
+        public virtual Type ObjectiveType {
+            get {
+                return typeof(QuestObjective);
+            }
+        }
+
+        public int CurrentAmount {
+            get {
+                return SaveManager.MyInstance.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
+                //return false;
+            }
+            set {
+                QuestObjectiveSaveData saveData = SaveManager.MyInstance.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
+                saveData.MyAmount = value;
+            }
+        }
+
         public string MyType { get => type; set => type = value; }
 
         public virtual bool IsComplete {
@@ -58,6 +72,10 @@ namespace AnyRPG {
         }
 
         public virtual void OnAcceptQuest(Quest quest, bool printMessages = true) {
+            this.quest = quest;
+        }
+
+        public virtual void SetQuest(Quest quest) {
             this.quest = quest;
         }
 

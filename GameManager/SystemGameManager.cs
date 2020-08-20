@@ -73,7 +73,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceLists;
+            //SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceLists;
             eventSubscriptionsInitialized = true;
         }
 
@@ -82,10 +82,14 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceLists;
+            //SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceLists;
             eventSubscriptionsInitialized = false;
         }
 
+        /// <summary>
+        /// this function is not currently in use because objects subscribe to events on these so clearing them breaks the event subscriptions
+        /// also, there should no longer be mutable properties on these so there should be no need to reload them
+        /// </summary>
         public void ReloadResourceLists() {
             //Debug.Log("SystemGameManager.ReloadResourceLists()");
 

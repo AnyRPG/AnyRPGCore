@@ -27,9 +27,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool unloadSceneOnEnd = false;
 
-        [SerializeField]
-        private bool viewed = false;
-
         [Tooltip("Set this to true to ignore the currently loaded player faction and just use faction default relationship colors.")]
         [SerializeField]
         private bool useDefaultFactionColors = false;
@@ -48,7 +45,19 @@ namespace AnyRPG {
 
         private Dialog dialog;
 
-        public bool Viewed { get => viewed; set => viewed = value; }
+        public bool Viewed {
+            get {
+                return SaveManager.MyInstance.GetCutsceneSaveData(this).isCutSceneViewed;
+            }
+            set {
+                Debug.Log(DisplayName + ".Viewed: setting to: " + value);
+                //SaveManager.MyInstance.GetCutsceneSaveData(this).IsCutSceneViewed = value;
+                CutsceneSaveData saveData = SaveManager.MyInstance.GetCutsceneSaveData(this);
+                saveData.isCutSceneViewed = value;
+                SaveManager.MyInstance.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
+            }
+        }
+
         public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
         public Dialog MyDialog { get => dialog; set => dialog = value; }
         public bool MyUnloadSceneOnEnd { get => unloadSceneOnEnd; set => unloadSceneOnEnd = value; }

@@ -235,8 +235,8 @@ namespace AnyRPG {
                 LearnSpecializationAbilities(baseCharacter.ClassSpecialization);
             }
 
-            if (baseCharacter.MyFaction != null) {
-                LearnFactionAbilities(baseCharacter.MyFaction);
+            if (baseCharacter.Faction != null) {
+                LearnFactionAbilities(baseCharacter.Faction);
             }
         }
 

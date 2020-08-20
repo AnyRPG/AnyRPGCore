@@ -9,6 +9,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class CollectObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(CollectObjective);
+            }
+        }
+
         public void UpdateItemCount(Item item) {
 
             // change this with check reference to item prefab in the future

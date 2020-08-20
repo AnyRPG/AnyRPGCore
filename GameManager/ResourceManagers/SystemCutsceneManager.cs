@@ -58,6 +58,7 @@ namespace AnyRPG {
             return returnList;
         }
 
+        /*
         public void LoadCutscene(CutsceneSaveData cutsceneSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
@@ -68,6 +69,7 @@ namespace AnyRPG {
             }
             cutScene.Viewed = cutsceneSaveData.isCutSceneViewed;
         }
+        */
     }
 
 }

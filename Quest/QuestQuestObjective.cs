@@ -9,6 +9,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class QuestQuestObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(QuestQuestObjective);
+            }
+        }
+
         private Quest questObjective;
 
         public override void UpdateCompletionCount(bool printMessages = true) {

@@ -9,6 +9,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class TradeSkillObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(TradeSkillObjective);
+            }
+        }
         private Skill skill;
 
         public virtual bool IsMet() {

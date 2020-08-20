@@ -34,9 +34,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool repeatable = false;
 
-        // track whether it is completed to prevent it from repeating if it is automatic
-        private bool completed = false;
-
         public bool MyPrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -51,12 +48,17 @@ namespace AnyRPG {
 
         public List<BehaviorNode> MyBehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
+
+        // track whether it is completed to prevent it from repeating if it is automatic
         public bool Completed {
-            get => completed;
+            get {
+                return SaveManager.MyInstance.GetBehaviorSaveData(this).completed;
+            }
             set {
-                //Debug.Log(MyName + ".BehaviorProfile.MyCompleted = " + value + "; id: " + GetInstanceID());
-                completed = value;
-            } 
+                BehaviorSaveData saveData = SaveManager.MyInstance.GetBehaviorSaveData(this);
+                saveData.completed = value;
+                SaveManager.MyInstance.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
+            }
         }
 
         public bool Repeatable { get => repeatable; set => repeatable = value; }
@@ -103,7 +105,7 @@ namespace AnyRPG {
         /// </summary>
         public void ResetStatus() {
             if (repeatable == true) {
-                completed = false;
+                Completed = false;
                 foreach (BehaviorNode behaviorNode in behaviorNodes) {
                     behaviorNode.ResetStatus();
                 }

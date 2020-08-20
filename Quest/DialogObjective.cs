@@ -10,6 +10,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class DialogObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(DialogObjective);
+            }
+        }
+
         // NEW (HOPEFULLY) SAFE COMPLETION CHECK CODE THAT SHOULDN'T RESULT IN RUNAWAY STACK OVERFLOW ETC
         public void CheckCompletionCount(Dialog dialog) {
             bool completeBefore = IsComplete;

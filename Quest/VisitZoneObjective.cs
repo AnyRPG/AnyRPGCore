@@ -10,6 +10,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class VisitZoneObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(VisitZoneObjective);
+            }
+        }
+
         private SceneNode objectiveSceneNode = null;
 
         // NEW (HOPEFULLY) SAFE COMPLETION CHECK CODE THAT SHOULDN'T RESULT IN RUNAWAY STACK OVERFLOW ETC

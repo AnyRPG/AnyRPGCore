@@ -64,23 +64,6 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public void LoadSceneNode(SceneNodeSaveData sceneNodeSaveData) {
-            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
-
-            SceneNode sceneNode = GetResource(sceneNodeSaveData.MyName);
-            if (sceneNode == null) {
-                //Debug.LogError("SystemSceneNodeManager.LoadSceneNode(): Scene " + sceneNodeSaveData.MyName + " could not be found.");
-                return;
-            }
-            sceneNode.Visited = sceneNodeSaveData.visited;
-            if (sceneNodeSaveData.persistentObjects != null) {
-                foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNodeSaveData.persistentObjects) {
-                    if (sceneNode.PersistentObjects.ContainsKey(persistentObjectSaveData.UUID) == false) {
-                        sceneNode.PersistentObjects.Add(persistentObjectSaveData.UUID, persistentObjectSaveData);
-                    }
-                }
-            }
-        }
     }
 
 }

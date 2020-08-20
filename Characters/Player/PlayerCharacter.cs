@@ -57,7 +57,7 @@ namespace AnyRPG {
 
         public void JoinFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
-            if (newFaction != null && newFaction != PlayerManager.MyInstance.MyCharacter.MyFaction) {
+            if (newFaction != null && newFaction != PlayerManager.MyInstance.MyCharacter.Faction) {
                 SetCharacterFaction(newFaction);
                 characterAbilityManager.LearnFactionAbilities(newFaction);
             }

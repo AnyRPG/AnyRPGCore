@@ -45,10 +45,11 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance != null) {
                     SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
-                        if (activeSceneNode.PersistentObjects.ContainsKey(uuid.ID)) {
-                            storedUUID = activeSceneNode.PersistentObjects[uuid.ID].UUID;
-                            storedPosition = new Vector3(activeSceneNode.PersistentObjects[uuid.ID].LocationX, activeSceneNode.PersistentObjects[uuid.ID].LocationY, activeSceneNode.PersistentObjects[uuid.ID].LocationZ);
-                            storedForwardDirection = new Vector3(activeSceneNode.PersistentObjects[uuid.ID].DirectionX, activeSceneNode.PersistentObjects[uuid.ID].DirectionY, activeSceneNode.PersistentObjects[uuid.ID].DirectionZ);
+                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(uuid.ID);
+                        if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
+                            storedUUID = persistentObjectSaveData.UUID;
+                            storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
+                            storedForwardDirection = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
                             PersistentState persistentState = new PersistentState();
                             persistentState.Position = storedPosition;
                             persistentState.Forward = storedForwardDirection;
@@ -131,7 +132,8 @@ namespace AnyRPG {
             if (LevelManager.MyInstance != null) {
                 SceneNode currentSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
                 if (currentSceneNode != null) {
-                    currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
+                    //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
+                    currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());
                 }
             }
         }

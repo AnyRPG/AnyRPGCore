@@ -63,8 +63,8 @@ namespace AnyRPG {
 
         public string MyName;
         public bool turnedIn;
+        public bool markedComplete;
         public bool inLog;
-        public bool isAchievement;
 
         public List<QuestObjectiveSaveData> killObjectives;
         public List<QuestObjectiveSaveData> useInteractableObjectives;
@@ -93,6 +93,7 @@ namespace AnyRPG {
     public struct CutsceneSaveData {
 
         public string MyName;
+
         public bool isCutSceneViewed;
     }
 

@@ -63,6 +63,7 @@ namespace AnyRPG {
             return returnList;
         }
 
+        /*
         public void LoadDialog(DialogSaveData dialogSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
@@ -71,6 +72,7 @@ namespace AnyRPG {
                 dialog.TurnedIn = dialogSaveData.turnedIn;
             }
         }
+        */
     }
 
 }

@@ -443,7 +443,7 @@ namespace AnyRPG {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
                 CharacterUnit targetCharacterUnit = collidedGameObject.GetComponent<CharacterUnit>();
-                if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.MyFaction) <= -1) {
+                if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.MyCharacter, baseCharacter.Faction) <= -1) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away

@@ -108,8 +108,8 @@ namespace AnyRPG {
             //Debug.Log("Faction.RelationWith(" + (characterToCheck == null ? "null" : characterToCheck.gameObject.name) + ", " + (myCharacter != null ? myCharacter.MyCharacterName : "null" ) + ")");
             Faction otherFaction;
             Faction thisFaction;
-            otherFaction = characterToCheck.MyFaction;
-            thisFaction = myCharacter.MyFaction;
+            otherFaction = characterToCheck.Faction;
+            thisFaction = myCharacter.Faction;
             if (otherFaction != null && thisFaction != null) {
                 // first, checking if mycharacter has a reputation modifier for the other faction
                 //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " is checking if it's own faction manager has a reputation modifier for the faction of target: " + characterToCheck.MyName);
@@ -128,7 +128,7 @@ namespace AnyRPG {
 
             // neither had a special gained reputation with the other, go on to default dispositions
             //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " did not have a local reputation modifer and there was no modifer in the target: " + characterToCheck.MyName + " now checking default dispositions for source and target");
-            return RelationWith(characterToCheck, myCharacter.MyFaction);
+            return RelationWith(characterToCheck, myCharacter.Faction);
         }
 
         // return the relationship between the target characters faction and the source faction
@@ -137,7 +137,7 @@ namespace AnyRPG {
             Faction thisFaction = sourceFaction;
 
             if (targetCharacter != null) {
-                Faction otherFaction = targetCharacter.MyFaction;
+                Faction otherFaction = targetCharacter.Faction;
                 // this is duplicated but needs to be here because you can check colors for ui panels and stuff
                 if (targetCharacter.CharacterFactionManager != null && targetCharacter.CharacterFactionManager.HasReputationModifier(thisFaction)) {
                     //Debug.Log("Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + sourceFactionName + "): target had reputation modifer, returning it");

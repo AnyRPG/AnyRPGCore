@@ -36,6 +36,7 @@ namespace AnyRPG {
         private void Start() {
         }
 
+        /*
         public void LoadQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
@@ -46,14 +47,11 @@ namespace AnyRPG {
             }
             if (!questSaveData.inLog) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
-                //quest.TurnedIn = questSaveData.turnedIn;
-                quest.SetTurnedIn(questSaveData.turnedIn, false);
                 return;
             }
 
-
             // add tracked objectives to quest
-            List<KillObjective> killObjectiveSaveDataList = new List<KillObjective>();
+            //List<KillObjective> killObjectiveSaveDataList = new List<KillObjective>();
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.killObjectives) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objectives");
                 foreach (QuestObjective existingQuestObjective in quest.MyKillObjectives) {
@@ -103,6 +101,7 @@ namespace AnyRPG {
             // just in case one quest was complete but not turned in
             //CheckCompletion();
         }
+        */
 
         public void AcceptQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");

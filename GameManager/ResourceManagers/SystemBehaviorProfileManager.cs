@@ -71,6 +71,7 @@ namespace AnyRPG {
             return returnList;
         }
 
+        /*
         public void LoadBehavior(BehaviorSaveData behaviorSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
@@ -79,6 +80,7 @@ namespace AnyRPG {
                 behaviorProfile.Completed = behaviorSaveData.completed;
             }
         }
+        */
 
     }
 }

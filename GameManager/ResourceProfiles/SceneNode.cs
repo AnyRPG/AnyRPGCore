@@ -73,8 +73,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> environmentStateNames = new List<string>();
 
-        private bool visited = false;
-
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
 
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
@@ -84,17 +82,54 @@ namespace AnyRPG {
         public bool SuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
         public AudioProfile AmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
         public AudioProfile BackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
-        public Dictionary<string, PersistentObjectSaveData> PersistentObjects { get => persistentObjects; set => persistentObjects = value; }
+        public List<PersistentObjectSaveData> PersistentObjects {
+            get {
+                return SaveManager.MyInstance.GetSceneNodeSaveData(this).persistentObjects;
+            }
+        }
         public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene AutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
-        public bool Visited { get => visited; set => visited = value; }
+
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
         public string SceneFile { get => sceneFile; set => sceneFile = value; }
 
+        public bool Visited {
+            get {
+                return SaveManager.MyInstance.GetSceneNodeSaveData(this).visited;
+            }
+            set {
+                SceneNodeSaveData saveData = SaveManager.MyInstance.GetSceneNodeSaveData(this);
+                saveData.visited = value;
+                SaveManager.MyInstance.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+            }
+        }
+
+        public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
+            SceneNodeSaveData saveData = SaveManager.MyInstance.GetSceneNodeSaveData(this);
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.persistentObjects) {
+                if (_persistentObjectSaveData.UUID == UUID) {
+                    saveData.persistentObjects.Remove(_persistentObjectSaveData);
+                    SaveManager.MyInstance.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                    break;
+                }
+            }
+            saveData.persistentObjects.Add(persistentObjectSaveData);
+            SaveManager.MyInstance.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+        }
+
+        public PersistentObjectSaveData GetPersistentObject(string UUID) {
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in SaveManager.MyInstance.GetSceneNodeSaveData(this).persistentObjects) {
+                if (_persistentObjectSaveData.UUID == UUID) {
+                    return _persistentObjectSaveData;
+                }
+            }
+            return new PersistentObjectSaveData();
+        }
+
         public void Visit() {
-            if (visited == false) {
-                visited = true;
+            if (Visited == false) {
+                Visited = true;
             }
             OnVisitZone();
         }

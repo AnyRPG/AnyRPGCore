@@ -127,7 +127,10 @@ namespace AnyRPG {
             ClearCoRoutine();
             gameObject.SetActive(false);
             if (currentCutscene != null) {
+                Debug.Log("CutSceneBarController.EndCutScene(): setting currentcutscene viewed to true");
                 currentCutscene.Viewed = true;
+            } else {
+                Debug.Log("CutSceneBarController.EndCutScene(): currentCutscene is null");
             }
             // if this is not a cutscene that should return, then do not, else do
             //if (currentCutscene.MyUnloadSceneOnEnd) {
@@ -137,7 +140,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator LoadCutSceneBars(int barHeight) {
-            //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Enter Ienumerator");
+            //Debug.Log("CutsceneBarController.PerformAbilityCast() Enter Ienumerator");
             float currentTime = 0f;
             float barHeightPerSecond = barHeight / barFadeInTime;
             //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);

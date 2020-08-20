@@ -83,7 +83,7 @@ namespace AnyRPG {
                 return;
             }
             BaseCharacter otherBaseCharacter = _characterUnit.MyCharacter;
-            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.MyFaction != null && baseCharacter != null && baseCharacter.MyFaction != null) {
+            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
                 if (Faction.RelationWith(otherBaseCharacter, MyBaseCharacter) <= -1) {
                     baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                 }

@@ -10,6 +10,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class KillObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(KillObjective);
+            }
+        }
+
         public void UpdateKillCount(BaseCharacter character, float creditPercent) {
             //Debug.Log("KillObjective.UpdateKillCount()");
 
@@ -19,7 +25,7 @@ namespace AnyRPG {
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.CharacterName, MyType) || SystemResourceManager.MatchResource(character.MyFaction.DisplayName, MyType)) {
+            if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.CharacterName, MyType) || SystemResourceManager.MatchResource(character.Faction.DisplayName, MyType)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {

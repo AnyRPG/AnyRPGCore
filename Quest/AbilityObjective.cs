@@ -9,6 +9,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class AbilityObjective : QuestObjective {
 
+        public override Type ObjectiveType {
+            get {
+                return typeof(AbilityObjective);
+            }
+        }
+
         // if true, you must use the ability, otherwise, just learning it is good enough
         [SerializeField]
         private bool requireUse = false;
