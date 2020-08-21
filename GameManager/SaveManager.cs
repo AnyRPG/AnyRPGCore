@@ -465,6 +465,7 @@ namespace AnyRPG {
                 saveData = sceneNodeSaveDataDictionary[sceneNode.DisplayName];
             } else {
                 saveData = new SceneNodeSaveData();
+                saveData.persistentObjects = new List<PersistentObjectSaveData>();
                 saveData.MyName = sceneNode.DisplayName;
                 sceneNodeSaveDataDictionary.Add(sceneNode.DisplayName, saveData);
             }
