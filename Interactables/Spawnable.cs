@@ -188,12 +188,23 @@ namespace AnyRPG {
 
             if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
-                spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(prefabProfile.SheathedPosition), Quaternion.LookRotation(transform.forward), transform);
-                
-                // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
-                spawnReference.transform.localScale = prefabProfile.SheathedScale;
+                Vector3 usedPosition = prefabProfile.SheathedPosition;
+                Vector3 usedScale = prefabProfile.SheathedScale;
+                Vector3 usedRotation = prefabProfile.SheathedRotation;
 
-                spawnReference.transform.Rotate(prefabProfile.SheathedRotation);
+                if (prefabProfile.UseItemPickup) {
+                    usedPosition = prefabProfile.PickupPosition;
+                    usedScale = prefabProfile.PickupScale;
+                    usedRotation = prefabProfile.PickupRotation;
+                }
+
+                //spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(usedPosition), Quaternion.LookRotation(transform.forward), transform);
+                spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
+
+                // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
+                spawnReference.transform.localScale = usedScale;
+
+                spawnReference.transform.Rotate(usedRotation);
             } else {
                 if (spawnReference != null) {
                     //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Already spawned");

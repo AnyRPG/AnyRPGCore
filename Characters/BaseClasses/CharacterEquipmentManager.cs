@@ -305,6 +305,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
                 return;
             }
+            if (go == null) {
+                //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): gameObject is null is null");
+                return;
+            }
             Transform targetBone = searchObject.transform.FindChildByRecursive(holdableObject.SheathedTargetBone);
             if (targetBone != null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);

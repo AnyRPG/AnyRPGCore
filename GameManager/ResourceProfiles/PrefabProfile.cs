@@ -83,6 +83,27 @@ namespace AnyRPG {
         private string sheathAudioProfileName = string.Empty;
         private AudioProfile sheathAudioProfile = null;
 
+        [Header("Pickup")]
+
+        [Tooltip("If true, this will be used for item pickups instead of sheathed")]
+        [SerializeField]
+        private bool useItemPickup = false;
+
+        [FormerlySerializedAs("sheathedPhysicalPosition")]
+        [SerializeField]
+        private Vector3 pickupPosition = Vector3.zero;
+
+
+        [FormerlySerializedAs("sheathedPhysicalRotation")]
+        [SerializeField]
+        private Vector3 pickupRotation = Vector3.zero;
+
+
+        [FormerlySerializedAs("sheathedPhysicalScale")]
+        [SerializeField]
+        private Vector3 pickupScale = Vector3.one;
+
+
         public GameObject MyPrefab { get => prefab; }
         public Vector3 MyPosition { get => position; }
         public Vector3 MyRotation { get => rotation; }
@@ -96,6 +117,10 @@ namespace AnyRPG {
         public bool RotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
         public AudioProfile UnsheathAudioProfile { get => unsheathAudioProfile; set => unsheathAudioProfile = value; }
         public AudioProfile SheathAudioProfile { get => sheathAudioProfile; set => sheathAudioProfile = value; }
+        public bool UseItemPickup { get => useItemPickup; set => useItemPickup = value; }
+        public Vector3 PickupPosition { get => pickupPosition; set => pickupPosition = value; }
+        public Vector3 PickupRotation { get => pickupRotation; set => pickupRotation = value; }
+        public Vector3 PickupScale { get => pickupScale; set => pickupScale = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
