@@ -56,7 +56,7 @@ namespace AnyRPG {
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
                 Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
                 if (tmpDialog != null) {
-                    prerequisiteDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                    prerequisiteDialog = tmpDialog;
                     prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;
                 } else {
                     Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
