@@ -54,11 +54,16 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteDialog = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                if (tmpDialog != null) {
+                    prerequisiteDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                    prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;
+                } else {
+                    Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+                }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): no prerequisite was defined while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }
-            prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;
         }
 
         public void CleanupScriptableObjects() {
