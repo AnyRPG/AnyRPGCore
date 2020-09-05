@@ -7,15 +7,30 @@ namespace AnyRPG {
     [System.Serializable]
     public class AttachmentNode {
 
+        [Tooltip("Depending on the equipment slot type (eg one hand), this object may be assigned to different actual slots (main hand vs off hand).  This relationship defines what holdable object to use for what actual slot.")]
         [SerializeField]
         private string equipmentSlotProfileName = string.Empty;
 
         private EquipmentSlotProfile equipmentSlotProfile = null;
 
+        [Tooltip("The name of the holdable object profile that refers to the physical prefab")]
         [SerializeField]
         private string holdableObjectName = string.Empty;
 
         private PrefabProfile holdableObject = null;
+
+        [Tooltip("If true, the item will search the prefabProfile of the unit this is being equippped on for the following attachment points")]
+        [SerializeField]
+        private bool useUniversalAttachment = false;
+
+        [Tooltip("The name of the attachment to use when this item is sheathed (or worn in the case of armor)")]
+        [SerializeField]
+        private string primaryAttachmentName = string.Empty;
+
+        [Tooltip("The name of the attachment to use when this item is unSheathed")]
+        [SerializeField]
+        private string unsheathedAttachmentName = string.Empty;
+
 
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
         public PrefabProfile MyHoldableObject { get => holdableObject; set => holdableObject = value; }

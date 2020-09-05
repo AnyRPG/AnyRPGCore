@@ -24,7 +24,7 @@ namespace AnyRPG {
         // keep a reference to the actual equipment set
         private EquipmentSet equipmentSet = null;
 
-        [Header("Equipment Models")]
+        [Header("UMA Equipment Models")]
 
         [Tooltip("If true, the item will look for an UMA recipe with the same name as the item")]
         [SerializeField]
@@ -38,6 +38,8 @@ namespace AnyRPG {
         private List<UMA.UMATextRecipe> UMARecipes = new List<UMATextRecipe>();
 
         // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
+
+        [Header("Prefab Equipment Models")]
 
         [Tooltip("Physical prefabs to attach to bones on the character unit")]
         [SerializeField]
