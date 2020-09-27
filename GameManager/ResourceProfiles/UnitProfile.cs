@@ -21,6 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         private string prefabProfileName = string.Empty;
 
+        private PrefabProfile prefabProfile = null;
+
         // The physical game object to spawn for this unit
         private GameObject unitPrefab = null;
 
@@ -242,6 +244,7 @@ namespace AnyRPG {
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
+        public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -359,7 +362,8 @@ namespace AnyRPG {
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null) {
-                    unitPrefab = tmpPrefabProfile.MyPrefab;
+                    prefabProfile = tmpPrefabProfile;
+                    unitPrefab = tmpPrefabProfile.Prefab;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }

@@ -49,7 +49,7 @@ namespace AnyRPG {
                             endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                         }
                         
-                        channeledObjectScript.Setup(prefabParent, prefabProfile.MyPosition, usedTarget, endPosition);
+                        channeledObjectScript.Setup(prefabParent, prefabProfile.Position, usedTarget, endPosition);
                         //channeledObjectScript.MyStartObject = prefabParent;
                         //channeledObjectScript.MyStartPosition = source.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;

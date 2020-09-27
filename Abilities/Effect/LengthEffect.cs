@@ -127,9 +127,9 @@ namespace AnyRPG {
                         //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);
-                        float finalX = (prefabParent == null ? spawnLocation.x + prefabProfile.MyPosition.x : prefabParent.TransformPoint(prefabProfile.MyPosition).x);
-                        float finalY = (prefabParent == null ? spawnLocation.y + prefabProfile.MyPosition.y : prefabParent.TransformPoint(prefabProfile.MyPosition).y);
-                        float finalZ = (prefabParent == null ? spawnLocation.z + prefabProfile.MyPosition.z : prefabParent.TransformPoint(prefabProfile.MyPosition).z);
+                        float finalX = (prefabParent == null ? spawnLocation.x + prefabProfile.Position.x : prefabParent.TransformPoint(prefabProfile.Position).x);
+                        float finalY = (prefabParent == null ? spawnLocation.y + prefabProfile.Position.y : prefabParent.TransformPoint(prefabProfile.Position).y);
+                        float finalZ = (prefabParent == null ? spawnLocation.z + prefabProfile.Position.z : prefabParent.TransformPoint(prefabProfile.Position).z);
                         //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
                         Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
                         //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
@@ -142,13 +142,13 @@ namespace AnyRPG {
                         if (prefabParent != null) {
                             usedForwardDirection = prefabParent.transform.forward;
                         }
-                        GameObject prefabObject = Instantiate(prefabProfile.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(prefabProfile.MyRotation), prefabParent);
+                        GameObject prefabObject = Instantiate(prefabProfile.Prefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(prefabProfile.Rotation), prefabParent);
                         if (prefabObject == null) {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): prefabObject = null");
                         } else {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
                         }
-                        prefabObject.transform.localScale = prefabProfile.MyScale;
+                        prefabObject.transform.localScale = prefabProfile.Scale;
                         prefabObjects[prefabProfile] = prefabObject;
                         //abilityEffectObject =
                     }

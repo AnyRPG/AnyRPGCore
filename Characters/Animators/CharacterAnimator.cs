@@ -1257,7 +1257,7 @@ namespace AnyRPG {
             SetAttacking(false);
             currentAbilityEffectContext = null;
             if (characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterEquipmentManager != null) {
-                characterUnit.MyCharacter.CharacterEquipmentManager.DespawnAbilityObjects();
+                characterUnit.MyCharacter.CharacterAbilityManager.DespawnAbilityObjects();
             }
         }
 

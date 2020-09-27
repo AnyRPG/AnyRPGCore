@@ -186,7 +186,7 @@ namespace AnyRPG {
         public virtual void Spawn() {
             //Debug.Log(gameObject.name + ".Spawnable.Spawn()");
 
-            if (spawnReference == null && prefabProfile != null && prefabProfile.MyPrefab != null) {
+            if (spawnReference == null && prefabProfile != null && prefabProfile.Prefab != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
@@ -199,7 +199,7 @@ namespace AnyRPG {
                 }
 
                 //spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(usedPosition), Quaternion.LookRotation(transform.forward), transform);
-                spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
+                spawnReference = Instantiate(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
 
                 // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
                 spawnReference.transform.localScale = usedScale;
@@ -212,7 +212,7 @@ namespace AnyRPG {
                 if (prefabProfile == null) {
                     //Debug.Log(gameObject.name + ".Spawnable.Spawn(): PrefabProfile is null");
                 } else {
-                    if (prefabProfile.MyPrefab == null) {
+                    if (prefabProfile.Prefab == null) {
                         //Debug.Log(gameObject.name + ".Spawnable.Spawn(): PrefabProfile.myprefab is null");
                     }
                 }
@@ -266,7 +266,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.SetupScriptableObjects()");
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
-                if (tmpPrefabProfile != null && tmpPrefabProfile.MyPrefab != null) {
+                if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {
                     prefabProfile = tmpPrefabProfile;
                 } else {
                     Debug.LogError(gameObject.name + ".Spawnable.SetupScriptableObjects(): COULD NOT FIND PREFAB PROFILE: " + prefabProfileName + " OR ITS PREFAB WHILE INITIALIZING " + gameObject.name);

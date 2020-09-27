@@ -61,7 +61,7 @@ namespace AnyRPG {
         public void AnimationPrefabDestroy() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabDestroy()");
             if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterEquipmentManager != null) {
-                characterUnit.MyCharacter.CharacterEquipmentManager.DespawnAbilityObjects();
+                characterUnit.MyCharacter.CharacterAbilityManager.DespawnAbilityObjects();
             }
         }
 

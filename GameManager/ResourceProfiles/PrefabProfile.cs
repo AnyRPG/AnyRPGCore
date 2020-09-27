@@ -112,10 +112,10 @@ namespace AnyRPG {
         // reference to the actual attachment profile
         private AttachmentProfile attachmentProfile = null;
 
-        public GameObject MyPrefab { get => prefab; }
-        public Vector3 MyPosition { get => position; }
-        public Vector3 MyRotation { get => rotation; }
-        public Vector3 MyScale { get => scale; }
+        public GameObject Prefab { get => prefab; }
+        public Vector3 Position { get => position; }
+        public Vector3 Rotation { get => rotation; }
+        public Vector3 Scale { get => scale; }
         public string TargetBone { get => targetBone; }
 
         public Vector3 SheathedPosition { get => sheathedPosition; }

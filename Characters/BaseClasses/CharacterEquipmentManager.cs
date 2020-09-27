@@ -18,12 +18,10 @@ namespace AnyRPG {
 
         protected Dictionary<EquipmentSlotProfile, Equipment> currentEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
 
-        protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
+        //protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
+        protected Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
 
         //protected Transform targetBone;
-
-        // the holdable objects spawned during an ability cast and removed when the cast is complete
-        protected List<GameObject> abilityObjects = new List<GameObject>();
 
         protected bool eventSubscriptionsInitialized = false;
         protected bool componentReferencesInitialized = false;
@@ -185,30 +183,37 @@ namespace AnyRPG {
             if (newEquipment == null || newEquipment.MyHoldableObjectList == null || equipmentSlotProfile == null) {
                 return;
             }
-            Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
+            //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
+            Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
             foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.MyHoldableObjectList) {
                 if (holdableObjectAttachment != null && holdableObjectAttachment.MyAttachmentNodes != null) {
                     foreach (AttachmentNode attachmentNode in holdableObjectAttachment.MyAttachmentNodes) {
                         if (attachmentNode != null && attachmentNode.MyEquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
                             //CreateComponentReferences();
-                            if (attachmentNode.MyHoldableObject != null && attachmentNode.MyHoldableObject.MyPrefab != null) {
+                            if (attachmentNode.HoldableObject != null && attachmentNode.HoldableObject.Prefab != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
                                 // attach a mesh to a bone for weapons
-                                Transform targetBone = playerUnitObject.transform.FindChildByRecursive(attachmentNode.MyHoldableObject.SheathedTargetBone);
-                                if (targetBone != null) {
-                                    //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                    GameObject newEquipmentPrefab = Instantiate(attachmentNode.MyHoldableObject.MyPrefab, targetBone, false);
-                                    holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
-                                    //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
-                                    newEquipmentPrefab.transform.localScale = attachmentNode.MyHoldableObject.MyScale;
-                                    if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
-                                        HoldObject(newEquipmentPrefab, attachmentNode.MyHoldableObject, playerUnitObject);
+                                AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
+                                if (attachmentPointNode != null) {
+                                    Transform targetBone = playerUnitObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+
+                                    if (targetBone != null) {
+                                        //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                                        GameObject newEquipmentPrefab = Instantiate(attachmentNode.HoldableObject.Prefab, targetBone, false);
+                                        //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
+                                        holdableObjects.Add(attachmentNode, newEquipmentPrefab);
+                                        //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
+
+                                        newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
+                                        if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
+                                            HoldObject(newEquipmentPrefab, attachmentNode, playerUnitObject);
+                                        } else {
+                                            SheathObject(newEquipmentPrefab, attachmentNode, playerUnitObject);
+                                        }
                                     } else {
-                                        SheathObject(newEquipmentPrefab, attachmentNode.MyHoldableObject, playerUnitObject);
+                                        Debug.Log(gameObject + ".CharacterEquipmentManager.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.DisplayName);
                                     }
-                                } else {
-                                    //Debug.Log(gameObject + ".CharacterEquipmentManager.HandleWeaponSlot(). We could not find the target bone " + holdableObject.MySheathedTargetBone + " when trying to Equip " + newItem.MyName);
                                 }
                             }
                         }
@@ -220,56 +225,13 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnAbilityObjects(List<PrefabProfile> holdableObjects) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObjects()");
-            foreach (PrefabProfile holdableObject in holdableObjects) {
-                if (holdableObject != null) {
-
-                    if (holdableObject.MyPrefab != null) {
-                        Transform targetBone = playerUnitObject.transform.FindChildByRecursive(holdableObject.TargetBone);
-                        Vector3 usedForwardDirection = playerUnitObject.transform.forward;
-                        if (targetBone == null) {
-                            targetBone = playerUnitObject.transform;
-                        } else {
-                            usedForwardDirection = targetBone.transform.forward;
-                        }
-                        if (targetBone != null) {
-                            Vector3 finalSpawnLocation = new Vector3(targetBone.TransformPoint(holdableObject.MyPosition).x, targetBone.TransformPoint(holdableObject.MyPosition).y, targetBone.TransformPoint(holdableObject.MyPosition).z);
-                            //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                            GameObject abilityObject = Instantiate(holdableObject.MyPrefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(holdableObject.MyRotation), targetBone);
-                            abilityObject.transform.localScale = holdableObject.MyScale;
-                            HoldObject(abilityObject, holdableObject, playerUnitObject);
-                            abilityObjects.Add(abilityObject);
-                        } else {
-                            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        public void DespawnAbilityObjects() {
-            //Debug.Log(gameObject + ".CharacterEquipmentManager.DespawnAbilityObjects()");
-            if (abilityObjects == null || abilityObjects.Count == 0) {
-                return;
-            }
-
-            foreach (GameObject abilityObject in abilityObjects) {
-                if (abilityObject != null) {
-                    Destroy(abilityObject);
-                }
-            }
-            abilityObjects.Clear();
-        }
-
         public void SheathWeapons() {
             // loop through all the equipmentslots and check if they have equipment that is of type weapon
             //if they do, run sheathobject on that slot
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
-                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                         SheathObject(holdableObjectReference.Value, holdableObjectReference.Key, playerUnitObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
@@ -281,7 +243,8 @@ namespace AnyRPG {
         public void HoldWeapons() {
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
-                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
+                    foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                         HoldObject(holdableObjectReference.Value, holdableObjectReference.Key, playerUnitObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
@@ -296,12 +259,13 @@ namespace AnyRPG {
             }
         }
 
-        public void SheathObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
+        //public void SheathObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
+        public void SheathObject(GameObject go, AttachmentNode attachmentNode, GameObject searchObject) {
             if (searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): searchObject is null");
                 return;
             }
-            if (holdableObject == null) {
+            if (attachmentNode == null || attachmentNode.HoldableObject == null ) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): MyHoldableObjectName is empty");
                 return;
             }
@@ -309,34 +273,90 @@ namespace AnyRPG {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): gameObject is null is null");
                 return;
             }
-            Transform targetBone = searchObject.transform.FindChildByRecursive(holdableObject.SheathedTargetBone);
-            if (targetBone != null) {
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
-                go.transform.parent = targetBone;
-                go.transform.localPosition = holdableObject.SheathedPosition;
-                go.transform.localEulerAngles = holdableObject.SheathedRotation;
-            } else {
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
+            AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
+            if (attachmentPointNode != null) {
+                Transform targetBone = searchObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                if (targetBone != null) {
+                    //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is NOT null: " + holdableObject.MySheathedTargetBone);
+                    go.transform.parent = targetBone;
+                    go.transform.localPosition = attachmentPointNode.Position;
+                    go.transform.localEulerAngles = attachmentPointNode.Rotation;
+                } else {
+                    //Debug.Log(gameObject + ".CharacterEquipmentManager.SheathObject(): targetBone is null: " + holdableObject.MySheathedTargetBone);
+                }
             }
 
         }
 
-        public void HoldObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
+        public AttachmentPointNode GetSheathedAttachmentPointNode(AttachmentNode attachmentNode) {
+            if (attachmentNode.UseUniversalAttachment == false) {
+                AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
+                attachmentPointNode.TargetBone = attachmentNode.HoldableObject.SheathedTargetBone;
+                attachmentPointNode.Position = attachmentNode.HoldableObject.SheathedPosition;
+                attachmentPointNode.Rotation = attachmentNode.HoldableObject.SheathedRotation;
+                return attachmentPointNode;
+            } else {
+                // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                    }
+                } else {
+                    Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
+                }
+            }
+
+            Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): Unable to return attachment point node!");
+            return null;
+        }
+
+        public AttachmentPointNode GetHeldAttachmentPointNode(AttachmentNode attachmentNode) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetHeldAttachmentPointNode()");
+            if (attachmentNode.UseUniversalAttachment == false) {
+                AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
+                attachmentPointNode.TargetBone = attachmentNode.HoldableObject.TargetBone;
+                attachmentPointNode.Position = attachmentNode.HoldableObject.Position;
+                attachmentPointNode.Rotation = attachmentNode.HoldableObject.Rotation;
+                attachmentPointNode.RotationIsGlobal = attachmentNode.HoldableObject.RotationIsGlobal;
+                return attachmentPointNode;
+            } else {
+                // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
+                        return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void HoldObject(GameObject go, AttachmentNode attachmentNode, GameObject searchObject) {
+            //public void HoldObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
             //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
-            if (holdableObject == null || go == null || searchObject == null) {
+            if (attachmentNode == null || attachmentNode.HoldableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
             }
-            Transform targetBone = searchObject.transform.FindChildByRecursive(holdableObject.TargetBone);
-            if (targetBone != null) {
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyRotation);
-                go.transform.parent = targetBone;
-                go.transform.localPosition = holdableObject.MyPosition;
-                if (holdableObject.RotationIsGlobal) {
-                    go.transform.rotation = Quaternion.LookRotation(targetBone.transform.forward) * Quaternion.Euler(holdableObject.MyRotation);
+
+            AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(attachmentNode);
+            if (attachmentPointNode != null && attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
+                Transform targetBone = searchObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                if (targetBone != null) {
+                    //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyRotation);
+                    go.transform.parent = targetBone;
+                    go.transform.localPosition = attachmentPointNode.Position;
+                    if (attachmentPointNode.RotationIsGlobal) {
+                        go.transform.rotation = Quaternion.LookRotation(targetBone.transform.forward) * Quaternion.Euler(attachmentPointNode.Rotation);
+                    } else {
+                        go.transform.localEulerAngles = attachmentPointNode.Rotation;
+                    }
                 } else {
-                    go.transform.localEulerAngles = holdableObject.MyRotation;
+                    Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
                 }
+            } else {
+                // disabled message because some equipment (like quivers) does not have held attachment points intentionally because it should stay in the same place in combat
+                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to get attachment point " + attachmentNode.UnsheathedAttachmentName);
             }
         }
 
@@ -490,7 +510,7 @@ namespace AnyRPG {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
                 if (currentEquipmentPhysicalObjects.ContainsKey(equipmentSlot)) {
                     // LOOP THOUGH THEM INSTEAD
-                    foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
+                    foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                         GameObject destroyObject = holdableObjectReference.Value;
                         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
                         Destroy(destroyObject);

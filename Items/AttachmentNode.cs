@@ -33,7 +33,10 @@ namespace AnyRPG {
 
 
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
-        public PrefabProfile MyHoldableObject { get => holdableObject; set => holdableObject = value; }
+        public PrefabProfile HoldableObject { get => holdableObject; set => holdableObject = value; }
+        public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
+        public string PrimaryAttachmentName { get => primaryAttachmentName; set => primaryAttachmentName = value; }
+        public string UnsheathedAttachmentName { get => unsheathedAttachmentName; set => unsheathedAttachmentName = value; }
 
         public void SetupScriptableObjects() {
             holdableObject = null;
