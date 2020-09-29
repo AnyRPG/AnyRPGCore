@@ -204,7 +204,8 @@ namespace AnyRPG {
                 // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
                 spawnReference.transform.localScale = usedScale;
 
-                spawnReference.transform.Rotate(usedRotation);
+                //spawnReference.transform.Rotate(usedRotation);
+                spawnReference.transform.localRotation = Quaternion.Euler(usedRotation);
             } else {
                 if (spawnReference != null) {
                     //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Already spawned");
