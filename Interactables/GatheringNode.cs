@@ -47,6 +47,10 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the skill is a special type of prerequisite, we need to be notified when it changes
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
+                return;
+            }
             SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChange;
         }
 
