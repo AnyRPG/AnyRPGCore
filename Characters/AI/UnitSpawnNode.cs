@@ -549,6 +549,8 @@ namespace AnyRPG {
                         UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
                         if (unitProfile != null) {
                             unitProfiles.Add(unitProfile);
+                        } else {
+                            Debug.LogError(gameObject.name + ": Unit Profile: " + unitProfileName + " not found while initializing Unit Unit Spawn Node.  Check Inspector!");
                         }
                     }
                 }
