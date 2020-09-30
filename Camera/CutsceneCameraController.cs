@@ -42,6 +42,10 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
+            if (InputManager.MyInstance == null) {
+                Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");
+                return;
+            }
             if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
                 SystemWindowManager.MyInstance.confirmCancelCutsceneMenuWindow.OpenWindow();
