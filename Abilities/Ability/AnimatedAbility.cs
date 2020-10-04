@@ -55,10 +55,10 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AnimatedAbility.Cast(" + sourceCharacter.Name + ")");
+            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.Name + ")");
             if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
-                if (usedAnimationClips.Count > 0) {
+                if (usedAnimationClips != null && usedAnimationClips.Count > 0) {
                     //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
 
                     CharacterUnit targetCharacterUnit = null;
