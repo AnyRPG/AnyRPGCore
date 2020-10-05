@@ -233,11 +233,14 @@ namespace AnyRPG {
             if (characterUnit.MyCharacter.CharacterStats.IsAlive && (characterUnit.MyCharacter.CharacterController as PlayerController).canMove) {
                 // code to prevent turning when clicking on UI elements
                 if (InputManager.MyInstance.rightMouseButtonDown && (characterUnit.MyCharacter.CharacterController as PlayerController).HasMoveInput() && (!InputManager.MyInstance.rightMouseButtonClickedOverUI || (NamePlateManager.MyInstance != null ? NamePlateManager.MyInstance.MouseOverNamePlate() : false))) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting transform.forward");
+
                     transform.forward = new Vector3(CameraManager.MyInstance.MainCameraController.MyWantedDirection.x, 0, CameraManager.MyInstance.MainCameraController.MyWantedDirection.z);
                     CameraManager.MyInstance.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
                 }
 
                 if ((characterUnit.MyCharacter.CharacterController as PlayerController).inputTurn != 0) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): rotating " + currentTurnVelocity.x);
                     animatedUnit.MyCharacterMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
                 }
             }
@@ -365,7 +368,7 @@ namespace AnyRPG {
                 */
 
                 // get current movement speed and clamp it to current clamp value
-                float calculatedSpeed = PlayerManager.MyInstance.MyCharacter.CharacterController.MyMovementSpeed;
+                float calculatedSpeed = PlayerManager.MyInstance.MyCharacter.CharacterController.MovementSpeed;
                 calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
 
                 if ((characterUnit.MyCharacter.CharacterController as PlayerController).HasMoveInput()) {
@@ -489,9 +492,14 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// switch to quaternion rotation instead of transformDirection so direction can be maintained in air no matter which way player faces in air
+        /// </summary>
+        /// <param name="inputVector"></param>
+        /// <returns></returns>
         Vector3 CharacterRelativeInput(Vector3 inputVector) {
             //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
-            // switch to quaternion rotation instead of transformDirection so direction can be maintained in air no matter which way player faces in air
+
             Vector3 qRelativeVelocity = Vector3.zero;
             if (inputVector != Vector3.zero) {
                 qRelativeVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * inputVector;
@@ -500,6 +508,7 @@ namespace AnyRPG {
             if (qRelativeVelocity != Vector3.zero && tRelativeVelocity != Vector3.zero) {
                 //Debug.Log("CharacterRelativeInput(" + inputVector + "): qRelativeVelocity: " + qRelativeVelocity + "; tRelativeVelocity: " + tRelativeVelocity);
             }
+            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + "): return " + qRelativeVelocity + "; transformF: " + transform.forward + "; airForwardDirection: " + airForwardDirection);
             return qRelativeVelocity;
         }
 

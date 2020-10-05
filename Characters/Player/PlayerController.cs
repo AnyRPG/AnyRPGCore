@@ -716,10 +716,14 @@ namespace AnyRPG {
 
         //Keep character from moving.
         public void LockMovement() {
+            //Debug.Log(gameObject.name + ".PlayerController.LockMovement()");
             canMove = false;
             if (baseCharacter.AnimatedUnit != null) {
                 baseCharacter.AnimatedUnit.MyCharacterAnimator.SetMoving(false);
+
+                // why do we do this?
                 baseCharacter.AnimatedUnit.MyCharacterAnimator.EnableRootMotion();
+
                 if ((baseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
                     (baseCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
                 }
@@ -727,7 +731,11 @@ namespace AnyRPG {
         }
 
         public void UnlockMovement() {
+            //Debug.Log(gameObject.name + ".PlayerController.UnlockMovement()");
             canMove = true;
+
+            // why do we do this?
+            // is it because this function is never really called ?
             baseCharacter.AnimatedUnit.MyCharacterAnimator.DisableRootMotion();
         }
 

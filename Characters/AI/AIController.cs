@@ -175,7 +175,7 @@ namespace AnyRPG {
         }
 
         public void SetMasterRelativeDestination() {
-            if (MyUnderControl == false) {
+            if (UnderControl == false) {
                 // only do this stuff if we actually have a master
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
                 return;
@@ -214,7 +214,7 @@ namespace AnyRPG {
             if (target != null) {
                 distanceToTarget = Vector3.Distance(target.transform.position, transform.position);
             }
-            if (MyControlLocked) {
+            if (ControlLocked) {
                 // can't allow any action if we are stunned/frozen/etc
                 //Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
                 return;
@@ -351,7 +351,7 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.CharacterStats.ResetResourceAmounts();
                 if (baseCharacter.AnimatedUnit != null && baseCharacter.AnimatedUnit.MyCharacterMotor != null) {
-                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = MyMovementSpeed;
+                    MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = MovementSpeed;
                     MyBaseCharacter.AnimatedUnit.MyCharacterMotor.ResetPath();
                 } else {
                     //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter.myanimatedunit was null!");

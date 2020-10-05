@@ -746,8 +746,8 @@ namespace AnyRPG {
         public override bool IsPlayerControlled() {
             if (baseCharacter != null &&
                 baseCharacter.CharacterController != null &&
-                baseCharacter.CharacterController.MyMasterUnit != null &&
-                baseCharacter.CharacterController.MyMasterUnit == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
+                baseCharacter.CharacterController.MasterUnit != null &&
+                baseCharacter.CharacterController.MasterUnit == (PlayerManager.MyInstance.MyCharacter as BaseCharacter)) {
 
                 return true;
             }

@@ -36,7 +36,7 @@ namespace AnyRPG {
         public void SetMovementSpeed() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed + " motor: " + this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed + "; " + "; aicontroller: " + this.aiController.MyMovementSpeed);
             if (aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed == 0) {
-                this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+                this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MovementSpeed;
             } else {
                 this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed;
             }

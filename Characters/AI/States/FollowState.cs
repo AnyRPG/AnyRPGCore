@@ -10,7 +10,7 @@ namespace AnyRPG {
         public void Enter(AIController aiController) {
             //Debug.Log(aiController.gameObject.name + ".FollowState.Enter()");
             this.aiController = aiController;
-            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyBaseCharacter.CharacterController.MyMovementSpeed;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = aiController.MyBaseCharacter.CharacterController.MovementSpeed;
             MakeFollowDecision();
         }
 

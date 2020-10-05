@@ -12,7 +12,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ": Enter return state at position: " + aiController.transform.position);
             this.aiController = aiController;
             this.aiController.SetDestination(aiController.MyLeashPosition);
-            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MyMovementSpeed;
+            this.aiController.MyBaseCharacter.AnimatedUnit.MyCharacterMotor.MyMovementSpeed = this.aiController.MovementSpeed;
             if (this.aiController.MyCombatStrategy != null) {
                 this.aiController.ResetCombat();
             }

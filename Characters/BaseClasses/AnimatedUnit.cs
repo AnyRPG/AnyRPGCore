@@ -31,6 +31,8 @@ namespace AnyRPG {
 
         private CharacterUnit characterUnit;
 
+        private bool useAgent = false;
+
         protected INamePlateTarget namePlateTarget;
 
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
@@ -126,6 +128,14 @@ namespace AnyRPG {
                 return;
             }
             agent = GetComponent<NavMeshAgent>();
+
+            // check agent status at start-up time to prevent accidentally enabling an agent that should be disabled
+            if (agent != null) {
+                if (agent.enabled == true) {
+                    useAgent = true;
+                }
+            }
+
             rigidBody = GetComponent<Rigidbody>();
             characterMotor = GetComponent<CharacterMotor>();
             characterAnimator = GetComponent<CharacterAnimator>();
@@ -157,7 +167,7 @@ namespace AnyRPG {
 
         public void EnableAgent() {
             //Debug.Log(gameObject.name + ".AnimatedUnit.EnableAgent()");
-            if (MyAgent != null) {
+            if (MyAgent != null && useAgent == true) {
                 MyAgent.enabled = true;
             }
         }

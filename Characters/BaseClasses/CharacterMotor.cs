@@ -76,7 +76,7 @@ namespace AnyRPG {
         protected virtual void SetMovementSpeed() {
             //Debug.Log(gameObject.name + ".CharacterMotor.SetMovementSpeed(): movementSpeed: " + movementSpeed);
             if (movementSpeed == 0) {
-                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.CharacterController.MyMovementSpeed;
+                animatedUnit.MyAgent.speed = characterUnit.MyCharacter.CharacterController.MovementSpeed;
             } else {
                 //Debug.Log(gameObject.name + ".CharacterMotor.Update(): movementSpeed: " + movementSpeed);
                 animatedUnit.MyAgent.speed = movementSpeed;

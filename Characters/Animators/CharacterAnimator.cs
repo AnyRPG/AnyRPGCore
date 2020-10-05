@@ -205,12 +205,14 @@ namespace AnyRPG {
         }
 
         public void DisableRootMotion() {
+            //Debug.Log(gameObject.name + ": CharacterAnimator.DisableRootMotion()");
             if (animator != null) {
                 animator.applyRootMotion = false;
             }
         }
 
         public void EnableRootMotion() {
+            //Debug.Log(gameObject.name + ": CharacterAnimator.EnableRootMotion()");
             if (animator != null) {
                 animator.applyRootMotion = true;
             }
@@ -256,7 +258,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetOverrideController()");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetDefaultOverrideController()");
             SetOverrideController(overrideController, runUpdate);
         }
 
@@ -1449,7 +1451,7 @@ namespace AnyRPG {
         }
 
         public void SetVelocity(Vector3 varValue, bool rotateModel = false) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ", " + rotateModel + ")");
             // receives velocity in LOCAL SPACE
 
             if (animator == null) {
@@ -1457,6 +1459,8 @@ namespace AnyRPG {
             }
 
             if (rotateModel) {
+                //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
+
                 if (varValue == Vector3.zero) {
                     animator.transform.forward = transform.forward;
                 } else {
@@ -1618,6 +1622,7 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetTurnVelocity(" + varValue + ")");
             animator.SetFloat("TurnVelocity", varValue);
         }
 
@@ -1650,6 +1655,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetTrigger(" + varName + ")");
             if (animator != null) {
                 if (ParameterExists(varName)) {
+                    // testing unity bug, so reset trigger in case character is triggered twice in a frame
+                    animator.ResetTrigger(varName);
+
                     animator.SetTrigger(varName);
                 }
             }

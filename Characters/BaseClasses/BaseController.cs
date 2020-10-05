@@ -36,23 +36,23 @@ namespace AnyRPG {
 
         public GameObject MyTarget { get => target; }
         public BaseCharacter MyBaseCharacter { get => baseCharacter; }
-        public float MyMovementSpeed {
+        public float MovementSpeed {
             get {
-                if (MyUnderControl == true && MyMasterUnit != null && MyMasterUnit.CharacterController != null) {
-                    return MyMasterUnit.CharacterController.MyMovementSpeed;
+                if (UnderControl == true && MasterUnit != null && MasterUnit.CharacterController != null) {
+                    return MasterUnit.CharacterController.MovementSpeed;
                 }
                 return (walking == false ? baseCharacter.CharacterStats.RunSpeed : baseCharacter.CharacterStats.WalkSpeed);
             }
         }
-        public bool MyUnderControl { get => underControl; set => underControl = value; }
-        public BaseCharacter MyMasterUnit { get => masterUnit; set => masterUnit = value; }
-        public bool MyFrozen { get => frozen; }
-        public bool MyStunned { get => stunned; set => stunned = value; }
-        public bool MyLevitated { get => levitated; set => levitated = value; }
-        public bool MyControlLocked {
+        public bool UnderControl { get => underControl; set => underControl = value; }
+        public BaseCharacter MasterUnit { get => masterUnit; set => masterUnit = value; }
+        public bool Frozen { get => frozen; }
+        public bool Stunned { get => stunned; set => stunned = value; }
+        public bool Levitated { get => levitated; set => levitated = value; }
+        public bool ControlLocked {
             get {
                 //Debug.Log(gameObject.name + ".BaseController.MyControlLocked: frozen: " + MyFrozen + "; stunned: "  + MyStunned + "; mylevitated: " + MyLevitated);
-                return (MyFrozen || MyStunned || MyLevitated);
+                return (Frozen || Stunned || Levitated);
             }
         }
 
@@ -175,6 +175,10 @@ namespace AnyRPG {
 
         public void StunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): ");
+            if (stunned == true) {
+                // testing -- avoid triggering stun animation multiple times
+                return;
+            }
             stunned = true;
             if (MyBaseCharacter.AnimatedUnit != null) {
                 baseCharacter.AnimatedUnit.FreezePositionXZ();
