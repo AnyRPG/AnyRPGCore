@@ -874,8 +874,8 @@ namespace AnyRPG {
                     multiplierValues[primaryStatMultiplierNode.StatName] = primaryStatMultiplierNode.StatMultiplier;
                 }
                 resourceMultipliers = new Dictionary<string, float>();
-                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
-                    resourceMultipliers.Add(primaryStatMultiplierNode.StatName, primaryStatMultiplierNode.StatMultiplier);
+                foreach (resourceMultiplierNode resourceStatMultiplierNode in baseCharacter.UnitToughness.ResourceMultipliers) {
+                    resourceMultipliers.Add(resourceStatMultiplierNode.ResourceName, resourceStatMultiplierNode.ValueMultiplier);
                 }
             }
 
