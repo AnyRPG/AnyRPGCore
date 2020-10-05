@@ -86,11 +86,15 @@ namespace AnyRPG {
             if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentNameList == null) {
                 return;
             }
+            bool skipModels = false;
+            if (baseCharacter.UnitProfile.IsUMAUnit == true) {
+                skipModels = true;
+            }
 
             foreach (string equipmentName in baseCharacter.UnitProfile.EquipmentNameList) {
                 Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
                 if (equipment != null) {
-                    Equip(equipment);
+                    Equip(equipment, null, skipModels);
                 }
             }
         }
@@ -402,7 +406,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
+        public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName)+ ")");
             //Debug.Break();
             if (newItem == null) {
@@ -444,9 +448,14 @@ namespace AnyRPG {
 
             //Debug.Break();
             //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
+
             // both of these not needed if character unit not yet spawned?
             HandleItemUMARecipe(newItem);
-            HandleWeaponSlot(emptySlotProfile);
+
+            // testing new code to prevent UKMA characters from trying to find bones before they are created.
+            if (skipModels == false) {
+                HandleWeaponSlot(emptySlotProfile);
+            }
 
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.

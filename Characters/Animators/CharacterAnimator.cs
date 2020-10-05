@@ -532,11 +532,13 @@ namespace AnyRPG {
 
             if (overrideControllerClipList.Contains(systemAnimations.MyCombatIdleClip.name)) {
                 if (currentAnimationProfile.MyCombatIdleClip != null) {
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is not null");
                     if (overrideController[systemAnimations.MyCombatIdleClip.name] != currentAnimationProfile.MyCombatIdleClip) {
                         overrideController[systemAnimations.MyCombatIdleClip.name] = currentAnimationProfile.MyCombatIdleClip;
                         currentAnimations.MyCombatIdleClip = currentAnimationProfile.MyCombatIdleClip;
                     }
                 } else {
+                    //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is null");
                     if (defaultAnimationProfile.MyCombatIdleClip != null && overrideController[systemAnimations.MyCombatIdleClip.name] != defaultAnimationProfile.MyCombatIdleClip) {
                         overrideController[systemAnimations.MyCombatIdleClip.name] = defaultAnimationProfile.MyCombatIdleClip;
                         currentAnimations.MyCombatIdleClip = defaultAnimationProfile.MyCombatIdleClip;
@@ -1672,7 +1674,7 @@ namespace AnyRPG {
         }
 
         public void PerformEquipmentChange(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.MyName) + ", " + (oldItem == null ? "null" : oldItem.MyName) + ")");
+            //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
             // Animate grip for weapon when an item is added or removed from hand
             if (newItem != null && newItem is Weapon && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");

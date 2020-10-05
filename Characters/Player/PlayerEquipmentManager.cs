@@ -104,13 +104,13 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.NotifyOnEquipmentRefresh(equipment);
         }
 
-        public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
+        public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false) {
             //Debug.Log(gameObject.name + ".PlayerEquipmentManager.Equip(" + (newItem == null ? "null" : newItem.MyName)+ ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName) + ")");
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
                 return;
             }
-            base.Equip(newItem, equipmentSlotProfile);
+            base.Equip(newItem, equipmentSlotProfile, skipModels);
 
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.

@@ -75,11 +75,20 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AICharacter.OrchestratorStart()");
 
             // if this is run, or the getcomponents part anyway before the below block, then character unit will be set properly
-            base.OrchestratorFinish();
+            // ^ that comment was probably just the copy and paste from the block above and is not accurate ?
 
             if (interactable != null) {
                 interactable.OrchestratorFinish();
             }
+
+            base.OrchestratorFinish();
+
+            // testing if it is safe to move this above the base finish so the animator can be properly setup when equipment is loaded
+            /*
+            if (interactable != null) {
+                interactable.OrchestratorFinish();
+            }
+            */
         }
 
         public void EnableAnimation() {

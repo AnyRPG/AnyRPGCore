@@ -145,15 +145,20 @@ namespace AnyRPG {
                 characterAbilityManager.OrchestratorStart();
             }
 
+            // can this next block happen in orchestrator finish ?
             if (characterEquipmentManager != null) {
                 characterEquipmentManager.OrchestratorStart();
-                characterEquipmentManager.LoadDefaultEquipment();
+                //characterEquipmentManager.LoadDefaultEquipment();
             } else {
                 //Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
             }
+            /*
             if (characterAbilityManager != null) {
                 characterAbilityManager.LearnDefaultAutoAttackAbility();
             }
+            */
+
+
             if (characterPetManager != null) {
                 characterPetManager.OrchestratorStart();
             }
@@ -165,8 +170,14 @@ namespace AnyRPG {
                 characterStats.OrchestratorFinish();
             }
             if (characterEquipmentManager != null) {
+                characterEquipmentManager.LoadDefaultEquipment();
                 characterEquipmentManager.OrchestratorFinish();
             }
+
+            if (characterAbilityManager != null) {
+                characterAbilityManager.LearnDefaultAutoAttackAbility();
+            }
+
         }
 
         protected virtual void Start() {
