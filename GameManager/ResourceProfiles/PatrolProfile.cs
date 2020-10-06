@@ -13,8 +13,17 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoStart = false;
 
+        [Tooltip("List of vectors to patrol to")]
         [SerializeField]
         private List<Vector3> destinationList = new List<Vector3>();
+
+        [Tooltip("If true, use tags instead of vectors for patrol")]
+        [SerializeField]
+        private bool useTags = false;
+
+        [Tooltip("List of tags to find and patrol to")]
+        [SerializeField]
+        private List<string> destinationTagList = new List<string>();
 
         [Tooltip("If randomDestinations is set to false, they are followed in order.  Otherwise, they are chosen randomly from the destinationList")]
         [SerializeField]
@@ -68,9 +77,13 @@ namespace AnyRPG {
         public bool MyAutoStart { get => autoStart; set => autoStart = value; }
         public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
         public bool MySavePositionAtDestination { get => savePositionAtDestination; set => savePositionAtDestination = value; }
-
-        void Start() {
-            //Debug.Log(gameObject.name + ".AIPatrol.Start(): destinationList length: " + destinationList.Count);
+        public int DestinationCount {
+            get {
+                if (useTags == true) {
+                    return destinationTagList.Count;
+                }
+                return destinationList.Count;
+            }
         }
 
         public Vector3 GetDestination(bool destinationReached) {
@@ -117,7 +130,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (!loopDestinations && destinationReachedCount >= destinationList.Count) {
+            if (!loopDestinations && destinationReachedCount >= DestinationCount) {
                 return true;
             }
 
@@ -129,12 +142,16 @@ namespace AnyRPG {
             return false;
         }
 
+        /// <summary>
+        /// get a random destination from the list, or a random destination near the spawn point if no list exists
+        /// </summary>
+        /// <returns></returns>
         public Vector3 GetRandomDestination() {
             //Debug.Log(MyName + ".AIPatrol.GetRandomDestination()");
-            if (destinationList.Count > 0) {
+            if (DestinationCount > 0) {
                 // get destination from list
-                int randomNumber = Random.Range(0, destinationList.Count);
-                return destinationList[randomNumber];
+                int randomNumber = Random.Range(0, DestinationCount);
+                return GetDestinationByIndex(randomNumber);
             } else {
                 // choose nearby random destination
                 float randomXNumber = Random.Range(0, maxDistanceFromSpawnPoint * 2) - maxDistanceFromSpawnPoint;
@@ -161,11 +178,33 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// return a vector3 location for a destination in the current destination list
+        /// </summary>
+        /// <param name="listIndex"></param>
+        /// <returns></returns>
+        public Vector3 GetDestinationByIndex(int listIndex) {
+            Vector3 returnValue = Vector3.zero;
+            if (useTags == false) {
+                returnValue = destinationList[listIndex];
+            } else {
+                GameObject tagObject = GameObject.FindGameObjectWithTag(destinationTagList[listIndex]);
+                if (tagObject != null) {
+                    returnValue = tagObject.transform.position;
+                }
+            }
+            return returnValue;
+        }
+
+        /// <summary>
+        /// get the next destination based on the current index
+        /// </summary>
+        /// <returns></returns>
         public Vector3 GetLinearDestination() {
             //Debug.Log("AIPatrol.GetLinearDestination(): destinationIndex: " + destinationIndex);
-            Vector3 returnValue = destinationList[destinationIndex];
+            Vector3 returnValue = GetDestinationByIndex(destinationIndex);
             destinationIndex++;
-            if (destinationIndex >= destinationList.Count) {
+            if (destinationIndex >= DestinationCount) {
                 destinationIndex = 0;
             }
             return returnValue;
