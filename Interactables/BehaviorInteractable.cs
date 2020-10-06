@@ -199,6 +199,11 @@ namespace AnyRPG {
 
             // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
             ProcessBehaviorBeginEnd();
+
+            // hope this doesn't cause stack overflow ?  it shouldn't because technically this one exits immediately after that call ?
+            if (behaviorProfile.Looping == true) {
+                behaviorCoroutine = StartCoroutine(playBehavior(behaviorProfile));
+            }
         }
 
 

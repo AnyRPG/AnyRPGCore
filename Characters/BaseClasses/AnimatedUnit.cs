@@ -134,6 +134,9 @@ namespace AnyRPG {
                 if (agent.enabled == true) {
                     useAgent = true;
                 }
+                if (true) {
+
+                }
             }
 
             rigidBody = GetComponent<Rigidbody>();
@@ -141,6 +144,11 @@ namespace AnyRPG {
             characterAnimator = GetComponent<CharacterAnimator>();
             characterUnit = GetComponent<CharacterUnit>();
             namePlateTarget = GetComponent<INamePlateTarget>();
+
+            if (characterUnit != null && ((characterUnit.MyCharacter as AICharacter) is AICharacter)) {
+                useAgent = true;
+            }
+
             /*
             if (baseCharacter == null) {
                 baseCharacter = GetComponent<BaseCharacter>();

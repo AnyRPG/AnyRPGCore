@@ -34,6 +34,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool repeatable = false;
 
+        [Tooltip("Should this behavior restart when complete.")]
+        [SerializeField]
+        private bool looping = false;
+
         public bool MyPrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -62,6 +66,7 @@ namespace AnyRPG {
         }
 
         public bool Repeatable { get => repeatable; set => repeatable = value; }
+        public bool Looping { get => looping; set => looping = value; }
 
         public void HandlePrerequisiteUpdates() {
             // call back to owner
