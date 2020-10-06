@@ -394,15 +394,17 @@ namespace AnyRPG {
 
             if (MyCombatStrategy != null) {
                 if (MyCombatStrategy.HasMusic() == true) {
-                    //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): combat strategy was not null");
-                    if (LevelManager.MyInstance.GetActiveSceneNode().BackgroundMusicProfile != null && LevelManager.MyInstance.GetActiveSceneNode().BackgroundMusicProfile != null) {
+                    //Debug.Log(gameObject.name + ".AIController.ResetCombat(): attempting to turn off fight music");
+                    AudioProfile musicProfile = LevelManager.MyInstance.GetActiveSceneNode().BackgroundMusicProfile;
+                    if (musicProfile != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                        AudioProfile musicProfile = LevelManager.MyInstance.GetActiveSceneNode().BackgroundMusicProfile;
-                        if (musicProfile != null && musicProfile.AudioClip != null && AudioManager.MyInstance.MusicAudioSource.clip != musicProfile.AudioClip) {
+                        if (musicProfile.AudioClip != null && AudioManager.MyInstance.MusicAudioSource.clip != musicProfile.AudioClip) {
                             //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
-
                             AudioManager.MyInstance.PlayMusic(musicProfile.AudioClip);
                         }
+                    } else {
+                        // There was no music, turn it off instead
+                        AudioManager.MyInstance.StopMusic();
                     }
                 }
                 ResetCombatStrategy();
