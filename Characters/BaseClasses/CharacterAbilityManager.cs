@@ -509,7 +509,9 @@ namespace AnyRPG {
         public override bool PerformFactionCheck(ITargetable targetableEffect, CharacterUnit targetCharacterUnit, bool targetIsSelf) {
 
             // if this ability has no faction requirements, we can cast it on anyone
-            if (targetableEffect.CanCastOnEnemy == false
+            // added cancastonothers because we can have no faction requirement but need to only cast on self
+            if (targetableEffect.CanCastOnOthers == true
+                && targetableEffect.CanCastOnEnemy == false
                 && targetableEffect.CanCastOnNeutral == false
                 && targetableEffect.CanCastOnFriendly == false) {
                 return true;

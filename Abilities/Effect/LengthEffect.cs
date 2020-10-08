@@ -74,7 +74,7 @@ namespace AnyRPG {
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".LengthEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" : source.Name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ", " + (target == null ? "null" : target.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
             if (prefabProfileList != null) {

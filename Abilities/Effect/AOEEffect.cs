@@ -8,6 +8,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New AOEEffect", menuName = "AnyRPG/Abilities/Effects/AOEEffect")]
     public class AOEEffect : FixedLengthEffect {
 
+        [Header("AOE")]
+
         [SerializeField]
         protected float aoeRadius;
 
