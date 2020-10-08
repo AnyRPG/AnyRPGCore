@@ -22,8 +22,8 @@ namespace AnyRPG {
         #endregion
 
 
-        public override GameObject GetCloneSource() {
-            return PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile.UnitPrefab;
+        public override UnitProfile GetCloneSource() {
+            return PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile;
         }
 
         public void HandleOpenWindow() {

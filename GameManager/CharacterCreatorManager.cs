@@ -36,7 +36,7 @@ namespace AnyRPG {
                 Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
                 return;
             }
-            cloneSource = unitProfile.UnitPrefab;
+            cloneSource = unitProfile;
             if (cloneSource == null) {
                 return;
             }

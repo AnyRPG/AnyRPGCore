@@ -22,7 +22,7 @@ namespace AnyRPG {
         protected int previewLayer;
 
         // the source we are going to clone from 
-        protected GameObject cloneSource;
+        protected UnitProfile cloneSource;
 
         public GameObject PreviewUnit { get => previewUnit; set => previewUnit = value; }
         public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
@@ -44,13 +44,13 @@ namespace AnyRPG {
             }
         }
 
-        public virtual GameObject GetCloneSource() {
+        public virtual UnitProfile GetCloneSource() {
             // override this in all child classes
             return null;
         }
 
         public void OpenWindowCommon() {
-            previewUnit = Instantiate(cloneSource, transform.position, Quaternion.identity, transform);
+            previewUnit = Instantiate(cloneSource.UnitPrefab, transform.position, Quaternion.identity, transform);
             UIManager.MyInstance.SetLayerRecursive(previewUnit, previewLayer);
 
             // disable any components on the cloned unit that may give us trouble since this unit cannot move
@@ -91,6 +91,7 @@ namespace AnyRPG {
 
 
             AIEquipmentManager aIEquipmentManager = previewUnit.AddComponent<AIEquipmentManager>();
+            aIEquipmentManager.AttachmentProfile = cloneSource.PrefabProfile.AttachmentProfile;
         }
 
     }

@@ -21,16 +21,18 @@ namespace AnyRPG {
         //protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
         protected Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
 
-        //protected Transform targetBone;
-
         protected bool eventSubscriptionsInitialized = false;
         protected bool componentReferencesInitialized = false;
         protected bool subscribedToCombatEvents = false;
 
         protected string equipmentProfileName;
 
+        // need a local reference to this for preview characters which don't have a way to reference back to the base character to find this
+        protected AttachmentProfile attachmentProfile;
+
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public GameObject MyPlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
+        public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
 
         protected virtual void Start() {
             int numSlots = SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count;
@@ -88,8 +90,17 @@ namespace AnyRPG {
             }
             bool skipModels = false;
             if (baseCharacter.UnitProfile.IsUMAUnit == true) {
+                // quick check to avoid lookup
                 skipModels = true;
+            } else {
+                // try lookup just in case unit profile wasn't set properly or unit is uma / non uma in different regions (which profile doesn't handle yet)
+                // this avoids annoying message in console for now
+                DynamicCharacterAvatar dynamicCharacterAvatar = baseCharacter.CharacterUnit.GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
+                    skipModels = true;
+                }
             }
+
 
             foreach (string equipmentName in baseCharacter.UnitProfile.EquipmentNameList) {
                 Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
@@ -304,6 +315,10 @@ namespace AnyRPG {
                 if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
                     if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
                         return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                    }
+                } else if (attachmentProfile != null) {
+                    if (attachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return attachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else {
                     Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");

@@ -25,8 +25,8 @@ namespace AnyRPG {
         #endregion
 
 
-        public override GameObject GetCloneSource() {
-            return UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile.UnitPrefab;
+        public override UnitProfile GetCloneSource() {
+            return UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile;
         }
 
         public void HandleOpenWindow() {
