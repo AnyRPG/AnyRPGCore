@@ -14,7 +14,11 @@ It accomplishes this by providing a platform with the most common Role Playing G
 
 http://www.anyrpg.org/
 
-## Unity Packages and Example Games
+## Patreon
+
+https://www.patreon.com/anyrpg
+
+## Download Unity Packages and Example Games
 
 http://www.anyrpg.org/downloads/
 
@@ -29,7 +33,3 @@ https://discord.gg/huSAuqk
 ## Wiki
 
 https://wiki.anyrpg.org/
-
-## Patreon
-
-https://www.patreon.com/anyrpg

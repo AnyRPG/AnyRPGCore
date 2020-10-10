@@ -214,7 +214,13 @@ namespace AnyRPG {
                         if (unitAudio != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.AudioClips != null && dialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
                             unitAudio.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
                         }
-                        if (CombatLogUI.MyInstance != null) {
+                        bool writeMessage = true;
+                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitObject != null) {
+                            if (Vector3.Distance(transform.position, PlayerManager.MyInstance.MyPlayerUnitObject.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
+                                writeMessage = false;
+                            }
+                        }
+                        if (writeMessage && CombatLogUI.MyInstance != null) {
                             CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
                         }
 

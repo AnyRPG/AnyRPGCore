@@ -240,6 +240,10 @@ namespace AnyRPG {
         [SerializeField]
         private string vendorAudioProfileName = string.Empty;
 
+        [Tooltip("The maximum distance at which chat in dialogs above characters will also appear in the player chat log.  Prevents distant conversations from spamming logs.")]
+        [SerializeField]
+        private float maxChatTextDistance = 25f;
+
         private AudioProfile vendorAudioProfile;
 
         [Header("INTERACTABLE CONFIGURATION")]
@@ -425,6 +429,7 @@ namespace AnyRPG {
         public Currency KillCurrency { get => killCurrency; set => killCurrency = value; }
         public Currency QuestCurrency { get => questCurrency; set => questCurrency = value; }
         public AudioProfile VendorAudioProfile { get => vendorAudioProfile; set => vendorAudioProfile = value; }
+        public float MaxChatTextDistance { get => maxChatTextDistance; set => maxChatTextDistance = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
