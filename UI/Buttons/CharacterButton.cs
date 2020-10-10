@@ -76,7 +76,7 @@ namespace AnyRPG {
             if (eventData.button == PointerEventData.InputButton.Left) {
                 if (HandScript.MyInstance.MyMoveable is Equipment) {
                     Equipment tmp = (Equipment)HandScript.MyInstance.MyMoveable;
-                    if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.MyEquipmentSlotType)) {
+                    if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
                         PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
 

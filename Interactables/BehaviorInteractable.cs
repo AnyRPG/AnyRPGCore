@@ -212,7 +212,7 @@ namespace AnyRPG {
             if (!base.CanInteract()) {
                 return false;
             }
-            if (GetCurrentOptionList().Count == 0 || suppressNameplateImage == true) {
+            if (GetCurrentOptionCount() == 0 || suppressNameplateImage == true) {
                 return false;
             }
             return true;
@@ -247,7 +247,14 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount()");
             if (behaviorCoroutine == null) {
-                return GetCurrentOptionList().Count;
+                //return GetCurrentOptionList().Count;
+                int count = 0;
+                foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
+                    if (behaviorProfile.AllowManualStart == true) {
+                        count++;
+                    }
+                }
+                return count;
             } else {
                 return 0;
             }

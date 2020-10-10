@@ -195,12 +195,12 @@ namespace AnyRPG {
         }
 
         public void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
-            if (newEquipment == null || newEquipment.MyHoldableObjectList == null || equipmentSlotProfile == null) {
+            if (newEquipment == null || newEquipment.HoldableObjectList == null || equipmentSlotProfile == null) {
                 return;
             }
             //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
             Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
-            foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.MyHoldableObjectList) {
+            foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.HoldableObjectList) {
                 if (holdableObjectAttachment != null && holdableObjectAttachment.MyAttachmentNodes != null) {
                     foreach (AttachmentNode attachmentNode in holdableObjectAttachment.MyAttachmentNodes) {
                         if (attachmentNode != null && attachmentNode.MyEquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
@@ -430,13 +430,13 @@ namespace AnyRPG {
             }
             //currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
             //Unequip(newItem.equipSlot);
-            if (newItem.MyEquipmentSlotType == null) {
+            if (newItem.EquipmentSlotType == null) {
                 Debug.LogError(gameObject + ".CharacterEquipmentManager.Equip() " + newItem.DisplayName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
                 return;
             }
 
             // get list of compatible slots that can take this slot type
-            List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.MyEquipmentSlotType);
+            List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
             // check if any are empty.  if not, unequip the first one
             EquipmentSlotProfile emptySlotProfile = equipmentSlotProfile;
             if (emptySlotProfile == null) {
@@ -455,7 +455,7 @@ namespace AnyRPG {
             }
 
             // unequip any item in an exclusive slot for this item
-            UnequipExclusiveSlots(newItem.MyEquipmentSlotType);
+            UnequipExclusiveSlots(newItem.EquipmentSlotType);
 
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile] = newItem;
@@ -485,7 +485,7 @@ namespace AnyRPG {
 
             if (equipmentSet != null) {
                 foreach (Equipment tmpEquipment in CurrentEquipment.Values) {
-                    if (tmpEquipment != null && tmpEquipment.MyEquipmentSet != null && tmpEquipment.MyEquipmentSet == equipmentSet) {
+                    if (tmpEquipment != null && tmpEquipment.EquipmentSet != null && tmpEquipment.EquipmentSet == equipmentSet) {
                         equipmentCount++;
                     }
                 }

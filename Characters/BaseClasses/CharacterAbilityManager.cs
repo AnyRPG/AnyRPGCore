@@ -32,7 +32,7 @@ namespace AnyRPG {
         protected BaseAbility autoAttackAbility = null;
 
         // the holdable objects spawned during an ability cast and removed when the cast is complete
-        protected List<GameObject> abilityObjects = new List<GameObject>();
+        protected Dictionary<AbilityAttachmentNode, GameObject> abilityObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
 
         public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
 
@@ -173,25 +173,36 @@ namespace AnyRPG {
             base.OnDisable();
         }
 
-        public AttachmentPointNode GetHeldAttachmentPointNode(PrefabProfile prefabProfile) {
-            AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
-            attachmentPointNode.TargetBone = prefabProfile.TargetBone;
-            attachmentPointNode.Position = prefabProfile.Position;
-            attachmentPointNode.Rotation = prefabProfile.Rotation;
-            attachmentPointNode.RotationIsGlobal = prefabProfile.RotationIsGlobal;
-            return attachmentPointNode;
+        public AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
+            if (attachmentNode.UseUniversalAttachment == false) {
+                AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
+                attachmentPointNode.TargetBone = attachmentNode.HoldableObject.TargetBone;
+                attachmentPointNode.Position = attachmentNode.HoldableObject.Position;
+                attachmentPointNode.Rotation = attachmentNode.HoldableObject.Rotation;
+                attachmentPointNode.RotationIsGlobal = attachmentNode.HoldableObject.RotationIsGlobal;
+                return attachmentPointNode;
+            } else {
+                // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
+                        return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
+                    }
+                }
+            }
+
+            return null;
         }
 
-        public void HoldObject(GameObject go, PrefabProfile prefabProfile, GameObject searchObject) {
+        public void HoldObject(GameObject go, AbilityAttachmentNode attachmentNode, GameObject searchObject) {
             //public void HoldObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
             //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
-            if (prefabProfile == null || go == null || searchObject == null) {
+            if (attachmentNode == null || attachmentNode.HoldableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
             }
 
-            AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(prefabProfile);
-            if (attachmentPointNode != null) {
+            AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(attachmentNode);
+            if (attachmentPointNode != null && attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
                 Transform targetBone = searchObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
                 if (targetBone != null) {
                     //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): targetBone: " + targetBone + "; position: " + holdableObject.MyPosition + "; holdableObject.MyPhysicalRotation: " + holdableObject.MyRotation);
@@ -202,18 +213,24 @@ namespace AnyRPG {
                     } else {
                         go.transform.localEulerAngles = attachmentPointNode.Rotation;
                     }
+                } else {
+                    Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
                 }
-
+            } else {
+                // disabled message because some equipment (like quivers) does not have held attachment points intentionally because it should stay in the same place in combat
+                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to get attachment point " + attachmentNode.UnsheathedAttachmentName);
             }
         }
 
-        public void SpawnAbilityObjects(List<PrefabProfile> holdableObjects) {
+        public void SpawnAbilityObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObjects()");
-            foreach (PrefabProfile holdableObject in holdableObjects) {
-                if (holdableObject != null) {
-
-                    if (holdableObject.Prefab != null) {
-                        Transform targetBone = baseCharacter.CharacterUnit.transform.FindChildByRecursive(holdableObject.TargetBone);
+            Dictionary<AbilityAttachmentNode, GameObject> holdableObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
+            foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAttachmentNodes) {
+                if (abilityAttachmentNode != null) {
+                    // OLD CODE
+                    /*
+                    if (abilityAttachmentNode.Prefab != null) {
+                        Transform targetBone = baseCharacter.CharacterUnit.transform.FindChildByRecursive(abilityAttachmentNode.TargetBone);
                         Vector3 usedForwardDirection = baseCharacter.CharacterUnit.transform.forward;
                         if (targetBone == null) {
                             targetBone = baseCharacter.CharacterUnit.transform;
@@ -221,18 +238,49 @@ namespace AnyRPG {
                             usedForwardDirection = targetBone.transform.forward;
                         }
                         if (targetBone != null) {
-                            Vector3 finalSpawnLocation = new Vector3(targetBone.TransformPoint(holdableObject.Position).x, targetBone.TransformPoint(holdableObject.Position).y, targetBone.TransformPoint(holdableObject.Position).z);
+                            Vector3 finalSpawnLocation = new Vector3(targetBone.TransformPoint(abilityAttachmentNode.Position).x, targetBone.TransformPoint(abilityAttachmentNode.Position).y, targetBone.TransformPoint(abilityAttachmentNode.Position).z);
                             //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                            GameObject abilityObject = Instantiate(holdableObject.Prefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(holdableObject.Rotation), targetBone);
-                            abilityObject.transform.localScale = holdableObject.Scale;
-                            HoldObject(abilityObject, holdableObject, baseCharacter.CharacterUnit.gameObject);
+                            GameObject abilityObject = Instantiate(abilityAttachmentNode.Prefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(abilityAttachmentNode.Rotation), targetBone);
+                            abilityObject.transform.localScale = abilityAttachmentNode.Scale;
+                            HoldObject(abilityObject, abilityAttachmentNode, baseCharacter.CharacterUnit.gameObject);
                             abilityObjects.Add(abilityObject);
                         } else {
                             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObject(): We could not find the target bone " + holdableObject.MySheathedTargetBone);
                         }
                     }
+                    */
+                    // END OLD CODE
+                    // NEW CODE
+                    if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
+                        //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
+                        // attach a mesh to a bone for weapons
+
+                        AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
+                        if (attachmentPointNode != null) {
+                            Transform targetBone = baseCharacter.CharacterUnit.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+
+                            if (targetBone != null) {
+                                //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                                GameObject newEquipmentPrefab = Instantiate(abilityAttachmentNode.HoldableObject.Prefab, targetBone, false);
+                                //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
+                                holdableObjects.Add(abilityAttachmentNode, newEquipmentPrefab);
+                                //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
+
+                                newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
+                                HoldObject(newEquipmentPrefab, abilityAttachmentNode, baseCharacter.CharacterUnit.gameObject);
+                            } else {
+                                Debug.Log(gameObject + ".CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone);
+                            }
+                        }
+                    }
+                    // END NEW CODE
+
                 }
             }
+            if (holdableObjects.Count > 0) {
+                abilityObjects = holdableObjects;
+            }
+
         }
 
         public override void DespawnAbilityObjects() {
@@ -242,7 +290,7 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (GameObject abilityObject in abilityObjects) {
+            foreach (GameObject abilityObject in abilityObjects.Values) {
                 if (abilityObject != null) {
                     Destroy(abilityObject);
                 }
@@ -620,19 +668,19 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
             if (oldItem != null) {
-                foreach (BaseAbility baseAbility in oldItem.MyLearnedAbilities) {
+                foreach (BaseAbility baseAbility in oldItem.LearnedAbilities) {
                     UnlearnAbility(baseAbility);
                 }
             }
             UpdateEquipmentTraits(oldItem);
 
             if (newItem != null) {
-                if (newItem.MyOnEquipAbility != null) {
+                if (newItem.OnEquipAbility != null) {
                     if (baseCharacter.CharacterUnit != null) {
-                        BeginAbility(newItem.MyOnEquipAbility);
+                        BeginAbility(newItem.OnEquipAbility);
                     }
                 }
-                foreach (BaseAbility baseAbility in newItem.MyLearnedAbilities) {
+                foreach (BaseAbility baseAbility in newItem.LearnedAbilities) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
@@ -647,7 +695,7 @@ namespace AnyRPG {
 
         public virtual void UpdateEquipmentTraits(Equipment equipment) {
 
-            if (equipment == null || equipment.MyEquipmentSet == null) {
+            if (equipment == null || equipment.EquipmentSet == null) {
                 // nothing to do
                 return;
             }
@@ -655,11 +703,11 @@ namespace AnyRPG {
             int equipmentCount = 0;
 
             if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
-                equipmentCount = baseCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipment.MyEquipmentSet);
+                equipmentCount = baseCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipment.EquipmentSet);
             }
 
-            for (int i = 0; i < equipment.MyEquipmentSet.MyTraitList.Count; i++) {
-                StatusEffect statusEffect = equipment.MyEquipmentSet.MyTraitList[i];
+            for (int i = 0; i < equipment.EquipmentSet.MyTraitList.Count; i++) {
+                StatusEffect statusEffect = equipment.EquipmentSet.MyTraitList[i];
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
@@ -1065,11 +1113,11 @@ namespace AnyRPG {
                 float nextTickPercent = 0f;
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && ability.HoldableObjects.Count != 0) {
+                if (baseCharacter != null && ability.HoldableObjectList.Count != 0) {
                     //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
                     if (!ability.AnimatorCreatePrefabs) {
-                        SpawnAbilityObjects(ability.HoldableObjects);
+                        SpawnAbilityObjects(ability.HoldableObjectList);
                     }
                 }
                 if (ability.CastingAudioClip != null) {
@@ -1128,16 +1176,16 @@ namespace AnyRPG {
             if (baseCharacter != null &&
                 baseCharacter.CharacterEquipmentManager != null &&
                 usedBaseAbility != null &&
-                usedBaseAbility.HoldableObjects != null &&
-                usedBaseAbility.HoldableObjects.Count != 0) {
+                usedBaseAbility.HoldableObjectList != null &&
+                usedBaseAbility.HoldableObjectList.Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.AnimatorCreatePrefabs) {
                     if (indexValue == -1) {
-                        SpawnAbilityObjects(usedBaseAbility.HoldableObjects);
+                        SpawnAbilityObjects(usedBaseAbility.HoldableObjectList);
                     } else {
-                        List<PrefabProfile> passList = new List<PrefabProfile>();
-                        passList.Add(usedBaseAbility.HoldableObjects[indexValue - 1]);
+                        List<AbilityAttachmentNode> passList = new List<AbilityAttachmentNode>();
+                        passList.Add(usedBaseAbility.HoldableObjectList[indexValue - 1]);
                         SpawnAbilityObjects(passList);
                     }
                 }

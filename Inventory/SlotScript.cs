@@ -170,7 +170,7 @@ namespace AnyRPG {
                     }
                 } else if (HandScript.MyInstance.MyMoveable is Equipment) {
                     // the handscript has equipment in it
-                    if (MyItem is Equipment && (MyItem as Equipment).MyEquipmentSlotType == (HandScript.MyInstance.MyMoveable as Equipment).MyEquipmentSlotType) {
+                    if (MyItem is Equipment && (MyItem as Equipment).EquipmentSlotType == (HandScript.MyInstance.MyMoveable as Equipment).EquipmentSlotType) {
                         // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
                         EquipmentSlotProfile equipmentSlotProfile = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.MyInstance.MyMoveable as Equipment);
                         PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);

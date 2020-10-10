@@ -27,12 +27,9 @@ namespace AnyRPG {
 
         [Header("Prefabs")]
 
-        [Tooltip("The names of items to spawn while casting this ability")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit")]
         [SerializeField]
-        private List<string> holdableObjectNames = new List<string>();
-
-        //[SerializeField]
-        private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
+        private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
 
         [Header("Prefab Control")]
 
@@ -298,7 +295,6 @@ namespace AnyRPG {
         public bool IgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
-        public virtual List<PrefabProfile> HoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }
@@ -323,6 +319,7 @@ namespace AnyRPG {
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
         public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
+        public virtual List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -469,7 +466,7 @@ namespace AnyRPG {
 
         public virtual void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbility.ProcessAbilityPrefabs()");
-            if (HoldableObjects.Count == 0) {
+            if (holdableObjectList == null || holdableObjectList.Count == 0) {
                 return;
             }
 
@@ -725,14 +722,10 @@ namespace AnyRPG {
                     }
                 }
             }
-            holdableObjects = new List<PrefabProfile>();
-            if (holdableObjectNames != null) {
-                foreach (string holdableObjectName in holdableObjectNames) {
-                    PrefabProfile holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
-                    if (holdableObject != null) {
-                        holdableObjects.Add(holdableObject);
-                    } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+            if (holdableObjectList != null) {
+                foreach (AbilityAttachmentNode holdableObjectAttachment in holdableObjectList) {
+                    if (holdableObjectAttachment != null) {
+                        holdableObjectAttachment.SetupScriptableObjects();
                     }
                 }
             }

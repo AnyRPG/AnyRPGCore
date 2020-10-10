@@ -584,24 +584,26 @@ namespace AnyRPG {
 
             List<IInteractable> validInteractables = new List<IInteractable>();
             foreach (IInteractable _interactable in interactables) {
-                if (_interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
-                    
-                    // HAD TO REMOVE THE FIRST CONDITION BECAUSE IT WAS BREAKING MINIMAP UPDATES - MONITOR FOR WHAT REMOVING THAT BREAKS...
-                    //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
-                    
-                    //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
-                    validInteractables.Add(_interactable);
-                } else {
-                    if (_interactable.GetValidOptionCount() <= 0) {
-                        //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; optionCount: " + _interactable.GetValidOptionCount());
-                    }
-                    if (!_interactable.MyPrerequisitesMet) {
-                        //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; prerequisitesmet: " + _interactable.MyPrerequisitesMet);
-                    }
-                    if ((_interactable as MonoBehaviour).enabled == false) {
-                        //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; DISABLED");
-                    }
+                if (_interactable != null && !_interactable.Equals(null)) {
+                    if ((_interactable as MonoBehaviour).enabled == true && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
 
+                        // HAD TO REMOVE THE FIRST CONDITION BECAUSE IT WAS BREAKING MINIMAP UPDATES - MONITOR FOR WHAT REMOVING THAT BREAKS...
+                        //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
+
+                        //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
+                        validInteractables.Add(_interactable);
+                    } else {
+                        if (_interactable.GetValidOptionCount() <= 0) {
+                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; optionCount: " + _interactable.GetValidOptionCount());
+                        }
+                        if (!_interactable.MyPrerequisitesMet) {
+                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; prerequisitesmet: " + _interactable.MyPrerequisitesMet);
+                        }
+                        if ((_interactable as MonoBehaviour).enabled == false) {
+                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; DISABLED");
+                        }
+
+                    }
                 }
             }
             return validInteractables;

@@ -36,12 +36,9 @@ namespace AnyRPG {
 
         [Header("Prefabs")]
 
-        [Tooltip("The names of items to spawn while casting this ability")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit")]
         [SerializeField]
-        private List<string> holdableObjectNames = new List<string>();
-
-        //[SerializeField]
-        private List<PrefabProfile> holdableObjects = new List<PrefabProfile>();
+        private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
 
         // a reference to the actual craft ability
         private CraftAbility craftAbility;
@@ -50,9 +47,9 @@ namespace AnyRPG {
         public List<CraftingMaterial> MyCraftingMaterials { get => craftingMaterials; set => craftingMaterials = value; }
         public int MyOutputCount { get => outputCount; set => outputCount = value; }
         public CraftAbility CraftAbility { get => craftAbility; set => craftAbility = value; }
-        public List<PrefabProfile> HoldableObjects { get => holdableObjects; set => holdableObjects = value; }
         public bool AutoLearn { get => autoLearn; set => autoLearn = value; }
         public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
+        public List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -66,14 +63,10 @@ namespace AnyRPG {
                 }
             }
 
-            holdableObjects = new List<PrefabProfile>();
-            if (holdableObjectNames != null) {
-                foreach (string holdableObjectName in holdableObjectNames) {
-                    PrefabProfile holdableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
-                    if (holdableObject != null) {
-                        holdableObjects.Add(holdableObject);
-                    } else {
-                        Debug.LogError("Recipe.SetupScriptableObjects(): Could not find holdableObject: " + holdableObjectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+            if (holdableObjectList != null) {
+                foreach (AbilityAttachmentNode holdableObjectAttachment in holdableObjectList) {
+                    if (holdableObjectAttachment != null) {
+                        holdableObjectAttachment.SetupScriptableObjects();
                     }
                 }
             }

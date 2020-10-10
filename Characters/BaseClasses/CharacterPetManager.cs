@@ -132,6 +132,17 @@ namespace AnyRPG {
             //Vector3 newSpawnLocation = GetSpawnLocation();
             Vector3 newSpawnLocation = baseCharacter.CharacterUnit.transform.position;
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
+
+            // remove behavior and patrol interactable so pets don't patrol once you capture them
+            BehaviorInteractable behaviorInteractable = go.GetComponent<BehaviorInteractable>();
+            if (behaviorInteractable != null) {
+                Destroy(behaviorInteractable);
+            }
+            AIPatrol aIPatrol = go.GetComponent<AIPatrol>();
+            if (aIPatrol != null) {
+                Destroy(aIPatrol);
+            }
+
             NavMeshAgent navMeshAgent = go.GetComponent<NavMeshAgent>();
             AIController aIController = go.GetComponent<AIController>();
             aIController.MyStartPosition = newSpawnLocation;

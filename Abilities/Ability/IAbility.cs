@@ -23,7 +23,7 @@ namespace AnyRPG {
         bool CanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
         AnimationClip MyCastingAnimationClip { get; }
-        List<PrefabProfile> HoldableObjects { get; set; }
+        List<AbilityAttachmentNode> HoldableObjectList { get; set; }
         AudioClip CastingAudioClip { get; }
         bool AnimatorCreatePrefabs { get; set; }
         bool RequireOutOfCombat { get; set; }

@@ -122,7 +122,7 @@ namespace AnyRPG {
                         return itemPrimaryStatNode.ManualModifierValue;
                     }
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * (GetItemQualityNumber() - 1f)) * ((MyEquipmentSlotType.MyStatWeight * MyEquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * (GetItemQualityNumber() - 1f)) * ((EquipmentSlotType.MyStatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                         0f,
                         Mathf.Infinity
                         ));
@@ -149,12 +149,12 @@ namespace AnyRPG {
             return 0;
         }
 
-        public BaseAbility MyOnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
-        public List<BaseAbility> MyLearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
-        public bool MyManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
-        public EquipmentSlotType MyEquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
-        public List<HoldableObjectAttachment> MyHoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
-        public EquipmentSet MyEquipmentSet { get => equipmentSet; set => equipmentSet = value; }
+        public BaseAbility OnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
+        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
+        public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+        public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 
@@ -253,7 +253,7 @@ namespace AnyRPG {
             if (onEquipAbility != null) {
                 abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
             }
-            foreach (BaseAbility learnedAbility in MyLearnedAbilities) {
+            foreach (BaseAbility learnedAbility in LearnedAbilities) {
                 abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
