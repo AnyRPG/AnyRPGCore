@@ -29,3 +29,7 @@ https://discord.gg/huSAuqk
 ## Wiki
 
 https://wiki.anyrpg.org/
+
+## Patreon
+
+https://www.patreon.com/anyrpg
