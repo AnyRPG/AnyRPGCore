@@ -35,9 +35,10 @@ namespace AnyRPG {
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
                     go = Instantiate(creditTemplate, creditsContainer);
                     CreditController creditController = go.GetComponent<CreditController>();
-                    creditController.MyCreditNameText.text = creditsNode.MyCreditName;
-                    creditController.MyAttributionText.text = creditsNode.MyCreditAttribution;
-                    creditController.MyUrl = creditsNode.MyUrl;
+                    creditController.MyCreditNameText.text = creditsNode.CreditName;
+                    creditController.MyAttributionText.text = creditsNode.CreditAttribution;
+                    creditController.UserUrl = creditsNode.MyUrl;
+                    creditController.DownloadUrl = creditsNode.DownloadUrl;
                 }
             }
         }

@@ -27,9 +27,17 @@ namespace AnyRPG {
         private string downloadUrl = string.Empty;
 
 
-        public string MyCreditName { get => creditName; set => creditName = value; }
-        public string MyCreditAttribution { get => creditAttribution; set => creditAttribution = value; }
-        public string MyUrl { get => url; set => url = value; }
+        public string CreditName { get => creditName; set => creditName = value; }
+        public string CreditAttribution { get => creditAttribution; set => creditAttribution = value; }
+        public string MyUrl {
+            get {
+                if (userUrl != null && userUrl != string.Empty) {
+                    return userUrl;
+                }
+                return url;
+            }
+            set => url = value;
+        }
         public string Email { get => email; set => email = value; }
         public string UserUrl { get => userUrl; set => userUrl = value; }
         public string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
