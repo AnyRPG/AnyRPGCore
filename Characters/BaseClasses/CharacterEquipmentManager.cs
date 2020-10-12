@@ -547,7 +547,7 @@ namespace AnyRPG {
                     //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                     //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
                     foreach (UMATextRecipe uMARecipe in oldItem.MyUMARecipes) {
-                        if (uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                        if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
                             dynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
                         }
                     }
