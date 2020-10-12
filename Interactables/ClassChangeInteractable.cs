@@ -52,6 +52,28 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnClassChange -= HandleClassChange;
+            }
+        }
+
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+
+            // because the skill is a special type of prerequisite, we need to be notified when it changes
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
+                return;
+            }
+            SystemEventManager.MyInstance.OnClassChange += HandleClassChange;
+        }
+
+        public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {
+            HandlePrerequisiteUpdates();
         }
 
         public override void HandleConfirmAction() {
@@ -133,6 +155,20 @@ namespace AnyRPG {
 
             }
 
+        }
+
+        // character class is a special type of prerequisite
+        public override bool MyPrerequisitesMet {
+            get {
+                bool returnValue = base.MyPrerequisitesMet;
+                if (returnValue == false) {
+                    return false;
+                }
+                if (PlayerManager.MyInstance.MyCharacter.CharacterClass == characterClass) {
+                    return false;
+                }
+                return returnValue;
+            }
         }
 
     }

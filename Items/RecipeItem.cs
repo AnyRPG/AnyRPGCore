@@ -24,7 +24,7 @@ namespace AnyRPG {
                     return false;
                 }
                 // learn recipe if the character has the right skill
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.ContainsValue(recipe.CraftAbility)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
                     PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LearnRecipe(recipe);
                     MessageFeedManager.MyInstance.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
@@ -46,7 +46,7 @@ namespace AnyRPG {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.ContainsValue(recipe.CraftAbility)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
                     abilityKnownString = "<color=white>requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
                     abilityKnownString = "<color=red>requires: " + recipe.CraftAbility.DisplayName + "</color>\n";

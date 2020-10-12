@@ -718,7 +718,7 @@ namespace AnyRPG {
 
         public void SaveAbilityData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (BaseAbility baseAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Values) {
+            foreach (BaseAbility baseAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.RawAbilityList.Values) {
                 AbilitySaveData saveData = new AbilitySaveData();
                 saveData.MyName = baseAbility.DisplayName;
                 anyRPGSaveData.abilitySaveData.Add(saveData);

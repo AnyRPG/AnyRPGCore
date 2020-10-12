@@ -71,7 +71,7 @@ namespace AnyRPG {
             if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                     if (baseAbility.CanCastOnEnemy &&
@@ -100,7 +100,7 @@ namespace AnyRPG {
             if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                     if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == true) {
@@ -121,7 +121,7 @@ namespace AnyRPG {
             if (MyBaseCharacter != null && MyBaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.MyAbilityList.Values) {
+                foreach (BaseAbility baseAbility in MyBaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     returnList.Add(baseAbility);
                 }
             }

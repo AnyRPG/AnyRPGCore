@@ -33,6 +33,7 @@ namespace AnyRPG {
         int ResourceGainPerLevel { get; set; }
         float SpendDelay { get; set; }
         bool UseSpeedMultipliers { get; set; }
+        List<CharacterClass> CharacterClassRequirementList { get; set; }
 
         float GetAbilityCastingTime(IAbilityCaster abilityCaster);
 

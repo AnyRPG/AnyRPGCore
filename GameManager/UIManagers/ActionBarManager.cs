@@ -258,9 +258,9 @@ namespace AnyRPG {
                 return;
             }
             // TODO: set maximum size of loop to less of abilitylist count or button count
-            int abilityListCount = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Count;
+            int abilityListCount = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityList.Values) {
+            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;

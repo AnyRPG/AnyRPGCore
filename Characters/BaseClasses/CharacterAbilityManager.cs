@@ -94,12 +94,26 @@ namespace AnyRPG {
             }
         }
 
-        public Dictionary<string, IAbility> MyAbilityList { get => abilityList; }
+        public Dictionary<string, IAbility> AbilityList {
+            get {
+                Dictionary<string, IAbility> returnAbilityList = new Dictionary<string, IAbility>();
+                foreach (string abilityName in abilityList.Keys) {
+                    if (abilityList[abilityName].CharacterClassRequirementList == null || abilityList[abilityName].CharacterClassRequirementList.Count == 0 || abilityList[abilityName].CharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
+                        returnAbilityList.Add(abilityName, abilityList[abilityName]);
+                    }
+                }
+                return returnAbilityList;
+            }
+            
+        }
         public bool WaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool IsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
         public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
         public BaseAbility AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
+        
+        // direct access for save manager so we don't miss saving abilities we know but belong to another class
+        public Dictionary<string, IAbility> RawAbilityList { get => abilityList; set => abilityList = value; }
 
         protected virtual void Start() {
             //Debug.Log(gameObject.name + "CharacterAbilityManager.Start()");
@@ -909,9 +923,12 @@ namespace AnyRPG {
             if (characterClass == null) {
                 return;
             }
+
+            // first, unlearn the abilities in the character class ability list
             foreach (BaseAbility oldAbility in characterClass.AbilityList) {
                 UnlearnAbility(oldAbility, updateActionBars);
             }
+
         }
 
         public void UnLearnSpecializationAbilities(ClassSpecialization classSpecialization) {
@@ -970,7 +987,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
             //string keyName = SystemResourceManager.prepareStringForMatch(baseAbility);
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + "): keyname: " + keyName);
-            if (MyAbilityList.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.DisplayName))) {
+            if (AbilityList.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.DisplayName))) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }
@@ -1473,7 +1490,7 @@ namespace AnyRPG {
 
             string keyName = SystemResourceManager.prepareStringForMatch(ability.DisplayName);
 
-            if (!ability.MyUseableWithoutLearning && !abilityList.ContainsKey(keyName)) {
+            if (!ability.MyUseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
                 return false;
             }
             return true;
