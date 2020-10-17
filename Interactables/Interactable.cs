@@ -304,7 +304,7 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
-            if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
@@ -412,7 +412,7 @@ namespace AnyRPG {
 
         public bool InstantiateMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator()");
-            if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;
             }
@@ -488,7 +488,7 @@ namespace AnyRPG {
                 return false;
             }
             //Debug.Log(gameObject.name + ".Interactable.CanInteract()");
-            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return false;
             }
             List<IInteractable> validInteractables = GetValidInteractables();
@@ -661,7 +661,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
 
@@ -680,7 +680,7 @@ namespace AnyRPG {
                 return;
             }
             */
-            if (PlayerManager.MyInstance.MyPlayerUnitObject == gameObject) {
+            if (PlayerManager.MyInstance.PlayerUnitObject == gameObject) {
                 return;
             }
 
@@ -726,11 +726,11 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (PlayerManager.MyInstance.MyPlayerUnitObject == gameObject) {
+            if (PlayerManager.MyInstance.PlayerUnitObject == gameObject) {
                 return;
             }
 

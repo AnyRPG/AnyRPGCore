@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         public void Start() {
             //Debug.Log(gameObject.name + ".PlayerStats.Start()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log("PlayerStats.Start(): Player Unit is already spawned");
                 ProcessPlayerUnitSpawn();
             }
@@ -147,7 +147,7 @@ namespace AnyRPG {
                 //Debug.Log("Playerstats.ApplyStatusEffect(): statusEffect is null!");
             }
             StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, source, abilityEffectInput);
-            if (statusEffect.MyClassTrait == false) {
+            if (statusEffect.ClassTrait == false) {
                 if (_statusEffectNode != null) {
                     UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(_statusEffectNode, baseCharacter.CharacterUnit);
                     if (abilityEffectInput.savedEffect == false) {

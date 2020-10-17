@@ -38,7 +38,7 @@ namespace AnyRPG {
         }
 
         public void HandleCloseWindow() {
-            //Debug.Log("CharacterCreatorManager.HandleCloseWindow();");
+            //Debug.Log("PreviewManager.HandleCloseWindow();");
             if (previewUnit != null) {
                 Destroy(previewUnit);
             }
@@ -91,7 +91,12 @@ namespace AnyRPG {
 
 
             AIEquipmentManager aIEquipmentManager = previewUnit.AddComponent<AIEquipmentManager>();
+            //Debug.Log("PreviewManager.OpenWindowCommon(): adding attachment profile: " + cloneSource.PrefabProfile.AttachmentProfile.DisplayName);
             aIEquipmentManager.AttachmentProfile = cloneSource.PrefabProfile.AttachmentProfile;
+
+            // testing to make equipping character in new game panel
+            aIEquipmentManager.OrchestratorStart();
+            aIEquipmentManager.OrchestratorFinish();
         }
 
     }

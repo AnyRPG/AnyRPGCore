@@ -35,7 +35,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnXPGained += UpdateXP;
             SystemEventManager.MyInstance.OnLevelChanged += UpdateXPBar;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void UpdateXPBar(int _Level) {
-            if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");

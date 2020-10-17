@@ -25,10 +25,6 @@ namespace AnyRPG {
 
         [Header("Level Manager")]
 
-        [Tooltip("When a new game is started, the character will initially spawn in this scene")]
-        [SerializeField]
-        private string defaultStartingZone = string.Empty;
-
         [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
         [SerializeField]
         private string initializationScene = "Load GameManager";
@@ -41,16 +37,6 @@ namespace AnyRPG {
 
         // reference to the main menu scene node
         private SceneNode mainMenuSceneNode = null;
-
-        [Tooltip("The name of the character creator scene")]
-        [SerializeField]
-        private string characterCreatorScene = "Character Creator";
-
-        private SceneNode characterCreatorSceneNode = null;
-
-        [Tooltip("whether to start the game with the character creator or just go straight into the game as a soul")]
-        [SerializeField]
-        private bool loadCharacterCreator = true;
 
         [Header("LOADING SCREEN")]
         public Slider loadBar;
@@ -74,15 +60,13 @@ namespace AnyRPG {
         // dictionary of scene file names to scene nodes for quick lookup at runtime
         private Dictionary<string, SceneNode> sceneDictionary = new Dictionary<string, SceneNode>();
 
-        public bool MyNavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
-        public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
+        public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         public Vector3 SpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
         public Vector3 SpawnLocationOverride { get => spawnLocationOverride; set => spawnLocationOverride = value; }
         public string ReturnSceneName { get => returnSceneName; set => returnSceneName = value; }
         public string OverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
         public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
         public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
-        public SceneNode CharacterCreatorSceneNode { get => characterCreatorSceneNode; set => characterCreatorSceneNode = value; }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -298,9 +282,9 @@ namespace AnyRPG {
 
         public void LoadCutScene(Cutscene cutscene) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
-            if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
-                spawnRotationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward;
-                spawnLocationOverride = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
+            if (PlayerManager.MyInstance.PlayerUnitObject != null) {
+                spawnRotationOverride = PlayerManager.MyInstance.PlayerUnitObject.transform.forward;
+                spawnLocationOverride = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
             UIManager.MyInstance.MyCutSceneBarController.AssignCutScene(cutscene);
@@ -320,7 +304,7 @@ namespace AnyRPG {
                 UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);
                 UIManager.MyInstance.MyCombatTextCanvas.SetActive(true);
 
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                     PlayerManager.MyInstance.SpawnPlayerUnit();
                 }
 
@@ -364,8 +348,8 @@ namespace AnyRPG {
         }
 
         public void LoadDefaultStartingZone() {
-            if (defaultStartingZone != string.Empty) {
-                LoadLevel(defaultStartingZone);
+            if (SystemConfigurationManager.MyInstance.DefaultStartingZone != string.Empty) {
+                LoadLevel(SystemConfigurationManager.MyInstance.DefaultStartingZone);
             }
         }
 
@@ -375,11 +359,13 @@ namespace AnyRPG {
         }
 
         public void LoadFirstScene() {
+            /*
             if (loadCharacterCreator == true) {
                 LoadLevel(characterCreatorScene);
             } else {
-                LoadDefaultStartingZone();
-            }
+            */
+            LoadDefaultStartingZone();
+            //}
         }
 
 
@@ -435,16 +421,6 @@ namespace AnyRPG {
                     Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + mainMenuScene + ". Check inspector.");
                 }
             }
-
-            if (characterCreatorScene != null && characterCreatorScene != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(characterCreatorScene);
-                if (tmpSceneNode != null) {
-                    characterCreatorSceneNode = tmpSceneNode;
-                } else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + characterCreatorScene + ". Check inspector.");
-                }
-            }
-
 
         }
 

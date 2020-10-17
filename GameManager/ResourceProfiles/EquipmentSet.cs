@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         [Header("Equipment Set")]
 
+        [Tooltip("The names of the equipment that belong to this set")]
         [SerializeField]
         private List<string> equipmentNames = new List<string>();
 

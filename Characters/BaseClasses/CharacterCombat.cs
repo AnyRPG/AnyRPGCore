@@ -179,13 +179,13 @@ namespace AnyRPG {
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
-                    if (statusEffectNode.StatusEffect.MyReflectAbilityEffectList.Count > 0) {
+                    if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
                         statusEffectNode.StatusEffect.CastReflect(MyBaseCharacter.CharacterAbilityManager, target.UnitGameObject, abilityEffectContext);
                     }
                 }
             }
 
-            if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null && PlayerManager.MyInstance.MyPlayerUnitObject != null && baseCharacter != null && baseCharacter.CharacterUnit != null) {
+            if (target != null && PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null && PlayerManager.MyInstance.PlayerUnitObject != null && baseCharacter != null && baseCharacter.CharacterUnit != null) {
                 if (target == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster) ||
                     (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
                     target.IsPlayerControlled()) {
@@ -365,7 +365,7 @@ namespace AnyRPG {
                 foreach (StatusEffectNode statusEffectNode in MyBaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                     // this could maybe be done better through an event subscription
-                    if (statusEffectNode.StatusEffect.MyWeaponHitAbilityEffectList.Count > 0) {
+                    if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
                         statusEffectNode.StatusEffect.CastWeaponHit(MyBaseCharacter.CharacterAbilityManager as IAbilityCaster, targetCharacterUnit.gameObject, abilityAffectInput);
                     }
                 }
@@ -394,7 +394,7 @@ namespace AnyRPG {
 
         public virtual void ReceiveCombatMiss(GameObject targetObject, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
-            if (targetObject == PlayerManager.MyInstance.MyPlayerUnitObject || baseCharacter.CharacterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
+            if (targetObject == PlayerManager.MyInstance.PlayerUnitObject || baseCharacter.CharacterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
                 CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
             }
         }

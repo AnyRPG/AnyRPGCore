@@ -215,8 +215,8 @@ namespace AnyRPG {
                             unitAudio.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitObject != null) {
-                            if (Vector3.Distance(transform.position, PlayerManager.MyInstance.MyPlayerUnitObject.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
+                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitObject != null) {
+                            if (Vector3.Distance(transform.position, PlayerManager.MyInstance.PlayerUnitObject.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }

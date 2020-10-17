@@ -41,17 +41,17 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            if (faction.LearnedAbilityList.Count > 0) {
+            if (faction.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
                 abilitiesArea.gameObject.SetActive(false);
             }
-            for (int i = 0; i < faction.LearnedAbilityList.Count; i++) {
+            for (int i = 0; i < faction.AbilityList.Count; i++) {
                 RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                rewardIcon.SetDescribable(faction.LearnedAbilityList[i]);
+                rewardIcon.SetDescribable(faction.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (faction.LearnedAbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
-                    rewardIcon.StackSizeText.text = "Level\n" + faction.LearnedAbilityList[i].MyRequiredLevel;
+                if (faction.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                    rewardIcon.StackSizeText.text = "Level\n" + faction.AbilityList[i].RequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
             }

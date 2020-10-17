@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace AnyRPG {
     public interface IAbility {
-        bool MyAutoLearn { get; }
+        bool AutoLearn { get; }
         Sprite MyIcon { get; }
         string DisplayName { get; }
-        int MyRequiredLevel { get; }
-        bool MyUseableWithoutLearning { get; }
+        int RequiredLevel { get; }
+        bool UseableWithoutLearning { get; }
         bool IgnoreGlobalCoolDown { get; }
         bool CanSimultaneousCast { get; }
         float BaseAbilityCastingTime { get; }
@@ -22,7 +22,7 @@ namespace AnyRPG {
         bool CanCastOnSelf { get; }
         bool CanCastOnFriendly { get; }
         //AnimationClip MyAnimationClip { get; set; }
-        AnimationClip MyCastingAnimationClip { get; }
+        AnimationClip CastingAnimationClip { get; }
         List<AbilityAttachmentNode> HoldableObjectList { get; set; }
         AudioClip CastingAudioClip { get; }
         bool AnimatorCreatePrefabs { get; set; }

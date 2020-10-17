@@ -159,7 +159,7 @@ namespace AnyRPG {
                 return;
             }
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfile);
 
             // testing do this earlier
             LoadUMARecipe();
@@ -652,6 +652,7 @@ namespace AnyRPG {
 
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
+            Debug.Log("CharacterCreatorPanel.HandleItemUMARecipe(): BuildCharacter()");
             umaAvatar.BuildCharacter();
             //umaAvatar.BuildCharacter(true);
             //umaAvatar.ForceUpdate(true, true, true);
@@ -659,14 +660,17 @@ namespace AnyRPG {
 
         public void SaveCharacter() {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
-            SaveManager.MyInstance.SaveUMASettings(umaAvatar.GetCurrentRecipe());
+
+            if (umaAvatar != null) {
+                SaveManager.MyInstance.SaveUMASettings(umaAvatar.GetCurrentRecipe());
+            }
 
             // replace a default player unit with an UMA player unit when a save occurs
             if (PlayerManager.MyInstance.MyAvatar == null) {
-                Vector3 currentPlayerLocation = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
+                Vector3 currentPlayerLocation = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
                 PlayerManager.MyInstance.DespawnPlayerUnit();
                 //PlayerManager.MyInstance.SetUMAPrefab();
-                PlayerManager.MyInstance.MyCharacter.SetUnitProfile(PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName);
+                PlayerManager.MyInstance.MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName);
                 PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
                     PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();

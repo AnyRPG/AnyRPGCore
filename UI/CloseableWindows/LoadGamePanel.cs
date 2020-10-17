@@ -134,7 +134,7 @@ namespace AnyRPG {
             }
             if (unitProfile == null) {
                 Debug.Log("CharacterPanel.SetPreviewTarget(): unit profile was null, setting to character creator default");
-                unitProfile = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfile;
+                unitProfile = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfile;
             }
             //spawn correct preview unit
             CharacterCreatorManager.MyInstance.HandleOpenWindow(unitProfile);
@@ -238,6 +238,7 @@ namespace AnyRPG {
 
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
+            Debug.Log("LoadGamePanel.RebuildUMA(): BuildCharacter()");
             umaAvatar.BuildCharacter();
             //umaAvatar.BuildCharacter(true);
             //umaAvatar.ForceUpdate(true, true, true);
@@ -249,7 +250,7 @@ namespace AnyRPG {
 
             // replace a default player unit with an UMA player unit when a save occurs
             if (PlayerManager.MyInstance.MyAvatar == null) {
-                Vector3 currentPlayerLocation = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position;
+                Vector3 currentPlayerLocation = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
                 PlayerManager.MyInstance.DespawnPlayerUnit();
                 PlayerManager.MyInstance.SetUMAPrefab();
                 PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
@@ -266,7 +267,7 @@ namespace AnyRPG {
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
-            SystemWindowManager.MyInstance.newGameMenuWindow.OpenWindow();
+            SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
         }
 
         public void DeleteGame() {

@@ -162,7 +162,7 @@ namespace AnyRPG {
             } else {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
 
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                     //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): player unit is already spawned.");
                     ProcessPlayerUnitSpawn();
                 }

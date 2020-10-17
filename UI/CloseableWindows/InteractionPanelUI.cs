@@ -130,7 +130,7 @@ namespace AnyRPG {
             ClearButtons();
 
             // updated to only use valid interactables
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }

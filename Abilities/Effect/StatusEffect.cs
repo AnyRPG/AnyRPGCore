@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
-    public class StatusEffect : LengthEffect {
+    public class StatusEffect : LengthEffect, ILearnable {
 
         [Header("Status Effect")]
 
@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         [Tooltip("The required level to automatically cast this if it is a trait")]
         [SerializeField]
-        private int requiredLevel = 1;
+        protected int requiredLevel = 1;
 
         [Header("Restrictions")]
 
@@ -152,15 +152,15 @@ namespace AnyRPG {
         [SerializeField]
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
 
-        public int MyStatAmount { get => statAmount; }
-        public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
-        public int MyCurrentStacks { get => currentStacks; set => currentStacks = value; }
+        public int StatAmount { get => statAmount; }
+        public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
+        public int CurrentStacks { get => currentStacks; set => currentStacks = value; }
         public float IncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
-        public List<FactionDisposition> MyFactionModifiers { get => factionModifiers; set => factionModifiers = value; }
-        public bool MyControlTarget { get => controlTarget; set => controlTarget = value; }
-        public bool MyDisableAnimator { get => disableAnimator; set => disableAnimator = value; }
-        public bool MyStun { get => stun; set => stun = value; }
-        public bool MyLevitate { get => levitate; set => levitate = value; }
+        public List<FactionDisposition> FactionModifiers { get => factionModifiers; set => factionModifiers = value; }
+        public bool ControlTarget { get => controlTarget; set => controlTarget = value; }
+        public bool DisableAnimator { get => disableAnimator; set => disableAnimator = value; }
+        public bool Stun { get => stun; set => stun = value; }
+        public bool Levitate { get => levitate; set => levitate = value; }
         public float Duration {
             get {
                 if (limitedDuration == false) {
@@ -170,17 +170,17 @@ namespace AnyRPG {
             }
             set => duration = value;
         }
-        public List<AbilityEffect> MyReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
-        public List<AbilityEffect> MyWeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
-        public bool MyClassTrait { get => classTrait; set => classTrait = value; }
-        public bool MyLimitedDuration { get => limitedDuration; set => limitedDuration = value; }
-        public int MyRequiredLevel { get => requiredLevel; set => requiredLevel = value; }
-        public float MyOutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
-        public bool MyImmuneDisableAnimator { get => immuneDisableAnimator; set => immuneDisableAnimator = value; }
-        public bool MyImmuneStun { get => immuneStun; set => immuneStun = value; }
-        public bool MyImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
-        public StatusEffectType MyStatusEffectType { get => statusEffectType; set => statusEffectType = value; }
-        public StatusEffectAlignment MyStatusEffectAlignment { get => statusEffectAlignment; set => statusEffectAlignment = value; }
+        public List<AbilityEffect> ReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
+        public List<AbilityEffect> WeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
+        public bool ClassTrait { get => classTrait; set => classTrait = value; }
+        public bool LimitedDuration { get => limitedDuration; set => limitedDuration = value; }
+        public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
+        public float OutgoingDamageMultiplier { get => outgoingDamageMultiplier; set => outgoingDamageMultiplier = value; }
+        public bool ImmuneDisableAnimator { get => immuneDisableAnimator; set => immuneDisableAnimator = value; }
+        public bool ImmuneStun { get => immuneStun; set => immuneStun = value; }
+        public bool ImmuneLevitate { get => immuneLevitate; set => immuneLevitate = value; }
+        public StatusEffectType StatusEffectType { get => statusEffectType; set => statusEffectType = value; }
+        public StatusEffectAlignment StatusEffectAlignment { get => statusEffectAlignment; set => statusEffectAlignment = value; }
         public List<string> StatBuffTypeNames { get => statBuffTypeNames; set => statBuffTypeNames = value; }
         public List<SecondaryStatType> SecondaryStatBuffsTypes { get => secondaryStatBuffsTypes; set => secondaryStatBuffsTypes = value; }
         public int SecondaryStatAmount { get => secondaryStatAmount; set => secondaryStatAmount = value; }
@@ -422,16 +422,16 @@ namespace AnyRPG {
             if (statBuffTypeNames.Count > 0) {
 
                 foreach (string statBuffType in statBuffTypeNames) {
-                    if (MyStatAmount > 0) {
-                        descriptionItem = "Increases " + statBuffType + " by " + MyStatAmount;
+                    if (StatAmount > 0) {
+                        descriptionItem = "Increases " + statBuffType + " by " + StatAmount;
                         effectStrings.Add(descriptionItem);
                     }
-                    if (MyStatMultiplier > 0 && MyStatMultiplier < 1) {
-                        descriptionItem = "Reduces " + statBuffType + " by " + ((1 - MyStatMultiplier) * 100) + "%";
+                    if (StatMultiplier > 0 && StatMultiplier < 1) {
+                        descriptionItem = "Reduces " + statBuffType + " by " + ((1 - StatMultiplier) * 100) + "%";
                         effectStrings.Add(descriptionItem);
                     }
-                    if (MyStatMultiplier > 1) {
-                        descriptionItem = "Increases " + statBuffType + " by " + ((MyStatMultiplier - 1) * 100) + "%";
+                    if (StatMultiplier > 1) {
+                        descriptionItem = "Increases " + statBuffType + " by " + ((StatMultiplier - 1) * 100) + "%";
                         effectStrings.Add(descriptionItem);
                     }
                 }
@@ -495,16 +495,16 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter targetCharacter) {
-            if (MyDisableAnimator == true) {
+            if (DisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
                 targetCharacter.CharacterController.FreezeCharacter();
             }
 
-            if (MyStun == true) {
+            if (Stun == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
                 targetCharacter.CharacterController.StunCharacter();
             }
-            if (MyLevitate == true) {
+            if (Levitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
                 targetCharacter.CharacterController.LevitateCharacter();
             }
@@ -514,13 +514,13 @@ namespace AnyRPG {
             if (targetCharacter == null) {
                 return;
             }
-            if (MyDisableAnimator == true) {
+            if (DisableAnimator == true) {
                 targetCharacter.CharacterController.UnFreezeCharacter();
             }
-            if (MyStun == true) {
+            if (Stun == true) {
                 targetCharacter.CharacterController.UnStunCharacter();
             }
-            if (MyLevitate == true) {
+            if (Levitate == true) {
                 targetCharacter.CharacterController.UnLevitateCharacter();
             }
         }

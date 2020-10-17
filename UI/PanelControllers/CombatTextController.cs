@@ -91,7 +91,7 @@ namespace AnyRPG {
             if (image.sprite == null) {
                 image.color = new Color32(0, 0, 0, 0);
             }
-            if (mainTarget == PlayerManager.MyInstance.MyPlayerUnitObject) {
+            if (mainTarget == PlayerManager.MyInstance.PlayerUnitObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:

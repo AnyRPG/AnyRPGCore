@@ -16,7 +16,7 @@ namespace AnyRPG {
         public override StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(gameObject + ".AISats.ApplyStatusEffect()");
             StatusEffectNode _statusEffectNode = base.ApplyStatusEffect(statusEffect, sourceCharacter, abilityEffectInput);
-            if (_statusEffectNode != null && _statusEffectNode.StatusEffect.MyControlTarget == true) {
+            if (_statusEffectNode != null && _statusEffectNode.StatusEffect.ControlTarget == true) {
                 //Debug.Log(gameObject + ".AISats.ApplyStatusEffect() : disabling ai patrol");
                 if ((baseCharacter.CharacterController as AIController).MyAiPatrol != null) {
                     (baseCharacter.CharacterController as AIController).MyAiPatrol.enabled = false;

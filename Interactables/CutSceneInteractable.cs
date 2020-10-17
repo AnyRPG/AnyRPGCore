@@ -57,7 +57,7 @@ namespace AnyRPG {
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (cutscene != null) {
                 if (cutscene.Viewed == false || cutscene.Repeatable == true) {
-                    if (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.MyPlayerUnitSpawned == true)) {
+                    if (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
                         if (cutscene.MyLoadScene != null) {
                             LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
                         } else {

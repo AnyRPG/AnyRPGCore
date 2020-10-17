@@ -16,7 +16,7 @@ namespace AnyRPG {
             if (returnObjects != null) {
                 foreach (GameObject go in returnObjects.Values) {
                     //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name);
-                    go.transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
+                    go.transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
                     ProjectileScript projectileScript = go.GetComponent<ProjectileScript>();
                     if (projectileScript != null) {
                         //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");

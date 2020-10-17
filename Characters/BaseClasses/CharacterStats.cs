@@ -469,7 +469,9 @@ namespace AnyRPG {
                 }
 
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in oldItem.PrimaryStats) {
-                    primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                    if (primaryStats.ContainsKey(itemPrimaryStatNode.StatName)) {
+                        primaryStats[itemPrimaryStatNode.StatName].RemoveModifier(oldItem.GetPrimaryStatModifier(itemPrimaryStatNode.StatName, Level, baseCharacter));
+                    }
                 }
             }
 
@@ -509,7 +511,7 @@ namespace AnyRPG {
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue += statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
+                    returnValue += statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
                 }
             }
             if (secondaryStats.ContainsKey(secondaryStatType)) {
@@ -523,7 +525,7 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
+                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
                     //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue + "; stack: " + statusEffectNode.MyStatusEffect.MyCurrentStacks + "; multiplier: " + statusEffectNode.MyStatusEffect.MyStatMultiplier);
                 }
             }
@@ -545,7 +547,7 @@ namespace AnyRPG {
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue += statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyStatAmount;
+                    returnValue += statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.StatAmount;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -564,7 +566,7 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue *= statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyStatMultiplier;
+                    returnValue *= statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.StatMultiplier;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -582,7 +584,7 @@ namespace AnyRPG {
                 if (statusEffectNode.StatusEffect != null) {
                     if (statusEffectNode.StatusEffect.IncomingDamageMultiplier != 1) {
                         //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                        returnValue *= statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.IncomingDamageMultiplier;
+                        returnValue *= statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.IncomingDamageMultiplier;
                     }
                 } else {
                     Debug.Log(gameObject.name + "CharacterStats.GetIncomingDamageModifiers(): statusEffectNode.MyStatusEffect is null!!!");
@@ -605,7 +607,7 @@ namespace AnyRPG {
         public virtual bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.StatusEffect.MyImmuneDisableAnimator == true) {
+                if (statusEffectNode.StatusEffect.ImmuneDisableAnimator == true) {
                     return true;
                 }
             }
@@ -615,7 +617,7 @@ namespace AnyRPG {
         public virtual bool HasStunImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.StatusEffect.MyImmuneStun == true) {
+                if (statusEffectNode.StatusEffect.ImmuneStun == true) {
                     return true;
                 }
             }
@@ -625,7 +627,7 @@ namespace AnyRPG {
         public virtual bool HasLevitateImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                if (statusEffectNode.StatusEffect.MyImmuneLevitate == true) {
+                if (statusEffectNode.StatusEffect.ImmuneLevitate == true) {
                     return true;
                 }
             }
@@ -640,7 +642,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.StatusEffect.ThreatMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.ThreatMultiplier;
+                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.ThreatMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -652,9 +654,9 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
-                if (statusEffectNode.StatusEffect.MyOutgoingDamageMultiplier != 1) {
+                if (statusEffectNode.StatusEffect.OutgoingDamageMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.StatusEffect.MyCurrentStacks * statusEffectNode.StatusEffect.MyOutgoingDamageMultiplier;
+                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.OutgoingDamageMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -688,7 +690,7 @@ namespace AnyRPG {
         }
 
         public virtual bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            if (statusEffect.MyDisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
+            if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
@@ -699,7 +701,7 @@ namespace AnyRPG {
 
         public virtual bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
-            if (statusEffect.MyStun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
+            if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
@@ -710,7 +712,7 @@ namespace AnyRPG {
 
         public virtual bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
-            if (statusEffect.MyLevitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
+            if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
@@ -818,7 +820,7 @@ namespace AnyRPG {
                 StatChangedNotificationHandler();
             }
 
-            if (statusEffect.MyFactionModifiers.Count > 0) {
+            if (statusEffect.FactionModifiers.Count > 0) {
                 if (SystemEventManager.MyInstance != null) {
                     SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
                 }
@@ -996,7 +998,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.MyPlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
+            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.PlayerUnitObject || source.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
@@ -1112,7 +1114,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                if (clearAll == true || statusEffectNode.StatusEffect.MyClassTrait == false) {
+                if (clearAll == true || statusEffectNode.StatusEffect.ClassTrait == false) {
                     statusEffectNodes.Add(statusEffectNode);
                 }
             }
@@ -1164,7 +1166,7 @@ namespace AnyRPG {
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
-            while ((statusEffect.MyLimitedDuration == false || statusEffect.MyClassTrait == true || statusEffect.GetRemainingDuration() > 0f) && baseCharacter != null) {
+            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffect.GetRemainingDuration() > 0f) && baseCharacter != null) {
                 yield return null;
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
                 statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
-    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility, ITargetable {
+    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility, ITargetable, ILearnable {
 
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };
@@ -252,13 +252,13 @@ namespace AnyRPG {
 
         protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
-        public AnimationClip MyCastingAnimationClip {
+        public AnimationClip CastingAnimationClip {
             get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null);
         }
-        public int MyRequiredLevel { get => requiredLevel; }
-        public bool MyAutoLearn { get => autoLearn; }
-        public bool MyAutoAddToBars { get => autoAddToBars; }
-        public bool MyUseableWithoutLearning { get => useableWithoutLearning; }
+        public int RequiredLevel { get => requiredLevel; }
+        public bool AutoLearn { get => autoLearn; }
+        public bool AutoAddToBars { get => autoAddToBars; }
+        public bool UseableWithoutLearning { get => useableWithoutLearning; }
 
 
         public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
@@ -276,8 +276,8 @@ namespace AnyRPG {
                 if (useAnimationCastTime == false) {
                     return abilityCastingTime;
                 } else {
-                    if (MyCastingAnimationClip != null) {
-                        return MyCastingAnimationClip.length;
+                    if (CastingAnimationClip != null) {
+                        return CastingAnimationClip.length;
                     }
                     return abilityCastingTime;
                 }
@@ -629,8 +629,8 @@ namespace AnyRPG {
         public virtual void StartCasting(IAbilityCaster source) {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
             //Debug.Log("setting casting animation");
-            if (MyCastingAnimationClip != null) {
-                source.PerformCastingAnimation(MyCastingAnimationClip, this);
+            if (CastingAnimationClip != null) {
+                source.PerformCastingAnimation(CastingAnimationClip, this);
             }
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?

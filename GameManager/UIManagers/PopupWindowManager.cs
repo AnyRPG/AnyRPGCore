@@ -50,7 +50,7 @@ namespace AnyRPG {
         // Update is called once per frame
         void Update() {
 
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }

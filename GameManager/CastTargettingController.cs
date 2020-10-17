@@ -51,7 +51,7 @@ namespace AnyRPG {
 
         private void FollowMouse() {
             //Debug.Log("CastTargettingController.FollowMouse()");
-            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
@@ -61,7 +61,7 @@ namespace AnyRPG {
                 if (Physics.Raycast(ray, out hit, 100, (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).movementMask.value)) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                     Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 4, hit.point.z);
-                    if (Vector3.Distance(hit.point, PlayerManager.MyInstance.MyPlayerUnitObject.transform.position) < 40f) {
+                    if (Vector3.Distance(hit.point, PlayerManager.MyInstance.PlayerUnitObject.transform.position) < 40f) {
                         //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                         this.transform.position = cameraPoint;
                     }

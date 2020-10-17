@@ -38,9 +38,66 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
-
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
+
+        [Header("NEW GAME OPTIONS")]
+
+        [Tooltip("If false, launch straight into a game with no character configuration")]
+        [SerializeField]
+        private bool useNewGameWindow = true;
+
+        [Tooltip("If the new game window is used, show the appearance tab")]
+        [SerializeField]
+        private bool newGameAppearance = true;
+
+        [Tooltip("If the appearance tab is used, show the UMA version of the character customizer")]
+        [SerializeField]
+        private bool newGameUMAAppearance = true;
+
+        [Tooltip("If the new game window is used, show the class tab")]
+        [SerializeField]
+        private bool newGameClass = true;
+
+        [Tooltip("If the new game window is used, show the faction tab")]
+        [SerializeField]
+        private bool newGameFaction = true;
+
+        [Tooltip("If the new game window is used, show the specialiation tab")]
+        [SerializeField]
+        private bool newGameSpecialization = true;
+
+        [Tooltip("The name of the audio profile to play when the new game window is active")]
+        [SerializeField]
+        private string newGameAudio = string.Empty;
+
+        private AudioProfile newGameAudioProfile = null;
+
+        [Tooltip("If the character creator is not used, this unit will be the default player unit. Usually a non UMA mecanim Unit or pre-configured UMA unit.")]
+        [SerializeField]
+        private string defaultPlayerUnitProfileName = string.Empty;
+
+        [Tooltip("The options available when the character creator is used")]
+        [SerializeField]
+        private List<string> characterCreatorProfileNames = new List<string>();
+
+        // reference to the default profile
+        private UnitProfile defaultPlayerUnitProfile = null;
+
+        // reference to the default profile
+        private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
+
+        [Tooltip("The default name for the character creator, and the default to start with if no character creator is used.")]
+        [SerializeField]
+        private string defaultPlayerName = "New Player";
+
+        [Tooltip("When a new game is started, the character will initially spawn in this scene")]
+        [SerializeField]
+        private string defaultStartingZone = string.Empty;
+
+        [Tooltip("if false, default backpack goes in bank")]
+        [SerializeField]
+        private bool equipDefaultBackPack = true;
 
         [Header("CONTROLLER")]
 
@@ -244,7 +301,7 @@ namespace AnyRPG {
         [SerializeField]
         private float maxChatTextDistance = 25f;
 
-        private AudioProfile vendorAudioProfile;
+        private AudioProfile vendorAudioProfile = null;
 
         [Header("INTERACTABLE CONFIGURATION")]
 
@@ -430,6 +487,30 @@ namespace AnyRPG {
         public Currency QuestCurrency { get => questCurrency; set => questCurrency = value; }
         public AudioProfile VendorAudioProfile { get => vendorAudioProfile; set => vendorAudioProfile = value; }
         public float MaxChatTextDistance { get => maxChatTextDistance; set => maxChatTextDistance = value; }
+        public bool UseNewGameWindow { get => useNewGameWindow; set => useNewGameWindow = value; }
+        public bool NewGameAppearance { get => newGameAppearance; set => newGameAppearance = value; }
+        public bool NewGameClass { get => newGameClass; set => newGameClass = value; }
+        public bool NewGameFaction { get => newGameFaction; set => newGameFaction = value; }
+        public bool NewGameSpecialization { get => newGameSpecialization; set => newGameSpecialization = value; }
+        public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
+        public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
+        public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
+        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
+        public string CharacterCreatorUnitProfileName { get => characterCreatorProfileNames[0]; }
+        public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
+        public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
+
+        public UnitProfile CharacterCreatorUnitProfile {
+            get {
+                if (characterCreatorProfiles != null && characterCreatorProfiles.Count > 0) {
+                    return characterCreatorProfiles[0];
+                }
+                return null;
+            }
+        }
+
+        public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
+        public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -452,6 +533,13 @@ namespace AnyRPG {
             }
             eventSubscriptionsInitialized = false;
         }
+
+        public void PerformRequiredPropertyChecks() {
+            if (defaultPlayerUnitProfileName == null || defaultPlayerUnitProfileName == string.Empty) {
+                Debug.LogError("PlayerManager.Awake(): the default player unit profile name is null.  Please set it in the inspector");
+            }
+        }
+
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
@@ -544,6 +632,45 @@ namespace AnyRPG {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + vendorAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
                 }
             }
+
+            if (newGameAudio != null && newGameAudio != string.Empty) {
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(newGameAudio);
+                if (tmpAudioProfile != null) {
+                    newGameAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + newGameAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            // get default player unit profile
+            if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultPlayerUnitProfileName);
+                if (tmpUnitProfile != null) {
+                    defaultPlayerUnitProfile = tmpUnitProfile;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                }
+            } else {
+                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+            }
+
+            // get default player unit profile
+            if (characterCreatorProfileNames != null) {
+                foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
+                    if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
+                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(characterCreatorProfileName);
+                        if (tmpUnitProfile != null) {
+                            characterCreatorProfiles.Add(tmpUnitProfile);
+                        } else {
+                            Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + ".  Check Inspector");
+                        }
+                    } else {
+                        Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+                    }
+
+                }
+            }
+
 
 
         }

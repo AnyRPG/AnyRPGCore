@@ -35,7 +35,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += AcceptAchievements;
-            if (PlayerManager.MyInstance.MyPlayerConnectionSpawned == true) {
+            if (PlayerManager.MyInstance.PlayerConnectionSpawned == true) {
                 AcceptAchievements();
             }
             eventSubscriptionsInitialized = true;

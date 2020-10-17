@@ -61,7 +61,7 @@ namespace AnyRPG {
             if (GetComponent<CharacterUnit>() == null) {
                 SetupScriptableObjects();
                 OrchestrateStartup();
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                     // this allows us to spawn things with no prerequisites that don't need to check against the player
                     PrerequisiteCheck();
                 }
@@ -94,7 +94,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
                 ProcessPlayerUnitSpawn();
             } else {

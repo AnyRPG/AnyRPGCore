@@ -39,12 +39,14 @@ namespace AnyRPG {
         public CloseableWindow deleteGameMenuWindow;
         public CloseableWindow copyGameMenuWindow;
         public CloseableWindow loadGameWindow;
+        public CloseableWindow newGameWindow;
         public CloseableWindow confirmDestroyMenuWindow;
         public CloseableWindow confirmCancelCutsceneMenuWindow;
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
         public CloseableWindow exitToMainMenuWindow;
-        public CloseableWindow newGameMenuWindow;
+
+        public CloseableWindow confirmNewGameMenuWindow;
 
 
         private void Start() {
@@ -96,7 +98,7 @@ namespace AnyRPG {
                 inGameMainMenuWindow.CloseWindow();
 
                 // testing - do not allow accidentally closing this while dead
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }

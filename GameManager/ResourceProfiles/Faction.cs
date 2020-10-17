@@ -6,6 +6,36 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Factions/Faction")]
     public class Faction : DescribableResource {
 
+        [Header("NewGame")]
+
+        [Tooltip("If true, this faction is available for Players to choose on the new game menu")]
+        [SerializeField]
+        private bool newGameOption = false;
+
+        [Tooltip("When a new game is started, the character will initially spawn in this scene")]
+        [SerializeField]
+        private string defaultStartingZone = string.Empty;
+
+        [Tooltip("If true, hide any default unit profiles when this faction is used")]
+        [SerializeField]
+        private bool hideDefaultProfiles = false;
+
+        [Tooltip("The options available when the character creator is used")]
+        [SerializeField]
+        private List<string> characterCreatorProfileNames = new List<string>();
+
+        // reference to the default profile
+        private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
+
+        [Header("Start Equipment")]
+
+        [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
+        [SerializeField]
+        private List<string> equipmentNames = new List<string>();
+
+        private List<Equipment> equipmentList = new List<Equipment>();
+
+
         [Header("Faction Dispositions")]
 
         [Tooltip("The disposition that this faction has toward any faction not specificially in its disposition list")]
@@ -22,16 +52,28 @@ namespace AnyRPG {
 
         private List<BaseAbility> learnedAbilityList = new List<BaseAbility>();
 
-        public List<BaseAbility> LearnedAbilityList { get => learnedAbilityList; set => learnedAbilityList = value; }
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [SerializeField]
+        private List<string> traitNames = new List<string>();
+
+        private List<StatusEffect> traitList = new List<StatusEffect>();
+
+        public List<BaseAbility> AbilityList { get => learnedAbilityList; set => learnedAbilityList = value; }
+        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
+        public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
+        public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
+        public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
+        public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
+        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
         public static Color GetFactionColor(INamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");
-            if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
+            if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.PlayerUnitObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if ((namePlateUnit is CharacterUnit) && PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if ((namePlateUnit is CharacterUnit) && PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
                 return GetFactionColor(PlayerManager.MyInstance.MyCharacter, (namePlateUnit as CharacterUnit).MyCharacter);
             } else {
@@ -191,7 +233,20 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects() {
+            //Debug.Log("Faction.SetupScriptableObjects()");
             base.SetupScriptableObjects();
+
+            if (equipmentNames != null) {
+                foreach (string equipmentName in equipmentNames) {
+                    Equipment tmpEquipment = null;
+                    tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    if (tmpEquipment != null) {
+                        equipmentList.Add(tmpEquipment);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
 
             learnedAbilityList = new List<BaseAbility>();
             if (learnedAbilityNames != null) {
@@ -212,6 +267,27 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (characterCreatorProfileNames != null) {
+                //Debug.Log("Faction.SetupScriptableObjects(): characterCreatorProfileNames is not null");
+                foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
+                    //Debug.Log("Faction.SetupScriptableObjects(): found a string");
+                    if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
+                        //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
+                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(characterCreatorProfileName);
+                        if (tmpUnitProfile != null) {
+                            //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
+                            characterCreatorProfiles.Add(tmpUnitProfile);
+                        } else {
+                            Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + ".  Check Inspector");
+                        }
+                    } else {
+                        Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): a character creator profile string was empty.  Check Inspector");
+                    }
+
+                }
+            }
+
 
 
         }

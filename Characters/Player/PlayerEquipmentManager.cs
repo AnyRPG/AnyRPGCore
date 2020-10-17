@@ -104,13 +104,13 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.NotifyOnEquipmentRefresh(equipment);
         }
 
-        public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false) {
+        public override void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildUMA = true) {
             //Debug.Log(gameObject.name + ".PlayerEquipmentManager.Equip(" + (newItem == null ? "null" : newItem.MyName)+ ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName) + ")");
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
                 return;
             }
-            base.Equip(newItem, equipmentSlotProfile, skipModels);
+            base.Equip(newItem, equipmentSlotProfile, skipModels, rebuildUMA);
 
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.
@@ -118,11 +118,11 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, null);
         }
 
-        public override Equipment Unequip(EquipmentSlotProfile equipmentSlotProfile, int slotIndex = -1) {
+        public override Equipment Unequip(EquipmentSlotProfile equipmentSlotProfile, int slotIndex = -1, bool rebuildUMA = true) {
             //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString());
-            Equipment returnValue = base.Unequip(equipmentSlotProfile, slotIndex);
+            Equipment returnValue = base.Unequip(equipmentSlotProfile, slotIndex, rebuildUMA);
             if (returnValue != null) {
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned) {
 
                     if (slotIndex != -1) {
                         InventoryManager.MyInstance.AddItem(returnValue, slotIndex);

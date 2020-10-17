@@ -167,7 +167,7 @@ namespace AnyRPG {
 
         public void CheckForPlayerOwnerShip() {
             //Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned && ((namePlateUnit as CharacterUnit) == PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned && ((namePlateUnit as CharacterUnit) == PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
                 namePlateCanvasGroup.blocksRaycasts = false;
                 UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
@@ -248,7 +248,7 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log("NamePlateController.SetCharacterName(): namePlateUnit has no faction!");
                         Color textColor;
-                        if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.MyPlayerUnitObject) {
+                        if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.PlayerUnitObject) {
                             textColor = Color.green;
                         } else {
                             textColor = Color.white;
@@ -353,7 +353,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (namePlateUnit != null && (PlayerManager.MyInstance.MyPlayerUnitObject != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
+            if (namePlateUnit != null && (PlayerManager.MyInstance.PlayerUnitObject != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
@@ -379,7 +379,7 @@ namespace AnyRPG {
                     }
                 } else {
                     //Debug.Log("NamePlateController.LateUpdate(): not cutscene: calculating distance from player");
-                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, namePlateUnit.NamePlateTransform.position)) > 40f) {
+                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.PlayerUnitObject.transform.position, namePlateUnit.NamePlateTransform.position)) > 40f) {
                         renderNamePlate = false;
                     }
                 }
@@ -409,7 +409,7 @@ namespace AnyRPG {
 
         private void SetFactionColor() {
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene == null) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene == null) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
@@ -457,7 +457,7 @@ namespace AnyRPG {
 
         public void OnClick(BaseEventData eventData) {
             //Debug.Log("NamePlateController: OnClick()");
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
 

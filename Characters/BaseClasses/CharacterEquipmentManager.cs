@@ -33,12 +33,14 @@ namespace AnyRPG {
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public GameObject MyPlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
+        public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
 
         protected virtual void Start() {
             int numSlots = SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count;
         }
 
         public void OrchestratorStart() {
+            //Debug.Log("CharacterEquipmentManager.OrchestratorStart()");
             GetComponentReferences();
             CreateEventSubscriptions();
         }
@@ -48,6 +50,7 @@ namespace AnyRPG {
         }
 
         public virtual void GetComponentReferences() {
+            //Debug.Log("CharacterEquipmentManager.GetComponentReferences()");
             baseCharacter = GetComponent<BaseCharacter>();
         }
 
@@ -57,7 +60,7 @@ namespace AnyRPG {
         }
 
         protected virtual void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log("CharacterEquipmentManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -138,25 +141,33 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleItemUMARecipe(Equipment newItem) {
+        public void HandleItemUMARecipe(Equipment newItem, bool rebuildUMA = true) {
             //Debug.Log("EquipmentManager.HandleItemUMARecipe()");
             if (newItem == null) {
-                //Debug.Log("newItem is null. returning");
+                Debug.Log("newItem is null. returning");
                 return;
             }
 
             if (newItem.MyUMARecipes != null && newItem.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
-                //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.MyName);
+                //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.DisplayName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
                 foreach (UMATextRecipe uMARecipe in newItem.MyUMARecipes) {
                     if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                        //Debug.Log("EquipmentManager.HandleItemUMARecipe(): SetSlot: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
                         dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
                     }
                 }
-                dynamicCharacterAvatar.BuildCharacter();
+                if (rebuildUMA) {
+                    //Debug.Log("CharacterEquipmentManager.HandleItemUMARecipe(): BuildCharacter()");
+                    dynamicCharacterAvatar.BuildCharacter();
+                }
             } else {
-                //Debug.Log("EquipmentManager.HandleItemUMARecipe() No UMA recipe to handle");
+                if (dynamicCharacterAvatar == null) {
+                    //Debug.Log("EquipmentManager.HandleItemUMARecipe() dynamicCharacterAvatar is null");
+                } else {
+                    //Debug.Log("EquipmentManager.HandleItemUMARecipe() No UMA recipe to handle");
+                }
             }
         }
 
@@ -168,7 +179,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleWeaponSlot(EquipmentSlotProfile equipmentSlotProfile) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + ")");
             if (currentEquipment == null) {
                 Debug.LogError(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;
@@ -195,7 +206,9 @@ namespace AnyRPG {
         }
 
         public void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
+            //Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects()");
             if (newEquipment == null || newEquipment.HoldableObjectList == null || equipmentSlotProfile == null) {
+                Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects() : FAILED TO SPAWN OBJECTS");
                 return;
             }
             //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
@@ -321,7 +334,8 @@ namespace AnyRPG {
                         return attachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else {
-                    Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
+                    // enable for troubleshooting only.  It gets spammy with beast units that don't have attachments.
+                    //Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
                 }
             }
 
@@ -421,8 +435,8 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.MyName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.MyName)+ ")");
+        public virtual void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildUMA = true) {
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)+ ")");
             //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
@@ -465,7 +479,7 @@ namespace AnyRPG {
             //Debug.Log("Putting " + newItem.GetUMASlotType() + " in slot " + newItem.UMARecipe.wardrobeSlot);
 
             // both of these not needed if character unit not yet spawned?
-            HandleItemUMARecipe(newItem);
+            HandleItemUMARecipe(newItem, rebuildUMA);
 
             // testing new code to prevent UKMA characters from trying to find bones before they are created.
             if (skipModels == false) {
@@ -528,7 +542,7 @@ namespace AnyRPG {
         }
         */
 
-        public virtual Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1) {
+        public virtual Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool rebuildUMA = true) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ")");
             if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
@@ -551,7 +565,10 @@ namespace AnyRPG {
                             dynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
                         }
                     }
-                    dynamicCharacterAvatar.BuildCharacter();
+                    if (rebuildUMA) {
+                        Debug.Log("EquipmentManager.Unequip(): BuildCharacter()");
+                        dynamicCharacterAvatar.BuildCharacter();
+                    }
                 }
 
                 //Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
@@ -562,7 +579,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public void UnequipAll() {
+        public void UnequipAll(bool rebuildUMA = true) {
             //Debug.Log("EquipmentManager.UnequipAll()");
             List<EquipmentSlotProfile> tmpList = new List<EquipmentSlotProfile>();
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
@@ -570,7 +587,7 @@ namespace AnyRPG {
             }
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in tmpList) {
-                Unequip(equipmentSlotProfile);
+                Unequip(equipmentSlotProfile, -1, rebuildUMA);
             }
 
             /*

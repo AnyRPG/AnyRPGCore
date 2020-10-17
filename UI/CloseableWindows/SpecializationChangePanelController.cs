@@ -62,8 +62,8 @@ namespace AnyRPG {
                     RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(classSpecialization.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((classSpecialization.TraitList[i] as StatusEffect).MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
-                        rewardIcon.StackSizeText.text = "Level\n" + (classSpecialization.TraitList[i] as StatusEffect).MyRequiredLevel;
+                    if ((classSpecialization.TraitList[i] as StatusEffect).RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                        rewardIcon.StackSizeText.text = "Level\n" + (classSpecialization.TraitList[i] as StatusEffect).RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
@@ -85,8 +85,8 @@ namespace AnyRPG {
                     RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(classSpecialization.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (classSpecialization.AbilityList[i].MyRequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
-                        rewardIcon.StackSizeText.text = "Level\n" + classSpecialization.AbilityList[i].MyRequiredLevel;
+                    if (classSpecialization.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                        rewardIcon.StackSizeText.text = "Level\n" + classSpecialization.AbilityList[i].RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }

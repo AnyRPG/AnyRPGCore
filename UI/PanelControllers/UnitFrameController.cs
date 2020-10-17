@@ -519,7 +519,7 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
             if (followGameObject == null) {

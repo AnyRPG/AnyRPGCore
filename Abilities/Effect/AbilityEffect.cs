@@ -151,7 +151,10 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".AbilityEffect.OnDestroy()");
         }
 
-        
+        public string GetShortDescription() {
+            return description;
+        }
+
 
         public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".AbilityEffect.CanUseOn()");

@@ -101,7 +101,7 @@ namespace AnyRPG {
 
         private void Awake() {
             if (PlayerManager.MyInstance != null) {
-                groundMask = PlayerManager.MyInstance.MyDefaultGroundMask;
+                groundMask = PlayerManager.MyInstance.DefaultGroundMask;
             }
         }
 
@@ -358,7 +358,7 @@ namespace AnyRPG {
             if (((characterUnit.MyCharacter.CharacterController as PlayerController).HasMoveInput() || (characterUnit.MyCharacter.CharacterController as PlayerController).HasTurnInput()) && (characterUnit.MyCharacter.CharacterController as PlayerController).canMove) {
 
                 // set clampValue to default of max movement speed
-                float clampValue = PlayerManager.MyInstance.MyMaxMovementSpeed;
+                float clampValue = PlayerManager.MyInstance.MaxMovementSpeed;
 
                 // set a clamp value to limit movement speed to walking if going backward
                 /*

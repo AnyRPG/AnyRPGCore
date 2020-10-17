@@ -117,7 +117,7 @@ namespace AnyRPG {
                 return;
             }
             SceneNode activeScene = LevelManager.MyInstance.GetActiveSceneNode();
-            if (activeScene == LevelManager.MyInstance.MainMenuSceneNode || activeScene == LevelManager.MyInstance.InitializationSceneNode || activeScene == LevelManager.MyInstance.CharacterCreatorSceneNode || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
+            if (activeScene == LevelManager.MyInstance.MainMenuSceneNode || activeScene == LevelManager.MyInstance.InitializationSceneNode || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
@@ -235,7 +235,7 @@ namespace AnyRPG {
 
             if (LevelManager.MyInstance.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.HandlePlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.MyPlayerUnitObject.transform);
+                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.PlayerUnitObject.transform);
             }
         }
 

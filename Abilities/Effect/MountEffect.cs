@@ -23,14 +23,14 @@ namespace AnyRPG {
                 // game is in the middle of exiting
                 return;
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitObject != null) {
-                PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
+            if (PlayerManager.MyInstance.PlayerUnitObject != null) {
+                PlayerManager.MyInstance.PlayerUnitObject.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
 
                 //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
-                PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabObjects.Values.ElementAt(0).transform.localEulerAngles;
+                PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = prefabObjects.Values.ElementAt(0).transform.localEulerAngles;
 
                 // we could skip this and just let the player fall through gravity
-                PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
+                PlayerManager.MyInstance.PlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
             }
             DeActivateMountedState();
             UnsubscribeFromUMACreate();
@@ -49,7 +49,7 @@ namespace AnyRPG {
             if (!CanUseOn(target, source)) {
                 return null;
             }
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // we can't mount anything if the player unit is not spawned
                 return null;
             }
@@ -61,7 +61,7 @@ namespace AnyRPG {
             if (abilityEffectObject != null) {
 
                 // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                abilityEffectObject.transform.parent = PlayerManager.MyInstance.MyPlayerUnitParent.transform;
+                abilityEffectObject.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
 
                 dynamicCharacterAvatar = go.GetComponent<DynamicCharacterAvatar>();
                 if (dynamicCharacterAvatar != null) {
@@ -85,10 +85,10 @@ namespace AnyRPG {
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
-                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.parent = mountPoint;
+                    PlayerManager.MyInstance.PlayerUnitObject.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                    PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = prefabProfile.SheathedRotation;
+                    PlayerManager.MyInstance.PlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
+                    PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = prefabProfile.SheathedRotation;
                     ActivateMountedState();
                 }
             }
@@ -99,14 +99,14 @@ namespace AnyRPG {
             if (prefabObjects != null) {
                 GameObject go = prefabObjects.Values.ElementAt(0);
                 PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
-                if (playerUnitMovementController != null && PlayerManager.MyInstance.MyPlayerUnitObject != null) {
+                if (playerUnitMovementController != null && PlayerManager.MyInstance.PlayerUnitObject != null) {
                     //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
 
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
                     //Debug.Log("Setting Animator Values");
 
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<AnimatedUnit>();
+                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<AnimatedUnit>();
                     ConfigureCharacterRegularPhysics();
 
                     // set player unit to normal state
@@ -203,7 +203,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.useGravity = false;
             PlayerManager.MyInstance.MyCharacter.AnimatedUnit.FreezeAll();
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
-            Collider collider = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<Collider>();
+            Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
                 collider.enabled = false;
             }
@@ -218,7 +218,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.isKinematic = false;
             PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.useGravity = true;
             PlayerManager.MyInstance.MyCharacter.AnimatedUnit.FreezeRotation();
-            Collider collider = PlayerManager.MyInstance.MyPlayerUnitObject.GetComponent<Collider>();
+            Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
                 collider.enabled = true;
             }

@@ -106,7 +106,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.playerFaction == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
-                anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyDefaultFaction.DisplayName;
+                anyRPGSaveData.playerFaction = string.Empty;
             }
             if (anyRPGSaveData.characterClass == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
@@ -118,7 +118,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.unitProfileName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
-                anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyDefaultCharacterCreatorUnitProfileName;
+                anyRPGSaveData.unitProfileName = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName;
             }
             if (anyRPGSaveData.PlayerUMARecipe == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
@@ -126,7 +126,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.CurrentScene == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
-                anyRPGSaveData.CurrentScene = LevelManager.MyInstance.DefaultStartingZone;
+                anyRPGSaveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
             }
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);
@@ -365,12 +365,12 @@ namespace AnyRPG {
             // moved to resource power data
             //anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
 
-            anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.x;
-            anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.y;
-            anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.position.z;
-            anyRPGSaveData.PlayerRotationX = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward.x;
-            anyRPGSaveData.PlayerRotationY = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward.y;
-            anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.MyPlayerUnitObject.transform.forward.z;
+            anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.PlayerUnitObject.transform.position.x;
+            anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.PlayerUnitObject.transform.position.y;
+            anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.PlayerUnitObject.transform.position.z;
+            anyRPGSaveData.PlayerRotationX = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.x;
+            anyRPGSaveData.PlayerRotationY = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.y;
+            anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.PlayerUMARecipe = recipeString;
             anyRPGSaveData.CurrentScene = LevelManager.MyInstance.GetActiveSceneNode().SceneName;
@@ -641,7 +641,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
             foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.StatusEffects.Values) {
-                if (statusEffectNode.StatusEffect.MyClassTrait == false
+                if (statusEffectNode.StatusEffect.ClassTrait == false
                     && statusEffectNode.StatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.MyName = statusEffectNode.StatusEffect.DisplayName;
@@ -1056,6 +1056,7 @@ namespace AnyRPG {
             InventoryManager.MyInstance.CreateDefaultBackpack();
 
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
+            SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
 
             // load default scene
             LevelManager.MyInstance.LoadFirstScene();

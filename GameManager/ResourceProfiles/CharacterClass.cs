@@ -11,6 +11,20 @@ namespace AnyRPG {
     [System.Serializable]
     public class CharacterClass : DescribableResource, IStatProvider {
 
+        [Header("NewGame")]
+
+        [Tooltip("If true, this faction is available for Players to choose on the new game menu")]
+        [SerializeField]
+        private bool newGameOption = false;
+
+        [Header("Start Equipment")]
+
+        [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
+        [SerializeField]
+        private List<string> equipmentNames = new List<string>();
+
+        private List<Equipment> equipmentList = new List<Equipment>();
+
         [Header("Abilities and Traits")]
 
         [Tooltip("Abilities available to this class")]
@@ -24,7 +38,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> traitNames = new List<string>();
 
-        private List<AbilityEffect> traitList = new List<AbilityEffect>();
+        private List<StatusEffect> traitList = new List<StatusEffect>();
 
         [Header("Capabilities")]
 
@@ -59,12 +73,26 @@ namespace AnyRPG {
         public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<AbilityEffect> TraitList { get => traitList; set => traitList = value; }
+        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
+        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
+
+            if (equipmentNames != null) {
+                foreach (string equipmentName in equipmentNames) {
+                    Equipment tmpEquipment = null;
+                    tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    if (tmpEquipment != null) {
+                        equipmentList.Add(tmpEquipment);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
 
             abilityList = new List<BaseAbility>();
             if (abilityNames != null) {
@@ -73,19 +101,19 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         abilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
-            traitList = new List<AbilityEffect>();
+            traitList = new List<StatusEffect>();
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName);
+                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
                     if (abilityEffect != null) {
                         traitList.Add(abilityEffect);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -97,7 +125,7 @@ namespace AnyRPG {
                     if (weaponSkill != null) {
                         weaponSkillList.Add(weaponSkill);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -109,7 +137,7 @@ namespace AnyRPG {
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

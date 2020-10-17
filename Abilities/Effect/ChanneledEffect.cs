@@ -28,7 +28,7 @@ namespace AnyRPG {
 
                 foreach (PrefabProfile prefabProfile in prefabObjects.Keys) {
 
-                    prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.MyEffectPrefabParent.transform;
+                    prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
                     IChanneledObject channeledObjectScript = prefabObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
                         GameObject prefabParent = source.UnitGameObject;

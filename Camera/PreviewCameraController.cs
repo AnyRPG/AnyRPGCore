@@ -347,7 +347,7 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
             UnsubscribeFromUMACreate();
             if (initialTargetString != string.Empty) {
                 Transform targetBone = target.transform.FindChildByRecursive(initialTargetString);
@@ -367,6 +367,7 @@ namespace AnyRPG {
         public void UnsubscribeFromUMACreate() {
             if (dynamicCharacterAvatar != null) {
                 dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+                //dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
             }
         }
 
@@ -388,7 +389,31 @@ namespace AnyRPG {
 
             UMAData umaData = dynamicCharacterAvatar.umaData;
             umaData.OnCharacterCreated += HandleCharacterCreated;
+            umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
+            umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
+            umaData.OnCharacterDnaUpdated += HandleCharacterDnaUpdated;
+            umaData.OnCharacterDestroyed += HandleCharacterDestroyed;
+            umaData.OnCharacterUpdated += HandleCharacterUpdated;
+
         }
+
+        public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.BeforeDnaUpdated(): " + umaData);
+        }
+        public void HandleCharacterBeforeUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterBeforeUpdated(): " + umaData);
+        }
+        public void HandleCharacterDnaUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterDnaUpdated(): " + umaData);
+        }
+        public void HandleCharacterDestroyed(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
+        }
+        public void HandleCharacterUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
+            //HandleCharacterCreated(umaData);
+        }
+
 
         private void FindFollowTarget() {
             //Debug.Log("CharacterPreviewCameraController.FindFollowTarget()");
@@ -432,7 +457,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetAvailable() {
-            //Debug.Log("AnyRPGCharacterPreviewCameraController.HandleTargetAvailable()");
+            //Debug.Log("PreviewCameraController.HandleTargetAvailable()");
             targetInitialized = true;
             JumpToFollowSpot();
             OnTargetReady();

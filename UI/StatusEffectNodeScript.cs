@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         public void HandleRightClick() {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
-            if (statusEffectNode != null && statusEffectNode.StatusEffect.MyStatusEffectAlignment != StatusEffectAlignment.Harmful) {
+            if (statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
                 //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
                 statusEffectNode.CancelStatusEffect();
             }

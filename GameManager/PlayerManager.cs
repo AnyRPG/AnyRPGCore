@@ -48,35 +48,13 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject effectPrefabParent = null;
 
-        // the default non UMA player unit prefab
-        [SerializeField]
-        private string defaultPlayerUnitProfileName = string.Empty;
-
-        [SerializeField]
-        private string defaultCharacterCreatorUnitProfileName = string.Empty;
-
-        //[SerializeField]
-        //private List<string> defaultUMARaceProfiles = new List<string>();
-
-        [SerializeField]
-        private string defaultPlayerName = "Player";
         private string currentPlayerName = string.Empty;
-
-        // players with no faction will get this one by default
-        [SerializeField]
-        private Faction defaultFaction = null;
 
         [SerializeField]
         private bool autoDetectNavMeshes = false;
 
         [SerializeField]
         private bool autoSpawnPlayerOnLevelLoad = false;
-
-        // reference to the default profile
-        private UnitProfile defaultPlayerUnitProfile;
-
-        // reference to the default profile
-        private UnitProfile defaultCharacterCreatorUnitProfile;
 
         /// <summary>
         /// The invisible gameobject that stores all the player scripts. A reference to an instantiated playerPrefab
@@ -99,22 +77,17 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         public PlayerCharacter MyCharacter { get => character; set => character = value; }
-        public GameObject MyPlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
-        public GameObject MyPlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
-        public float MyMaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
-        public bool MyPlayerUnitSpawned { get => playerUnitSpawned; }
-        public bool MyPlayerConnectionSpawned { get => playerConnectionSpawned; }
+        public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
+        public GameObject PlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
+        public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
+        public bool PlayerUnitSpawned { get => playerUnitSpawned; }
+        public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
         public DynamicCharacterAvatar MyAvatar { get => avatar; set => avatar = value; }
         public int MyInitialLevel { get => initialLevel; set => initialLevel = value; }
-        public Faction MyDefaultFaction { get => defaultFaction; set => defaultFaction = value; }
-        public GameObject MyAIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
-        public GameObject MyEffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
-        public GameObject MyPlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
-        public LayerMask MyDefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
-        public string MyDefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
-        public UnitProfile MyDefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
-        public string MyDefaultCharacterCreatorUnitProfileName { get => defaultCharacterCreatorUnitProfileName; set => defaultCharacterCreatorUnitProfileName = value; }
-        public UnitProfile MyDefaultCharacterCreatorUnitProfile { get => defaultCharacterCreatorUnitProfile; set => defaultCharacterCreatorUnitProfile = value; }
+        public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
+        public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
+        public GameObject PlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
+        public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
@@ -128,9 +101,6 @@ namespace AnyRPG {
         }
 
         public void PerformRequiredPropertyChecks() {
-            if (defaultPlayerUnitProfileName == null || defaultPlayerUnitProfileName == string.Empty) {
-                Debug.LogError("PlayerManager.Awake(): the default player unit profile name is null.  Please set it in the inspector");
-            }
             if (aiUnitParent == null) {
                 Debug.LogError("PlayerManager.Awake(): the ai unit parent is null.  Please set it in the inspector");
             }
@@ -147,29 +117,6 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
 
-            // get default player unit profile
-            if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultPlayerUnitProfileName);
-                if (tmpUnitProfile != null) {
-                    defaultPlayerUnitProfile = tmpUnitProfile;
-                } else {
-                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
-                }
-            } else {
-                Debug.LogError("PlayerManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
-            }
-
-            // get default player unit profile
-            if (defaultCharacterCreatorUnitProfileName != null && defaultCharacterCreatorUnitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
-                if (tmpUnitProfile != null) {
-                    defaultCharacterCreatorUnitProfile = tmpUnitProfile;
-                } else {
-                    Debug.LogError("PlayerManager.SetupScriptableObjects(): could not find unit profile " + defaultCharacterCreatorUnitProfileName + ".  Check Inspector");
-                }
-            } else {
-                Debug.LogError("PlayerManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
-            }
 
             //defaultCharacterCreatorUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(defaultCharacterCreatorUnitProfileName);
         }
@@ -236,7 +183,7 @@ namespace AnyRPG {
 
             SystemEventManager.MyInstance.NotifyOnPlayerNameChanged();
             if (playerUnitSpawned) {
-                UIManager.MyInstance.MyPlayerUnitFrameController.SetTarget(MyPlayerUnitObject);
+                UIManager.MyInstance.MyPlayerUnitFrameController.SetTarget(PlayerUnitObject);
             }
         }
 
@@ -306,13 +253,13 @@ namespace AnyRPG {
                 //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
                 CameraManager.MyInstance.ActivateMainCamera();
-                CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, MyPlayerUnitObject.transform.forward);
+                CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, PlayerUnitObject.transform.forward);
             }
         }
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (MyPlayerUnitSpawned == false) {
+            if (PlayerUnitSpawned == false) {
                 return;
             }
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
@@ -328,7 +275,7 @@ namespace AnyRPG {
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (MyPlayerUnitSpawned == false) {
+            if (PlayerUnitSpawned == false) {
                 return;
             }
             //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
@@ -392,7 +339,7 @@ namespace AnyRPG {
                 SpawnPlayerConnection();
             }
             if (MyCharacter.UnitProfile == null) {
-                MyCharacter.SetUnitProfile(defaultPlayerUnitProfileName);
+                MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
             }
 
             // spawn the player unit
@@ -416,7 +363,7 @@ namespace AnyRPG {
 
             NavMeshAgent navMeshAgent = playerUnitObject.GetComponent<NavMeshAgent>();
 
-            if (LevelManager.MyInstance.MyNavMeshAvailable == true && autoDetectNavMeshes) {
+            if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 if (navMeshAgent != null) {
                     navMeshAgent.enabled = true;
@@ -479,7 +426,7 @@ namespace AnyRPG {
             // ensure the character unit has its references before we try to access them
             //MyCharacter.MyCharacterUnit.GetComponentReferences();
 
-            avatar = MyPlayerUnitObject.GetComponent<DynamicCharacterAvatar>();
+            avatar = PlayerUnitObject.GetComponent<DynamicCharacterAvatar>();
             if (avatar == null) {
                 Debug.Log("PlayerManager.InitializeUMA(): avatar is null!!! returning");
                 return;
@@ -534,7 +481,7 @@ namespace AnyRPG {
             MyCharacter.OrchestratorStart();
             MyCharacter.OrchestratorFinish();
 
-            MyCharacter.Initialize(defaultPlayerName, initialLevel);
+            MyCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionSpawn();
         }

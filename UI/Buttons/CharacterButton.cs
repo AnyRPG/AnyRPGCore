@@ -153,7 +153,7 @@ namespace AnyRPG {
                 UIManager.MyInstance.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }
 
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }

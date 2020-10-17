@@ -244,7 +244,7 @@ namespace AnyRPG {
 
         public void NotifyOnQuestStatusUpdated() {
             //Debug.Log("SystemEventManager.NotifyOnQuestStatusUpdated");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                 return;
             }

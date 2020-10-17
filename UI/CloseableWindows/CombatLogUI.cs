@@ -279,7 +279,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearLog;
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += PrintWelcomeMessages;
-            if (PlayerManager.MyInstance.MyPlayerConnectionSpawned == true) {
+            if (PlayerManager.MyInstance.PlayerConnectionSpawned == true) {
                 PrintWelcomeMessages();
             }
             eventSubscriptionsInitialized = true;

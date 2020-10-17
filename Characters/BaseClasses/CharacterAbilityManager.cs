@@ -851,7 +851,7 @@ namespace AnyRPG {
         public void LearnSystemAbilities() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnSystemAbilities(" + newFaction + ")");
             foreach (BaseAbility ability in SystemAbilityManager.MyInstance.GetResourceList()) {
-                if (ability.MyRequiredLevel <= baseCharacter.CharacterStats.Level && ability.MyAutoLearn == true) {
+                if (ability.RequiredLevel <= baseCharacter.CharacterStats.Level && ability.AutoLearn == true) {
                     if (!HasAbility(ability)) {
                         LearnAbility(ability);
                     } else {
@@ -869,7 +869,7 @@ namespace AnyRPG {
             }
             foreach (BaseAbility baseAbility in characterClass.AbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.MyRequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
+                if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
                     baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
@@ -885,7 +885,7 @@ namespace AnyRPG {
             }
             foreach (BaseAbility baseAbility in classSpecialization.AbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.MyRequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
+                if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
                     baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
@@ -896,9 +896,9 @@ namespace AnyRPG {
 
         public void LearnFactionAbilities(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
-            foreach (BaseAbility baseAbility in newFaction.LearnedAbilityList) {
+            foreach (BaseAbility baseAbility in newFaction.AbilityList) {
                 //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.MyRequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
+                if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
                     baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
                 } else {
@@ -1056,7 +1056,7 @@ namespace AnyRPG {
                 // can't learn 2 auto-attacks
                 return false;
             }
-            if (!HasAbility(newAbility) && newAbility.MyRequiredLevel <= BaseCharacter.CharacterStats.Level) {
+            if (!HasAbility(newAbility) && newAbility.RequiredLevel <= BaseCharacter.CharacterStats.Level) {
                 abilityList[SystemResourceManager.prepareStringForMatch(newAbility.DisplayName)] = newAbility;
                 if (isAutoAttack) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + "): setting auto-attack ability");
@@ -1490,7 +1490,7 @@ namespace AnyRPG {
 
             string keyName = SystemResourceManager.prepareStringForMatch(ability.DisplayName);
 
-            if (!ability.MyUseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
+            if (!ability.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
                 return false;
             }
             return true;

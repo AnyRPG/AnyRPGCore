@@ -155,7 +155,7 @@ namespace AnyRPG {
             //Debug.Log("UIManager subscribing to characterspawn");
             CreateEventSubscriptions();
 
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
             }
             toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
@@ -206,7 +206,7 @@ namespace AnyRPG {
 
         void Update() {
 
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
@@ -241,7 +241,7 @@ namespace AnyRPG {
             if (CameraManager.MyInstance != null) {
                 CameraManager.MyInstance.DisableCutsceneCamera();
             }
-            if (!PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);
             } else {
                 InitializeMainCamera();
@@ -264,7 +264,7 @@ namespace AnyRPG {
         }
 
         public void InitializeMainCamera() {
-            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyPlayerUnitObject.transform);
+            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.PlayerUnitObject.transform);
         }
 
         public void DeactivatePlayerUI() {
@@ -329,11 +329,11 @@ namespace AnyRPG {
 
             // enable things that track the character
             // initialize unit frame
-            playerUnitFrameController.SetTarget(PlayerManager.MyInstance.MyPlayerUnitObject);
-            floatingCastBarController.SetTarget(PlayerManager.MyInstance.MyPlayerUnitObject);
+            playerUnitFrameController.SetTarget(PlayerManager.MyInstance.PlayerUnitObject);
+            floatingCastBarController.SetTarget(PlayerManager.MyInstance.PlayerUnitObject);
 
             // intialize mini map
-            InitializeMiniMapTarget(PlayerManager.MyInstance.MyPlayerUnitObject);
+            InitializeMiniMapTarget(PlayerManager.MyInstance.PlayerUnitObject);
         }
 
         public void HandlePlayerUnitDespawn() {
@@ -356,7 +356,7 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility.MyName) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {
-                if (newAbility.MyAutoAddToBars == true) {
+                if (newAbility.AutoAddToBars == true) {
                     if (!actionBarManager.AddNewAbility(newAbility)) {
                         //Debug.Log("UIManager.HandleAbilityListChanged(): All Ability Bars were full.  unable to add " + newAbility);
                     }

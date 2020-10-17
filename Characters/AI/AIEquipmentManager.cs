@@ -26,11 +26,10 @@ namespace AnyRPG {
                     SubscribeToUMACreate();
                 }
             }
-
         }
 
         public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
+            //Debug.Log("AIEquipmentManager.CharacterCreatedCallback(): " + umaData);
             UnsubscribeFromUMACreate();
             HandleCharacterUnitSpawn();
         }
@@ -46,6 +45,7 @@ namespace AnyRPG {
 
                 UMAData umaData = dynamicCharacterAvatar.umaData;
                 umaData.OnCharacterCreated += HandleCharacterCreated;
+                //umaData.OnCharacterUpdated += HandleCharacterCreated;
             } else {
                 if (baseCharacter == null ) {
                     //Debug.Log(gameObject.name + "AIEquipmentManager.SubscribeToUMACreate(): baseCharacter is null!");
@@ -61,6 +61,7 @@ namespace AnyRPG {
         public void UnsubscribeFromUMACreate() {
             if (dynamicCharacterAvatar != null) {
                 dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+                //dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterCreated;
             }
         }
 

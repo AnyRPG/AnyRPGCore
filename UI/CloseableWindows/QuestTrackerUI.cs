@@ -55,7 +55,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated += ShowQuests;
             SystemEventManager.MyInstance.OnAfterQuestStatusUpdated += ShowQuests;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == true) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 ShowQuests();
             }
 
@@ -85,7 +85,7 @@ namespace AnyRPG {
 
         public void ShowQuestsCommon() {
             //Debug.Log("QuestTrackerUI.ShowQuestsCommon()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // shouldn't be doing anything without a player spawned.
                 return;
             }

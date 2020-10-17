@@ -36,10 +36,6 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultBankBagItemName = null;
 
-        // if false, default backpack goes in bank
-        [SerializeField]
-        private bool equipDefaultBackPack = true;
-
         [SerializeField]
         private GameObject windowPrefab = null;
 
@@ -190,7 +186,7 @@ namespace AnyRPG {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                if (equipDefaultBackPack) {
+                if (SystemConfigurationManager.MyInstance.EquipDefaultBackPack) {
                     bag.Use();
                 } else {
                     AddItem(bag, true);

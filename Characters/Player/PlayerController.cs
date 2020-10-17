@@ -145,7 +145,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.Update()");
             ResetMoveInput();
 
-            if (PlayerManager.MyInstance.MyPlayerUnitObject == null) {
+            if (PlayerManager.MyInstance.PlayerUnitObject == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");
                 return;
             }
@@ -397,7 +397,7 @@ namespace AnyRPG {
         private bool InteractionSucceeded() {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return false;
             }
             //if (IsTargetInHitBox(target)) {

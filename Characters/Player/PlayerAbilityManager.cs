@@ -18,7 +18,7 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.OnLevelChanged += UpdateAbilityList;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandleCharacterUnitDespawn;
-            if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".PlayerAbilityManager.CreateEventSubscriptions() Player is already spawned");
                 ProcessCharacterUnitSpawn();
             }
@@ -82,7 +82,7 @@ namespace AnyRPG {
         public override bool PerformAnimatedAbilityCheck(AnimatedAbility animatedAbility) {
             bool returnresult = base.PerformAnimatedAbilityCheck(animatedAbility);
             if (!returnresult) {
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
+                if (PlayerManager.MyInstance.PlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
                     CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
                 }
             }

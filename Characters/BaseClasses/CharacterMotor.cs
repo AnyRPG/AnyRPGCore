@@ -300,7 +300,7 @@ namespace AnyRPG {
             Vector3 firstTestPosition = Vector3.zero;
             bool foundMatch = false;
             //if (Physics.Raycast(testPosition + new Vector3(0f, -0.1f, 0f), Vector3.up, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
-            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.MyDefaultGroundMask)) {
+            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
                 //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; collider: " + raycastHit.collider.name);
@@ -325,7 +325,7 @@ namespace AnyRPG {
             // now try raycast downward in case we are at the top of a hill
             firstTestPosition = Vector3.zero;
             foundMatch = false;
-            if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.MyDefaultGroundMask)) {
+            if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
                 //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit below on walkable ground: " + firstTestPosition + ")");

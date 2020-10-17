@@ -69,7 +69,7 @@ namespace AnyRPG {
             //Debug.Log("StatusEffectPanelController.SpawnStatusNode()");
 
             // do not spawn visible icons for traits
-            if (statusEffectNode.StatusEffect.MyClassTrait == true) {
+            if (statusEffectNode.StatusEffect.ClassTrait == true) {
                 return null;
             }
 
