@@ -8,21 +8,25 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class StatusEffectNode {
 
-        private StatusEffect statusEffect;
+        private StatusEffect statusEffect = null;
 
-        private Coroutine monitorCoroutine;
+        private Coroutine monitorCoroutine = null;
+
+        private AbilityEffectContext abilityEffectContext = null;
 
         // the reference to the character stats this node sits on
-        private CharacterStats characterStats;
+        private CharacterStats characterStats = null;
 
         public StatusEffect StatusEffect { get => statusEffect; set => statusEffect = value; }
         public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
+        public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
-        public void Setup(CharacterStats characterStats, StatusEffect _statusEffect) {
+        public void Setup(CharacterStats characterStats, StatusEffect statusEffect, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("StatusEffectNode.Setup(): " + _statusEffect.MyName);
             this.characterStats = characterStats;
-            this.statusEffect = _statusEffect;
+            this.statusEffect = statusEffect;
+            this.abilityEffectContext = abilityEffectContext;
             //this.monitorCoroutine = newCoroutine;
         }
 

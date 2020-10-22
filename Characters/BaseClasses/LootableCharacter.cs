@@ -60,16 +60,16 @@ namespace AnyRPG {
         }
 
         public void AddUnitProfileSettings() {
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.LootTableNames != null) {
-                    foreach (string lootTableName in characterUnit.MyCharacter.UnitProfile.LootTableNames) {
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
+                if (characterUnit.BaseCharacter.UnitProfile.LootTableNames != null) {
+                    foreach (string lootTableName in characterUnit.BaseCharacter.UnitProfile.LootTableNames) {
                         LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                         if (lootTable != null) {
                             lootTables.Add(lootTable);
                         }
                     }
                 }
-                automaticCurrency = characterUnit.MyCharacter.UnitProfile.AutomaticCurrency;
+                automaticCurrency = characterUnit.BaseCharacter.UnitProfile.AutomaticCurrency;
             }
             HandlePrerequisiteUpdates();
 
@@ -89,16 +89,16 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions(): subscribing to handledeath");
-            characterUnit.MyCharacter.CharacterStats.BeforeDie += HandleDeath;
-            characterUnit.MyCharacter.CharacterStats.OnReviveComplete += HandleRevive;
+            characterUnit.BaseCharacter.CharacterStats.BeforeDie += HandleDeath;
+            characterUnit.BaseCharacter.CharacterStats.OnReviveComplete += HandleRevive;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.CharacterStats != null) {
-                characterUnit.MyCharacter.CharacterStats.BeforeDie -= HandleDeath;
-                characterUnit.MyCharacter.CharacterStats.OnReviveComplete -= HandleRevive;
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
+                characterUnit.BaseCharacter.CharacterStats.BeforeDie -= HandleDeath;
+                characterUnit.BaseCharacter.CharacterStats.OnReviveComplete -= HandleRevive;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
@@ -158,7 +158,7 @@ namespace AnyRPG {
         public void TryToDespawn() {
 
             //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn()");
-            if (MyCharacterUnit.MyCharacter.CharacterStats.IsAlive == true) {
+            if (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
             }
@@ -271,9 +271,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
                 currencyNode.currency = SystemConfigurationManager.MyInstance.KillCurrency;
                 if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
-                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * (namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Level;
-                    if ((namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Toughness != null) {
-                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).MyCharacter.CharacterStats.Toughness.CurrencyMultiplier;
+                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * (namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Level;
+                    if ((namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Toughness != null) {
+                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
                     }
                 }
             }
@@ -286,7 +286,7 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (!characterUnit.MyCharacter.CharacterStats.IsAlive) {
+            if (!characterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source);
                 // keep track of currency drops for combining after
@@ -297,7 +297,7 @@ namespace AnyRPG {
                 foreach (GameObject interactable in GetLootableTargets()) {
                     LootableCharacter lootableCharacter = interactable.GetComponent<LootableCharacter>();
                     if (lootableCharacter != null) {
-                        CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().MyCharacter.CharacterStats as CharacterStats;
+                        CharacterStats characterStats = interactable.GetComponent<CharacterUnit>().BaseCharacter.CharacterStats as CharacterStats;
                         if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.lootTables != null) {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
 
@@ -392,7 +392,7 @@ namespace AnyRPG {
         public override int GetValidOptionCount() {
             // this was commented out.  putting it back in because bunnies are 
             //if (MyCharacterUnit != null && MyCharacterUnit.MyCharacter != null && MyCharacterUnit.MyCharacter.MyCharacterStats != null) {
-                return (MyCharacterUnit.MyCharacter.CharacterStats.IsAlive == false ? 1 : 0);
+                return (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false ? 1 : 0);
             //}
             //return 0;
         }

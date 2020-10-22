@@ -111,7 +111,7 @@ namespace AnyRPG {
         public List<Recipe> GetRecipes() {
             //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
             List<Recipe> returnList = new List<Recipe>();
-            foreach (Recipe recipe in PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.Values) {
+            foreach (Recipe recipe in PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.Values) {
                 if (craftAbility == recipe.CraftAbility) {
                     returnList.Add(recipe);
                 }

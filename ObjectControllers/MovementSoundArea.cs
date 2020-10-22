@@ -34,16 +34,16 @@ namespace AnyRPG {
 
         public void OnTriggerEnter(Collider other) {
             //Debug.Log(gameObject.name + ".MovementSoundArea.OnTriggerEnter()");
-            CharacterUnit characterUnit = other.gameObject.GetComponent<CharacterUnit>();
-            if (characterUnit != null) {
-                characterUnit.SetMovementSoundArea(this);
+            UnitController unitController = other.gameObject.GetComponent<UnitController>();
+            if (unitController != null) {
+                unitController.SetMovementSoundArea(this);
             }
         }
 
         public void OnTriggerExit(Collider other) {
-            CharacterUnit characterUnit = other.gameObject.GetComponent<CharacterUnit>();
-            if (characterUnit != null) {
-                characterUnit.UnsetMovementSoundArea(this);
+            UnitController unitController = other.gameObject.GetComponent<UnitController>();
+            if (unitController != null) {
+                unitController.UnsetMovementSoundArea(this);
             }
         }
 

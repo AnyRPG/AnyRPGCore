@@ -45,13 +45,13 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnValue = base.Cast(source, target, originalTarget, abilityEffectInput);
 
             BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
-            if (targetCharacter != null && targetCharacter.CharacterStats != null && targetCharacter.CharacterStats is AIStats) {
-                Debug.Log(DisplayName + ".CapturePetEffect.Cast(): applying control effects");
-                (targetCharacter.CharacterStats as AIStats).ApplyControlEffects(source);
+            if (targetCharacter != null && targetCharacter.CharacterStats != null) {
+                //Debug.Log(DisplayName + ".CapturePetEffect.Cast(): applying control effects");
+                targetCharacter.CharacterStats.ApplyControlEffects(source);
             }
 
             if (targetCharacter != null && targetCharacter.UnitProfile != null) {
-                source.CapturePet(targetCharacter.UnitProfile, target);
+                source.AbilityManager.CapturePet(targetCharacter.UnitProfile, target);
             }
 
             return returnValue;

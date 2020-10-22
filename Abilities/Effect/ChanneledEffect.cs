@@ -31,7 +31,7 @@ namespace AnyRPG {
                     prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
                     IChanneledObject channeledObjectScript = prefabObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
-                        GameObject prefabParent = source.UnitGameObject;
+                        GameObject prefabParent = source.AbilityManager.UnitGameObject;
                         Transform usedPrefabSourceBone = null;
                         if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
                             usedPrefabSourceBone = prefabParent.transform.FindChildByRecursive(prefabProfile.TargetBone);
@@ -51,7 +51,7 @@ namespace AnyRPG {
                         
                         channeledObjectScript.Setup(prefabParent, prefabProfile.Position, usedTarget, endPosition);
                         //channeledObjectScript.MyStartObject = prefabParent;
-                        //channeledObjectScript.MyStartPosition = source.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
+                        //channeledObjectScript.MyStartPosition = source.AbilityManager.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;
                         //channeledObjectScript.MyStartPosition = prefabParent.transform.TransformPoint(prefabOffset);
                         //channeledObjectScript.MyEndObject = target.gameObject;
@@ -63,7 +63,7 @@ namespace AnyRPG {
 
                 // delayed damage
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
-                source.BeginPerformAbilityHitDelay(source, target, abilityEffectInput, this);
+                source.AbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectInput, this);
             } else {
                 //Debug.Log(MyName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
 

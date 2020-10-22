@@ -36,16 +36,16 @@ namespace AnyRPG {
             // physical / spell power
             if (resourceAmountNode.AddPower) {
                 if (damageType == DamageType.physical) {
-                    amountAddModifier = sourceCharacter.GetPhysicalPower();
+                    amountAddModifier = sourceCharacter.AbilityManager.GetPhysicalPower();
                 } else if (damageType == DamageType.ability) {
                     //spells can tick so a spell damage multiplier is additionally calculated for the tick share of damage based on tick rate
-                    amountAddModifier = sourceCharacter.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
+                    amountAddModifier = sourceCharacter.AbilityManager.GetSpellPower() * abilityEffectInput.spellDamageMultiplier;
                 }
             }
 
             if (allowCriticalStrike == true) {
                 // critical hit modifer
-                critChanceModifier = sourceCharacter.GetCritChance();
+                critChanceModifier = sourceCharacter.AbilityManager.GetCritChance();
 
                 int randomInt = Random.Range(0, 100);
                 if (randomInt <= critChanceModifier) {
@@ -56,18 +56,18 @@ namespace AnyRPG {
             if (damageType == DamageType.physical) {
                 
                 // additive damage from weapons
-                amountAddModifier += sourceCharacter.GetPhysicalDamage();
+                amountAddModifier += sourceCharacter.AbilityManager.GetPhysicalDamage();
 
                 // since all damage so far is DPS, we need to multiply it by the attack length.
                 // Since global cooldown is 1 second, all abilities less than one second should have their damage increased to one second worth of damage to prevent dps loss
-                amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
+                amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
 
             } else if (damageType == DamageType.ability) {
 
                 amountMultiplyModifier *= Mathf.Clamp(abilityEffectInput.castTimeMultiplier, 1, Mathf.Infinity);
             }
             // multiplicative damage modifiers
-            amountMultiplyModifier *= sourceCharacter.GetOutgoingDamageModifiers();
+            amountMultiplyModifier *= sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
 
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
@@ -83,7 +83,7 @@ namespace AnyRPG {
 
             // check ability context ?  if base ability was animated, then no need to check because we already checked
             if (!((abilityEffectInput.baseAbility as AnimatedAbility) is AnimatedAbility)) {
-                if (!source.AbilityHit(target, abilityEffectInput)) {
+                if (!source.AbilityManager.AbilityHit(target, abilityEffectInput)) {
                     return;
                 }
 
@@ -94,7 +94,7 @@ namespace AnyRPG {
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
                 int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;
-                float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.Level);
+                float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.AbilityManager.Level);
                 KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput, resourceAmountNode);
                 finalAmount = (int)abilityKeyValuePair.Key;
                 combatMagnitude = abilityKeyValuePair.Value;

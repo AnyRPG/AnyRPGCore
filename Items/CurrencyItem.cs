@@ -25,7 +25,7 @@ namespace AnyRPG {
                 return false;
             }
             if (currencyNode.currency != null) {
-                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
             }
             Remove();
             return true;

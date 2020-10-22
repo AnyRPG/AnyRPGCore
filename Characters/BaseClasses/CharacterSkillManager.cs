@@ -4,30 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterSkillManager : MonoBehaviour {
+    public class CharacterSkillManager {
 
-        protected BaseCharacter baseCharacter;
+        private BaseCharacter baseCharacter;
 
-        protected Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
-
-        public BaseCharacter MyBaseCharacter {
-            get => baseCharacter;
-            set => baseCharacter = value;
-        }
+        private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
         public Dictionary<string, Skill> MySkillList { get => skillList; }
 
         //public List<string> MySkillList { get => skillList;}
-
-        protected virtual void Awake() {
-            //Debug.Log("CharacterAbilityManager.Awake()");
-            baseCharacter = GetComponent<BaseCharacter>();
+        public CharacterSkillManager(BaseCharacter baseCharacter) {
+            this.baseCharacter = baseCharacter;
+            UpdateSkillList(baseCharacter.CharacterStats.Level);
         }
 
         protected virtual void Start() {
             //Debug.Log("CharacterAbilityManager.Start()");
             CreateEventSubscriptions();
-            UpdateSkillList(baseCharacter.CharacterStats.Level);
         }
 
         public virtual void OnDisable() {
@@ -43,13 +36,6 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnLevelChanged -= UpdateSkillList;
             }
         }
-
-        /*
-        public List<string> GetSkillList() {
-
-            return skillList.Keys;
-        }
-        */
 
         public void UpdateSkillList(int newLevel) {
             //Debug.Log("CharacterSkillManager.UpdateSkillList()");
@@ -73,11 +59,11 @@ namespace AnyRPG {
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[SystemResourceManager.prepareStringForMatch(newSkill.DisplayName)] = newSkill;
                 foreach (BaseAbility ability in newSkill.MyAbilityList) {
-                    MyBaseCharacter.CharacterAbilityManager.LearnAbility(ability);
+                    baseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
                 foreach (Recipe recipe in SystemRecipeManager.MyInstance.GetResourceList()) {
-                    if (MyBaseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
-                        PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LearnRecipe(recipe);
+                    if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
+                        PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
 
@@ -98,7 +84,7 @@ namespace AnyRPG {
             if (skillList.ContainsValue(oldSkill)) {
                 skillList.Remove(SystemResourceManager.prepareStringForMatch(oldSkill.DisplayName));
                 foreach (BaseAbility ability in oldSkill.MyAbilityList) {
-                    MyBaseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
+                    baseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
                 }
             }
         }

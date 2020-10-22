@@ -114,8 +114,8 @@ namespace AnyRPG {
                 aoeSpawnCenter = target.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
-                aoeSpawnCenter = source.UnitGameObject.transform.position;
-                aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
+                aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
+                aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
@@ -123,7 +123,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
-            //aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
+            //aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
             Collider[] colliders = new Collider[0];
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
@@ -133,7 +133,7 @@ namespace AnyRPG {
             }
             if (useExtents) {
                 //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
-                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.UnitGameObject.transform.rotation, validMask);
+                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.AbilityManager.UnitGameObject.transform.rotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
@@ -163,7 +163,7 @@ namespace AnyRPG {
                         if (preferClosestTargets == true) {
                             int counter = 0;
                             foreach (AOETargetNode validTarget in validTargets) {
-                                if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.UnitGameObject.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.UnitGameObject.transform.position)) {
+                                if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position)) {
                                     removeNumber = counter;
                                 }
                                 counter++;

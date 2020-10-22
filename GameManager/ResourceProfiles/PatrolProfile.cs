@@ -69,14 +69,14 @@ namespace AnyRPG {
         // keep track of the current destination
         private Vector3 currentDestination = Vector3.zero;
 
-        private CharacterUnit characterUnit;
+        private UnitController unitController;
 
-        public bool MyDespawnOnCompletion { get => despawnOnCompletion; }
-        public float MyDestinationPauseTime { get => destinationPauseTime; set => destinationPauseTime = value; }
-        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
-        public bool MyAutoStart { get => autoStart; set => autoStart = value; }
-        public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
-        public bool MySavePositionAtDestination { get => savePositionAtDestination; set => savePositionAtDestination = value; }
+        public bool DespawnOnCompletion { get => despawnOnCompletion; }
+        public float DestinationPauseTime { get => destinationPauseTime; set => destinationPauseTime = value; }
+        public UnitController CurrentUnitController { get => unitController; set => unitController = value; }
+        public bool AutoStart { get => autoStart; set => autoStart = value; }
+        public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+        public bool SavePositionAtDestination { get => savePositionAtDestination; set => savePositionAtDestination = value; }
         public int DestinationCount {
             get {
                 if (useTags == true) {
@@ -156,14 +156,14 @@ namespace AnyRPG {
                 // choose nearby random destination
                 float randomXNumber = Random.Range(0, maxDistanceFromSpawnPoint * 2) - maxDistanceFromSpawnPoint;
                 float randomZNumber = Random.Range(0, maxDistanceFromSpawnPoint * 2) - maxDistanceFromSpawnPoint;
-                if (characterUnit == null) {
+                if (unitController == null) {
                     //Debug.Log("AIPatrol.GetRandomDestination(): CharacterUnit is null!");
                     return Vector3.zero;
                 }
 
                 // get a random point that's on the navmesh
-                Vector3 randomPoint = (characterUnit.MyCharacter.CharacterController as AIController).MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
-                randomPoint = characterUnit.BaseCharacter.AnimatedUnit.MyCharacterMotor.CorrectedNavmeshPosition(randomPoint);
+                Vector3 randomPoint = unitController.MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
+                randomPoint = unitController.UnitMotor.CorrectedNavmeshPosition(randomPoint);
                 /*
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPoint, out hit, 10.0f, NavMesh.AllAreas)) {

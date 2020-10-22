@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    [RequireComponent(typeof(CharacterFactionManager))]
-    public abstract class BaseCharacter : MonoBehaviour {
+    public class BaseCharacter : MonoBehaviour, IAbilityCaster {
 
         public event System.Action<string> OnNameChange = delegate { };
         public event System.Action<string> OnTitleChange = delegate { };
@@ -16,46 +15,49 @@ namespace AnyRPG {
 
         [Tooltip("The name of the unit profile used to configure this character")]
         [SerializeField]
-        protected string unitProfileName;
+        private string unitProfileName;
 
         // properties that come from the unit profile
-        protected string characterName = string.Empty;
-        protected string title = string.Empty;
-        protected Faction faction;
-        protected UnitType unitType;
-        protected CharacterClass characterClass;
-        protected ClassSpecialization classSpecialization;
-        protected bool spawnDead = false;
-        protected UnitToughness unitToughness;
+        private string characterName = string.Empty;
+        private string title = string.Empty;
+        private Faction faction;
+        private UnitType unitType;
+        private CharacterClass characterClass;
+        private ClassSpecialization classSpecialization;
+        private bool spawnDead = false;
+        private UnitToughness unitToughness;
 
-        protected UnitProfile unitProfile = null;
+        private UnitProfile unitProfile = null;
 
         // common access to properties that provide stats
-        protected List<IStatProvider> statProviders = new List<IStatProvider>();
+        private List<IStatProvider> statProviders = new List<IStatProvider>();
+
+        // properties
+        private CharacterCombat characterCombat = null;
+        private CharacterAbilityManager characterAbilityManager = null;
+        private CharacterSkillManager characterSkillManager = null;
+        private CharacterPetManager characterPetManager = null;
+        private CharacterFactionManager characterFactionManager = null;
+        private CharacterEquipmentManager characterEquipmentManager = null;
+        private CharacterStats characterStats = null;
+        private CharacterCurrencyManager characterCurrencyManager = null;
+        private CharacterRecipeManager characterRecipeManager = null;
 
         // components
-        protected CharacterCombat characterCombat = null;
-        protected CharacterAbilityManager characterAbilityManager = null;
-        protected CharacterSkillManager characterSkillManager = null;
-        protected CharacterPetManager characterPetManager = null;
-        protected BaseController characterController = null;
-        protected CharacterFactionManager characterFactionManager = null;
-        protected CharacterEquipmentManager characterEquipmentManager = null;
-        protected CharacterStats characterStats = null;
-        protected CharacterUnit characterUnit = null;
-        protected AnimatedUnit animatedUnit = null;
-        protected Interactable interactable = null;
+        private UnitController unitController = null;
+        private CharacterUnit characterUnit = null;
 
-        // disable certain things not needed for preview units
-        protected bool previewCharacter = false;
+        //private bool animationEnabled = false;
+
+        private bool eventSubscriptionsInitialized = false;
 
         public CharacterStats CharacterStats { get => characterStats; }
         public CharacterCombat CharacterCombat { get => characterCombat; }
-        public BaseController CharacterController { get => characterController; }
+        public UnitController UnitController { get => unitController; }
         public CharacterAbilityManager CharacterAbilityManager { get => characterAbilityManager; }
+        public IAbilityManager AbilityManager { get => characterAbilityManager; }
         public CharacterSkillManager CharacterSkillManager { get => characterSkillManager; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
-        public AnimatedUnit AnimatedUnit { get => animatedUnit; set => animatedUnit = value; }
         public CharacterFactionManager CharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
@@ -65,9 +67,9 @@ namespace AnyRPG {
         public Faction Faction {
 
             get {
-                if (CharacterController != null && CharacterController.UnderControl) {
+                if (UnitController != null && UnitController.UnderControl) {
                     //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
-                    return CharacterController.MasterUnit.Faction;
+                    return UnitController.MasterUnit.Faction;
                 }
                 return faction;
             }
@@ -81,25 +83,63 @@ namespace AnyRPG {
         public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
-        public bool PreviewCharacter { get => previewCharacter; set => previewCharacter = value; }
         public string Title { get => title; set => title = value; }
         public List<IStatProvider> StatProviders { get => statProviders; set => statProviders = value; }
         public UnitToughness UnitToughness { get => unitToughness; set => unitToughness = value; }
+        public CharacterRecipeManager CharacterRecipeManager { get => characterRecipeManager; set => characterRecipeManager = value; }
+        public CharacterCurrencyManager CharacterCurrencyManager { get => characterCurrencyManager; set => characterCurrencyManager = value; }
 
-        protected virtual void Awake() {
+        private void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
             SetupScriptableObjects();
+            CreateCharacterComponents();
+            CreateEventSubscriptions();
+        }
+
+        public void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
+            eventSubscriptionsInitialized = true;
+        }
+
+        public void CleanupEventSubscriptions() {
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
+            }
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            characterStats.ProcessLevelUnload();
+            characterAbilityManager.ProcessLevelUnload();
+        }
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            characterStats.ProcessLevelLoad();
+        }
+
+        public void CreateCharacterComponents() {
+            characterStats = new CharacterStats(this);
+            characterEquipmentManager = new CharacterEquipmentManager(this);
+            characterFactionManager = new CharacterFactionManager(this);
+            characterPetManager = new CharacterPetManager(this);
+            characterCombat = new CharacterCombat(this);
+            characterSkillManager = new CharacterSkillManager(this);
+            characterCurrencyManager = new CharacterCurrencyManager(this);
+            characterRecipeManager = new CharacterRecipeManager(this);
+            characterAbilityManager = new CharacterAbilityManager(this);
         }
 
         public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
-            characterStats = GetComponent<CharacterStats>();
-            characterCombat = GetComponent<CharacterCombat>();
-            characterController = GetComponent<BaseController>();
-            characterAbilityManager = GetComponent<CharacterAbilityManager>();
-            characterSkillManager = GetComponent<CharacterSkillManager>();
-            characterPetManager = GetComponent<CharacterPetManager>();
+            unitController = GetComponent<UnitController>();
 
             if (CharacterUnit == null) {
                 CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
@@ -107,18 +147,6 @@ namespace AnyRPG {
                     CharacterUnit = _characterUnit;
                 }
             }
-            if (AnimatedUnit == null) {
-                AnimatedUnit _animatedUnit = GetComponent<AnimatedUnit>();
-                if (_animatedUnit != null) {
-                    AnimatedUnit = _animatedUnit;
-                }
-            }
-            characterFactionManager = GetComponent<CharacterFactionManager>();
-            if (characterFactionManager == null) {
-                gameObject.AddComponent<CharacterFactionManager>();
-                Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences(): CharacterFactionManager MISSING.  ADDING BUT CHECK GAMEOBJECT AND ADD MANUALLY IF POSSIBLE.");
-            }
-            characterEquipmentManager = GetComponent<CharacterEquipmentManager>();
 
         }
 
@@ -126,65 +154,46 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
             SetUnitProfileProperties();
 
-            OrchestratorStartCommon();
-        }
-
-        public virtual void OrchestratorStartCommon() {
-            //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStartCommon()");
-
             GetComponentReferences();
             if (characterStats != null) {
                 characterStats.OrchestratorStart();
                 characterStats.OrchestratorSetLevel();
             }
-            //GetUnitProfile();
-            if (characterCombat != null) {
-                characterCombat.OrchestratorStart();
-            }
-            if (characterAbilityManager != null) {
-                characterAbilityManager.OrchestratorStart();
-            }
-
-            // can this next block happen in orchestrator finish ?
-            if (characterEquipmentManager != null) {
-                characterEquipmentManager.OrchestratorStart();
-                //characterEquipmentManager.LoadDefaultEquipment();
-            } else {
-                //Debug.Log(gameObject.name + ": BaseCharacter.Start(): characterEquipmentManager is null");
-            }
-            /*
-            if (characterAbilityManager != null) {
-                characterAbilityManager.LearnDefaultAutoAttackAbility();
-            }
-            */
-
-
-            if (characterPetManager != null) {
-                characterPetManager.OrchestratorStart();
-            }
-
         }
 
         public virtual void OrchestratorFinish() {
-            if (characterStats != null) {
-                characterStats.OrchestratorFinish();
-            }
             if (characterEquipmentManager != null) {
                 characterEquipmentManager.LoadDefaultEquipment();
-                characterEquipmentManager.OrchestratorFinish();
             }
 
             if (characterAbilityManager != null) {
                 characterAbilityManager.LearnDefaultAutoAttackAbility();
             }
-
         }
 
-        protected virtual void Start() {
-            //Debug.Log(gameObject.name + ": BaseCharacter.Start()");
+        public void JoinFaction(Faction newFaction) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            if (newFaction != null && newFaction != faction) {
+                SetCharacterFaction(newFaction);
+                characterAbilityManager.LearnFactionAbilities(newFaction);
+            }
         }
 
-        public virtual void SetUnitProfile(string unitProfileName) {
+        public void ChangeClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            if (newClassSpecialization != null && newClassSpecialization != classSpecialization) {
+                SetClassSpecialization(newClassSpecialization);
+            }
+        }
+
+        public void ChangeCharacterClass(CharacterClass newCharacterClass) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            if (newCharacterClass != null && newCharacterClass != characterClass) {
+                SetCharacterClass(newCharacterClass);
+            }
+        }
+
+        public void SetUnitProfile(string unitProfileName) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             unitProfile = null;
@@ -196,7 +205,7 @@ namespace AnyRPG {
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        protected virtual void GetUnitProfileReference() {
+        private void GetUnitProfileReference() {
             if (SystemUnitProfileManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + ".GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
                 return;
@@ -214,7 +223,7 @@ namespace AnyRPG {
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        protected virtual void SetUnitProfileProperties() {
+        private void SetUnitProfileProperties() {
             if (unitProfile != null) {
                 if (unitProfile.CharacterName != null && unitProfile.CharacterName != string.Empty) {
                     SetCharacterName(unitProfile.CharacterName);
@@ -251,6 +260,13 @@ namespace AnyRPG {
 
         }
 
+        public void Update() {
+            characterCombat.Update();
+
+            // do this after combat so regen ticks can use the proper combat state
+            characterStats.Update();
+        }
+
         public void UpdateStatProviderList() {
             statProviders = new List<IStatProvider>();
             if (unitProfile != null) {
@@ -267,47 +283,48 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void Initialize(string characterName, int characterLevel = 1) {
+        public void Initialize(string characterName, int characterLevel = 1) {
             //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
         }
 
-        public virtual void SetUnitToughness(UnitToughness newUnitToughness) {
+        public void SetUnitToughness(UnitToughness newUnitToughness) {
             unitToughness = newUnitToughness;
         }
 
-        public virtual void SetCharacterName(string newName) {
+        public void SetCharacterName(string newName) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharactername(" + newName + ")");
             if (newName != null && newName != string.Empty) {
                 characterName = newName;
                 OnNameChange(newName);
-                if (characterUnit != null) {
-                    characterUnit.HandleNameChange();
+                if (unitController != null) {
+                    unitController.NamePlateController.HandleNameChange();
                 }
             }
         }
 
-        public virtual void SetCharacterFaction(Faction newFaction) {
+        public void SetCharacterFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
             if (newFaction != null) {
                 faction = newFaction;
                 OnFactionChange(newFaction);
             }
+            characterFactionManager.SetReputation(newFaction);
         }
 
-        public virtual void SetCharacterTitle(string newTitle) {
+        public void SetCharacterTitle(string newTitle) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
             if (newTitle != null) {
                 title = newTitle;
                 OnTitleChange(newTitle);
-                if (characterUnit != null) {
-                    characterUnit.HandleNameChange();
+                if (unitController != null) {
+                    unitController.NamePlateController.HandleNameChange();
                 }
             }
         }
 
-        public virtual void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true) {
+        public void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
             if (newClassSpecialization != null) {
                 ClassSpecialization oldClassSpecialization = classSpecialization;
@@ -324,11 +341,12 @@ namespace AnyRPG {
 
                 if (notify == true) {
                     OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+                    characterAbilityManager.HandleSpecializationChange(newClassSpecialization, oldClassSpecialization);
                 }
             }
         }
 
-        public virtual void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true) {
+        public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
             if (newCharacterClass != null) {
                 CharacterClass oldCharacterClass = characterClass;
@@ -340,6 +358,8 @@ namespace AnyRPG {
                 if (notify) {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnClassChange(newCharacterClass, oldCharacterClass);
+                    characterEquipmentManager.HandleClassChange(newCharacterClass, oldCharacterClass);
+                    characterAbilityManager.HandleClassChange(newCharacterClass, oldCharacterClass);
                 }
 
                 // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
@@ -349,7 +369,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true) {
+        public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
             if (newUnitType != null) {
                 UnitType oldUnitType = unitType;
@@ -368,11 +388,43 @@ namespace AnyRPG {
             }
         }
 
+        public void DespawnImmediate() {
+            //Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
+            if (characterUnit != null) {
+                characterUnit.Despawn(0, false, true);
+            }
+        }
 
-        public virtual void SetupScriptableObjects() {
+
+        public void Despawn() {
+            //Debug.Log(gameObject.name + ".AICharacter.Despawn()");
+            if (characterUnit != null) {
+                characterUnit.Despawn();
+            }
+        }
+
+        public void TryToDespawn() {
+            //Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
+            if (unitProfile != null && unitProfile.PreventAutoDespawn == true) {
+                return;
+            }
+            if (unitController != null && unitController.LootableCharacter != null) {
+                // lootable character handles its own despawn logic
+                return;
+            }
+            Despawn();
+        }
+
+
+        public void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects()");
 
             GetUnitProfileReference();
+        }
+
+        public void OnDestroy() {
+            StopAllCoroutines();
+            CleanupEventSubscriptions();
         }
 
     }

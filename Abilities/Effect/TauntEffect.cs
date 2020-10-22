@@ -38,15 +38,15 @@ namespace AnyRPG {
             // make ourselves the top threat in his threat table
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
             if (targetCharacterUnit != null) {
-                if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterCombat != null && targetCharacterUnit.MyCharacter.CharacterCombat.MyAggroTable != null) {
+                if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterCombat != null && targetCharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable != null) {
                     //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
-                    AggroNode AgroNode = targetCharacterUnit.MyCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
+                    AggroNode AgroNode = targetCharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
                     float usedAgroValue = 0f;
                     if (AgroNode != null) {
                         usedAgroValue = AgroNode.aggroValue;
                     }
                     if (source != null) {
-                        source.GenerateAgro(targetCharacterUnit, (int)(usedAgroValue + extraThreat));
+                        source.AbilityManager.GenerateAgro(targetCharacterUnit, (int)(usedAgroValue + extraThreat));
                     }
                 }
 

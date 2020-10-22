@@ -24,7 +24,7 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
-            //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.MyName) + ")");
+            //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
             if (target != null) {
                 //Debug.Log("GatherAbility.CanUseOn(" + target.name + ")");
             } else {
@@ -34,7 +34,7 @@ namespace AnyRPG {
                 return false;
             }
             // distance from center of character to whereever the raycast hit the object
-            //float distanceToTarget = Vector3.Distance((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyMouseOverhit.point, source.UnitGameObject.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
+            //float distanceToTarget = Vector3.Distance((PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).MyMouseOverhit.point, source.AbilityManager.UnitGameObject.transform.TransformPoint(source.MyCharacterUnit.GetComponent<CapsuleCollider>().center));
             //Debug.Log("PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point: " + PlayerManager.MyInstance.MyCharacter.MyCharacterController.MyMouseOverhit.point);
 
             /*

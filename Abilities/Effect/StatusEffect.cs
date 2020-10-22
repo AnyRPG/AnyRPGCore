@@ -277,7 +277,7 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
-            if (classTrait == true && sourceCharacter.Level >= requiredLevel) {
+            if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
                 return true;
             }
             if (!ZoneRequirementMet()) {
@@ -313,7 +313,7 @@ namespace AnyRPG {
             if ((classTrait || abilityEffectInput.savedEffect) && (source as CharacterAbilityManager) is CharacterAbilityManager) {
                 targetCharacterStats = (source as CharacterAbilityManager).BaseCharacter.CharacterStats;
             } else {
-                targetCharacterStats = target.GetComponent<CharacterUnit>().MyCharacter.CharacterStats;
+                targetCharacterStats = target.GetComponent<CharacterUnit>().BaseCharacter.CharacterStats;
             }
 
             // prevent status effect from sending scaled up damage to its ticks
@@ -497,16 +497,16 @@ namespace AnyRPG {
         public void ApplyControlEffects(BaseCharacter targetCharacter) {
             if (DisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
-                targetCharacter.CharacterController.FreezeCharacter();
+                targetCharacter.UnitController.FreezeCharacter();
             }
 
             if (Stun == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
-                targetCharacter.CharacterController.StunCharacter();
+                targetCharacter.UnitController.StunCharacter();
             }
             if (Levitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
-                targetCharacter.CharacterController.LevitateCharacter();
+                targetCharacter.UnitController.LevitateCharacter();
             }
         }
 
@@ -515,13 +515,13 @@ namespace AnyRPG {
                 return;
             }
             if (DisableAnimator == true) {
-                targetCharacter.CharacterController.UnFreezeCharacter();
+                targetCharacter.UnitController.UnFreezeCharacter();
             }
             if (Stun == true) {
-                targetCharacter.CharacterController.UnStunCharacter();
+                targetCharacter.UnitController.UnStunCharacter();
             }
             if (Levitate == true) {
-                targetCharacter.CharacterController.UnLevitateCharacter();
+                targetCharacter.UnitController.UnLevitateCharacter();
             }
         }
 

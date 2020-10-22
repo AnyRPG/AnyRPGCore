@@ -106,15 +106,15 @@ namespace AnyRPG {
 
                     //Debug.Log("Setting Animator Values");
 
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<AnimatedUnit>();
+                    PlayerManager.MyInstance.ActiveUnitController = PlayerManager.MyInstance.UnitController;
                     ConfigureCharacterRegularPhysics();
 
                     // set player unit to normal state
-                    PlayerManager.MyInstance.MyCharacter.CharacterUnit.MyMounted = false;
-                    if ((PlayerManager.MyInstance.MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController) {
-                        (PlayerManager.MyInstance.MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = true;
+                    PlayerManager.MyInstance.ActiveUnitController.Mounted = false;
+                    if (PlayerManager.MyInstance.PlayerUnitMovementController) {
+                        PlayerManager.MyInstance.PlayerUnitMovementController.enabled = true;
                     }
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyCharacterAnimator.SetRiding(false);
+                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetRiding(false);
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
                     CameraManager.MyInstance.ActivateMainCamera();
                     CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.CharacterUnit.transform);
@@ -128,35 +128,29 @@ namespace AnyRPG {
             if (prefabObjects != null) {
                 ConfigureMountPhysics();
                 GameObject go = prefabObjects.Values.ElementAt(0);
-                PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
-                if (playerUnitMovementController != null) {
-                    // disable movement and input on player unit
-                    if ((PlayerManager.MyInstance.MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController) {
-                        (PlayerManager.MyInstance.MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.enabled = false;
-                    }
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.FreezeAll();
 
-                    //Debug.Log("MountEffect.ActivateMountedState()Setting Animator Values");
-                    // set player animator to riding state
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyCharacterAnimator.SetRiding(true);
-                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", true);
-                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetTrigger("RidingTrigger");
-
-                    // set player unit to riding state
-                    PlayerManager.MyInstance.MyCharacter.CharacterUnit.MyMounted = true;
-
-                    ConfigureCharacterMountedPhysics();
-
-                    // initialize the mount animator
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit = go.GetComponent<AnimatedUnit>();
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.OrchestratorStart();
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.OrchestratorFinish();
-                    PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyCharacterUnit = PlayerManager.MyInstance.MyCharacter.CharacterUnit;
-
-                    playerUnitMovementController.SetCharacterUnit(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
-                    CameraManager.MyInstance.SwitchToMainCamera();
-                    CameraManager.MyInstance.MainCameraController.InitializeCamera(go.transform);
+                // disable movement and input on player unit
+                if (PlayerManager.MyInstance.PlayerUnitMovementController) {
+                    PlayerManager.MyInstance.PlayerUnitMovementController.enabled = false;
                 }
+                PlayerManager.MyInstance.ActiveUnitController.FreezeAll();
+
+                // set player animator to riding state
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetRiding(true);
+
+                // set player unit to riding state
+                PlayerManager.MyInstance.ActiveUnitController.Mounted = true;
+
+                ConfigureCharacterMountedPhysics();
+
+                // initialize the mount animator
+                PlayerManager.MyInstance.ActiveUnitController = go.GetComponent<UnitController>();
+                PlayerManager.MyInstance.ActiveUnitController.SetUnitControllerMode(UnitControllerMode.Mount);
+                PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.MyCharacter.CharacterUnit;
+
+                CameraManager.MyInstance.SwitchToMainCamera();
+                CameraManager.MyInstance.MainCameraController.InitializeCamera(go.transform);
+
             }
         }
 
@@ -176,11 +170,9 @@ namespace AnyRPG {
         public void SubscribeToUMACreate() {
 
             // is this stuff necessary on ai characters?
-            AnimatedUnit animatedUnit = dynamicCharacterAvatar.gameObject.GetComponent<AnimatedUnit>();
-            animatedUnit.OrchestratorStart();
-            animatedUnit.OrchestratorFinish();
-            if (animatedUnit != null && animatedUnit.MyCharacterAnimator != null) {
-                animatedUnit.MyCharacterAnimator.InitializeAnimator();
+            UnitController unitController = dynamicCharacterAvatar.gameObject.GetComponent<UnitController>();
+            if (unitController != null && unitController.UnitAnimator != null) {
+                unitController.UnitAnimator.InitializeAnimator();
             } else {
 
             }
@@ -192,37 +184,37 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterMountedPhysics() {
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.WakeUp();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
             // UNITY ERROR MESSAGE IS MISLEADING AND WRONG HERE....
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.interpolation = RigidbodyInterpolation.None;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.detectCollisions = false;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.isKinematic = true;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.useGravity = false;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.FreezeAll();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.interpolation = RigidbodyInterpolation.None;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.detectCollisions = false;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.isKinematic = true;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.useGravity = false;
+            PlayerManager.MyInstance.ActiveUnitController.FreezeAll();
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
             Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
                 collider.enabled = false;
             }
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.WakeUp();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
 
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.WakeUp();
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.detectCollisions = true;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.isKinematic = false;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.useGravity = true;
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.FreezeRotation();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.detectCollisions = true;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.isKinematic = false;
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.useGravity = true;
+            PlayerManager.MyInstance.ActiveUnitController.FreezeRotation();
             Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
             if (collider != null) {
                 collider.enabled = true;
             }
-            PlayerManager.MyInstance.MyCharacter.AnimatedUnit.MyRigidBody.WakeUp();
+            PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
         }
 
         public void ConfigureMountPhysics() {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class AbilityManager : MonoBehaviour {
+    public class AbilityManager : IAbilityManager {
 
         protected BaseAbility currentCastAbility = null;
 
@@ -19,6 +19,8 @@ namespace AnyRPG {
         protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
+        protected MonoBehaviour abilityCaster = null;
+
         public virtual bool IsDead {
             get {
                 return false;
@@ -27,7 +29,7 @@ namespace AnyRPG {
 
         public virtual GameObject UnitGameObject {
             get {
-                return gameObject;
+                return null;
             }
         }
 
@@ -46,8 +48,22 @@ namespace AnyRPG {
 
         public virtual string Name {
             get {
-                return gameObject.name;
+                return string.Empty;
             }
+        }
+
+        public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
+        public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
+
+        public AbilityManager(MonoBehaviour abilityCaster) {
+            this.abilityCaster = abilityCaster;
+        }
+
+        // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
+        public virtual bool CanCastAbility(IAbility ability) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
+
+            return true;
         }
 
         public virtual void GeneratePower(IAbility ability) {
@@ -66,13 +82,17 @@ namespace AnyRPG {
             return true;
         }
 
+        public virtual bool HasAbility(BaseAbility baseAbility) {
+            
+            return false;
+        }
 
         public virtual float GetMeleeRange() {
             return 1f;
         }
 
         public void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
-            abilityHitDelayCoroutine = StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
+            abilityHitDelayCoroutine = abilityCaster.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
         }
 
         public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
@@ -133,7 +153,7 @@ namespace AnyRPG {
         public virtual void CleanupAbilityEffectGameObjects() {
             foreach (GameObject go in abilityEffectGameObjects) {
                 if (go != null) {
-                    Destroy(go);
+                    UnityEngine.Object.Destroy(go);
                 }
             }
             abilityEffectGameObjects.Clear();
@@ -142,22 +162,22 @@ namespace AnyRPG {
         public virtual void CleanupCoroutines() {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
             if (currentCastCoroutine != null) {
-                StopCoroutine(currentCastCoroutine);
+                abilityCaster.StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
             }
             if (abilityHitDelayCoroutine != null) {
-                StopCoroutine(abilityHitDelayCoroutine);
+                abilityCaster.StopCoroutine(abilityHitDelayCoroutine);
                 abilityHitDelayCoroutine = null;
             }
 
             if (destroyAbilityEffectObjectCoroutine != null) {
-                StopCoroutine(destroyAbilityEffectObjectCoroutine);
+                abilityCaster.StopCoroutine(destroyAbilityEffectObjectCoroutine);
                 destroyAbilityEffectObjectCoroutine = null;
             }
             CleanupCoolDownRoutines();
 
             if (globalCoolDownCoroutine != null) {
-                StopCoroutine(globalCoolDownCoroutine);
+                abilityCaster.StopCoroutine(globalCoolDownCoroutine);
                 globalCoolDownCoroutine = null;
             }
         }
@@ -170,7 +190,7 @@ namespace AnyRPG {
         public void CleanupCoolDownRoutines() {
             foreach (AbilityCoolDownNode abilityCoolDownNode in abilityCoolDownDictionary.Values) {
                 if (abilityCoolDownNode.MyCoroutine != null) {
-                    StopCoroutine(abilityCoolDownNode.MyCoroutine);
+                    abilityCaster.StopCoroutine(abilityCoolDownNode.MyCoroutine);
                 }
             }
             abilityCoolDownDictionary.Clear();
@@ -280,10 +300,6 @@ namespace AnyRPG {
 
         public virtual bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext) {
             return true;
-        }
-
-        public virtual void OnDestroy() {
-
         }
 
     }

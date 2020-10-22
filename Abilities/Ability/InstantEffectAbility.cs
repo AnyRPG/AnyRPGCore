@@ -26,7 +26,7 @@ namespace AnyRPG {
                 return false;
             }
             if (!CanSimultaneousCast) {
-                if (source.PerformingAbility) {
+                if (source.AbilityManager.PerformingAbility) {
                     return false;
                 }
             }

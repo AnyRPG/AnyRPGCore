@@ -30,7 +30,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterUnit is null? target despawn during cast?");
                 return;
             }
-            characterUnit.MyCharacter.CharacterStats.Revive();
+            characterUnit.BaseCharacter.CharacterStats.Revive();
         }
 
         public override bool CanUseOn(GameObject target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
@@ -41,7 +41,7 @@ namespace AnyRPG {
             if (characterUnit == null) {
                 return false;
             }
-            if (characterUnit.MyCharacter.CharacterStats.IsAlive == false && characterUnit.MyCharacter.CharacterStats.IsReviving == false) {
+            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false && characterUnit.BaseCharacter.CharacterStats.IsReviving == false) {
                 return true;
             }
             return false;
@@ -56,7 +56,7 @@ namespace AnyRPG {
             if (targetCharacterUnit == null) {
                 return null;
             }
-            if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false) {
+            if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
                 return target;
             }
             return null;

@@ -49,9 +49,9 @@ namespace AnyRPG {
 
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.Quests != null) {
-                    foreach (QuestNode quest in characterUnit.MyCharacter.UnitProfile.Quests) {
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
+                if (characterUnit.BaseCharacter.UnitProfile.Quests != null) {
+                    foreach (QuestNode quest in characterUnit.BaseCharacter.UnitProfile.Quests) {
                         quest.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
                         quests.Add(quest);
                     }
@@ -69,7 +69,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             if (namePlateUnit != null) {
-                namePlateUnit.OnInitializeNamePlate += HandlePrerequisiteUpdates;
+                namePlateUnit.NamePlateController.OnInitializeNamePlate += HandlePrerequisiteUpdates;
             }
         }
 
@@ -83,7 +83,7 @@ namespace AnyRPG {
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
             if (namePlateUnit != null) {
-                namePlateUnit.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
+                namePlateUnit.NamePlateController.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
             }
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
@@ -213,7 +213,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
-            if (namePlateUnit.MyNamePlate == null) {
+            if (namePlateUnit.NamePlateController.NamePlate == null) {
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Nameplate is null");
                 return;
             }
@@ -221,11 +221,11 @@ namespace AnyRPG {
             string indicatorType = GetIndicatorType();
 
             if (indicatorType == string.Empty) {
-                namePlateUnit.MyNamePlate.MyQuestIndicatorBackground.SetActive(false);
+                namePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(false);
             } else {
-                namePlateUnit.MyNamePlate.MyQuestIndicatorBackground.SetActive(true);
+                namePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(true);
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
-                SetIndicatorText(indicatorType, namePlateUnit.MyNamePlate.MyQuestIndicator);
+                SetIndicatorText(indicatorType, namePlateUnit.NamePlateController.NamePlate.MyQuestIndicator);
             }
             //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() About to fire MiniMapUpdateHandler");
         }

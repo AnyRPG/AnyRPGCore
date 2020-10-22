@@ -58,7 +58,7 @@ namespace AnyRPG {
                 Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 //if (Physics.Raycast(ray, out hit, 100)) {
-                if (Physics.Raycast(ray, out hit, 100, (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).movementMask.value)) {
+                if (Physics.Raycast(ray, out hit, 100, PlayerManager.MyInstance.PlayerController.movementMask.value)) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                     Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 4, hit.point.z);
                     if (Vector3.Distance(hit.point, PlayerManager.MyInstance.PlayerUnitObject.transform.position) < 40f) {

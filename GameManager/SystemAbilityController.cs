@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemAbilityController : AbilityManager, IAbilityCaster {
+    public class SystemAbilityController : MonoBehaviour, IAbilityCaster {
 
         #region Singleton
         private static SystemAbilityController instance;
@@ -20,11 +20,19 @@ namespace AnyRPG {
         }
         #endregion
 
+        private AbilityManager abilityManager = null;
+
+        public IAbilityManager AbilityManager { get => abilityManager; }
+
+        private void Awake() {
+            abilityManager = new AbilityManager(this);
+    }
+
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
             foreach (GameObject go in abilityEffectObjects.Values) {
-                abilityEffectGameObjects.Add(go);
+                abilityManager.AbilityEffectGameObjects.Add(go);
             }
-            destroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
+            abilityManager.DestroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
@@ -39,7 +47,7 @@ namespace AnyRPG {
             if (target != null) {
                 CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
                 if (_characterUnit != null) {
-                    targetStats = _characterUnit.MyCharacter.CharacterStats;
+                    targetStats = _characterUnit.BaseCharacter.CharacterStats;
                 }
             } else {
                 nullTarget = true;
@@ -79,18 +87,17 @@ namespace AnyRPG {
             //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
             foreach (GameObject go in abilityEffectObjects.Values) {
-                if (abilityEffectGameObjects.Contains(go)) {
-                    abilityEffectGameObjects.Remove(go);
+                if (abilityManager.AbilityEffectGameObjects.Contains(go)) {
+                    abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
             }
             abilityEffectObjects.Clear();
 
-            destroyAbilityEffectObjectCoroutine = null;
+            abilityManager.DestroyAbilityEffectObjectCoroutine = null;
         }
 
-        public override void OnDestroy() {
-            base.OnDestroy();
+        public void OnDestroy() {
             StopAllCoroutines();
         }
     }

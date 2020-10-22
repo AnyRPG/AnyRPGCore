@@ -165,7 +165,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
 
             // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
                 Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
                 return;

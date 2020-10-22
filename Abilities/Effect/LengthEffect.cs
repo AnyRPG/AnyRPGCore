@@ -74,7 +74,7 @@ namespace AnyRPG {
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" : source.Name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ", " + (target == null ? "null" : target.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
             if (prefabProfileList != null) {
@@ -90,21 +90,21 @@ namespace AnyRPG {
                     Transform prefabParent = null;
                     if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                         //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
-                        //spawnLocation = source.GetComponent<Collider>().bounds.center;
+                        //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                         spawnLocation = abilityEffectInput.groundTargetLocation;
                         prefabParent = null;
                     }
                     if (prefabSpawnLocation == PrefabSpawnLocation.targetPoint) {
                         //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
-                        //spawnLocation = source.GetComponent<Collider>().bounds.center;
+                        //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                         spawnLocation = target.transform.position;
                         prefabParent = null;
                     }
                     if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                         //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
-                        //spawnLocation = source.GetComponent<Collider>().bounds.center;
-                        spawnLocation = source.UnitGameObject.transform.position;
-                        prefabParent = source.UnitGameObject.transform;
+                        //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
+                        spawnLocation =source.AbilityManager.UnitGameObject.transform.position;
+                        prefabParent =source.AbilityManager.UnitGameObject.transform;
                         Transform usedPrefabSourceBone = null;
                         if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
                             usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabProfile.TargetBone);
@@ -134,10 +134,10 @@ namespace AnyRPG {
                         Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
                         //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                         // CORRECT WAY BELOW
-                        //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
+                        //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.AbilityManager.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                         Vector3 usedForwardDirection = Vector3.forward;
-                        if (source != null && source.UnitGameObject != null) {
-                            usedForwardDirection = source.UnitGameObject.transform.forward;
+                        if (source != null &&source.AbilityManager.UnitGameObject != null) {
+                            usedForwardDirection =source.AbilityManager.UnitGameObject.transform.forward;
                         }
                         if (prefabParent != null) {
                             usedForwardDirection = prefabParent.transform.forward;
@@ -164,17 +164,17 @@ namespace AnyRPG {
         }
 
         public virtual void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" + source.name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" +source.AbilityManager.name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
             PlayAudioEffects(onTickAudioProfiles, target);
         }
 
         public virtual void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" +source.AbilityManager.name + ", " + (target ? target.name : "null") + ")");
         }
 
         protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 
@@ -187,12 +187,12 @@ namespace AnyRPG {
         }
 
         public virtual void PerformAbilityTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityTickEffects(source, target, abilityEffectInput);
         }
 
         public virtual void PerformAbilityComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityComplete(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityComplete(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityCompleteEffects(source, target, abilityEffectInput);
         }
 

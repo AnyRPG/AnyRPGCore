@@ -696,7 +696,7 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencyNode currencyNode in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
                 currencySaveData.MyAmount = currencyNode.MyAmount;
                 currencySaveData.MyName = currencyNode.currency.DisplayName;
@@ -764,7 +764,7 @@ namespace AnyRPG {
 
         public void SaveRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveRecipeData()");
-            foreach (string recipeName in PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.Keys) {
+            foreach (string recipeName in PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.Keys) {
                 RecipeSaveData saveData = new RecipeSaveData();
                 saveData.MyName = recipeName;
                 anyRPGSaveData.recipeSaveData.Add(saveData);
@@ -954,7 +954,7 @@ namespace AnyRPG {
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
-                PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.AddCurrency(SystemCurrencyManager.MyInstance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
+                PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.MyInstance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
             }
         }
 
@@ -963,7 +963,7 @@ namespace AnyRPG {
 
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
-                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).LoadAbility(abilitySaveData.MyName);
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
                 }
             }
         }
@@ -989,7 +989,7 @@ namespace AnyRPG {
         public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadRecipeData()");
             foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
-                PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LoadRecipe(recipeSaveData.MyName);
+                PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.LoadRecipe(recipeSaveData.MyName);
             }
         }
 

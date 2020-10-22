@@ -50,20 +50,19 @@ namespace AnyRPG {
 
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
 
-            Vector3 sourcePosition = source.UnitGameObject.transform.position;
+            Vector3 sourcePosition = source.AbilityManager.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
 
-            AnimatedUnit animatedUnit = target.GetComponent<AnimatedUnit>();
             CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
-            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterAbilityManager) {
+            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log("KnockBackEffect.Cast(): stop casting");
-                targetCharacterUnit.MyCharacter.CharacterAbilityManager.StopCasting();
+                targetCharacterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
             }
 
             if (knockbackType == KnockbackType.Knockback) {
-                if (animatedUnit != null && animatedUnit.MyCharacterMotor != null) {
+                if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter.UnitController.UnitMotor != null) {
                     //Debug.Log("KnockBackEffect.Cast(): casting on character");
-                    animatedUnit.MyCharacterMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+                    targetCharacterUnit.BaseCharacter.UnitController.UnitMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
                 } else {
                     Rigidbody rigidbody = target.GetComponent<Rigidbody>();
                     if (rigidbody != null) {

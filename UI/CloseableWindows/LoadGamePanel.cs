@@ -145,7 +145,7 @@ namespace AnyRPG {
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnit.transform);
+                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
@@ -155,11 +155,11 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            if (CharacterCreatorManager.MyInstance.PreviewUnit == null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController == null) {
                 //Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
                 return;
             }
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
                 //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
             } else {
@@ -176,12 +176,12 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
-            if (CharacterCreatorManager.MyInstance.PreviewUnit != null) {
-                CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<CharacterEquipmentManager>();
-                if (characterEquipmentManager != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
+                BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
+                if (baseCharacter != null) {
                     //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
-                    SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, characterEquipmentManager);
+                    SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
 
@@ -201,6 +201,8 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMASettings(umaAvatar);
             */
 
+            // theoretically this should be done automatically now by the new unit modes
+            /*
             CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<CharacterEquipmentManager>();
             if (previewUnitEquipmentManager != null) {
                 //Debug.Log("LoadGamePanel.TargetReadyCallback(): about to equip character");
@@ -213,12 +215,13 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("LoadGamePanel.TargetReadyCallback(): equipment manager was null");
             }
+            */
 
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            CharacterCreatorManager.MyInstance.PreviewUnit.layer = LayerMask.NameToLayer("PlayerPreview");
-            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnit.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnit.layer;
+            CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
+                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
             }
 
             // new code for weapons

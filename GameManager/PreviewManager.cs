@@ -10,7 +10,7 @@ namespace AnyRPG {
     public abstract class PreviewManager : MonoBehaviour {
 
         [SerializeField]
-        protected GameObject previewUnit;
+        protected UnitController unitController;
 
         [SerializeField]
         protected Vector3 previewSpawnLocation;
@@ -24,7 +24,7 @@ namespace AnyRPG {
         // the source we are going to clone from 
         protected UnitProfile cloneSource;
 
-        public GameObject PreviewUnit { get => previewUnit; set => previewUnit = value; }
+        public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
         public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
         protected void Awake() {
@@ -39,8 +39,8 @@ namespace AnyRPG {
 
         public void HandleCloseWindow() {
             //Debug.Log("PreviewManager.HandleCloseWindow();");
-            if (previewUnit != null) {
-                Destroy(previewUnit);
+            if (unitController != null) {
+                Destroy(unitController.gameObject);
             }
         }
 
@@ -50,53 +50,16 @@ namespace AnyRPG {
         }
 
         public void OpenWindowCommon() {
-            previewUnit = Instantiate(cloneSource.UnitPrefab, transform.position, Quaternion.identity, transform);
-            UIManager.MyInstance.SetLayerRecursive(previewUnit, previewLayer);
+            GameObject go = Instantiate(cloneSource.UnitPrefab, transform.position, Quaternion.identity, transform);
+            UIManager.MyInstance.SetLayerRecursive(go, previewLayer);
+            unitController = go.GetComponent<UnitController>();
+            if (unitController != null) {
+                unitController.SetUnitControllerMode(UnitControllerMode.Preview);
+                if (unitController.BaseCharacter != null) {
+                    unitController.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.PrefabProfile.AttachmentProfile;
+                }
 
-            // disable any components on the cloned unit that may give us trouble since this unit cannot move
-            MonoBehaviour[] monoBehaviours = previewUnit.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
-                //Debug.Log("CharacterCreatorManager.HandleOpenWindow(): disable monobehavior: " + monoBehaviour.GetType().Name);
-                monoBehaviour.enabled = false;
             }
-
-            // NavMeshAgent is technically not a Monobehavior so has to be handled separately
-            if (previewUnit.GetComponent<NavMeshAgent>() != null) {
-                previewUnit.GetComponent<NavMeshAgent>().enabled = false;
-            }
-
-            // prevent the character from enabling the navmeshagent
-            if (previewUnit.GetComponent<BaseCharacter>() != null) {
-                previewUnit.GetComponent<BaseCharacter>().PreviewCharacter = true;
-            }
-
-            // re-enable behaviors needed for character animation
-            if (previewUnit.GetComponent<DynamicCharacterAvatar>() != null) {
-                previewUnit.GetComponent<DynamicCharacterAvatar>().enabled = true;
-            }
-            if (previewUnit.GetComponent<CharacterAnimator>() != null) {
-                previewUnit.GetComponent<CharacterAnimator>().enabled = true;
-            }
-            if (previewUnit.GetComponent<AnimatedUnit>() != null) {
-                previewUnit.GetComponent<AnimatedUnit>().enabled = true;
-            }
-
-            // prevent preview unit from moving around
-            if (previewUnit.GetComponent<Rigidbody>() != null) {
-                previewUnit.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-                previewUnit.GetComponent<Rigidbody>().isKinematic = true;
-                previewUnit.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                previewUnit.GetComponent<Rigidbody>().useGravity = false;
-            }
-
-
-            AIEquipmentManager aIEquipmentManager = previewUnit.AddComponent<AIEquipmentManager>();
-            //Debug.Log("PreviewManager.OpenWindowCommon(): adding attachment profile: " + cloneSource.PrefabProfile.AttachmentProfile.DisplayName);
-            aIEquipmentManager.AttachmentProfile = cloneSource.PrefabProfile.AttachmentProfile;
-
-            // testing to make equipping character in new game panel
-            aIEquipmentManager.OrchestratorStart();
-            aIEquipmentManager.OrchestratorFinish();
         }
 
     }

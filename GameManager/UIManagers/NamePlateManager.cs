@@ -75,7 +75,7 @@ namespace AnyRPG {
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit) == false) {
                 NamePlateController namePlate = SpawnNamePlate(namePlateUnit, usePositionOffset);
-                namePlateUnit.NamePlateNeedsRemoval += RemoveNamePlate;
+                namePlateUnit.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
                 return namePlate;
             }
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.MyDisplayName + "): key already existed.  returning null!!!");

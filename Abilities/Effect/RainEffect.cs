@@ -21,14 +21,14 @@ namespace AnyRPG {
                 aoeSpawnCenter = target.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
-                aoeSpawnCenter = source.UnitGameObject.transform.position;
+                aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectInput.groundTargetLocation;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
-            //aoeSpawnCenter += source.UnitGameObject.transform.TransformDirection(aoeCenter);
+            //aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
 
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();

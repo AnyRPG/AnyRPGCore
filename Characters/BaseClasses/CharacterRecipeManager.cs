@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterRecipeManager : MonoBehaviour {
+    public class CharacterRecipeManager {
 
         protected BaseCharacter baseCharacter;
 
@@ -17,37 +17,12 @@ namespace AnyRPG {
 
         public Dictionary<string, Recipe> RecipeList { get => recipeList; }
 
-        //public List<string> MyRecipeList { get => recipeList;}
-
         protected bool eventSubscriptionsInitialized = false;
 
-        protected virtual void Awake() {
-            //Debug.Log("CharacteRecipeManager.Awake()");
-            baseCharacter = GetComponent<BaseCharacter>();
-        }
-
-        protected virtual void Start() {
-            //Debug.Log("CharacterRecipeManager.Start()");
-            CreateEventSubscriptions();
+        public CharacterRecipeManager(BaseCharacter baseCharacter) {
+            this.baseCharacter = baseCharacter;
             UpdateRecipeList(baseCharacter.CharacterStats.Level);
         }
-
-        public virtual void OnDisable() {
-            CleanupEventSubscriptions();
-        }
-
-        public virtual void CreateEventSubscriptions() {
-        }
-
-        public virtual void CleanupEventSubscriptions() {
-        }
-
-        /*
-        public List<string> GetRecipeList() {
-
-            return recipeList.Keys;
-        }
-        */
 
         public virtual void UpdateRecipeList(int newLevel) {
             //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + ")");
@@ -57,16 +32,7 @@ namespace AnyRPG {
                     //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " + recipe.MyName + "evaluating skill: " + skill.MyName);
                     if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.MyAbilityList.Contains(recipe.CraftAbility as BaseAbility)) {
                         LearnRecipe(recipe);
-                    }/*
-                    else {
-                        Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " +
-                            recipe.MyName + "evaluating skill: " + skill.MyName + 
-                            "autolearn: " + recipe.AutoLearn +
-                            "level: " + recipe.RequiredLevel + 
-                            "hasrecipe: " + HasRecipe(recipe) + 
-                            "skillcontainsability: " + skill.MyAbilityList.Contains(recipe.CraftAbility));
                     }
-                    */
                 }
             }
         }

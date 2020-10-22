@@ -56,11 +56,11 @@ namespace AnyRPG {
 
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.BehaviorNames != null) {
-                    foreach (string behaviorName in characterUnit.MyCharacter.UnitProfile.BehaviorNames) {
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
+                if (characterUnit.BaseCharacter.UnitProfile.BehaviorNames != null) {
+                    foreach (string behaviorName in characterUnit.BaseCharacter.UnitProfile.BehaviorNames) {
                         BehaviorProfile tmpBehaviorProfile = null;
-                        if (characterUnit.MyCharacter.UnitProfile.UseBehaviorCopy == true) {
+                        if (characterUnit.BaseCharacter.UnitProfile.UseBehaviorCopy == true) {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
                         } else {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
@@ -105,19 +105,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public List<BehaviorProfile> GetCurrentOptionList() {
-            //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
-            List<BehaviorProfile> currentList = new List<BehaviorProfile>();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
-                if (behaviorProfile.MyPrerequisitesMet == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
-                    //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
-                    currentList.Add(behaviorProfile);
-                }
-            }
-            //Debug.Log("BehaviorInteractable.GetValidOptionList(): List Size: " + validList.Count);
-            return currentList;
-        }
-
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
             List<BehaviorProfile> currentList = GetCurrentOptionList();
@@ -146,8 +133,8 @@ namespace AnyRPG {
                 StopCoroutine(behaviorCoroutine);
             }
             behaviorCoroutine = null;
-            if (namePlateUnit != null && namePlateUnit.MyNamePlate != null) {
-                namePlateUnit.MyNamePlate.HideSpeechBubble();
+            if (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null) {
+                namePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
             }
         }
 
@@ -206,6 +193,18 @@ namespace AnyRPG {
             }
         }
 
+        public List<BehaviorProfile> GetCurrentOptionList() {
+            //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
+            List<BehaviorProfile> currentList = new List<BehaviorProfile>();
+            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+                if (behaviorProfile.MyPrerequisitesMet == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                    //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
+                    currentList.Add(behaviorProfile);
+                }
+            }
+            //Debug.Log("BehaviorInteractable.GetValidOptionList(): List Size: " + validList.Count);
+            return currentList;
+        }
 
         public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");

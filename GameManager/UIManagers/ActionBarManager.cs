@@ -78,8 +78,8 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget += HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget += HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.UnitController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.UnitController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn() {
@@ -88,8 +88,8 @@ namespace AnyRPG {
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
             HandleClearTarget();
 
-            PlayerManager.MyInstance.MyCharacter.CharacterController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.MyCharacter.CharacterController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.MyInstance.MyCharacter.UnitController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.MyCharacter.UnitController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(GameObject target) {
@@ -128,7 +128,7 @@ namespace AnyRPG {
             //float distanceToTarget = 0f;
             bool inRange = false;
             while (HasTarget()) {
-                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.AnimatedUnit == null) {
+                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
@@ -137,8 +137,8 @@ namespace AnyRPG {
                         BaseAbility baseAbility = actionButton.Useable as BaseAbility;
                         //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.MyName);
 
-                        GameObject finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager, target, false);
-                        //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.MyCharacter.AnimatedUnit.transform.position, target.transform.position);
+                        GameObject finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter, target, false);
+                        //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, target.transform.position);
                         inRange = false;
                         if (finalTarget != null) {
                             inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInAbilityRange(baseAbility, finalTarget);

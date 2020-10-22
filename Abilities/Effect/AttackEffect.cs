@@ -20,12 +20,12 @@ namespace AnyRPG {
             // handle regular effects
             base.PerformAbilityHit(source, target, abilityEffectInput);
 
-            source.ProcessWeaponHitEffects(this, target, abilityEffectInput);
+            source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectInput);
         }
 
 
         public override bool ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-            bool returnValue = target.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
+            bool returnValue = target.GetComponent<CharacterUnit>().BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
             if (returnValue == false) {
                 return false;
             }

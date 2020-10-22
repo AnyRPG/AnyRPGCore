@@ -83,7 +83,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnit.transform);
+                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -97,7 +97,7 @@ namespace AnyRPG {
             characterReady = true;
 
             // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
             /*
             if (umaAvatar == null) {
                 //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
@@ -120,7 +120,7 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<CharacterEquipmentManager>();
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<CharacterEquipmentManager>();
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
                 characterEquipmentManager.UnequipAll(false);

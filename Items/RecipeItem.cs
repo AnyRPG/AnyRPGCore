@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public override bool Use() {
             //Debug.Log(MyDisplayName + ".RecipeItem.Use()");
-            if (!PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.ContainsValue(recipe)) {
+            if (!PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                 //Debug.Log(MyDisplayName + ".RecipeItem.Use(): Player does not have the recipe: " + recipe.MyDisplayName);
                 bool returnValue = base.Use();
                 if (returnValue == false) {
@@ -25,7 +25,7 @@ namespace AnyRPG {
                 }
                 // learn recipe if the character has the right skill
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.LearnRecipe(recipe);
+                    PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     MessageFeedManager.MyInstance.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
                 } else {
@@ -42,7 +42,7 @@ namespace AnyRPG {
             string returnString = base.GetSummary();
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
-                if (PlayerManager.MyInstance.MyCharacter.PlayerRecipeManager.RecipeList.ContainsValue(recipe)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;

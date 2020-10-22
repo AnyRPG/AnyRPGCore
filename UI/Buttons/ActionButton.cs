@@ -156,7 +156,7 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public void HandleEnterCombat() {
+        public void HandleEnterCombat(IAbilityCaster abilityCaster) {
             UpdateVisual();
         }
 
@@ -171,9 +171,9 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility -= OnAttemptUseableUse;
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
                 } else {
-                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnPerformAbility -= OnUseableUse;
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
                 }
                 UnsubscribeFromCombatEvents();
             }
@@ -198,9 +198,9 @@ namespace AnyRPG {
                 //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnAttemptPerformAbility += OnAttemptUseableUse;
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
                 } else {
-                    (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as PlayerAbilityManager).OnPerformAbility += OnUseableUse;
+                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
                 }
                 SubscribeToCombatEvents();
             }
@@ -427,7 +427,7 @@ namespace AnyRPG {
 
                 if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).WeaponAffinityNames.Count > 0) {
                     if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
-                        if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager))) {
+                        if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
                             //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
                             EnableFullCoolDownIcon();
                             return;

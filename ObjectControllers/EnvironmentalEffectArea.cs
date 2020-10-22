@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class EnvironmentalEffectArea : AbilityManager, IAbilityCaster {
+    public class EnvironmentalEffectArea : MonoBehaviour, IAbilityCaster {
 
         [Tooltip("Every x seconds, the effect will be applied to everyone within the effect radius")]
         [SerializeField]
@@ -22,10 +22,15 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider = null;
 
+        private AbilityManager abilityManager = null;
+
+        public IAbilityManager AbilityManager { get => abilityManager; }
+
         private void Awake() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.Awake()");
             GetComponentReferences();
             SetupScriptableObjects();
+            abilityManager = new AbilityManager(this);
         }
 
         public void GetComponentReferences() {

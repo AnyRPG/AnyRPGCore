@@ -45,7 +45,7 @@ public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
         //Debug.Log("ReputationBookUI.CreatePages()");
         ClearPages();
         List<CurrencyNode> page = new List<CurrencyNode>();
-        foreach (CurrencyNode currencySaveData in PlayerManager.MyInstance.MyCharacter.MyPlayerCurrencyManager.MyCurrencyList.Values) {
+        foreach (CurrencyNode currencySaveData in PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
             page.Add(currencySaveData);
             if (page.Count == pageSize) {
                 pages.Add(page);

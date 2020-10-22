@@ -21,12 +21,12 @@ namespace AnyRPG {
         public void SetTarget(CharacterUnit characterUnit) {
             //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
             this.targetCharacterUnit = characterUnit;
-            if (targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
+            if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
-                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.MyCharacter.CharacterStats.StatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
                     SpawnStatusNode(statusEffectNode, characterUnit);
                 }
-                CreateEventSubscriptions(targetCharacterUnit.MyCharacter.CharacterStats as CharacterStats);
+                CreateEventSubscriptions(targetCharacterUnit.BaseCharacter.CharacterStats as CharacterStats);
             }
         }
 
@@ -60,8 +60,8 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             //Debug.Log("StatusEffectPanelController.CleanupEventSubscriptions()");
-            if (targetCharacterUnit != null && targetCharacterUnit.MyCharacter != null && targetCharacterUnit.MyCharacter.CharacterStats != null) {
-                targetCharacterUnit.MyCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
+                targetCharacterUnit.BaseCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
             }
         }
 

@@ -120,7 +120,7 @@ namespace AnyRPG {
 
         public Sprite MyIcon { get => interactableIcon; }
 
-        public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.UnitDisplayName : gameObject.name)); }
+        public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.NamePlateController.UnitDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public BoxCollider MyBoxCollider { get => boxCollider;}
 
@@ -216,8 +216,8 @@ namespace AnyRPG {
             // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
             if (namePlateUnit != null) {
-                if (namePlateUnit.UnitDisplayName != null && namePlateUnit.UnitDisplayName != string.Empty) {
-                    interactableName = namePlateUnit.UnitDisplayName;
+                if (namePlateUnit.NamePlateController.UnitDisplayName != null && namePlateUnit.NamePlateController.UnitDisplayName != string.Empty) {
+                    interactableName = namePlateUnit.NamePlateController.UnitDisplayName;
                 }
             } else {
                 //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
@@ -331,16 +331,16 @@ namespace AnyRPG {
                 return;
             }
             if (namePlateUnit == null) {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.UnitDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.MyNamePlate != null ? namePlateUnit.MyNamePlate.name : "null"));
+                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.UnitDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null ? namePlateUnit.NamePlateController.NamePlate.name : "null"));
                 return;
             }
 
             // if there is a nameplate unit give it a chance to initialize its nameplate.
             // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
             // this means the only way they can spawn their nameplate is through a direct call
-            if (namePlateUnit.MyNamePlate == null) {
-                namePlateUnit.InitializeNamePlate();
-                if (namePlateUnit.MyNamePlate == null) {
+            if (namePlateUnit.NamePlateController.NamePlate == null) {
+                namePlateUnit.NamePlateController.InitializeNamePlate();
+                if (namePlateUnit.NamePlateController.NamePlate == null) {
                     return;
                 }
             }
@@ -358,7 +358,7 @@ namespace AnyRPG {
 
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
-                namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
+                namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
@@ -366,15 +366,15 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
                     if (GetCurrentInteractables()[0].MyNamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
-                        namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].MyNamePlateImage;
+                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].MyNamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
-                    namePlateUnit.MyNamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                    namePlateUnit.MyNamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
+                    namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                    namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
                 }
             }
         }
@@ -778,10 +778,10 @@ namespace AnyRPG {
 
                 //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
 
-                AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
-                if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
+                UnitController unitController = other.gameObject.GetComponent<UnitController>();
+                if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.CharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
                     Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
@@ -800,10 +800,10 @@ namespace AnyRPG {
 
                 //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
 
-                AnimatedPlayerUnit otherCharacterUnit = other.gameObject.GetComponent<AnimatedPlayerUnit>();
-                if (otherCharacterUnit != null && otherCharacterUnit.MyCharacterUnit != null) {
+                UnitController unitController = other.gameObject.GetComponent<UnitController>();
+                if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    (otherCharacterUnit.MyCharacterUnit.MyCharacter.CharacterController as PlayerController).InterActWithTarget(this, gameObject);
+                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this, gameObject);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
                     Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
@@ -815,9 +815,9 @@ namespace AnyRPG {
         public void ClearFromPlayerRangeTable() {
             //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");
             // prevent bugs if a unit despawns before the player moves out of range of it
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterController != null) {
-                if ((PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).MyInteractables.Contains(this)) {
-                    (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).MyInteractables.Remove(this);
+            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.UnitController != null) {
+                if (PlayerManager.MyInstance.PlayerController.MyInteractables.Contains(this)) {
+                    PlayerManager.MyInstance.PlayerController.MyInteractables.Remove(this);
                 }
             }
         }
@@ -830,15 +830,15 @@ namespace AnyRPG {
                 CharacterUnit baseCharacter = GetComponent<CharacterUnit>();
                 if (baseCharacter != null) {
                     //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
-                    nameString = baseCharacter.UnitDisplayName;
+                    nameString = baseCharacter.DisplayName;
                 }
             }
             Color textColor = Color.white;
             string factionString = string.Empty;
-            if (namePlateUnit != null && namePlateUnit.Faction != null) {
+            if (namePlateUnit != null && namePlateUnit.NamePlateController.Faction != null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
                 textColor = Faction.GetFactionColor(namePlateUnit);
-                factionString = "\n" + namePlateUnit.Faction.DisplayName;
+                factionString = "\n" + namePlateUnit.NamePlateController.Faction.DisplayName;
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription():  namePlateUnit is null: " + (namePlateUnit == null));
             }

@@ -23,12 +23,6 @@ namespace AnyRPG {
         #endregion
 
 
-        /*
-        public override GameObject GetCloneSource() {
-            return unitProfile.UnitPrefab;
-        }
-        */
-
         public void HandleOpenWindow(UnitProfile unitProfile) {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
@@ -50,11 +44,8 @@ namespace AnyRPG {
             while (CharacterPanel.MyInstance.MyPreviewCameraController == null) {
                 yield return null;
             }
-            //Debug.Log("WaitForCamera(): got camera");
 
-            CharacterPanel.MyInstance.MyPreviewCameraController.InitializeCamera(previewUnit.transform);
-            //targetInitialized = true;
-
+            CharacterPanel.MyInstance.MyPreviewCameraController.InitializeCamera(unitController);
         }
 
 

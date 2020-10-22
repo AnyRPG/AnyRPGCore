@@ -311,7 +311,7 @@ namespace AnyRPG {
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnit.transform);
+                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnitController);
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -327,7 +327,7 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             // get reference to avatar
-            DynamicCharacterAvatar umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            DynamicCharacterAvatar umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
                 //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
             } else {
@@ -358,7 +358,7 @@ namespace AnyRPG {
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(umaAvatar);
             */
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<CharacterEquipmentManager>();
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<CharacterEquipmentManager>();
             if (characterEquipmentManager != null) {
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
@@ -372,9 +372,9 @@ namespace AnyRPG {
             */
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            CharacterCreatorManager.MyInstance.PreviewUnit.layer = LayerMask.NameToLayer("PlayerPreview");
-            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnit.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnit.layer;
+            CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
+                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
             }
 
             // new code for weapons

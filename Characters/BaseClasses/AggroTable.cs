@@ -21,7 +21,7 @@ namespace AnyRPG {
                 List<AggroNode> removeNodes = new List<AggroNode>();
                 // we need to remove stale nodes on each check because we could have aggro'd a target that was already fighting with someone and not got the message it died if we didn't hit it first
                 foreach (AggroNode node in aggroNodes) {
-                    if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.MyCharacter, MyBaseCharacter) > -1 || node.aggroTarget.MyCharacter.CharacterStats.IsAlive == false || node.aggroTarget.gameObject.activeInHierarchy == false) {
+                    if (node.aggroTarget == null || Faction.RelationWith(node.aggroTarget.BaseCharacter, MyBaseCharacter) > -1 || node.aggroTarget.BaseCharacter.CharacterStats.IsAlive == false || node.aggroTarget.gameObject.activeInHierarchy == false) {
                         //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                         // we could be in combat with someone who has switched faction from a faction buff mid combat or died
                         removeNodes.Add(node);
@@ -85,7 +85,7 @@ namespace AnyRPG {
         public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".AggroTable.AddToAggroTable(): target: " + targetCharacterUnit.name + "; amount: " + aggroAmount);
 
-            if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false) {
+            if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
                 return false;
             }
 
@@ -143,7 +143,7 @@ namespace AnyRPG {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
                 if (aggroNode.aggroTarget == targetCharacterUnit && aggroNode.aggroValue < 0) {
                     //Debug.Log(baseCharacter.name + ": Removing " + targetCharacterUnit.name + " from aggro table");
-                    aggroNode.aggroTarget.MyCharacter.CharacterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.CharacterUnit);
+                    aggroNode.aggroTarget.BaseCharacter.CharacterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.CharacterUnit);
                     aggroNodes.Remove(aggroNode);
                 }
             }
@@ -158,7 +158,7 @@ namespace AnyRPG {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
                 if (aggroNode.aggroTarget == target) {
                     //Debug.Log(baseCharacter.name + ": Removing " + target.name + " from aggro table");
-                    aggroNode.aggroTarget.MyCharacter.CharacterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.CharacterUnit);
+                    aggroNode.aggroTarget.BaseCharacter.CharacterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.CharacterUnit);
                     aggroNodes.Remove(aggroNode);
                 }
             }
@@ -171,7 +171,7 @@ namespace AnyRPG {
         public void ClearAndBroadcast() {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
                 //Debug.Log(baseCharacter.name + ": Removing " + aggroNode.aggroTarget.name + " from aggro table");
-                CharacterCombat _characterCombat = aggroNode.aggroTarget.GetComponent<CharacterUnit>().MyCharacter.CharacterCombat as CharacterCombat;
+                CharacterCombat _characterCombat = aggroNode.aggroTarget.GetComponent<CharacterUnit>().BaseCharacter.CharacterCombat as CharacterCombat;
                 if (_characterCombat != null) {
                     _characterCombat.MyAggroTable.ClearSingleTarget(baseCharacter.CharacterUnit);
                 }

@@ -40,7 +40,7 @@ namespace AnyRPG {
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
 
-        protected UnitAudioController unitAudio = null;
+        protected UnitController unitController = null;
 
         public virtual string InteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -62,7 +62,7 @@ namespace AnyRPG {
         public virtual Sprite MyNamePlateImage { get => namePlateImage; }
 
         public string DisplayName { get => (InteractionPanelTitle != null && InteractionPanelTitle != string.Empty ? InteractionPanelTitle : (interactable != null ? interactable.DisplayName : "interactable is null!")); }
-        public UnitAudioController UnitAudio { get => unitAudio; set => unitAudio = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
 
         protected virtual void Awake() {
             //Debug.Log(gameObject.name + ".InteractableOption.Awake(). Setting interactable");
@@ -90,7 +90,7 @@ namespace AnyRPG {
                 return;
             }
             interactable = GetComponent<Interactable>();
-            unitAudio = GetComponent<UnitAudioController>();
+            unitController = GetComponent<UnitController>();
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences(): " + interactable is null);
             }
@@ -116,7 +116,7 @@ namespace AnyRPG {
 
         public virtual void StopInteract() {
             //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
-            (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).StopInteract();
+            PlayerManager.MyInstance.PlayerController.StopInteract();
         }
 
         public virtual bool HasMiniMapText() {

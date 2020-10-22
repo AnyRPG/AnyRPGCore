@@ -94,7 +94,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather();
             } else {
-                source.GetComponent<CharacterUnit>().MyCharacter.CharacterAbilityManager.BeginAbility(MyAbility, gameObject);
+                source.GetComponent<CharacterUnit>().BaseCharacter.CharacterAbilityManager.BeginAbility(MyAbility, gameObject);
             }
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;

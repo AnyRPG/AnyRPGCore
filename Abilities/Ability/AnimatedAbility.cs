@@ -38,7 +38,7 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
             if (useWeaponHitSound == true) {
                 //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
-                return abilityCaster.GetAnimatedAbilityHitSound();
+                return abilityCaster.AbilityManager.GetAnimatedAbilityHitSound();
             }
             //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): not using weapon hit sound");
             return base.GetHitSound(abilityCaster);
@@ -47,7 +47,7 @@ namespace AnyRPG {
         public List<AnimationClip> GetAnimationClips(IAbilityCaster sourceCharacter) {
             List<AnimationClip> animationClips = new List<AnimationClip>();
             if (useAutoAttackAnimations == true) {
-                animationClips = sourceCharacter.GetDefaultAttackAnimations();
+                animationClips = sourceCharacter.AbilityManager.GetDefaultAttackAnimations();
             } else {
                 animationClips = AnimationClips;
             }
@@ -55,7 +55,7 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.Name + ")");
+            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.AbilityManager.Name + ")");
             if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
                 if (usedAnimationClips != null && usedAnimationClips.Count > 0) {
@@ -73,9 +73,9 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
                     if (usedAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
+                        float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
 
-                        sourceCharacter.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
+                        sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
                     }
 
                 }
@@ -108,7 +108,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (!source.ProcessAnimatedAbilityHit(target, !base.CanUseOn(target, source))) {
+            if (!source.AbilityManager.ProcessAnimatedAbilityHit(target, !base.CanUseOn(target, source))) {
                 return false;
             }
 
@@ -124,7 +124,7 @@ namespace AnyRPG {
 
         public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
-            if (performCooldownChecks && !source.PerformAnimatedAbilityCheck(this)) {
+            if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
             

@@ -16,11 +16,12 @@ namespace AnyRPG {
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
-
+        /*
         [Header("Appearance")]
 
         [SerializeField]
         private HighlightButton bodyButton = null;
+        */
 
         [Header("Configuration")]
 

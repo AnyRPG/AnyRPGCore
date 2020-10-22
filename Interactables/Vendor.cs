@@ -29,9 +29,9 @@ namespace AnyRPG {
 
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
-            if (characterUnit != null && characterUnit.MyCharacter != null && characterUnit.MyCharacter.UnitProfile != null) {
-                if (characterUnit.MyCharacter.UnitProfile.VendorCollections != null) {
-                    vendorCollections.AddRange(characterUnit.MyCharacter.UnitProfile.VendorCollections);
+            if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
+                if (characterUnit.BaseCharacter.UnitProfile.VendorCollections != null) {
+                    vendorCollections.AddRange(characterUnit.BaseCharacter.UnitProfile.VendorCollections);
                 }
             }
             HandlePrerequisiteUpdates();

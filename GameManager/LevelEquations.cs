@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
-            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + secondaryStatType.ToString() + ", " + sourceCharacter.CharacterName + ")");
+            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + secondaryStatType.ToString() + ", " + sourceCharacter.AbilityManager.CharacterName + ")");
             float returnValue = 0f;
 
             foreach (IStatProvider statProvider in sourceCharacter.StatProviders) {
@@ -190,7 +190,7 @@ namespace AnyRPG {
         }
 
         public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
-            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + sourceCharacter.CharacterName + ")");
+            //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + sourceCharacter.AbilityManager.CharacterName + ")");
             float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, sourceCharacter);
             returnValue += sourceCharacter.CharacterStats.GetSecondaryAddModifiers(secondaryStatType);
             returnValue *= sourceCharacter.CharacterStats.GetSecondaryMultiplyModifiers(secondaryStatType);

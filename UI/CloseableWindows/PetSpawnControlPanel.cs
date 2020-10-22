@@ -80,7 +80,7 @@ namespace AnyRPG {
         }
 
         public void UpdateUnitInformation() {
-            BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnit.GetComponent<BaseCharacter>();
+            BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
             if (baseCharacter != null && baseCharacter.CharacterClass != null) {
                 classText.text = baseCharacter.CharacterClass.DisplayName;
             }
@@ -117,7 +117,7 @@ namespace AnyRPG {
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(PetPreviewManager.MyInstance.PreviewUnit.transform);
+                    MyPreviewCameraController.InitializeCamera(PetPreviewManager.MyInstance.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
@@ -131,7 +131,7 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
             // get reference to avatar
-            umaAvatar = PetPreviewManager.MyInstance.PreviewUnit.GetComponent<DynamicCharacterAvatar>();
+            umaAvatar = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
             if (umaAvatar == null) {
                 //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
             } else {

@@ -188,7 +188,7 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                (PlayerManager.MyInstance.MyCharacter.CharacterController as PlayerController).RemoveInteractable(gameObject.GetComponent<Interactable>());
+                PlayerManager.MyInstance.PlayerController.RemoveInteractable(gameObject.GetComponent<Interactable>());
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in lootTables) {
                     lootTable.Reset();

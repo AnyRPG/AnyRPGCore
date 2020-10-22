@@ -61,6 +61,10 @@ namespace AnyRPG {
         /// </summary>
         private GameObject playerConnectionObject = null;
 
+        private PlayerUnitMovementController playerUnitMovementController = null;
+
+        private PlayerController playerController = null;
+
         /// <summary>
         /// The actual movable rendered unit in the game world that we will be moving around
         /// </summary>
@@ -70,13 +74,25 @@ namespace AnyRPG {
 
         private bool playerConnectionSpawned = false;
 
-        private PlayerCharacter character = null;
+        // a reference to the 'main' character.  This should remain constant as long as the player is logged in
+        private BaseCharacter character = null;
+
+        // a reference to the active character.  This can change the player mind controls a unit to allow things like action bar ability updates
+        private BaseCharacter activeCharacter = null;
+
+        // a reference to the 'main' unit.  This should be the main character when spawned, and null when not spawned
+        private UnitController unitController = null;
+
+        // a reference to the active unit.  This could change in cases of both mind control and mounted states
+        private UnitController activeUnitController = null;
+
 
         private DynamicCharacterAvatar avatar = null;
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public PlayerCharacter MyCharacter { get => character; set => character = value; }
+        public BaseCharacter MyCharacter { get => character; set => character = value; }
+
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
         public GameObject PlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
@@ -88,6 +104,11 @@ namespace AnyRPG {
         public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
         public GameObject PlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
         public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
+        public PlayerUnitMovementController PlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
+        public BaseCharacter ActiveCharacter { get => activeCharacter; set => activeCharacter = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
+        public UnitController ActiveUnitController { get => activeUnitController; set => activeUnitController = value; }
+        public PlayerController PlayerController { get => playerController; set => playerController = value; }
 
         private void Awake() {
             //Debug.Log("PlayerManager.Awake()");
@@ -178,33 +199,33 @@ namespace AnyRPG {
         public void SetPlayerName(string newName) {
             //Debug.Log("PlayerManager.SetPlayerName()");
             if (newName != null && newName != string.Empty) {
-                MyCharacter.SetCharacterName(newName);
+                character.SetCharacterName(newName);
             }
 
             SystemEventManager.MyInstance.NotifyOnPlayerNameChanged();
             if (playerUnitSpawned) {
-                UIManager.MyInstance.MyPlayerUnitFrameController.SetTarget(PlayerUnitObject);
+                UIManager.MyInstance.MyPlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
             }
         }
 
         public void SetPlayerCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
             if (newCharacterClass != null) {
-                MyCharacter.ChangeCharacterClass(newCharacterClass);
+                activeCharacter.ChangeCharacterClass(newCharacterClass);
             }
         }
 
         public void SetPlayerCharacterSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
             if (newClassSpecialization != null) {
-                MyCharacter.ChangeClassSpecialization(newClassSpecialization);
+                character.ChangeClassSpecialization(newClassSpecialization);
             }
         }
 
         public void SetPlayerFaction(Faction newFaction) {
             //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
             if (newFaction != null) {
-                MyCharacter.JoinFaction(newFaction);
+                character.JoinFaction(newFaction);
             }
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
@@ -262,14 +283,12 @@ namespace AnyRPG {
             if (PlayerUnitSpawned == false) {
                 return;
             }
-            //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
-                //MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.MyLevelUpAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLevelUpAbility;
 
-                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, MyCharacter.CharacterUnit.gameObject, abilityEffectContext);
+                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.gameObject, abilityEffectContext);
             }
         }
 
@@ -278,11 +297,9 @@ namespace AnyRPG {
             if (PlayerUnitSpawned == false) {
                 return;
             }
-            //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.PerformAbilityCast((levelUpAbility as IAbility), null);
-            //MyCharacter.CharacterAbilityManager.BeginAbility((SystemConfigurationManager.MyInstance.DeathAbility as IAbility), MyCharacter.CharacterUnit.gameObject);
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
             abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.DeathAbility;
-            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, MyCharacter.CharacterUnit.gameObject, abilityEffectContext);
+            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.gameObject, abilityEffectContext);
         }
 
         public void Initialize() {
@@ -317,13 +334,13 @@ namespace AnyRPG {
         public void RespawnPlayer() {
             //Debug.Log("PlayerManager.RespawnPlayer()");
             DespawnPlayerUnit();
-            MyCharacter.CharacterStats.ReviveRaw();
+            activeCharacter.CharacterStats.ReviveRaw();
             SpawnPlayerUnit();
         }
 
         public void RevivePlayerUnit() {
             //Debug.Log("PlayerManager.RevivePlayerUnit()");
-            MyCharacter.CharacterStats.Revive();
+            activeCharacter.CharacterStats.Revive();
         }
 
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
@@ -338,8 +355,8 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): playerConnectionObject is null, instantiating connection!");
                 SpawnPlayerConnection();
             }
-            if (MyCharacter.UnitProfile == null) {
-                MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
+            if (activeCharacter.UnitProfile == null) {
+                activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
             }
 
             // spawn the player unit
@@ -350,34 +367,29 @@ namespace AnyRPG {
                 spawnQuaternion = Quaternion.LookRotation(spawnRotation);
             }
             //Debug.Log("PlayerManager.SpawnPlayerUnit(): spawning player unit at location: " + playerUnitParent.transform.position + " with rotation: " + spawnRotation);
-            playerUnitObject = Instantiate(MyCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
+            playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
 
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
-            MyCharacter.CharacterUnit = playerUnitObject.GetComponent<PlayerUnit>();
-            MyCharacter.CharacterUnit.MyCharacter = MyCharacter;
-            MyCharacter.CharacterUnit.GetComponentReferences();
+            unitController = playerUnitObject.GetComponent<UnitController>();
+            activeUnitController = unitController;
+            activeCharacter.CharacterUnit = playerUnitObject.GetComponent<CharacterUnit>();
+            activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
+            activeCharacter.CharacterUnit.GetComponentReferences();
 
-            MyCharacter.AnimatedUnit = playerUnitObject.GetComponent<AnimatedUnit>();
             MyCharacter.CharacterUnit.OrchestratorStart();
             MyCharacter.CharacterUnit.OrchestratorFinish();
 
-            NavMeshAgent navMeshAgent = playerUnitObject.GetComponent<NavMeshAgent>();
-
             if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                if (navMeshAgent != null) {
-                    navMeshAgent.enabled = true;
-                }
-                if (MyCharacter.AnimatedUnit is AnimatedPlayerUnit && (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
-                    (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = true;
+                activeUnitController.EnableAgent();
+                if (playerUnitMovementController != null) {
+                    playerUnitMovementController.useMeshNav = true;
                 }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
-                if (navMeshAgent != null) {
-                    navMeshAgent.enabled = false;
-                }
-                if (MyCharacter.AnimatedUnit is AnimatedPlayerUnit && (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController != null) {
-                    (MyCharacter.AnimatedUnit as AnimatedPlayerUnit).MyPlayerUnitMovementController.useMeshNav = false;
+                activeUnitController.DisableAgent();
+                if (playerUnitMovementController != null) {
+                    playerUnitMovementController.useMeshNav = false;
                 }
             }
 
@@ -412,12 +424,137 @@ namespace AnyRPG {
             // inform any subscribers that we just spawned a player unit
             //Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
             playerUnitSpawned = true;
+
+            foreach (StatusEffectNode statusEffectNode in MyCharacter.CharacterStats.StatusEffects.Values) {
+                //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
+                statusEffectNode.StatusEffect.RawCast(MyCharacter, MyCharacter.CharacterUnit.gameObject, MyCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
+            }
+
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 
-            // do this just in case things that would not update before the player unit spawned that are now initialized due to that last call have a chance to react : EDIT BELOW
-            // this should no longer be necessary and it is causing double calls every time the player unit spawns.  if it is needed, then whatever is supposed to use it, should instead react to
-            // notifyonplayerunitspawn
-            //SystemEventManager.MyInstance.NotifyOnPrerequisiteUpdated();
+            SubscribeToUnitEvents();
+        }
+
+        public void SubscribeToUnitEvents() {
+            activeUnitController.OnSetTarget += HandleSetTarget;
+            activeUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
+            activeUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
+            activeUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
+            activeUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
+            activeUnitController.UnitAnimator.OnStartRiding += HandleStartRiding;
+            activeUnitController.UnitAnimator.OnEndRiding += HandleEndRiding;
+            activeUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
+            activeUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
+            activeUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
+            activeUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
+            activeUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
+            activeUnitController.UnitAnimator.OnDeath += HandleDeath;
+        }
+
+        public void UnsubscribeFromUnitEvents() {
+            activeUnitController.OnSetTarget -= HandleSetTarget;
+            activeUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
+            activeUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
+            activeUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
+            activeUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
+            activeUnitController.UnitAnimator.OnStartRiding -= HandleStartRiding;
+            activeUnitController.UnitAnimator.OnEndRiding -= HandleEndRiding;
+            activeUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
+            activeUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
+            activeUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
+            activeUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
+            activeUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
+            activeUnitController.UnitAnimator.OnDeath += HandleDeath;
+        }
+
+        public void HandleDeath() {
+            activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
+        }
+
+        public void HandleStartRevive() {
+            activeUnitController.UnitAnimator.SetDefaultOverrideController();
+        }
+
+        public void HandleStartLevitated() {
+            activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartLevitated", eventParam);
+        }
+
+        public void HandleEndLevitated(bool swapAnimator) {
+            if (swapAnimator) {
+                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndLevitated", eventParam);
+            }
+        }
+
+        public void HandleStartStunned() {
+            activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartStunned", eventParam);
+        }
+
+        public void HandleEndStunned(bool swapAnimator) {
+            if (swapAnimator) {
+                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
+            }
+        }
+
+        public void HandleStartRiding() {
+            activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
+        }
+
+        public void HandleEndRiding() {
+            activeUnitController.UnitAnimator.SetCorrectOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
+        }
+
+        public void HandleStartCasting(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator == true) {
+                activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            }
+            SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
+        }
+
+        public void HandleEndCasting(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
+            }
+        }
+
+        public void HandleStartAttacking(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                activeUnitController.UnitAnimator.SetDefaultOverrideController();
+            }
+            SystemEventManager.TriggerEvent("OnStartAttacking", eventParam);
+        }
+
+        public void HandleEndAttacking(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
+            }
+        }
+
+
+        public void HandleSetTarget(GameObject newTarget) {
+            playerController.SetTarget(newTarget);
+        }
+
+        public void HandleClearTarget() {
+            playerController.ClearTarget();
         }
 
         public void InitializeUMA() {
@@ -436,7 +573,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMASettings(false);
 
             // initialize the animator so our avatar initialization has an animator.
-            MyCharacter.AnimatedUnit.MyCharacterAnimator.InitializeAnimator();
+            activeUnitController.UnitAnimator.InitializeAnimator();
             avatar.Initialize();
             UMAData umaData = avatar.umaData;
             umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;
@@ -474,16 +611,21 @@ namespace AnyRPG {
                 return;
             }
             playerConnectionObject = Instantiate(playerConnectionPrefab, playerConnectionParent.transform);
-            MyCharacter = playerConnectionObject.GetComponent<PlayerCharacter>() as PlayerCharacter;
+            character = playerConnectionObject.GetComponent<BaseCharacter>();
+            activeCharacter = character;
+            PlayerController playerController = playerConnectionObject.GetComponent<PlayerController>();
+            playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
 
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
 
-            MyCharacter.OrchestratorStart();
-            MyCharacter.OrchestratorFinish();
+            activeCharacter.OrchestratorStart();
+            activeCharacter.OrchestratorFinish();
 
-            MyCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
+            activeCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionSpawn();
+
+            SubscribeToPlayerEvents();
         }
 
         public void DespawnPlayerConnection() {
@@ -491,10 +633,230 @@ namespace AnyRPG {
                 Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
+            UnsubscribeFromPlayerEvents();
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionDespawn();
             Destroy(playerConnectionObject.gameObject);
-            MyCharacter = null;
+            character = null;
+            activeCharacter = null;
+            playerUnitMovementController = null;
             playerConnectionSpawned = false;
+        }
+
+        public void SubscribeToPlayerEvents() {
+            activeCharacter.OnClassChange -= HandleClassChange;
+            activeCharacter.CharacterStats.OnImmuneToEffect += HandleImmuneToEffect;
+            activeCharacter.CharacterStats.OnDie += HandleDie;
+            activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
+            MyCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
+            activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
+            activeCharacter.CharacterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
+            activeCharacter.CharacterStats.OnRecoverResource += HandleRecoverResource;
+            activeCharacter.CharacterStats.OnCalculateRunSpeed += HandleCalculateRunSpeed;
+            activeCharacter.CharacterCombat.OnKillEvent += HandleKillEvent;
+            activeCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
+            activeCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
+            activeCharacter.CharacterCombat.OnUpdate += HandleCombatUpdate;
+            activeCharacter.CharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
+            activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities += HandleUnlearnClassAbilities;
+            activeCharacter.CharacterAbilityManager.OnLearnedCheckFail += HandleLearnedCheckFail;
+            activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
+            activeCharacter.CharacterAbilityManager.OnCombatCheckFail += HandleCombatCheckFail;
+            activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail += HandleAnimatedAbilityCheckFail;
+            activeCharacter.CharacterAbilityManager.OnPerformAbility += HandlePerformAbility;
+            activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
+            activeCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
+            activeCharacter.CharacterAbilityManager.OnUnlearnAbility += HandleUnlearnAbility;
+            activeCharacter.CharacterAbilityManager.OnLearnAbility += HandleLearnAbility;
+            activeCharacter.CharacterAbilityManager.OnActivateTargetingMode += HandleActivateTargetingMode;
+        }
+
+        public void UnsubscribeFromPlayerEvents() {
+            activeCharacter.OnClassChange -= HandleClassChange;
+            activeCharacter.CharacterStats.OnImmuneToEffect -= HandleImmuneToEffect;
+            activeCharacter.CharacterStats.OnDie -= HandleDie;
+            activeCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
+            activeCharacter.CharacterStats.OnLevelChanged -= HandleLevelChanged;
+            activeCharacter.CharacterStats.OnGainXP -= HandleGainXP;
+            activeCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            activeCharacter.CharacterStats.OnRecoverResource -= HandleRecoverResource;
+            activeCharacter.CharacterStats.OnCalculateRunSpeed -= HandleCalculateRunSpeed;
+            activeCharacter.CharacterCombat.OnKillEvent -= HandleKillEvent;
+            activeCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
+            activeCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
+            activeCharacter.CharacterCombat.OnUpdate -= HandleCombatUpdate;
+            activeCharacter.CharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
+            activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities -= HandleUnlearnClassAbilities;
+            activeCharacter.CharacterAbilityManager.OnLearnedCheckFail -= HandleLearnedCheckFail;
+            activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
+            activeCharacter.CharacterAbilityManager.OnCombatCheckFail -= HandleCombatCheckFail;
+            activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail -= HandleAnimatedAbilityCheckFail;
+            activeCharacter.CharacterAbilityManager.OnPerformAbility -= HandlePerformAbility;
+            activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
+            activeCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
+            activeCharacter.CharacterAbilityManager.OnUnlearnAbility -= HandleUnlearnAbility;
+            activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
+            activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
+        }
+
+        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
+        }
+
+        public void HandleActivateTargetingMode(BaseAbility baseAbility) {
+            CastTargettingManager.MyInstance.EnableProjector(baseAbility);
+        }
+
+        public void HandleAnimatedAbilityCheckFail(AnimatedAbility animatedAbility) {
+            if (PlayerUnitSpawned == true && CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
+            }
+        }
+
+        public void HandleLearnAbility(BaseAbility baseAbility) {
+            SystemEventManager.MyInstance.NotifyOnAbilityListChanged(baseAbility);
+            baseAbility.NotifyOnLearn();
+        }
+
+        public void HandleUnlearnAbility(bool updateActionBars) {
+            if (updateActionBars) {
+                UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+            }
+        }
+
+        public void HandleCombatUpdate() {
+            activeCharacter.CharacterCombat.HandleAutoAttack();
+        }
+
+        public void HandleDropCombat() {
+            if (CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteCombatMessage("Left combat");
+            }
+        }
+
+        public void HandleEnterCombat(IAbilityCaster sourceCharacter) {
+            if (CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteCombatMessage("Entered combat with " + sourceCharacter.AbilityManager.Name);
+            }
+        }
+
+        public void HandleReputationChange() {
+            SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
+        }
+
+        public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, GameObject target) {
+            if (baseAbility != null && CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
+            }
+        }
+
+        public void HandlePerformAbility(IAbility ability) {
+            SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
+            (ability as BaseAbility).NotifyOnAbilityUsed();
+
+        }
+
+        public void HandleCombatCheckFail(IAbility ability) {
+            CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+        }
+
+        public void HandlePowerResourceCheckFail(IAbility ability, IAbilityCaster abilityCaster) {
+            CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+        }
+
+        public void HandleLearnedCheckFail(IAbility ability) {
+            CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+        }
+
+        public void HandleUnlearnClassAbilities() {
+            // now perform a single action bar update
+            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+        }
+
+        public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
+            if (PlayerUnitSpawned) {
+                if (slotIndex != -1) {
+                    InventoryManager.MyInstance.AddItem(oldItem, slotIndex);
+                } else {
+                    InventoryManager.MyInstance.AddItem(oldItem);
+                }
+            }
+            SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, oldItem);
+        }
+
+        /// <summary>
+        /// trigger events with new speed information, mostly for third party controllers to pick up the new values
+        /// </summary>
+        /// <param name="oldRunSpeed"></param>
+        /// <param name="currentRunSpeed"></param>
+        /// <param name="oldSprintSpeed"></param>
+        /// <param name="currentSprintSpeed"></param>
+        public void HandleCalculateRunSpeed(float oldRunSpeed, float currentRunSpeed, float oldSprintSpeed, float currentSprintSpeed) {
+            if (currentRunSpeed != oldRunSpeed) {
+                EventParamProperties eventParam = new EventParamProperties();
+                eventParam.simpleParams.FloatParam = currentRunSpeed;
+                SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
+                eventParam.simpleParams.FloatParam = currentSprintSpeed;
+                SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+            }
+            if (currentSprintSpeed != oldSprintSpeed) {
+                EventParamProperties eventParam = new EventParamProperties();
+                eventParam.simpleParams.FloatParam = currentSprintSpeed;
+                SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+            }
+        }
+
+        public void HandleKillEvent(BaseCharacter sourceCharacter, float creditPercent) {
+            if (creditPercent == 0) {
+                return;
+            }
+            //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
+            MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter) * creditPercent));
+        }
+
+
+        public void HandleRecoverResource(PowerResource powerResource, int amount) {
+            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+        }
+
+        public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
+            if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false) {
+                UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(statusEffectNode, activeCharacter.CharacterUnit);
+                if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
+                    if (activeCharacter.CharacterUnit != null) {
+                        CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, statusEffectNode.StatusEffect, true);
+                    }
+                }
+            }
+        }
+
+        public void HandleGainXP(int xp) {
+            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
+            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+            SystemEventManager.MyInstance.NotifyOnXPGained();
+        }
+
+        public void HandleLevelChanged(int newLevel) {
+            SystemEventManager.MyInstance.NotifyOnLevelChanged(newLevel);
+            MessageFeedManager.MyInstance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
+        }
+
+        public void HandleReviveComplete() {
+            SystemEventManager.TriggerEvent("OnReviveComplete", new EventParamProperties());
+            activeUnitController.UnitAnimator.SetCorrectOverrideController();
+        }
+
+        public void HandleReviveBegin() {
+            playerController.HandleReviveBegin();
+        }
+
+        public void HandleDie(CharacterStats characterStats) {
+            playerController.HandleDie(characterStats);
+            SystemEventManager.TriggerEvent("OnPlayerDeath", new EventParamProperties());
+        }
+
+        public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
+            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 
     }

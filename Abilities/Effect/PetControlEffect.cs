@@ -33,7 +33,7 @@ namespace AnyRPG {
             List<CharacterUnit> unitsToRemove = new List<CharacterUnit>();
             foreach (CharacterUnit characterUnit in petUnits) {
                 //if (characterUnit != null) {
-                    if (characterUnit.MyCharacter.CharacterStats.IsAlive == false) {
+                    if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
                     //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING DEAD PET TO REMOVE LIST");
                     unitsToRemove.Add(characterUnit);
                     }

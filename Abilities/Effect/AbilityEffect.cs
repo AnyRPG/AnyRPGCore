@@ -1,11 +1,6 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -173,7 +168,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (target == sourceCharacter.UnitGameObject) {
+            if (target == sourceCharacter.AbilityManager.UnitGameObject) {
                 targetIsSelf = true;
             }
 
@@ -199,18 +194,18 @@ namespace AnyRPG {
                 if (targetCharacterUnit != null) {
 
                     // liveness checks
-                    if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
+                    if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
                         //Debug.Log("This ability requires a live target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
                         return false;
                     }
-                    if (targetCharacterUnit.MyCharacter.CharacterStats.IsAlive == true && requireDeadTarget == true) {
+                    if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && requireDeadTarget == true) {
                         //Debug.Log("This ability requires a dead target");
                         //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
                         return false;
                     }
 
-                    if (!sourceCharacter.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
+                    if (!sourceCharacter.AbilityManager.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
                         return false;
                     }
 
@@ -230,7 +225,7 @@ namespace AnyRPG {
             // if we made it this far we passed liveness and relationship checks.
             // since the target is not ourself, and it is valid, we should perform a range check
 
-            if (!sourceCharacter.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
+            if (!sourceCharacter.AbilityManager.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
                 return false;
             }
 
@@ -294,7 +289,7 @@ namespace AnyRPG {
             GameObject finalTarget = ReturnTarget(target);
 
             // perform source dependent target check
-            finalTarget = source.ReturnTarget(abilityEffect, target);
+            finalTarget = source.AbilityManager.ReturnTarget(abilityEffect, target);
 
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(): FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
@@ -317,17 +312,17 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
-                UnitAudioController unitAudio = null;
+                UnitController unitController = null;
                 if (target != null) {
-                    unitAudio = target.GetComponent<UnitAudioController>();
+                    unitController = target.GetComponent<UnitController>();
                 }
-                if (unitAudio == null) {
+                if (unitController == null) {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
-                if (audioSource != null || unitAudio != null) {
+                if (audioSource != null || unitController != null) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
                         usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
@@ -337,8 +332,8 @@ namespace AnyRPG {
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.AudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-                            if (unitAudio != null) {
-                                unitAudio.PlayEffect(audioProfile.AudioClip);
+                            if (unitController != null) {
+                                unitController.UnitComponentController.PlayEffect(audioProfile.AudioClip);
                             } else {
                                 audioSource.PlayOneShot(audioProfile.AudioClip);
                             }
