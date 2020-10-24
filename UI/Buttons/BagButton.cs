@@ -45,14 +45,14 @@ namespace AnyRPG {
             }
         }
 
-        public Image Icon { get => icon; set => icon = value; }
+        public Image Image { get => icon; set => icon = value; }
 
-        public Sprite MyIcon { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.MyIcon : null); }
+        public Sprite Icon { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.Icon : null); }
         public string DisplayName { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.DisplayName : null); }
 
         public void OnAddBag(Bag bag) {
             //Debug.Log("BagButton.OnAddBag: setting icon: " + bag.MyIcon.name);
-            icon.GetComponent<Image>().sprite = bag.MyIcon;
+            icon.GetComponent<Image>().sprite = bag.Icon;
             icon.GetComponent<Image>().color = Color.white;
             SetBackGroundColor();
         }

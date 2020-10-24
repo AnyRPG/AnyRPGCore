@@ -11,44 +11,19 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyCutSceneInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage : base.MyNamePlateImage); }
+        private CutsceneConfig cutsceneConfig = null;
+
+        public override Sprite Icon { get => cutsceneConfig.Icon; }
+        public override Sprite NamePlateImage { get => cutsceneConfig.NamePlateImage; }
 
         [SerializeField]
         private string cutsceneName = string.Empty;
 
         private Cutscene cutscene = null;
 
-
-        protected override void Awake() {
-            //Debug.Log("NameChangeInteractable.Awake()");
-            base.Awake();
+        public CutSceneInteractable(Interactable interactable, CutsceneConfig interactableOptionConfig) : base(interactable) {
+            this.cutsceneConfig = interactableOptionConfig;
         }
-
-        protected override void Start() {
-            //Debug.Log("NameChangeInteractable.Start()");
-            base.Start();
-        }
-
-        /*
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
-        }
-
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            //CleanupEventSubscriptions();
-        }
-        */
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);

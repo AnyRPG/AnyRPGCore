@@ -10,11 +10,17 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private LoadSceneConfig loadSceneConfig = null;
+
         [Header("Scene Options")]
 
         [Tooltip("When interacted with, this scene will load directly.")]
         [SerializeField]
         private string sceneName = string.Empty;
+
+        public LoadSceneInteractable(Interactable interactable, LoadSceneConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
+            this.loadSceneConfig = interactableOptionConfig;
+        }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public interface IAbility {
         bool AutoLearn { get; }
-        Sprite MyIcon { get; }
+        Sprite Icon { get; }
         string DisplayName { get; }
         int RequiredLevel { get; }
         bool UseableWithoutLearning { get; }

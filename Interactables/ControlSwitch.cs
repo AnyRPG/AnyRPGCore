@@ -8,6 +8,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private ControlSwitchConfig controlSwitchConfig = null;
+
         [Header("Control Switch")]
 
         [Tooltip("When successfully activated, this switch will call Interact() on the following interactables")]
@@ -30,11 +32,9 @@ namespace AnyRPG {
 
         public bool MyOnState { get => onState; set => onState = value; }
 
-
-        protected override void Start() {
-            base.Start();
+        public ControlSwitch(Interactable interactable, ControlSwitchConfig interactableOptionConfig) : base(interactable) {
+            this.controlSwitchConfig = interactableOptionConfig;
             interactionPanelTitle = "Interactable";
-
         }
 
         public override bool Interact(CharacterUnit source) {

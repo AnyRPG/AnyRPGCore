@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         public void AddCurrency(Currency currency) {
             this.currency = currency as Currency;
-            icon.sprite = this.currency.MyIcon;
+            icon.sprite = this.currency.Icon;
             icon.color = Color.white;
             currencyName.text = this.currency.DisplayName;
             description.text = this.currency.GetSummary();

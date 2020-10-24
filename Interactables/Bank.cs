@@ -8,25 +8,21 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon {
+        private BankConfig bankConfig;
+
+        public override Sprite Icon {
             get {
-                if (SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage != null) {
-                    return SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage;
-                }
-                return base.MyIcon;
+                return bankConfig.Icon;
             } 
         }
-        public override Sprite MyNamePlateImage {
+        public override Sprite NamePlateImage {
             get {
-                if (SystemConfigurationManager.MyInstance.MyBankNamePlateImage != null) {
-                    return SystemConfigurationManager.MyInstance.MyBankNamePlateImage;
-                }
-                return base.MyNamePlateImage;
+                return bankConfig.NamePlateImage;
             }
         }
 
-        protected override void Start() {
-            base.Start();
+        public Bank(Interactable interactable, BankConfig interactableConfig) : base(interactable) {
+            this.bankConfig = interactableConfig;
             interactionPanelTitle = "Bank";
         }
 

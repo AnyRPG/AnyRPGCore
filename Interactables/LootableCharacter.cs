@@ -13,11 +13,12 @@ namespace AnyRPG {
     public class LootableCharacter : InteractableOption {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
-
         public event System.Action<GameObject> OnLootComplete = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.MyNamePlateImage); }
+        private LootableCharacterConfig lootableCharacterConfig;
+
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.NamePlateImage); }
 
         
         [Header("Loot")]
@@ -50,8 +51,8 @@ namespace AnyRPG {
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
 
-        protected override void Awake() {
-            base.Awake();
+        public LootableCharacter(Interactable interactable, LootableCharacterConfig interactableConfig) : base(interactable) {
+            this.lootableCharacterConfig = interactableConfig;
         }
 
         protected override void Start() {

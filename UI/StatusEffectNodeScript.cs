@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target) {
             //Debug.Log("StatusEffectNodeScript.Initialize()");
-            icon.sprite = statusEffectNode.StatusEffect.MyIcon;
+            icon.sprite = statusEffectNode.StatusEffect.Icon;
             this.statusEffectNode = statusEffectNode;
             this.target = target;
             statusEffectNode.StatusEffect.SetStatusNode(this);

@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
         public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
-        public Sprite MyIcon { get => icon.sprite; set => icon.sprite = value; }
+        public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
         public Image MyEmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
 
         public string DisplayName {
@@ -135,8 +135,8 @@ namespace AnyRPG {
                     backGroundImage.color = emptyBackGroundColor;
                 }
                 emptySlotImage.sprite = null;
-                if (MyEquipmentSlotProfile != null && MyEquipmentSlotProfile.MyIcon != null) {
-                    emptySlotImage.sprite = MyEquipmentSlotProfile.MyIcon;
+                if (MyEquipmentSlotProfile != null && MyEquipmentSlotProfile.Icon != null) {
+                    emptySlotImage.sprite = MyEquipmentSlotProfile.Icon;
                     emptySlotImage.color = Color.white;
                 } else {
                     emptySlotImage.color = new Color32(0, 0, 0, 0);
@@ -148,7 +148,7 @@ namespace AnyRPG {
                 //emptySlotImage.color = new Color32(0, 0, 0, 0);
                 icon.enabled = true;
                 icon.color = Color.white;
-                icon.sprite = equippedEquipment.MyIcon;
+                icon.sprite = equippedEquipment.Icon;
 
                 UIManager.MyInstance.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }

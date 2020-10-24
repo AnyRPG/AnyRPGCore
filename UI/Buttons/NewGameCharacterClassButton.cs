@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         public void AddCharacterClass(CharacterClass newCharacterClass) {
             characterClass = newCharacterClass;
-            icon.sprite = this.characterClass.MyIcon;
+            icon.sprite = this.characterClass.Icon;
             icon.color = Color.white;
             characterClassName.text = characterClass.DisplayName;
             //description.text = this.faction.GetSummary();

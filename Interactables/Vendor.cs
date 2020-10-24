@@ -9,8 +9,10 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.MyNamePlateImage); }
+        private VendorConfig vendorConfig = null;
+
+        public override Sprite Icon { get => vendorConfig.Icon; }
+        public override Sprite NamePlateImage { get => vendorConfig.NamePlateImage; }
 
         [Header("Vendor")]
 
@@ -19,9 +21,13 @@ namespace AnyRPG {
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
+        public Vendor(Interactable interactable, VendorConfig interactableConfig) : base(interactable) {
+            this.vendorConfig = interactableConfig;
+            interactionPanelTitle = "Purchase Items";
+        }
+
         protected override void Start() {
             base.Start();
-            interactionPanelTitle = "Purchase Items";
 
             AddUnitProfileSettings();
 

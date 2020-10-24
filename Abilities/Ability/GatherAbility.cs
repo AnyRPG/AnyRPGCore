@@ -51,7 +51,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (_gatheringNode.MyAbility == this) {
+            if (_gatheringNode.BaseAbility == this) {
                 return true;
             } else {
                 //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);

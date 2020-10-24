@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     public interface IDescribable {
-        Sprite MyIcon { get; }
+        Sprite Icon { get; }
         string DisplayName { get; }
         string GetDescription();
         string GetSummary();

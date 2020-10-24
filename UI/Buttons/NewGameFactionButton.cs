@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         public void AddFaction(Faction newFaction) {
             faction = newFaction;
-            icon.sprite = this.faction.MyIcon;
+            icon.sprite = this.faction.Icon;
             icon.color = Color.white;
             factionName.text = faction.DisplayName;
             //description.text = this.faction.GetSummary();

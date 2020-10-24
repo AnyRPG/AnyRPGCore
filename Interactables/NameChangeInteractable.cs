@@ -10,8 +10,10 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.MyNamePlateImage); }
+        private NameChangeConfig nameChangeConfig = null;
+
+        public override Sprite Icon { get => nameChangeConfig.Icon; }
+        public override Sprite NamePlateImage { get => nameChangeConfig.NamePlateImage; }
 
         [SerializeField]
         private GameObject spawnPrefab = null;
@@ -22,10 +24,8 @@ namespace AnyRPG {
 
         private bool windowEventSubscriptionsInitialized = false;
 
-
-        protected override void Awake() {
-            //Debug.Log("NameChangeInteractable.Awake()");
-            base.Awake();
+        public NameChangeInteractable(Interactable interactable, NameChangeConfig interactableOptionConfig) : base(interactable) {
+            this.nameChangeConfig = interactableOptionConfig;
         }
 
         protected override void Start() {

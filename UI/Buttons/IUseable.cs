@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public interface IUseable {
-        Sprite MyIcon { get; }
+        Sprite Icon { get; }
         string DisplayName { get; }
         bool Use();
     }

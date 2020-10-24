@@ -118,7 +118,7 @@ namespace AnyRPG {
 
         public IInteractable[] MyInteractables { get => interactables; set => interactables = value; }
 
-        public Sprite MyIcon { get => interactableIcon; }
+        public Sprite Icon { get => interactableIcon; }
 
         public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.NamePlateController.UnitDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
@@ -364,10 +364,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
-                    if (GetCurrentInteractables()[0].MyNamePlateImage != null) {
+                    if (GetCurrentInteractables()[0].NamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].MyNamePlateImage;
+                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].NamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }

@@ -4,7 +4,7 @@ using AnyRPG;
 namespace AnyRPG {
 public interface IMoveable{
 
-    Sprite MyIcon { get; }
+    Sprite Icon { get; }
     string DisplayName { get; }
 }
 }

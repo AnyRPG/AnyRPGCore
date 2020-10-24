@@ -121,9 +121,9 @@ namespace AnyRPG {
 
                 // code for the default image
                 castSlider.GetComponent<LayoutElement>().preferredWidth = currentPercent * originalCastSliderWidth;
-                if (castIcon.sprite != ability.MyIcon) {
+                if (castIcon.sprite != ability.Icon) {
                     castIcon.sprite = null;
-                    castIcon.sprite = ability.MyIcon;
+                    castIcon.sprite = ability.Icon;
                 }
             }
         }

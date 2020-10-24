@@ -10,9 +10,7 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        // the faction that this interactable option offers
-        [SerializeField]
-        private string factionName = string.Empty;
+        private FactionChangeConfig factionChangeConfig = null;
 
         private Faction faction;
 
@@ -20,18 +18,12 @@ namespace AnyRPG {
 
         public Faction MyFaction { get => faction; set => faction = value; }
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage : base.MyNamePlateImage); }
+        public override Sprite Icon { get => factionChangeConfig.Icon; }
+        public override Sprite NamePlateImage { get => factionChangeConfig.NamePlateImage; }
 
-        protected override void Awake() {
-            //Debug.Log("FactionChangeInteractable.Awake()");
-            base.Awake();
+        public FactionChangeInteractable(Interactable interactable, FactionChangeConfig factionChangeConfig) : base(interactable) {
+            this.factionChangeConfig = factionChangeConfig;
             SetupScriptableObjects();
-        }
-
-        protected override void Start() {
-            //Debug.Log("FactionChangeInteractable.Start()");
-            base.Start();
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -121,12 +113,12 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
-            if (faction == null && factionName != null && factionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+            if (factionChangeConfig != null && factionChangeConfig.FactionName != null && factionChangeConfig.FactionName != string.Empty) {
+                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionChangeConfig.FactionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionChangeConfig.FactionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
 
             }

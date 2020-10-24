@@ -10,6 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private TeleportConfig teleportConfig = null;
+
         [Header("Teleport")]
 
         [Tooltip("When interacted with, the player will cast this ability. Only applies if Portal Type is Ability.")]
@@ -19,6 +21,11 @@ namespace AnyRPG {
         private BaseAbility ability = null;
 
         public IAbility MyAbility { get => ability; }
+
+        public TeleportInteractable(Interactable interactable, TeleportConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
+            this.teleportConfig = interactableOptionConfig;
+        }
+
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");

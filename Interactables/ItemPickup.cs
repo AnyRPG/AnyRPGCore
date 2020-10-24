@@ -10,20 +10,12 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        [SerializeField]
-        protected string itemName;
+        private ItemPickupConfig itemPickupConfig = null;
 
-        /*
-        public override bool Interact(CharacterUnit source) {
-            bool returnValue = PickUp();
-            return returnValue;
+        public ItemPickup(Interactable interactable, ItemPickupConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
+            this.itemPickupConfig = interactableOptionConfig;
         }
-        */
-        /*
-        public override int GetCurrentOptionCount() {
-            return (pickupCount > 0 && spawnTimer == -1 ? 0 : 1);
-        }
-        */
+
         public override int GetValidOptionCount() {
             int returnValue = base.GetValidOptionCount();
             if (returnValue == 0) {

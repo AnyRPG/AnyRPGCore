@@ -11,18 +11,21 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage : base.MyNamePlateImage); }
+        private UnitSpawnControllerConfig unitSpawnControllerConfig = null;
+
+        public override Sprite Icon { get => unitSpawnControllerConfig.Icon; }
+        public override Sprite NamePlateImage { get => unitSpawnControllerConfig.Icon; }
 
         [SerializeField]
         private List<string> unitProfileNames = new List<string>();
 
-        [SerializeField]
+        //[SerializeField]
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         [SerializeField]
         private GameObject spawnPrefab = null;
 
+        [Tooltip("List of Unit Spawn Nodes to control")]
         [SerializeField]
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
 
@@ -30,10 +33,10 @@ namespace AnyRPG {
 
         private Collider boxCollider = null;
 
-        protected override void Awake() {
-            //Debug.Log("Portal.Awake()");
-            base.Awake();
+        public UnitSpawnControllerInteractable(Interactable interactable, UnitSpawnControllerConfig interactableOptionConfig) : base(interactable) {
+            this.unitSpawnControllerConfig = interactableOptionConfig;
         }
+
 
         protected override void Start() {
             //Debug.Log("Portal.Start()")

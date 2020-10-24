@@ -10,8 +10,10 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyPortalInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyPortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyPortalNamePlateImage : base.MyNamePlateImage); }
+        private PortalConfig portalConfig = null;
+
+        public override Sprite Icon { get => portalConfig.Icon; }
+        public override Sprite NamePlateImage { get => portalConfig.NamePlateImage; }
 
         [Header("Location Override")]
 
@@ -19,9 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         protected string locationTag = string.Empty;
 
-        protected override void Awake() {
-            //Debug.Log("Portal.Awake()");
-            base.Awake();
+        public PortalInteractable(Interactable interactable, PortalConfig interactableOptionConfig) : base(interactable) {
+            this.portalConfig = interactableOptionConfig;
         }
 
         public override bool Interact(CharacterUnit source) {

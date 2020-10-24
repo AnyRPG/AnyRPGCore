@@ -27,8 +27,8 @@ namespace AnyRPG {
             this.unitProfile = unitProfile;
 
             icon.sprite = null;
-            if (unitProfile.MyIcon != null) {
-                icon.sprite = unitProfile.MyIcon;
+            if (unitProfile.Icon != null) {
+                icon.sprite = unitProfile.Icon;
             } else {
                 icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
             }

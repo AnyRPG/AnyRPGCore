@@ -10,19 +10,21 @@ namespace AnyRPG {
 
         //public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private GatheringNodeConfig gatheringNodeConfig = null;
+
         // gathering nodes are special.  The image is based on what ability it supports
-        public override Sprite MyIcon {
+        public override Sprite Icon {
             get {
-                return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyIcon);
+                return (BaseAbility.Icon != null ? BaseAbility.Icon : base.Icon);
             }
         }
 
-        public override Sprite MyNamePlateImage {
+        public override Sprite NamePlateImage {
             get {
-                return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
+                return (BaseAbility.Icon != null ? BaseAbility.Icon : base.NamePlateImage);
             }
         }
-        public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.DisplayName : base.InteractionPanelTitle); }
+        public override string InteractionPanelTitle { get => (BaseAbility != null ? BaseAbility.DisplayName : base.InteractionPanelTitle); }
 
         /// <summary>
         /// The ability to cast in order to mine this node
@@ -30,14 +32,14 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
-        private GatherAbility realAbility = null;
+        private GatherAbility baseAbility = null;
 
-        public GatherAbility MyAbility { get => realAbility; }
+        public GatherAbility BaseAbility { get => baseAbility; }
 
-        protected override void Awake() {
-            //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
-            base.Awake();
+        public GatheringNode(Interactable interactable, GatheringNodeConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
+            this.gatheringNodeConfig = interactableOptionConfig;
         }
+
 
         public override void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
@@ -94,7 +96,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather();
             } else {
-                source.GetComponent<CharacterUnit>().BaseCharacter.CharacterAbilityManager.BeginAbility(MyAbility, gameObject);
+                source.GetComponent<CharacterUnit>().BaseCharacter.CharacterAbilityManager.BeginAbility(BaseAbility, gameObject);
             }
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
@@ -118,7 +120,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(MyAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
+            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(BaseAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
         }
 
         /*
@@ -137,7 +139,7 @@ namespace AnyRPG {
             if (abilityName != null && abilityName != string.Empty) {
                 GatherAbility tmpBaseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName) as GatherAbility;
                 if (tmpBaseAbility != null) {
-                    realAbility = tmpBaseAbility;
+                    baseAbility = tmpBaseAbility;
                 } else {
                     Debug.LogError(gameObject.name + ".GatheringNode.SetupScriptableObjects(): could not find ability " + abilityName);
                 }

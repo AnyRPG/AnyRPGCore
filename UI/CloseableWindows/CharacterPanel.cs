@@ -60,14 +60,14 @@ namespace AnyRPG {
                 characterButton.MyEmptyBackGroundColor = emptySlotColor;
                 characterButton.MyFullBackGroundColor = fullSlotColor;
                 //Debug.Log("CharacterPanel.Start(): checking icon");
-                if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.MyIcon != null) {
+                if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.Icon != null) {
                     //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
-                    characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.MyIcon;
+                    characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.Icon;
                 } else {
                     if (characterButton.MyEquipmentSlotProfile == null) {
                         //Debug.Log("CharacterPanel.Start(): equipmentslotprofile is null");
                     }
-                    if (characterButton.MyEquipmentSlotProfile.MyIcon == null) {
+                    if (characterButton.MyEquipmentSlotProfile.Icon == null) {
                         //Debug.Log("CharacterPanel.Start(): equipmentslotprofile.myicon is null");
                     }
                 }

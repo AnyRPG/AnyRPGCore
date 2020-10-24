@@ -118,10 +118,10 @@ namespace AnyRPG {
                 //Debug.Log("DescribableIcon.UpdateVisual(): MyIcon is null!");
             }
             if (Describable != null && MyIcon != null) {
-                if (MyIcon.sprite != Describable.MyIcon) {
+                if (MyIcon.sprite != Describable.Icon) {
                     //Debug.Log("DescribableIcon.UpdateVisual(): Updating Icon for : " + MyDescribable.MyName);
                     MyIcon.sprite = null;
-                    MyIcon.sprite = Describable.MyIcon;
+                    MyIcon.sprite = Describable.Icon;
                     MyIcon.color = Color.white;
                 }
             } else if (Describable == null && MyIcon != null) {

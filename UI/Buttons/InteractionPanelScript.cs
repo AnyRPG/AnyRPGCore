@@ -28,8 +28,8 @@ public class InteractionPanelScript : MonoBehaviour {
     public Image MyIcon { get => icon; set => icon = value; }
     public IInteractable MyInteractableOption { get => interactableOption;
         set {
-            if (value.MyIcon != null) {
-                icon.sprite = value.MyIcon;
+            if (value.Icon != null) {
+                icon.sprite = value.Icon;
                 icon.color = Color.white;
             } else {
                 icon.sprite = null;

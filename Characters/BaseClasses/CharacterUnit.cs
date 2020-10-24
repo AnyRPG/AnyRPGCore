@@ -10,7 +10,6 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [RequireComponent(typeof(BaseCharacter))]
     public class CharacterUnit : InteractableOption {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
@@ -42,6 +41,8 @@ namespace AnyRPG {
         public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
+        public CharacterUnit(Interactable interactable) : base(interactable) {
+        }
 
         public void EnableCollider() {
             if (capsuleCollider != null) {

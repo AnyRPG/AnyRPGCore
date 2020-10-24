@@ -336,8 +336,8 @@ namespace AnyRPG {
                 return;
             }
 
-            if (MyIcon.sprite != Useable.MyIcon) {
-                MyIcon.sprite = Useable.MyIcon;
+            if (MyIcon.sprite != Useable.Icon) {
+                MyIcon.sprite = Useable.Icon;
             }
             if (MyIcon.color != Color.white) {
                 MyIcon.color = Color.white;
@@ -365,8 +365,8 @@ namespace AnyRPG {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                         if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
-                            if (MyIcon.sprite != equipment.MyIcon) {
-                                MyIcon.sprite = equipment.MyIcon;
+                            if (MyIcon.sprite != equipment.Icon) {
+                                MyIcon.sprite = equipment.Icon;
                                 break;
                             }
                         }

@@ -214,6 +214,13 @@ namespace AnyRPG {
         [SerializeField]
         private bool useBehaviorCopy = false;
 
+        [Header("Interactable")]
+
+        [Tooltip("The names of the interactable options available on this character")]
+        [SerializeField]
+        private List<string> interactableOptions = new List<string>();
+
+
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }

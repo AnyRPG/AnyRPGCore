@@ -11,8 +11,7 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
+        public BehaviorConfig behaviorConfig = null;
 
         private BoxCollider boxCollider;
 
@@ -38,11 +37,10 @@ namespace AnyRPG {
         public int MyBehaviorIndex { get => behaviorIndex; }
         public List<BehaviorProfile> MyDialogList { get => behaviorList; set => behaviorList = value; }
 
-
-        protected override void Awake() {
-            //Debug.Log("NameChangeInteractable.Awake()");
-            base.Awake();
+        public BehaviorInteractable(Interactable interactable, BehaviorConfig interactableOptionConfig) : base(interactable) {
+            this.behaviorConfig = interactableOptionConfig;
         }
+
 
         protected override void Start() {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.Start()");

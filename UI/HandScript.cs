@@ -59,7 +59,7 @@ public class HandScript : MonoBehaviour {
     public void TakeMoveable(IMoveable moveable) {
         //Debug.Log("HandScript.TakeMoveable(" + moveable.ToString() + ")");
         this.MyMoveable = moveable;
-        icon.sprite = moveable.MyIcon;
+        icon.sprite = moveable.Icon;
         icon.color = Color.white;
     }
 

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LootDrop : IDescribable {
 
-        public virtual Sprite MyIcon => null;
+        public virtual Sprite Icon => null;
 
         public virtual string DisplayName => string.Empty;
 
@@ -52,7 +52,7 @@ namespace AnyRPG {
 
         private string summary = string.Empty;
 
-        public override Sprite MyIcon {
+        public override Sprite Icon {
             get {
                 return icon;
             }
@@ -118,12 +118,12 @@ namespace AnyRPG {
             }
         }
 
-        public override Sprite MyIcon {
+        public override Sprite Icon {
             get {
                 if (MyItem != null) {
-                    return MyItem.MyIcon;
+                    return MyItem.Icon;
                 }
-                return base.MyIcon;
+                return base.Icon;
             }
         }
 

@@ -11,6 +11,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private QuestGiverConfig questGiverConfig = null;
+
         [Header("QuestGiver")]
 
         [SerializeField]
@@ -24,13 +26,11 @@ namespace AnyRPG {
 
         public List<QuestNode> MyQuests { get => quests; }
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage : base.MyNamePlateImage); }
+        public override Sprite Icon { get => questGiverConfig.Icon; }
+        public override Sprite NamePlateImage { get => questGiverConfig.NamePlateImage; }
 
-        protected override void Awake() {
-            //Debug.Log(gameObject.name + ".QuestGiver.Awake()");
-            base.Awake();
-            //namePlateUnit = GetComponent<INamePlateUnit>();
+        public QuestGiver(Interactable interactable, QuestGiverConfig interactableConfig) : base(interactable) {
+            this.questGiverConfig = interactableConfig;
         }
 
         protected override void Start() {

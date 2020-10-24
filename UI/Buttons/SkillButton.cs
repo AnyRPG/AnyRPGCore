@@ -27,7 +27,7 @@ namespace AnyRPG {
             //Debug.Log("SkillButton.AddSkill(" + (skillName != null && skillName != string.Empty ? skillName : "null") + ")");
             skill = newSkill;
             if (skill != null) {
-                icon.sprite = skill.MyIcon;
+                icon.sprite = skill.Icon;
                 icon.color = Color.white;
                 skillNameText.text = skill.DisplayName;
                 description.text = skill.GetSummary();

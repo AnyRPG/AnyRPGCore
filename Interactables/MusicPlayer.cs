@@ -9,27 +9,21 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.MyNamePlateImage); }
+        private MusicPlayerConfig musicPlayerConfig;
+
+        public override Sprite Icon { get => musicPlayerConfig.Icon; }
+        public override Sprite NamePlateImage { get => musicPlayerConfig.NamePlateImage; }
 
         [SerializeField]
         private List<string> musicProfileNames = new List<string>();
 
-        [SerializeField]
+        //[SerializeField]
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();
-
-        /*
-        [SerializeField]
-        private CharacterUnit characterUnit;
-        */
 
         public List<AudioProfile> MyMusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
-
-        protected override void Awake() {
-            base.Awake();
-            //Debug.Log(gameObject.name + ".SkillTrainer.Awake()");
-            //characterUnit = GetComponent<CharacterUnit>();
+        public MusicPlayer(Interactable interactable, MusicPlayerConfig interactableConfig) : base(interactable) {
+            this.musicPlayerConfig = interactableConfig;
         }
 
         protected override void Start() {

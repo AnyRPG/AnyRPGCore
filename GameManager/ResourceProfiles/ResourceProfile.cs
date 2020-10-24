@@ -24,7 +24,7 @@ namespace AnyRPG {
         [TextArea(10, 20)]
         protected string description;
 
-        public Sprite MyIcon { get => icon; set => icon = value; }
+        public Sprite Icon { get => icon; set => icon = value; }
 
         /// <summary>
         /// return the resourceName

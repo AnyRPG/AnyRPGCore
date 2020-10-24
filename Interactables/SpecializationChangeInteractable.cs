@@ -10,7 +10,9 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        // the class that this interactable option offers
+        private SpecializationChangeConfig specializationChangeConfig = null;
+
+        [Tooltip("the class Specialization that this interactable option offers")]
         [SerializeField]
         private string specializationName = string.Empty;
 
@@ -20,18 +22,9 @@ namespace AnyRPG {
 
         public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.MyNamePlateImage); }
-
-        protected override void Awake() {
-            //Debug.Log("ClassChangeInteractable.Awake()");
-            base.Awake();
+        public SpecializationChangeInteractable(Interactable interactable, SpecializationChangeConfig interactableOptionConfig) : base(interactable) {
+            this.specializationChangeConfig = interactableOptionConfig;
             SetupScriptableObjects();
-        }
-
-        protected override void Start() {
-            //Debug.Log("ClassChangeInteractable.Start()");
-            base.Start();
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

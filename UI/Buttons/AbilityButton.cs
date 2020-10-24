@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public void AddAbility(IAbility ability) {
             this.ability = ability as BaseAbility;
-            icon.sprite = this.ability.MyIcon;
+            icon.sprite = this.ability.Icon;
             icon.color = Color.white;
             spellName.text = ability.DisplayName;
             description.text = ability.GetSummary();

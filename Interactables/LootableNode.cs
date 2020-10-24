@@ -11,6 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        private LootableNodeConfig lootableNodeConfig = null;
+
         [SerializeField]
         protected List<string> lootTableNames = new List<string>();
 
@@ -41,10 +43,10 @@ namespace AnyRPG {
             }
         }
 
-        protected override void Awake() {
-            //Debug.Log(gameObject.name + ".GatheringNode.Awake();");
-            base.Awake();
+        public LootableNode(Interactable interactable, LootableNodeConfig interactableOptionConfig) : base(interactable) {
+            this.lootableNodeConfig = interactableOptionConfig;
         }
+
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableNode.Interact(" + source.name + ")");

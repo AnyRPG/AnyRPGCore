@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public int reputationAmount;
 
-        public Sprite MyIcon { get => faction.MyIcon; }
+        public Sprite Icon { get => faction.Icon; }
 
         public string DisplayName { get => faction.DisplayName; }
 

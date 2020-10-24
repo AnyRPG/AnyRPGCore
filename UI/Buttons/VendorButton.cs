@@ -41,7 +41,7 @@ namespace AnyRPG {
             this.buyBackButton = buyBackButton;
 
             if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited) {
-                icon.sprite = vendorItem.MyItem.MyIcon;
+                icon.sprite = vendorItem.MyItem.Icon;
                 UIManager.MyInstance.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
                 //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
                 title.text = string.Format("{0}", vendorItem.MyItem.DisplayName);

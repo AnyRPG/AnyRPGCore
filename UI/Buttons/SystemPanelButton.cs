@@ -20,7 +20,7 @@ namespace AnyRPG {
         [SerializeField]
         private Image menuImage = null;
 
-        public Sprite MyIcon {
+        public Sprite Icon {
             get => icon;
             set {
                 icon = value;

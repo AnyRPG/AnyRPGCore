@@ -58,16 +58,16 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Sprite MyIcon { get => interactionPanelImage; }
-        public virtual Sprite MyNamePlateImage { get => namePlateImage; }
+        public virtual Sprite Icon { get => interactionPanelImage; }
+        public virtual Sprite NamePlateImage { get => namePlateImage; }
 
         public string DisplayName { get => (InteractionPanelTitle != null && InteractionPanelTitle != string.Empty ? InteractionPanelTitle : (interactable != null ? interactable.DisplayName : "interactable is null!")); }
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".InteractableOption.Awake(). Setting interactable");
-            //GetComponentReferences();
+        public InteractableOption(Interactable interactable) {
+            this.interactable = interactable;
         }
+
 
         protected virtual void Start() {
             CreateEventSubscriptions();
@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         public virtual bool HasMiniMapIcon() {
-            return (MyNamePlateImage != null);
+            return (NamePlateImage != null);
         }
 
         public virtual bool SetMiniMapText(TextMeshProUGUI text) {
@@ -134,7 +134,7 @@ namespace AnyRPG {
         public virtual void SetMiniMapIcon(Image icon) {
             //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
-                icon.sprite = MyNamePlateImage;
+                icon.sprite = NamePlateImage;
                 icon.color = Color.white;
             } else {
                 icon.sprite = null;

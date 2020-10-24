@@ -11,8 +11,10 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.MyNamePlateImage); }
+        private DialogConfig dialogConfig = null;
+
+        public override Sprite Icon { get => dialogConfig.Icon; }
+        public override Sprite NamePlateImage { get => dialogConfig.NamePlateImage; }
 
         public override string InteractionPanelTitle {
             get {
@@ -41,14 +43,13 @@ namespace AnyRPG {
 
         private BoxCollider boxCollider;
 
-        public int MyDialogIndex { get => dialogIndex; }
-        public List<Dialog> MyDialogList { get => dialogList; set => dialogList = value; }
+        public int DialogIndex { get => dialogIndex; }
+        public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
 
-
-        protected override void Awake() {
-            //Debug.Log("NameChangeInteractable.Awake()");
-            base.Awake();
+        public DialogInteractable(Interactable interactable, DialogConfig interactableConfig) : base(interactable) {
+            this.dialogConfig = interactableConfig;
         }
+
 
         protected override void Start() {
             //Debug.Log("DialogInteractable.Start()");

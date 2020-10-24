@@ -67,7 +67,7 @@ namespace AnyRPG {
                         nonZeroFound = true;
                         if (setIcon) {
                             //Debug.Log("LootableDrop.RecalculateValues(): setting icon: " + keyValuePair.Key.MyIcon.name);
-                            returnSprite = keyValuePair.Key.MyIcon;
+                            returnSprite = keyValuePair.Key.Icon;
                             
                         }
                     }

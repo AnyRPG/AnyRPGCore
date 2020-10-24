@@ -29,19 +29,19 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("BagBarController.Start()");
             if (SystemConfigurationManager.MyInstance.MySystemBarMainMenu != null) {
-                mainMenuButton.MyIcon = SystemConfigurationManager.MyInstance.MySystemBarMainMenu;
+                mainMenuButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarMainMenu;
             }
             if (SystemConfigurationManager.MyInstance.MySystemBarAbilityBook != null) {
-                abilityBookButton.MyIcon = SystemConfigurationManager.MyInstance.MySystemBarAbilityBook;
+                abilityBookButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarAbilityBook;
             }
             if (SystemConfigurationManager.MyInstance.MySystemBarQuestLog != null) {
-                questLogButton.MyIcon = SystemConfigurationManager.MyInstance.MySystemBarQuestLog;
+                questLogButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarQuestLog;
             }
             if (SystemConfigurationManager.MyInstance.MySystemBarCharacter != null) {
-                characterButton.MyIcon = SystemConfigurationManager.MyInstance.MySystemBarCharacter;
+                characterButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarCharacter;
             }
             if (SystemConfigurationManager.MyInstance.MySystemBarMap != null) {
-                mapButton.MyIcon = SystemConfigurationManager.MyInstance.MySystemBarMap;
+                mapButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarMap;
             }
 
         }

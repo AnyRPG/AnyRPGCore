@@ -43,7 +43,7 @@ namespace AnyRPG {
                 Faction playerFaction = SystemFactionManager.MyInstance.GetResource(mySaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
-                    icon.sprite = playerFaction.MyIcon;
+                    icon.sprite = playerFaction.Icon;
                 } else {
                     icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
                 }

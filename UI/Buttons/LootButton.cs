@@ -26,7 +26,7 @@ namespace AnyRPG {
             get => lootDrop;
             set {
                 lootDrop = value;
-                MyIcon.sprite = lootDrop.MyIcon;
+                MyIcon.sprite = lootDrop.Icon;
                 lootDrop.SetBackgroundImage(backGroundImage);
             }
         }

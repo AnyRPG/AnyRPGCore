@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         string DisplayName { get; }
         int RequiredLevel { get; }
-        Sprite MyIcon { get; }
+        Sprite Icon { get; }
 
         string GetSummary();
         string GetShortDescription();

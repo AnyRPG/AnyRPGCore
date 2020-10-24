@@ -13,7 +13,7 @@ namespace AnyRPG {
         string InteractionPanelTitle { get; set; }
         Interactable MyInteractable { get; set; }
         bool MyPrerequisitesMet { get; }
-        Sprite MyNamePlateImage { get; }
+        Sprite NamePlateImage { get; }
 
         bool CanInteract();
         bool Interact(CharacterUnit source);

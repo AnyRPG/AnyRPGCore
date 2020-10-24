@@ -34,8 +34,8 @@ namespace AnyRPG {
                         //Debug.Log("setting resource name to: " + tmpResourceDescription.MyDisplayName);
                         displayName = tmpResourceDescription.RawDisplayName;
                     }
-                    if (tmpResourceDescription.MyIcon != null) {
-                        icon = tmpResourceDescription.MyIcon;
+                    if (tmpResourceDescription.Icon != null) {
+                        icon = tmpResourceDescription.Icon;
                     }
                     if (tmpResourceDescription.IconBackgroundImage != null) {
                         iconBackgroundImage = tmpResourceDescription.IconBackgroundImage;

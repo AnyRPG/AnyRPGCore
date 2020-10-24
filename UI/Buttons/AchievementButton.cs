@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public void AddResource(Quest quest) {
             this.rawResource = quest;
-            icon.sprite = this.rawResource.MyIcon;
+            icon.sprite = this.rawResource.Icon;
             icon.color = Color.white;
             resourceNameField.text = this.rawResource.DisplayName;
             descriptionField.text = this.rawResource.GetSummary();

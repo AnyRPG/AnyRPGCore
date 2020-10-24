@@ -10,33 +10,34 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        /// <summary>
-        /// The ability to cast in order to mine this node
-        /// </summary>
-        //[SerializeField]
-        private BaseAbility ability;
+        private CraftingNodeConfig craftingNodeConfig;
 
-        /// <summary>
-        /// The ability to cast in order to mine this node
-        /// </summary>
+        [Tooltip("The ability to cast in order to mine this node")]
         [SerializeField]
         private string abilityName = string.Empty;
 
+        private BaseAbility ability;
+
         // crafting nodes are special.  The image is based on what ability it supports
-        public override Sprite MyIcon {
+        public override Sprite Icon {
             get {
-                return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyIcon);
+                return (MyAbility.Icon != null ? MyAbility.Icon : base.Icon);
             }
         }
 
-        public override Sprite MyNamePlateImage {
+        public override Sprite NamePlateImage {
             get {
-                return (MyAbility.MyIcon != null ? MyAbility.MyIcon : base.MyNamePlateImage);
+                return (MyAbility.Icon != null ? MyAbility.Icon : base.NamePlateImage);
             }
         }
 
         public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.DisplayName : base.InteractionPanelTitle); }
         public BaseAbility MyAbility { get => ability; }
+
+        public CraftingNode(Interactable interactable, CraftingNodeConfig interactableConfig) : base(interactable) {
+            this.craftingNodeConfig = interactableConfig;
+        }
+
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);

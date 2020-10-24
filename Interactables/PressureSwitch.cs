@@ -8,10 +8,15 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        // the minimum amount of weight needed to activate this switch
+        private PressureSwitchConfig pressureSwitchConfig = null;
+
+        [Tooltip("the minimum amount of weight needed to activate this switch")]
         [SerializeField]
         private float minimumWeight = 0f;
 
+        public PressureSwitch(Interactable interactable, PressureSwitchConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
+            this.pressureSwitchConfig = interactableOptionConfig;
+        }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".PressureSwitch.Interact(" + (source == null ? "null" : source.name) +")");

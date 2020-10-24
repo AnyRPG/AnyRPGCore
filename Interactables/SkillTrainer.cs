@@ -9,25 +9,22 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public override Sprite MyIcon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.MyIcon); }
-        public override Sprite MyNamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.MyNamePlateImage); }
-
-        //[SerializeField]
-        private List<Skill> skills = new List<Skill>();
-
-        [SerializeField]
-        private CharacterUnit characterUnit;
+        private SkillTrainerConfig skillTrainerConfig = null;
 
         [SerializeField]
         private List<string> skillNames = new List<string>();
 
+        private List<Skill> skills = new List<Skill>();
+
+
         public List<Skill> MySkills { get => skills; }
 
+        public override Sprite Icon { get => skillTrainerConfig.Icon; }
+        public override Sprite NamePlateImage { get => skillTrainerConfig.NamePlateImage; }
 
-        protected override void Awake() {
-            base.Awake();
-            //Debug.Log(gameObject.name + ".SkillTrainer.Awake()");
-            characterUnit = GetComponent<CharacterUnit>();
+        public SkillTrainer(Interactable interactable, SkillTrainerConfig skillTrainerConfig) : base(interactable) {
+            this.skillTrainerConfig = skillTrainerConfig;
+            SetupScriptableObjects();
         }
 
         protected override void Start() {

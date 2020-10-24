@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         public void AddAbility(ILearnable ability) {
             this.ability = ability;
-            icon.sprite = this.ability.MyIcon;
+            icon.sprite = this.ability.Icon;
             icon.color = Color.white;
             spellName.text = ability.DisplayName;
             description.text = ability.GetShortDescription() + "\nLearned at level " + Mathf.Clamp(ability.RequiredLevel, 1, 1000);
