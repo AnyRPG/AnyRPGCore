@@ -327,9 +327,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
-            PersistentObject persistentObject = spawnReference.GetComponent<PersistentObject>();
-            if (persistentObject != null) {
-                PersistentState persistentState = persistentObject.GetPersistentState();
+            IPersistentObjectOwner persistentObjectOwner = spawnReference.GetComponent<IPersistentObjectOwner>();
+            if (persistentObjectOwner != null) {
+                PersistentState persistentState = persistentObjectOwner.PersistentObjectComponent.GetPersistentState();
                 if (persistentState != null) {
                     newSpawnLocation = persistentState.Position;
                     newSpawnForward = persistentState.Forward;
@@ -343,8 +343,8 @@ namespace AnyRPG {
             }
             //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
             NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
-            UnitController aIController = spawnReference.GetComponent<UnitController>();
-            aIController.MyStartPosition = newSpawnLocation;
+            UnitController unitController = spawnReference.GetComponent<UnitController>();
+            unitController.MyStartPosition = newSpawnLocation;
             //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
             //spawnReference.transform.position = newSpawnLocation;
             navMeshAgent.Warp(newSpawnLocation);

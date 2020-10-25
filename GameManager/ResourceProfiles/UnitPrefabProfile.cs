@@ -100,6 +100,8 @@ namespace AnyRPG {
 
         public bool RotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
+        public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
+        public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.Serialization;
 
 namespace AnyRPG {
-    public class UnitController : MonoBehaviour, INamePlateUnit {
+    public class UnitController : MonoBehaviour, INamePlateUnit, IPersistentObjectOwner {
 
         public event System.Action<GameObject> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
@@ -40,6 +40,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool useBehaviorCopy = false;
 
+        [Header("Persistence")]
+
+        [SerializeField]
+        private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
+
         // components
         private NavMeshAgent agent;
         private Rigidbody rigidBody;
@@ -49,6 +54,7 @@ namespace AnyRPG {
         private BaseCharacter baseCharacter;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController;
+        private UUID uuid = null;
 
         // track startup state
         private bool eventSubscriptionsInitialized = false;
@@ -196,6 +202,8 @@ namespace AnyRPG {
         public bool Mounted { get => mounted; set => mounted = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
+        public UUID UUID { get => uuid; set => uuid = value; }
+        public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
             this.unitControllerMode = unitControllerMode;
@@ -274,6 +282,7 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
+            UUID uuid = GetComponent<UUID>();
             baseCharacter = GetComponent<BaseCharacter>();
             lootableCharacter = GetComponent<LootableCharacter>();
             agent = GetComponent<NavMeshAgent>();
@@ -284,6 +293,7 @@ namespace AnyRPG {
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
             namePlateController.Setup(this);
+            persistentObjectComponent.Initialize(this);
 
             if (UnitControllerMode == UnitControllerMode.AI) {
                 useAgent = true;

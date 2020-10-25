@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         [Header("Unit")]
 
-        [Tooltip("If true, the unit prefab is loaded by searching for prefabProfile with the same name as this resource name and the word Unit appended.  Eg: BabyCornPlantUnit")]
+        [Tooltip("If true, the unit prefab is loaded by searching for a UnitPrefabProfile with the same name as this resource.")]
         [SerializeField]
         private bool automaticPrefabProfile = true;
 
@@ -21,10 +21,13 @@ namespace AnyRPG {
         [SerializeField]
         private string prefabProfileName = string.Empty;
 
-        private PrefabProfile prefabProfile = null;
+        private UnitPrefabProfile unitPrefabProfile = null;
 
         // The physical game object to spawn for this unit
         private GameObject unitPrefab = null;
+
+        // the physical game object to spawn for the model, if any (units can already have models if configured that way)
+        private GameObject modelPrefab = null;
 
         [Tooltip("Mark this if true is the unit is an UMA unit")]
         [SerializeField]
@@ -251,7 +254,7 @@ namespace AnyRPG {
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
-        public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
+        public UnitPrefabProfile PrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -364,13 +367,14 @@ namespace AnyRPG {
             }
 
             if (automaticPrefabProfile == true) {
-                prefabProfileName = ResourceName + "unit";
+                prefabProfileName = ResourceName;
             }
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
+                UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null) {
-                    prefabProfile = tmpPrefabProfile;
-                    unitPrefab = tmpPrefabProfile.Prefab;
+                    unitPrefabProfile = tmpPrefabProfile;
+                    unitPrefab = tmpPrefabProfile.UnitPrefab;
+                    modelPrefab = tmpPrefabProfile.ModelPrefab;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }

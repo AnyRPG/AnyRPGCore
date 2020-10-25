@@ -120,9 +120,8 @@ namespace AnyRPG {
         public void TrySavePersistentData() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
             if (baseController != null && baseController.PatrolController != null && baseController.PatrolController.MyCurrentPatrol != null && baseController.PatrolController.MyCurrentPatrol.SavePositionAtDestination) {
-                PersistentObject persistentObject = baseController.gameObject.GetComponent<PersistentObject>();
-                if (persistentObject != null) {
-                    persistentObject.SaveProperties();
+                if (baseController.PersistentObjectComponent != null) {
+                    baseController.PersistentObjectComponent.SaveProperties();
                 }
             }
         }

@@ -279,10 +279,10 @@ namespace AnyRPG {
                             //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
                         } else {
-                            Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + ".  Check Inspector");
+                            Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + DisplayName + ".  Check Inspector");
                         }
                     } else {
-                        Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): a character creator profile string was empty.  Check Inspector");
+                        Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + DisplayName + ".  Check Inspector");
                     }
 
                 }
