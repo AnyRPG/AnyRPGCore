@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public BehaviorConfig behaviorConfig = null;
+        [SerializeField]
+        public BehaviorConfig behaviorConfig = new BehaviorConfig();
 
         private BoxCollider boxCollider;
 

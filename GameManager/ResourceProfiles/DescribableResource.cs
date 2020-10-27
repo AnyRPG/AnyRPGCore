@@ -4,7 +4,6 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Describable Resource", menuName = "AnyRPG/Describable Resource")]
     public abstract class DescribableResource : ResourceProfile {
 
         [Header("Override Name, Icon, and Description")]

@@ -25,6 +25,10 @@ namespace AnyRPG {
         [SerializeField]
         protected AnimationProfile animationProfile = null;
 
+        [Tooltip("Should the model be rotated in the direction of travel while moving?  True is the best setting if no strafe or backing up animations exist on the animation profile.")]
+        [SerializeField]
+        protected bool rotateModel = false;
+
         [Header("UNIT FRAME")]
 
         [Tooltip("a string that represents the name of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame")]
@@ -102,6 +106,7 @@ namespace AnyRPG {
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
+        public bool RotateModel { get => rotateModel; set => rotateModel = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

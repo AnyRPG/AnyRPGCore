@@ -9,7 +9,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private SkillTrainerConfig skillTrainerConfig = null;
+        [SerializeField]
+        private SkillTrainerConfig skillTrainerConfig = new SkillTrainerConfig();
 
         [SerializeField]
         private List<string> skillNames = new List<string>();

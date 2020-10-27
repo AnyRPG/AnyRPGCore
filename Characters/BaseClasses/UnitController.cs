@@ -2,6 +2,8 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UMA;
+using UMA.CharacterSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -18,6 +20,7 @@ namespace AnyRPG {
         [SerializeField]
         protected UnitNamePlateController namePlateController = new UnitNamePlateController();
 
+        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
         [SerializeField]
         private UnitComponentController unitComponentController = null;
 
@@ -45,16 +48,22 @@ namespace AnyRPG {
         [SerializeField]
         private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
 
+        // unit profile
+        private UnitProfile unitProfile = null;
+
         // components
-        private NavMeshAgent agent;
-        private Rigidbody rigidBody;
-        private UnitMotor unitMotor;
-        private UnitAnimator unitAnimator;
-        private CharacterUnit characterUnit;
-        private BaseCharacter baseCharacter;
+        private NavMeshAgent agent = null;
+        private Rigidbody rigidBody = null;
+        private UnitMotor unitMotor = null;
+        private UnitAnimator unitAnimator = null;
+        private Interactable interactable = null;
+        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
+        private CharacterUnit characterUnit = null;
+        private BaseCharacter baseCharacter = null;
         private LootableCharacter lootableCharacter = null;
-        private PatrolController patrolController;
+        private PatrolController patrolController = null;
         private UUID uuid = null;
+        private GameObject unitModel = null;
 
         // track startup state
         private bool eventSubscriptionsInitialized = false;
@@ -98,7 +107,7 @@ namespace AnyRPG {
         private MovementSoundArea movementSoundArea = null;
 
         public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
-        public UnitNamePlateController NamePlateController { get => namePlateController; set => namePlateController = value; }
+        public INamePlateController NamePlateController { get => namePlateController; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
         public Rigidbody RigidBody { get => rigidBody; set => rigidBody = value; }
@@ -144,8 +153,8 @@ namespace AnyRPG {
         public float ApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
         public float AggroRadius {
             get {
-                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                    return baseCharacter.UnitProfile.AggroRadius;
+                if (baseCharacter != null && unitProfile != null) {
+                    return unitProfile.AggroRadius;
                 }
                 return 20f;
             }
@@ -155,8 +164,8 @@ namespace AnyRPG {
         }
         public CombatStrategy MyCombatStrategy {
             get {
-                if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                    return baseCharacter.UnitProfile.CombatStrategy;
+                if (baseCharacter != null && unitProfile != null) {
+                    return unitProfile.CombatStrategy;
                 }
                 return null;
             }
@@ -175,8 +184,8 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile;
                 }
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MovementAudioProfiles != null && baseCharacter.UnitProfile.MovementAudioProfiles.Count > 0) {
-                    return baseCharacter.UnitProfile.MovementAudioProfiles[0];
+                if (baseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                    return unitProfile.MovementAudioProfiles[0];
                 }
                 return null;
             }
@@ -191,8 +200,8 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile;
                 }
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.MovementAudioProfiles != null && baseCharacter.UnitProfile.MovementAudioProfiles.Count > 0) {
-                    return baseCharacter.UnitProfile.MovementAudioProfiles[0];
+                if (baseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                    return unitProfile.MovementAudioProfiles[0];
                 }
                 return null;
             }
@@ -204,6 +213,35 @@ namespace AnyRPG {
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
         public UUID UUID { get => uuid; set => uuid = value; }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
+        public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
+        public UnitProfile UnitProfile { get => unitProfile; }
+        public Interactable Interactable { get => interactable; set => interactable = value; }
+
+        /// <summary>
+        /// set this unit to be the pet of baseCharacter
+        /// </summary>
+        /// <param name="baseCharacter"></param>
+        public void SetPetMode(BaseCharacter masterBaseCharacter) {
+            SetUnitControllerMode(UnitControllerMode.Pet);
+
+            ChangeState(new IdleState());
+
+            if (masterBaseCharacter != null) {
+                baseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
+                baseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
+            }
+        }
+
+        public void SetMountMode() {
+            SetUnitControllerMode(UnitControllerMode.Mount);
+            Collider anyCollider = GetComponent<Collider>();
+            if (anyCollider != null) {
+                anyCollider.isTrigger = false;
+            }
+            rigidBody.isKinematic = false;
+            rigidBody.useGravity = true;
+            DisableAgent();
+        }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
             this.unitControllerMode = unitControllerMode;
@@ -211,31 +249,40 @@ namespace AnyRPG {
                 EnableAI();
             } else if (unitControllerMode == UnitControllerMode.Player) {
                 EnablePlayer();
-            } else if (unitControllerMode == UnitControllerMode.Pet) {
-                EnablePet();
-            } else if (unitControllerMode == UnitControllerMode.Preview) {
-                EnablePreview();
-            } else if (unitControllerMode == UnitControllerMode.Mount) {
-                EnableMount();
             }
         }
 
         protected void Awake() {
+            Debug.Log(gameObject.name + ".UnitController.Awake()");
             GetComponentReferences();
             CreateEventSubscriptions();
         }
 
         private void Start() {
-            SetStartPosition();
-            if (unitAnimator != null) {
-                unitAnimator.OrchestratorFinish();
-            }
+            //SpawnUnitModel();
 
-            if (unitControllerMode == UnitControllerMode.AI) {
-                EnableAI();
-            } else if (unitControllerMode == UnitControllerMode.Player) {
-                EnablePlayer();
-            }
+            unitMotor = new UnitMotor(this);
+            unitAnimator = new UnitAnimator(this);
+            patrolController = new PatrolController(this);
+
+            baseCharacter.Init();
+
+            namePlateController.Setup(this);
+            persistentObjectComponent.Initialize(this);
+
+            SetStartPosition();
+
+            SetUnitControllerMode(unitControllerMode);
+        }
+
+        /// <summary>
+        /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
+        /// </summary>
+        /// <param name="unitProfile"></param>
+        public void SetUnitProfile(UnitProfile unitProfile) {
+            this.unitProfile = unitProfile;
+            SpawnUnitModel();
+
         }
 
         private void SetStartPosition() {
@@ -282,21 +329,23 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
+
+            // first, get references to components that will exist on this unit
             UUID uuid = GetComponent<UUID>();
             baseCharacter = GetComponent<BaseCharacter>();
             lootableCharacter = GetComponent<LootableCharacter>();
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
-            characterUnit = GetComponent<CharacterUnit>();
+            interactable = GetComponent<Interactable>();
+        }
 
-            unitMotor = new UnitMotor(this);
-            unitAnimator = new UnitAnimator(this);
-            patrolController = new PatrolController(this);
-            namePlateController.Setup(this);
-            persistentObjectComponent.Initialize(this);
-
-            if (UnitControllerMode == UnitControllerMode.AI) {
-                useAgent = true;
+        public void SpawnUnitModel() {
+            if (unitProfile != null && unitProfile.UnitPrefabProfile != null && unitProfile.UnitPrefabProfile.ModelPrefab != null) {
+                unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
+                if (unitModel != null) {
+                    dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+                    dynamicCharacterAvatar.Initialize();
+                }
             }
         }
 
@@ -314,13 +363,10 @@ namespace AnyRPG {
             }
         }
 
-        public void EnablePet() {
-        }
+        public void SetPreviewMode() {
+            SetUnitControllerMode(UnitControllerMode.Preview);
+            UIManager.MyInstance.SetLayerRecursive(gameObject, CharacterCreatorManager.MyInstance.PreviewLayer);
 
-        public void EnableMount() {
-        }
-
-        public void EnablePreview() {
             DisableAgent();
 
             // prevent preview unit from moving around
@@ -334,6 +380,7 @@ namespace AnyRPG {
 
         public void EnableAI() {
             // this needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
+            useAgent = true;
             EnableAgent();
 
             if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
@@ -700,7 +747,7 @@ namespace AnyRPG {
 
         private void HandleMovementAudio() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            if (baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.MovementAudioProfiles == null || baseCharacter.UnitProfile.MovementAudioProfiles.Count == 0 || baseCharacter.UnitProfile.PlayOnFootstep == true) {
+            if (unitProfile == null || unitProfile.MovementAudioProfiles == null || unitProfile.MovementAudioProfiles.Count == 0 || unitProfile.PlayOnFootstep == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
@@ -902,7 +949,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            Vector3 returnValue = baseCharacter.CharacterUnit.transform.TransformPoint(baseCharacter.CharacterUnit.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.CharacterUnit.transform.forward * (baseCharacter.CharacterUnit.HitBoxSize / 2f));
+            Vector3 returnValue = baseCharacter.CharacterUnit.transform.TransformPoint(baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.CharacterUnit.transform.forward * (baseCharacter.CharacterUnit.HitBoxSize / 2f));
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
@@ -941,7 +988,7 @@ namespace AnyRPG {
         // leave this function here for debugging hitboxes
         void OnDrawGizmos() {
             if (Application.isPlaying) {
-                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.CharacterUnit.gameObject.GetComponent<CapsuleCollider>() == null) {
+                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>() == null) {
                     return;
                 }
 

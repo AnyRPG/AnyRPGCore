@@ -125,12 +125,9 @@ namespace AnyRPG {
                 characterAnimationEventReceiver = animator.gameObject.AddComponent<UnitAnimationEventReceiver>();
             }
             characterAnimationEventReceiver.Setup(unitController);
-        }
-
-
-        public void OrchestratorFinish() {
             InitializeAnimator();
         }
+
 
         public void DisableRootMotion() {
             //Debug.Log(gameObject.name + ": CharacterAnimator.DisableRootMotion()");
@@ -210,9 +207,8 @@ namespace AnyRPG {
                 animator.runtimeAnimatorController = animatorOverrideController;
 
                 // set animator on UMA if one exists
-                DynamicCharacterAvatar myAvatar = unitController.gameObject.GetComponent<DynamicCharacterAvatar>();
-                if (myAvatar != null) {
-                    myAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
+                if (unitController.DynamicCharacterAvatar != null) {
+                    unitController.DynamicCharacterAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
                 }
                 //animator.updateMode = AnimatorUpdateMode.
                 if (runUpdate) {
@@ -1397,7 +1393,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetVelocity(Vector3 varValue, bool rotateModel = false) {
+        public void SetVelocity(Vector3 varValue) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ", " + rotateModel + ")");
             // receives velocity in LOCAL SPACE
 
@@ -1405,7 +1401,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (rotateModel) {
+            if (unitController.UnitProfile.UnitPrefabProfile.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
 
                 if (varValue == Vector3.zero) {

@@ -9,38 +9,44 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New SummonEffect", menuName = "AnyRPG/Abilities/Effects/SummonEffect")]
     public class SummonEffect : InstantEffect {
 
-        /*
-        // The prefab to summon
-        [SerializeField]
-        private GameObject summonObject;
-        */
+        [Header("Summon")]
 
-        /*
+        [Tooltip("Unit Prefab Profile to use for the summon pet")]
         [SerializeField]
-        private Vector3 spawnLocation = Vector3.zero;
-        */
+        private string unitProfileName = string.Empty;
+
+        // reference to actual unitProfile
+        private UnitProfile unitProfile = null;
+
+        // reference to spawned object UnitController
+        private UnitController petUnitController;
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
-            Dictionary<PrefabProfile, GameObject> returnObjects = Spawn((source as CharacterAbilityManager).BaseCharacter);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            (source.AbilityManager as CharacterAbilityManager).BaseCharacter.MyCharacterPetManager.SpawnPet(unitProfile);
             return returnObjects;
         }
-
-        private Dictionary<PrefabProfile, GameObject> Spawn(BaseCharacter source) {
+        /*
+        private void Spawn(BaseCharacter source) {
             //Debug.Log(MyName + ".SummonEffect.Spawn(): prefabObjects.count: " + prefabObjects.Count);
-            foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in prefabObjects) {
-                //Debug.Log(MyName + ".SummonEffect.Spawn(): looping through prefabObjects");
-                //GameObject spawnReference = Instantiate(summonObject, PlayerManager.MyInstance.MyAIUnitParent.transform, true);
-                GameObject go = tmpPair.Value;
-                if (source.MyCharacterPetManager != null) {
-                    source.MyCharacterPetManager.HandlePetSpawn(go);
-                }
-                //spawnReferences.Add(spawnReference);
-            }
 
-            return prefabObjects;
+            UnitController unitController = unitProfile.SpawnUnitPrefab(source.UnitController.transform.parent);
+            if (unitController != null) {
+                petUnitController = unitController;
+                petUnitController.SetUnitControllerMode(UnitControllerMode.Pet);
+                source.MyCharacterPetManager.HandlePetSpawn(petUnitController);
+            }
         }
+        */
+
+        /*
+        public override void CancelEffect(BaseCharacter targetCharacter) {
+            base.CancelEffect(targetCharacter);
+            petUnitController.
+        }
+        */
 
         protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
             // intentionally not calling base to avoid getting our pet destroyed

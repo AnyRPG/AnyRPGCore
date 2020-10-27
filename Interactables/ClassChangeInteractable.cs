@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private ClassChangeConfig classChangeConfig;
+        [SerializeField]
+        private ClassChangeConfig classChangeConfig = new ClassChangeConfig();
 
         private CharacterClass characterClass;
 

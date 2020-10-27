@@ -9,15 +9,25 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface INamePlateController {
 
+        // events
+
         event System.Action OnInitializeNamePlate;
         event System.Action<INamePlateUnit> NamePlateNeedsRemoval;
         event System.Action<int, int> ResourceBarNeedsUpdate;
         event System.Action OnNameChange;
 
+        // properties
+
         NamePlateController NamePlate { get; set; }
+        INamePlateUnit NamePlateUnit { get; set; }
         string UnitFrameTarget { get; }
         Vector3 UnitFrameCameraPositionOffset { get; set; }
         Vector3 UnitFrameCameraLookOffset { get; set; }
+        Vector3 UnitPreviewCameraLookOffset { get; set; }
+        Vector3 UnitPreviewCameraPositionOffset { get; set; }
+        string PlayerPreviewTarget { get; }
+        List<PowerResource> PowerResourceList { get; }
+
         string UnitDisplayName { get; }
         string Title { get; }
         Faction Faction { get; }
@@ -25,6 +35,16 @@ namespace AnyRPG {
         Interactable Interactable { get; }
         bool SuppressFaction { get; }
         int Level { get; }
+
+        // methods
+
+        void HandleNamePlateNeedsRemoval(CharacterStats _characterStats);
+        float GetPowerResourceMaxAmount(PowerResource powerResource);
+        float GetPowerResourceAmount(PowerResource powerResource);
+
+        void HandleNameChange();
+
+        void Setup(INamePlateUnit namePlateUnit);
 
         /// <summary>
         /// true if the unit has a primary resource

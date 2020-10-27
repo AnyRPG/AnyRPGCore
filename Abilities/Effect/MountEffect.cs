@@ -14,8 +14,17 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New MountEffect", menuName = "AnyRPG/Abilities/Effects/MountEffect")]
     public class MountEffect : StatusEffect {
 
-        // reference to the dynamic character avatar on the mount, if it exists
-        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
+        [Header("Mount")]
+
+        [Tooltip("Unit Prefab Profile to use for the mount object")]
+        [SerializeField]
+        private string unitProfileName = string.Empty;
+
+        // reference to actual unitProfile
+        private UnitProfile unitProfile = null;
+
+        // reference to spawned mount UnitController
+        private UnitController mountUnitController;
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
@@ -54,17 +63,11 @@ namespace AnyRPG {
                 return null;
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
-            PrefabProfile prefabProfile = returnObjects.Keys.ElementAt(0);
-            GameObject abilityEffectObject = returnObjects[prefabProfile];
 
-            GameObject go = prefabObjects.Values.ElementAt(0);
-            if (abilityEffectObject != null) {
-
-                // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                abilityEffectObject.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
-
-                dynamicCharacterAvatar = go.GetComponent<DynamicCharacterAvatar>();
-                if (dynamicCharacterAvatar != null) {
+            mountUnitController = unitProfile.SpawnUnitPrefab(source.transform.parent, source.transform.position, source.transform.forward);
+            if (mountUnitController != null) {
+                mountUnitController.SetMountMode();
+                if (mountUnitController != null && mountUnitController.DynamicCharacterAvatar != null) {
                     SubscribeToUMACreate();
                 } else {
                     HandleMountUnitSpawn();
@@ -75,20 +78,17 @@ namespace AnyRPG {
 
         private void HandleMountUnitSpawn() {
 
-            PrefabProfile prefabProfile = prefabObjects.Keys.ElementAt(0);
-            GameObject abilityEffectObject = prefabObjects[prefabProfile];
-
-            string originalPrefabSourceBone = prefabProfile.TargetBone;
+            string originalPrefabSourceBone = unitProfile.UnitPrefabProfile.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
-            Vector3 originalPrefabOffset = prefabProfile.SheathedPosition;
+            Vector3 originalPrefabOffset = unitProfile.UnitPrefabProfile.Position;
 
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
-                Transform mountPoint = abilityEffectObject.transform.FindChildByRecursive(originalPrefabSourceBone);
+                Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     PlayerManager.MyInstance.PlayerUnitObject.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     PlayerManager.MyInstance.PlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                    PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = prefabProfile.SheathedRotation;
+                    PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = unitProfile.UnitPrefabProfile.Rotation;
                     ActivateMountedState();
                 }
             }
@@ -96,15 +96,8 @@ namespace AnyRPG {
 
         public void DeActivateMountedState() {
             //Debug.Log("MountEffect.DeActivateMountedState()");
-            if (prefabObjects != null) {
-                GameObject go = prefabObjects.Values.ElementAt(0);
-                PlayerUnitMovementController playerUnitMovementController = go.GetComponent<PlayerUnitMovementController>();
-                if (playerUnitMovementController != null && PlayerManager.MyInstance.PlayerUnitObject != null) {
-                    //Debug.Log("Got Player Unit Movement Controller On Spawned Prefab (mount)");
-
-                    //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
-
-                    //Debug.Log("Setting Animator Values");
+            if (mountUnitController != null) {
+                if (PlayerManager.MyInstance.PlayerUnitObject != null) {
 
                     PlayerManager.MyInstance.ActiveUnitController = PlayerManager.MyInstance.UnitController;
                     ConfigureCharacterRegularPhysics();
@@ -118,16 +111,12 @@ namespace AnyRPG {
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
                     CameraManager.MyInstance.ActivateMainCamera();
                     CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.CharacterUnit.transform);
-
-
                 }
             }
         }
 
         public void ActivateMountedState() {
             if (prefabObjects != null) {
-                ConfigureMountPhysics();
-                GameObject go = prefabObjects.Values.ElementAt(0);
 
                 // disable movement and input on player unit
                 if (PlayerManager.MyInstance.PlayerUnitMovementController) {
@@ -144,16 +133,13 @@ namespace AnyRPG {
                 ConfigureCharacterMountedPhysics();
 
                 // initialize the mount animator
-                PlayerManager.MyInstance.ActiveUnitController = go.GetComponent<UnitController>();
-                PlayerManager.MyInstance.ActiveUnitController.SetUnitControllerMode(UnitControllerMode.Mount);
                 PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.MyCharacter.CharacterUnit;
 
                 CameraManager.MyInstance.SwitchToMainCamera();
-                CameraManager.MyInstance.MainCameraController.InitializeCamera(go.transform);
+                CameraManager.MyInstance.MainCameraController.InitializeCamera(mountUnitController.transform);
 
             }
         }
-
 
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
@@ -162,25 +148,16 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromUMACreate() {
-            if (dynamicCharacterAvatar != null) {
-                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+            if (mountUnitController.DynamicCharacterAvatar != null) {
+                mountUnitController.DynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
             }
         }
 
         public void SubscribeToUMACreate() {
-
-            // is this stuff necessary on ai characters?
-            UnitController unitController = dynamicCharacterAvatar.gameObject.GetComponent<UnitController>();
-            if (unitController != null && unitController.UnitAnimator != null) {
-                unitController.UnitAnimator.InitializeAnimator();
-            } else {
-
+            if (mountUnitController.DynamicCharacterAvatar != null && mountUnitController.DynamicCharacterAvatar.umaData != null) {
+                mountUnitController.DynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
             }
-            dynamicCharacterAvatar.Initialize();
-            // is this stuff necessary end
 
-            UMAData umaData = dynamicCharacterAvatar.umaData;
-            umaData.OnCharacterCreated += HandleCharacterCreated;
         }
 
         public void ConfigureCharacterMountedPhysics() {
@@ -217,28 +194,19 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
         }
 
-        public void ConfigureMountPhysics() {
-            //Debug.Log("MountEffect.ConfigureMountPhysics()");
-            GameObject go = prefabObjects.Values.ElementAt(0);
-            Collider anyCollider = go.GetComponent<Collider>();
-            if (anyCollider != null) {
-                //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring trigger");
-                anyCollider.isTrigger = false;
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (unitProfileName != null && unitProfileName != string.Empty) {
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                if (tmpUnitProfile != null) {
+                    unitProfile = tmpUnitProfile;
+                } else {
+                    Debug.LogError("MountEffect.SetupScriptableObjects(): Could not find prefab Profile : " + unitProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
             } else {
-                //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
+                Debug.LogError("MountEffect.SetupScriptableObjects(): Mount effect requires a unit prefab profile but non was configured while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
             }
-            Rigidbody mountRigidBody = go.GetComponent<Rigidbody>();
-            if (mountRigidBody != null) {
-                //Debug.Log("MountEffect.ConfigureMountPhysics(): configuring rigidbody");
-                mountRigidBody.isKinematic = false;
-                mountRigidBody.useGravity = true;
-            } else {
-                //Debug.Log("MountEffect.ConfigureMountPhysics(): could not find collider");
-            }
-            NavMeshAgent navMeshAgent = go.GetComponent<NavMeshAgent>();
-            if (navMeshAgent != null) {
-                navMeshAgent.enabled = false;
-            }
+
         }
 
 

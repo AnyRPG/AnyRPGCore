@@ -17,7 +17,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<GameObject> abilityButtonHolders = new List<GameObject>();
 
-        private List<List<IAbility>> pages = new List<List<IAbility>>();
+        private List<List<BaseAbility>> pages = new List<List<BaseAbility>>();
 
         private int pageSize = 10;
 
@@ -51,13 +51,13 @@ namespace AnyRPG {
         public void CreatePages() {
             //Debug.Log("AbilityBookUI.CreatePages()");
             ClearPages();
-            List<IAbility> page = new List<IAbility>();
-            foreach (IAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            List<BaseAbility> page = new List<BaseAbility>();
+            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 if (newAbility.RequirementsAreMet()) {
                     page.Add(newAbility);
                     if (page.Count == pageSize) {
                         pages.Add(page);
-                        page = new List<IAbility>();
+                        page = new List<BaseAbility>();
                     }
                 }
             }

@@ -254,7 +254,43 @@ namespace AnyRPG {
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
-        public UnitPrefabProfile PrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
+        public UnitPrefabProfile UnitPrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
+
+        /// <summary>
+        /// spawn unit with parent. rotation and position from settings
+        /// </summary>
+        /// <param name="parentTransform"></param>
+        /// <param name="settingsTransform"></param>
+        /// <returns></returns>
+        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
+            GameObject prefabObject = SpawnPrefab(unitPrefab, parentTransform, position, forward);
+            UnitController unitController = null;
+            if (prefabObject != null) {
+                unitController = prefabObject.GetComponent<UnitController>();
+                if (unitController != null) {
+                    unitController.SetUnitProfile(this);
+                }
+            }
+
+            return unitController;
+        }
+
+        /// <summary>
+        /// spawn unit with parent. rotation and position from settings
+        /// </summary>
+        /// <param name="parentTransform"></param>
+        /// <param name="settingsTransform"></param>
+        /// <returns></returns>
+        public GameObject SpawnModelPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
+            return SpawnPrefab(modelPrefab, parentTransform, position, forward);
+        }
+
+        public GameObject SpawnPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+            GameObject prefabObject = Instantiate(spawnPrefab, position, Quaternion.LookRotation(forward), parentTransform);
+
+            return prefabObject;
+        }
+
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

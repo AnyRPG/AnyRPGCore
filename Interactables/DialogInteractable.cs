@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private DialogConfig dialogConfig = null;
+        [SerializeField]
+        private DialogConfig dialogConfig = new DialogConfig();
 
         public override Sprite Icon { get => dialogConfig.Icon; }
         public override Sprite NamePlateImage { get => dialogConfig.NamePlateImage; }

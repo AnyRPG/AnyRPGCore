@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private CutsceneConfig cutsceneConfig = null;
+        [SerializeField]
+        private CutsceneConfig cutsceneConfig = new CutsceneConfig();
 
         public override Sprite Icon { get => cutsceneConfig.Icon; }
         public override Sprite NamePlateImage { get => cutsceneConfig.NamePlateImage; }

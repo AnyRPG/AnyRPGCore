@@ -330,7 +330,7 @@ namespace AnyRPG {
             // enable things that track the character
             // initialize unit frame
             playerUnitFrameController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController);
-            floatingCastBarController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController);
+            floatingCastBarController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController as UnitNamePlateController);
 
             // intialize mini map
             InitializeMiniMapTarget(PlayerManager.MyInstance.PlayerUnitObject);

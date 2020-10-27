@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private List<GameObject> spawnReferences = new List<GameObject>();
+        private List<UnitController> spawnReferences = new List<UnitController>();
 
 
         // later on make this spawn mob as player walks into collider ;>
@@ -298,8 +298,8 @@ namespace AnyRPG {
             return spawnLocation;
         }
 
-        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness) {
-            CommonSpawn(unitLevel, extraLevels, dynamicLevel, spawnPrefab, toughness);
+        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness) {
+            CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfile, toughness);
         }
 
         public void Spawn() {
@@ -309,27 +309,34 @@ namespace AnyRPG {
             }
             if (CanTriggerSpawn()) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
-                if (unitProfiles[spawnIndex].UnitPrefab != null) {
-                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex].UnitPrefab, unitToughness);
+                if (unitProfiles[spawnIndex] != null) {
+                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex], unitToughness);
                 }
             }
         }
 
-        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, GameObject spawnPrefab, UnitToughness toughness = null) {
+        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
-            if (spawnPrefab == null || PlayerManager.MyInstance.MyCharacter == null) {
+            if (unitProfile == null || PlayerManager.MyInstance.MyCharacter == null) {
                 return;
             }
-            //GameObject spawnReference = Instantiate(spawnPrefabs[spawnIndex], GetSpawnLocation(),  Quaternion.identity);
-            // testing, re-enable transform position so mobs don't spawn way above the map if their prefab has a location set
-            GameObject spawnReference = Instantiate(spawnPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            spawnReference.name = spawnReference.name + SystemGameManager.MyInstance.GetSpawnCount();
-            //Debug.Log(gameObject.name + ".UnitSpawnNode.Spawn(): gameObject spawned at: " + spawnReference.transform.position);
+
+            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward);
+
+            if (unitController == null) {
+                // something went wrong.  None of the code below will work, so might as well return
+                return;
+            }
+
+            // give this unit a unique name
+            unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.MyInstance.GetSpawnCount();
+
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
-            IPersistentObjectOwner persistentObjectOwner = spawnReference.GetComponent<IPersistentObjectOwner>();
-            if (persistentObjectOwner != null) {
-                PersistentState persistentState = persistentObjectOwner.PersistentObjectComponent.GetPersistentState();
+
+            // lookup persistent position, or use navmesh agent to get a valid position (in case this spawner was not placed on walkable terrain)
+            if (unitController.PersistentObjectComponent.PersistObjectPosition == true) {
+                PersistentState persistentState = unitController.PersistentObjectComponent.GetPersistentState();
                 if (persistentState != null) {
                     newSpawnLocation = persistentState.Position;
                     newSpawnForward = persistentState.Forward;
@@ -337,29 +344,37 @@ namespace AnyRPG {
                     newSpawnLocation = GetSpawnLocation();
                     newSpawnForward = transform.forward;
                 }
-            } else {
-                newSpawnLocation = GetSpawnLocation();
-                newSpawnForward = transform.forward;
             }
-            //Debug.Log("UnitSpawnNode.Spawn(): newSpawnLocation: " + newSpawnLocation);
-            NavMeshAgent navMeshAgent = spawnReference.GetComponent<NavMeshAgent>();
-            UnitController unitController = spawnReference.GetComponent<UnitController>();
+
+            // now that we have a good final position and rotation, set it
             unitController.MyStartPosition = newSpawnLocation;
-            //Debug.Log("UnitSpawnNode.Spawn(): navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; isOnOffMeshLink: " + navMeshAgent.isOnOffMeshLink + "; pathpending: " + navMeshAgent.pathPending + "; warping now!");
-            //spawnReference.transform.position = newSpawnLocation;
-            navMeshAgent.Warp(newSpawnLocation);
-            spawnReference.transform.forward = newSpawnForward;
+            unitController.NavMeshAgent.Warp(newSpawnLocation);
+            unitController.transform.forward = newSpawnForward;
+
+
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
-            CharacterUnit _characterUnit = spawnReference.GetComponent<CharacterUnit>();
+            CharacterUnit _characterUnit = null;
+            if (unitController.Interactable != null) {
+                List<InteractableOption> tmpList = unitController.Interactable.GetInteractableOptionList(typeof(CharacterUnit));
+                if (tmpList.Count > 0) {
+                    // there can only be one of these types of object on an interactable
+                    _characterUnit = tmpList[0] as CharacterUnit;
+                }
+            }
             if (respawnOn == respawnCondition.Despawn) {
                 if (_characterUnit != null) {
                     _characterUnit.OnDespawn += HandleDespawn;
                 }
             } else if (respawnOn == respawnCondition.Loot) {
-                LootableCharacter _lootableCharacter = spawnReference.GetComponent<LootableCharacter>();
-                if (_lootableCharacter != null) {
+                List<InteractableOption> tmpList = unitController.Interactable.GetInteractableOptionList(typeof(LootableCharacter));
+                if (tmpList.Count > 0) {
+                    // there can only be one of these types of object on an interactable
+                    LootableCharacter _lootableCharacter = tmpList[0] as LootableCharacter;
+                    // interesting note : there is no unsubscribe to this event.  Unit spawn nodes exist for the entire scene and are only destroyed at the same time as the interactables
+                    // should we make an unsubscribe anyway even though it would never be called?
                     _lootableCharacter.OnLootComplete += HandleLootComplete;
                 }
+
             } else if (respawnOn == respawnCondition.Death) {
                 if (_characterUnit != null && _characterUnit.BaseCharacter != null && _characterUnit.BaseCharacter.CharacterStats != null) {
                     _characterUnit.BaseCharacter.CharacterStats.OnDie += HandleDie;
@@ -372,8 +387,9 @@ namespace AnyRPG {
             }
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             _characterUnit.BaseCharacter.CharacterStats.SetLevel(_unitLevel);
-            _characterUnit.BaseCharacter.CharacterStats.TrySpawnDead();
-            spawnReferences.Add(spawnReference);
+            spawnReferences.Add(unitController);
+
+
         }
 
         /// <summary>
@@ -434,8 +450,8 @@ namespace AnyRPG {
 
         private void DestroySpawns() {
             //Debug.Log("UnitSpawnNode.DestroySpawn(): Destroying spawns");
-            foreach (GameObject _gameObject in spawnReferences) {
-                Destroy(_gameObject, despawnDelay);
+            foreach (UnitController unitController in spawnReferences) {
+                Destroy(unitController.gameObject, despawnDelay);
             }
             spawnReferences.Clear();
         }
@@ -458,9 +474,9 @@ namespace AnyRPG {
             SpawnWithDelay();
         }
 
-        public void ProcessRespawn(GameObject _gameObject) {
-            if (spawnReferences.Contains(_gameObject)) {
-                spawnReferences.Remove(_gameObject);
+        public void ProcessRespawn(UnitController unitController) {
+            if (spawnReferences.Contains(unitController)) {
+                spawnReferences.Remove(unitController);
             }
             if (respawnTimer > -1) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn(): timer: " + DespawnTimer + "; starting despawn countdown");
@@ -474,20 +490,20 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleDespawn(GameObject _gameObject) {
+        public void HandleDespawn(UnitController unitController) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleDespawn()");
             if (respawnOn != respawnCondition.Despawn) {
                 return;
             }
-            ProcessRespawn(_gameObject);
+            ProcessRespawn(unitController);
         }
 
-        public void HandleLootComplete(GameObject _gameObject) {
+        public void HandleLootComplete(UnitController unitController) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleLootComplete(): timer: " + respawnTimer);
             if (respawnOn != respawnCondition.Loot) {
                 return;
             }
-            ProcessRespawn(_gameObject);
+            ProcessRespawn(unitController);
         }
 
         public void HandleDie(CharacterStats characterStats) {
@@ -496,7 +512,7 @@ namespace AnyRPG {
                 return;
             }
             // this works because unit spawn nodes do not spawn players.  If they ever do, this will need to reference stats->unit->gameobject instead
-            ProcessRespawn(characterStats.BaseCharacter.CharacterUnit.gameObject);
+            ProcessRespawn(characterStats.BaseCharacter.UnitController);
         }
 
         public void OnTriggerEnter(Collider other) {

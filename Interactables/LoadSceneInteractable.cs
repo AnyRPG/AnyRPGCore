@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private LoadSceneConfig loadSceneConfig = null;
+        [SerializeField]
+        private LoadSceneConfig loadSceneConfig = new LoadSceneConfig();
 
         [Header("Scene Options")]
 

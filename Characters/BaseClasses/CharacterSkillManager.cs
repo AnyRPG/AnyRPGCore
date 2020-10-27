@@ -15,26 +15,10 @@ namespace AnyRPG {
         //public List<string> MySkillList { get => skillList;}
         public CharacterSkillManager(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
+        }
+
+        public void Init() {
             UpdateSkillList(baseCharacter.CharacterStats.Level);
-        }
-
-        protected virtual void Start() {
-            //Debug.Log("CharacterAbilityManager.Start()");
-            CreateEventSubscriptions();
-        }
-
-        public virtual void OnDisable() {
-            CleanupEventSubscriptions();
-        }
-
-        public void CreateEventSubscriptions() {
-            SystemEventManager.MyInstance.OnLevelChanged += UpdateSkillList;
-        }
-
-        public void CleanupEventSubscriptions() {
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelChanged -= UpdateSkillList;
-            }
         }
 
         public void UpdateSkillList(int newLevel) {

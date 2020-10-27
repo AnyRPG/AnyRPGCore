@@ -13,12 +13,13 @@ namespace AnyRPG {
     public class LootableCharacter : InteractableOption {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
-        public event System.Action<GameObject> OnLootComplete = delegate { };
+        public event System.Action<UnitController> OnLootComplete = delegate { };
 
-        private LootableCharacterConfig lootableCharacterConfig;
+        [SerializeField]
+        private LootableCharacterConfig lootableCharacterConfig = new LootableCharacterConfig();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => lootableCharacterConfig.Icon; }
+        public override Sprite NamePlateImage { get => lootableCharacterConfig.NamePlateImage; }
 
         
         [Header("Loot")]
@@ -166,7 +167,7 @@ namespace AnyRPG {
             if (lootTables == null || lootTables.Count == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table was null, despawning");
                 if (gameObject != null) {
-                    OnLootComplete(gameObject);
+                    AdvertiseLootComplete();
                 }
                 Despawn();
                 return;
@@ -185,7 +186,7 @@ namespace AnyRPG {
                         characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.DisplayName)].CancelStatusEffect();
                     }
                 }
-                OnLootComplete(gameObject);
+                AdvertiseLootComplete();
                 Despawn();
             }/* else {
                 // 2. moved here from below to prevent dead units that have been looted from re-displaying their health bar
@@ -200,8 +201,15 @@ namespace AnyRPG {
             // also, there is now code in the healthbar update that detects if the unit spawns dead, and if not, will not re-enable the healthbar
             // having it in the else block caused units that had been looted and have no loot left, and are now on despawn countdown to still display the minimap icon
             HandlePrerequisiteUpdates();
+        }
 
-
+        public void AdvertiseLootComplete() {
+            if (interactable != null) {
+                UnitController unitController = interactable.gameObject.GetComponent<UnitController>();
+                if (unitController != null) {
+                    OnLootComplete(unitController);
+                }
+            }
         }
 
         public override bool CanInteract() {

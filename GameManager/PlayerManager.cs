@@ -87,7 +87,7 @@ namespace AnyRPG {
         private UnitController activeUnitController = null;
 
 
-        private DynamicCharacterAvatar avatar = null;
+        //private DynamicCharacterAvatar avatar = null;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -98,7 +98,7 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        public DynamicCharacterAvatar MyAvatar { get => avatar; set => avatar = value; }
+        //public DynamicCharacterAvatar MyAvatar { get => avatar; set => avatar = value; }
         public int MyInitialLevel { get => initialLevel; set => initialLevel = value; }
         public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
@@ -302,11 +302,13 @@ namespace AnyRPG {
             SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.gameObject, abilityEffectContext);
         }
 
+        /*
         public void Initialize() {
             //Debug.Log("PlayerManager.Initialize()");
             SpawnPlayerConnection();
             SpawnPlayerUnit();
         }
+        */
 
         public void ProcessLevelUnload() {
             DespawnPlayerUnit();
@@ -362,15 +364,12 @@ namespace AnyRPG {
             // spawn the player unit
             //playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(Vector3.forward), playerUnitParent.transform);
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
-            Quaternion spawnQuaternion = Quaternion.identity;
-            if (spawnRotation != Vector3.zero) {
-                spawnQuaternion = Quaternion.LookRotation(spawnRotation);
-            }
-            //Debug.Log("PlayerManager.SpawnPlayerUnit(): spawning player unit at location: " + playerUnitParent.transform.position + " with rotation: " + spawnRotation);
-            playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
+            //playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
+
+            unitController = activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation);
+            playerUnitObject = unitController.gameObject;
 
             // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
-            unitController = playerUnitObject.GetComponent<UnitController>();
             activeUnitController = unitController;
             activeCharacter.CharacterUnit = playerUnitObject.GetComponent<CharacterUnit>();
             activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
@@ -560,22 +559,11 @@ namespace AnyRPG {
         public void InitializeUMA() {
             //Debug.Log("PlayerManager.InitializeUMA()");
 
-            // ensure the character unit has its references before we try to access them
-            //MyCharacter.MyCharacterUnit.GetComponentReferences();
-
-            avatar = PlayerUnitObject.GetComponent<DynamicCharacterAvatar>();
-            if (avatar == null) {
-                Debug.Log("PlayerManager.InitializeUMA(): avatar is null!!! returning");
-                return;
-            }
-
             // try this earlier
             SaveManager.MyInstance.LoadUMASettings(false);
 
             // initialize the animator so our avatar initialization has an animator.
-            activeUnitController.UnitAnimator.InitializeAnimator();
-            avatar.Initialize();
-            UMAData umaData = avatar.umaData;
+            UMAData umaData = unitController.DynamicCharacterAvatar.umaData;
             umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;
             umaData.OnCharacterBeforeUpdated += OnCharacterBeforeUpdated;
             umaData.OnCharacterCreated += HandleCharacterCreated;
@@ -617,9 +605,6 @@ namespace AnyRPG {
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
 
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
-
-            activeCharacter.OrchestratorStart();
-            activeCharacter.OrchestratorFinish();
 
             activeCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
@@ -750,21 +735,21 @@ namespace AnyRPG {
             }
         }
 
-        public void HandlePerformAbility(IAbility ability) {
-            SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability as BaseAbility);
-            (ability as BaseAbility).NotifyOnAbilityUsed();
+        public void HandlePerformAbility(BaseAbility ability) {
+            SystemEventManager.MyInstance.NotifyOnAbilityUsed(ability);
+            ability.NotifyOnAbilityUsed();
 
         }
 
-        public void HandleCombatCheckFail(IAbility ability) {
+        public void HandleCombatCheckFail(BaseAbility ability) {
             CombatLogUI.MyInstance.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
         }
 
-        public void HandlePowerResourceCheckFail(IAbility ability, IAbilityCaster abilityCaster) {
+        public void HandlePowerResourceCheckFail(BaseAbility ability, IAbilityCaster abilityCaster) {
             CombatLogUI.MyInstance.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
         }
 
-        public void HandleLearnedCheckFail(IAbility ability) {
+        public void HandleLearnedCheckFail(BaseAbility ability) {
             CombatLogUI.MyInstance.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
         }
 

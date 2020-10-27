@@ -37,6 +37,10 @@ namespace AnyRPG {
             this.baseCharacter = baseCharacter;
         }
 
+        public void Init() {
+            LoadDefaultEquipment();
+        }
+
         public void HandleClassChange(CharacterClass newClass, CharacterClass oldClass) {
             List<Equipment> equipmentToRemove = new List<Equipment>();
             foreach (Equipment equipment in currentEquipment.Values) {
@@ -70,9 +74,7 @@ namespace AnyRPG {
                 skipModels = true;
             } else {
                 // try lookup just in case unit profile wasn't set properly or unit is uma / non uma in different regions (which profile doesn't handle yet)
-                // this avoids annoying message in console for now
-                DynamicCharacterAvatar dynamicCharacterAvatar = baseCharacter.CharacterUnit.GetComponent<DynamicCharacterAvatar>();
-                if (dynamicCharacterAvatar != null) {
+                if (baseCharacter.UnitController.DynamicCharacterAvatar != null) {
                     skipModels = true;
                 }
             }
@@ -154,7 +156,7 @@ namespace AnyRPG {
             }
             Equipment newItem = currentEquipment[equipmentSlotProfile];
             //public void HandleWeaponSlot(Equipment newItem) {
-            if (newItem == null || baseCharacter.CharacterUnit.gameObject == null) {
+            if (newItem == null || baseCharacter.UnitController == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
                 return;
             }
@@ -188,7 +190,7 @@ namespace AnyRPG {
 
                                 AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
                                 if (attachmentPointNode != null) {
-                                    Transform targetBone = baseCharacter.CharacterUnit.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                                    Transform targetBone = baseCharacter.UnitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                                     if (targetBone != null) {
                                         //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
@@ -199,9 +201,9 @@ namespace AnyRPG {
 
                                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
                                         if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
-                                            HoldObject(newEquipmentPrefab, attachmentNode, baseCharacter.CharacterUnit.gameObject);
+                                            HoldObject(newEquipmentPrefab, attachmentNode, baseCharacter.UnitController.gameObject);
                                         } else {
-                                            SheathObject(newEquipmentPrefab, attachmentNode, baseCharacter.CharacterUnit.gameObject);
+                                            SheathObject(newEquipmentPrefab, attachmentNode, baseCharacter.UnitController.gameObject);
                                         }
                                     } else {
                                         Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.DisplayName);
@@ -224,7 +226,7 @@ namespace AnyRPG {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
                     //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                     foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
-                        SheathObject(holdableObjectReference.Value, holdableObjectReference.Key, baseCharacter.CharacterUnit.gameObject);
+                        SheathObject(holdableObjectReference.Value, holdableObjectReference.Key, baseCharacter.UnitController.gameObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
                     
@@ -237,7 +239,7 @@ namespace AnyRPG {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
                     //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
                     foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
-                        HoldObject(holdableObjectReference.Value, holdableObjectReference.Key, baseCharacter.CharacterUnit.gameObject);
+                        HoldObject(holdableObjectReference.Value, holdableObjectReference.Key, baseCharacter.UnitController.gameObject);
                         //SheathObject(currentEquipmentPhysicalObjects[equipmentSlotProfileName], currentEquipment[equipmentSlotProfileName].MyHoldableObjectName, playerUnitObject);
                     }
 
@@ -289,9 +291,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
-                    if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
-                        return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else if (attachmentProfile != null) {
                     if (attachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
@@ -318,9 +320,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.PrefabProfile != null && baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile != null) {
-                    if (baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
-                        return baseCharacter.UnitProfile.PrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
+                        return baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
                     }
                 }
             }
@@ -463,7 +465,9 @@ namespace AnyRPG {
             baseCharacter.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterAbilityManager.HandleEquipmentChanged(newItem, oldItem, slotIndex);
-            baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
+            }
         }
 
         public int GetEquipmentSetCount(EquipmentSet equipmentSet) {

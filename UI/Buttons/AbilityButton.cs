@@ -21,8 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
-        public void AddAbility(IAbility ability) {
-            this.ability = ability as BaseAbility;
+        public void AddAbility(BaseAbility ability) {
+            this.ability = ability;
             icon.sprite = this.ability.Icon;
             icon.color = Color.white;
             spellName.text = ability.DisplayName;

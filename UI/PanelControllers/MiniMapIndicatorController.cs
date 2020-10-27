@@ -62,7 +62,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            foreach (IInteractable _interactable in interactable.MyInteractables) {
+            foreach (IInteractable _interactable in interactable.Interactables) {
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
                     _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
                 }
@@ -89,7 +89,7 @@ namespace AnyRPG {
                 //Debug.Log(".MiniMapIndicatorController.Start(): interactable is null");
                 return;
             }
-            foreach (IInteractable _interactable in interactable.MyInteractables) {
+            foreach (IInteractable _interactable in interactable.Interactables) {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (_interactable.HasMiniMapIcon()) {
                     //else if (_interactable.HasMiniMapIcon()) {

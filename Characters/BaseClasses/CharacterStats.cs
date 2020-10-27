@@ -201,23 +201,15 @@ namespace AnyRPG {
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
         public CharacterStats(BaseCharacter baseCharacter) {
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
             this.baseCharacter = baseCharacter;
-        }
-
-        public void OrchestratorSetLevel() {
-            if (currentLevel == 0) {
-                // if it is not zero, we have probably been initialized some other way, and don't need to do this
-                SetLevel(level);
-            } else {
-                CalculatePrimaryStats();
-            }
-            TrySpawnDead();
-        }
-
-        public void OrchestratorStart() {
-            //temporarily disabled since unit profile will still be null at this point
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
+        }
+
+        public void Init() {
+            SetLevel(level);
+            TrySpawnDead();
         }
 
         public void CalculatePrimaryStats() {
@@ -233,7 +225,7 @@ namespace AnyRPG {
 
             // update base values
             foreach (SecondaryStatType secondaryStatType in secondaryStats.Keys) {
-                secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, baseCharacter);
+                secondaryStats[secondaryStatType].BaseValue = (int)LevelEquations.GetBaseSecondaryStatForCharacter(secondaryStatType, this);
             }
 
             // calculate values that include base values plus modifiers
@@ -242,7 +234,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool PerformPowerResourceCheck(IAbility ability, float resourceCost) {
+        public bool PerformPowerResourceCheck(BaseAbility ability, float resourceCost) {
             //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.MyName) + ", " + resourceCost + ")");
             if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
                 return true;
@@ -650,7 +642,7 @@ namespace AnyRPG {
         public bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (!powerResourceDictionary.ContainsKey(powerResource)) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -661,7 +653,7 @@ namespace AnyRPG {
         public bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -673,7 +665,7 @@ namespace AnyRPG {
             // check for stun
             if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -685,7 +677,7 @@ namespace AnyRPG {
             // check for levitate
             if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
                 if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -765,11 +757,11 @@ namespace AnyRPG {
 
                 if (newStatusEffectNode.StatusEffect.ControlTarget == true) {
 
-                    baseCharacter.UnitController.SetUnitControllerMode(UnitControllerMode.Pet);
-                    (baseCharacter.UnitController as UnitController).ChangeState(new IdleState());
-                    ApplyControlEffects(sourceCharacter);
+                    baseCharacter.UnitController.SetPetMode((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter);
 
-                    sourceCharacter.AbilityManager.AddPet(baseCharacter.CharacterUnit);
+                    // any control effect will add the pet to the pet journal if this is used.  This is already done in capture pet effect so should not be needed
+                    // see if leaving it commented out breaks anything
+                    //sourceCharacter.AbilityManager.AddPet(baseCharacter.CharacterUnit);
 
                 }
 
@@ -975,9 +967,9 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (showCombatText && (baseCharacter.CharacterUnit.gameObject == PlayerManager.MyInstance.PlayerUnitObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.MyCharacter.CharacterUnit.gameObject)) {
+            if (showCombatText && (baseCharacter.UnitController.gameObject == PlayerManager.MyInstance.PlayerUnitObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.UnitController.gameObject)) {
                 // spawn text over the player
-                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+                CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
             OnRecoverResource(powerResource, amount);
             return true;
@@ -1150,7 +1142,7 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
             if (statusEffect.MyCastZeroTick) {
                 if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
-                    statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
+                    statusEffect.CastTick(characterSource, baseCharacter.UnitController.gameObject, abilityEffectContext);
                 }
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
@@ -1165,7 +1157,7 @@ namespace AnyRPG {
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
                     //Debug.Log(MyName + ".StatusEffect.Tick() TickTime!");
                     if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
-                        statusEffect.CastTick(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
+                        statusEffect.CastTick(characterSource, baseCharacter.UnitController.gameObject, abilityEffectContext);
                         elapsedTime -= statusEffect.TickRate;
                     }
                 }
@@ -1174,7 +1166,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             if (baseCharacter != null) {
                 if (characterSource != null & baseCharacter.CharacterUnit != null) {
-                    statusEffect.CastComplete(characterSource, baseCharacter.CharacterUnit.gameObject, abilityEffectContext);
+                    statusEffect.CastComplete(characterSource, baseCharacter.UnitController.gameObject, abilityEffectContext);
                 }
             }
 

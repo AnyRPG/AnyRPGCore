@@ -9,7 +9,7 @@ namespace AnyRPG {
     public interface IAbilityCaster {
 
         IAbilityManager AbilityManager { get; }
-
+        Transform transform { get; }
 
     }
 

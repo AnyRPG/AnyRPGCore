@@ -88,7 +88,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool despawnRequiresNoValidOption = false;
 
-        private IInteractable[] interactables;
+        private List<InteractableOption> interactables = new List<InteractableOption>();
 
         private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
@@ -116,7 +116,7 @@ namespace AnyRPG {
 
         public bool IsInteracting { get => isInteracting; }
 
-        public IInteractable[] MyInteractables { get => interactables; set => interactables = value; }
+        public List<InteractableOption> Interactables { get => interactables; set => interactables = value; }
 
         public Sprite Icon { get => interactableIcon; }
 
@@ -160,11 +160,6 @@ namespace AnyRPG {
             }
         }
 
-        public override void Start() {
-            //Debug.Log(gameObject.name + ".Interactable.Start()");
-            base.Start();
-        }
-
         public override void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
             base.CleanupEverything();
@@ -177,6 +172,15 @@ namespace AnyRPG {
         public override void OrchestratorStart() {
             //Debug.Log(gameObject.name + ".Interactable.OrchestratorStart()");
             base.OrchestratorStart();
+
+            // detect if this is a character and if so, add a characterUnit
+
+            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
+            if (baseCharacter != null) {
+                CharacterUnit characterUnit = new CharacterUnit(this);
+                characterUnit.BaseCharacter = baseCharacter;
+                AddInteractable(characterUnit);
+            }
 
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
@@ -211,7 +215,9 @@ namespace AnyRPG {
             }
             base.GetComponentReferences();
             boxCollider = GetComponent<BoxCollider>();
-            interactables = GetComponents<IInteractable>();
+
+            // get monobehavior interactables
+            interactables.AddRange(GetComponents<InteractableOption>());
 
             // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
@@ -224,6 +230,27 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.InitializeComponents(): namePlateUnit is null");
             }
 
+        }
+
+        /// <summary>
+        /// get a list of interactable options by type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public List<InteractableOption> GetInteractableOptionList(Type type) {
+            List<InteractableOption> returnList = new List<InteractableOption>();
+
+            foreach (InteractableOption interactableOption in interactables) {
+                if (interactableOption.GetType() == type) {
+                    returnList.Add(interactableOption);
+                }
+            }
+
+            return returnList;
+        }
+
+        public void AddInteractable(InteractableOption interactableOption) {
+            interactables.Add(interactableOption);
         }
 
         private void Update() {
@@ -433,7 +460,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): indicator prefab is null");
                     return false;
                 }
-                if (interactables.Length > 0) {
+                if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     Vector3 spawnPosition = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 9, gameObject.transform.position.z);
                     //miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, gameObject.transform);

@@ -8,7 +8,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private PressureSwitchConfig pressureSwitchConfig = null;
+        [SerializeField]
+        private PressureSwitchConfig pressureSwitchConfig = new PressureSwitchConfig();
 
         [Tooltip("the minimum amount of weight needed to activate this switch")]
         [SerializeField]

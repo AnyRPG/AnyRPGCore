@@ -110,7 +110,7 @@ namespace AnyRPG {
         private string maleRecipe = string.Empty;
         private string femaleRecipe = string.Empty;
 
-        private DynamicCharacterAvatar umaAvatar;
+        //private DynamicCharacterAvatar umaAvatar;
 
         private List<UMATextRecipe> hairRecipes = new List<UMATextRecipe>();
         private List<UMATextRecipe> eyebrowsRecipes = new List<UMATextRecipe>();
@@ -119,7 +119,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            umaAvatar = null;
             OnCloseWindow(this);
         }
 
@@ -144,7 +143,7 @@ namespace AnyRPG {
         private void InitializeSexButtons() {
             //Debug.Log("CharacterCreatorPanel.InitializeSexButtons()");
 
-            if (umaAvatar.activeRace.name == "HumanMaleDCS" || umaAvatar.activeRace.name == "HumanMale") {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS" || CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
                 if (maleButton != null) {
                     maleButton.Select();
                 }
@@ -164,24 +163,7 @@ namespace AnyRPG {
         public void TargetReadyCallback() {
             //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
 
-            // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-                return;
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
 
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            /*
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-            */
-
-            //CloseAppearanceOptionsArea();
-            //CloseColorsOptionsArea();
             CloseOptionsAreas();
             OpenAppearanceOptionsArea();
             InitializeSexButtons();
@@ -356,7 +338,7 @@ namespace AnyRPG {
         public void InitializeSkinColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeSkinColors()");
             ColorSelectionController colorSelectionController = skinColorsOptionsArea.GetComponent<ColorSelectionController>();
-            colorSelectionController.Setup(umaAvatar, "Skin", skinColorsOptionsArea, SkinColor);
+            colorSelectionController.Setup(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, "Skin", skinColorsOptionsArea, SkinColor);
             /*
                     foreach (UMA.OverlayColorData overlayColorData in umaAvatar.CurrentSharedColors) {
                         Debug.Log("CharacterCreatorPanel.InitializeSkinColors(): overlayColorData.name: " + overlayColorData.name);
@@ -372,13 +354,13 @@ namespace AnyRPG {
         public void InitializeHairColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeHairColors()");
             ColorSelectionController colorSelectionController = hairColorsOptionsArea.GetComponent<ColorSelectionController>();
-            colorSelectionController.Setup(umaAvatar, "Hair", hairColorsOptionsArea, HairColor);
+            colorSelectionController.Setup(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, "Hair", hairColorsOptionsArea, HairColor);
         }
 
         public void InitializeEyesColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeEyesColors()");
             ColorSelectionController colorSelectionController = eyesColorsOptionsArea.GetComponent<ColorSelectionController>();
-            colorSelectionController.Setup(umaAvatar, "Eyes", eyesColorsOptionsArea, EyesColor);
+            colorSelectionController.Setup(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, "Eyes", eyesColorsOptionsArea, EyesColor);
         }
 
         public void ColorsClick() {
@@ -387,7 +369,7 @@ namespace AnyRPG {
             CleanupDynamicMenus();
             GameObject setupParent = null;
 
-            foreach (UMA.OverlayColorData overlayColorData in umaAvatar.CurrentSharedColors) {
+            foreach (UMA.OverlayColorData overlayColorData in CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.CurrentSharedColors) {
                 //Debug.Log("CharacterCreatorPanel.ColorsClick(): overlayColorData.name: " + overlayColorData.name);
 
                 GameObject go = GameObject.Instantiate(ColorPrefab);
@@ -410,7 +392,7 @@ namespace AnyRPG {
                 }
                 //Debug.Log("CharacterCreatorPanel.ColorsClick(): setupParent.name: " + setupParent.name);
 
-                availableColorsHandler.Setup(umaAvatar, overlayColorData.name, setupParent, currColors);
+                availableColorsHandler.Setup(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, overlayColorData.name, setupParent, currColors);
 
                 // delete next part?
 
@@ -439,40 +421,40 @@ namespace AnyRPG {
         public void SetMale() {
             //Debug.Log("CharacterCreatorPanel.SetMale()");
 
-            if (umaAvatar.activeRace.name == "HumanMaleDCS" || umaAvatar.activeRace.name == "HumanMale") {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS" || CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
                 //Debug.Log("CharacterCreatorPanel.SetMale(): already male. returning");
                 return;
             }
-            femaleRecipe = umaAvatar.GetCurrentRecipe();
+            femaleRecipe = CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
             femaleButton.DeSelect();
             maleButton.Select();
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
-                umaAvatar.ChangeRace("HumanMaleDCS");
-                SaveManager.MyInstance.LoadUMASettings(maleRecipe, umaAvatar);
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
+                SaveManager.MyInstance.LoadUMASettings(maleRecipe, CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe == string.Empty");
-                umaAvatar.ChangeRace("HumanMaleDCS");
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
             }
         }
 
         public void SetFemale() {
             //Debug.Log("CharacterCreatorPanel.SetFemale()");
 
-            if (umaAvatar.activeRace.name == "HumanFemaleDCS" || umaAvatar.activeRace.name == "HumanFemale") {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanFemaleDCS" || CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanFemale") {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): already female. returning");
                 return;
             }
-            maleRecipe = umaAvatar.GetCurrentRecipe();
+            maleRecipe = CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
             maleButton.DeSelect();
             femaleButton.Select();
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
-                umaAvatar.ChangeRace("HumanFemaleDCS");
-                SaveManager.MyInstance.LoadUMASettings(femaleRecipe, umaAvatar);
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
+                SaveManager.MyInstance.LoadUMASettings(femaleRecipe, CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
-                umaAvatar.ChangeRace("HumanFemaleDCS");
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
             }
         }
 
@@ -493,10 +475,10 @@ namespace AnyRPG {
 
         public void CheckAppearance() {
             //Debug.Log("CharacterCreatorPanel.CheckAppearance()");
-            if (umaAvatar == null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar == null) {
                 Debug.Log("NewGameCharacterPanelController.CheckAppearance(): umaAvatar is null!!!!");
             }
-            Dictionary<string, List<UMATextRecipe>> recipes = umaAvatar.AvailableRecipes;
+            Dictionary<string, List<UMATextRecipe>> recipes = CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.AvailableRecipes;
 
             hairAppearanceDropdown.ClearOptions();
             eyebrowsAppearanceDropdown.ClearOptions();
@@ -515,7 +497,7 @@ namespace AnyRPG {
                     //Debug.Log("CharacterCreatorPanel.CheckAppearance(): recipeName.DisplayValue: " + recipeName.DisplayValue + "; recipeName.name: " + recipeName.name);
                     string option = recipeName.DisplayValue;
                     options.Add(option);
-                    if (GetRecipeName(option, hairRecipes) == umaAvatar.GetWardrobeItemName("Hair")) {
+                    if (GetRecipeName(option, hairRecipes) == CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetWardrobeItemName("Hair")) {
                         currentHairIndex = counter;
                     }
                     counter++;
@@ -539,7 +521,7 @@ namespace AnyRPG {
                 foreach (UMATextRecipe recipeName in eyebrowsRecipes) {
                     string option = recipeName.DisplayValue;
                     options.Add(option);
-                    if (GetRecipeName(option, eyebrowsRecipes) == umaAvatar.GetWardrobeItemName("Eyebrows")) {
+                    if (GetRecipeName(option, eyebrowsRecipes) == CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetWardrobeItemName("Eyebrows")) {
                         currentEyebrowsIndex = counter;
                     }
                     counter++;
@@ -564,7 +546,7 @@ namespace AnyRPG {
                 foreach (UMATextRecipe recipeName in beardRecipes) {
                     string option = recipeName.DisplayValue;
                     options.Add(option);
-                    if (GetRecipeName(option, beardRecipes) == umaAvatar.GetWardrobeItemName("Beard")) {
+                    if (GetRecipeName(option, beardRecipes) == CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetWardrobeItemName("Beard")) {
                         currentBeardIndex = counter;
                     }
                     counter++;
@@ -594,35 +576,35 @@ namespace AnyRPG {
         public void SetHair(int dropdownIndex) {
             //Debug.Log("CharacterCreatorPanel.SetHair(" + dropdownIndex + "): " + hairAppearanceDropdown.options[hairAppearanceDropdown.value].text);
             if (hairAppearanceDropdown.options[hairAppearanceDropdown.value].text == "None") {
-                umaAvatar.ClearSlot("Hair");
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ClearSlot("Hair");
             }
-            umaAvatar.SetSlot("Hair", GetRecipeName(hairAppearanceDropdown.options[hairAppearanceDropdown.value].text, hairRecipes));
+            CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.SetSlot("Hair", GetRecipeName(hairAppearanceDropdown.options[hairAppearanceDropdown.value].text, hairRecipes));
             RebuildUMA();
         }
 
         public void SetEyebrows(int dropdownIndex) {
             //Debug.Log("CharacterCreatorPanel.SetEyebrows(" + dropdownIndex + "): " + eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text);
             if (eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text == "None") {
-                umaAvatar.ClearSlot("Eyebrows");
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ClearSlot("Eyebrows");
             }
-            umaAvatar.SetSlot("Eyebrows", GetRecipeName(eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text, eyebrowsRecipes));
+            CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.SetSlot("Eyebrows", GetRecipeName(eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text, eyebrowsRecipes));
             RebuildUMA();
         }
 
         public void SetBeard(int dropdownIndex) {
             //Debug.Log("CharacterCreatorPanel.SetBeard(" + dropdownIndex + "): " + beardAppearanceDropdown.options[beardAppearanceDropdown.value].text);
             if (beardAppearanceDropdown.options[beardAppearanceDropdown.value].text == "None") {
-                umaAvatar.ClearSlot("Beard");
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.ClearSlot("Beard");
             }
-            umaAvatar.SetSlot("Beard", GetRecipeName(beardAppearanceDropdown.options[beardAppearanceDropdown.value].text, beardRecipes));
+            CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.SetSlot("Beard", GetRecipeName(beardAppearanceDropdown.options[beardAppearanceDropdown.value].text, beardRecipes));
             RebuildUMA();
         }
 
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("NewGameCharacterPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            
-            umaAvatar.BuildCharacter();
+
+            CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
         }
 
 

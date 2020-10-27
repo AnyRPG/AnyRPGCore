@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private CraftingNodeConfig craftingNodeConfig;
+        [SerializeField]
+        private CraftingNodeConfig craftingNodeConfig = new CraftingNodeConfig();
 
         [Tooltip("The ability to cast in order to mine this node")]
         [SerializeField]

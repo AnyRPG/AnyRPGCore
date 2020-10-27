@@ -66,23 +66,6 @@ namespace AnyRPG {
         public CharacterCombat(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
             aggroTable = new AggroTable(baseCharacter as BaseCharacter);
-            CreateEventSubscriptions();
-        }
-
-        protected void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            eventSubscriptionsInitialized = true;
-        }
-
-        protected void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            }
         }
 
         public void HandleAutoAttack() {
@@ -117,14 +100,6 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": target is not attackable.  deactivate autoattack");
                 DeActivateAutoAttack();
             }
-        }
-
-        public virtual void OnDestroy() {
-            CleanupEventSubscriptions();
-        }
-
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            ProcessLevelUnload();
         }
 
         public void ProcessLevelUnload() {
@@ -229,7 +204,7 @@ namespace AnyRPG {
                     } else if ((abilityEffect as AttackEffect).DamageType == DamageType.ability) {
                         combatTextType = CombatTextType.ability;
                     }
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.CharacterUnit.gameObject, damage, combatTextType, combatMagnitude, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.gameObject, damage, combatTextType, combatMagnitude, abilityEffectContext);
                     SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
@@ -575,7 +550,7 @@ namespace AnyRPG {
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.UseMeleeRange) {
-                    if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.CharacterUnit.gameObject)) {
+                    if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.UnitController.gameObject)) {
                         canPerformAbility = false;
                     }
                 }

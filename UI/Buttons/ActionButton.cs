@@ -225,44 +225,44 @@ namespace AnyRPG {
             }
         }
 
-        public void OnAttemptUseableUse(IAbility ability) {
+        public void OnAttemptUseableUse(BaseAbility ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
-            if (Useable is IAbility) {
+            if (Useable is BaseAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
-                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as IAbility));
+                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as BaseAbility));
                     }
                 } else {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
                     if (abilityCoRoutine == null) {
-                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as IAbility));
+                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as BaseAbility));
                     }
                 }
             }
         }
 
 
-        public void OnUseableUse(IAbility ability) {
+        public void OnUseableUse(BaseAbility ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
-            if (Useable is IAbility) {
+            if (Useable is BaseAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                     if (autoAttackCoRoutine == null) {
-                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as IAbility));
+                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as BaseAbility));
                     }
                 } else {
                     //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
                     if (abilityCoRoutine == null) {
-                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as IAbility));
+                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as BaseAbility));
                     }
                 }
             }
         }
 
-        public IEnumerator MonitorAutoAttack(IAbility ability) {
+        public IEnumerator MonitorAutoAttack(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             yield return null;
@@ -280,10 +280,10 @@ namespace AnyRPG {
             autoAttackCoRoutine = null;
         }
 
-        public IEnumerator MonitorAbility(IAbility ability) {
+        public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
-            while (Useable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+            while (Useable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
@@ -320,7 +320,7 @@ namespace AnyRPG {
             // attempt to remove unlearned spells from the bars
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
-                if (Useable != null && (Useable is IAbility)) {
+                if (Useable != null && (Useable is BaseAbility)) {
                     if (!PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
                         savedUseable = Useable;
                         Useable = null;
@@ -436,7 +436,7 @@ namespace AnyRPG {
                 }
 
 
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
                     //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
                     if (coolDownIcon.isActiveAndEnabled != true) {
                         coolDownIcon.enabled = true;
@@ -452,9 +452,9 @@ namespace AnyRPG {
                     //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
                     float abilityCoolDown = 0f;
                     float initialCoolDown = 0f;
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as IAbility).DisplayName)) {
-                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).DisplayName].MyRemainingCoolDown;
-                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as IAbility).DisplayName].MyInitialCoolDown;
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName)) {
+                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as BaseAbility).DisplayName].MyRemainingCoolDown;
+                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as BaseAbility).DisplayName].MyInitialCoolDown;
                     } else {
                         initialCoolDown = (Useable as BaseAbility).abilityCoolDown;
                     }

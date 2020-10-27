@@ -17,10 +17,11 @@ namespace AnyRPG {
 
         public Dictionary<string, Recipe> RecipeList { get => recipeList; }
 
-        protected bool eventSubscriptionsInitialized = false;
-
         public CharacterRecipeManager(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
+        }
+
+        public void Init() {
             UpdateRecipeList(baseCharacter.CharacterStats.Level);
         }
 
@@ -30,7 +31,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): evaluating recipe: " + recipe.MyName);
                 foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
                     //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " + recipe.MyName + "evaluating skill: " + skill.MyName);
-                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.MyAbilityList.Contains(recipe.CraftAbility as BaseAbility)) {
+                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.MyAbilityList.Contains(recipe.CraftAbility)) {
                         LearnRecipe(recipe);
                     }
                 }

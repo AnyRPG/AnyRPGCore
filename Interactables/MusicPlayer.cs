@@ -9,7 +9,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private MusicPlayerConfig musicPlayerConfig;
+        [SerializeField]
+        private MusicPlayerConfig musicPlayerConfig = new MusicPlayerConfig();
 
         public override Sprite Icon { get => musicPlayerConfig.Icon; }
         public override Sprite NamePlateImage { get => musicPlayerConfig.NamePlateImage; }

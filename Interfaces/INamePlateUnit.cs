@@ -9,8 +9,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface INamePlateUnit {
 
-        UnitNamePlateController NamePlateController { get; }
-
+        INamePlateController NamePlateController { get; }
+        UnitComponentController UnitComponentController { get; }
+        //INamePlateTarget NamePlateTarget { get; }
+        Interactable Interactable { get; }
+        Transform transform { get; }
+        GameObject gameObject { get; }
     }
 
 }

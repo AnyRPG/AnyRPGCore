@@ -229,14 +229,14 @@ namespace AnyRPG {
 
         public void SaveUMASettings() {
             //Debug.Log("SaveManager.SaveUMASettings()");
-            if (PlayerManager.MyInstance.MyAvatar != null) {
+            if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
                 if (recipeString == string.Empty) {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
-                    recipeString = PlayerManager.MyInstance.MyAvatar.GetCurrentRecipe();
+                    recipeString = PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 } else {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is not empty");
-                    recipeString = PlayerManager.MyInstance.MyAvatar.GetCurrentRecipe();
+                    recipeString = PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 }
             } else {
                 //Debug.Log("SaveManager.SaveUMASettings(): no avatar!!!");
@@ -259,7 +259,7 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
             }
-            LoadUMASettings(recipeString, PlayerManager.MyInstance.MyAvatar, rebuild);
+            LoadUMASettings(recipeString, PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar, rebuild);
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
@@ -1136,27 +1136,17 @@ namespace AnyRPG {
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
-            //PlayerManager.MyInstance.MyCharacter.MyCharacterClassName = anyRPGSaveData.characterClass;
-
-            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(anyRPGSaveData.characterClass);
 
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
-            // moved to clearshareddata to have central clearing method
-            //ClearSystemManagedCharacterData();
-
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             SetPlayerManagerPrefab(anyRPGSaveData);
-
-            // fix for random start order
 
             // complex data
             LoadEquippedBagData(anyRPGSaveData);
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
-            // testing - character class needs to be set first before equipment load so primary stats can be applied
-            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
             // testing allow notification so class trats can be applied
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), true);
 
@@ -1164,11 +1154,6 @@ namespace AnyRPG {
 
             // testing - move here to prevent learning auto-attack ability twice
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager);
-
-            // testing - move here to prevent learning abilities and filling up bars
-            //PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), false);
-            //PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
-
 
             LoadSkillData(anyRPGSaveData);
             LoadRecipeData(anyRPGSaveData);

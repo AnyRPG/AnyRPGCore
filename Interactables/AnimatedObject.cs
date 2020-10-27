@@ -8,7 +8,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private AnimatedObjectConfig animatedObjectConfig;
+        [SerializeField]
+        private AnimatedObjectConfig animatedObjectConfig = new AnimatedObjectConfig();
 
         [SerializeField]
         private float movementSpeed = 0.05f;

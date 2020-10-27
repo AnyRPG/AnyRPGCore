@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private UnitSpawnControllerConfig unitSpawnControllerConfig = null;
+        [SerializeField]
+        private UnitSpawnControllerConfig unitSpawnControllerConfig = new UnitSpawnControllerConfig();
 
         public override Sprite Icon { get => unitSpawnControllerConfig.Icon; }
         public override Sprite NamePlateImage { get => unitSpawnControllerConfig.Icon; }

@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         private List<PetSpawnButton> petSpawnButtons = new List<PetSpawnButton>();
 
-        private DynamicCharacterAvatar umaAvatar;
+        //private DynamicCharacterAvatar umaAvatar;
 
         private int unitLevel;
 
@@ -101,13 +101,12 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            umaAvatar = null;
             PetPreviewManager.MyInstance.HandleCloseWindow();
         }
 
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (umaAvatar != null) {
+            if (PetPreviewManager.MyInstance.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
@@ -130,14 +129,6 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
-            // get reference to avatar
-            umaAvatar = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
         }
 
         public void ClosePanel() {
@@ -158,7 +149,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            umaAvatar = null;
             previewCameraController.ClearTarget();
             PetPreviewManager.MyInstance.HandleCloseWindow();
             //SaveManager.MyInstance.ClearSharedData();
@@ -228,10 +218,7 @@ namespace AnyRPG {
         */
 
         public void SpawnUnit() {
-            GameObject spawnPrefab = MySelectedPetSpawnButton.MyUnitProfile.UnitPrefab;
-            if (spawnPrefab != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
-            }
+            PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             ClosePanel();
         }
 

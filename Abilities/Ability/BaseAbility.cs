@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
-    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, IAbility, ITargetable, ILearnable {
+    public abstract class BaseAbility : DescribableResource, IUseable, IMoveable, ITargetable, ILearnable {
 
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };

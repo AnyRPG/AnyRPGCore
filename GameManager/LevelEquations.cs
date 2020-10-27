@@ -165,19 +165,19 @@ namespace AnyRPG {
             return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + extraStatPerLevel;
         }
 
-        public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+        public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {
             //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + secondaryStatType.ToString() + ", " + sourceCharacter.AbilityManager.CharacterName + ")");
             float returnValue = 0f;
 
-            foreach (IStatProvider statProvider in sourceCharacter.StatProviders) {
+            foreach (IStatProvider statProvider in characterStats.BaseCharacter.StatProviders) {
                 if (statProvider != null) {
                     foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
                         foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
                             if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
                                 if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * (sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / sourceCharacter.CharacterStats.Level);
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * (characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / characterStats.Level);
                                 } else {
-                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * sourceCharacter.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
                                 }
                             }
                         }
@@ -185,15 +185,15 @@ namespace AnyRPG {
                 }
             }
 
-            returnValue += sourceCharacter.CharacterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
+            returnValue += characterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
             return returnValue;
         }
 
-        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, BaseCharacter sourceCharacter) {
+        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {
             //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + sourceCharacter.AbilityManager.CharacterName + ")");
-            float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, sourceCharacter);
-            returnValue += sourceCharacter.CharacterStats.GetSecondaryAddModifiers(secondaryStatType);
-            returnValue *= sourceCharacter.CharacterStats.GetSecondaryMultiplyModifiers(secondaryStatType);
+            float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, characterStats);
+            returnValue += characterStats.GetSecondaryAddModifiers(secondaryStatType);
+            returnValue *= characterStats.GetSecondaryMultiplyModifiers(secondaryStatType);
             return returnValue;
         }
 

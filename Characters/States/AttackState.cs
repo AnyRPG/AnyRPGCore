@@ -10,7 +10,7 @@ namespace AnyRPG {
         public void Enter(UnitController baseController) {
             //Debug.Log("Entering Attack State");
             this.baseController = baseController;
-            this.baseController.BaseCharacter.UnitController.UnitMotor.StopFollowingTarget();
+            this.baseController.UnitMotor.StopFollowingTarget();
         }
 
         public void Exit() {
@@ -47,7 +47,7 @@ namespace AnyRPG {
             }
 
             // face target before attack to ensure they are in the hitbox
-            baseController.BaseCharacter.UnitController.UnitMotor.FaceTarget(baseController.Target);
+            baseController.UnitMotor.FaceTarget(baseController.Target);
 
             if (baseController.CanGetValidAttack(true)) {
                 return;

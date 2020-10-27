@@ -23,18 +23,16 @@ namespace AnyRPG {
         private string maleRecipe = string.Empty;
         private string femaleRecipe = string.Empty;
 
-        private DynamicCharacterAvatar umaAvatar;
+        //private DynamicCharacterAvatar umaAvatar;
 
         // track whether targetreadycallback has been activated or not
         private bool characterReady = false;
 
         public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
-        public DynamicCharacterAvatar UmaAvatar { get => umaAvatar; set => umaAvatar = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            umaAvatar = null;
             previewCameraController.ClearTarget();
             characterReady = false;
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
@@ -66,13 +64,12 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("NewGameCharacterPanelController.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            umaAvatar = null;
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
         }
 
         private void SetPreviewTarget() {
             //Debug.Log("NewGameCharacterPanelController.SetPreviewTarget()");
-            if (umaAvatar != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
@@ -92,20 +89,9 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
+            Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
-
-            // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            /*
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-                // this is fine for mecanim models
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-            */
 
             EquipCharacter();
             StartCoroutine(PointlessDelay());
@@ -120,7 +106,7 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<CharacterEquipmentManager>();
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
                 characterEquipmentManager.UnequipAll(false);
@@ -145,16 +131,16 @@ namespace AnyRPG {
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("NewGameCharacterPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            if (umaAvatar != null) {
-                umaAvatar.BuildCharacter();
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
+                CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
             }
         }
 
         public string GetCurrentRecipe() {
-            if (umaAvatar == null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar == null) {
                 return string.Empty;
             }
-            return umaAvatar.GetCurrentRecipe();
+            return CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
         }
 
     }

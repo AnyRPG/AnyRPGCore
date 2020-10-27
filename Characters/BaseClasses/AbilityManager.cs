@@ -60,13 +60,13 @@ namespace AnyRPG {
         }
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
-        public virtual bool CanCastAbility(IAbility ability) {
+        public virtual bool CanCastAbility(BaseAbility ability) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             return true;
         }
 
-        public virtual void GeneratePower(IAbility ability) {
+        public virtual void GeneratePower(BaseAbility ability) {
             // do nothing
         }
 
@@ -120,7 +120,7 @@ namespace AnyRPG {
             // do nothing.  There is no weapon on the base class
         }
 
-        public virtual void CapturePet(UnitProfile unitProfile, GameObject target) {
+        public virtual void CapturePet(UnitController targetUnitController) {
             // do nothing.  environment effects cannot have pets
         }
 

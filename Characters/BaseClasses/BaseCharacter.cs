@@ -91,10 +91,60 @@ namespace AnyRPG {
 
         private void Awake() {
             //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
-            SetupScriptableObjects();
-            CreateCharacterComponents();
+
+            // react to level load and unload events
             CreateEventSubscriptions();
+
+            // find out if this character is on a unit
+            GetComponentReferences();
+
+            // get reference to any hard coded unit profile
+            SetupScriptableObjects();
+
+            // setup the objects that handle different character mechanics
+            CreateCharacterComponents();
+
         }
+
+        // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
+        public void Init() {
+
+            InitCharacterComponents();
+
+            SetUnitProfileProperties();
+        }
+
+        public void CreateCharacterComponents() {
+
+            // get character components ready for intitalization by allowing them to construct needed internal objects and references back to the character
+            characterStats = new CharacterStats(this);
+            characterEquipmentManager = new CharacterEquipmentManager(this);
+            characterFactionManager = new CharacterFactionManager(this);
+            characterPetManager = new CharacterPetManager(this);
+            characterCombat = new CharacterCombat(this);
+            characterSkillManager = new CharacterSkillManager(this);
+            characterCurrencyManager = new CharacterCurrencyManager(this);
+            characterRecipeManager = new CharacterRecipeManager(this);
+            characterAbilityManager = new CharacterAbilityManager(this);
+        }
+
+        public void InitCharacterComponents() {
+            // characterStats needs a chance to set level and spawn dead
+            characterStats.Init();
+
+            // equipment manager should load default equipment
+            characterEquipmentManager.Init();
+
+            // learn any skills for the level
+            characterSkillManager.Init();
+
+            // learn recipes for the level for any known skills
+            characterRecipeManager.Init();
+
+            // learn abilities for the level
+            characterAbilityManager.Init();
+        }
+
 
         public void CreateEventSubscriptions() {
             if (eventSubscriptionsInitialized) {
@@ -118,22 +168,11 @@ namespace AnyRPG {
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
             characterStats.ProcessLevelUnload();
             characterAbilityManager.ProcessLevelUnload();
+            characterCombat.ProcessLevelUnload();
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             characterStats.ProcessLevelLoad();
-        }
-
-        public void CreateCharacterComponents() {
-            characterStats = new CharacterStats(this);
-            characterEquipmentManager = new CharacterEquipmentManager(this);
-            characterFactionManager = new CharacterFactionManager(this);
-            characterPetManager = new CharacterPetManager(this);
-            characterCombat = new CharacterCombat(this);
-            characterSkillManager = new CharacterSkillManager(this);
-            characterCurrencyManager = new CharacterCurrencyManager(this);
-            characterRecipeManager = new CharacterRecipeManager(this);
-            characterAbilityManager = new CharacterAbilityManager(this);
         }
 
         public virtual void GetComponentReferences() {
@@ -150,26 +189,6 @@ namespace AnyRPG {
 
         }
 
-        public virtual void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ": BaseCharacter.OrchestratorStart()");
-            SetUnitProfileProperties();
-
-            GetComponentReferences();
-            if (characterStats != null) {
-                characterStats.OrchestratorStart();
-                characterStats.OrchestratorSetLevel();
-            }
-        }
-
-        public virtual void OrchestratorFinish() {
-            if (characterEquipmentManager != null) {
-                characterEquipmentManager.LoadDefaultEquipment();
-            }
-
-            if (characterAbilityManager != null) {
-                characterAbilityManager.LearnDefaultAutoAttackAbility();
-            }
-        }
 
         public void JoinFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
@@ -415,10 +434,7 @@ namespace AnyRPG {
             Despawn();
         }
 
-
         public void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects()");
-
             GetUnitProfileReference();
         }
 

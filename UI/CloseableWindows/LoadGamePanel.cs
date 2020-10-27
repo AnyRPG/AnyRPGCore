@@ -47,7 +47,7 @@ namespace AnyRPG {
         private string maleRecipe = string.Empty;
         private string femaleRecipe = string.Empty;
 
-        private DynamicCharacterAvatar umaAvatar;
+        //private DynamicCharacterAvatar umaAvatar;
 
         private AnyRPGSaveData anyRPGSaveData;
 
@@ -57,7 +57,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            umaAvatar = null;
             previewCameraController.ClearTarget();
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
             //SaveManager.MyInstance.ClearSharedData();
@@ -87,7 +86,6 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            umaAvatar = null;
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
         }
 
@@ -128,7 +126,7 @@ namespace AnyRPG {
 
         public void SetPreviewTarget(UnitProfile unitProfile) {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (umaAvatar != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
@@ -159,17 +157,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
                 return;
             }
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar, false);
+            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
         public void TargetReadyCallback() {
@@ -177,46 +165,13 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
             if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
-                BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
+                BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter;
                 if (baseCharacter != null) {
                     //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
                     SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
-
-            // testing do this earlier
-            /*
-            // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-            */
-
-            // theoretically this should be done automatically now by the new unit modes
-            /*
-            CharacterEquipmentManager previewUnitEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnit.GetComponent<CharacterEquipmentManager>();
-            if (previewUnitEquipmentManager != null) {
-                //Debug.Log("LoadGamePanel.TargetReadyCallback(): about to equip character");
-
-                // needs to be set manually because this is neither a player or npc unit
-                previewUnitEquipmentManager.MyPlayerUnitObject = CharacterCreatorManager.MyInstance.PreviewUnit;
-
-                // results in equipment being sheathed
-                previewUnitEquipmentManager.EquipCharacter();
-            } else {
-                //Debug.Log("LoadGamePanel.TargetReadyCallback(): equipment manager was null");
-            }
-            */
-
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
             CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
@@ -238,7 +193,7 @@ namespace AnyRPG {
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
         }
 
-
+        /*
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             Debug.Log("LoadGamePanel.RebuildUMA(): BuildCharacter()");
@@ -246,7 +201,9 @@ namespace AnyRPG {
             //umaAvatar.BuildCharacter(true);
             //umaAvatar.ForceUpdate(true, true, true);
         }
+        */
 
+        /*
         public void SaveCharacter() {
             Debug.Log("LoadGamePanel.SaveCharacter()");
             SaveManager.MyInstance.SaveUMASettings(umaAvatar.GetCurrentRecipe());
@@ -263,6 +220,7 @@ namespace AnyRPG {
 
             OnConfirmAction();
         }
+        */
 
         public void LoadGame() {
             SaveManager.MyInstance.LoadGame(MySelectedLoadGameButton.MySaveData);

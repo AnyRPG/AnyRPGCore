@@ -9,81 +9,34 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class UnitNamePlateController : INamePlateController {
+    public class UnitNamePlateController : BaseNamePlateController {
 
-        public event System.Action OnInitializeNamePlate = delegate { };
-        public event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
-        public event Action OnNameChange = delegate { };
-
-        [Header("NAMEPLATE SETTINGS")]
-
-        [Tooltip("This is what will be printed on the nameplate above the object.  It will also override whatever value is set for the Interactable mouseover display name.")]
-        [SerializeField]
-        private string displayName = string.Empty;
-
-        [Tooltip("If true, the nameplate is not shown above this unit.")]
-        [SerializeField]
-        private bool suppressNamePlate = false;
-
-        [Tooltip("If true, the faction will not be shown on the nameplate")]
-        [SerializeField]
-        private bool suppressFaction = true;
-
-        [Header("UNIT FRAME SETTINGS")]
-
-        [Tooltip("An object or bone in the heirarchy to use as the camera target.")]
-        [SerializeField]
-        private string unitFrameTarget = string.Empty;
-
-        [Tooltip("The position the camera is looking at, relative to the target")]
-        [SerializeField]
-        private Vector3 unitFrameCameraLookOffset = Vector3.zero;
-
-        [Tooltip("The position of the camera relative to the target")]
-        [SerializeField]
-        private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
+        public override event System.Action OnInitializeNamePlate = delegate { };
+        public override event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
+        public override event Action<int, int> ResourceBarNeedsUpdate = delegate { };
+        public override event Action OnNameChange = delegate { };
 
         private UnitController unitController = null;
 
-        private NamePlateController namePlate;
-
-        private Interactable interactable;
-
-        private string playerPreviewTarget = string.Empty;
-
-        private Vector3 unitPreviewCameraLookOffset = new Vector3(0f, 1f, 0f);
-
-        private Vector3 unitPreviewCameraPositionOffset = new Vector3(0f, 1f, 1f);
-
-        public NamePlateController NamePlate { get => namePlate; set => namePlate = value; }
-
-        public string UnitFrameTarget { get => unitFrameTarget; }
-        public string PlayerPreviewTarget { get => playerPreviewTarget; }
-        public Vector3 UnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
-        public Vector3 UnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
-        public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
-        public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
-        public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
-        public string UnitDisplayName {
+        public override string UnitDisplayName {
             get {
-                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.CharacterName : displayName);
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.CharacterName : base.UnitDisplayName);
             }
         }
-        public Faction Faction {
+        public override Faction Faction {
             get {
                 if (unitController.BaseCharacter != null) {
                     return unitController.BaseCharacter.Faction;
                 }
-                return null;
+                return base.Faction;
             }
         }
-        public string Title {
+        public override string Title {
             get {
-                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.Title : string.Empty); }
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.Title : base.Title); }
         }
 
-        public Transform NamePlateTransform {
+        public override Transform NamePlateTransform {
             get {
                 if (unitController.Mounted) {
                     if (unitController.NamePlateTarget != null) {
@@ -91,30 +44,37 @@ namespace AnyRPG {
                     }
                     return unitController.transform;
                 }
-                if (unitController.UnitComponentController.NamePlateTransform != null) {
-                    return unitController.UnitComponentController.NamePlateTransform;
-                }
-                return unitController.transform;
+                return base.NamePlateTransform;
             }
         }
-        public int Level {
+        public override int Level {
             get {
                 if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                     return unitController.BaseCharacter.CharacterStats.Level;
                 }
-                return 1;
+                return base.Level;
+            }
+        }
+        public override List<PowerResource> PowerResourceList {
+            get {
+                if (unitController != null && unitController.BaseCharacter != null) {
+                    return unitController.BaseCharacter.CharacterStats.PowerResourceList;
+                }
+                return base.PowerResourceList;
             }
         }
 
-        public Interactable Interactable { get => interactable; set => interactable = value; }
+
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public void Setup(UnitController unitController) {
-            this.unitController = unitController;
-            InitializeNamePlate();
+        public override void Setup(INamePlateUnit namePlateUnit) {
+            if ((namePlateUnit as UnitController) is UnitController) {
+                unitController = (namePlateUnit as UnitController);
+            }
+            base.Setup(namePlateUnit);
         }
 
-        public void InitializeNamePlate() {
+        public override void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
             if (suppressNamePlate == true) {
                 return;
@@ -135,50 +95,47 @@ namespace AnyRPG {
             }
         }
 
-        public int CurrentHealth() {
+        public override int CurrentHealth() {
             if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                 return unitController.BaseCharacter.CharacterStats.CurrentPrimaryResource;
             }
-            return 1;
+            return base.CurrentHealth();
         }
 
-        public int MaxHealth() {
+        public override int MaxHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
             if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                 return unitController.BaseCharacter.CharacterStats.MaxPrimaryResource;
             }
-            return 1;
+            return base.MaxHealth();
         }
 
-        public bool HasPrimaryResource() {
+        public override bool HasPrimaryResource() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                 return unitController.BaseCharacter.CharacterStats.HasPrimaryResource;
             }
-            return false;
+            return base.HasPrimaryResource();
         }
 
-        public bool HasSecondaryResource() {
+        public override bool HasSecondaryResource() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                 return unitController.BaseCharacter.CharacterStats.HasSecondaryResource;
             }
-            return false;
+            return base.HasSecondaryResource();
         }
 
-        public bool HasHealth() {
+        public override bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             if (unitController.BaseCharacter != null && unitController.BaseCharacter.CharacterStats != null) {
                 return unitController.BaseCharacter.CharacterStats.HasHealthResource;
             }
-            return false;
+            return base.HasHealth();
         }
 
-        public void HandleNameChange() {
-            OnNameChange();
-        }
 
-        public void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
+        public override void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval()");
             if (unitController != null && _characterStats != null) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval(" + _characterStats + ")");
@@ -186,6 +143,25 @@ namespace AnyRPG {
             }
             //baseCharacter.MyCharacterStats.OnHealthChanged -= HealthBarNeedsUpdate;
         }
+
+        public override void HandleNameChange() {
+            OnNameChange();
+        }
+
+        public override float GetPowerResourceMaxAmount(PowerResource powerResource) {
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource);
+            }
+            return base.GetPowerResourceMaxAmount(powerResource);
+        }
+
+        public override float GetPowerResourceAmount(PowerResource powerResource) {
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.BaseCharacter.CharacterStats.GetPowerResourceAmount(powerResource);
+            }
+            return base.GetPowerResourceAmount(powerResource);
+        }
+
 
 
     }

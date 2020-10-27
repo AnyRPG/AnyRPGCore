@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [System.Serializable]
-    public abstract class InteractableOptionConfig : DescribableResource {
+    public abstract class InteractableOptionProps {
 
         [Header("Interaction Panel")]
 
@@ -32,7 +32,7 @@ namespace AnyRPG {
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         public string InteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
-        public override Sprite Icon { get => interactionPanelImage; }
+        public Sprite Icon { get => interactionPanelImage; }
         public virtual Sprite NamePlateImage { get => namePlateImage; }
 
         public List<PrerequisiteConditions> PrerequisiteConditions { get => prerequisiteConditions; set => prerequisiteConditions = value; }

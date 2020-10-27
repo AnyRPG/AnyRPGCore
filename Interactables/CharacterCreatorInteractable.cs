@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private CharacterCreatorConfig characterCreatorConfig = null;
+        [SerializeField]
+        private CharacterCreatorConfig characterCreatorConfig = new CharacterCreatorConfig();
 
         public override Sprite Icon { get => characterCreatorConfig.Icon; }
         public override Sprite NamePlateImage { get => characterCreatorConfig.NamePlateImage; }

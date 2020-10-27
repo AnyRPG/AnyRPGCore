@@ -19,7 +19,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.baseController = baseController;
             if (!baseController.PatrolController.MyCurrentPatrol.PatrolComplete()) {
-                originalMovementSpeed = this.baseController.BaseCharacter.UnitController.UnitMotor.MyMovementSpeed;
+                originalMovementSpeed = this.baseController.UnitMotor.MyMovementSpeed;
                 SetMovementSpeed();
 
                 // set destination
@@ -36,9 +36,9 @@ namespace AnyRPG {
         public void SetMovementSpeed() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed + " motor: " + this.aiController.MyBaseCharacter.UnitController.MyCharacterMotor.MyMovementSpeed + "; " + "; aicontroller: " + this.aiController.MyMovementSpeed);
             if (baseController.PatrolController.MyCurrentPatrol.MovementSpeed == 0) {
-                this.baseController.BaseCharacter.UnitController.UnitMotor.MyMovementSpeed = this.baseController.MovementSpeed;
+                this.baseController.UnitMotor.MyMovementSpeed = this.baseController.MovementSpeed;
             } else {
-                this.baseController.BaseCharacter.UnitController.UnitMotor.MyMovementSpeed = baseController.PatrolController.MyCurrentPatrol.MovementSpeed;
+                this.baseController.UnitMotor.MyMovementSpeed = baseController.PatrolController.MyCurrentPatrol.MovementSpeed;
             }
         }
 
@@ -47,7 +47,7 @@ namespace AnyRPG {
             if (coroutine != null) {
                 baseController.StopCoroutine(coroutine);
             }
-            this.baseController.BaseCharacter.UnitController.UnitMotor.MyMovementSpeed = originalMovementSpeed;
+            this.baseController.UnitMotor.MyMovementSpeed = originalMovementSpeed;
         }
 
         public void Update() {
@@ -60,7 +60,7 @@ namespace AnyRPG {
             baseController.UpdateTarget();
 
             if (baseController.Target != null && baseController.AggroEnabled() == true) {
-                baseController.LeashPosition = baseController.BaseCharacter.CharacterUnit.transform.position;
+                baseController.LeashPosition = baseController.transform.position;
                 baseController.ChangeState(new FollowState());
             }
 
@@ -68,7 +68,7 @@ namespace AnyRPG {
 
             if (currentDestination == Vector3.zero && coroutine == null) {
                 getNewDestination = true;
-            } else if (Vector3.Distance(baseController.BaseCharacter.CharacterUnit.transform.position, currentDestination) <= baseController.BaseCharacter.UnitController.NavMeshAgent.stoppingDistance + baseController.BaseCharacter.UnitController.UnitMotor.MyNavMeshDistancePadding) {
+            } else if (Vector3.Distance(baseController.transform.position, currentDestination) <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.MyNavMeshDistancePadding) {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
@@ -90,13 +90,13 @@ namespace AnyRPG {
 
 
             //pathstatus: " + animatedUnit.MyAgent.pathStatus
-            if (baseController.BaseCharacter.UnitController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
+            if (baseController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid) {
                 // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS INVALID, GETTING NEW DESTINATION");
                 getNewDestination = true;
             }
 
-            if (baseController.BaseCharacter.UnitController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
+            if (baseController.NavMeshAgent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial) {
                 // this message means things are working properly and the unit just prevented itself from getting stuck or stalling
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): DESTINATION WAS PARTIAL, GETTING NEW DESTINATION");
                 getNewDestination = true;

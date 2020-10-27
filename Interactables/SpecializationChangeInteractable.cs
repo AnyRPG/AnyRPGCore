@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private SpecializationChangeConfig specializationChangeConfig = null;
+        [SerializeField]
+        private SpecializationChangeConfig specializationChangeConfig = new SpecializationChangeConfig();
 
         [Tooltip("the class Specialization that this interactable option offers")]
         [SerializeField]

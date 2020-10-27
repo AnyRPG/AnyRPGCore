@@ -22,9 +22,9 @@ namespace AnyRPG {
 
         bool IsDead { get; }
 
-        void GeneratePower(IAbility ability);
+        void GeneratePower(BaseAbility ability);
 
-        bool CanCastAbility(IAbility ability);
+        bool CanCastAbility(BaseAbility ability);
 
         AudioClip GetAnimatedAbilityHitSound();
 
@@ -191,7 +191,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         /// <param name="target"></param>
-        void CapturePet(UnitProfile unitProfile, GameObject target);
+        void CapturePet(UnitController targetUnitController);
 
         /// <summary>
         /// channeled effects have a delay

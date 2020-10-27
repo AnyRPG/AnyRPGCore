@@ -14,9 +14,9 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        public event System.Action<GameObject> OnDespawn = delegate { };
+        public event System.Action<UnitController> OnDespawn = delegate { };
 
-        [SerializeField]
+        //[SerializeField]
         protected float despawnDelay = 20f;
 
         private Collider capsuleCollider;
@@ -72,7 +72,6 @@ namespace AnyRPG {
         protected override void Start() {
             //Debug.Log(gameObject.name + ".CharacterUnit.Start()");
             base.Start();
-            CreateEventSubscriptions();
             SetDefaultLayer();
 
             startHasRun = true;
@@ -118,9 +117,8 @@ namespace AnyRPG {
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OnDisable()");
             base.OnDisable();
-            CleanupEventSubscriptions();
             if (despawnCoroutine != null) {
-                StopCoroutine(despawnCoroutine);
+                interactable.StopCoroutine(despawnCoroutine);
             }
         }
 
@@ -131,9 +129,6 @@ namespace AnyRPG {
                 return;
             }
             base.GetComponentReferences();
-            if (baseCharacter == null) {
-                baseCharacter = GetComponent<BaseCharacter>();
-            }
 
             capsuleCollider = GetComponent<Collider>();
             if (capsuleCollider != null) {
@@ -223,8 +218,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
-                OnDespawn(gameObject);
-                Destroy(gameObject);
+                OnDespawn(baseCharacter.UnitController);
+                Destroy(baseCharacter.UnitController.gameObject);
 
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");

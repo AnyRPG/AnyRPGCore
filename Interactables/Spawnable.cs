@@ -58,13 +58,11 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
-            if (GetComponent<CharacterUnit>() == null) {
-                SetupScriptableObjects();
-                OrchestrateStartup();
-                if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
-                    // this allows us to spawn things with no prerequisites that don't need to check against the player
-                    PrerequisiteCheck();
-                }
+            SetupScriptableObjects();
+            OrchestrateStartup();
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+                // this allows us to spawn things with no prerequisites that don't need to check against the player
+                PrerequisiteCheck();
             }
         }
 

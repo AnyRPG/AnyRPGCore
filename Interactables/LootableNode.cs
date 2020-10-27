@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private LootableNodeConfig lootableNodeConfig = null;
+        [SerializeField]
+        private LootableNodeConfig lootableNodeConfig = new LootableNodeConfig();
 
         [SerializeField]
         protected List<string> lootTableNames = new List<string>();

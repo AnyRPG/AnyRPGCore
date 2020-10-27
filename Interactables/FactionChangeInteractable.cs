@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private FactionChangeConfig factionChangeConfig = null;
+        [SerializeField]
+        private FactionChangeConfig factionChangeConfig = new FactionChangeConfig();
 
         private Faction faction;
 

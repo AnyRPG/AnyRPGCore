@@ -276,7 +276,7 @@ namespace AnyRPG {
             updateString += "\n";
 
             updateString += "Accuracy: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, PlayerManager.MyInstance.MyCharacter) +"%";
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, PlayerManager.MyInstance.MyCharacter.CharacterStats) +"%";
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
                 updateString += " ( " +
                     PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
@@ -285,7 +285,7 @@ namespace AnyRPG {
             updateString += "\n";
 
             updateString += "Attack/Casting Speed: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, PlayerManager.MyInstance.MyCharacter) + "%";
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, PlayerManager.MyInstance.MyCharacter.CharacterStats) + "%";
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
                 updateString += " ( " +
                     PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
@@ -326,50 +326,20 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            // get reference to avatar
-            DynamicCharacterAvatar umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar, false);
+            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
 
         }
 
         public void TargetReadyCallbackCommon() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
-            /*
-            // get reference to avatar
-            DynamicCharacterAvatar umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-            */
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<CharacterEquipmentManager>();
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
                     characterEquipmentManager.EquipCharacter();
                 }
             }
-            /*
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager != null) {
-                PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.EquipCharacter();
-            }
-            */
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
             CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");

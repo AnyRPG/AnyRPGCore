@@ -4,7 +4,6 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Resource Profile", menuName = "AnyRPG/ResourceProfile")]
     public abstract class ResourceProfile : ScriptableObject, IDescribable {
 
         [SerializeField]
@@ -24,7 +23,7 @@ namespace AnyRPG {
         [TextArea(10, 20)]
         protected string description;
 
-        public Sprite Icon { get => icon; set => icon = value; }
+        public virtual Sprite Icon { get => icon; set => icon = value; }
 
         /// <summary>
         /// return the resourceName

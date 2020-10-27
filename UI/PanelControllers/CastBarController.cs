@@ -102,7 +102,7 @@ namespace AnyRPG {
             DisableCastBar();
         }
 
-        public void OnCastTimeChanged(IAbilityCaster abilityCaster, IAbility ability, float currentPercent) {
+        public void OnCastTimeChanged(IAbilityCaster abilityCaster, BaseAbility ability, float currentPercent) {
             //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
 
             if (currentPercent <= 1f) {

@@ -8,7 +8,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private BankConfig bankConfig;
+        [SerializeField]
+        private BankConfig bankConfig = new BankConfig();
 
         public override Sprite Icon {
             get {

@@ -57,7 +57,7 @@ namespace AnyRPG {
         [SerializeField]
         private Canvas speechBubbleCanvas = null;
 
-        private UnitNamePlateController unitNamePlateController = null;
+        private INamePlateController unitNamePlateController = null;
 
         private int healthSliderWidth;
 
@@ -167,7 +167,7 @@ namespace AnyRPG {
 
         public void CheckForPlayerOwnerShip() {
             //Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
-            if (PlayerManager.MyInstance.PlayerUnitSpawned && unitNamePlateController.UnitController == PlayerManager.MyInstance.ActiveUnitController) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned && unitNamePlateController.NamePlateUnit.gameObject == PlayerManager.MyInstance.PlayerUnitObject) {
                 //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
                 namePlateCanvasGroup.blocksRaycasts = false;
                 UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
@@ -208,11 +208,11 @@ namespace AnyRPG {
                                 textColor = unitNamePlateController.Faction.GetFactionColor();
                             } else {
                                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING UNIT");
-                                textColor = Faction.GetFactionColor(unitNamePlateController.UnitController);
+                                textColor = Faction.GetFactionColor(unitNamePlateController.NamePlateUnit);
                             }
                         } else {
                             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING UNIT");
-                            textColor = Faction.GetFactionColor(unitNamePlateController.UnitController);
+                            textColor = Faction.GetFactionColor(unitNamePlateController.NamePlateUnit);
                         }
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(textColor));
 
@@ -248,7 +248,7 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log("NamePlateController.SetCharacterName(): namePlateUnit has no faction!");
                         Color textColor;
-                        if (unitNamePlateController.UnitController == PlayerManager.MyInstance.ActiveUnitController) {
+                        if (unitNamePlateController.NamePlateUnit.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                             textColor = Color.green;
                         } else {
                             textColor = Color.white;
@@ -278,10 +278,10 @@ namespace AnyRPG {
             InitializeLocalComponents();
 
             if (unitNamePlateController.HasHealth()) {
-                unitNamePlateController.UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
+                (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
                 ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
-                if (unitNamePlateController.UnitController.BaseCharacter != null && unitNamePlateController.UnitController.BaseCharacter.CharacterFactionManager != null) {
-                    unitNamePlateController.UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
+                if ((unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager != null) {
+                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
                 }
             } else {
                 MyHealthBar.SetActive(false);
@@ -299,9 +299,10 @@ namespace AnyRPG {
         /// <param name="maxHealth"></param>
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleHealthBarNeedsUpdate(" + currentHealth + ", " + maxHealth + ")");
-            if (unitNamePlateController.UnitController.BaseCharacter != null
-                && unitNamePlateController.UnitController.BaseCharacter.CharacterStats != null
-                && unitNamePlateController.UnitController.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
+            if (unitNamePlateController.HasHealth()
+                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
                 ProcessHealthChanged(currentHealth, maxHealth);
             }
         }
@@ -432,11 +433,11 @@ namespace AnyRPG {
                         MyHealthSlider.color = unitNamePlateController.Faction.GetFactionColor();
                     } else {
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING UNIT");
-                        MyHealthSlider.color = Faction.GetFactionColor(unitNamePlateController.UnitController);
+                        MyHealthSlider.color = Faction.GetFactionColor((unitNamePlateController as UnitNamePlateController).UnitController);
                     }
                 } else {
                     //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING UNIT");
-                    MyHealthSlider.color = Faction.GetFactionColor(unitNamePlateController.UnitController);
+                    MyHealthSlider.color = Faction.GetFactionColor((unitNamePlateController as UnitNamePlateController).UnitController);
                 }
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, set faction color: " + MyHealthSlider.color);
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(MyHealthSlider.color));
@@ -453,8 +454,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
                 unitNamePlateController.ResourceBarNeedsUpdate -= ProcessHealthChanged;
                 if (unitNamePlateController.HasHealth()) {
-                    unitNamePlateController.UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
-                    unitNamePlateController.UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
                 }
                 unitNamePlateController.NamePlate = null;
             }
@@ -491,14 +492,14 @@ namespace AnyRPG {
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.MyDisplayName);
             if (unitNamePlateController != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable, unitNamePlateController.UnitController.gameObject);
+                PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable, unitNamePlateController.NamePlateUnit.gameObject);
             }
         }
 
         private void HandleLeftClick() {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
             if (unitNamePlateController != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.MyCharacter.UnitController.SetTarget(unitNamePlateController.UnitController.gameObject);
+                PlayerManager.MyInstance.MyCharacter.UnitController.SetTarget(unitNamePlateController.NamePlateUnit.gameObject);
             }
         }
 

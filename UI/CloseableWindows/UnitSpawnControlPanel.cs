@@ -66,7 +66,7 @@ namespace AnyRPG {
 
         private List<UnitSpawnButton> unitSpawnButtons = new List<UnitSpawnButton>();
 
-        private DynamicCharacterAvatar umaAvatar;
+        //private DynamicCharacterAvatar umaAvatar;
 
         private int extraLevels;
 
@@ -153,16 +153,17 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            umaAvatar = null;
             UnitPreviewManager.MyInstance.HandleCloseWindow();
         }
 
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (umaAvatar != null) {
+            
+            if (UnitPreviewManager.MyInstance.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
+
             //spawn correct preview unit
             UnitPreviewManager.MyInstance.HandleOpenWindow();
 
@@ -181,15 +182,6 @@ namespace AnyRPG {
         public void TargetReadyCallback() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
-
-            // get reference to avatar
-            umaAvatar = UnitPreviewManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
         }
 
         public void ClosePanel() {
@@ -210,7 +202,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            umaAvatar = null;
             previewCameraController.ClearTarget();
             UnitPreviewManager.MyInstance.HandleCloseWindow();
             //SaveManager.MyInstance.ClearSharedData();
@@ -335,9 +326,8 @@ namespace AnyRPG {
         public void SpawnUnit() {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
                 bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
-                GameObject spawnPrefab = MySelectedUnitSpawnButton.MyUnitProfile.UnitPrefab;
-                if (spawnPrefab != null && unitSpawnNode != null) {
-                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, spawnPrefab, unitToughness);
+                if (unitSpawnNode != null) {
+                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, MySelectedUnitSpawnButton.MyUnitProfile, unitToughness);
                 }
             }
             ClosePanel();

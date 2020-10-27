@@ -50,13 +50,12 @@ namespace AnyRPG {
         }
 
         public void OpenWindowCommon() {
-            GameObject go = Instantiate(cloneSource.UnitPrefab, transform.position, Quaternion.identity, transform);
-            UIManager.MyInstance.SetLayerRecursive(go, previewLayer);
-            unitController = go.GetComponent<UnitController>();
+
+            UnitController unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward);
             if (unitController != null) {
-                unitController.SetUnitControllerMode(UnitControllerMode.Preview);
+                unitController.SetPreviewMode();
                 if (unitController.BaseCharacter != null) {
-                    unitController.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.PrefabProfile.AttachmentProfile;
+                    unitController.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.UnitPrefabProfile.AttachmentProfile;
                 }
 
             }

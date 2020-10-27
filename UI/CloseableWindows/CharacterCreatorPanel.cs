@@ -177,18 +177,8 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
             //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar, false);
+            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
 
         }
 
@@ -196,23 +186,6 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
-            /*
-            // get reference to avatar
-            umaAvatar = CharacterCreatorManager.MyInstance.MyPreviewUnit.GetComponent<DynamicCharacterAvatar>();
-            if (umaAvatar == null) {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID NOT get UMA avatar");
-            } else {
-                //Debug.Log("CharacterCreatorPanel.TargetReadyCallback() DID get UMA avatar");
-            }
-
-            // update character creator avatar to whatever recipe the actual character currently has, if any
-            // disabled for now.  recipe should be already in recipestring anyway
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(umaAvatar);
-            */
-
-            //CloseAppearanceOptionsArea();
-            //CloseColorsOptionsArea();
             CloseOptionsAreas();
             OpenAppearanceOptionsArea();
             InitializeSexButtons();
@@ -666,7 +639,7 @@ namespace AnyRPG {
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
-            if (PlayerManager.MyInstance.MyAvatar == null) {
+            if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar == null) {
                 Vector3 currentPlayerLocation = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
                 PlayerManager.MyInstance.DespawnPlayerUnit();
                 //PlayerManager.MyInstance.SetUMAPrefab();

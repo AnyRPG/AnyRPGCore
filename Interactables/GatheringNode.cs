@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         //public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private GatheringNodeConfig gatheringNodeConfig = null;
+        [SerializeField]
+        private GatheringNodeConfig gatheringNodeConfig = new GatheringNodeConfig();
 
         // gathering nodes are special.  The image is based on what ability it supports
         public override Sprite Icon {

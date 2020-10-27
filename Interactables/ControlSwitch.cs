@@ -8,7 +8,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private ControlSwitchConfig controlSwitchConfig = null;
+        [SerializeField]
+        private ControlSwitchConfig controlSwitchConfig = new ControlSwitchConfig();
 
         [Header("Control Switch")]
 

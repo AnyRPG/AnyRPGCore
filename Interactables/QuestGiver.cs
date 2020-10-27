@@ -11,7 +11,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private QuestGiverConfig questGiverConfig = null;
+        [SerializeField]
+        private QuestGiverConfig questGiverConfig = new QuestGiverConfig();
 
         [Header("QuestGiver")]
 

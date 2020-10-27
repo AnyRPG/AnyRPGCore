@@ -92,9 +92,6 @@ namespace AnyRPG {
         // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
         private float collisionMinimumHeight = 0.05f;
 
-        private bool rotateModel = false;
-
-
         private void Awake() {
             if (PlayerManager.MyInstance != null) {
                 groundMask = PlayerManager.MyInstance.DefaultGroundMask;
@@ -107,15 +104,6 @@ namespace AnyRPG {
             airForwardDirection = transform.forward;
 
             SwitchCollisionOn();
-            SetupRotateModel();
-        }
-
-        public void SetupRotateModel() {
-            CharacterUnit tmpUnit = GetComponent<CharacterUnit>();
-            DynamicCharacterAvatar dynamicCharacterAvatar = GetComponent<DynamicCharacterAvatar>();
-            if (tmpUnit == null && dynamicCharacterAvatar == null) {
-                rotateModel = true;
-            }
         }
 
         public void OrchestratorStart() {
@@ -201,7 +189,7 @@ namespace AnyRPG {
                     }
                     isMoving = true;
                     PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetMoving(true);
-                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity, rotateModel);
+                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
                 }/* else {
                     isMoving = false;
                     PlayerManager.MyInstance.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
@@ -256,7 +244,7 @@ namespace AnyRPG {
             // testing stop turning animation from playing
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
 
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity, rotateModel);
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
 
         }
 

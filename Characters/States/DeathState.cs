@@ -11,9 +11,9 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".DeathState.Enter(): entered death state");
             this.baseController = baseController;
             //this.aiController.MyBaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
-            if (this.baseController.BaseCharacter != null && this.baseController.BaseCharacter.UnitController != null) {
-                this.baseController.BaseCharacter.UnitController.UnitMotor.StopNavAgent();
-                this.baseController.BaseCharacter.UnitController.DisableMotor();
+            if (this.baseController.BaseCharacter != null && this.baseController != null) {
+                this.baseController.UnitMotor.StopNavAgent();
+                this.baseController.DisableMotor();
             }
             this.baseController.DisableAggro();
             this.baseController.ClearTarget();
@@ -29,8 +29,8 @@ namespace AnyRPG {
 
         public void Exit() {
             //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
-            this.baseController.BaseCharacter.UnitController.UnitMotor.StartNavAgent();
-            this.baseController.BaseCharacter.UnitController.EnableMotor();
+            this.baseController.UnitMotor.StartNavAgent();
+            this.baseController.EnableMotor();
             baseController.EnableAggro();
         }
 

@@ -9,7 +9,8 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private VendorConfig vendorConfig = null;
+        [SerializeField]
+        private VendorConfig vendorConfig = new VendorConfig();
 
         public override Sprite Icon { get => vendorConfig.Icon; }
         public override Sprite NamePlateImage { get => vendorConfig.NamePlateImage; }

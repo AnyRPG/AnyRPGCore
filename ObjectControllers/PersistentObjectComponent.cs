@@ -34,6 +34,7 @@ namespace AnyRPG {
         private IPersistentObjectOwner persistentObjectOwner = null;
 
         public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
+        public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
 
         public PersistentObjectComponent() {
         }

@@ -10,7 +10,8 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private PortalConfig portalConfig = null;
+        [SerializeField]
+        private PortalConfig portalConfig = new PortalConfig();
 
         public override Sprite Icon { get => portalConfig.Icon; }
         public override Sprite NamePlateImage { get => portalConfig.NamePlateImage; }
