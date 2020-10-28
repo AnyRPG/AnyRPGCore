@@ -12,10 +12,10 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private UnitSpawnControllerConfig unitSpawnControllerConfig = new UnitSpawnControllerConfig();
+        private UnitSpawnControllerProps interactableOptionProps = new UnitSpawnControllerProps();
 
-        public override Sprite Icon { get => unitSpawnControllerConfig.Icon; }
-        public override Sprite NamePlateImage { get => unitSpawnControllerConfig.Icon; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.Icon; }
 
         [SerializeField]
         private List<string> unitProfileNames = new List<string>();
@@ -34,8 +34,8 @@ namespace AnyRPG {
 
         private Collider boxCollider = null;
 
-        public UnitSpawnControllerInteractable(Interactable interactable, UnitSpawnControllerConfig interactableOptionConfig) : base(interactable) {
-            this.unitSpawnControllerConfig = interactableOptionConfig;
+        public UnitSpawnControllerInteractable(Interactable interactable, UnitSpawnControllerProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 

@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New QuestGiver Config", menuName = "AnyRPG/Interactable/QuestGiverConfig")]
-    [System.Serializable]
     public class QuestGiverConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private QuestGiverProps interactableOptionProps = new QuestGiverProps();
 
         [Header("QuestGiver")]
 
@@ -22,9 +24,6 @@ namespace AnyRPG {
 
         public List<string> QuestGiverProfileNames { get => questGiverProfileNames; set => questGiverProfileNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new QuestGiver(interactable, this);
-        }
     }
 
 }

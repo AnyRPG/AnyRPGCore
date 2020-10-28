@@ -7,12 +7,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootableNode : InteractableOption {
+    public abstract class LootableNode : InteractableOption {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        [SerializeField]
-        private LootableNodeConfig lootableNodeConfig = new LootableNodeConfig();
+        //[SerializeField]
+        //private LootableNodeConfig interactableOptionProps = new LootableNodeConfig();
 
         [SerializeField]
         protected List<string> lootTableNames = new List<string>();
@@ -44,8 +44,8 @@ namespace AnyRPG {
             }
         }
 
-        public LootableNode(Interactable interactable, LootableNodeConfig interactableOptionConfig) : base(interactable) {
-            this.lootableNodeConfig = interactableOptionConfig;
+        public LootableNode(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable) {
+            //this.interactableOptionProps = interactableOptionProps;
         }
 
 

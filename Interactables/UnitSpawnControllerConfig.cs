@@ -22,9 +22,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage : base.NamePlateImage); }
         public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new UnitSpawnControllerInteractable(interactable, this);
-        }
     }
 
 }

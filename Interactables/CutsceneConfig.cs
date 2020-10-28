@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Cutscene Config", menuName = "AnyRPG/Interactable/CutsceneConfig")]
-    [System.Serializable]
     public class CutsceneConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private CutsceneProps interactableOptionProps = new CutsceneProps();
 
         [Header("Cutscene")]
 
@@ -22,9 +24,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage : base.NamePlateImage); }
         public string CutsceneName { get => cutsceneName; set => cutsceneName = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new CutSceneInteractable(interactable, this);
-        }
     }
 
 }

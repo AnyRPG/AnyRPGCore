@@ -14,6 +14,8 @@ namespace AnyRPG {
         [SerializeField]
         public BehaviorConfig behaviorConfig = new BehaviorConfig();
 
+        private BehaviorProps interactableOptionProps = null;
+
         private BoxCollider boxCollider;
 
         [Header("Behavior")]
@@ -38,8 +40,8 @@ namespace AnyRPG {
         public int MyBehaviorIndex { get => behaviorIndex; }
         public List<BehaviorProfile> MyDialogList { get => behaviorList; set => behaviorList = value; }
 
-        public BehaviorInteractable(Interactable interactable, BehaviorConfig interactableOptionConfig) : base(interactable) {
-            this.behaviorConfig = interactableOptionConfig;
+        public BehaviorInteractable(Interactable interactable, BehaviorProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 
@@ -56,10 +58,10 @@ namespace AnyRPG {
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
-                if (characterUnit.BaseCharacter.UnitProfile.BehaviorNames != null) {
-                    foreach (string behaviorName in characterUnit.BaseCharacter.UnitProfile.BehaviorNames) {
+                if (characterUnit.BaseCharacter.UnitProfile.BehaviorConfig.BehaviorNames != null) {
+                    foreach (string behaviorName in characterUnit.BaseCharacter.UnitProfile.BehaviorConfig.BehaviorNames) {
                         BehaviorProfile tmpBehaviorProfile = null;
-                        if (characterUnit.BaseCharacter.UnitProfile.UseBehaviorCopy == true) {
+                        if (characterUnit.BaseCharacter.UnitProfile.BehaviorConfig.UseBehaviorCopy == true) {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
                         } else {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);

@@ -9,7 +9,7 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private ControlSwitchConfig controlSwitchConfig = new ControlSwitchConfig();
+        private ControlSwitchProps interactableOptionProps = new ControlSwitchProps();
 
         [Header("Control Switch")]
 
@@ -33,8 +33,8 @@ namespace AnyRPG {
 
         public bool MyOnState { get => onState; set => onState = value; }
 
-        public ControlSwitch(Interactable interactable, ControlSwitchConfig interactableOptionConfig) : base(interactable) {
-            this.controlSwitchConfig = interactableOptionConfig;
+        public ControlSwitch(Interactable interactable, ControlSwitchProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             interactionPanelTitle = "Interactable";
         }
 

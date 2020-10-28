@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class TeleportProps : InteractableOptionProps {
+    public class TeleportProps : PortalProps {
 
         [Header("Teleport")]
 
@@ -18,6 +18,10 @@ namespace AnyRPG {
         private string abilityName = string.Empty;
 
         public string AbilityName { get => abilityName; set => abilityName = value; }
+
+        public override InteractableOption GetInteractableOption(Interactable interactable) {
+            return new TeleportInteractable(interactable, this);
+        }
 
     }
 

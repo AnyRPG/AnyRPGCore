@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
-    [System.Serializable]
     public class UnitProfile : DescribableResource, IStatProvider {
 
         [Header("Unit")]
@@ -165,59 +164,39 @@ namespace AnyRPG {
 
         [Header("Patrol")]
 
-        [Tooltip("If the unit has a 'Patrol' component attached, use these patrol profiles")]
+        [Tooltip("Inline patrol configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [SerializeField]
+        private PatrolProps patrolConfig = new PatrolProps();
+
+        [Tooltip("Lookup and use these named patrols that can be shared among units")]
         [SerializeField]
         private List<string> patrolNames = new List<string>();
 
-        [Header("Loot")]
-
-        [Tooltip("If true, when killed, this unit will drop the system defined currency amount for its level and toughness")]
-        [SerializeField]
-        private bool automaticCurrency = false;
-
-        [Tooltip("Define items that can drop in this list")]
-        [SerializeField]
-        private List<string> lootTableNames = new List<string>();
-
-        //private List<LootTable> lootTables = new List<LootTable>();
-
-        [Header("Dialog")]
-
-        [Tooltip("The names of the dialogs available to this character")]
-        [SerializeField]
-        private List<string> dialogNames = new List<string>();
-
-        private List<Dialog> dialogList = new List<Dialog>();
-
-        [Header("QuestGiver")]
-
-        [Tooltip("The names of the questgiver profiles available to this character")]
-        [SerializeField]
-        private List<string> questGiverProfileNames = new List<string>();
-
-        private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();
-
-        private List<QuestNode> quests = new List<QuestNode>();
-
-        [Header("Vendor")]
-
-        [Tooltip("The names of the vendor collections available to this character")]
-        [SerializeField]
-        private List<string> vendorCollectionNames = new List<string>();
-
-        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
-
         [Header("Behavior")]
 
-        [Tooltip("The names of the behavior (profiles) available to this character")]
+        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
-        private List<string> behaviorNames = new List<string>();
+        private BehaviorProps behaviorConfig = new BehaviorProps();
 
-        [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
+        [Header("Builtin Interactables")]
+
+        [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
-        private bool useBehaviorCopy = false;
+        private LootableCharacterProps lootableCharacter = new LootableCharacterProps();
 
-        [Header("Interactable")]
+        [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [SerializeField]
+        private DialogProps dialogConfig = new DialogProps();
+
+        [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [SerializeField]
+        private QuestGiverProps questGiverConfig = new QuestGiverProps();
+
+        [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [SerializeField]
+        private VendorProps vendorConfig = new VendorProps();
+
+        [Header("Named Interactables")]
 
         [Tooltip("The names of the interactable options available on this character")]
         [SerializeField]
@@ -246,15 +225,13 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
-        public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
-        public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
-        public List<QuestNode> Quests { get => quests; set => quests = value; }
-        public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
-        public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
-        public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
-        public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
         public UnitPrefabProfile UnitPrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
+        public LootableCharacterProps LootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
+        public BehaviorProps BehaviorConfig { get => behaviorConfig; set => behaviorConfig = value; }
+        public DialogProps DialogConfig { get => dialogConfig; set => dialogConfig = value; }
+        public QuestGiverProps QuestGiverConfig { get => questGiverConfig; set => questGiverConfig = value; }
+        public VendorProps VendorConfig { get => vendorConfig; set => vendorConfig = value; }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -416,47 +393,6 @@ namespace AnyRPG {
                 }
             }
 
-            if (dialogNames != null) {
-                foreach (string dialogName in dialogNames) {
-                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
-                    if (tmpDialog != null) {
-                        dialogList.Add(tmpDialog);
-                    } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
-                    }
-                }
-            }
-
-            if (questGiverProfileNames != null) {
-                foreach (string questGiverProfileName in questGiverProfileNames) {
-                    QuestGiverProfile tmpQuestGiverProfile = SystemQuestGiverProfileManager.MyInstance.GetResource(questGiverProfileName);
-                    if (tmpQuestGiverProfile != null) {
-                        questGiverProfiles.Add(tmpQuestGiverProfile);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
-                if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
-                    foreach (QuestNode questNode in questGiverProfile.MyQuests) {
-                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
-                        quests.Add(questNode);
-                    }
-                }
-            }
-
-            if (vendorCollectionNames != null) {
-                foreach (string vendorCollectionName in vendorCollectionNames) {
-                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
-                    if (tmpVendorCollection != null) {
-                        vendorCollections.Add(tmpVendorCollection);
-                    } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
 
 
         }

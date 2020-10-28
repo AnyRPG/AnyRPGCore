@@ -12,10 +12,10 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private DialogConfig dialogConfig = new DialogConfig();
+        private DialogProps interactableOptionProps = new DialogProps();
 
-        public override Sprite Icon { get => dialogConfig.Icon; }
-        public override Sprite NamePlateImage { get => dialogConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         public override string InteractionPanelTitle {
             get {
@@ -27,12 +27,6 @@ namespace AnyRPG {
             }
             set => base.InteractionPanelTitle = value;
         }
-
-        [Header("Dialog")]
-
-        [Tooltip("The names of the dialogs available to this interactable")]
-        [SerializeField]
-        private List<string> dialogNames = new List<string>();
 
         private List<Dialog> dialogList = new List<Dialog>();
 
@@ -47,8 +41,8 @@ namespace AnyRPG {
         public int DialogIndex { get => dialogIndex; }
         public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
 
-        public DialogInteractable(Interactable interactable, DialogConfig interactableConfig) : base(interactable) {
-            this.dialogConfig = interactableConfig;
+        public DialogInteractable(Interactable interactable, DialogProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 
@@ -65,12 +59,7 @@ namespace AnyRPG {
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
-                if (characterUnit.BaseCharacter.UnitProfile.DialogList != null) {
-                    foreach (Dialog dialog in characterUnit.BaseCharacter.UnitProfile.DialogList) {
-                        dialog.RegisterPrerequisiteOwner(this);
-                        dialogList.Add(dialog);
-                    }
-                }
+                interactableOptionProps = characterUnit.BaseCharacter.UnitProfile.DialogConfig;
             }
 
             // testing - add handle prerequisiteupdates here
@@ -327,8 +316,8 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             dialogList = new List<Dialog>();
-            if (dialogNames != null) {
-                foreach (string dialogName in dialogNames) {
+            if (interactableOptionProps.DialogNames != null) {
+                foreach (string dialogName in interactableOptionProps.DialogNames) {
                     Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
                     if (tmpDialog != null) {
                         tmpDialog.RegisterPrerequisiteOwner(this);

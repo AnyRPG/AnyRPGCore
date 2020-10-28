@@ -10,10 +10,10 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private MusicPlayerConfig musicPlayerConfig = new MusicPlayerConfig();
+        private MusicPlayerProps interactableOptionProps = new MusicPlayerProps();
 
-        public override Sprite Icon { get => musicPlayerConfig.Icon; }
-        public override Sprite NamePlateImage { get => musicPlayerConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         [SerializeField]
         private List<string> musicProfileNames = new List<string>();
@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         public List<AudioProfile> MyMusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
-        public MusicPlayer(Interactable interactable, MusicPlayerConfig interactableConfig) : base(interactable) {
-            this.musicPlayerConfig = interactableConfig;
+        public MusicPlayer(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         protected override void Start() {

@@ -12,13 +12,13 @@ namespace AnyRPG {
     [System.Serializable]
     public class PressureSwitchConfig : ControlSwitchConfig {
 
+        [SerializeField]
+        private PressureSwitchProps interactableOptionProps = new PressureSwitchProps();
+
         [Tooltip("the minimum amount of weight needed to activate this switch")]
         [SerializeField]
         private float minimumWeight = 0f;
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new PressureSwitch(interactable, this);
-        }
     }
 
 }

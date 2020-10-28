@@ -10,11 +10,10 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        [SerializeField]
-        private CharacterCreatorConfig characterCreatorConfig = new CharacterCreatorConfig();
+        private CharacterCreatorProps interactableOptionProps = new CharacterCreatorProps();
 
-        public override Sprite Icon { get => characterCreatorConfig.Icon; }
-        public override Sprite NamePlateImage { get => characterCreatorConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         [SerializeField]
         private GameObject spawnPrefab = null;
@@ -23,8 +22,8 @@ namespace AnyRPG {
 
         private Collider boxCollider = null;
 
-        public CharacterCreatorInteractable(Interactable interactable, CharacterCreatorConfig interactableOptionConfig) : base(interactable) {
-            this.characterCreatorConfig = interactableOptionConfig;
+        public CharacterCreatorInteractable(Interactable interactable, CharacterCreatorProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         protected override void Start() {

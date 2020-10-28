@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    [CreateAssetMenu(fileName = "New Portal Config", menuName = "AnyRPG/Interactable/PortalConfig")]
-    [System.Serializable]
     public class PortalConfig : InteractableOptionConfig {
 
         [Header("Location Override")]

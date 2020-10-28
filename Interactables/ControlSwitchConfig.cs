@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Control Switch Config", menuName = "AnyRPG/Interactable/ControlSwitchConfig")]
-    [System.Serializable]
     public class ControlSwitchConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private ControlSwitchProps interactableOptionProps = new ControlSwitchProps();
 
         [Header("Control Switch")]
 
@@ -26,10 +28,6 @@ namespace AnyRPG {
         [SerializeField]
         private int activationLimit = 0;
 
-
-        public virtual InteractableOption GetInteractableOption(Interactable interactable) {
-            return new ControlSwitch(interactable, this);
-        }
     }
 
 }

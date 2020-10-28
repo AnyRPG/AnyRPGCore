@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private SpecializationChangeConfig specializationChangeConfig = new SpecializationChangeConfig();
+        private SpecializationChangeProps interactableOptionProps = new SpecializationChangeProps();
 
         [Tooltip("the class Specialization that this interactable option offers")]
         [SerializeField]
@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
-        public SpecializationChangeInteractable(Interactable interactable, SpecializationChangeConfig interactableOptionConfig) : base(interactable) {
-            this.specializationChangeConfig = interactableOptionConfig;
+        public SpecializationChangeInteractable(Interactable interactable, SpecializationChangeProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             SetupScriptableObjects();
         }
 

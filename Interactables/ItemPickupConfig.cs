@@ -9,13 +9,11 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Item Pickup Config", menuName = "AnyRPG/Interactable/ItemPickupConfig")]
-    [System.Serializable]
-    public class ItemPickupConfig : LootableNodeConfig {
+    public class ItemPickupConfig : InteractableOptionConfig {
 
+        [SerializeField]
+        private ItemPickupProps interactableOptionProps = new ItemPickupProps();
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new ItemPickup(interactable, this);
-        }
     }
 
 }

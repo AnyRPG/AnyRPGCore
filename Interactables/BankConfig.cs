@@ -9,9 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Bank Config", menuName = "AnyRPG/Interactable/BankConfig")]
-    [System.Serializable]
     public class BankConfig : InteractableOptionConfig {
 
+        [SerializeField]
+        private BankProps interactableOptionProps = new BankProps();
 
         public override Sprite Icon {
             get {
@@ -30,9 +31,6 @@ namespace AnyRPG {
             }
         }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new Bank(interactable, this);
-        }
     }
 
 }

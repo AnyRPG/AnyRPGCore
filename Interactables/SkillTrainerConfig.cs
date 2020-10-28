@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Skill Trainer Config", menuName = "AnyRPG/Interactable/SkillTrainerConfig")]
-    [System.Serializable]
     public class SkillTrainerConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private SkillTrainerProps interactableOptionProps = new SkillTrainerProps();
 
         [Tooltip("the skills that this interactable option offers")]
         [SerializeField]
@@ -21,9 +23,6 @@ namespace AnyRPG {
 
         public List<string> SkillNames { get => skillNames; set => skillNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new SkillTrainer(interactable, this);
-        }
     }
 
 }

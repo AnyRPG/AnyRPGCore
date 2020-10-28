@@ -11,19 +11,21 @@ namespace AnyRPG {
         [SerializeField]
         private BankConfig bankConfig = new BankConfig();
 
+        private BankProps interactableOptionProps = null;
+
         public override Sprite Icon {
             get {
-                return bankConfig.Icon;
+                return interactableOptionProps.Icon;
             } 
         }
         public override Sprite NamePlateImage {
             get {
-                return bankConfig.NamePlateImage;
+                return interactableOptionProps.NamePlateImage;
             }
         }
 
-        public Bank(Interactable interactable, BankConfig interactableConfig) : base(interactable) {
-            this.bankConfig = interactableConfig;
+        public Bank(Interactable interactable, BankProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             interactionPanelTitle = "Bank";
         }
 

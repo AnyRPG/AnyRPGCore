@@ -8,9 +8,8 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    [CreateAssetMenu(fileName = "New Lootable Node Config", menuName = "AnyRPG/Interactable/LootableNodeConfig")]
     [System.Serializable]
-    public class LootableNodeConfig : InteractableOptionConfig {
+    public class LootableNodeProps : InteractableOptionProps {
 
         [Header("Lootable Node")]
 
@@ -23,9 +22,12 @@ namespace AnyRPG {
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public float SpawnTimer { get => spawnTimer; set => spawnTimer = value; }
 
+        /*
         public virtual InteractableOption GetInteractableOption(Interactable interactable) {
             return new LootableNode(interactable, this);
         }
+        */
+        
     }
 
 }

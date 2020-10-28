@@ -11,7 +11,7 @@ namespace AnyRPG {
         //public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private GatheringNodeConfig gatheringNodeConfig = new GatheringNodeConfig();
+        private GatheringNodeProps interactableOptionProps = new GatheringNodeProps();
 
         // gathering nodes are special.  The image is based on what ability it supports
         public override Sprite Icon {
@@ -37,8 +37,8 @@ namespace AnyRPG {
 
         public GatherAbility BaseAbility { get => baseAbility; }
 
-        public GatheringNode(Interactable interactable, GatheringNodeConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
-            this.gatheringNodeConfig = interactableOptionConfig;
+        public GatheringNode(Interactable interactable, GatheringNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 

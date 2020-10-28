@@ -11,10 +11,10 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private NameChangeConfig nameChangeConfig = new NameChangeConfig();
+        private NameChangeProps interactableOptionProps = new NameChangeProps();
 
-        public override Sprite Icon { get => nameChangeConfig.Icon; }
-        public override Sprite NamePlateImage { get => nameChangeConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         [SerializeField]
         private GameObject spawnPrefab = null;
@@ -25,8 +25,8 @@ namespace AnyRPG {
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public NameChangeInteractable(Interactable interactable, NameChangeConfig interactableOptionConfig) : base(interactable) {
-            this.nameChangeConfig = interactableOptionConfig;
+        public NameChangeInteractable(Interactable interactable, NameChangeProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         protected override void Start() {

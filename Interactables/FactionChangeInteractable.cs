@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private FactionChangeConfig factionChangeConfig = new FactionChangeConfig();
+        private FactionChangeProps interactableOptionProps = new FactionChangeProps();
 
         private Faction faction;
 
@@ -19,11 +19,11 @@ namespace AnyRPG {
 
         public Faction MyFaction { get => faction; set => faction = value; }
 
-        public override Sprite Icon { get => factionChangeConfig.Icon; }
-        public override Sprite NamePlateImage { get => factionChangeConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
-        public FactionChangeInteractable(Interactable interactable, FactionChangeConfig factionChangeConfig) : base(interactable) {
-            this.factionChangeConfig = factionChangeConfig;
+        public FactionChangeInteractable(Interactable interactable, FactionChangeProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             SetupScriptableObjects();
         }
 
@@ -114,12 +114,12 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
-            if (factionChangeConfig != null && factionChangeConfig.FactionName != null && factionChangeConfig.FactionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionChangeConfig.FactionName);
+            if (interactableOptionProps != null && interactableOptionProps.FactionName != null && interactableOptionProps.FactionName != string.Empty) {
+                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(interactableOptionProps.FactionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + factionChangeConfig.FactionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + interactableOptionProps.FactionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
 
             }

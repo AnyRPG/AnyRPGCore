@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private TeleportProps teleportProps = new TeleportProps();
+        private TeleportProps interactableOptionProps = new TeleportProps();
 
         private TeleportConfig teleportConfig = null;
 
@@ -25,8 +25,8 @@ namespace AnyRPG {
 
         public BaseAbility BaseAbility { get => ability; }
 
-        public TeleportInteractable(Interactable interactable, TeleportConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
-            this.teleportConfig = interactableOptionConfig;
+        public TeleportInteractable(Interactable interactable, TeleportProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 

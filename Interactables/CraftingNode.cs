@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private CraftingNodeConfig craftingNodeConfig = new CraftingNodeConfig();
+        private CraftingNodeProps interactableOptionProps = new CraftingNodeProps();
 
         [Tooltip("The ability to cast in order to mine this node")]
         [SerializeField]
@@ -35,8 +35,8 @@ namespace AnyRPG {
         public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.DisplayName : base.InteractionPanelTitle); }
         public BaseAbility MyAbility { get => ability; }
 
-        public CraftingNode(Interactable interactable, CraftingNodeConfig interactableConfig) : base(interactable) {
-            this.craftingNodeConfig = interactableConfig;
+        public CraftingNode(Interactable interactable, CraftingNodeProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
 

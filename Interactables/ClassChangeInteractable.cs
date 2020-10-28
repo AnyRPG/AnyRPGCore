@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private ClassChangeConfig classChangeConfig = new ClassChangeConfig();
+        private ClassChangeProps interactableOptionProps = new ClassChangeProps();
 
         private CharacterClass characterClass;
 
@@ -19,11 +19,11 @@ namespace AnyRPG {
 
         public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
 
-        public override Sprite Icon { get => classChangeConfig.Icon; }
-        public override Sprite NamePlateImage { get => classChangeConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
-        public ClassChangeInteractable(Interactable interactable, ClassChangeConfig interactableOptionConfig) : base(interactable) {
-            this.classChangeConfig = interactableOptionConfig;
+        public ClassChangeInteractable(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             SetupScriptableObjects();
         }
 
@@ -137,12 +137,12 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
-            if (classChangeConfig != null && classChangeConfig.ClassName != null && classChangeConfig.ClassName != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(classChangeConfig.ClassName);
+            if (interactableOptionProps != null && interactableOptionProps.ClassName != null && interactableOptionProps.ClassName != string.Empty) {
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(interactableOptionProps.ClassName);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + classChangeConfig.ClassName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + interactableOptionProps.ClassName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
 
             }

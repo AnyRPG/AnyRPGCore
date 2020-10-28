@@ -12,7 +12,7 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private QuestGiverConfig questGiverConfig = new QuestGiverConfig();
+        private QuestGiverProps interactableOptionProps = new QuestGiverProps();
 
         [Header("QuestGiver")]
 
@@ -27,11 +27,11 @@ namespace AnyRPG {
 
         public List<QuestNode> MyQuests { get => quests; }
 
-        public override Sprite Icon { get => questGiverConfig.Icon; }
-        public override Sprite NamePlateImage { get => questGiverConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
-        public QuestGiver(Interactable interactable, QuestGiverConfig interactableConfig) : base(interactable) {
-            this.questGiverConfig = interactableConfig;
+        public QuestGiver(Interactable interactable, QuestGiverProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         protected override void Start() {
@@ -51,12 +51,7 @@ namespace AnyRPG {
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
-                if (characterUnit.BaseCharacter.UnitProfile.Quests != null) {
-                    foreach (QuestNode quest in characterUnit.BaseCharacter.UnitProfile.Quests) {
-                        quest.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
-                        quests.Add(quest);
-                    }
-                }
+                interactableOptionProps = characterUnit.BaseCharacter.UnitProfile.QuestGiverConfig;
             }
 
             HandlePrerequisiteUpdates();

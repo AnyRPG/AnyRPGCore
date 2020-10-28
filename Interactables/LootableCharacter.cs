@@ -16,21 +16,10 @@ namespace AnyRPG {
         public event System.Action<UnitController> OnLootComplete = delegate { };
 
         [SerializeField]
-        private LootableCharacterConfig lootableCharacterConfig = new LootableCharacterConfig();
+        private LootableCharacterProps interactableOptionProps = new LootableCharacterProps();
 
-        public override Sprite Icon { get => lootableCharacterConfig.Icon; }
-        public override Sprite NamePlateImage { get => lootableCharacterConfig.NamePlateImage; }
-
-        
-        [Header("Loot")]
-
-        [Tooltip("If true, when killed, this unit will drop the system defined currency amount for its level and toughness")]
-        [SerializeField]
-        private bool automaticCurrency = false;
-
-        [Tooltip("Define items that can drop in this list")]
-        [SerializeField]
-        private List<string> lootTableNames = new List<string>();
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         private List<LootTable> lootTables = new List<LootTable>();
 
@@ -47,13 +36,12 @@ namespace AnyRPG {
 
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public List<LootTable> MyLootTables { get => lootTables; set => lootTables = value; }
-        public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
         public bool CurrencyRolled { get => currencyRolled; }
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
 
-        public LootableCharacter(Interactable interactable, LootableCharacterConfig interactableConfig) : base(interactable) {
-            this.lootableCharacterConfig = interactableConfig;
+        public LootableCharacter(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         protected override void Start() {
@@ -63,15 +51,9 @@ namespace AnyRPG {
 
         public void AddUnitProfileSettings() {
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
-                if (characterUnit.BaseCharacter.UnitProfile.LootTableNames != null) {
-                    foreach (string lootTableName in characterUnit.BaseCharacter.UnitProfile.LootTableNames) {
-                        LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
-                        if (lootTable != null) {
-                            lootTables.Add(lootTable);
-                        }
-                    }
+                if (characterUnit.BaseCharacter.UnitProfile.LootableCharacter != null) {
+                    interactableOptionProps = characterUnit.BaseCharacter.UnitProfile.LootableCharacter;
                 }
-                automaticCurrency = characterUnit.BaseCharacter.UnitProfile.AutomaticCurrency;
             }
             HandlePrerequisiteUpdates();
 
@@ -116,7 +98,7 @@ namespace AnyRPG {
 
         public void CreateLootTables() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateLootTables()");
-            foreach (string lootTableName in lootTableNames) {
+            foreach (string lootTableName in interactableOptionProps.LootTableNames) {
                 LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
@@ -239,7 +221,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount(): after loot table count: " + lootCount);
                 }
             }
-            if (AutomaticCurrency == true) {
+            if (interactableOptionProps.AutomaticCurrency == true) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): automatic currency : true");
                 CurrencyNode tmpNode = GetCurrencyLoot();
                 if (tmpNode.currency != null) {
@@ -276,7 +258,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): currencyRolled: " + currencyRolled + "; lootCalculated: " + lootCalculated);
                 return currencyNode;
             }
-            if (automaticCurrency == true) {
+            if (interactableOptionProps.AutomaticCurrency == true) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
                 currencyNode.currency = SystemConfigurationManager.MyInstance.KillCurrency;
                 if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
@@ -311,7 +293,7 @@ namespace AnyRPG {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
 
                             // get currency loot
-                            if (lootableCharacter.AutomaticCurrency == true) {
+                            if (interactableOptionProps.AutomaticCurrency == true) {
                                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): automatic currency : true");
                                 CurrencyNode tmpNode = lootableCharacter.GetCurrencyLoot();
                                 if (tmpNode.currency != null) {

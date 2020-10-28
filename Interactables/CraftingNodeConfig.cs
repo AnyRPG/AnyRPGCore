@@ -12,14 +12,14 @@ namespace AnyRPG {
     [System.Serializable]
     public class CraftingNodeConfig : InteractableOptionConfig {
 
+        [SerializeField]
+        private CraftingNodeProps interactableOptionProps = new CraftingNodeProps();
+
         [Tooltip("The ability to cast in order to craft with this node")]
         [SerializeField]
         private string abilityName = string.Empty;
 
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new CraftingNode(interactable, this);
-        }
     }
 
 }

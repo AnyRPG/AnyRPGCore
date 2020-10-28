@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Teleport Config", menuName = "AnyRPG/Interactable/TeleportConfig")]
-    [System.Serializable]
-    public class TeleportConfig : PortalConfig {
+    public class TeleportConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private TeleportProps interactableOptionProps = new TeleportProps();
 
         [Header("Teleport")]
 
@@ -20,9 +22,6 @@ namespace AnyRPG {
 
         public string AbilityName { get => abilityName; set => abilityName = value; }
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new TeleportInteractable(interactable, this);
-        }
     }
 
 }

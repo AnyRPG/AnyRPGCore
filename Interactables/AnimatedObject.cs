@@ -8,8 +8,12 @@ namespace AnyRPG {
 
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
+        /*
         [SerializeField]
         private AnimatedObjectConfig animatedObjectConfig = new AnimatedObjectConfig();
+        */
+
+        private AnimatedObjectProps interactableOptionProps = null;
 
         [SerializeField]
         private float movementSpeed = 0.05f;
@@ -23,8 +27,8 @@ namespace AnyRPG {
         // keep track of opening and closing
         private Coroutine coroutine = null;
 
-        public AnimatedObject(Interactable interactable, AnimatedObjectConfig interactableConfig) : base(interactable) {
-            this.animatedObjectConfig = interactableConfig;
+        public AnimatedObject(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             interactionPanelTitle = "Interactable";
         }
 

@@ -8,8 +8,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Faction Change Config", menuName = "AnyRPG/Interactable/ClassChangeConfig")]
-    [System.Serializable]
     public class ClassChangeConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private ClassChangeProps interactableOptionProps = new ClassChangeProps();
 
         [Tooltip("the class that this interactable option offers")]
         [SerializeField]
@@ -19,9 +21,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.NamePlateImage); }
         public string ClassName { get => className; set => className = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new ClassChangeInteractable(interactable, this);
-        }
     }
 
 }

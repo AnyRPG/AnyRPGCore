@@ -10,7 +10,10 @@ namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Gathering Node Config", menuName = "AnyRPG/Interactable/GatheringNodeConfig")]
     [System.Serializable]
-    public class GatheringNodeConfig : LootableNodeConfig {
+    public class GatheringNodeConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private GatheringNodeProps interactableOptionProps = new GatheringNodeProps();
 
         [Header("Gathering Node")]
 
@@ -18,9 +21,6 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new GatheringNode(interactable, this);
-        }
     }
 
 }

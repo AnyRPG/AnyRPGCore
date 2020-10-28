@@ -11,6 +11,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class FactionChangeConfig : InteractableOptionConfig {
 
+        [SerializeField]
+        private FactionChangeProps interactableOptionProps = new FactionChangeProps();
+
         [Tooltip("the faction that this interactable option offers")]
         [SerializeField]
         private string factionName = string.Empty;
@@ -19,9 +22,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage : base.NamePlateImage); }
         public string FactionName { get => factionName; set => factionName = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new FactionChangeInteractable(interactable, this);
-        }
     }
 
 }

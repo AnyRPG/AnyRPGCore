@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Specialization Change Config", menuName = "AnyRPG/Interactable/SpecializationChangeConfig")]
-    [System.Serializable]
     public class SpecializationChangeConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private SpecializationChangeProps interactableOptionProps = new SpecializationChangeProps();
 
         [Tooltip("the class Specialization that this interactable option offers")]
         [SerializeField]
@@ -20,9 +22,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.NamePlateImage); }
         public string SpecializationName { get => specializationName; set => specializationName = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new SpecializationChangeInteractable(interactable, this);
-        }
     }
 
 }

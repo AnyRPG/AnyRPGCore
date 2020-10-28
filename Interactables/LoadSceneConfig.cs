@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Load Scene Config", menuName = "AnyRPG/Interactable/LoadSceneConfig")]
-    [System.Serializable]
     public class LoadSceneConfig : PortalConfig {
+
+        [SerializeField]
+        private LoadSceneProps interactableOptionProps = new LoadSceneProps();
 
         [Header("Scene Options")]
 
@@ -20,9 +22,6 @@ namespace AnyRPG {
 
         public string SceneName { get => sceneName; set => sceneName = value; }
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new LoadSceneInteractable(interactable, this);
-        }
     }
 
 }

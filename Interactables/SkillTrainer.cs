@@ -10,7 +10,7 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private SkillTrainerConfig skillTrainerConfig = new SkillTrainerConfig();
+        private SkillTrainerProps interactableOptionProps = new SkillTrainerProps();
 
         [SerializeField]
         private List<string> skillNames = new List<string>();
@@ -20,11 +20,11 @@ namespace AnyRPG {
 
         public List<Skill> MySkills { get => skills; }
 
-        public override Sprite Icon { get => skillTrainerConfig.Icon; }
-        public override Sprite NamePlateImage { get => skillTrainerConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
-        public SkillTrainer(Interactable interactable, SkillTrainerConfig skillTrainerConfig) : base(interactable) {
-            this.skillTrainerConfig = skillTrainerConfig;
+        public SkillTrainer(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             SetupScriptableObjects();
         }
 

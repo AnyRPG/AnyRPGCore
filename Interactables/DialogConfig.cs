@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Dialog Config", menuName = "AnyRPG/Interactable/DialogConfig")]
-    [System.Serializable]
     public class DialogConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private DialogProps interactableOptionProps = new DialogProps();
 
         [Header("Dialog")]
 
@@ -22,9 +24,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.NamePlateImage); }
         public List<string> DialogNames { get => dialogNames; set => dialogNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new DialogInteractable(interactable, this);
-        }
     }
 
 }

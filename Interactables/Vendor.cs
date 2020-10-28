@@ -10,10 +10,10 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private VendorConfig vendorConfig = new VendorConfig();
+        private VendorProps interactableOptionProps = new VendorProps();
 
-        public override Sprite Icon { get => vendorConfig.Icon; }
-        public override Sprite NamePlateImage { get => vendorConfig.NamePlateImage; }
+        public override Sprite Icon { get => interactableOptionProps.Icon; }
+        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
 
         [Header("Vendor")]
 
@@ -22,8 +22,8 @@ namespace AnyRPG {
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        public Vendor(Interactable interactable, VendorConfig interactableConfig) : base(interactable) {
-            this.vendorConfig = interactableConfig;
+        public Vendor(Interactable interactable, VendorProps interactableOptionProps) : base(interactable) {
+            this.interactableOptionProps = interactableOptionProps;
             interactionPanelTitle = "Purchase Items";
         }
 
@@ -37,9 +37,7 @@ namespace AnyRPG {
         public void AddUnitProfileSettings() {
             CharacterUnit characterUnit = GetComponent<CharacterUnit>();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.UnitProfile != null) {
-                if (characterUnit.BaseCharacter.UnitProfile.VendorCollections != null) {
-                    vendorCollections.AddRange(characterUnit.BaseCharacter.UnitProfile.VendorCollections);
-                }
+                interactableOptionProps = characterUnit.BaseCharacter.UnitProfile.VendorConfig;
             }
             HandlePrerequisiteUpdates();
 

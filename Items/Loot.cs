@@ -14,7 +14,7 @@ namespace AnyRPG {
         private Item item;
 
         [SerializeField]
-        private float dropChance = 0f;
+        private float dropChance = 100f;
 
         [SerializeField]
         private int minDrops = 1;

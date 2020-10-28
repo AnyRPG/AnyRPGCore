@@ -11,10 +11,10 @@ namespace AnyRPG {
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private ItemPickupConfig itemPickupConfig = new ItemPickupConfig();
+        private ItemPickupProps interactableOptionProps = new ItemPickupProps();
 
-        public ItemPickup(Interactable interactable, ItemPickupConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
-            this.itemPickupConfig = interactableOptionConfig;
+        public ItemPickup(Interactable interactable, ItemPickupProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         public override int GetValidOptionCount() {

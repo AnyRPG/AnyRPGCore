@@ -9,14 +9,14 @@ namespace AnyRPG {
         public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
-        private PressureSwitchConfig pressureSwitchConfig = new PressureSwitchConfig();
+        private PressureSwitchProps interactableOptionProps = new PressureSwitchProps();
 
         [Tooltip("the minimum amount of weight needed to activate this switch")]
         [SerializeField]
         private float minimumWeight = 0f;
 
-        public PressureSwitch(Interactable interactable, PressureSwitchConfig interactableOptionConfig) : base(interactable, interactableOptionConfig) {
-            this.pressureSwitchConfig = interactableOptionConfig;
+        public PressureSwitch(Interactable interactable, PressureSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            this.interactableOptionProps = interactableOptionProps;
         }
 
         public override bool Interact(CharacterUnit source) {

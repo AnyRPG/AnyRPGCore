@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Vendor Config", menuName = "AnyRPG/Interactable/VendorConfig")]
-    [System.Serializable]
     public class VendorConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private VendorProps interactableOptionProps = new VendorProps();
 
         [Header("Vendor")]
 
@@ -21,9 +23,6 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.NamePlateImage); }
         public List<string> VendorCollectionNames { get => vendorCollectionNames; set => vendorCollectionNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new Vendor(interactable, this);
-        }
     }
 
 }

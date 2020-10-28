@@ -9,8 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Character Creator Config", menuName = "AnyRPG/Interactable/CharacterCreatorConfig")]
-    [System.Serializable]
     public class CharacterCreatorConfig : InteractableOptionConfig {
+
+        [SerializeField]
+        private CharacterCreatorProps interactableOptionProps = new CharacterCreatorProps();
 
         [Header("Dialog")]
 
@@ -21,9 +23,6 @@ namespace AnyRPG {
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.NamePlateImage); }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new CharacterCreatorInteractable(interactable, this);
-        }
     }
 
 }
