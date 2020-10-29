@@ -1,7 +1,5 @@
 using AnyRPG;
 using System.Collections;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -24,7 +22,7 @@ namespace AnyRPG {
 
 
         public void HandleOpenWindow(UnitProfile unitProfile) {
-            //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
+            Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
             if (unitProfile == null) {
                 Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");

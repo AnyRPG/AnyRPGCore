@@ -171,8 +171,8 @@ namespace AnyRPG {
                 StopCoroutine(dialogCoroutine);
             }
             dialogCoroutine = null;
-            if (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null) {
-                namePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
+            if (interactable.NamePlateUnit != null && interactable.NamePlateUnit.NamePlateController.NamePlate != null) {
+                interactable.NamePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
             }
         }
 
@@ -185,8 +185,8 @@ namespace AnyRPG {
         }
 
         public IEnumerator playDialog(Dialog dialog) {
-            if (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null) {
-                namePlateUnit.NamePlateController.NamePlate.ShowSpeechBubble();
+            if (interactable.NamePlateUnit != null && interactable.NamePlateUnit.NamePlateController.NamePlate != null) {
+                interactable.NamePlateUnit.NamePlateController.NamePlate.ShowSpeechBubble();
             }
             float elapsedTime = 0f;
             dialogIndex = 0;
@@ -199,11 +199,11 @@ namespace AnyRPG {
                 foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
-                        if (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null) {
-                            namePlateUnit.NamePlateController.NamePlate.SetSpeechText(dialogNode.MyDescription);
+                        if (interactable.NamePlateUnit != null && interactable.NamePlateUnit.NamePlateController.NamePlate != null) {
+                            interactable.NamePlateUnit.NamePlateController.NamePlate.SetSpeechText(dialogNode.MyDescription);
                         }
-                        if (unitController != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.AudioClips != null && dialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
-                            unitController.UnitComponentController.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
+                        if (interactable.NamePlateUnit != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.AudioClips != null && dialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
+                            interactable.NamePlateUnit.UnitComponentController.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
                         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitObject != null) {
@@ -236,8 +236,8 @@ namespace AnyRPG {
             if (currentdialogNode != null) {
                 yield return new WaitForSeconds(currentdialogNode.MyShowTime);
             }
-            if (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null) {
-                namePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
+            if (interactable.NamePlateUnit != null && interactable.NamePlateUnit.NamePlateController.NamePlate != null) {
+                interactable.NamePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
             }
         }
 

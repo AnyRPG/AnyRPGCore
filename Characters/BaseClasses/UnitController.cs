@@ -6,7 +6,6 @@ using UMA;
 using UMA.CharacterSystem;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace AnyRPG {
     public class UnitController : MonoBehaviour, INamePlateUnit, IPersistentObjectOwner {
@@ -14,8 +13,9 @@ namespace AnyRPG {
         public event System.Action<GameObject> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
+        public event System.Action OnModelReady = delegate { };
 
-        private INamePlateTarget namePlateTarget;
+        private INamePlateTarget namePlateTarget = null;
 
         [SerializeField]
         protected UnitNamePlateController namePlateController = new UnitNamePlateController();
@@ -54,6 +54,7 @@ namespace AnyRPG {
         // components
         private NavMeshAgent agent = null;
         private Rigidbody rigidBody = null;
+        private Collider myCollider = null;
         private UnitMotor unitMotor = null;
         private UnitAnimator unitAnimator = null;
         private Interactable interactable = null;
@@ -67,6 +68,8 @@ namespace AnyRPG {
 
         // track startup state
         private bool eventSubscriptionsInitialized = false;
+        private bool profileReady = false;
+        private bool modelReady = false;
 
         // control logic
         private IState currentState;
@@ -216,6 +219,8 @@ namespace AnyRPG {
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
         public Interactable Interactable { get => interactable; set => interactable = value; }
+        public Collider Collider { get => myCollider; set => myCollider = value; }
+        public bool ModelReady { get => modelReady; set => modelReady = value; }
 
         /// <summary>
         /// set this unit to be the pet of baseCharacter
@@ -256,16 +261,32 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".UnitController.Awake()");
             GetComponentReferences();
             CreateEventSubscriptions();
-        }
 
-        private void Start() {
-            //SpawnUnitModel();
-
+            // create components here instead?  which ones rely on other things like unit profile being set before start?
             unitMotor = new UnitMotor(this);
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
 
+            // allow the base character to initialize.  it can possibly contain a unit profile
+            // if it does, attempt to spawn the character model referenced in it
             baseCharacter.Init();
+            if (baseCharacter.UnitProfile != null) {
+                SetUnitProfile(baseCharacter.UnitProfile);
+            }
+
+            // setUnitProfile will have spawned a model if it contained one.  If it did not,
+            // look for an animator.  If one is found, the model is already attached to this unit.
+            if (unitModel == null) {
+                ConfigureAnimator();
+            }
+
+            // if we got this far without an animator or model, this is probably the default character unit prefab
+            // in that case, whatever spawned this will set the unit profile manually and spawn the model by calling SetUnitProfile()
+        }
+
+        private void Start() {
+
+            patrolController.Init();
 
             namePlateController.Setup(this);
             persistentObjectComponent.Initialize(this);
@@ -282,7 +303,6 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile) {
             this.unitProfile = unitProfile;
             SpawnUnitModel();
-
         }
 
         private void SetStartPosition() {
@@ -337,16 +357,84 @@ namespace AnyRPG {
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
             interactable = GetComponent<Interactable>();
+            myCollider = GetComponent<Collider>();
         }
 
         public void SpawnUnitModel() {
             if (unitProfile != null && unitProfile.UnitPrefabProfile != null && unitProfile.UnitPrefabProfile.ModelPrefab != null) {
                 unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
-                if (unitModel != null) {
-                    dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+                ConfigureAnimator(unitModel);
+            }
+        }
+
+        public void ConfigureAnimator(GameObject unitModel = null) {
+
+            if (unitModel != null) {
+                this.unitModel = unitModel;
+            }
+            Animator animator = GetComponentInChildren<Animator>();
+            if (animator != null) {
+                unitAnimator.Init(animator);
+                if (unitModel == null) {
+                    unitModel = animator.gameObject;
+                }
+                ConfigureUnitModel();
+            }
+        }
+
+        public void ConfigureUnitModel() {
+            if (unitModel != null) {
+                dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+                if (dynamicCharacterAvatar != null) {
                     dynamicCharacterAvatar.Initialize();
+                    SubscribeToUMACreate();
+                } else {
+                    // this is not an UMA model, therefore it is ready and its bone structure is already created
+                    modelReady = true;
                 }
             }
+        }
+
+        public void UnsubscribeFromUMACreate() {
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+                //dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
+            }
+        }
+
+        public void SubscribeToUMACreate() {
+
+            UMAData umaData = dynamicCharacterAvatar.umaData;
+            umaData.OnCharacterCreated += HandleCharacterCreated;
+            umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
+            umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
+            umaData.OnCharacterDnaUpdated += HandleCharacterDnaUpdated;
+            umaData.OnCharacterDestroyed += HandleCharacterDestroyed;
+            umaData.OnCharacterUpdated += HandleCharacterUpdated;
+        }
+
+        public void HandleCharacterCreated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
+            UnsubscribeFromUMACreate();
+            modelReady = true;
+            OnModelReady();
+        }
+
+        public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.BeforeDnaUpdated(): " + umaData);
+        }
+        public void HandleCharacterBeforeUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterBeforeUpdated(): " + umaData);
+        }
+        public void HandleCharacterDnaUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterDnaUpdated(): " + umaData);
+        }
+        public void HandleCharacterDestroyed(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
+        }
+        public void HandleCharacterUpdated(UMAData umaData) {
+            //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
+            //HandleCharacterCreated(umaData);
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
@@ -963,7 +1051,8 @@ namespace AnyRPG {
             }
             // testing disable size multiplier and just put it straight into the hitbox.  it is messing with character motor because we stop moving toward a character that is 0.5 units outside of the hitbox
             //return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
-            return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, baseCharacter.CharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
+            //return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, baseCharacter.CharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
+            return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, myCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
         }
 
         public bool IsTargetInHitBox(GameObject newTarget) {

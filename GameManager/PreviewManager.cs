@@ -1,7 +1,5 @@
 using AnyRPG;
 using System.Collections;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +7,6 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public abstract class PreviewManager : MonoBehaviour {
 
-        [SerializeField]
         protected UnitController unitController;
 
         [SerializeField]
@@ -51,7 +48,7 @@ namespace AnyRPG {
 
         public void OpenWindowCommon() {
 
-            UnitController unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward);
+            unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward);
             if (unitController != null) {
                 unitController.SetPreviewMode();
                 if (unitController.BaseCharacter != null) {

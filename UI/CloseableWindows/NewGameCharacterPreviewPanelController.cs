@@ -4,11 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UMA;
-using UMA.Examples;
-using UMA.CharacterSystem;
-using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 
@@ -18,12 +13,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private CharacterPreviewCameraController previewCameraController = null;
-
-        // hold data so changes are not reset on switch between male and female
-        private string maleRecipe = string.Empty;
-        private string femaleRecipe = string.Empty;
-
-        //private DynamicCharacterAvatar umaAvatar;
 
         // track whether targetreadycallback has been activated or not
         private bool characterReady = false;

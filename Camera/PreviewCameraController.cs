@@ -1,6 +1,4 @@
 using AnyRPG;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -109,7 +107,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            //Debug.Log("AnyRPGCharacterPreviewCameraController.SetTarget(" + newTarget.name + ")");
+            Debug.Log("PreviewCameraController.SetTarget(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             // initial zoom distance is based on offset
             //initialCameraPositionOffset = new Vector3(0, 0, 2);
@@ -132,7 +130,14 @@ namespace AnyRPG {
         }
 
         public void InitializePosition() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition()");
+            Debug.Log(gameObject.name + ".PreviewCameraController.InitializePosition()");
+            if (unitController == null) {
+                Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController is null");
+            }
+            if (unitController.NamePlateController == null) {
+                Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
+            }
+
             if (unitController.NamePlateController.UnitPreviewCameraPositionOffset != null) {
                 initialCameraPositionOffset = unitController.NamePlateController.UnitPreviewCameraPositionOffset;
             } else {
@@ -155,7 +160,7 @@ namespace AnyRPG {
 
 
         public void InitializeCamera(UnitController unitController) {
-            //Debug.Log("AnyRPGCameraController.InitializeCamera(" + newTarget.gameObject.name + ")");
+            Debug.Log("AnyRPGCameraController.InitializeCamera(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
             SetTarget(unitController);
             //JumpToFollowSpot();
         }
@@ -330,9 +335,9 @@ namespace AnyRPG {
             //Debug.Log("Camera offset is " + cameraOffsetVector);
         }
 
-        public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
-            UnsubscribeFromUMACreate();
+        public void HandleModelReady() {
+            Debug.Log("PreviewCameraController.HandleModelReady()");
+            UnsubscribeFromModelReady();
             if (initialTargetString != string.Empty) {
                 Transform targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 if (targetBone == null) {
@@ -348,42 +353,18 @@ namespace AnyRPG {
 
         }
 
-        public void UnsubscribeFromUMACreate() {
-            if (unitController.DynamicCharacterAvatar != null) {
-                unitController.DynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
-                //dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
+        public void UnsubscribeFromModelReady() {
+            if (unitController != null) {
+                unitController.OnModelReady -= HandleModelReady;
             }
         }
 
-        public void SubscribeToUMACreate() {
+        public void SubscribeToModelReady() {
 
-            UMAData umaData = unitController.DynamicCharacterAvatar.umaData;
-            umaData.OnCharacterCreated += HandleCharacterCreated;
-            umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
-            umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
-            umaData.OnCharacterDnaUpdated += HandleCharacterDnaUpdated;
-            umaData.OnCharacterDestroyed += HandleCharacterDestroyed;
-            umaData.OnCharacterUpdated += HandleCharacterUpdated;
-
+            if (unitController != null) {
+                unitController.OnModelReady += HandleModelReady;
+            }
         }
-
-        public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.BeforeDnaUpdated(): " + umaData);
-        }
-        public void HandleCharacterBeforeUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterBeforeUpdated(): " + umaData);
-        }
-        public void HandleCharacterDnaUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterDnaUpdated(): " + umaData);
-        }
-        public void HandleCharacterDestroyed(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
-        }
-        public void HandleCharacterUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
-            //HandleCharacterCreated(umaData);
-        }
-
 
         private void FindFollowTarget() {
             Debug.Log("PreviewCameraController.FindFollowTarget()");
@@ -405,11 +386,11 @@ namespace AnyRPG {
             if (targetBone == null) {
                 Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is null");
                 // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
-                if (unitController.DynamicCharacterAvatar != null) {
-                    Debug.Log("PreviewCameraController.FindFollowTarget(): dynamic Character avatar is not null");
-                    SubscribeToUMACreate();
+                if (unitController.ModelReady == false) {
+                    Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
+                    SubscribeToModelReady();
                 } else {
-                    Debug.Log("PreviewCameraController.FindFollowTarget(): dynamic Character avatar is null");
+                    Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
                     if (initialTargetString != string.Empty) {
                         Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
                     }

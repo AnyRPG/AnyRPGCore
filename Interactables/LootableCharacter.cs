@@ -42,6 +42,11 @@ namespace AnyRPG {
 
         public LootableCharacter(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable) {
             this.interactableOptionProps = interactableOptionProps;
+            List<InteractableOption> interactableOptions = interactable.GetInteractableOptionList(typeof(CharacterUnit));
+            if (interactableOptions != null && interactableOptions.Count > 0) {
+                characterUnit = interactableOptions[0] as CharacterUnit;
+            }
+
         }
 
         protected override void Start() {
@@ -261,10 +266,10 @@ namespace AnyRPG {
             if (interactableOptionProps.AutomaticCurrency == true) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
                 currencyNode.currency = SystemConfigurationManager.MyInstance.KillCurrency;
-                if ((namePlateUnit as CharacterUnit) is CharacterUnit) {
-                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * (namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Level;
-                    if ((namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Toughness != null) {
-                        currencyNode.MyAmount *= (int)(namePlateUnit as CharacterUnit).BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
+                if (characterUnit != null) {
+                    currencyNode.MyAmount = SystemConfigurationManager.MyInstance.KillCurrencyAmountPerLevel * characterUnit.BaseCharacter.CharacterStats.Level;
+                    if (characterUnit.BaseCharacter.CharacterStats.Toughness != null) {
+                        currencyNode.MyAmount *= (int)characterUnit.BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
                     }
                 }
             }

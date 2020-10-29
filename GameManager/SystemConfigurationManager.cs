@@ -2,13 +2,8 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
-using UMA;
-using UMA.CharacterSystem;
 
 namespace AnyRPG {
     public class SystemConfigurationManager : MonoBehaviour {

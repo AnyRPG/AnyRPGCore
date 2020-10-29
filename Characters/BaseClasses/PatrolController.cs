@@ -27,6 +27,10 @@ namespace AnyRPG {
         public PatrolController(UnitController unitController) {
             this.unitController = unitController;
             SetupScriptableObjects();
+        }
+
+        public void Init() {
+            // this should be run after the unit profile is set
             FindAutomaticPatrol();
         }
 

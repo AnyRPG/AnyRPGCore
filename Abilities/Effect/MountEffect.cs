@@ -6,8 +6,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-using UMA;
-using UMA.CharacterSystem;
 
 
 namespace AnyRPG {
@@ -42,7 +40,7 @@ namespace AnyRPG {
                 PlayerManager.MyInstance.PlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
             }
             DeActivateMountedState();
-            UnsubscribeFromUMACreate();
+            UnsubscribeFromModelReady();
             base.CancelEffect(targetCharacter);
         }
 
@@ -67,8 +65,8 @@ namespace AnyRPG {
             mountUnitController = unitProfile.SpawnUnitPrefab(source.transform.parent, source.transform.position, source.transform.forward);
             if (mountUnitController != null) {
                 mountUnitController.SetMountMode();
-                if (mountUnitController != null && mountUnitController.DynamicCharacterAvatar != null) {
-                    SubscribeToUMACreate();
+                if (mountUnitController != null && mountUnitController.ModelReady == false) {
+                    SubscribeToModelReady();
                 } else {
                     HandleMountUnitSpawn();
                 }
@@ -141,23 +139,22 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleCharacterCreated(UMAData umaData) {
+        public void HandleModelReady() {
             //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
-            UnsubscribeFromUMACreate();
+            UnsubscribeFromModelReady();
             HandleMountUnitSpawn();
         }
 
-        public void UnsubscribeFromUMACreate() {
-            if (mountUnitController.DynamicCharacterAvatar != null) {
-                mountUnitController.DynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+        public void UnsubscribeFromModelReady() {
+            if (mountUnitController != null) {
+                mountUnitController.OnModelReady -= HandleModelReady;
             }
         }
 
-        public void SubscribeToUMACreate() {
-            if (mountUnitController.DynamicCharacterAvatar != null && mountUnitController.DynamicCharacterAvatar.umaData != null) {
-                mountUnitController.DynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
+        public void SubscribeToModelReady() {
+            if (mountUnitController != null) {
+                mountUnitController.OnModelReady += HandleModelReady;
             }
-
         }
 
         public void ConfigureCharacterMountedPhysics() {
@@ -172,10 +169,12 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.useGravity = false;
             PlayerManager.MyInstance.ActiveUnitController.FreezeAll();
             //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
-            Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
-            if (collider != null) {
-                collider.enabled = false;
-            }
+
+            // TODO : should this just set to trigger instead so player go through portals and be attacked on mount?
+            //PlayerManager.MyInstance.ActiveUnitController.Collider.enabled = false;
+            // TESTING IT NOW
+            PlayerManager.MyInstance.ActiveUnitController.Collider.isTrigger = true;
+
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
 
         }
@@ -187,10 +186,10 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.isKinematic = false;
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.useGravity = true;
             PlayerManager.MyInstance.ActiveUnitController.FreezeRotation();
-            Collider collider = PlayerManager.MyInstance.PlayerUnitObject.GetComponent<Collider>();
-            if (collider != null) {
-                collider.enabled = true;
-            }
+
+            // testing - this used to disable the collider
+            PlayerManager.MyInstance.ActiveUnitController.Collider.isTrigger = false;
+
             PlayerManager.MyInstance.ActiveUnitController.RigidBody.WakeUp();
         }
 

@@ -451,7 +451,7 @@ namespace AnyRPG {
                 if (animatorCurrentAbility != null) {
                     AudioClip audioClip = animatorCurrentAbility.GetHitSound(baseCharacter);
                     if (audioClip != null) {
-                        baseCharacter.CharacterUnit.UnitController.UnitComponentController.PlayEffect(audioClip);
+                        baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
                     }
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }

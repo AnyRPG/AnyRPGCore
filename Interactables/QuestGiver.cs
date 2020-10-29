@@ -64,8 +64,8 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            if (namePlateUnit != null) {
-                namePlateUnit.NamePlateController.OnInitializeNamePlate += HandlePrerequisiteUpdates;
+            if (interactable.NamePlateUnit != null) {
+                interactable.NamePlateUnit.NamePlateController.OnInitializeNamePlate += HandlePrerequisiteUpdates;
             }
         }
 
@@ -78,8 +78,8 @@ namespace AnyRPG {
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
-            if (namePlateUnit != null) {
-                namePlateUnit.NamePlateController.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
+            if (interactable.NamePlateUnit != null) {
+                interactable.NamePlateUnit.NamePlateController.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
             }
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
@@ -209,7 +209,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
-            if (namePlateUnit.NamePlateController.NamePlate == null) {
+            if (interactable.NamePlateUnit == null || interactable.NamePlateUnit.NamePlateController.NamePlate == null) {
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Nameplate is null");
                 return;
             }
@@ -217,11 +217,11 @@ namespace AnyRPG {
             string indicatorType = GetIndicatorType();
 
             if (indicatorType == string.Empty) {
-                namePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(false);
+                interactable.NamePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(false);
             } else {
-                namePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(true);
+                interactable.NamePlateUnit.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(true);
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
-                SetIndicatorText(indicatorType, namePlateUnit.NamePlateController.NamePlate.MyQuestIndicator);
+                SetIndicatorText(indicatorType, interactable.NamePlateUnit.NamePlateController.NamePlate.MyQuestIndicator);
             }
             //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() About to fire MiniMapUpdateHandler");
         }

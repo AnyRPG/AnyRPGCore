@@ -110,7 +110,7 @@ namespace AnyRPG {
 
         private bool miniMapIndicatorReady = false;
 
-        private BoxCollider boxCollider;
+        private Collider myCollider;
 
         private INamePlateUnit namePlateUnit = null;
 
@@ -122,7 +122,8 @@ namespace AnyRPG {
 
         public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.NamePlateController.UnitDisplayName : gameObject.name)); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
-        public BoxCollider MyBoxCollider { get => boxCollider;}
+        //public BoxCollider MyBoxCollider { get => boxCollider;}
+        public Collider Collider { get => myCollider; }
 
         public override bool MyPrerequisitesMet {
             get {
@@ -141,6 +142,7 @@ namespace AnyRPG {
         }
 
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
+        public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
@@ -192,21 +194,6 @@ namespace AnyRPG {
 
         }
 
-        public override void OrchestratorFinish() {
-            //Debug.Log(gameObject.name + ".Interactable.OrchestratorFinish()");
-            foreach (IInteractable interactable in interactables) {
-                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
-                if (interactable != null) {
-                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactable.OrchestratorFinish();
-                }
-            }
-
-            // TEST MOVING THIS DOWN SO NAMEPLATE UNIT HAS CHANCE TO INITIALIZE NAMEPLATE BEFORE WE REACT TO SPAWN CONDITIONS
-            base.OrchestratorFinish();
-
-        }
-
         public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".Interactable.InitializeComponents()");
 
@@ -214,13 +201,16 @@ namespace AnyRPG {
                 return;
             }
             base.GetComponentReferences();
-            boxCollider = GetComponent<BoxCollider>();
+            //boxCollider = GetComponent<BoxCollider>();
+            myCollider = GetComponent<Collider>();
 
             // get monobehavior interactables
             interactables.AddRange(GetComponents<InteractableOption>());
 
             // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
+            // testing - because that reference is already encoded in the DisplayName property, this step should not be necessary
+            /*
             if (namePlateUnit != null) {
                 if (namePlateUnit.NamePlateController.UnitDisplayName != null && namePlateUnit.NamePlateController.UnitDisplayName != string.Empty) {
                     interactableName = namePlateUnit.NamePlateController.UnitDisplayName;
@@ -229,6 +219,7 @@ namespace AnyRPG {
                 //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
                 //Debug.Log(gameObject.name + ".Interactable.InitializeComponents(): namePlateUnit is null");
             }
+            */
 
         }
 
@@ -416,15 +407,15 @@ namespace AnyRPG {
 
         public void EnableInteraction() {
             // interactables have box colliders and units have capsule so this should not interfere with units
-            if (boxCollider != null) {
-                boxCollider.enabled = true;
+            if (myCollider != null) {
+                myCollider.enabled = true;
             }
         }
 
         public void DisableInteraction() {
             // interactables have box colliders and units have capsule so this should not interfere with units
-            if (boxCollider != null) {
-                boxCollider.enabled = false;
+            if (myCollider != null) {
+                myCollider.enabled = false;
             }
         }
 

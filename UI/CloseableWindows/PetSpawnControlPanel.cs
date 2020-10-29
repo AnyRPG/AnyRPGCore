@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UMA;
-using UMA.Examples;
-using UMA.CharacterSystem;
-using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 
@@ -137,15 +133,6 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         }
 
-        /*
-        public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            umaAvatar.BuildCharacter();
-            //umaAvatar.BuildCharacter(true);
-            //umaAvatar.ForceUpdate(true, true, true);
-        }
-        */
-
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
@@ -196,26 +183,6 @@ namespace AnyRPG {
             petSpawnButtons.Clear();
             MySelectedPetSpawnButton = null;
         }
-
-        private string GetRecipeName(string recipeDisplayName, List<UMATextRecipe> recipeList) {
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + ")");
-            foreach (UMATextRecipe umaTextRecipe in recipeList) {
-                if (umaTextRecipe.DisplayValue == recipeDisplayName) {
-                    return umaTextRecipe.name;
-                }
-            }
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + "): Could not find recipe.  return string.Empty!!!");
-            return string.Empty;
-        }
-
-        /*
-        public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            umaAvatar.BuildCharacter();
-            //umaAvatar.BuildCharacter(true);
-            //umaAvatar.ForceUpdate(true, true, true);
-        }
-        */
 
         public void SpawnUnit() {
             PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);

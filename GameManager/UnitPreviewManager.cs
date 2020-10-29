@@ -1,10 +1,5 @@
 using AnyRPG;
-using System.Collections;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
-using UnityEngine.AI;
-
 
 namespace AnyRPG {
     public class UnitPreviewManager : PreviewManager {

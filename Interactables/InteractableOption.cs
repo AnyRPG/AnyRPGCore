@@ -32,15 +32,10 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        [SerializeField]
-        protected INamePlateUnit namePlateUnit;
-
         protected Interactable interactable;
 
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
-
-        protected UnitController unitController = null;
 
         public virtual string InteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -62,7 +57,6 @@ namespace AnyRPG {
         public virtual Sprite NamePlateImage { get => namePlateImage; }
 
         public string DisplayName { get => (InteractionPanelTitle != null && InteractionPanelTitle != string.Empty ? InteractionPanelTitle : (interactable != null ? interactable.DisplayName : "interactable is null!")); }
-        public UnitController UnitController { get => unitController; set => unitController = value; }
 
         public InteractableOption(Interactable interactable) {
             this.interactable = interactable;
@@ -79,22 +73,12 @@ namespace AnyRPG {
             GetComponentReferences();
         }
 
-        public virtual void OrchestratorFinish() {
-
-        }
-
         public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences()");
             if (componentReferencesInitialized) {
                 //Debug.Log("InteractableOption.GetComponentReferences(): already initialized. exiting!");
                 return;
             }
-            interactable = GetComponent<Interactable>();
-            unitController = GetComponent<UnitController>();
-            if (interactable == null) {
-                //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences(): " + interactable is null);
-            }
-            namePlateUnit = GetComponent<INamePlateUnit>();
 
             componentReferencesInitialized = true;
         }

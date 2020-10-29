@@ -1100,7 +1100,6 @@ namespace AnyRPG {
         public void ClearSharedData() {
             //Debug.Log("SaveManager.ClearSharedData()");
             ClearUMASettings();
-            PlayerManager.MyInstance.SetDefaultPrefab();
 
             ClearSystemManagedCharacterData();
 

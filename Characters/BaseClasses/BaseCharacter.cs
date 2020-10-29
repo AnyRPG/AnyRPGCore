@@ -89,8 +89,9 @@ namespace AnyRPG {
         public CharacterRecipeManager CharacterRecipeManager { get => characterRecipeManager; set => characterRecipeManager = value; }
         public CharacterCurrencyManager CharacterCurrencyManager { get => characterCurrencyManager; set => characterCurrencyManager = value; }
 
+        /*
         private void Awake() {
-            //Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
+            Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
 
             // react to level load and unload events
             CreateEventSubscriptions();
@@ -105,9 +106,22 @@ namespace AnyRPG {
             CreateCharacterComponents();
 
         }
+        */
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
+
+            // react to level load and unload events
+            CreateEventSubscriptions();
+
+            // find out if this character is on a unit
+            GetComponentReferences();
+
+            // get reference to any hard coded unit profile
+            SetupScriptableObjects();
+
+            // setup the objects that handle different character mechanics
+            CreateCharacterComponents();
 
             InitCharacterComponents();
 

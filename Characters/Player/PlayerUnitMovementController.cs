@@ -2,9 +2,6 @@ using AnyRPG;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UMA;
-using UMA.CharacterSystem;
-using UnityEngine.EventSystems;
 
 namespace AnyRPG {
     public enum AnyRPGCharacterState {

@@ -13,16 +13,11 @@ namespace AnyRPG {
 
         // component references
         protected BaseCharacter baseCharacter = null;
-        protected DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         protected Dictionary<EquipmentSlotProfile, Equipment> currentEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
 
         //protected Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<PrefabProfile, GameObject>>();
         protected Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
-
-        protected bool eventSubscriptionsInitialized = false;
-        protected bool componentReferencesInitialized = false;
-        protected bool subscribedToCombatEvents = false;
 
         protected string equipmentProfileName;
 
@@ -31,7 +26,6 @@ namespace AnyRPG {
 
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
-        public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
 
         public CharacterEquipmentManager (BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
@@ -114,25 +108,19 @@ namespace AnyRPG {
                 return;
             }
 
-            if (newItem.MyUMARecipes != null && newItem.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
+            if (newItem.MyUMARecipes != null && newItem.MyUMARecipes.Count > 0 && baseCharacter.UnitController != null && baseCharacter.UnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.DisplayName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
                 foreach (UMATextRecipe uMARecipe in newItem.MyUMARecipes) {
-                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(baseCharacter.UnitController.DynamicCharacterAvatar.activeRace.name)) {
                         //Debug.Log("EquipmentManager.HandleItemUMARecipe(): SetSlot: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
-                        dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
+                        baseCharacter.UnitController.DynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
                     }
                 }
                 if (rebuildUMA) {
                     //Debug.Log("CharacterEquipmentManager.HandleItemUMARecipe(): BuildCharacter()");
-                    dynamicCharacterAvatar.BuildCharacter();
-                }
-            } else {
-                if (dynamicCharacterAvatar == null) {
-                    //Debug.Log("EquipmentManager.HandleItemUMARecipe() dynamicCharacterAvatar is null");
-                } else {
-                    //Debug.Log("EquipmentManager.HandleItemUMARecipe() No UMA recipe to handle");
+                    baseCharacter.UnitController.DynamicCharacterAvatar.BuildCharacter();
                 }
             }
         }
@@ -532,18 +520,18 @@ namespace AnyRPG {
                 }
                 Equipment oldItem = currentEquipment[equipmentSlot];
 
-                if (oldItem.MyUMARecipes != null && oldItem.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
+                if (oldItem.MyUMARecipes != null && oldItem.MyUMARecipes.Count > 0 && baseCharacter.UnitController != null && baseCharacter.UnitController.DynamicCharacterAvatar != null) {
                     // Clear the item from the UMA slot on the UMA character
                     //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                     //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
                     foreach (UMATextRecipe uMARecipe in oldItem.MyUMARecipes) {
-                        if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
-                            dynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
+                        if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(baseCharacter.UnitController.DynamicCharacterAvatar.activeRace.name)) {
+                            baseCharacter.UnitController.DynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
                         }
                     }
                     if (rebuildUMA) {
                         Debug.Log("EquipmentManager.Unequip(): BuildCharacter()");
-                        dynamicCharacterAvatar.BuildCharacter();
+                        baseCharacter.UnitController.DynamicCharacterAvatar.BuildCharacter();
                     }
                 }
 

@@ -3,10 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UMA;
-using UMA.Examples;
-using UMA.CharacterSystem;
-using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 

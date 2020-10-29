@@ -3,10 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Serialization;
-using UMA;
-using UMA.CharacterSystem;
 
 namespace AnyRPG {
     public class UnitAnimator {
@@ -117,7 +113,14 @@ namespace AnyRPG {
             animatorController = SystemConfigurationManager.MyInstance.MyDefaultAnimatorController;
             defaultAnimationProfile = SystemConfigurationManager.MyInstance.MyDefaultAnimationProfile;
 
-            animator = unitController.gameObject.GetComponentInChildren<Animator>();
+        }
+
+        public void Init(Animator animator) {
+            //animator = unitController.gameObject.GetComponentInChildren<Animator>();
+            if (animator == null) {
+                return;
+            }
+            this.animator = animator;
 
             // configure character animation event receiver
             UnitAnimationEventReceiver characterAnimationEventReceiver = animator.GetComponent<UnitAnimationEventReceiver>();

@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UMA;
-using UMA.Examples;
-using UMA.CharacterSystem;
-using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 
@@ -65,8 +61,6 @@ namespace AnyRPG {
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
 
         private List<UnitSpawnButton> unitSpawnButtons = new List<UnitSpawnButton>();
-
-        //private DynamicCharacterAvatar umaAvatar;
 
         private int extraLevels;
 
@@ -190,15 +184,6 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         }
 
-        /*
-        public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            umaAvatar.BuildCharacter();
-            //umaAvatar.BuildCharacter(true);
-            //umaAvatar.ForceUpdate(true, true, true);
-        }
-        */
-
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
@@ -270,17 +255,6 @@ namespace AnyRPG {
             extraLevelsOptionsArea.gameObject.SetActive(true);
         }
 
-        private string GetRecipeName(string recipeDisplayName, List<UMATextRecipe> recipeList) {
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + ")");
-            foreach (UMATextRecipe umaTextRecipe in recipeList) {
-                if (umaTextRecipe.DisplayValue == recipeDisplayName) {
-                    return umaTextRecipe.name;
-                }
-            }
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + "): Could not find recipe.  return string.Empty!!!");
-            return string.Empty;
-        }
-
         public void SetLevelType(int dropdownIndex) {
             //Debug.Log("CharacterCreatorPanel.SetHair(" + dropdownIndex + "): " + hairAppearanceDropdown.options[hairAppearanceDropdown.value].text);
             if (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed") {
@@ -313,15 +287,6 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SetBeard(" + dropdownIndex + "): " + beardAppearanceDropdown.options[beardAppearanceDropdown.value].text);
             extraLevels = levelDropdown.value;
         }
-
-        /*
-        public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            umaAvatar.BuildCharacter();
-            //umaAvatar.BuildCharacter(true);
-            //umaAvatar.ForceUpdate(true, true, true);
-        }
-        */
 
         public void SpawnUnit() {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {

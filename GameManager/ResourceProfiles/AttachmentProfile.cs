@@ -3,13 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UMA;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Attachment Profile", menuName = "AnyRPG/AttachmentProfile")]
     public class AttachmentProfile : DescribableResource {
-
 
         [Header("Attachment Points")]
 

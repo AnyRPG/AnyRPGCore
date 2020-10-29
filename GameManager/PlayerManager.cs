@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
-using UMA;
-using UMA.CharacterSystem;
 
 namespace AnyRPG {
     public class PlayerManager : MonoBehaviour {
@@ -86,9 +83,6 @@ namespace AnyRPG {
         // a reference to the active unit.  This could change in cases of both mind control and mounted states
         private UnitController activeUnitController = null;
 
-
-        //private DynamicCharacterAvatar avatar = null;
-
         protected bool eventSubscriptionsInitialized = false;
 
         public BaseCharacter MyCharacter { get => character; set => character = value; }
@@ -98,7 +92,6 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        //public DynamicCharacterAvatar MyAvatar { get => avatar; set => avatar = value; }
         public int MyInitialLevel { get => initialLevel; set => initialLevel = value; }
         public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
@@ -230,32 +223,6 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
-        public void SetUMAPrefab() {
-            // if an UMA prefab exists, set it as the current default for spawning
-            //Debug.Log("Playermanager.SetUMAPrefab()");
-            /*
-            if (defaultUMAPlayerUnitPrefab != null) {
-                //Debug.Log("Playermanager.SetUMAPrefab(): UMA prefab set successfully");
-                currentPlayerUnitPrefab = defaultUMAPlayerUnitPrefab;
-            } else {
-                //Debug.Log("Playermanager.SetUMAPrefab(): no player unit UMA prefab found!!");
-            }
-            */
-        }
-
-        public void SetDefaultPrefab() {
-            //Debug.Log("PlayerManager.SetDefaultPrefab()");
-            // if an UMA prefab exists, set it as the current default for spawning
-            /*
-            if (defaultNonUMAPlayerUnitPrefab != null) {
-                //Debug.Log("PlayerManager.SetDefaultPrefab(): setting default to non uma prefab");
-                currentPlayerUnitPrefab = defaultNonUMAPlayerUnitPrefab;
-            } else {
-                //Debug.Log("PlayerManager.SetDefaultPrefab(): no player unit Non UMA prefab found!!");
-            }
-            */
-        }
-
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("PlayerManager.OnLevelLoad()");
             bool loadCharacter = true;
@@ -361,22 +328,19 @@ namespace AnyRPG {
                 activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
             }
 
-            // spawn the player unit
-            //playerUnitObject = Instantiate(currentPlayerUnitPrefab, spawnLocation, Quaternion.LookRotation(Vector3.forward), playerUnitParent.transform);
+            // spawn the player unit and set gameObject references
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
             //playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
-
             unitController = activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation);
             playerUnitObject = unitController.gameObject;
-
-            // create a reference from the character (connection) to the character unit, and from the character unit to the character (connection)
             activeUnitController = unitController;
-            activeCharacter.CharacterUnit = playerUnitObject.GetComponent<CharacterUnit>();
-            activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
-            activeCharacter.CharacterUnit.GetComponentReferences();
 
-            MyCharacter.CharacterUnit.OrchestratorStart();
-            MyCharacter.CharacterUnit.OrchestratorFinish();
+            // create a reference from the character (connection) to the character unit (interactable), and from the character unit (interactable) to the character (connection)
+            List<InteractableOption> interactableOptions = activeUnitController.Interactable.GetInteractableOptionList(typeof(CharacterUnit));
+            if (interactableOptions != null && interactableOptions.Count > 0) {
+                activeCharacter.CharacterUnit = interactableOptions[0] as CharacterUnit;
+                activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
+            }
 
             if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
@@ -392,9 +356,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (MyCharacter.UnitProfile.IsUMAUnit == true) {
+            if (activeUnitController.ModelReady == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
-                InitializeUMA();
+                SubscribeToModelReady();
             } else {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
@@ -409,12 +373,9 @@ namespace AnyRPG {
             return spawnLocation;
         }
 
-        public void HandleUMACreated() {
-            //Debug.Log("PlayerManager.HandleUMACreated()");
-
-            // update the UMA armor models and stuff
-            // testing do this earlier
-            //SaveManager.MyInstance.LoadUMASettings();
+        public void HandleModelReady() {
+            //Debug.Log("PlayerManager.HandleModelReady()");
+            UnsubscribeFromModelReady();
 
             HandlePlayerUnitSpawn();
         }
@@ -556,40 +517,17 @@ namespace AnyRPG {
             playerController.ClearTarget();
         }
 
-        public void InitializeUMA() {
+        public void SubscribeToModelReady() {
             //Debug.Log("PlayerManager.InitializeUMA()");
 
             // try this earlier
             SaveManager.MyInstance.LoadUMASettings(false);
 
-            // initialize the animator so our avatar initialization has an animator.
-            UMAData umaData = unitController.DynamicCharacterAvatar.umaData;
-            umaData.OnCharacterBeforeDnaUpdated += OnCharacterBeforeDnaUpdated;
-            umaData.OnCharacterBeforeUpdated += OnCharacterBeforeUpdated;
-            umaData.OnCharacterCreated += HandleCharacterCreated;
-            umaData.OnCharacterDnaUpdated += OnCharacterDnaUpdated;
-            umaData.OnCharacterDestroyed += OnCharacterDestroyed;
-            umaData.OnCharacterUpdated += OnCharacterUpdatedCallback;
+            activeUnitController.OnModelReady += HandleModelReady;
         }
 
-        public void OnCharacterBeforeDnaUpdated(UMAData umaData) {
-            //Debug.Log("PlayerManager.BeforeDnaUpdated(): " + umaData);
-        }
-        public void OnCharacterBeforeUpdated(UMAData umaData) {
-            //Debug.Log("PlayerManager.OnCharacterBeforeUpdated(): " + umaData);
-        }
-        public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PlayerManager.CharacterCreatedCallback(): " + umaData);
-            HandleUMACreated();
-        }
-        public void OnCharacterDnaUpdated(UMAData umaData) {
-            //Debug.Log("PlayerManager.OnCharacterDnaUpdated(): " + umaData);
-        }
-        public void OnCharacterDestroyed(UMAData umaData) {
-            //Debug.Log("PlayerManager.OnCharacterDestroyed(): " + umaData);
-        }
-        public void OnCharacterUpdatedCallback(UMAData umaData) {
-            //Debug.Log("PlayerManager.OnCharacterUpdated(): " + umaData);
+        public void UnsubscribeFromModelReady() {
+            activeUnitController.OnModelReady -= HandleModelReady;
         }
 
         public void SpawnPlayerConnection() {

@@ -3,11 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class CharacterUnit : InteractableOption {
@@ -18,8 +14,6 @@ namespace AnyRPG {
 
         //[SerializeField]
         protected float despawnDelay = 20f;
-
-        private Collider capsuleCollider;
 
         private float hitBoxSize = 1.5f;
 
@@ -38,21 +32,23 @@ namespace AnyRPG {
 
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
 
-        public Collider MyCapsuleCollider { get => capsuleCollider; set => capsuleCollider = value; }
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
         public CharacterUnit(Interactable interactable) : base(interactable) {
+            if (interactable.Collider != null) {
+                hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
+            }
         }
 
         public void EnableCollider() {
-            if (capsuleCollider != null) {
-                capsuleCollider.enabled = true;
+            if (interactable.Collider != null) {
+                interactable.Collider.enabled = true;
             }
         }
 
         public void DisableCollider() {
-            if (capsuleCollider != null) {
-                capsuleCollider.enabled = false;
+            if (interactable.Collider != null) {
+                interactable.Collider.enabled = false;
             }
         }
 
@@ -113,7 +109,7 @@ namespace AnyRPG {
                 }
             }
         }
-        
+
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".CharacterUnit.OnDisable()");
             base.OnDisable();
@@ -121,24 +117,6 @@ namespace AnyRPG {
                 interactable.StopCoroutine(despawnCoroutine);
             }
         }
-
-        public override void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences()");
-            if (componentReferencesInitialized) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): already initialized. exiting!");
-                return;
-            }
-            base.GetComponentReferences();
-
-            capsuleCollider = GetComponent<Collider>();
-            if (capsuleCollider != null) {
-                hitBoxSize = capsuleCollider.bounds.extents.y * 1.5f;
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): found collider");
-            } else {
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetComponentReferences(): DID NOT FIND collider");
-            }
-        }
-
 
         /// <summary>
         /// The default interaction on any character is to be attacked.  Return true if the relationship is less than 0.

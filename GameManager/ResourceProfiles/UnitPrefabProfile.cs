@@ -1,10 +1,6 @@
 using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UMA;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Prefab Profile", menuName = "AnyRPG/UnitPrefabProfile")]
