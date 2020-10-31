@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -28,7 +27,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
                 //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CANNOT USE RETURNING");
@@ -36,7 +35,7 @@ namespace AnyRPG {
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             // make ourselves the top threat in his threat table
-            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
             if (targetCharacterUnit != null) {
                 if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterCombat != null && targetCharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable != null) {
                     //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");

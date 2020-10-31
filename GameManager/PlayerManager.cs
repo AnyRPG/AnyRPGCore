@@ -255,7 +255,7 @@ namespace AnyRPG {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLevelUpAbility;
 
-                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.gameObject, abilityEffectContext);
+                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.Interactable, abilityEffectContext);
             }
         }
 
@@ -266,7 +266,7 @@ namespace AnyRPG {
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
             abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.DeathAbility;
-            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.gameObject, abilityEffectContext);
+            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.Interactable, abilityEffectContext);
         }
 
         /*
@@ -336,9 +336,9 @@ namespace AnyRPG {
             activeUnitController = unitController;
 
             // create a reference from the character (connection) to the character unit (interactable), and from the character unit (interactable) to the character (connection)
-            List<InteractableOption> interactableOptions = activeUnitController.Interactable.GetInteractableOptionList(typeof(CharacterUnit));
-            if (interactableOptions != null && interactableOptions.Count > 0) {
-                activeCharacter.CharacterUnit = interactableOptions[0] as CharacterUnit;
+            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(activeUnitController.Interactable);
+            if (tmpCharacterUnit != null) {
+                activeCharacter.CharacterUnit = tmpCharacterUnit;
                 activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
             }
 
@@ -387,7 +387,7 @@ namespace AnyRPG {
 
             foreach (StatusEffectNode statusEffectNode in MyCharacter.CharacterStats.StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.StatusEffect.RawCast(MyCharacter, MyCharacter.CharacterUnit.gameObject, MyCharacter.CharacterUnit.gameObject, new AbilityEffectContext());
+                statusEffectNode.StatusEffect.RawCast(MyCharacter, MyCharacter.CharacterUnit.Interactable, MyCharacter.CharacterUnit.Interactable, new AbilityEffectContext());
             }
 
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
@@ -509,7 +509,7 @@ namespace AnyRPG {
         }
 
 
-        public void HandleSetTarget(GameObject newTarget) {
+        public void HandleSetTarget(Interactable newTarget) {
             playerController.SetTarget(newTarget);
         }
 
@@ -543,7 +543,7 @@ namespace AnyRPG {
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
 
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
-
+            activeCharacter.Init();
             activeCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionSpawn();
@@ -558,7 +558,7 @@ namespace AnyRPG {
             }
             UnsubscribeFromPlayerEvents();
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionDespawn();
-            Destroy(playerConnectionObject.gameObject);
+            Destroy(playerConnectionObject);
             character = null;
             activeCharacter = null;
             playerUnitMovementController = null;
@@ -657,9 +657,9 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleEnterCombat(IAbilityCaster sourceCharacter) {
+        public void HandleEnterCombat(Interactable interactable) {
             if (CombatLogUI.MyInstance != null) {
-                CombatLogUI.MyInstance.WriteCombatMessage("Entered combat with " + sourceCharacter.AbilityManager.Name);
+                CombatLogUI.MyInstance.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
             }
         }
 
@@ -667,7 +667,7 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
-        public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, GameObject target) {
+        public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, Interactable target) {
             if (baseAbility != null && CombatLogUI.MyInstance != null) {
                 CombatLogUI.MyInstance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
             }
@@ -747,7 +747,7 @@ namespace AnyRPG {
                 UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(statusEffectNode, activeCharacter.CharacterUnit);
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
                     if (activeCharacter.CharacterUnit != null) {
-                        CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, statusEffectNode.StatusEffect, true);
+                        CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, statusEffectNode.StatusEffect, true);
                     }
                 }
             }
@@ -755,7 +755,7 @@ namespace AnyRPG {
 
         public void HandleGainXP(int xp) {
             CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
-            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }
 
@@ -779,7 +779,7 @@ namespace AnyRPG {
         }
 
         public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.gameObject, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 
     }

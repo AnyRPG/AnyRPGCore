@@ -26,12 +26,10 @@ namespace AnyRPG {
             characterReady = false;
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
             OnCloseWindow(this);
-            // close interaction window too for smoother experience
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
+            Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
 
             characterReady = false;
             SetPreviewTarget();
@@ -42,6 +40,7 @@ namespace AnyRPG {
         }
 
         public void ReloadUnit() {
+            Debug.Log("NewGameCharacterPanelController.ReloadUnit()");
             if (characterReady == false) {
                 // the window has not been opened (initialized) yet, so don't try to spawn any unit
                 return;
@@ -51,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void ClearPreviewTarget() {
-            //Debug.Log("NewGameCharacterPanelController.ClearPreviewTarget()");
+            Debug.Log("NewGameCharacterPanelController.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
         }

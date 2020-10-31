@@ -22,7 +22,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.NamePlateImage); }
         public List<string> VendorCollectionNames { get => vendorCollectionNames; set => vendorCollectionNames = value; }
-
+        public VendorProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         event System.Action<IInteractable> MiniMapStatusUpdateHandler;
         string InteractionPanelTitle { get; set; }
-        Interactable MyInteractable { get; set; }
+        Interactable Interactable { get; set; }
         bool MyPrerequisitesMet { get; }
         Sprite NamePlateImage { get; }
 

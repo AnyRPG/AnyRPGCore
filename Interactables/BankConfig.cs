@@ -14,23 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private BankProps interactableOptionProps = new BankProps();
 
-        public override Sprite Icon {
-            get {
-                if (SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage != null) {
-                    return SystemConfigurationManager.MyInstance.MyBankInteractionPanelImage;
-                }
-                return base.Icon;
-            }
-        }
-        public override Sprite NamePlateImage {
-            get {
-                if (SystemConfigurationManager.MyInstance.MyBankNamePlateImage != null) {
-                    return SystemConfigurationManager.MyInstance.MyBankNamePlateImage;
-                }
-                return base.NamePlateImage;
-            }
-        }
-
+        public BankProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

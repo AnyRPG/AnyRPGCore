@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Load Scene Config", menuName = "AnyRPG/Interactable/LoadSceneConfig")]
-    public class LoadSceneConfig : PortalConfig {
+    public class LoadSceneConfig : InteractableOptionConfig {
 
         [SerializeField]
         private LoadSceneProps interactableOptionProps = new LoadSceneProps();
@@ -21,7 +21,7 @@ namespace AnyRPG {
         private string sceneName = string.Empty;
 
         public string SceneName { get => sceneName; set => sceneName = value; }
-
+        public LoadSceneProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

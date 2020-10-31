@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (unitTypeRestrictionList != null && unitTypeRestrictionList.Count > 0) {
                 BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
                 if (targetCharacter == null) {
@@ -36,7 +36,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             if (target == null) {
                 Debug.Log(DisplayName + ".CapturePetEffect.Cast(): target is null, returning");
                 return null;

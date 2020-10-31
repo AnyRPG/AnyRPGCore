@@ -13,7 +13,7 @@ namespace AnyRPG {
             this.baseController = baseController;
             this.baseController.ClearTarget();
             this.baseController.SetDestination(baseController.LeashPosition);
-            this.baseController.UnitMotor.MyMovementSpeed = baseController.EvadeRunSpeed;
+            this.baseController.UnitMotor.MovementSpeed = baseController.EvadeRunSpeed;
             this.baseController.BaseCharacter.CharacterCombat.MyAggroTable.ClearAndBroadcast();
         }
 
@@ -25,7 +25,7 @@ namespace AnyRPG {
 
             float distance = Vector3.Distance(baseController.LeashPosition, baseController.transform.position);
             //Debug.Log(aiController.gameObject.name + ": EvadeState.Update(): Distance from spawn point: " + distance.ToString());
-            if (distance <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.MyNavMeshDistancePadding) {
+            if (distance <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
                 baseController.ChangeState(new IdleState());
             }
         }

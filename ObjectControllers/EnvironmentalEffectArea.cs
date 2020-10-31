@@ -79,20 +79,17 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
 
                 bool canAdd = true;
-                if (collider.gameObject.GetComponent<CharacterUnit>() == null) {
+                Interactable interactable = collider.gameObject.GetComponent<Interactable>();
+                if (interactable == null) {
                     canAdd = false;
-                }
-                /*
-                foreach (AbilityEffect abilityEffect in abilityEffects) {
-                    if (abilityEffect.CanUseOn(collider.gameObject, source) == false) {
+                } else {
+                    if (CharacterUnit.GetCharacterUnit(interactable) == null) {
                         canAdd = false;
                     }
                 }
-                */
-                //Debug.Log(MyName + "performing AOE ability  on " + collider.gameObject);
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
-                    validTargetNode.targetGameObject = collider.gameObject;
+                    validTargetNode.targetGameObject = interactable;
                     validTargets.Add(validTargetNode);
                 }
             }

@@ -18,11 +18,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> skillNames = new List<string>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.NamePlateImage); }
-
         public List<string> SkillNames { get => skillNames; set => skillNames = value; }
-
+        public SkillTrainerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

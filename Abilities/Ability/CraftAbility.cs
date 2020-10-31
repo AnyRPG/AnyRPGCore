@@ -25,7 +25,7 @@ namespace AnyRPG {
             set => base.HoldableObjectList = value;
         }
 
-        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {

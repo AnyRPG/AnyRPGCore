@@ -8,7 +8,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Direct Ability", menuName = "AnyRPG/Abilities/DirectAbility")]
     public class DirectAbility : InstantEffectAbility {
 
-        public override bool PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
 
             //float abilityCastingTime = GetAbilityCastingTime(source);
             float abilityCastingTime = BaseAbilityCastingTime;

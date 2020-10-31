@@ -12,8 +12,8 @@ namespace AnyRPG {
     public class ItemPickupProps : LootableNodeProps {
 
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new ItemPickup(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new ItemPickupComponent(interactable, this);
         }
     }
 

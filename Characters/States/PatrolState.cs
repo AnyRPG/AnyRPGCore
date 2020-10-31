@@ -19,7 +19,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.Enter() position: " + aiController.transform.position);
             this.baseController = baseController;
             if (!baseController.PatrolController.MyCurrentPatrol.PatrolComplete()) {
-                originalMovementSpeed = this.baseController.UnitMotor.MyMovementSpeed;
+                originalMovementSpeed = this.baseController.UnitMotor.MovementSpeed;
                 SetMovementSpeed();
 
                 // set destination
@@ -36,9 +36,9 @@ namespace AnyRPG {
         public void SetMovementSpeed() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + aiController.MyAiPatrol.MyCurrentPatrol.MyMovementSpeed + " motor: " + this.aiController.MyBaseCharacter.UnitController.MyCharacterMotor.MyMovementSpeed + "; " + "; aicontroller: " + this.aiController.MyMovementSpeed);
             if (baseController.PatrolController.MyCurrentPatrol.MovementSpeed == 0) {
-                this.baseController.UnitMotor.MyMovementSpeed = this.baseController.MovementSpeed;
+                this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
             } else {
-                this.baseController.UnitMotor.MyMovementSpeed = baseController.PatrolController.MyCurrentPatrol.MovementSpeed;
+                this.baseController.UnitMotor.MovementSpeed = baseController.PatrolController.MyCurrentPatrol.MovementSpeed;
             }
         }
 
@@ -47,7 +47,7 @@ namespace AnyRPG {
             if (coroutine != null) {
                 baseController.StopCoroutine(coroutine);
             }
-            this.baseController.UnitMotor.MyMovementSpeed = originalMovementSpeed;
+            this.baseController.UnitMotor.MovementSpeed = originalMovementSpeed;
         }
 
         public void Update() {
@@ -68,7 +68,7 @@ namespace AnyRPG {
 
             if (currentDestination == Vector3.zero && coroutine == null) {
                 getNewDestination = true;
-            } else if (Vector3.Distance(baseController.transform.position, currentDestination) <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.MyNavMeshDistancePadding) {
+            } else if (Vector3.Distance(baseController.transform.position, currentDestination) <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached

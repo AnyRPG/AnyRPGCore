@@ -6,20 +6,17 @@ using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterUnit : InteractableOption {
+    public class CharacterUnit : InteractableOptionComponent {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
         public event System.Action<UnitController> OnDespawn = delegate { };
 
-        //[SerializeField]
         protected float despawnDelay = 20f;
 
         private float hitBoxSize = 1.5f;
 
         private Coroutine despawnCoroutine = null;
-
-        private bool startHasRun = false;
 
         private BaseCharacter baseCharacter = null;
 
@@ -38,6 +35,10 @@ namespace AnyRPG {
             if (interactable.Collider != null) {
                 hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
             }
+        }
+
+        public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {
+            return searchInteractable.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;
         }
 
         public void EnableCollider() {
@@ -65,12 +66,9 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        protected override void Start() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Start()");
-            base.Start();
+        protected override void Init() {
+            base.Init();
             SetDefaultLayer();
-
-            startHasRun = true;
 
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
                 // this code is a quick way to set speed on third party controllers when the player spawns
@@ -90,6 +88,7 @@ namespace AnyRPG {
             }
         }
 
+
         public static bool IsInLayerMask(int layer, LayerMask layermask) {
             return layermask == (layermask | (1 << layer));
         }
@@ -102,10 +101,10 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != null && SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
                 int finalmask = (1 << defaultLayer) | (1 << UnitPreviewManager.MyInstance.PreviewLayer) | (1 << PetPreviewManager.MyInstance.PreviewLayer);
-                if (!IsInLayerMask(gameObject.layer, finalmask)) {
+                if (!IsInLayerMask(interactable.gameObject.layer, finalmask)) {
                     //if (gameObject.layer != defaultLayer) {
-                    gameObject.layer = defaultLayer;
-                    Debug.Log(gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
+                    interactable.gameObject.layer = defaultLayer;
+                    Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
                 }
             }
         }
@@ -174,8 +173,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
             //gameObject.SetActive(false);
             // TEST ADDING A MANDATORY DELAY
-            if (despawnCoroutine == null && gameObject.activeSelf == true && isActiveAndEnabled) {
-                despawnCoroutine = StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
+            if (despawnCoroutine == null && interactable.gameObject.activeSelf == true && interactable.isActiveAndEnabled) {
+                despawnCoroutine = interactable.StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
             }
         }
 
@@ -197,7 +196,7 @@ namespace AnyRPG {
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
                 OnDespawn(baseCharacter.UnitController);
-                Destroy(baseCharacter.UnitController.gameObject);
+                UnityEngine.Object.Destroy(baseCharacter.UnitController.gameObject);
 
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");

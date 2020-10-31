@@ -19,9 +19,10 @@ namespace AnyRPG {
 
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.NamePlateImage); }
+        public List<string> MusicProfileNames { get => musicProfileNames; set => musicProfileNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new MusicPlayer(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new MusicPlayerComponent(interactable, this);
         }
     }
 

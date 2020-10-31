@@ -14,7 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 offset = Vector3.zero;
 
-        private GameObject target = null;
+        private Interactable target = null;
 
         CharacterUnit characterUnit = null;
 
@@ -96,9 +96,9 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.UnitController.OnClearTarget -= HandleClearTarget;
         }
 
-        public void HandleSetTarget(GameObject target) {
+        public void HandleSetTarget(Interactable target) {
             //Debug.Log("FocusTargettingController.HandleSetTarget()");
-            characterUnit = target.GetComponent<CharacterUnit>();
+            characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (characterUnit == null) {
                 // don't show this under inanimate units
                 HandleClearTarget();

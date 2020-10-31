@@ -21,7 +21,7 @@ namespace AnyRPG {
         private string abilityName = string.Empty;
 
         public string AbilityName { get => abilityName; set => abilityName = value; }
-
+        public TeleportProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

@@ -20,8 +20,8 @@ namespace AnyRPG {
 
         public List<string> SkillNames { get => skillNames; set => skillNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new SkillTrainer(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new SkillTrainerComponent(interactable, this);
         }
     }
 

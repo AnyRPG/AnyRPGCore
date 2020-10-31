@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public List<QuestNode> MyQuests { get => quests; }
 
-        public Interactable MyInteractable { get => null; }
+        public Interactable Interactable { get => null; }
 
         public override bool Use() {
             //Debug.Log("QuestStartItem.Use()");

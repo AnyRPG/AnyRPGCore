@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public float projectileSpeed = 0;
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".ProjectileEffect.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             if (returnObjects != null) {
@@ -29,7 +29,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public void HandleCollission(IAbilityCaster source, GameObject target, GameObject _abilityEffectObject, AbilityEffectContext abilityEffectInput) {
+        public void HandleCollission(IAbilityCaster source, Interactable target, GameObject _abilityEffectObject, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".ProjectileEffect.HandleCollission()");
             PerformAbilityHit(source, target, abilityEffectInput);
             Destroy(_abilityEffectObject);

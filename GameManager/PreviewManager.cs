@@ -38,6 +38,7 @@ namespace AnyRPG {
             //Debug.Log("PreviewManager.HandleCloseWindow();");
             if (unitController != null) {
                 Destroy(unitController.gameObject);
+                unitController = null;
             }
         }
 

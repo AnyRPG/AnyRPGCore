@@ -386,7 +386,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual float GetLOSMaxRange(IAbilityCaster source, GameObject target) {
+        public virtual float GetLOSMaxRange(IAbilityCaster source, Interactable target) {
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source.AbilityManager.PerformLOSCheck(target, this)) {
                 //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + MaxRange);
@@ -396,7 +396,7 @@ namespace AnyRPG {
             return source.AbilityManager.GetMeleeRange();
         }
 
-        public virtual void PerformChanneledEffect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformChanneledEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
@@ -426,7 +426,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             if (!CanCast(sourceCharacter)) {
                 //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
@@ -473,7 +473,7 @@ namespace AnyRPG {
             sourceCharacter.AbilityManager.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.name : "null") + ")");
 
             if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
@@ -565,7 +565,7 @@ namespace AnyRPG {
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
-        public virtual bool PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
             if (abilityEffects.Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
@@ -603,7 +603,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="sourceCharacter"></param>
         /// <returns></returns>
-        public virtual GameObject ReturnTarget(IAbilityCaster sourceCharacter, GameObject target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             // before we get here, a validity check has already been performed, so no need to unset any targets
             // we are only concerned with redirecting the target to self if auto-selfcast is enabled
@@ -617,7 +617,7 @@ namespace AnyRPG {
             if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext) == false) {
                 //Debug.Log(MyName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
-                    target = sourceCharacter.AbilityManager.UnitGameObject;
+                    target = (sourceCharacter as MonoBehaviour).GetComponent<Interactable>();
                     //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;
                 } else {
@@ -654,7 +654,7 @@ namespace AnyRPG {
             //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
         }
 
-        public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.OnCastTimeChanged()");
             // overwrite me
             if (currentCastPercent >= nextTickPercent) {
@@ -698,19 +698,6 @@ namespace AnyRPG {
             return true;
         }
 
-
-        /*
-        public virtual void HandleCastStop(BaseCharacter source) {
-            //Debug.Log("BaseAbility.OnCastComplete()");
-            //Destroy(abilityCastingPrefabRef, prefabDestroyDelay);
-
-            // this may lead to bugs, not sure...
-            // taking out for now, seems to be messing with attacks?
-            //source.MyCharacterCombat.SetWaitingForHits(false);
-
-            source.MyCharacterAbilityManager.OnCastStop -= HandleCastStop;
-        }
-        */
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

@@ -17,8 +17,10 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new GatheringNode(interactable, this);
+        public string AbilityName { get => abilityName; set => abilityName = value; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new GatheringNodeComponent(interactable, this);
         }
     }
 

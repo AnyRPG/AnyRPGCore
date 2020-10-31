@@ -21,7 +21,7 @@ namespace AnyRPG {
         // reference to spawned object UnitController
         private UnitController petUnitController;
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
@@ -48,7 +48,7 @@ namespace AnyRPG {
         }
         */
 
-        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             // intentionally not calling base to avoid getting our pet destroyed
         }
 

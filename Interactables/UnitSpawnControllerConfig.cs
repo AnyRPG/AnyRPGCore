@@ -12,6 +12,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class UnitSpawnControllerConfig : InteractableOptionConfig {
 
+        [SerializeField]
+        private UnitSpawnControllerProps interactableOptionProps = new UnitSpawnControllerProps();
+
         [Header("Unit Spawn Controller")]
 
         [Tooltip("The names of the unit profiles that will be available to spawn with this controller")]
@@ -21,7 +24,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage : base.NamePlateImage); }
         public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
-
+        public UnitSpawnControllerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

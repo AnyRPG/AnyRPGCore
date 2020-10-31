@@ -26,8 +26,8 @@ namespace AnyRPG {
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new LootableCharacter(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new LootableCharacterComponent(interactable, this);
         }
     }
 

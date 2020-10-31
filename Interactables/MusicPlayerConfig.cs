@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.NamePlateImage); }
-
+        public MusicPlayerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

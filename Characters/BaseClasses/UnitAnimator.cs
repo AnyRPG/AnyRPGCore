@@ -182,6 +182,10 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
 
+            // before finishing initialization, search for a valid unit profile and try to get an animation profile from it
+            if (unitController.UnitProfile != null && unitController.UnitProfile.UnitPrefabProfile != null && unitController.UnitProfile.UnitPrefabProfile.AnimationProfile != null) {
+                defaultAnimationProfile = unitController.UnitProfile.UnitPrefabProfile.AnimationProfile;
+            }
             SetAnimationProfileOverride(defaultAnimationProfile);
 
             initialized = true;

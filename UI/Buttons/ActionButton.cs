@@ -156,7 +156,7 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public void HandleEnterCombat(IAbilityCaster abilityCaster) {
+        public void HandleEnterCombat(Interactable interactable) {
             UpdateVisual();
         }
 

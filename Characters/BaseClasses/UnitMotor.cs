@@ -7,7 +7,7 @@ namespace AnyRPG {
 
         public event System.Action OnMovement = delegate { };
 
-        protected GameObject target;
+        protected Interactable target;
 
         protected bool moveToDestination = false;
         protected Vector3 destinationPosition = Vector3.zero;
@@ -44,11 +44,11 @@ namespace AnyRPG {
         private bool useRootMotion = false;
 
         // properties
-        public float MyMovementSpeed { get => movementSpeed; set => movementSpeed = value; }
-        public GameObject MyTarget { get => target; }
-        public bool MyFrozen { get => frozen; set => frozen = value; }
-        public float MyNavMeshDistancePadding { get => navMeshDistancePadding; }
-        public bool MyUseRootMotion { get => useRootMotion; set => useRootMotion = value; }
+        public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+        public Interactable Target { get => target; }
+        public bool Frozen { get => frozen; set => frozen = value; }
+        public float NavMeshDistancePadding { get => navMeshDistancePadding; }
+        public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
 
         public UnitMotor(UnitController unitController) {
             this.unitController = unitController;
@@ -421,7 +421,7 @@ namespace AnyRPG {
         }
 
 
-        public void FollowTarget(GameObject newTarget, float minAttackRange = -1f) {
+        public void FollowTarget(Interactable newTarget, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (newTarget == null ? "null" : newTarget.name) + ", " + minAttackRange + ")");
             if (frozen) {
                 return;
@@ -431,7 +431,7 @@ namespace AnyRPG {
             // moving to a target happens when we click on an interactable.  Since it might be moving, we will manually update the rotation every frame
             // TEST DISABLE THIS TO PREVENT WALKING SIDEWAYS AROUND CORNERS
             //unitController.MyAgent.updateRotation = false;
-            GameObject oldTarget = target;
+            Interactable oldTarget = target;
             target = newTarget;
             if (oldTarget == null || (minAttackRange > 0f && currentMaxSampleRadius != minAttackRange)) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + "): issuing movetopoint. currentradius: " + currentMaxSampleRadius + "; minattack: " + minAttackRange);
@@ -466,7 +466,7 @@ namespace AnyRPG {
             }
         }
 
-        public void FaceTarget(GameObject newTarget) {
+        public void FaceTarget(Interactable newTarget) {
             //Debug.Log(gameObject.name + ".CharacterMotor.FaceTarget(" + newTarget.name + ")");
             if (frozen) {
                 return;
@@ -518,7 +518,7 @@ namespace AnyRPG {
         }
 
         public void ReceiveAnimatorMovment() {
-            if (MyUseRootMotion) {
+            if (UseRootMotion) {
                 // will this work for navmeshAgents?  do we need to warp them?
                 unitController.transform.position += unitController.UnitAnimator.MyAnimator.deltaPosition;
             }

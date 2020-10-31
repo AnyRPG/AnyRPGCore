@@ -21,7 +21,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
         
     }
 
-    private QuestGiver questGiver;
+    private QuestGiverComponent questGiver;
 
     [SerializeField]
     private TextMeshProUGUI text = null;
@@ -34,7 +34,7 @@ public class InteractionPanelQuestScript : MonoBehaviour {
         }
     }
 
-    public QuestGiver MyQuestGiver { get => questGiver; set => questGiver = value; }
+    public QuestGiverComponent MyQuestGiver { get => questGiver; set => questGiver = value; }
 
     public void InitWindow(ICloseableWindowContents questGiverUI) {
         //Debug.Log(gameObject.name + ".QuestGiver.InitWindow()");

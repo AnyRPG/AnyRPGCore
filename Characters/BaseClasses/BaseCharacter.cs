@@ -49,6 +49,8 @@ namespace AnyRPG {
 
         //private bool animationEnabled = false;
 
+        // track state
+        private bool characterInitialized = false;
         private bool eventSubscriptionsInitialized = false;
 
         public CharacterStats CharacterStats { get => characterStats; }
@@ -126,6 +128,8 @@ namespace AnyRPG {
             InitCharacterComponents();
 
             SetUnitProfileProperties();
+
+            characterInitialized = true;
         }
 
         public void CreateCharacterComponents() {
@@ -294,6 +298,11 @@ namespace AnyRPG {
         }
 
         public void Update() {
+            if (!characterInitialized) {
+                // this is probably a player unit
+                return;
+            }
+
             characterCombat.Update();
 
             // do this after combat so regen ticks can use the proper combat state
@@ -317,7 +326,7 @@ namespace AnyRPG {
         }
 
         public void Initialize(string characterName, int characterLevel = 1) {
-            //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
+            Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
         }

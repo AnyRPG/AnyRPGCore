@@ -41,7 +41,7 @@ public class InteractionPanelScript : MonoBehaviour {
 
     public void Interact() {
         MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
-        MyInteractableOption.MyInteractable.CloseInteractionWindow();
+        MyInteractableOption.Interactable.CloseInteractionWindow();
     }
 
 }

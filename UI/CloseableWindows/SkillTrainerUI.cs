@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         #endregion
 
-        private SkillTrainer skillTrainer = null;
+        private SkillTrainerComponent skillTrainer = null;
 
         [SerializeField]
         private GameObject learnButton = null;
@@ -80,7 +80,7 @@ namespace AnyRPG {
             unlearnButton.GetComponent<Button>().enabled = false;
         }
 
-        public void ShowSkillsCommon(SkillTrainer skillTrainer) {
+        public void ShowSkillsCommon(SkillTrainerComponent skillTrainer) {
             //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
 
             ClearSkills();
@@ -118,7 +118,7 @@ namespace AnyRPG {
             ShowSkillsCommon(skillTrainer);
         }
 
-        public void ShowSkills(SkillTrainer skillTrainer) {
+        public void ShowSkills(SkillTrainerComponent skillTrainer) {
             //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
             this.skillTrainer = skillTrainer;
             ShowSkillsCommon(this.skillTrainer);

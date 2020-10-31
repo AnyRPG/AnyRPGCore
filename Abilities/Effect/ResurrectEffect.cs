@@ -12,7 +12,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
             AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
             abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
@@ -20,7 +20,7 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectOutput);
         }
 
-        private void ResurrectTarget(GameObject target) {
+        private void ResurrectTarget(Interactable target) {
             if (target == null) {
                 // our target despawned in the middle of the cast
                 return;
@@ -33,7 +33,7 @@ namespace AnyRPG {
             characterUnit.BaseCharacter.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
             if (target == null) {
                 return false;
             }
@@ -47,7 +47,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override GameObject ReturnTarget(GameObject target) {
+        public override Interactable ReturnTarget(Interactable target) {
             if (target == null) {
                 //Debug.Log("Ressurect spell cast, but there was no target");
                 return null;

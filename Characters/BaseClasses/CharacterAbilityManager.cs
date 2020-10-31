@@ -17,7 +17,7 @@ namespace AnyRPG {
         public event System.Action<BaseAbility> OnCombatCheckFail = delegate { };
         public event System.Action<AnimatedAbility> OnAnimatedAbilityCheckFail = delegate { };
         public event System.Action<BaseAbility, IAbilityCaster> OnPowerResourceCheckFail = delegate { };
-        public event System.Action<BaseAbility, GameObject> OnTargetInAbilityRangeFail = delegate { };
+        public event System.Action<BaseAbility, Interactable> OnTargetInAbilityRangeFail = delegate { };
         public event System.Action<bool> OnUnlearnAbility = delegate { };
         public event System.Action<BaseAbility> OnLearnAbility = delegate { };
         public event System.Action<BaseAbility> OnActivateTargetingMode = delegate { };
@@ -223,7 +223,7 @@ namespace AnyRPG {
 
                         AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
                         if (attachmentPointNode != null) {
-                            Transform targetBone = baseCharacter.CharacterUnit.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                            Transform targetBone = baseCharacter.UnitController.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                             if (targetBone != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
@@ -300,7 +300,7 @@ namespace AnyRPG {
             }
             return base.GetThreatModifiers();
         }
-
+        /*
         public override bool AddToAggroTable(CharacterUnit targetCharacterUnit, int usedAgroValue) {
             // intentionally don't call the base
             if (baseCharacter.CharacterStats.IsAlive) {
@@ -308,6 +308,7 @@ namespace AnyRPG {
             }
             return false;
         }
+        */
 
         public override void GenerateAgro(CharacterUnit targetCharacterUnit, int usedAgroValue) {
             base.GenerateAgro(targetCharacterUnit, usedAgroValue);
@@ -336,7 +337,7 @@ namespace AnyRPG {
             }
         }
 
-        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             bool returnResult = IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility, abilityEffectContext);
             if (returnResult == false) {
@@ -345,16 +346,16 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect, abilityEffectContext);
         }
 
-        public override bool IsTargetInMeleeRange(GameObject target) {
+        public override bool IsTargetInMeleeRange(Interactable target) {
             return baseCharacter.UnitController.IsTargetInHitBox(target);
         }
 
-        public override bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public override bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
 
             if (targetable.RequireLineOfSight == false) {
                 return true;
@@ -384,7 +385,7 @@ namespace AnyRPG {
             Debug.DrawLine(sourcePosition, targetPosition, Color.cyan);
             RaycastHit wallHit = new RaycastHit();
 
-            int targetMask = 1 << target.layer;
+            int targetMask = 1 << target.gameObject.layer;
             int defaultMask = 1 << LayerMask.NameToLayer("Default");
 
             int layerMask = (defaultMask | targetMask);
@@ -401,7 +402,7 @@ namespace AnyRPG {
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
-        public bool IsTargetInRange(GameObject target, bool useMeleeRange, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public bool IsTargetInRange(Interactable target, bool useMeleeRange, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
             if (useMeleeRange) {
@@ -419,7 +420,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public bool IsTargetInMaxRange(GameObject target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
+        public bool IsTargetInMaxRange(Interactable target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
             if (target == null || UnitGameObject == null) {
                 return false;
             }
@@ -455,7 +456,7 @@ namespace AnyRPG {
         /// Return true if the ability hit, false if it missed
         /// </summary>
         /// <returns></returns>
-        public override bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
             if (baseCharacter.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 baseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
@@ -472,7 +473,7 @@ namespace AnyRPG {
             return base.PerformAnimatedAbilityCheck(animatedAbility);
         }
 
-        public override bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
+        public override bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack) {
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || deactivateAutoAttack == true) {
@@ -552,7 +553,7 @@ namespace AnyRPG {
         }
 
         // this ability exists to allow a caster to auto-self cast
-        public override GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
+        public override Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
             //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             CharacterUnit targetCharacterUnit = null;
             if (target != null) {
@@ -575,7 +576,7 @@ namespace AnyRPG {
             if (target == null) {
                 if (abilityEffect.AutoSelfCast == true) {
                     //Debug.Log("target is null and autoselfcast is true.  setting target to self");
-                    target = baseCharacter.UnitController.gameObject;
+                    target = baseCharacter.UnitController.Interactable;
                 }
             }
 
@@ -948,7 +949,7 @@ namespace AnyRPG {
             return base.HasAbility(baseAbility);
         }
 
-        public void ActivateTargettingMode(BaseAbility baseAbility, GameObject target) {
+        public void ActivateTargettingMode(BaseAbility baseAbility, Interactable target) {
             //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
             targettingModeActive = true;
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI) {
@@ -1057,7 +1058,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformAbilityCast(BaseAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public IEnumerator PerformAbilityCast(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
             float startTime = Time.time;
             //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
             bool canCast = true;
@@ -1108,7 +1109,7 @@ namespace AnyRPG {
                 // added target condition to allow channeled spells to stop casting if target disappears
                 while (currentCastPercent < 1f
                     && (ability.RequiresTarget == false
-                    || (target != null && target.activeInHierarchy == true))) {
+                    || (target != null && target.gameObject.activeInHierarchy == true))) {
                     yield return null;
                     currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(baseCharacter));
 
@@ -1176,7 +1177,7 @@ namespace AnyRPG {
 
         public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
             //Debug.Log("CharacterAbilityManager.ReceiveKillDetails()");
-            if (BaseCharacter.UnitController.Target == killedcharacter.CharacterUnit.gameObject) {
+            if (BaseCharacter.UnitController.Target == killedcharacter.UnitController.Interactable) {
                 if (killStopCast) {
                     StopCasting();
                 }
@@ -1220,7 +1221,7 @@ namespace AnyRPG {
             BeginAbilityCommon(ability, baseCharacter.UnitController.Target);
         }
 
-        public void BeginAbility(BaseAbility ability, GameObject target) {
+        public void BeginAbility(BaseAbility ability, Interactable target) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
             BeginAbilityCommon(ability, target);
         }
@@ -1243,7 +1244,7 @@ namespace AnyRPG {
             return base.GetOutgoingDamageModifiers();
         }
 
-        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput) {
+        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
             // handle weapon on hit effects
             if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.MyOnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.MyOnHitEffect.DisplayName != attackEffect.DisplayName) {
@@ -1300,7 +1301,7 @@ namespace AnyRPG {
             return base.GetCritChance();
         }
 
-        protected void BeginAbilityCommon(BaseAbility ability, GameObject target) {
+        protected void BeginAbilityCommon(BaseAbility ability, Interactable target) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ")");
             BaseAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.DisplayName);
             if (usedAbility == null) {
@@ -1317,7 +1318,7 @@ namespace AnyRPG {
             abilityEffectContext.baseAbility = ability;
 
             // get final target before beginning casting
-            GameObject finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext);
+            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext);
 
 
             CharacterUnit targetCharacterUnit = null;
@@ -1495,14 +1496,14 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         /// <param name="target"></param>
-        public void PerformAbility(BaseAbility ability, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public void PerformAbility(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ")");
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability;
             }
             abilityEffectContext.originalTarget = target;
-            GameObject finalTarget = target;
+            Interactable finalTarget = target;
             if (finalTarget != null) {
                 //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + " on " + finalTarget.name);
             } else {

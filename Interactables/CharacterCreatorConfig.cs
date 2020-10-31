@@ -14,15 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private CharacterCreatorProps interactableOptionProps = new CharacterCreatorProps();
 
-        [Header("Dialog")]
-
-        [Tooltip("The names of the dialogs available to this interactable")]
-        [SerializeField]
-        private List<string> dialogNames = new List<string>();
-
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCharacterCreatorNamePlateImage : base.NamePlateImage); }
-
+        public CharacterCreatorProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

@@ -37,11 +37,10 @@ namespace AnyRPG {
         public float tabTargetMaxDistance = 20f;
 
         private List<Interactable> interactables = new List<Interactable>();
-        private Interactable interactable = null;
+        private Interactable target = null;
         private Interactable mouseOverInteractable = null;
 
         private int tabTargetIndex = 0;
-        private CharacterCombat enemyCombat;
 
         private DateTime lastTabTargetTime;
 
@@ -99,7 +98,7 @@ namespace AnyRPG {
             TurnInput = new Vector3(inputTurn, 0, 0);
 
             if (HasMoveInput()) {
-                PlayerManager.MyInstance.MyCharacter.UnitController.CommonMovementNotifier();
+                PlayerManager.MyInstance.ActiveUnitController.CommonMovementNotifier();
             }
         }
 
@@ -277,7 +276,7 @@ namespace AnyRPG {
                 if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
                     //Debug.Log("setting interaction target to " + hit.collider.gameObject.name);
                     //interactionTarget = hit.collider.gameObject;
-                    InterActWithTarget(mouseOverInteractable, mouseOverInteractable.gameObject);
+                    InterActWithTarget(mouseOverInteractable);
                 }
                 //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
             }
@@ -306,7 +305,7 @@ namespace AnyRPG {
                 //RemoveFocus();
                 ClearTarget();
             } else if (mouseOverInteractable != null) {
-                SetTarget(mouseOverInteractable.gameObject);
+                SetTarget(mouseOverInteractable);
             }
             //}
 
@@ -323,7 +322,7 @@ namespace AnyRPG {
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
         private void CheckForInteraction() {
-            if (interactable == null) {
+            if (target == null) {
                 return;
             }
             if (InteractionSucceeded()) {
@@ -340,11 +339,11 @@ namespace AnyRPG {
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
-            if (interactable.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+            if (target.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                if (interactable != null) {
-                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.DisplayName);
-                    interactable = null;
+                if (target != null) {
+                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
+                    target = null;
                 }
                 return true;
             }
@@ -357,14 +356,14 @@ namespace AnyRPG {
         private void RegisterTab() {
             if (InputManager.MyInstance.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                GameObject oldTarget = PlayerManager.MyInstance.ActiveUnitController.Target;
+                Interactable oldTarget = PlayerManager.MyInstance.ActiveUnitController.Target;
                 // moving this inside getnexttabtarget
                 //ClearTarget();
                 GetNextTabTarget(oldTarget);
             }
         }
 
-        private void GetNextTabTarget(GameObject oldTarget) {
+        private void GetNextTabTarget(Interactable oldTarget) {
             //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
             DateTime currentTime = DateTime.Now;
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
@@ -377,18 +376,18 @@ namespace AnyRPG {
             int closestTargetIndex = -1;
 
             // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
-            List<GameObject> characterUnitList = new List<GameObject>();
+            List<UnitController> characterUnitList = new List<UnitController>();
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
-                CharacterUnit targetCharacterUnit = collidedGameObject.GetComponent<CharacterUnit>();
+                UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
                 if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.BaseCharacter, PlayerManager.MyInstance.MyCharacter.Faction) <= -1) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
                     Vector3 transformedPosition = PlayerManager.MyInstance.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position);
                     if (transformedPosition.z > 0f) {
-                        characterUnitList.Add(collidedGameObject);
+                        characterUnitList.Add(targetCharacterUnit);
 
                     }
                 }
@@ -404,7 +403,7 @@ namespace AnyRPG {
 
             // now that we have all valid attack targets, we need to process the list a bit before choosing a target
             i = 0;
-            foreach (GameObject collidedGameObject in characterUnitList) {
+            foreach (UnitController collidedGameObject in characterUnitList) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
@@ -434,7 +433,7 @@ namespace AnyRPG {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
                     ClearTarget();
-                    SetTarget(characterUnitList[closestTargetIndex]);
+                    SetTarget(characterUnitList[closestTargetIndex].Interactable);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
@@ -442,7 +441,7 @@ namespace AnyRPG {
                     if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
                         ClearTarget();
-                        SetTarget(characterUnitList[tabTargetIndex]);
+                        SetTarget(characterUnitList[tabTargetIndex].Interactable);
                     }
                 }
             } else {
@@ -450,26 +449,16 @@ namespace AnyRPG {
                 // we only want to clear the target if we are actually setting a new target
                 if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                     ClearTarget();
-                    SetTarget(characterUnitList[tabTargetIndex]);
+                    SetTarget(characterUnitList[tabTargetIndex].Interactable);
                 }
             }
         }
 
-        public void InterActWithTarget(Interactable interactable, GameObject _gameObject) {
+        public void InterActWithTarget(Interactable interactable) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + "); my current target: " + target);
-            if (PlayerManager.MyInstance.ActiveUnitController.Target != _gameObject) {
+            if (PlayerManager.MyInstance.ActiveUnitController.Target != interactable) {
                 ClearTarget();
-                SetTarget(_gameObject);
-            } else {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): current target remains the same");
-            }
-            if (this.interactable != interactable) {
-                this.interactable = interactable;
-            } else {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): current interactable remains the same");
-            }
-            if (interactable == null) {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
+                SetTarget(interactable);
             }
             if (InteractionSucceeded()) {
                 //Debug.Log("We were able to interact with the target");
@@ -486,10 +475,9 @@ namespace AnyRPG {
             }
         }
 
-        public void InterActWithInteractableOption(Interactable interactable, InteractableOption interactableOption, GameObject _gameObject) {
+        public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + ")");
-            SetTarget(_gameObject);
-            this.interactable = interactable;
+            SetTarget(interactable);
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
             }
@@ -508,14 +496,14 @@ namespace AnyRPG {
             }
         }
 
-        private bool InteractionWithOptionSucceeded(InteractableOption interactableOption) {
+        private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(PlayerManager.MyInstance.ActiveCharacter.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(interactable.DisplayName);
+                SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
-                interactable = null;
+                target = null;
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -562,21 +550,21 @@ namespace AnyRPG {
 
         public void ClearTarget() {
             //Debug.Log("PlayerController.ClearTarget()");
-            interactable = null;
+            target = null;
             UIManager.MyInstance.MyFocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
         }
 
-        public void SetTarget(GameObject newTarget) {
+        public void SetTarget(Interactable newTarget) {
             //Debug.Log("PlayerController.SetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
             if (newTarget == null) {
                 return;
             }
-            UnitController unitController = newTarget.GetComponent<UnitController>();
-            if (unitController != null) {
+            this.target = newTarget;
+            if (newTarget.NamePlateUnit != null) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(unitController.NamePlateController);
-                NamePlateManager.MyInstance.SetFocus(unitController);
+                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget.NamePlateUnit.NamePlateController);
+                NamePlateManager.MyInstance.SetFocus(newTarget.NamePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }

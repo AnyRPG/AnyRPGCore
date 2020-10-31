@@ -78,7 +78,7 @@ namespace AnyRPG {
             return new List<AnimationClip>();
         }
 
-        public virtual bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
 
@@ -91,11 +91,11 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
+        public void BeginPerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
             abilityHitDelayCoroutine = abilityCaster.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput, channeledEffect));
         }
 
-        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
+        public IEnumerator PerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect) {
             //Debug.Log("ChanelledEffect.PerformAbilityEffectDelay()");
             float timeRemaining = channeledEffect.effectDelay;
             while (timeRemaining > 0f) {
@@ -116,7 +116,7 @@ namespace AnyRPG {
             // do nothing for now
         }
 
-        public virtual void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput) {
+        public virtual void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
             // do nothing.  There is no weapon on the base class
         }
 
@@ -250,7 +250,7 @@ namespace AnyRPG {
             return 1f;
         }
 
-        public virtual bool IsTargetInMeleeRange(GameObject target) {
+        public virtual bool IsTargetInMeleeRange(Interactable target) {
             return true;
         }
 
@@ -259,12 +259,12 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }
 
-        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }
@@ -277,7 +277,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack) {
+        public virtual bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack) {
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || deactivateAutoAttack == true) {
@@ -287,7 +287,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target) {
+        public virtual Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
             return target;
         }
 
@@ -298,7 +298,7 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
             return true;
         }
 

@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public Vector3 groundTargetLocation = Vector3.zero;
 
-        public GameObject originalTarget;
+        public Interactable originalTarget;
 
         // track the ability that was originally cast that resulted in this effect
         public BaseAbility baseAbility = null;

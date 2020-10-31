@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class RainEffect : AOEEffect {
 
 
-        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(MyName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 

@@ -21,8 +21,8 @@ namespace AnyRPG {
 
         public List<string> QuestGiverProfileNames { get => questGiverProfileNames; set => questGiverProfileNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new QuestGiver(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new QuestGiverComponent(interactable, this);
         }
     }
 

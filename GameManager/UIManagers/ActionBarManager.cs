@@ -18,7 +18,7 @@ namespace AnyRPG {
         private Coroutine targetRangeRoutine = null;
 
         // the action bar target for range checks
-        private GameObject target = null;
+        private Interactable target = null;
 
         public ActionButton MyFromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> MyActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
@@ -92,7 +92,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.UnitController.OnClearTarget -= HandleClearTarget;
         }
 
-        public void HandleSetTarget(GameObject target) {
+        public void HandleSetTarget(Interactable target) {
             //Debug.Log("ActionBarmanager.HandleSetTarget()");
             this.target = target;
             if (targetRangeRoutine == null) {
@@ -137,7 +137,7 @@ namespace AnyRPG {
                         BaseAbility baseAbility = actionButton.Useable as BaseAbility;
                         //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.MyName);
 
-                        GameObject finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter, target, false);
+                        Interactable finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter, target, false);
                         //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, target.transform.position);
                         inRange = false;
                         if (finalTarget != null) {

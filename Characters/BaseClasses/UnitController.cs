@@ -10,7 +10,8 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class UnitController : MonoBehaviour, INamePlateUnit, IPersistentObjectOwner {
 
-        public event System.Action<GameObject> OnSetTarget = delegate { };
+        //public event System.Action<GameObject> OnSetTarget = delegate { };
+        public event System.Action<Interactable> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
         public event System.Action OnModelReady = delegate { };
@@ -76,7 +77,9 @@ namespace AnyRPG {
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
 
         // targeting
-        private GameObject target;
+        //private GameObject target;
+        // it's not possible to target anything that is not interactable, so change to Interactable target
+        private Interactable target;
         private float distanceToTarget = 0f;
 
         // track current state
@@ -131,7 +134,8 @@ namespace AnyRPG {
         public IState CurrentState { get => currentState; set => currentState = value; }
         public float LeashDistance { get => leashDistance; }
         public PatrolController PatrolController { get => patrolController; }
-        public GameObject Target { get => target; }
+        //public GameObject Target { get => target; }
+        public Interactable Target { get => target; }
         public BaseCharacter BaseCharacter { get => baseCharacter; }
         public float MovementSpeed {
             get {
@@ -512,7 +516,7 @@ namespace AnyRPG {
 
 
 
-        public void FollowTarget(GameObject target, float minAttackRange = -1f) {
+        public void FollowTarget(Interactable target, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ": AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
             if (!(currentState is DeathState)) {
                 BaseCharacter.UnitController.UnitMotor.FollowTarget(target, minAttackRange);
@@ -559,7 +563,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
                 return;
             }
-            currentState.Update();
+            if (currentState != null) {
+                currentState.Update();
+            }
             if (motorEnabled) {
                 unitMotor.FixedUpdate();
             }
@@ -637,7 +643,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
-            Vector3 masterRelativeDestination = masterUnit.CharacterUnit.gameObject.transform.position + masterUnit.CharacterUnit.gameObject.transform.TransformDirection(Vector3.right);
+            Vector3 masterRelativeDestination = masterUnit.UnitController.gameObject.transform.position + masterUnit.UnitController.gameObject.transform.TransformDirection(Vector3.right);
             float usedMaxDistance = 0f;
             if (baseCharacter.CharacterCombat.GetInCombat() == true) {
                 usedMaxDistance = maxCombatDistanceFromMasterOnMove;
@@ -645,7 +651,7 @@ namespace AnyRPG {
                 usedMaxDistance = maxDistanceFromMasterOnMove;
             }
 
-            if (Vector3.Distance(gameObject.transform.position, masterUnit.CharacterUnit.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(LeashPosition, masterUnit.CharacterUnit.gameObject.transform.position) > usedMaxDistance) {
+            if (Vector3.Distance(gameObject.transform.position, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(LeashPosition, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance) {
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
                 masterRelativeDestination = SetDestination(masterRelativeDestination);
                 LeashPosition = masterRelativeDestination;
@@ -656,7 +662,7 @@ namespace AnyRPG {
         }
 
         public void OnMasterAttack(BaseCharacter target) {
-            SetTarget(target.CharacterUnit.gameObject);
+            SetTarget(target.UnitController.Interactable);
         }
 
         public void OnMasterDropCombat() {
@@ -702,13 +708,13 @@ namespace AnyRPG {
             topNode.aggroValue = Mathf.Clamp(topNode.aggroValue, 0, float.MaxValue);
             if (Target == null) {
                 //Debug.Log(gameObject.name + ".AIController.UpdateTarget(): target was null.  setting target: " + topNode.aggroTarget.gameObject.name);
-                SetTarget(topNode.aggroTarget.gameObject);
+                SetTarget(topNode.aggroTarget.Interactable);
                 return;
             }
-            if (Target != topNode.aggroTarget.gameObject) {
+            if (Target != topNode.aggroTarget.Interactable) {
                 //Debug.Log(gameObject.name + ".AIController.UpdateTarget(): " + topNode.aggroTarget.gameObject.name + "[" + topNode.aggroValue + "] stole agro from " + MyTarget);
                 ClearTarget();
-                SetTarget(topNode.aggroTarget.gameObject);
+                SetTarget(topNode.aggroTarget.Interactable);
             }
         }
 
@@ -734,7 +740,7 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 baseCharacter.CharacterStats.ResetResourceAmounts();
                 if (baseCharacter.UnitController != null && baseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.MyMovementSpeed = MovementSpeed;
+                    BaseCharacter.UnitController.UnitMotor.MovementSpeed = MovementSpeed;
                     BaseCharacter.UnitController.UnitMotor.ResetPath();
                 } else {
                     //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter.myanimatedunit was null!");
@@ -829,7 +835,7 @@ namespace AnyRPG {
 
         public void SetUseRootMotion(bool useRootMotion) {
             if (UnitMotor != null) {
-                UnitMotor.MyUseRootMotion = false;
+                UnitMotor.UseRootMotion = false;
             }
         }
 
@@ -856,8 +862,8 @@ namespace AnyRPG {
         public void UpdateApparentVelocity() {
             // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
             if (BaseCharacter != null && BaseCharacter.CharacterUnit != null) {
-                apparentVelocity = Vector3.Distance(BaseCharacter.CharacterUnit.transform.position, lastPosition) * (1 / Time.deltaTime);
-                lastPosition = BaseCharacter.CharacterUnit.transform.position;
+                apparentVelocity = Vector3.Distance(BaseCharacter.UnitController.transform.position, lastPosition) * (1 / Time.deltaTime);
+                lastPosition = BaseCharacter.UnitController.transform.position;
             }
 
         }
@@ -875,12 +881,11 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterUnit targetCharacterUnit = agroTarget;
-            if (targetCharacterUnit == null) {
+            if (agroTarget == null) {
                 //Debug.Log("no character unit on target");
-            } else if (targetCharacterUnit.BaseCharacter == null) {
+            } else if (agroTarget.BaseCharacter == null) {
                 // nothing for now
-            } else if (targetCharacterUnit.BaseCharacter.CharacterCombat == null) {
+            } else if (agroTarget.BaseCharacter.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
             } else {
                 if (baseCharacter.CharacterCombat == null) {
@@ -888,8 +893,8 @@ namespace AnyRPG {
                     // like inanimate units
                 } else {
                     // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-                    targetCharacterUnit.BaseCharacter.CharacterCombat.EnterCombat(BaseCharacter);
-                    baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
+                    agroTarget.BaseCharacter.CharacterCombat.EnterCombat(BaseCharacter);
+                    baseCharacter.CharacterCombat.EnterCombat(agroTarget.BaseCharacter);
                 }
                 //Debug.Log("combat is " + combat.ToString());
                 //Debug.Log("mytarget is " + MyTarget.ToString());
@@ -995,7 +1000,7 @@ namespace AnyRPG {
         }
 
 
-        public void SetTarget(GameObject newTarget) {
+        public void SetTarget(Interactable newTarget) {
             //Debug.Log(gameObject.name + ": BaseController: setting target: " + newTarget.name);
             if (unitControllerMode == UnitControllerMode.AI) {
                 if (currentState is DeathState || currentState is EvadeState) {
@@ -1037,7 +1042,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            Vector3 returnValue = baseCharacter.CharacterUnit.transform.TransformPoint(baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.CharacterUnit.transform.forward * (baseCharacter.CharacterUnit.HitBoxSize / 2f));
+            Vector3 returnValue = baseCharacter.UnitController.transform.TransformPoint(baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.UnitController.transform.forward * (baseCharacter.CharacterUnit.HitBoxSize / 2f));
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
@@ -1055,7 +1060,7 @@ namespace AnyRPG {
             return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, myCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
         }
 
-        public bool IsTargetInHitBox(GameObject newTarget) {
+        public bool IsTargetInHitBox(Interactable newTarget) {
             //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + newTarget.name + ")");
             if (newTarget == null) {
                 return false;

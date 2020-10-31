@@ -21,8 +21,8 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage : base.NamePlateImage); }
         public string CutsceneName { get => cutsceneName; set => cutsceneName = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new CutSceneInteractable(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new CutSceneComponent(interactable, this);
         }
     }
 

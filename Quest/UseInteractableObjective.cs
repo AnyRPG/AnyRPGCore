@@ -29,11 +29,11 @@ namespace AnyRPG {
             CheckInteractableName(interactable.DisplayName, true);
         }
 
-        public void CheckInteractionComplete(InteractableOption interactable) {
+        public void CheckInteractionComplete(InteractableOptionComponent interactable) {
             CheckInteractableName(interactable.DisplayName, true);
         }
 
-        public void CheckInteractionStart(InteractableOption interactable) {
+        public void CheckInteractionStart(InteractableOptionComponent interactable) {
             CheckInteractableName(interactable.DisplayName, false);
         }
 

@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public float MyAbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
 
-        protected override void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        protected override void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("FixedLengthEffect.BeginMonitoring(" + (target == null ? "null" : target.name) + ")");
             base.BeginMonitoring(abilityEffectObjects, source, target, abilityEffectInput);
             //Debug.Log("FixedLengthEffect.BeginMonitoring(); source: " + source.name);
@@ -26,7 +26,7 @@ namespace AnyRPG {
             CheckDestroyObjects(abilityEffectObjects, source, target, abilityEffectInput);
         }
 
-        protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             if (source != null) {
                 SystemAbilityController.MyInstance.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
             }

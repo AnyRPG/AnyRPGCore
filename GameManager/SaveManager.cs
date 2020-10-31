@@ -229,6 +229,12 @@ namespace AnyRPG {
 
         public void SaveUMASettings() {
             //Debug.Log("SaveManager.SaveUMASettings()");
+            if (PlayerManager.MyInstance == null) {
+                return;
+            }
+            if (PlayerManager.MyInstance.UnitController == null) {
+                return;
+            }
             if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
                 if (recipeString == string.Empty) {
@@ -238,8 +244,6 @@ namespace AnyRPG {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is not empty");
                     recipeString = PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 }
-            } else {
-                //Debug.Log("SaveManager.SaveUMASettings(): no avatar!!!");
             }
         }
 

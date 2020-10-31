@@ -42,7 +42,7 @@ namespace AnyRPG {
         private LayerMask explosionMask = 0;
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".KnockBackEffect.Cast()");
             if (target == null) {
                 return null;

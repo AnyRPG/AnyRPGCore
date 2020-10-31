@@ -9,15 +9,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Name Change Config", menuName = "AnyRPG/Interactable/NameChangeConfig")]
-    [System.Serializable]
     public class NameChangeConfig : InteractableOptionConfig {
 
         [SerializeField]
         private NameChangeProps interactableOptionProps = new NameChangeProps();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.NamePlateImage); }
-
+        public NameChangeProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

@@ -93,7 +93,7 @@ namespace AnyRPG {
             get => questGiver;
             set {
                 questGiver = value;
-                MyInteractable = questGiver.MyInteractable;
+                MyInteractable = questGiver.Interactable;
             }
         }
 
@@ -121,7 +121,7 @@ namespace AnyRPG {
                 Debug.Log("QuestGiverUI.ShowQuestsCommon() QUESTGIVER IS NULL!!!");
                 return;
             }
-            interactable = questGiver.MyInteractable;
+            interactable = questGiver.Interactable;
             //Debug.Log("QuestGiverUI.ShowQuestsCommon(): about to clear quests");
             ClearQuests();
             //Debug.Log("QuestGiverUI.ShowQuestsCommon(): cleared quests");

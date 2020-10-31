@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class InstantEffectAbility : BaseAbility {
 
 
-        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".InstantEffectAbility.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + ")");
 
             // this code could lead to a situation where an instanteffect was allowed to perform its ability effects even if the wrong weapon was equipped.
@@ -20,7 +20,7 @@ namespace AnyRPG {
             return castResult;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("DirectAbility.CanUseOn(" + (target != null ? target.name : "null") + ")");
             if (!base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext)) {
                 return false;

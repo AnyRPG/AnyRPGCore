@@ -15,12 +15,7 @@ namespace AnyRPG {
         [SerializeField]
         private AnimatedObjectProps interactableOptionProps = new AnimatedObjectProps();
 
-        [SerializeField]
-        private float movementSpeed = 0.05f;
-
-        [SerializeField]
-        private float rotationSpeed = 10f;
-
+        public AnimatedObjectProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

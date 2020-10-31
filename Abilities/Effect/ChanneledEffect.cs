@@ -11,7 +11,7 @@ namespace AnyRPG {
         // the amount of time to delay damage after spawning the prefab
         public float effectDelay = 0f;
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
@@ -40,7 +40,7 @@ namespace AnyRPG {
                             prefabParent = usedPrefabSourceBone.gameObject;
                         }
                         Vector3 endPosition = Vector3.zero;
-                        GameObject usedTarget = target;
+                        Interactable usedTarget = target;
                         if (abilityEffectInput.baseAbility != null && abilityEffectInput.baseAbility.RequiresGroundTarget == true) {
                             endPosition = abilityEffectInput.groundTargetLocation;
                             usedTarget = null;
@@ -49,7 +49,7 @@ namespace AnyRPG {
                             endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                         }
                         
-                        channeledObjectScript.Setup(prefabParent, prefabProfile.Position, usedTarget, endPosition);
+                        channeledObjectScript.Setup(prefabParent, prefabProfile.Position, usedTarget.gameObject, endPosition);
                         //channeledObjectScript.MyStartObject = prefabParent;
                         //channeledObjectScript.MyStartPosition = source.AbilityManager.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;
@@ -71,7 +71,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
                 return false;

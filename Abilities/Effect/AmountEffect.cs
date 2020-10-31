@@ -72,7 +72,7 @@ namespace AnyRPG {
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
 
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             if (abilityEffectInput == null) {
                 //Debug.Log("AttackEffect.PerformAbilityHit() abilityEffectInput is null!");
             }
@@ -128,7 +128,7 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
-        public virtual bool ProcessAbilityHit(GameObject target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+        public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
             // nothing here for now, override by heal or attack
             return true;
         }

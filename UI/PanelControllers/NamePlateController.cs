@@ -492,14 +492,14 @@ namespace AnyRPG {
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.MyDisplayName);
             if (unitNamePlateController != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable, unitNamePlateController.NamePlateUnit.gameObject);
+                PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
             }
         }
 
         private void HandleLeftClick() {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
             if (unitNamePlateController != (PlayerManager.MyInstance.MyCharacter.CharacterUnit as INamePlateUnit)) {
-                PlayerManager.MyInstance.MyCharacter.UnitController.SetTarget(unitNamePlateController.NamePlateUnit.gameObject);
+                PlayerManager.MyInstance.MyCharacter.UnitController.SetTarget(unitNamePlateController.Interactable);
             }
         }
 

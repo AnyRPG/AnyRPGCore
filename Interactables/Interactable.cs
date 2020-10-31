@@ -88,7 +88,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool despawnRequiresNoValidOption = false;
 
-        private List<InteractableOption> interactables = new List<InteractableOption>();
+        private List<InteractableOptionComponent> interactables = new List<InteractableOptionComponent>();
 
         private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
@@ -114,9 +114,11 @@ namespace AnyRPG {
 
         private INamePlateUnit namePlateUnit = null;
 
+        private UnitController unitController = null;
+
         public bool IsInteracting { get => isInteracting; }
 
-        public List<InteractableOption> Interactables { get => interactables; set => interactables = value; }
+        public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
 
         public Sprite Icon { get => interactableIcon; }
 
@@ -143,6 +145,7 @@ namespace AnyRPG {
 
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
@@ -203,9 +206,15 @@ namespace AnyRPG {
             base.GetComponentReferences();
             //boxCollider = GetComponent<BoxCollider>();
             myCollider = GetComponent<Collider>();
+            unitController = GetComponent<UnitController>();
 
             // get monobehavior interactables
-            interactables.AddRange(GetComponents<InteractableOption>());
+            InteractableOption[] interactableOptionMonoList = GetComponents<InteractableOption>();
+            foreach (InteractableOption interactableOption in interactableOptionMonoList) {
+                if (interactableOption.InteractableOptionProps != null) {
+                    interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this));
+                }
+            }
 
             // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
@@ -228,10 +237,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public List<InteractableOption> GetInteractableOptionList(Type type) {
-            List<InteractableOption> returnList = new List<InteractableOption>();
+        public List<InteractableOptionComponent> GetInteractableOptionList(Type type) {
+            List<InteractableOptionComponent> returnList = new List<InteractableOptionComponent>();
 
-            foreach (InteractableOption interactableOption in interactables) {
+            foreach (InteractableOptionComponent interactableOption in interactables) {
                 if (interactableOption.GetType() == type) {
                     returnList.Add(interactableOption);
                 }
@@ -240,7 +249,23 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public void AddInteractable(InteractableOption interactableOption) {
+        /// <summary>
+        /// get the first interactable option by type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public InteractableOptionComponent GetFirstInteractableOption(Type type) {
+
+            foreach (InteractableOptionComponent interactableOption in interactables) {
+                if (interactableOption.GetType() == type) {
+                    return interactableOption;
+                }
+            }
+
+            return null;
+        }
+
+        public void AddInteractable(InteractableOptionComponent interactableOption) {
             interactables.Add(interactableOption);
         }
 
@@ -799,7 +824,7 @@ namespace AnyRPG {
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
                 if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this, gameObject);
+                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
                     Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
@@ -821,7 +846,7 @@ namespace AnyRPG {
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
                 if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this, gameObject);
+                    PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
                     Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);

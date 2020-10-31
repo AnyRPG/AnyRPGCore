@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         #endregion
 
-        private MusicPlayer musicPlayer = null;
+        private MusicPlayerComponent musicPlayer = null;
 
         [SerializeField]
         private Button playButton = null;
@@ -79,7 +79,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowMusicProfilesCommon(MusicPlayer musicPlayer) {
+        public void ShowMusicProfilesCommon(MusicPlayerComponent musicPlayer) {
             //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
 
             ClearMusicProfiles();
@@ -115,7 +115,7 @@ namespace AnyRPG {
             ShowMusicProfilesCommon(musicPlayer);
         }
 
-        public void ShowMusicProfiles(MusicPlayer musicPlayer) {
+        public void ShowMusicProfiles(MusicPlayerComponent musicPlayer) {
             //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
             this.musicPlayer = musicPlayer;
             ShowMusicProfilesCommon(this.musicPlayer);

@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public virtual void OnDisable() {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.OnDestroy()");
+            //Debug.Log(abilityEffectName + ".AbilityEffect.OnDisable()");
         }
 
         public string GetShortDescription() {
@@ -151,7 +151,7 @@ namespace AnyRPG {
         }
 
 
-        public virtual bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".AbilityEffect.CanUseOn()");
 
             // create target booleans
@@ -233,7 +233,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             /*
             if (abilityEffectInput != null) {
@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         
-        public virtual GameObject ReturnTarget(GameObject target) {
+        public virtual Interactable ReturnTarget(Interactable target) {
             return target;
         }
         
@@ -254,7 +254,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
+        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.Name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
@@ -280,13 +280,13 @@ namespace AnyRPG {
             return returnList;
         }
 
-        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext, AbilityEffect abilityEffect) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffect abilityEffect) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
 
             // perform ability dependent target check
-            GameObject finalTarget = ReturnTarget(target);
+            Interactable finalTarget = ReturnTarget(target);
 
             // perform source dependent target check
             finalTarget = source.AbilityManager.ReturnTarget(abilityEffect, target);
@@ -303,18 +303,18 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, GameObject> PerformAbilityHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
+        public virtual Dictionary<PrefabProfile, GameObject> PerformAbilityHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
-        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, GameObject target) {
+        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target) {
             //Debug.Log(MyName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
                 UnitController unitController = null;
                 if (target != null) {
-                    unitController = target.GetComponent<UnitController>();
+                    unitController = target.UnitController;
                 }
                 if (unitController == null) {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
@@ -343,7 +343,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
             Dictionary<PrefabProfile, GameObject> effectObjects = PerformAbilityHitEffects(source, target, abilityEffectInput);
 
@@ -353,7 +353,7 @@ namespace AnyRPG {
         }
 
         //void PerformMaterialChange(BaseCharacter source, GameObject target) {
-        void PerformMaterialChange(GameObject target) {
+        void PerformMaterialChange(Interactable target) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformMaterialChange(" + source.name + ", " + target.name + ")");
             if (effectMaterial == null) {
                 //Debug.Log("This effect does not have a material.  returning");
@@ -381,7 +381,7 @@ namespace AnyRPG {
 
 
             if (target.GetComponent<MaterialChangeController>() == null) {
-                MaterialChangeController materialChangeController = target.AddComponent<MaterialChangeController>();
+                MaterialChangeController materialChangeController = target.gameObject.AddComponent<MaterialChangeController>();
                 materialChangeController.Initialize(materialChangeDuration, effectMaterial);
             }
         }

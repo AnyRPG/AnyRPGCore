@@ -146,8 +146,8 @@ namespace AnyRPG {
             foreach (IInteractable _interactable in currentInteractables) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "; type: " + _interactable.GetType() + "; Checking for valid button");
                 // handle questgiver
-                if (_interactable is QuestGiver) {
-                    foreach (QuestNode questNode in (_interactable as QuestGiver).MyQuests) {
+                if (_interactable is QuestGiverComponent) {
+                    foreach (QuestNode questNode in (_interactable as QuestGiverComponent).MyQuests) {
                         Quest quest = questNode.MyQuest;
                         if (quest != null) {
                             //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest.MyName);
@@ -164,7 +164,7 @@ namespace AnyRPG {
                                 GameObject go = Instantiate(questPrefab, availableQuestArea.transform);
                                 InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
                                 qs.MyQuest = quest;
-                                qs.MyQuestGiver = (_interactable as QuestGiver);
+                                qs.MyQuestGiver = (_interactable as QuestGiverComponent);
 
                                 displayText += quest.DisplayName;
 

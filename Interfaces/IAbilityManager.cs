@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         AudioClip GetAnimatedAbilityHitSound();
 
-        GameObject ReturnTarget(AbilityEffect abilityEffect, GameObject target);
+        Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="targetable"></param>
         /// <returns></returns>
-        bool PerformLOSCheck(GameObject target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
+        bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
 
         float GetMeleeRange();
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
         /// give a chance to cast any onhit abilities from the equipped weapon
         /// </summary>
         /// <param name="attackEffect"></param>
-        void ProcessWeaponHitEffects(AttackEffect attackEffect, GameObject target, AbilityEffectContext abilityEffectOutput);
+        void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput);
 
         /// <summary>
         /// return a float that increases damage by the animation time to ensure long cast abilities get the same benefit from dps increases
@@ -115,19 +115,19 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        bool IsTargetInMeleeRange(GameObject target);
+        bool IsTargetInMeleeRange(Interactable target);
 
         /// <summary>
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, GameObject target, AbilityEffectContext abilityEffectContext = null);
+        bool IsTargetInAbilityEffectRange(AbilityEffect abilityEffect, Interactable target, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// True if the target is in the correct range for the ability
         /// </summary>
         /// <returns></returns>
-        bool IsTargetInAbilityRange(BaseAbility baseAbility, GameObject target, AbilityEffectContext abilityEffectContext = null);
+        bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// Put an ability on cooldown and prevent it from being cast for x seconds
@@ -161,7 +161,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="deactivateAutoAttack"></param>
         /// <returns></returns>
-        bool ProcessAnimatedAbilityHit(GameObject target, bool deactivateAutoAttack);
+        bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack);
 
         /// <summary>
         /// True if the caster has the weapon equipped required to cast the ability
@@ -182,7 +182,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        bool AbilityHit(GameObject target, AbilityEffectContext abilityEffectContext);
+        bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext);
 
         void AddPet(CharacterUnit target);
 
@@ -200,7 +200,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <param name="abilityEffectInput"></param>
         /// <param name="channeledEffect"></param>
-        void BeginPerformAbilityHitDelay(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect);
+        void BeginPerformAbilityHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, ChanneledEffect channeledEffect);
 
         /// <summary>
         /// Destroy ability effect objects after a certain amount of time
@@ -225,7 +225,7 @@ namespace AnyRPG {
         /// <param name="targetCharacterUnit"></param>
         /// <param name="usedAgroValue"></param>
         /// <returns></returns>
-        bool AddToAggroTable(CharacterUnit targetCharacterUnit, int usedAgroValue);
+        //bool AddToAggroTable(CharacterUnit targetCharacterUnit, int usedAgroValue);
 
         /// <summary>
         /// return any threat multipliers

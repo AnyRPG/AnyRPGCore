@@ -20,8 +20,8 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.NamePlateImage); }
         public List<string> VendorCollectionNames { get => vendorCollectionNames; set => vendorCollectionNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new Vendor(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new VendorComponent(interactable, this);
         }
     }
 

@@ -17,9 +17,11 @@ namespace AnyRPG {
         [SerializeField]
         private float rotationSpeed = 10f;
 
+        public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+        public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new AnimatedObject(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new AnimatedObjectComponent(interactable, this);
         }
     }
 

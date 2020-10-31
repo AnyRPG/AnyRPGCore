@@ -354,29 +354,30 @@ namespace AnyRPG {
 
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
             CharacterUnit _characterUnit = null;
-            if (unitController.Interactable != null) {
-                List<InteractableOption> tmpList = unitController.Interactable.GetInteractableOptionList(typeof(CharacterUnit));
-                if (tmpList.Count > 0) {
-                    // there can only be one of these types of object on an interactable
-                    _characterUnit = tmpList[0] as CharacterUnit;
-                }
+            if (unitController.Interactable == null) {
+                Debug.LogError("UnitController had no interactable");
+                return;
             }
+            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(unitController.Interactable);
+            if (tmpCharacterUnit == null) {
+                Debug.LogError("Interactable had no characterUnit");
+                return;
+            }
+            _characterUnit = tmpCharacterUnit;
+
             if (respawnOn == respawnCondition.Despawn) {
-                if (_characterUnit != null) {
-                    _characterUnit.OnDespawn += HandleDespawn;
-                }
+                _characterUnit.OnDespawn += HandleDespawn;
             } else if (respawnOn == respawnCondition.Loot) {
-                List<InteractableOption> tmpList = unitController.Interactable.GetInteractableOptionList(typeof(LootableCharacter));
-                if (tmpList.Count > 0) {
+                LootableCharacterComponent tmpLootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(unitController.Interactable);
+                if (tmpLootableCharacter != null) {
                     // there can only be one of these types of object on an interactable
-                    LootableCharacter _lootableCharacter = tmpList[0] as LootableCharacter;
                     // interesting note : there is no unsubscribe to this event.  Unit spawn nodes exist for the entire scene and are only destroyed at the same time as the interactables
                     // should we make an unsubscribe anyway even though it would never be called?
-                    _lootableCharacter.OnLootComplete += HandleLootComplete;
+                    tmpLootableCharacter.OnLootComplete += HandleLootComplete;
                 }
 
             } else if (respawnOn == respawnCondition.Death) {
-                if (_characterUnit != null && _characterUnit.BaseCharacter != null && _characterUnit.BaseCharacter.CharacterStats != null) {
+                if (_characterUnit.BaseCharacter != null && _characterUnit.BaseCharacter.CharacterStats != null) {
                     _characterUnit.BaseCharacter.CharacterStats.OnDie += HandleDie;
                 }
             }
@@ -388,8 +389,6 @@ namespace AnyRPG {
             int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             _characterUnit.BaseCharacter.CharacterStats.SetLevel(_unitLevel);
             spawnReferences.Add(unitController);
-
-
         }
 
         /// <summary>

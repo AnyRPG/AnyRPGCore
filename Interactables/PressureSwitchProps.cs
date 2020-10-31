@@ -15,8 +15,10 @@ namespace AnyRPG {
         [SerializeField]
         private float minimumWeight = 0f;
 
-        public override InteractableOption GetInteractableOption(Interactable interactable) {
-            return new PressureSwitch(interactable, this);
+        public float MinimumWeight { get => minimumWeight; set => minimumWeight = value; }
+
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new PressureSwitchComponent(interactable, this);
         }
     }
 

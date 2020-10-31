@@ -271,12 +271,12 @@ namespace AnyRPG {
         }
 
         // bypass the creation of the status effect and just make its visual prefab
-        public void RawCast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public void RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".StatusEffect.RawCast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
             if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
                 return true;
             }
@@ -302,7 +302,7 @@ namespace AnyRPG {
         }
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
@@ -310,10 +310,13 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             CharacterStats targetCharacterStats = null;
 
-            if ((classTrait || abilityEffectInput.savedEffect) && (source as CharacterAbilityManager) is CharacterAbilityManager) {
-                targetCharacterStats = (source as CharacterAbilityManager).BaseCharacter.CharacterStats;
+            if ((classTrait || abilityEffectInput.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
+                targetCharacterStats = (source as BaseCharacter).CharacterStats;
             } else {
-                targetCharacterStats = target.GetComponent<CharacterUnit>().BaseCharacter.CharacterStats;
+                BaseCharacter baseCharacter = target.GetComponent<BaseCharacter>();
+                if (baseCharacter != null) {
+                    targetCharacterStats = baseCharacter.CharacterStats;
+                }
             }
 
             // prevent status effect from sending scaled up damage to its ticks
@@ -333,7 +336,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void PerformAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("DirectEffect.PerformAbilityEffect()");
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
@@ -370,45 +373,45 @@ namespace AnyRPG {
         //public void HandleStatusEffectEnd(
 
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
-        public override void CastTick(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
             abilityEffectInput.spellDamageMultiplier = tickRate / Duration;
             base.CastTick(source, target, abilityEffectInput);
             PerformAbilityTick(source, target, abilityEffectInput);
         }
 
-        public override void CastComplete(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastComplete()");
             base.CastComplete(source, target, abilityEffectInput);
             PerformAbilityComplete(source, target, abilityEffectInput);
         }
 
-        public virtual void CastWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public virtual void CastWeaponHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityWeaponHit(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectInput) {
+        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
         }
 
-        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, GameObject target, AbilityEffectContext effectOutput) {
+        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
             PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
         }
 
-        public virtual void CastReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual void CastReflect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.Name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityReflect(source, target, abilityEffectContext);
         }
 
-        public virtual void PerformAbilityReflect(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformAbilityReflect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflect(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
             PerformAbilityReflectEffects(source, target, abilityEffectContext);
         }
 
 
-        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
             abilityEffectContext.reflectDamage = true;
             PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);

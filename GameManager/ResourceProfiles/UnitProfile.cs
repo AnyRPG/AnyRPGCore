@@ -227,11 +227,11 @@ namespace AnyRPG {
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
         public UnitPrefabProfile UnitPrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
-        public LootableCharacterProps LootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
-        public BehaviorProps BehaviorConfig { get => behaviorConfig; set => behaviorConfig = value; }
-        public DialogProps DialogConfig { get => dialogConfig; set => dialogConfig = value; }
-        public QuestGiverProps QuestGiverConfig { get => questGiverConfig; set => questGiverConfig = value; }
-        public VendorProps VendorConfig { get => vendorConfig; set => vendorConfig = value; }
+        public LootableCharacterProps LootableCharacterProps { get => lootableCharacter; set => lootableCharacter = value; }
+        public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
+        public DialogProps DialogProps { get => dialogConfig; set => dialogConfig = value; }
+        public QuestGiverProps QuestGiverProps { get => questGiverConfig; set => questGiverConfig = value; }
+        public VendorProps VendorProps { get => vendorConfig; set => vendorConfig = value; }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings

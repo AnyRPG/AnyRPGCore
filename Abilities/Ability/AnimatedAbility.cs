@@ -54,7 +54,7 @@ namespace AnyRPG {
             return animationClips;
         }
 
-        public override bool Cast(IAbilityCaster sourceCharacter, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.AbilityManager.Name + ")");
             if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
@@ -101,7 +101,7 @@ namespace AnyRPG {
             //source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 
-        public bool HandleAbilityHit(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
             bool returnResult = PerformAbilityEffects(source, target, abilityEffectContext);
             if (!returnResult) {
@@ -122,7 +122,7 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
             if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;

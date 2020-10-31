@@ -18,8 +18,8 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.NamePlateImage); }
         public string ClassName { get => className; set => className = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new ClassChangeInteractable(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new ClassChangeComponent(interactable, this);
         }
     }
 

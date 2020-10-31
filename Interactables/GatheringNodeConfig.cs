@@ -21,6 +21,7 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
+        public GatheringNodeProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }
 
 }

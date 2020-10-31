@@ -45,9 +45,9 @@ namespace AnyRPG {
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
 
         public event System.Action<string> OnInteractionStarted = delegate { };
-        public event System.Action<InteractableOption> OnInteractionWithOptionStarted = delegate { };
+        public event System.Action<InteractableOptionComponent> OnInteractionWithOptionStarted = delegate { };
         public event System.Action<Interactable> OnInteractionCompleted = delegate { };
-        public event System.Action<InteractableOption> OnInteractionWithOptionCompleted = delegate { };
+        public event System.Action<InteractableOptionComponent> OnInteractionWithOptionCompleted = delegate { };
         public event System.Action<Item> OnItemCountChanged = delegate { };
         public event System.Action OnBeginKeybind = delegate { };
         public event System.Action OnEndKeybind = delegate { };
@@ -225,7 +225,7 @@ namespace AnyRPG {
             OnInteractionStarted(interactableName);
         }
 
-        public void NotifyOnInteractionWithOptionStarted(InteractableOption interactableOption) {
+        public void NotifyOnInteractionWithOptionStarted(InteractableOptionComponent interactableOption) {
             OnInteractionWithOptionStarted(interactableOption);
         }
 
@@ -233,7 +233,7 @@ namespace AnyRPG {
             OnInteractionCompleted(interactable);
         }
 
-        public void NotifyOnInteractionWithOptionCompleted(InteractableOption interactableOption) {
+        public void NotifyOnInteractionWithOptionCompleted(InteractableOptionComponent interactableOption) {
             OnInteractionWithOptionCompleted(interactableOption);
         }
 

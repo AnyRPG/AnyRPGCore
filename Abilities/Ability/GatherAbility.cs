@@ -8,14 +8,17 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
     public class GatherAbility : DirectAbility {
 
-        public override bool Cast(IAbilityCaster source, GameObject target, AbilityEffectContext abilityEffectContext) {
+        public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             if (target == null) {
                 return false;
             }
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
                 if (target != null) {
-                    target.GetComponent<GatheringNode>().Gather();
+                    GatheringNodeComponent gatheringNodeComponent = GatheringNodeComponent.GetGatheringNodeComponent(target);
+                    if (gatheringNodeComponent != null) {
+                        gatheringNodeComponent.Gather();
+                    }
                 } else {
                     //Debug.Log(MyName + ".GatherAbility.Cast(): target was null");
                 }
@@ -23,7 +26,7 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(GameObject target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
             if (target != null) {
                 //Debug.Log("GatherAbility.CanUseOn(" + target.name + ")");
@@ -45,13 +48,13 @@ namespace AnyRPG {
             }
             */
 
-            GatheringNode _gatheringNode = target.GetComponent<GatheringNode>();
-            if (_gatheringNode == null) {
+            GatheringNodeComponent gatheringNodeComponent = GatheringNodeComponent.GetGatheringNodeComponent(target);
+            if (gatheringNodeComponent == null) {
                 //Debug.Log("You cannot use " + MyName + " on: " + target.name);
                 return false;
             }
 
-            if (_gatheringNode.BaseAbility == this) {
+            if (gatheringNodeComponent.BaseAbility == this) {
                 return true;
             } else {
                 //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);

@@ -33,7 +33,7 @@ namespace AnyRPG {
         private int defaultFontSize = 30;
 
         private string displayText;
-        private GameObject mainTarget;
+        private Interactable mainTarget;
         private float alpha;
         private Vector2 targetPos;
         private float fadeOutTimer;
@@ -52,11 +52,11 @@ namespace AnyRPG {
         private int directionMultiplier = 1;
 
 
-        public string MyDisplayText { get => displayText; set => displayText = value; }
-        public GameObject MyMainTarget { get => mainTarget; set => mainTarget = value; }
-        public CombatMagnitude MyCombatMagnitude { get => combatMagnitude; set => combatMagnitude = value; }
-        public CombatTextType MyCombatType { get => textType; set => textType = value; }
-        public Image MyImage { get => image; set => image = value; }
+        public string DisplayText { get => displayText; set => displayText = value; }
+        public Interactable MainTarget { get => mainTarget; set => mainTarget = value; }
+        public CombatMagnitude CombatMagnitude { get => combatMagnitude; set => combatMagnitude = value; }
+        public CombatTextType CombatType { get => textType; set => textType = value; }
+        public Image Image { get => image; set => image = value; }
         public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
 
         /*
@@ -171,7 +171,7 @@ namespace AnyRPG {
             tmpProtext.color = textColor;
             string finalString = preText + displayText + postText;
             tmpProtext.text = finalString;
-            if (MyCombatMagnitude == CombatMagnitude.critical) {
+            if (CombatMagnitude == CombatMagnitude.critical) {
                 tmpProtext.fontSize = tmpProtext.fontSize * 2;
             }
             RunCombatTextUpdate();

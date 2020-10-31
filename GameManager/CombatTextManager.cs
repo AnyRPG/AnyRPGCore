@@ -72,7 +72,7 @@ namespace AnyRPG {
             combatTextController.gameObject.SetActive(false);
         }
 
-        public void SpawnCombatText(GameObject target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name + "; damage: " + damage + "; type: " + combatType);
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
@@ -81,22 +81,22 @@ namespace AnyRPG {
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
                 //Debug.Log("About to Set MainTarget on combat text");
-                combatTextController.MyMainTarget = target;
+                combatTextController.MainTarget = target;
                 if (combatType == CombatTextType.miss) {
-                    combatTextController.MyDisplayText = "(Miss)";
+                    combatTextController.DisplayText = "(Miss)";
                 } else if (combatType == CombatTextType.immune) {
-                    combatTextController.MyDisplayText = "(Immune)";
+                    combatTextController.DisplayText = "(Immune)";
                 } else {
-                    combatTextController.MyDisplayText = damage.ToString();
+                    combatTextController.DisplayText = damage.ToString();
                 }
-                combatTextController.MyCombatMagnitude = combatMagnitude;
-                combatTextController.MyCombatType = combatType;
+                combatTextController.CombatMagnitude = combatMagnitude;
+                combatTextController.CombatType = combatType;
                 combatTextController.AbilityEffectContext = abilityEffectContext;
                 combatTextController.InitializeCombatTextController();
             }
         }
 
-        public void SpawnCombatText(GameObject target, StatusEffect statusEffect, bool gainEffect) {
+        public void SpawnCombatText(Interactable target, StatusEffect statusEffect, bool gainEffect) {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }
@@ -105,13 +105,13 @@ namespace AnyRPG {
             //Debug.Log("About to Set MainTarget on combat text");
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
-                combatTextController.MyMainTarget = target;
-                combatTextController.MyImage.sprite = statusEffect.Icon;
-                combatTextController.MyDisplayText = statusEffect.DisplayName;
+                combatTextController.MainTarget = target;
+                combatTextController.Image.sprite = statusEffect.Icon;
+                combatTextController.DisplayText = statusEffect.DisplayName;
                 if (gainEffect) {
-                    combatTextController.MyCombatType = CombatTextType.gainBuff;
+                    combatTextController.CombatType = CombatTextType.gainBuff;
                 } else {
-                    combatTextController.MyCombatType = CombatTextType.loseBuff;
+                    combatTextController.CombatType = CombatTextType.loseBuff;
                 }
                 combatTextController.InitializeCombatTextController();
             }

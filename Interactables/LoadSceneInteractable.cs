@@ -8,12 +8,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LoadSceneInteractable : PortalInteractable {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
-
         [SerializeField]
-        private LoadSceneConfig loadSceneConfig = new LoadSceneConfig();
-
-        private LoadSceneProps interactableOptionProps = null;
+        private LoadSceneProps loadSceneProps = new LoadSceneProps();
 
         [Header("Scene Options")]
 
@@ -21,17 +17,6 @@ namespace AnyRPG {
         [SerializeField]
         private string sceneName = string.Empty;
 
-        public LoadSceneInteractable(Interactable interactable, LoadSceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            this.interactableOptionProps = interactableOptionProps;
-        }
-
-        public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
-            base.Interact(source);
-
-            LevelManager.MyInstance.LoadLevel(sceneName);
-            return true;
-        }
-
+        public override InteractableOptionProps InteractableOptionProps { get => loadSceneProps; }
     }
 }

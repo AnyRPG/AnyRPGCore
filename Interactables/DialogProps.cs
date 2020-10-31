@@ -21,8 +21,8 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.NamePlateImage); }
         public List<string> DialogNames { get => dialogNames; set => dialogNames = value; }
 
-        public InteractableOption GetInteractableOption(Interactable interactable) {
-            return new DialogInteractable(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new DialogComponent(interactable, this);
         }
     }
 

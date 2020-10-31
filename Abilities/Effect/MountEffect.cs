@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, GameObject target, GameObject originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {
                 return null;
@@ -108,7 +108,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetRiding(false);
                     //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
                     CameraManager.MyInstance.ActivateMainCamera();
-                    CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.MyCharacter.CharacterUnit.transform);
+                    CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
                 }
             }
         }

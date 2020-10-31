@@ -63,11 +63,11 @@ namespace AnyRPG {
                 return GetDescription();
             }
         }
-        private Dictionary<LootableCharacter, CurrencyNode> currencyNodes = new Dictionary<LootableCharacter, CurrencyNode>();
+        private Dictionary<LootableCharacterComponent, CurrencyNode> currencyNodes = new Dictionary<LootableCharacterComponent, CurrencyNode>();
 
-        public Dictionary<LootableCharacter, CurrencyNode> CurrencyNodes { get => currencyNodes; set => currencyNodes = value; }
+        public Dictionary<LootableCharacterComponent, CurrencyNode> CurrencyNodes { get => currencyNodes; set => currencyNodes = value; }
 
-        public void AddCurrencyNode(LootableCharacter lootableCharacter, CurrencyNode currencyNode) {
+        public void AddCurrencyNode(LootableCharacterComponent lootableCharacter, CurrencyNode currencyNode) {
             //Debug.Log("LootableDrop.AddCurrencyNode(" + lootableCharacter.name + ", " + currencyNode.currency.MyName + " " + currencyNode.MyAmount +")");
 
             currencyNodes.Add(lootableCharacter, currencyNode);
@@ -88,7 +88,7 @@ namespace AnyRPG {
 
         public override bool TakeLoot() {
             base.TakeLoot();
-            foreach (LootableCharacter lootableCharacter in currencyNodes.Keys) {
+            foreach (LootableCharacterComponent lootableCharacter in currencyNodes.Keys) {
                 if (currencyNodes[lootableCharacter].currency != null) {
                     PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();

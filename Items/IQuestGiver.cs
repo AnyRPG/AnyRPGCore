@@ -10,7 +10,7 @@ namespace AnyRPG {
     public interface IQuestGiver {
         List<QuestNode> MyQuests { get; }
         void UpdateQuestStatus();
-        Interactable MyInteractable { get; }
+        Interactable Interactable { get; }
         bool Interact(CharacterUnit source);
         void HandleCompleteQuest();
         void HandleAcceptQuest();
