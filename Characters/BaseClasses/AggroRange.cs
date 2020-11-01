@@ -27,9 +27,9 @@ namespace AnyRPG {
 
         private void Start() {
             // do this in start because our awake can run before the awake that sets this in the parent
-            baseCharacter = GetComponentInParent<CharacterUnit>().BaseCharacter;
-            if (baseCharacter == null) {
-                //Debug.Log("AggroRange.Start(): baseCharacter is null!");
+            Interactable interactable = GetComponentInParent<Interactable>();
+            if (interactable != null) {
+                baseCharacter = interactable.UnitController.BaseCharacter;
             }
             StartEnableAggro();
             //SetAgroRange(aggroRadius);
@@ -77,7 +77,12 @@ namespace AnyRPG {
                 return;
             }
             // if a player enters our sphere, target him (which has the effect of agro because the idle state will follow any target the enemycontroller has)
-            CharacterUnit _characterUnit = collider.gameObject.GetComponent<CharacterUnit>();
+            Interactable targetInteractable = collider.gameObject.GetComponent<Interactable>();
+            if (targetInteractable == null) {
+                // whatever entered the sphere was not interactable
+                return;
+            }
+            CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(targetInteractable);
             if (_characterUnit == null) {
                 // this was not a character that entered, and therefore we cannot agro it
                 return;

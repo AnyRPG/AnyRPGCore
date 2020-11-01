@@ -64,32 +64,20 @@ namespace AnyRPG {
             this.interactable = interactable;
         }
 
-        protected virtual void Init() {
+        public virtual void Init() {
+            SetupScriptableObjects();
             AddUnitProfileSettings();
             CreateEventSubscriptions();
+        }
+
+        public virtual void Cleanup() {
+            CleanupEventSubscriptions();
+            CleanupScriptableObjects();
         }
 
         protected virtual void AddUnitProfileSettings() {
             // do nothing here
         }
-
-        public virtual void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".InteractableOption.OrchestratorStart()");
-            SetupScriptableObjects();
-            //GetComponentReferences();
-        }
-
-        /*
-        public virtual void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".InteractableOption.GetComponentReferences()");
-            if (componentReferencesInitialized) {
-                //Debug.Log("InteractableOption.GetComponentReferences(): already initialized. exiting!");
-                return;
-            }
-
-            componentReferencesInitialized = true;
-        }
-        */
 
         public virtual void CreateEventSubscriptions() {
             if (eventSubscriptionsInitialized) {
@@ -170,11 +158,6 @@ namespace AnyRPG {
 
         public virtual string GetSummary() {
             return string.Format("{0}", DisplayName);
-        }
-
-        public virtual void OnDisable() {
-            CleanupEventSubscriptions();
-            CleanupScriptableObjects();
         }
 
         public virtual void HandlePlayerUnitSpawn() {

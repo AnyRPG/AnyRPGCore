@@ -25,7 +25,7 @@ namespace AnyRPG {
                 // our target despawned in the middle of the cast
                 return;
             }
-            CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (characterUnit == null) {
                 //Debug.Log("CharacterUnit is null? target despawn during cast?");
                 return;
@@ -37,7 +37,7 @@ namespace AnyRPG {
             if (target == null) {
                 return false;
             }
-            CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (characterUnit == null) {
                 return false;
             }
@@ -52,7 +52,7 @@ namespace AnyRPG {
                 //Debug.Log("Ressurect spell cast, but there was no target");
                 return null;
             }
-            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
             if (targetCharacterUnit == null) {
                 return null;
             }

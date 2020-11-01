@@ -15,6 +15,8 @@ namespace AnyRPG {
         bool MyPrerequisitesMet { get; }
         Sprite NamePlateImage { get; }
 
+        void Init();
+        void Cleanup();
         bool CanInteract();
         bool Interact(CharacterUnit source);
         void StopInteract();
@@ -27,8 +29,6 @@ namespace AnyRPG {
         int GetCurrentOptionCount();
         void HandlePrerequisiteUpdates();
         void SetupScriptableObjects();
-        void OrchestratorStart();
-        //void OrchestratorFinish();
         void HandlePlayerUnitSpawn();
     }
 

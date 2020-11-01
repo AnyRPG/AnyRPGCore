@@ -9,14 +9,6 @@ namespace AnyRPG {
         [SerializeField]
         private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
 
-        [Tooltip("If true, this object will save it's position when switching from one scene to another (including the main menu).  It will not save if the game is quit directly from the main menu.")]
-        [SerializeField]
-        private bool saveOnLevelUnload = false;
-
-        [Tooltip("If true, this object will save it's position when the player saves the game.")]
-        [SerializeField]
-        private bool saveOnGameSave = false;
-
         private UUID uuid = null;
 
         public UUID UUID { get => uuid; set => uuid = value; }
@@ -24,12 +16,12 @@ namespace AnyRPG {
 
         private void Awake() {
             GetComponentReferences();
-            persistentObjectComponent.Initialize(this);
+            persistentObjectComponent.Setup(this);
         }
 
         // Start is called before the first frame update
         void Start() {
-            persistentObjectComponent.Start();
+            persistentObjectComponent.Init();
         }
 
         public void GetComponentReferences() {
@@ -37,7 +29,7 @@ namespace AnyRPG {
         }
 
         private void OnDisable() {
-            persistentObjectComponent.OnDisable();
+            persistentObjectComponent.Cleanup();
         }
 
     }

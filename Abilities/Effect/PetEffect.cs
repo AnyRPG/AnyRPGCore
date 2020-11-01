@@ -14,7 +14,7 @@ namespace AnyRPG {
             if (target == null) {
                 return false;
             }
-            CharacterUnit characterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (characterUnit == null) {
                 return false;
             }

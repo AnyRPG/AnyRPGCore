@@ -520,8 +520,7 @@ namespace AnyRPG {
             }
 
             // only players can activate trigger based unit spawn nodes.  we don't want npcs wandering around patrolling to activate these
-            CharacterUnit _characterUnit = other.gameObject.GetComponent<CharacterUnit>();
-            if (_characterUnit == null || _characterUnit != PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
+            if (other.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                 return;
             }
 

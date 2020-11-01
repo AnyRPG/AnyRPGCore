@@ -23,7 +23,7 @@ namespace AnyRPG {
             SetupScriptableObjects();
         }
 
-        protected override void Init() {
+        public override void Init() {
             base.Init();
             if (interactionPanelTitle == string.Empty) {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
@@ -75,11 +75,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
-        }
-
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
-            base.OnDisable();
         }
 
         public void HandleSkillListChanged(Skill skill) {

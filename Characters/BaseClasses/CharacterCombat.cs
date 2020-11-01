@@ -89,12 +89,12 @@ namespace AnyRPG {
             if (MyAutoAttackActive == true && baseCharacter.UnitController.Target != null) {
                 //Debug.Log("player controller is in combat and target is not null");
                 //Interactable _interactable = controller.MyTarget.GetComponent<Interactable>();
-                CharacterUnit _characterUnit = baseCharacter.UnitController.Target.GetComponent<CharacterUnit>();
+                CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(baseCharacter.UnitController.Target);
                 if (_characterUnit != null) {
                     BaseCharacter targetCharacter = _characterUnit.BaseCharacter;
                     if (targetCharacter != null) {
                         //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is not null.  Attacking");
-                        Attack(baseCharacter.UnitController.Target.GetComponent<CharacterUnit>().BaseCharacter);
+                        Attack(targetCharacter);
                         return;
                     } else {
                         //Debug.Log(gameObject.name + ".PlayerCombat.HandleAutoAttack(). targetCharacter is null. deactivating auto attack");
@@ -454,7 +454,7 @@ namespace AnyRPG {
             CharacterUnit targetCharacterUnit = null;
             //stats.TakeDamage(myStats.damage.GetValue());
             if (MyBaseCharacter.UnitController.Target != null) {
-                targetCharacterUnit = MyBaseCharacter.UnitController.Target.GetComponent<CharacterUnit>();
+                targetCharacterUnit = CharacterUnit.GetCharacterUnit(MyBaseCharacter.UnitController.Target);
             }
 
             if (MyBaseCharacter.UnitController.Target != null && targetCharacterUnit != null) {

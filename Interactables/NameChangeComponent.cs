@@ -91,11 +91,6 @@ namespace AnyRPG {
             return true;
         }
 
-        public override void OnDisable() {
-            base.OnDisable();
-            CleanupEventSubscriptions();
-        }
-
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.GetCurrentOptionCount(): returning " + GetValidOptionCount());
             return GetValidOptionCount();

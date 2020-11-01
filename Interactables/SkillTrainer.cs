@@ -10,9 +10,6 @@ namespace AnyRPG {
         [SerializeField]
         private SkillTrainerProps skillTrainerProps = new SkillTrainerProps();
 
-        [SerializeField]
-        private List<string> skillNames = new List<string>();
-
         public override InteractableOptionProps InteractableOptionProps { get => skillTrainerProps; }
     }
 

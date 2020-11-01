@@ -198,8 +198,8 @@ namespace AnyRPG {
 
             unitController = GetComponent<UnitController>();
 
-            if (CharacterUnit == null) {
-                CharacterUnit _characterUnit = GetComponent<CharacterUnit>();
+            if (CharacterUnit == null && unitController != null) {
+                CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(unitController.Interactable);
                 if (_characterUnit != null) {
                     CharacterUnit = _characterUnit;
                 }

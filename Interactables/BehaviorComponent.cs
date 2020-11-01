@@ -30,13 +30,17 @@ namespace AnyRPG {
             this.interactableOptionProps = interactableOptionProps;
         }
 
-        protected override void Init() {
+        public override void Init() {
             base.Init();
-            AddUnitProfileSettings();
             HandlePrerequisiteUpdates();
         }
 
-        public void AddUnitProfileSettings() {
+        public override void Cleanup() {
+            base.Cleanup();
+            CleanupDialog();
+        }
+
+        protected override void AddUnitProfileSettings() {
             if (unitProfile != null) {
                 if (unitProfile.BehaviorProps.BehaviorNames != null) {
                     foreach (string behaviorName in unitProfile.BehaviorProps.BehaviorNames) {
@@ -56,13 +60,6 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-
-        public override void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            base.OnDisable();
-            CleanupEventSubscriptions();
-            CleanupDialog();
-        }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");

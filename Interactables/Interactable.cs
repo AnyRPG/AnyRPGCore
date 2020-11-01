@@ -191,7 +191,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
                 if (interactable != null) {
                     // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactable.OrchestratorStart();
+                    interactable.Init();
                 }
             }
 
@@ -816,12 +816,8 @@ namespace AnyRPG {
             }
 
             if (isTrigger) {
-                //CharacterUnit otherCharacterUnit = other.gameObject.GetComponent<CharacterUnit>();
-                // changed to player to ensure ai don't accidentally trigger interactions
-
-                //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
-
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
+                // ensure ai don't accidentally trigger interactions
                 if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
                     PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
@@ -838,12 +834,8 @@ namespace AnyRPG {
             }
 
             if (isTrigger == true && interactOnExit == true) {
-                //CharacterUnit otherCharacterUnit = other.gameObject.GetComponent<CharacterUnit>();
-                // changed to player to ensure ai don't accidentally trigger interactions
-
-                //PlayerUnit otherCharacterUnit = other.gameObject.GetComponent<PlayerUnit>();
-
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
+                // ensure ai don't accidentally trigger interactions
                 if (unitController != null && unitController == PlayerManager.MyInstance.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
                     PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
@@ -870,7 +862,7 @@ namespace AnyRPG {
 
             string nameString = DisplayName;
             if (DisplayName == string.Empty) {
-                CharacterUnit baseCharacter = GetComponent<CharacterUnit>();
+                CharacterUnit baseCharacter = CharacterUnit.GetCharacterUnit(this);
                 if (baseCharacter != null) {
                     //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
                     nameString = baseCharacter.DisplayName;
@@ -1017,6 +1009,18 @@ namespace AnyRPG {
                 }
             }
             */
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            foreach (IInteractable interactable in interactables) {
+                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
+                if (interactable != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    interactable.Cleanup();
+                }
+            }
+
         }
 
 

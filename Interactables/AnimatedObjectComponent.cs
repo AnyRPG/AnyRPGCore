@@ -21,6 +21,13 @@ namespace AnyRPG {
             interactionPanelTitle = "Interactable";
         }
 
+        public override void Cleanup() {
+            base.Cleanup();
+            if (coroutine != null) {
+                coroutine = null;
+            }
+        }
+
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             //if (coroutine != null) {
@@ -101,16 +108,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-
-        public override void OnDisable() {
-            base.OnDisable();
-            if (coroutine != null) {
-                // next line no longer needed.  stopAllCoroutines now handled by interactable
-                //StopCoroutine(coroutine);
-                coroutine = null;
-            }
-
-        }
     }
 
 }

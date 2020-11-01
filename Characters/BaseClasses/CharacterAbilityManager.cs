@@ -557,7 +557,7 @@ namespace AnyRPG {
             //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             CharacterUnit targetCharacterUnit = null;
             if (target != null) {
-                targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (targetCharacterUnit != null) {
                     bool targetIsSelf = false;
                     if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
@@ -1323,7 +1323,7 @@ namespace AnyRPG {
 
             CharacterUnit targetCharacterUnit = null;
             if (finalTarget != null) {
-                targetCharacterUnit = finalTarget.GetComponent<CharacterUnit>();
+                targetCharacterUnit = CharacterUnit.GetCharacterUnit(finalTarget);
             }
             if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
                 if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {

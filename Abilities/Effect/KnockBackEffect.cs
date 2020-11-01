@@ -53,7 +53,7 @@ namespace AnyRPG {
             Vector3 sourcePosition = source.AbilityManager.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
 
-            CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
             if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log("KnockBackEffect.Cast(): stop casting");
                 targetCharacterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
@@ -93,14 +93,13 @@ namespace AnyRPG {
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
 
                         // we have to handle player knockback specially, as they need to be in knockback state or the idle update will freeze them in place
-                        PlayerUnitMovementController playerUnitMovementController = collider.gameObject.GetComponent<PlayerUnitMovementController>();
-                        if (playerUnitMovementController != null) {
-                            playerUnitMovementController.KnockBack();
+                        if (collider.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+                            PlayerManager.MyInstance.PlayerUnitMovementController.KnockBack();
                         }
 
                         // if this is a character, we want to freeze their rotation.  for inanimate objects, we want rotation
-                        targetCharacterUnit = collider.gameObject.GetComponent<CharacterUnit>();
-                        if (targetCharacterUnit != null) {
+                        Interactable _interactable = collider.gameObject.GetComponent<Interactable>();
+                        if (_interactable != null && CharacterUnit.GetCharacterUnit(_interactable) != null) {
                             rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                         }
                         rigidbody.AddExplosionForce(explosionForce, explosionCenter, 0, upwardModifier, ForceMode.VelocityChange);

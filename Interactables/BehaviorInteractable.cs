@@ -12,15 +12,6 @@ namespace AnyRPG {
         [SerializeField]
         private BehaviorProps behaviorProps = new BehaviorProps();
 
-        [Header("Behavior")]
-
-        [SerializeField]
-        private List<string> behaviorNames = new List<string>();
-
-        [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
-        [SerializeField]
-        private bool useBehaviorCopy = false;
-
         public override InteractableOptionProps InteractableOptionProps { get => behaviorProps; }
     }
 

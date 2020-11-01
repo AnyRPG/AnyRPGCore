@@ -95,7 +95,7 @@ namespace AnyRPG {
                 int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;
                 float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.AbilityManager.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, target.GetComponent<CharacterUnit>(), abilityEffectInput, resourceAmountNode);
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, CharacterUnit.GetCharacterUnit(target), abilityEffectInput, resourceAmountNode);
                 finalAmount = (int)abilityKeyValuePair.Key;
                 combatMagnitude = abilityKeyValuePair.Value;
                 float inputAmount = 0f;

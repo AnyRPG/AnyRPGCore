@@ -73,11 +73,6 @@ namespace AnyRPG {
             return true;
         }
 
-        public override void OnDisable() {
-            base.OnDisable();
-            CleanupEventSubscriptions();
-        }
-
         public override void HandlePrerequisiteUpdates() {
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);

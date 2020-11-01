@@ -12,11 +12,6 @@ namespace AnyRPG {
         [SerializeField]
         private QuestGiverProps questGiverProps = new QuestGiverProps();
 
-        [Header("QuestGiver")]
-
-        [SerializeField]
-        private List<string> questGiverProfileNames = new List<string>();
-
         public override InteractableOptionProps InteractableOptionProps { get => questGiverProps; }
     }
 

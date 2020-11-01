@@ -372,7 +372,7 @@ namespace AnyRPG {
             Vector3 unitTargetOffset = Vector3.zero;
 
             if (unitController == null) {
-                Debug.Log("PreviewCameraController.WaitForFollowTarget(): target.GetComponent<CharacterUnit>() is null!!!!");
+                Debug.Log("PreviewCameraController.WaitForFollowTarget(): CharacterUnit.GetCharacterUnit(target) is null!!!!");
             } else {
                 Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
                 initialTargetString = unitController.NamePlateController.PlayerPreviewTarget;

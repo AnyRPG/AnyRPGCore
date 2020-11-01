@@ -45,7 +45,7 @@ namespace AnyRPG {
             bool nullTarget = false;
             CharacterStats targetStats = null;
             if (target != null) {
-                CharacterUnit _characterUnit = target.GetComponent<CharacterUnit>();
+                CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (_characterUnit != null) {
                     targetStats = _characterUnit.BaseCharacter.CharacterStats;
                 }

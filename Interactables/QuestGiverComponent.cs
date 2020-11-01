@@ -28,10 +28,9 @@ namespace AnyRPG {
             this.interactableOptionProps = interactableOptionProps;
         }
 
-        protected override void Init() {
+        public override void Init() {
             InitializeQuestGiver();
             base.Init();
-            CreateEventSubscriptions();
             // this could run after the character spawn.  check it just in case
             UpdateQuestStatus();
         }
@@ -71,11 +70,6 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
-        }
-
-        public override void OnDisable() {
-            //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
-            CleanupEventSubscriptions();
         }
 
         public override bool CanInteract() {

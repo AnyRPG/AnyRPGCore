@@ -10,9 +10,6 @@ namespace AnyRPG {
         [SerializeField]
         private MusicPlayerProps musicPlayerProps = new MusicPlayerProps();
 
-        [SerializeField]
-        private List<string> musicProfileNames = new List<string>();
-
         public override InteractableOptionProps InteractableOptionProps { get => musicPlayerProps; }
     }
 

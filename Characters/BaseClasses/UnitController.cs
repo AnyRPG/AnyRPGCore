@@ -293,7 +293,7 @@ namespace AnyRPG {
             patrolController.Init();
 
             namePlateController.Setup(this);
-            persistentObjectComponent.Initialize(this);
+            persistentObjectComponent.Setup(this);
 
             SetStartPosition();
 
@@ -1012,7 +1012,7 @@ namespace AnyRPG {
                 //Debug.Log("my target is " + MyTarget.ToString());
 
                 // moved this whole block inside the evade check because it doesn't make sense to agro anything while you are evading
-                CharacterUnit targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (targetCharacterUnit != null) {
                     Agro(targetCharacterUnit);
                 }

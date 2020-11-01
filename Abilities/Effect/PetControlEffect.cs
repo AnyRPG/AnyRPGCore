@@ -25,7 +25,9 @@ namespace AnyRPG {
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".PetEffect.CastTick()");
             base.CastTick(source, target, abilityEffectInput);
-            CheckPetSpawn(source, target, abilityEffectInput);
+
+            // FIX ME : TEMPORARILY DISABLED TO PREVENT INFINITE PET SPAWN
+            //CheckPetSpawn(source, target, abilityEffectInput);
         }
 
         public void CheckPetSpawn(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
@@ -62,11 +64,15 @@ namespace AnyRPG {
                     Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
                     foreach (KeyValuePair<PrefabProfile, GameObject> tmpObject in rawObjectList) {
                         //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): LOOPING THROUGH RAW OBJECT LIST ");
+
+                        // FIX ME : NEED TO TRACK PETS SOMEHOW - MAYBE INTEGRATE WITH PET JOURNAL
+                        /*
                         CharacterUnit _characterUnit = tmpObject.Value.GetComponent<CharacterUnit>();
                         if (_characterUnit != null) {
                             //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING PET TO UNIT LIST");
                             petUnits.Add(_characterUnit);
                         }
+                        */
                     }
                 }
             }

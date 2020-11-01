@@ -54,16 +54,9 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+        public override void Cleanup() {
+            base.Cleanup();
             CleanupConfirm();
-        }
-
-        public override void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            base.OnDisable();
-            CleanupEventSubscriptions();
             CleanupDialog();
         }
 

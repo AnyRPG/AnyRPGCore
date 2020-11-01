@@ -15,10 +15,15 @@ namespace AnyRPG {
 
         private void Awake() {
             rangeCollider = GetComponent<SphereCollider>();
-            playerUnit = GetComponentInParent<CharacterUnit>();
-            if (playerUnit == null) {
-                Debug.Log("Found an interactable range on a non player unit!!! DESTROYING IT!!! " + transform.parent.gameObject.name);
-                Destroy(gameObject);
+            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+                // player unit not spawned yet, so this can't be the player.  Disable collider
+                rangeCollider.enabled = false;
+                return;
+            }
+            Interactable _interactable = GetComponentInParent<Interactable>();
+            if (_interactable != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+                // player unit is spawned, but this is not the player unit.  Disable collider
+                rangeCollider.enabled = false;
             }
         }
 

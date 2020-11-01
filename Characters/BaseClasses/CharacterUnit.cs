@@ -66,7 +66,7 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        protected override void Init() {
+        public override void Init() {
             base.Init();
             SetDefaultLayer();
 
@@ -106,14 +106,6 @@ namespace AnyRPG {
                     interactable.gameObject.layer = defaultLayer;
                     Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
                 }
-            }
-        }
-
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.OnDisable()");
-            base.OnDisable();
-            if (despawnCoroutine != null) {
-                interactable.StopCoroutine(despawnCoroutine);
             }
         }
 

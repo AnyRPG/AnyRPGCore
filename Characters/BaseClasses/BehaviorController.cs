@@ -23,8 +23,6 @@ namespace AnyRPG {
 
         public int MyBehaviorIndex { get => behaviorIndex; }
 
-
-
         public BehaviorController(UnitController unitController) {
             this.unitController = unitController;
             AddUnitProfileSettings();

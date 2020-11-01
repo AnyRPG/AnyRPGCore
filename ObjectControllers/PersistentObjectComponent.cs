@@ -39,14 +39,20 @@ namespace AnyRPG {
         public PersistentObjectComponent() {
         }
 
-        public void Initialize(IPersistentObjectOwner persistentObjectOwner) {
+        public void Setup(IPersistentObjectOwner persistentObjectOwner) {
             this.persistentObjectOwner = persistentObjectOwner;
-            OrchestratorStart();
+            CreateEventSubscriptions();
+        }
+
+        public void Cleanup() {
+            CleanupEventSubscriptions();
         }
 
 
-        // Start is called before the first frame update
-        public void Start() {
+        public void Init() {
+            if (persistObjectPosition == false) {
+                return;
+            }
             if (moveOnStart == true) {
                 LoadPersistentState();
             }
@@ -83,11 +89,6 @@ namespace AnyRPG {
             }
         }
 
-        public void OrchestratorStart() {
-            //GetComponentReferences();
-            CreateEventSubscriptions();
-        }
-
         public virtual void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + "CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
@@ -113,17 +114,19 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
-        public void OnDisable() {
-            CleanupEventSubscriptions();
-        }
-
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            if (persistObjectPosition == false) {
+                return;
+            }
             if (saveOnLevelUnload == true) {
                 SaveProperties();
             }
         }
 
         public void HandleSaveGame(string eventName, EventParamProperties eventParamProperties) {
+            if (persistObjectPosition == false) {
+                return;
+            }
             if (saveOnGameSave == true) {
                 SaveProperties();
             }

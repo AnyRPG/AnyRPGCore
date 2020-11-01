@@ -70,10 +70,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-
-        public override void OnDisable() {
-            base.OnDisable();
-        }
     }
 
 }

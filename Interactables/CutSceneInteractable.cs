@@ -12,9 +12,6 @@ namespace AnyRPG {
         [SerializeField]
         private CutsceneProps cutsceneProps = new CutsceneProps();
 
-        [SerializeField]
-        private string cutsceneName = string.Empty;
-
         public override InteractableOptionProps InteractableOptionProps { get => cutsceneProps; }
     }
 

@@ -11,10 +11,6 @@ namespace AnyRPG {
         [SerializeField]
         private SpecializationChangeProps specializationChangeProps = new SpecializationChangeProps();
 
-        [Tooltip("the class Specialization that this interactable option offers")]
-        [SerializeField]
-        private string specializationName = string.Empty;
-
         public override InteractableOptionProps InteractableOptionProps { get => specializationChangeProps; }
     }
 

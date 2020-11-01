@@ -25,7 +25,7 @@ namespace AnyRPG {
 
 
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-            bool returnValue = target.GetComponent<CharacterUnit>().BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
+            bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
             if (returnValue == false) {
                 return false;
             }

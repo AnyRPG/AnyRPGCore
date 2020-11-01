@@ -63,7 +63,7 @@ namespace AnyRPG {
 
                     CharacterUnit targetCharacterUnit = null;
                     if (target != null) {
-                        targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                        targetCharacterUnit =  CharacterUnit.GetCharacterUnit(target);
                     }
                     BaseCharacter targetBaseCharacter = null;
                     if (targetCharacterUnit != null) {

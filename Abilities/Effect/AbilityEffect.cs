@@ -190,7 +190,7 @@ namespace AnyRPG {
 
 
             if (target != null) {
-                targetCharacterUnit = target.GetComponent<CharacterUnit>();
+                targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (targetCharacterUnit != null) {
 
                     // liveness checks

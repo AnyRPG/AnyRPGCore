@@ -41,6 +41,15 @@ namespace AnyRPG {
             //this.interactableOptionProps = interactableOptionProps;
         }
 
+        public override void Init() {
+            base.Init();
+            CreateLootTables();
+        }
+
+        public override void Cleanup() {
+            base.Cleanup();
+            ClearLootTables();
+        }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableNode.Interact(" + source.name + ")");
@@ -149,16 +158,6 @@ namespace AnyRPG {
 
         public void ClearLootTables() {
             lootTables.Clear();
-        }
-
-        public void OnEnable() {
-            CreateLootTables();
-        }
-
-        public override void OnDisable() {
-            base.OnDisable();
-            CleanupEventSubscriptions();
-            ClearLootTables();
         }
 
         public void CheckDropListSize() {

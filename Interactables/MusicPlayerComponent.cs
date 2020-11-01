@@ -26,6 +26,11 @@ namespace AnyRPG {
             }
         }
 
+        public override void Cleanup() {
+            base.Cleanup();
+            CleanupWindowEventSubscriptions();
+        }
+
         public void InitWindow(ICloseableWindowContents musicPlayerUI) {
             //Debug.Log(gameObject.name + ".SkillTrainer.InitWindow()");
             (musicPlayerUI as MusicPlayerUI).ShowMusicProfiles(this);
@@ -62,17 +67,6 @@ namespace AnyRPG {
                 PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
                 PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
             }
-        }
-
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.OnDisable()");
-            base.OnDisable();
         }
 
         public override void HandlePrerequisiteUpdates() {
