@@ -4,12 +4,12 @@ using UnityEngine;
 namespace AnyRPG {
     public class UnitAnimationEventReceiver : MonoBehaviour {
 
-        [SerializeField]
-        private UnitController unitController;
+        private UnitController unitController = null;
 
         private int stepIndex = 0;
 
         public void Setup(UnitController unitController) {
+            Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.Setup(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
             this.unitController = unitController;
         }
 
@@ -79,10 +79,14 @@ namespace AnyRPG {
 
         public void PlayFootStep() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            if (unitController == null) {
+                Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
+            }
+
             if (unitController.MovementHitProfile == null ||
                 unitController.MovementHitProfile.AudioClips == null || 
                 unitController.MovementHitProfile.AudioClips.Count == 0 ||
-                unitController.BaseCharacter.UnitProfile.PlayOnFootstep == false) {
+                unitController.UnitProfile.PlayOnFootstep == false) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }

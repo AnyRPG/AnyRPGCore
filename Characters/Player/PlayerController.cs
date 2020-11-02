@@ -86,6 +86,7 @@ namespace AnyRPG {
 
 
         private void CollectMoveInput() {
+            //Debug.Log("PlayerController.CollectMoveInput()");
             inputJump = InputManager.MyInstance.KeyBindWasPressed("JUMP");
             inputStrafe = InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFELEFT") || InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFERIGHT");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");

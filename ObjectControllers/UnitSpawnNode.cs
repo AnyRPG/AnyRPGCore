@@ -17,9 +17,6 @@ namespace AnyRPG {
 
         private List<UnitProfile> unitProfiles = new List<UnitProfile>();
 
-        [SerializeField]
-        private List<GameObject> spawnPrefabs = new List<GameObject>();
-
         [Header("Unit Level and Toughness")]
 
         [SerializeField]
@@ -103,7 +100,6 @@ namespace AnyRPG {
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         protected UnitToughness unitToughness = null;
-
 
         private Coroutine countDownRoutine = null;
 
@@ -344,6 +340,9 @@ namespace AnyRPG {
                     newSpawnLocation = GetSpawnLocation();
                     newSpawnForward = transform.forward;
                 }
+            } else {
+                newSpawnLocation = GetSpawnLocation();
+                newSpawnForward = transform.forward;
             }
 
             // now that we have a good final position and rotation, set it

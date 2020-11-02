@@ -10,7 +10,6 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class UnitController : MonoBehaviour, INamePlateUnit, IPersistentObjectOwner {
 
-        //public event System.Action<GameObject> OnSetTarget = delegate { };
         public event System.Action<Interactable> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
@@ -19,7 +18,7 @@ namespace AnyRPG {
         private INamePlateTarget namePlateTarget = null;
 
         [SerializeField]
-        protected UnitNamePlateController namePlateController = new UnitNamePlateController();
+        private NamePlateProps namePlateProps = new NamePlateProps();
 
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
         [SerializeField]
@@ -49,7 +48,7 @@ namespace AnyRPG {
         [SerializeField]
         private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
 
-        // unit profile
+        // unit profile and settings
         private UnitProfile unitProfile = null;
 
         // components
@@ -64,6 +63,7 @@ namespace AnyRPG {
         private BaseCharacter baseCharacter = null;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
+        private UnitNamePlateController namePlateController = null;
         private UUID uuid = null;
         private GameObject unitModel = null;
 
@@ -71,6 +71,7 @@ namespace AnyRPG {
         private bool eventSubscriptionsInitialized = false;
         private bool profileReady = false;
         private bool modelReady = false;
+        private bool namePlateReady = false;
 
         // control logic
         private IState currentState;
@@ -134,7 +135,6 @@ namespace AnyRPG {
         public IState CurrentState { get => currentState; set => currentState = value; }
         public float LeashDistance { get => leashDistance; }
         public PatrolController PatrolController { get => patrolController; }
-        //public GameObject Target { get => target; }
         public Interactable Target { get => target; }
         public BaseCharacter BaseCharacter { get => baseCharacter; }
         public float MovementSpeed {
@@ -225,6 +225,14 @@ namespace AnyRPG {
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public Collider Collider { get => myCollider; set => myCollider = value; }
         public bool ModelReady { get => modelReady; set => modelReady = value; }
+        public NamePlateProps NamePlateProps {
+            get {
+                if (unitProfile != null && unitProfile.UnitPrefabProfile != null) {
+                    return unitProfile.UnitPrefabProfile.NamePlateProps;
+                }
+                return namePlateProps;
+            }
+        }
 
         /// <summary>
         /// set this unit to be the pet of baseCharacter
@@ -267,6 +275,7 @@ namespace AnyRPG {
             CreateEventSubscriptions();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
+            namePlateController = new UnitNamePlateController(this);
             unitMotor = new UnitMotor(this);
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
@@ -284,15 +293,24 @@ namespace AnyRPG {
                 ConfigureAnimator();
             }
 
+            // interactables will hold their initialization if they detect a Unit controller to give baseCharacter time to be initialized
+            // they must be activated manually in this case
+            if (interactable != null) {
+                interactable.Initialize();
+            }
             // if we got this far without an animator or model, this is probably the default character unit prefab
             // in that case, whatever spawned this will set the unit profile manually and spawn the model by calling SetUnitProfile()
         }
 
         private void Start() {
+            Debug.Log(gameObject.name + ".UnitController.Start()");
 
             patrolController.Init();
 
-            namePlateController.Setup(this);
+            // in the event that no unitprofile was set, the nameplate will not yet be initialized
+            // give it a chance to initalize if it has not already
+            InitializeNamePlateController();
+
             persistentObjectComponent.Setup(this);
 
             SetStartPosition();
@@ -304,9 +322,23 @@ namespace AnyRPG {
         /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
         /// </summary>
         /// <param name="unitProfile"></param>
-        public void SetUnitProfile(UnitProfile unitProfile) {
+        public void SetUnitProfile(UnitProfile unitProfile, bool updateBaseCharacter = false) {
+            Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+            if (baseCharacter != null) {
+                baseCharacter.SetUnitProfile(unitProfile);
+            }
+            InitializeNamePlateController();
             SpawnUnitModel();
+        }
+
+        public void InitializeNamePlateController() {
+            Debug.Log(gameObject.name + "UnitController.InitializeNamePlateController()");
+            if (namePlateReady == true) {
+                return;
+            }
+            namePlateController.Init();
+            namePlateReady = true;
         }
 
         private void SetStartPosition() {
@@ -353,6 +385,7 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
+            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): searching for base character");
 
             // first, get references to components that will exist on this unit
             UUID uuid = GetComponent<UUID>();
@@ -376,14 +409,21 @@ namespace AnyRPG {
             if (unitModel != null) {
                 this.unitModel = unitModel;
             }
+
+            // most (but not all) units have animators
+            // find an animator if one exists and initialize it
             Animator animator = GetComponentInChildren<Animator>();
             if (animator != null) {
                 unitAnimator.Init(animator);
+
+                // this may have been called from a unit which already had a model attached
+                // if so, the model is the animator gameobject, since no model will have been passed to this call
                 if (unitModel == null) {
                     unitModel = animator.gameObject;
                 }
-                ConfigureUnitModel();
             }
+
+            ConfigureUnitModel();
         }
 
         public void ConfigureUnitModel() {
@@ -574,7 +614,8 @@ namespace AnyRPG {
         public void SetAggroRange() {
             if (unitComponentController.AggroRangeController != null) {
                 //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
-                unitComponentController.AggroRangeController.SetAgroRange(AggroRadius);
+                unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, baseCharacter);
+                unitComponentController.AggroRangeController.StartEnableAggro();
             }
         }
 

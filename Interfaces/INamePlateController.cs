@@ -21,11 +21,11 @@ namespace AnyRPG {
         NamePlateController NamePlate { get; set; }
         INamePlateUnit NamePlateUnit { get; set; }
         string UnitFrameTarget { get; }
-        Vector3 UnitFrameCameraPositionOffset { get; set; }
-        Vector3 UnitFrameCameraLookOffset { get; set; }
-        Vector3 UnitPreviewCameraLookOffset { get; set; }
-        Vector3 UnitPreviewCameraPositionOffset { get; set; }
-        string PlayerPreviewTarget { get; }
+        Vector3 UnitFrameCameraPositionOffset { get; }
+        Vector3 UnitFrameCameraLookOffset { get; }
+        Vector3 UnitPreviewCameraLookOffset { get; }
+        Vector3 UnitPreviewCameraPositionOffset { get; }
+        string UnitPreviewTarget { get; }
         List<PowerResource> PowerResourceList { get; }
 
         string UnitDisplayName { get; }
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         void HandleNameChange();
 
-        void Setup(INamePlateUnit namePlateUnit);
+        void Init();
 
         /// <summary>
         /// true if the unit has a primary resource

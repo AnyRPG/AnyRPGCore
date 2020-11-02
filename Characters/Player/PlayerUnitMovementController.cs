@@ -92,31 +92,23 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance != null) {
                 groundMask = PlayerManager.MyInstance.DefaultGroundMask;
             }
-        }
-
-        private void Start() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Start()");
-            //Set currentState to idle on startup.
-            //airForwardDirection = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
-
-            SwitchCollisionOn();
-        }
-
-        public void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
             GetComponentReferences();
         }
 
-        public void OrchestratorFinish() {
+        public void Init() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
+            //airForwardDirection = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
             ConfigureStateMachine();
+            SwitchCollisionOn();
         }
+
 
         public void ConfigureStateMachine() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
             rpgCharacterState = AnyRPGCharacterState.Idle;
             if (characterController != null) {
-                characterController.OrchestrateStartup();
+                characterController.Init();
             }
         }
 
@@ -245,6 +237,7 @@ namespace AnyRPG {
 
             if (PlayerManager.MyInstance.ActiveUnitController == null) {
                 // still waiting for character to spawn
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): not spawned yet");
                 return;
             }
 
@@ -332,7 +325,7 @@ namespace AnyRPG {
                 */
 
                 // get current movement speed and clamp it to current clamp value
-                float calculatedSpeed = PlayerManager.MyInstance.MyCharacter.UnitController.MovementSpeed;
+                float calculatedSpeed = PlayerManager.MyInstance.ActiveUnitController.MovementSpeed;
                 calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
 
                 if (PlayerManager.MyInstance.PlayerController.HasMoveInput()) {
@@ -855,6 +848,9 @@ namespace AnyRPG {
         }
 
         private void OnDrawGizmos() {
+            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.ActiveUnitController == null) {
+                return;
+            }
             Gizmos.color = Color.white;
             Gizmos.DrawWireCube(PlayerManager.MyInstance.ActiveUnitController.transform.position, acquiringGroundExtents * 2);
 

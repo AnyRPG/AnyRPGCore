@@ -22,9 +22,6 @@ namespace AnyRPG {
 
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
-            set {
-                baseCharacter = value;
-            }
         }
 
         protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
@@ -35,6 +32,11 @@ namespace AnyRPG {
             if (interactable.Collider != null) {
                 hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
             }
+        }
+
+        public void SetBaseCharacter(BaseCharacter baseCharacter) {
+            Debug.Log("CharacterUnit.SetBaseCharacter: " + baseCharacter.gameObject.name);
+            this.baseCharacter = baseCharacter;
         }
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {

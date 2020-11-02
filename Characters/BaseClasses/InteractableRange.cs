@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         private SphereCollider rangeCollider;
 
-        private CharacterUnit playerUnit;
+        //private CharacterUnit playerUnit;
 
         private void Awake() {
             rangeCollider = GetComponent<SphereCollider>();
@@ -29,9 +29,11 @@ namespace AnyRPG {
 
         private void OnTriggerEnter(Collider collider) {
             //Debug.Log("InteractableRange.OnTriggerEnter()");
+            /*
             if (playerUnit == null) {
                 return;
             }
+            */
             bool isAlreadyInRangeTable = false;
 
             Interactable _interactable = collider.GetComponent<Interactable>();
@@ -60,9 +62,11 @@ namespace AnyRPG {
 
         private void OnTriggerExit(Collider collider) {
             //Debug.Log(gameObject.name + ".InteractableRange.OnTriggerExit()");
+            /*
             if (playerUnit == null) {
                 return;
             }
+            */
             Interactable _interactable = collider.GetComponent<Interactable>();
             //Debug.Log(gameObject.name + " at " + transform.position + ".InteractableRange.OnTriggerExit(): " + collider.gameObject.name + " at " + collider.gameObject.transform.position);
             if (_interactable != null) {

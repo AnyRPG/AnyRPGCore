@@ -110,14 +110,14 @@ namespace AnyRPG {
 
         private bool miniMapIndicatorReady = false;
 
+        // components
         private Collider myCollider;
-
         private INamePlateUnit namePlateUnit = null;
+        protected UnitController unitController = null;
 
-        private UnitController unitController = null;
 
         public bool IsInteracting { get => isInteracting; }
-
+        public UnitController UnitController { get => unitController; set => unitController = value; }
         public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
 
         public Sprite Icon { get => interactableIcon; }
@@ -145,11 +145,19 @@ namespace AnyRPG {
 
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
-        public UnitController UnitController { get => unitController; set => unitController = value; }
 
         protected override void Awake() {
             //Debug.Log(gameObject.name + ".Interactable.Awake()");
+            namePlateUnit = GetComponent<INamePlateUnit>();
+            if (namePlateUnit != null) {
+                // namePlateUnits control startup
+                return;
+            }
             base.Awake();
+        }
+
+        public override void Initialize() {
+            base.Initialize();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 if (SystemConfigurationManager.MyInstance == null) {
@@ -165,25 +173,12 @@ namespace AnyRPG {
             }
         }
 
-        public override void CleanupEverything() {
-            //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
-            base.CleanupEverything();
-            CleanupMiniMapIndicator();
-            ClearFromPlayerRangeTable();
-        }
-
-
-
-        public override void OrchestratorStart() {
-            //Debug.Log(gameObject.name + ".Interactable.OrchestratorStart()");
-            base.OrchestratorStart();
-
+        public override void Init() {
             // detect if this is a character and if so, add a characterUnit
-
             BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
             if (baseCharacter != null) {
                 CharacterUnit characterUnit = new CharacterUnit(this);
-                characterUnit.BaseCharacter = baseCharacter;
+                characterUnit.SetBaseCharacter(baseCharacter);
                 AddInteractable(characterUnit);
             }
 
@@ -194,7 +189,6 @@ namespace AnyRPG {
                     interactable.Init();
                 }
             }
-
         }
 
         public override void GetComponentReferences() {
@@ -216,21 +210,17 @@ namespace AnyRPG {
                 }
             }
 
-            // MOVED THIS HERE FROM START
             namePlateUnit = GetComponent<INamePlateUnit>();
-            // testing - because that reference is already encoded in the DisplayName property, this step should not be necessary
-            /*
-            if (namePlateUnit != null) {
-                if (namePlateUnit.NamePlateController.UnitDisplayName != null && namePlateUnit.NamePlateController.UnitDisplayName != string.Empty) {
-                    interactableName = namePlateUnit.NamePlateController.UnitDisplayName;
-                }
-            } else {
-                //things like mining nodes have no namePlateUnit.  That's ok.  we don't want names over top of them
-                //Debug.Log(gameObject.name + ".Interactable.InitializeComponents(): namePlateUnit is null");
-            }
-            */
-
         }
+
+        public override void CleanupEverything() {
+            //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
+            base.CleanupEverything();
+            CleanupMiniMapIndicator();
+            ClearFromPlayerRangeTable();
+        }
+
+
 
         /// <summary>
         /// get a list of interactable options by type
@@ -392,8 +382,8 @@ namespace AnyRPG {
 
             // determine if one of our current interactables is a questgiver
             bool questGiverCurrent = false;
-            foreach (InteractableOption interactableOption in GetCurrentInteractables()) {
-                if (interactableOption is QuestGiver) {
+            foreach (InteractableOptionComponent interactableOption in GetCurrentInteractables()) {
+                if (interactableOption is QuestGiverComponent) {
                     questGiverCurrent = true;
                 }
             }
@@ -628,10 +618,10 @@ namespace AnyRPG {
             List<IInteractable> validInteractables = new List<IInteractable>();
             foreach (IInteractable _interactable in interactables) {
                 if (_interactable != null && !_interactable.Equals(null)) {
-                    if ((_interactable as MonoBehaviour).enabled == true && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
+                    if (_interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
 
                         // HAD TO REMOVE THE FIRST CONDITION BECAUSE IT WAS BREAKING MINIMAP UPDATES - MONITOR FOR WHAT REMOVING THAT BREAKS...
-                        //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet && (_interactable as MonoBehaviour).enabled == true) {
+                        //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
 
                         //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                         validInteractables.Add(_interactable);
@@ -642,10 +632,6 @@ namespace AnyRPG {
                         if (!_interactable.MyPrerequisitesMet) {
                             //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; prerequisitesmet: " + _interactable.MyPrerequisitesMet);
                         }
-                        if ((_interactable as MonoBehaviour).enabled == false) {
-                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; DISABLED");
-                        }
-
                     }
                 }
             }
@@ -675,7 +661,7 @@ namespace AnyRPG {
 
             List<IInteractable> currentInteractables = new List<IInteractable>();
             foreach (IInteractable _interactable in interactables) {
-                if (_interactable.CanInteract() && (_interactable as MonoBehaviour).enabled == true) {
+                if (_interactable.CanInteract()) {
                     //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                     currentInteractables.Add(_interactable);
                 } else {
@@ -850,7 +836,9 @@ namespace AnyRPG {
         public void ClearFromPlayerRangeTable() {
             //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");
             // prevent bugs if a unit despawns before the player moves out of range of it
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.UnitController != null) {
+            if (PlayerManager.MyInstance != null
+                && PlayerManager.MyInstance.PlayerController != null
+                && PlayerManager.MyInstance.ActiveUnitController != null) {
                 if (PlayerManager.MyInstance.PlayerController.MyInteractables.Contains(this)) {
                     PlayerManager.MyInstance.PlayerController.MyInteractables.Remove(this);
                 }

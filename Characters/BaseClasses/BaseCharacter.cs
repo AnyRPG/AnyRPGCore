@@ -112,6 +112,7 @@ namespace AnyRPG {
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
+            Debug.Log(gameObject.name + ".BaseCharacter.Init()");
 
             // react to level load and unload events
             CreateEventSubscriptions();
@@ -194,7 +195,7 @@ namespace AnyRPG {
         }
 
         public virtual void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
+            Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
             unitController = GetComponent<UnitController>();
 
@@ -236,6 +237,12 @@ namespace AnyRPG {
             unitProfile = null;
             this.unitProfileName = unitProfileName;
             GetUnitProfileReference();
+            SetUnitProfileProperties();
+        }
+
+        public void SetUnitProfile (UnitProfile unitProfile) {
+            this.unitProfileName = unitProfile.DisplayName;
+            this.unitProfile = unitProfile;
             SetUnitProfileProperties();
         }
 

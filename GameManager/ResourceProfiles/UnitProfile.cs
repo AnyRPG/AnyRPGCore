@@ -110,7 +110,7 @@ namespace AnyRPG {
 
         [Header("Control")]
 
-        [Tooltip("The radius of the aggro sphere around the unit.  If any hostile characters enter this range, the character will attack them.")]
+        [Tooltip("The radius of the aggro sphere around the unit.  If any hostile characters enter this range, the character will attack them. Set to 0 to disable aggro")]
         [FormerlySerializedAs("aggroRange")]
         [SerializeField]
         private float aggroRadius = 20f;
@@ -245,7 +245,7 @@ namespace AnyRPG {
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
-                    unitController.SetUnitProfile(this);
+                    unitController.SetUnitProfile(this, true);
                 }
             }
 

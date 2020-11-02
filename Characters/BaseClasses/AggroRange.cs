@@ -25,23 +25,16 @@ namespace AnyRPG {
             DisableAggro();
         }
 
-        private void Start() {
-            // do this in start because our awake can run before the awake that sets this in the parent
-            Interactable interactable = GetComponentInParent<Interactable>();
-            if (interactable != null) {
-                baseCharacter = interactable.UnitController.BaseCharacter;
-            }
-            StartEnableAggro();
-            //SetAgroRange(aggroRadius);
-        }
-
         public void SetLayer() {
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
+        /// <summary>
+        /// detect if agro should be enabled based on monobehavior setting or unit profile
+        /// </summary>
         public void StartEnableAggro() {
             //Debug.Log("AggroRange.StartEnableAggro()");
-            if (autoEnableAgro) {
+            if (autoEnableAgro || (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitProfile != null && baseCharacter.UnitController.UnitProfile.AggroRadius > 0f)) {
                 EnableAggro();
             }
         }
@@ -55,8 +48,9 @@ namespace AnyRPG {
             aggroCollider.radius = aggroRadius;
         }
 
-        public void SetAgroRange(float newRange) {
+        public void SetAgroRange(float newRange, BaseCharacter baseCharacter) {
             //Debug.Log("AggroRange.SetAgroRange(" + newRange + ")");
+            this.baseCharacter = baseCharacter;
             aggroRadius = newRange;
             if (aggroCollider != null) {
                 aggroCollider.radius = aggroRadius;

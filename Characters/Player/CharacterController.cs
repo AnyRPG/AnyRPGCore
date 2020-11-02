@@ -17,8 +17,8 @@ namespace AnyRPG {
         void Awake() {
         }
 
-        public void OrchestrateStartup() {
-            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OrchestrateStartup()");
+        public void Init() {
+            Debug.Log(gameObject.name + ".AnyRPGCharacterController.OrchestrateStartup()");
             gameObject.SendMessage("StateStart", SendMessageOptions.DontRequireReceiver);
         }
 

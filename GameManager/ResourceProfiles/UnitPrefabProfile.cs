@@ -25,39 +25,10 @@ namespace AnyRPG {
         [SerializeField]
         protected bool rotateModel = false;
 
-        [Header("UNIT FRAME")]
-
-        [Tooltip("a string that represents the name of the transform in the heirarchy that we will attach the portrait camera to when this character is displayed in a unit frame")]
-        [SerializeField]
-        private string unitFrameTarget = string.Empty;
+        [Header("NamePlate")]
 
         [SerializeField]
-        private Vector3 unitFrameCameraLookOffset = Vector3.zero;
-
-        [SerializeField]
-        private Vector3 unitFrameCameraPositionOffset = Vector3.zero;
-
-        [Header("PLAYER PREVIEW")]
-
-        [Tooltip("a string that represents the name of the transform in the heirarchy that we will attach the camera to when this character is displayed in a player preview type of window")]
-        [SerializeField]
-        private string playerPreviewTarget = string.Empty;
-
-        [SerializeField]
-        private Vector3 unitPreviewCameraLookOffset = new Vector3(0f, 1f, 0f);
-
-        [SerializeField]
-        private Vector3 unitPreviewCameraPositionOffset = new Vector3(0f, 1f, 1f);
-
-        [Header("NAMEPLATE")]
-
-        [Tooltip("If true, the nameplate is not shown above this unit.")]
-        [SerializeField]
-        private bool suppressNamePlate = false;
-
-        [Tooltip("If true, the nameplate will not show the faction of the unit.")]
-        [SerializeField]
-        private bool suppressFaction = false;
+        protected NamePlateProps namePlateProps = new NamePlateProps();
 
         [Header("Mount")]
 
@@ -104,6 +75,7 @@ namespace AnyRPG {
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
         public bool RotateModel { get => rotateModel; set => rotateModel = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
+        public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

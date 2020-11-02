@@ -1623,6 +1623,11 @@ namespace AnyRPG {
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex = -1) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
+            if (animator == null) {
+                // this unit isn't animated
+                return;
+            }
+
             // Animate grip for weapon when an item is added or removed from hand
             if (newItem != null && newItem is Weapon && (newItem as Weapon).MyDefaultAttackAnimationProfile != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");

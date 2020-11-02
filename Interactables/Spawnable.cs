@@ -36,7 +36,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         public GameObject MySpawnReference { get => spawnReference; set => spawnReference = value; }
-
         public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
         public virtual bool MyPrerequisitesMet {
@@ -58,25 +57,22 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
+            Initialize();
+        }
+
+        public virtual void Initialize() {
             SetupScriptableObjects();
-            OrchestrateStartup();
+            GetComponentReferences();
+            Init();
+            CreateEventSubscriptions();
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck();
             }
         }
 
-        public virtual void OrchestrateStartup() {
-            OrchestratorStart();
-            OrchestratorFinish();
-        }
-
-        public virtual void OrchestratorStart() {
-            GetComponentReferences();
-        }
-
-        public virtual void OrchestratorFinish() {
-            CreateEventSubscriptions();
+        public virtual void Init() {
+            // do nothing here
         }
 
         public virtual void Start() {

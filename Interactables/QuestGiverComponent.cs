@@ -39,9 +39,8 @@ namespace AnyRPG {
             base.AddUnitProfileSettings();
             if (unitProfile != null) {
                 interactableOptionProps = unitProfile.QuestGiverProps;
+                HandlePrerequisiteUpdates();
             }
-
-            HandlePrerequisiteUpdates();
         }
 
 

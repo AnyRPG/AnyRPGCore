@@ -10,14 +10,6 @@ namespace AnyRPG {
 
         public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
 
-        private LoadSceneProps interactableOptionProps = null;
-
-        [Header("Scene Options")]
-
-        [Tooltip("When interacted with, this scene will load directly.")]
-        [SerializeField]
-        private string sceneName = string.Empty;
-
         public LoadSceneComponent(Interactable interactable, LoadSceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             this.interactableOptionProps = interactableOptionProps;
         }
@@ -26,7 +18,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
-            LevelManager.MyInstance.LoadLevel(sceneName);
+            LevelManager.MyInstance.LoadLevel((interactableOptionProps as LoadSceneProps).SceneName);
             return true;
         }
 

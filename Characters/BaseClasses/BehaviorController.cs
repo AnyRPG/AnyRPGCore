@@ -35,11 +35,11 @@ namespace AnyRPG {
         }
 
         public void AddUnitProfileSettings() {
-            if (unitController != null && unitController.BaseCharacter != null && unitController.BaseCharacter.UnitProfile != null) {
-                if (unitController.BaseCharacter.UnitProfile.BehaviorProps.BehaviorNames != null) {
-                    foreach (string behaviorName in unitController.BaseCharacter.UnitProfile.BehaviorProps.BehaviorNames) {
+            if (unitController != null && unitController.UnitProfile != null) {
+                if (unitController.UnitProfile.BehaviorProps.BehaviorNames != null) {
+                    foreach (string behaviorName in unitController.UnitProfile.BehaviorProps.BehaviorNames) {
                         BehaviorProfile tmpBehaviorProfile = null;
-                        if (unitController.BaseCharacter.UnitProfile.BehaviorProps.UseBehaviorCopy == true) {
+                        if (unitController.UnitProfile.BehaviorProps.UseBehaviorCopy == true) {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
                         } else {
                             tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);

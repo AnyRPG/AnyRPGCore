@@ -8,7 +8,6 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    [System.Serializable]
     public class BaseNamePlateController : INamePlateController {
 
         public virtual event System.Action OnInitializeNamePlate = delegate { };
@@ -16,53 +15,66 @@ namespace AnyRPG {
         public virtual event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public virtual event Action OnNameChange = delegate { };
 
-        [Header("NAMEPLATE SETTINGS")]
-
-        [Tooltip("This is what will be printed on the nameplate above the object.  It will also override whatever value is set for the Interactable mouseover display name.")]
-        [SerializeField]
-        protected string displayName = string.Empty;
-
-        [Tooltip("If true, the nameplate is not shown above this unit.")]
-        [SerializeField]
-        protected bool suppressNamePlate = false;
-
-        [Tooltip("If true, the faction will not be shown on the nameplate")]
-        [SerializeField]
-        protected bool suppressFaction = true;
-
-        [Header("UNIT FRAME SETTINGS")]
-
-        [Tooltip("An object or bone in the heirarchy to use as the camera target.")]
-        [SerializeField]
-        protected string unitFrameTarget = string.Empty;
-
-        [Tooltip("The position the camera is looking at, relative to the target")]
-        [SerializeField]
-        protected Vector3 unitFrameCameraLookOffset = Vector3.zero;
-
-        [Tooltip("The position of the camera relative to the target")]
-        [SerializeField]
-        protected Vector3 unitFrameCameraPositionOffset = Vector3.zero;
-
         protected NamePlateController namePlate;
 
         protected INamePlateUnit namePlateUnit;
 
-        protected string playerPreviewTarget = string.Empty;
-
-        protected Vector3 unitPreviewCameraLookOffset = new Vector3(0f, 1f, 0f);
-
-        protected Vector3 unitPreviewCameraPositionOffset = new Vector3(0f, 1f, 1f);
-
         public virtual NamePlateController NamePlate { get => namePlate; set => namePlate = value; }
 
-        public virtual string UnitFrameTarget { get => unitFrameTarget; }
-        public virtual string PlayerPreviewTarget { get => playerPreviewTarget; }
-        public virtual Vector3 UnitFrameCameraLookOffset { get => unitFrameCameraLookOffset; set => unitFrameCameraLookOffset = value; }
-        public virtual Vector3 UnitFrameCameraPositionOffset { get => unitFrameCameraPositionOffset; set => unitFrameCameraPositionOffset = value; }
-        public virtual Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
-        public virtual Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
-        public virtual bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
+        public virtual string UnitFrameTarget {
+            get {
+                return namePlateUnit.NamePlateProps.UnitFrameTarget;
+            }
+        }
+        public virtual string UnitPreviewTarget {
+            get {
+                return namePlateUnit.NamePlateProps.UnitPreviewTarget;
+            }
+        }
+        public virtual Vector3 UnitFrameCameraLookOffset {
+            get {
+                return namePlateUnit.NamePlateProps.UnitFrameCameraLookOffset;
+            }
+        }
+        public virtual Vector3 UnitFrameCameraPositionOffset {
+            get {
+                return namePlateUnit.NamePlateProps.UnitFrameCameraPositionOffset;
+            }
+        }
+        public virtual Vector3 UnitPreviewCameraLookOffset {
+            get {
+                return namePlateUnit.NamePlateProps.UnitPreviewCameraLookOffset;
+            }
+        }
+        public virtual Vector3 UnitPreviewCameraPositionOffset {
+            get {
+                return namePlateUnit.NamePlateProps.UnitPreviewCameraPositionOffset;
+            }
+        }
+        public virtual bool SuppressFaction {
+            get {
+                return namePlateUnit.NamePlateProps.SuppressFaction;
+            }
+        }
+
+        public virtual bool SuppressNamePlate {
+            get {
+                return namePlateUnit.NamePlateProps.SuppressNamePlate;
+            }
+        }
+
+        public virtual bool OverrideNamePlatePosition {
+            get {
+                return namePlateUnit.NamePlateProps.OverrideNameplatePosition;
+            }
+        }
+
+        public Vector3 NamePlatePosition {
+            get {
+                return namePlateUnit.NamePlateProps.NameplatePosition;
+            }
+        }
+
         public virtual List<PowerResource> PowerResourceList {
             get {
                 return new List<PowerResource>();
@@ -76,7 +88,7 @@ namespace AnyRPG {
         }
         public virtual string UnitDisplayName {
             get {
-                return displayName;
+                return namePlateUnit.NamePlateProps.DisplayName;
             }
         }
         public virtual Faction Faction {
@@ -106,18 +118,24 @@ namespace AnyRPG {
 
         public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
 
-        public virtual void Setup(INamePlateUnit namePlateUnit) {
+        public BaseNamePlateController(INamePlateUnit namePlateUnit) {
             this.namePlateUnit = namePlateUnit;
+        }
+
+        public virtual void Init() {
             InitializeNamePlate();
         }
 
         public virtual void InitializeNamePlate() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
-            if (suppressNamePlate == true) {
+            Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
+            if (namePlateUnit.NamePlateProps.SuppressNamePlate == true) {
                 return;
             }
             if (namePlateUnit != null) {
                 //NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+                if (OverrideNamePlatePosition) {
+                    namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
+                }
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
                 if (_namePlate != null) {
                     namePlate = _namePlate;

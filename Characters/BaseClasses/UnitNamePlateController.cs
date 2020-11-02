@@ -67,16 +67,21 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public override void Setup(INamePlateUnit namePlateUnit) {
+        public UnitNamePlateController(INamePlateUnit namePlateUnit) : base(namePlateUnit) {
+
+        }
+
+        public override void Init() {
+            Debug.Log("UnitNamePlateController.Init()");
             if ((namePlateUnit as UnitController) is UnitController) {
                 unitController = (namePlateUnit as UnitController);
             }
-            base.Setup(namePlateUnit);
+            base.Init();
         }
 
         public override void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
-            if (suppressNamePlate == true) {
+            if (SuppressNamePlate == true) {
                 return;
             }
             if (unitController != null) {
@@ -87,6 +92,9 @@ namespace AnyRPG {
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;
+                    if (OverrideNamePlatePosition) {
+                        _namePlate.transform.localPosition = NamePlatePosition;
+                    }
                 }
                 OnInitializeNamePlate();
             } else {

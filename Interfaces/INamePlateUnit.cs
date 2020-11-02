@@ -11,6 +11,7 @@ namespace AnyRPG {
 
         INamePlateController NamePlateController { get; }
         UnitComponentController UnitComponentController { get; }
+        NamePlateProps NamePlateProps { get; }
         //INamePlateTarget NamePlateTarget { get; }
         Interactable Interactable { get; }
         Transform transform { get; }

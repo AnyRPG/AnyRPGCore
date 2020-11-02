@@ -187,7 +187,10 @@ namespace AnyRPG {
 
         public void BroadcastMovement() {
             OnMovement();
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
+            if (unitController != null
+                && unitController.CharacterUnit != null
+                && unitController.CharacterUnit.BaseCharacter != null
+                && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.HandleManualMovement();
             }
         }

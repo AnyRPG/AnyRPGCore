@@ -339,7 +339,7 @@ namespace AnyRPG {
             CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(activeUnitController.Interactable);
             if (tmpCharacterUnit != null) {
                 activeCharacter.CharacterUnit = tmpCharacterUnit;
-                activeCharacter.CharacterUnit.BaseCharacter = activeCharacter;
+                activeCharacter.CharacterUnit.SetBaseCharacter(activeCharacter);
             }
 
             if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
@@ -393,6 +393,8 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 
             SubscribeToUnitEvents();
+
+            playerUnitMovementController.Init();
         }
 
         public void SubscribeToUnitEvents() {
@@ -539,7 +541,7 @@ namespace AnyRPG {
             playerConnectionObject = Instantiate(playerConnectionPrefab, playerConnectionParent.transform);
             character = playerConnectionObject.GetComponent<BaseCharacter>();
             activeCharacter = character;
-            PlayerController playerController = playerConnectionObject.GetComponent<PlayerController>();
+            playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
 
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();

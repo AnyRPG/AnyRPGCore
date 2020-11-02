@@ -85,8 +85,8 @@ namespace AnyRPG {
             }
 
             // patrols from unit profile
-            if (unitController.BaseCharacter != null && unitController.BaseCharacter.UnitProfile != null && unitController.BaseCharacter.UnitProfile.PatrolNames != null) {
-                foreach (string patrolName in unitController.BaseCharacter.UnitProfile.PatrolNames) {
+            if (unitController != null && unitController.UnitProfile != null && unitController.UnitProfile.PatrolNames != null) {
+                foreach (string patrolName in unitController.UnitProfile.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
                         PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
                         if (_tmpPatrolProfile != null) {

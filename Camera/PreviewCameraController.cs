@@ -23,7 +23,13 @@ namespace AnyRPG {
         //public float rightMouseLookSpeed = 10f;
         public float cameraSpeed = 4f;
         public float minZoom = 1f;
-        public float maxZoom = 10f;
+
+        [Tooltip("The maximum zoom distance is how far past the initial zoom you can zoom out")]
+        [SerializeField]
+        private float maxZoomDifference = 5f;
+
+        private float currentMaxZoom = 5f;
+
         public float maxVerticalPan = 75;
         public float minVerticalPan = -75;
 
@@ -107,7 +113,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            Debug.Log("PreviewCameraController.SetTarget(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+            //Debug.Log("PreviewCameraController.SetTarget(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             // initial zoom distance is based on offset
             //initialCameraPositionOffset = new Vector3(0, 0, 2);
@@ -130,19 +136,21 @@ namespace AnyRPG {
         }
 
         public void InitializePosition() {
-            Debug.Log(gameObject.name + ".PreviewCameraController.InitializePosition()");
+            //Debug.Log(gameObject.name + ".PreviewCameraController.InitializePosition()");
             if (unitController == null) {
-                Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController is null");
+                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController is null");
             }
             if (unitController.NamePlateController == null) {
-                Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
+                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
             }
 
             if (unitController.NamePlateController.UnitPreviewCameraPositionOffset != null) {
                 initialCameraPositionOffset = unitController.NamePlateController.UnitPreviewCameraPositionOffset;
+                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
             } else {
                 initialCameraPositionOffset = cameraPositionOffsetDefault;
             }
+            currentMaxZoom = initialCameraPositionOffset.z + maxZoomDifference;
 
             if (unitController.NamePlateController.UnitPreviewCameraLookOffset != null) {
                 initialCameraLookOffset = unitController.NamePlateController.UnitPreviewCameraLookOffset;
@@ -220,7 +228,7 @@ namespace AnyRPG {
             if (!mouseOutsideWindow && InputManager.MyInstance.mouseScrolled) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
-                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
+                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
                 cameraZoom = true;
             }
 
@@ -375,7 +383,7 @@ namespace AnyRPG {
                 Debug.Log("PreviewCameraController.WaitForFollowTarget(): CharacterUnit.GetCharacterUnit(target) is null!!!!");
             } else {
                 Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
-                initialTargetString = unitController.NamePlateController.PlayerPreviewTarget;
+                initialTargetString = unitController.NamePlateController.UnitPreviewTarget;
                 if (initialTargetString != string.Empty) {
                     targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 }

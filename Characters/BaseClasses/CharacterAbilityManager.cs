@@ -773,8 +773,11 @@ namespace AnyRPG {
         }
 
         public override void AddPet(CharacterUnit target) {
-            if (baseCharacter.MyCharacterPetManager != null && target.BaseCharacter != null && target.BaseCharacter.UnitProfile != null) {
-                baseCharacter.MyCharacterPetManager.AddPet(target.BaseCharacter.UnitProfile);
+            if (baseCharacter.MyCharacterPetManager != null
+                && target.Interactable != null
+                && target.Interactable.UnitController != null
+                && target.Interactable.UnitController.UnitProfile != null) {
+                baseCharacter.MyCharacterPetManager.AddPet(target.Interactable.UnitController.UnitProfile);
             }
         }
 
