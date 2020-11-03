@@ -235,7 +235,7 @@ namespace AnyRPG {
 
             if (LevelManager.MyInstance.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.HandlePlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.PlayerUnitObject.transform);
+                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
             }
         }
 

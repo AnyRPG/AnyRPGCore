@@ -31,17 +31,17 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MySystemBarMainMenu != null) {
                 mainMenuButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarMainMenu;
             }
-            if (SystemConfigurationManager.MyInstance.MySystemBarAbilityBook != null) {
-                abilityBookButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarAbilityBook;
+            if (SystemConfigurationManager.MyInstance.SystemBarAbilityBook != null) {
+                abilityBookButton.Icon = SystemConfigurationManager.MyInstance.SystemBarAbilityBook;
             }
-            if (SystemConfigurationManager.MyInstance.MySystemBarQuestLog != null) {
-                questLogButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarQuestLog;
+            if (SystemConfigurationManager.MyInstance.SystemBarQuestLog != null) {
+                questLogButton.Icon = SystemConfigurationManager.MyInstance.SystemBarQuestLog;
             }
-            if (SystemConfigurationManager.MyInstance.MySystemBarCharacter != null) {
-                characterButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarCharacter;
+            if (SystemConfigurationManager.MyInstance.SystemBarCharacter != null) {
+                characterButton.Icon = SystemConfigurationManager.MyInstance.SystemBarCharacter;
             }
-            if (SystemConfigurationManager.MyInstance.MySystemBarMap != null) {
-                mapButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarMap;
+            if (SystemConfigurationManager.MyInstance.SystemBarMap != null) {
+                mapButton.Icon = SystemConfigurationManager.MyInstance.SystemBarMap;
             }
 
         }

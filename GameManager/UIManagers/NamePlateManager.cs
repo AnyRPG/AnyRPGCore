@@ -29,9 +29,9 @@ namespace AnyRPG {
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline
         /// </summary>
-        private Interactable focus;
+        private NamePlateUnit focus;
 
-        private Dictionary<Interactable, NamePlateController> namePlates = new Dictionary<Interactable, NamePlateController>();
+        private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
@@ -42,7 +42,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NamePlateManager.Start()");
         }
 
-        public void SetFocus(Interactable newInteractable) {
+        public void SetFocus(NamePlateUnit newInteractable) {
             ClearFocus();
             //Debug.Log("NamePlateManager.SetFocus(" + characterUnit.MyCharacter.MyCharacterName + ")");
             if (namePlates.ContainsKey(newInteractable)) {
@@ -63,7 +63,7 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NamePlateController SpawnNamePlate(Interactable namePlateUnit, bool usePositionOffset) {
+        public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
             namePlates.Add(namePlateUnit, namePlate);
@@ -71,7 +71,7 @@ namespace AnyRPG {
             return namePlate;
         }
 
-        public NamePlateController AddNamePlate(Interactable interactable, bool usePositionOffset) {
+        public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             if (namePlates.ContainsKey(interactable) == false) {
                 NamePlateController namePlate = SpawnNamePlate(interactable, usePositionOffset);
@@ -82,7 +82,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public void RemoveNamePlate(Interactable namePlateUnit) {
+        public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.MyDisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {

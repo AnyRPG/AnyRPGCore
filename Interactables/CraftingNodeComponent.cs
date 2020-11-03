@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private CraftingNodeProps interactableOptionProps = null;
 

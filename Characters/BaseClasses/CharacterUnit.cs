@@ -8,7 +8,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterUnit : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         public event System.Action<UnitController> OnDespawn = delegate { };
 
@@ -66,49 +66,6 @@ namespace AnyRPG {
             // when the engine is upgraded to support multiplayer, this may need to be revisited.
             // some logic to still show minimap icons for dead players in your group so you can find and res them could be necessary
             HandlePrerequisiteUpdates();
-        }
-
-        public override void Init() {
-            base.Init();
-            SetDefaultLayer();
-
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                // this code is a quick way to set speed on third party controllers when the player spawns
-                if (BaseCharacter.CharacterStats != null) {
-                    EventParamProperties eventParam = new EventParamProperties();
-                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.RunSpeed;
-                    SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
-
-                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.SprintSpeed;
-                    SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
-
-                }
-                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
-                    KeyBindManager.MyInstance.SendKeyBindEvents();
-                }
-
-            }
-        }
-
-
-        public static bool IsInLayerMask(int layer, LayerMask layermask) {
-            return layermask == (layermask | (1 << layer));
-        }
-
-        protected virtual void SetDefaultLayer() {
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                // players should stay on player unit layer
-                return;
-            }
-            if (SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != null && SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer != string.Empty) {
-                int defaultLayer = LayerMask.NameToLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
-                int finalmask = (1 << defaultLayer) | (1 << UnitPreviewManager.MyInstance.PreviewLayer) | (1 << PetPreviewManager.MyInstance.PreviewLayer);
-                if (!IsInLayerMask(interactable.gameObject.layer, finalmask)) {
-                    //if (gameObject.layer != defaultLayer) {
-                    interactable.gameObject.layer = defaultLayer;
-                    Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetDefaultLayer(): object was not set to correct layer: " + SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer + ". Setting automatically");
-                }
-            }
         }
 
         /// <summary>

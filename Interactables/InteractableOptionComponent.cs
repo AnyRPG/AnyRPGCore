@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public abstract class InteractableOptionComponent : IInteractable, IPrerequisiteOwner {
+    public abstract class InteractableOptionComponent : IPrerequisiteOwner {
 
-        public abstract event System.Action<IInteractable> MiniMapStatusUpdateHandler;
+        public abstract event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler;
 
         [Header("Interaction Panel")]
 
@@ -77,6 +77,9 @@ namespace AnyRPG {
 
         protected virtual void AddUnitProfileSettings() {
             // do nothing here
+        }
+
+        public virtual void ProcessStatusIndicatorSourceInit() {
         }
 
         public virtual void CreateEventSubscriptions() {

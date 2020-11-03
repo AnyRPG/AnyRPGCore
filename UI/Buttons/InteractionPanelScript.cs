@@ -23,10 +23,10 @@ public class InteractionPanelScript : MonoBehaviour {
         }
     }
 
-    private IInteractable interactableOption;
+    private InteractableOptionComponent interactableOption;
 
     public Image MyIcon { get => icon; set => icon = value; }
-    public IInteractable MyInteractableOption { get => interactableOption;
+    public InteractableOptionComponent MyInteractableOption { get => interactableOption;
         set {
             if (value.Icon != null) {
                 icon.sprite = value.Icon;

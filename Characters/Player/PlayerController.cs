@@ -113,7 +113,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.Update()");
             ResetMoveInput();
 
-            if (PlayerManager.MyInstance.PlayerUnitObject == null) {
+            if (PlayerManager.MyInstance.ActiveUnitController == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");
                 return;
             }
@@ -562,10 +562,11 @@ namespace AnyRPG {
                 return;
             }
             this.target = newTarget;
-            if (newTarget.NamePlateController != null && newTarget.NamePlateController.SuppressNamePlate == false) {
+            NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
+            if (namePlateUnit != null && namePlateUnit.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget.NamePlateController);
-                NamePlateManager.MyInstance.SetFocus(newTarget);
+                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
+                NamePlateManager.MyInstance.SetFocus(namePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }

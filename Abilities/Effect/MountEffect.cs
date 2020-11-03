@@ -30,14 +30,14 @@ namespace AnyRPG {
                 // game is in the middle of exiting
                 return;
             }
-            if (PlayerManager.MyInstance.PlayerUnitObject != null) {
-                PlayerManager.MyInstance.PlayerUnitObject.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
+            if (PlayerManager.MyInstance.UnitController != null) {
+                PlayerManager.MyInstance.UnitController.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
 
                 //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
-                PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = prefabObjects.Values.ElementAt(0).transform.localEulerAngles;
+                PlayerManager.MyInstance.UnitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
 
                 // we could skip this and just let the player fall through gravity
-                PlayerManager.MyInstance.PlayerUnitObject.transform.position = prefabObjects.Values.ElementAt(0).transform.position;
+                PlayerManager.MyInstance.UnitController.transform.position = mountUnitController.transform.position;
             }
             DeActivateMountedState();
             UnsubscribeFromModelReady();
@@ -62,9 +62,9 @@ namespace AnyRPG {
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
 
-            mountUnitController = unitProfile.SpawnUnitPrefab(source.transform.parent, source.transform.position, source.transform.forward);
+            mountUnitController = unitProfile.SpawnUnitPrefab(source.transform.parent, source.transform.position, source.transform.forward, UnitControllerMode.Mount);
             if (mountUnitController != null) {
-                mountUnitController.SetMountMode();
+                //mountUnitController.SetMountMode();
                 if (mountUnitController != null && mountUnitController.ModelReady == false) {
                     SubscribeToModelReady();
                 } else {
@@ -83,10 +83,10 @@ namespace AnyRPG {
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
-                    PlayerManager.MyInstance.PlayerUnitObject.transform.parent = mountPoint;
+                    PlayerManager.MyInstance.UnitController.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
-                    PlayerManager.MyInstance.PlayerUnitObject.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                    PlayerManager.MyInstance.PlayerUnitObject.transform.localEulerAngles = unitProfile.UnitPrefabProfile.Rotation;
+                    PlayerManager.MyInstance.UnitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
+                    PlayerManager.MyInstance.UnitController.transform.localEulerAngles = unitProfile.UnitPrefabProfile.Rotation;
                     ActivateMountedState();
                 }
             }
@@ -95,9 +95,9 @@ namespace AnyRPG {
         public void DeActivateMountedState() {
             //Debug.Log("MountEffect.DeActivateMountedState()");
             if (mountUnitController != null) {
-                if (PlayerManager.MyInstance.PlayerUnitObject != null) {
+                if (PlayerManager.MyInstance.UnitController != null) {
 
-                    PlayerManager.MyInstance.ActiveUnitController = PlayerManager.MyInstance.UnitController;
+                    PlayerManager.MyInstance.SetUnitController(PlayerManager.MyInstance.UnitController);
                     ConfigureCharacterRegularPhysics();
 
                     // set player unit to normal state
@@ -129,6 +129,8 @@ namespace AnyRPG {
                 PlayerManager.MyInstance.ActiveUnitController.Mounted = true;
 
                 ConfigureCharacterMountedPhysics();
+
+                PlayerManager.MyInstance.SetUnitController(mountUnitController);
 
                 // initialize the mount animator
                 PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.MyCharacter.CharacterUnit;

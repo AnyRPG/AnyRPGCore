@@ -640,7 +640,7 @@ namespace AnyRPG {
 
             // replace a default player unit with an UMA player unit when a save occurs
             if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar == null) {
-                Vector3 currentPlayerLocation = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
+                Vector3 currentPlayerLocation = PlayerManager.MyInstance.ActiveUnitController.transform.position;
                 PlayerManager.MyInstance.DespawnPlayerUnit();
                 //PlayerManager.MyInstance.SetUMAPrefab();
                 PlayerManager.MyInstance.MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName);

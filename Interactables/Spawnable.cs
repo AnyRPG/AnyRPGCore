@@ -31,8 +31,13 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        protected bool componentsInitialized = false;
+        // get references step tracker
+        protected bool componentReferencesInitialized = false;
 
+        // initialize step tracker
+        protected bool initialized = false;
+
+        // subscriptions step tracker
         protected bool eventSubscriptionsInitialized = false;
 
         public GameObject MySpawnReference { get => spawnReference; set => spawnReference = value; }
@@ -59,7 +64,6 @@ namespace AnyRPG {
             }
             GetComponentReferences();
             SetupScriptableObjects();
-            Init();
             CreateEventSubscriptions();
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
@@ -68,14 +72,28 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
+            if (initialized == true) {
+                return;
+            }
+            ProcessInit();
+            initialized = true;
+        }
+
+        public virtual void ProcessInit() {
             // do nothing here
         }
 
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".Spawnable.Start()");
-            //InitializeComponents();
-            //interactionTransform = transform;
-            //InitializeMaterials();
+            Init();
+
+            // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
+                ProcessPlayerUnitSpawn();
+            } else {
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
+            }
         }
 
         public virtual void CreateEventSubscriptions() {
@@ -85,12 +103,6 @@ namespace AnyRPG {
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                ProcessPlayerUnitSpawn();
-            } else {
-                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
-            }
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
@@ -135,10 +147,10 @@ namespace AnyRPG {
         public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".Spawnable.InitializeComponents()");
 
-            if (componentsInitialized == true) {
+            if (componentReferencesInitialized == true) {
                 return;
             }
-            componentsInitialized = true;
+            componentReferencesInitialized = true;
         }
 
         public virtual void HandlePrerequisiteUpdates() {

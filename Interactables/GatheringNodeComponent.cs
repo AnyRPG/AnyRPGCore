@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class GatheringNodeComponent : LootableNodeComponent {
 
-        //public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        //public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         // gathering nodes are special.  The image is based on what ability it supports
         public override Sprite Icon {

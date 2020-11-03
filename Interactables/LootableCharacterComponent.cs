@@ -12,7 +12,7 @@ namespace AnyRPG {
     /// </summary>
     public class LootableCharacterComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
         public event System.Action<UnitController> OnLootComplete = delegate { };
 
         private LootableCharacterProps interactableOptionProps = null;

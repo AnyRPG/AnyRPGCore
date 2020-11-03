@@ -317,7 +317,7 @@ namespace AnyRPG {
                 return;
             }
 
-            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward);
+            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI);
 
             if (unitController == null) {
                 // something went wrong.  None of the code below will work, so might as well return

@@ -342,7 +342,9 @@ namespace AnyRPG {
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
             Dictionary<PrefabProfile, GameObject> effectObjects = PerformAbilityHitEffects(source, target, abilityEffectInput);
-
+            if (target == null) {
+                return;
+            }
             PlayAudioEffects(onHitAudioProfiles, target);
             //PerformMaterialChange(source, target);
             PerformMaterialChange(target);

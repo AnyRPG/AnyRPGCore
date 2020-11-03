@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         private Vector2 uiOffset = Vector2.zero;
 
-        private Dictionary<IInteractable, GameObject> miniMapLayers = new Dictionary<IInteractable, GameObject>();
+        private Dictionary<InteractableOptionComponent, GameObject> miniMapLayers = new Dictionary<InteractableOptionComponent, GameObject>();
 
         private bool setupComplete = false;
 
@@ -62,7 +62,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            foreach (IInteractable _interactable in interactable.Interactables) {
+            foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
                     _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
                 }
@@ -89,7 +89,7 @@ namespace AnyRPG {
                 //Debug.Log(".MiniMapIndicatorController.Start(): interactable is null");
                 return;
             }
-            foreach (IInteractable _interactable in interactable.Interactables) {
+            foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (_interactable.HasMiniMapIcon()) {
                     //else if (_interactable.HasMiniMapIcon()) {
@@ -134,7 +134,7 @@ namespace AnyRPG {
             contentParent.localPosition = proportionalPosition - uiOffset;
         }
 
-        public void HandleMiniMapStatusUpdate(IInteractable _interactable) {
+        public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
             //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
             if (miniMapLayers[_interactable] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");

@@ -239,14 +239,17 @@ namespace AnyRPG {
         /// <param name="parentTransform"></param>
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
-        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
+        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode) {
             GameObject prefabObject = SpawnPrefab(unitPrefab, parentTransform, position, forward);
             UnitController unitController = null;
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
                     //unitController.SetUnitProfile(this, true);
-                    unitController.SetUnitProfile(this);
+                    if (unitControllerMode == UnitControllerMode.Player) {
+                        PlayerManager.MyInstance.SetUnitController(unitController);
+                    }
+                    unitController.SetUnitProfile(this, unitControllerMode);
                 }
             }
 

@@ -375,14 +375,14 @@ namespace AnyRPG {
         }
 
         private void FindFollowTarget() {
-            Debug.Log("PreviewCameraController.FindFollowTarget()");
+            //Debug.Log("PreviewCameraController.FindFollowTarget()");
             Transform targetBone = null;
             Vector3 unitTargetOffset = Vector3.zero;
 
             if (unitController == null) {
-                Debug.Log("PreviewCameraController.WaitForFollowTarget(): CharacterUnit.GetCharacterUnit(target) is null!!!!");
+                //Debug.Log("PreviewCameraController.WaitForFollowTarget(): CharacterUnit.GetCharacterUnit(target) is null!!!!");
             } else {
-                Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
+                //Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
                 initialTargetString = unitController.NamePlateController.UnitPreviewTarget;
                 if (initialTargetString != string.Empty) {
                     targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
@@ -392,13 +392,13 @@ namespace AnyRPG {
             currentCameraLookOffset = unitTargetOffset;
 
             if (targetBone == null) {
-                Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is null");
+                //Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is null");
                 // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
                 if (unitController.ModelReady == false) {
-                    Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
+                    //Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
                     SubscribeToModelReady();
                 } else {
-                    Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
+                    //Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
                     if (initialTargetString != string.Empty) {
                         Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
                     }
@@ -406,7 +406,7 @@ namespace AnyRPG {
                     HandleTargetAvailable();
                 }
             } else {
-                Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is not null");
+                //Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is not null");
                 followTransform = targetBone;
                 HandleTargetAvailable();
             }
@@ -414,7 +414,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetAvailable() {
-            Debug.Log("PreviewCameraController.HandleTargetAvailable()");
+            //Debug.Log("PreviewCameraController.HandleTargetAvailable()");
             targetInitialized = true;
             JumpToFollowSpot();
             OnTargetReady();

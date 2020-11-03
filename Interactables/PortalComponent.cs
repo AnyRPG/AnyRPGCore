@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public abstract class PortalComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         protected PortalProps interactableOptionProps = null;
 

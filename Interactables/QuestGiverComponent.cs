@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class QuestGiverComponent : InteractableOptionComponent, IQuestGiver {
 
-        public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private QuestGiverProps interactableOptionProps = null;
 
@@ -44,15 +44,9 @@ namespace AnyRPG {
         }
 
 
-        public override void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".QuestGiver.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
-            if (interactable != null) {
-                interactable.NamePlateController.OnInitializeNamePlate += HandlePrerequisiteUpdates;
-            }
+        public override void ProcessStatusIndicatorSourceInit() {
+            base.ProcessStatusIndicatorSourceInit();
+            HandlePrerequisiteUpdates();
         }
 
         public void CleanupWindowEventSubscriptions() {
@@ -64,9 +58,6 @@ namespace AnyRPG {
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
-            if (interactable != null) {
-                interactable.NamePlateController.OnInitializeNamePlate -= HandlePrerequisiteUpdates;
-            }
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
         }
@@ -190,7 +181,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
-            if (interactable == null || interactable.NamePlateController.NamePlate == null) {
+            if (interactable == null) {
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Nameplate is null");
                 return;
             }
@@ -198,13 +189,10 @@ namespace AnyRPG {
             string indicatorType = GetIndicatorType();
 
             if (indicatorType == string.Empty) {
-                interactable.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(false);
+                interactable.ProcessHideQuestIndicator();
             } else {
-                interactable.NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(true);
-                //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
-                SetIndicatorText(indicatorType, interactable.NamePlateController.NamePlate.MyQuestIndicator);
+                interactable.ProcessShowQuestIndicator(indicatorType, this);
             }
-            //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() About to fire MiniMapUpdateHandler");
         }
 
         public string GetIndicatorType() {
@@ -262,7 +250,7 @@ namespace AnyRPG {
             return indicatorType;
         }
 
-        private void SetIndicatorText(string indicatorType, TextMeshProUGUI text) {
+        public void SetIndicatorText(string indicatorType, TextMeshProUGUI text) {
             //Debug.Log(gameObject.name + ".QuestGiver.SetIndicatorText(" + indicatorType + ")");
             if (indicatorType == "complete") {
                 text.text = "?";

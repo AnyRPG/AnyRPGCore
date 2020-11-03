@@ -34,10 +34,10 @@ namespace AnyRPG {
         private void SetupGameLabels() {
             if (SystemConfigurationManager.MyInstance != null) {
                 if (gameNameText != null) {
-                    gameNameText.text = SystemConfigurationManager.MyInstance.MyGameName;
+                    gameNameText.text = SystemConfigurationManager.MyInstance.GameName;
                 }
                 if (gameVersionText != null) {
-                    gameVersionText.text = SystemConfigurationManager.MyInstance.MyGameVersion;
+                    gameVersionText.text = SystemConfigurationManager.MyInstance.GameVersion;
                 }
             } else {
                 //Debug.Log("SystemConfigurationManager Does Not Exist!");

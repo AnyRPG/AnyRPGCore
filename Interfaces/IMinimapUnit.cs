@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface IMinimapUnit {
 
-        event System.Action<IInteractable> MiniMapStatusUpdateHandler;
+        event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler;
         bool HasMiniMapText();
         bool HasMiniMapIcon();
         bool SetMiniMapText(TextMeshProUGUI text);

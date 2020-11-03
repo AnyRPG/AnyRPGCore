@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class BehaviorComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private BehaviorProps interactableOptionProps = null;
 
@@ -89,9 +89,14 @@ namespace AnyRPG {
                 interactable.StopCoroutine(behaviorCoroutine);
             }
             behaviorCoroutine = null;
+
+            // is this really needed ?  If the component is being destroyed, then other code will remove the nameplate anyway
+            // testing if anything breaks
+            /*
             if (interactable != null && interactable.NamePlateController.NamePlate != null) {
                 interactable.NamePlateController.NamePlate.HideSpeechBubble();
             }
+            */
         }
 
         public IEnumerator playBehavior(BehaviorProfile behaviorProfile) {

@@ -369,12 +369,12 @@ namespace AnyRPG {
             // moved to resource power data
             //anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
 
-            anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.PlayerUnitObject.transform.position.x;
-            anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.PlayerUnitObject.transform.position.y;
-            anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.PlayerUnitObject.transform.position.z;
-            anyRPGSaveData.PlayerRotationX = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.x;
-            anyRPGSaveData.PlayerRotationY = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.y;
-            anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.PlayerUnitObject.transform.forward.z;
+            anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.ActiveUnitController.transform.position.x;
+            anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.ActiveUnitController.transform.position.y;
+            anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.ActiveUnitController.transform.position.z;
+            anyRPGSaveData.PlayerRotationX = PlayerManager.MyInstance.ActiveUnitController.transform.forward.x;
+            anyRPGSaveData.PlayerRotationY = PlayerManager.MyInstance.ActiveUnitController.transform.forward.y;
+            anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.ActiveUnitController.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.PlayerUMARecipe = recipeString;
             anyRPGSaveData.CurrentScene = LevelManager.MyInstance.GetActiveSceneNode().SceneName;
@@ -1414,7 +1414,7 @@ namespace AnyRPG {
             string replaceString = string.Empty;
             Regex regex = new Regex("[^a-zA-Z0-9]");
             if (SystemConfigurationManager.MyInstance != null) {
-                replaceString = regex.Replace(SystemConfigurationManager.MyInstance.MyGameName, "");
+                replaceString = regex.Replace(SystemConfigurationManager.MyInstance.GameName, "");
             }
 
             if (replaceString != string.Empty) {

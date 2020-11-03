@@ -77,7 +77,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
+            //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
 

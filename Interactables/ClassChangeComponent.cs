@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private ClassChangeProps interactableOptionProps = null;
 

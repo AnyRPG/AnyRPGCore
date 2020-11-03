@@ -159,23 +159,18 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("starting nameplate on unknown character");
             }
-            CheckForPlayerOwnerShip();
+            namePlateCanvasGroup.blocksRaycasts = true;
             //Debug.Log("NamePlateController: PlayerUnitSpawned: " + PlayerManager.MyInstance.MyPlayerUnitSpawned);
 
             localComponentsInitialized = true;
         }
 
-        public void CheckForPlayerOwnerShip() {
-            //Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
-            if (PlayerManager.MyInstance.PlayerUnitSpawned && unitNamePlateController.NamePlateUnit.gameObject == PlayerManager.MyInstance.PlayerUnitObject) {
-                //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
-                namePlateCanvasGroup.blocksRaycasts = false;
-                UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
-                isPlayerUnitNamePlate = true;
-            } else {
-                namePlateCanvasGroup.blocksRaycasts = true;
-            }
-
+        public void SetPlayerOwnerShip() {
+            Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
+            //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
+            namePlateCanvasGroup.blocksRaycasts = false;
+            UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
+            isPlayerUnitNamePlate = true;
         }
 
         public void Highlight() {
@@ -267,7 +262,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetNamePlateUnit(Interactable namePlateUnit, bool usePositionOffset) {
+        public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.UnitDisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             unitNamePlateController = namePlateUnit.NamePlateController;
@@ -359,7 +354,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (unitNamePlateController != null && (PlayerManager.MyInstance.PlayerUnitObject != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
+            if (unitNamePlateController != null && (PlayerManager.MyInstance.ActiveUnitController != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
@@ -385,7 +380,7 @@ namespace AnyRPG {
                     }
                 } else {
                     //Debug.Log("NamePlateController.LateUpdate(): not cutscene: calculating distance from player");
-                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.PlayerUnitObject.transform.position, unitNamePlateController.NamePlateTransform.position)) > 40f) {
+                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, unitNamePlateController.NamePlateTransform.position)) > 40f) {
                         renderNamePlate = false;
                     }
                 }
@@ -424,7 +419,7 @@ namespace AnyRPG {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.SetFactionColor() characterunit or player instance is null. returning!");
                 return;
             }
-            CheckForPlayerOwnerShip();
+            //CheckForPlayerOwnerShip();
             if (unitNamePlateController.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
                 if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene.MyUseDefaultFactionColors == true) {

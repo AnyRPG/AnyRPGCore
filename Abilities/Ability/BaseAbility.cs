@@ -488,7 +488,8 @@ namespace AnyRPG {
             if (requiresGroundTarget == true
                 && maxRange > 0
                 && target != null
-                && ((sourceCharacter as BaseCharacter) is BaseCharacter) && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > maxRange) {
+                && ((sourceCharacter as BaseCharacter) is BaseCharacter)
+                && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > maxRange) {
                 return false;
             }
 

@@ -282,9 +282,9 @@ namespace AnyRPG {
 
         public void LoadCutScene(Cutscene cutscene) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
-            if (PlayerManager.MyInstance.PlayerUnitObject != null) {
-                spawnRotationOverride = PlayerManager.MyInstance.PlayerUnitObject.transform.forward;
-                spawnLocationOverride = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
+            if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                spawnRotationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
+                spawnLocationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
             UIManager.MyInstance.MyCutSceneBarController.AssignCutScene(cutscene);

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class ControlSwitchComponent : InteractableOptionComponent {
 
-        public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         protected ControlSwitchProps interactableOptionProps = null;
 

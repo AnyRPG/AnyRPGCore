@@ -12,6 +12,7 @@ namespace AnyRPG {
         public event System.Action<Interactable> OnEnterCombat = delegate { };
         public event System.Action<BaseCharacter, Interactable> OnHitEvent = delegate { };
         public event System.Action OnUpdate = delegate { };
+        public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -206,7 +207,7 @@ namespace AnyRPG {
                 && PlayerManager.MyInstance != null
                 && PlayerManager.MyInstance.MyCharacter != null
                 && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null
-                && PlayerManager.MyInstance.PlayerUnitObject != null
+                && PlayerManager.MyInstance.ActiveUnitController != null
                 && baseCharacter != null
                 && baseCharacter.CharacterUnit != null) {
                 if (target == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster) ||
@@ -520,9 +521,7 @@ namespace AnyRPG {
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
-            if (targetObject == PlayerManager.MyInstance.PlayerUnitObject || baseCharacter.CharacterUnit == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
-                CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
-            }
+            OnReceiveCombatMiss(targetObject, abilityEffectContext);
         }
 
         public bool DidAttackMiss() {

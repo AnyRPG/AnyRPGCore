@@ -12,20 +12,22 @@ namespace AnyRPG {
         [SerializeField]
         protected Vector3 previewSpawnLocation;
 
+        /*
         [Tooltip("The name of the layer to set the preview unit to")]
         [SerializeField]
         protected string layerName;
 
         protected int previewLayer;
+        */
 
         // the source we are going to clone from 
         protected UnitProfile cloneSource;
 
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
-        public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
+        //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
         protected void Awake() {
-            previewLayer = LayerMask.NameToLayer(layerName);
+            //previewLayer = LayerMask.NameToLayer(layerName);
         }
 
         protected void Start() {
@@ -49,9 +51,8 @@ namespace AnyRPG {
 
         public void OpenWindowCommon() {
 
-            unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward);
+            unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
-                unitController.SetPreviewMode();
                 if (unitController.BaseCharacter != null) {
                     unitController.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.UnitPrefabProfile.AttachmentProfile;
                 }

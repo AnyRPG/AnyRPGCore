@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : Interactable, IPersistentObjectOwner {
+    public class UnitController : NamePlateUnit, IPersistentObjectOwner {
 
         public event System.Action<Interactable> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
@@ -59,7 +59,6 @@ namespace AnyRPG {
         // track startup state
         private bool profileReady = false;
         private bool modelReady = false;
-        private bool namePlateReady = false;
 
         // control logic
         private IState currentState;
@@ -100,7 +99,6 @@ namespace AnyRPG {
         private MovementSoundArea movementSoundArea = null;
 
         public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
-        //public BaseNamePlateController NamePlateController { get => namePlateController; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
         public Rigidbody RigidBody { get => rigidBody; set => rigidBody = value; }
         public UnitMotor UnitMotor { get => unitMotor; set => unitMotor = value; }
@@ -216,14 +214,55 @@ namespace AnyRPG {
             }
         }
 
+        public static bool IsInLayerMask(int layer, LayerMask layermask) {
+            return layermask == (layermask | (1 << layer));
+        }
+
+        protected virtual void SetDefaultLayer(string layerName) {
+            if (layerName != null && layerName != string.Empty) {
+                int defaultLayer = LayerMask.NameToLayer(layerName);
+                int finalmask = (1 << defaultLayer);
+                if (!IsInLayerMask(gameObject.layer, finalmask)) {
+                    //if (gameObject.layer != defaultLayer) {
+                    gameObject.layer = defaultLayer;
+                    Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
+                }
+                if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
+                    //if (gameObject.layer != defaultLayer) {
+                    //unitModel.layer = defaultLayer;
+                    UIManager.MyInstance.SetLayerRecursive(unitModel, defaultLayer);
+                    Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// set this unit to be a stationary preview
+        /// </summary>
+        private void SetPreviewMode() {
+            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            SetUnitControllerMode(UnitControllerMode.Preview);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            DisableAgent();
+
+            // prevent preview unit from moving around
+            if (rigidBody != null) {
+                rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+                rigidBody.isKinematic = true;
+                rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                rigidBody.useGravity = false;
+            }
+        }
+
         /// <summary>
         /// set this unit to be the pet of baseCharacter
         /// </summary>
         /// <param name="baseCharacter"></param>
         public void SetPetMode(BaseCharacter masterBaseCharacter) {
+            Debug.Log(gameObject.name + ".UnitController.SetPetMode()");
             SetUnitControllerMode(UnitControllerMode.Pet);
-
-            ChangeState(new IdleState());
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
 
             if (masterBaseCharacter != null) {
                 baseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
@@ -231,8 +270,18 @@ namespace AnyRPG {
             }
         }
 
-        public void SetMountMode() {
+        private void EnablePetMode() {
+            Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
+            ChangeState(new IdleState());
+        }
+
+        /// <summary>
+        /// set this unit to be a mount
+        /// </summary>
+        private void SetMountMode() {
+            Debug.Log(gameObject.name + ".UnitController.SetMountMode()");
             SetUnitControllerMode(UnitControllerMode.Mount);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
             Collider anyCollider = GetComponent<Collider>();
             if (anyCollider != null) {
                 anyCollider.isTrigger = false;
@@ -242,19 +291,72 @@ namespace AnyRPG {
             DisableAgent();
         }
 
+        /// <summary>
+        /// set this unit to be a player
+        /// </summary>
+        private void EnablePlayer() {
+            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
+            unitComponentController.AggroRangeController.DisableAggro();
+            unitComponentController.InteractableRange.gameObject.SetActive(false);
+            DisableAgent();
+
+            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+                // this code is a quick way to set speed on third party controllers when the player spawns
+                if (BaseCharacter.CharacterStats != null) {
+                    EventParamProperties eventParam = new EventParamProperties();
+                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.RunSpeed;
+                    SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
+
+                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.SprintSpeed;
+                    SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+
+                }
+                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
+                    KeyBindManager.MyInstance.SendKeyBindEvents();
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// set this unit to be an AI unit
+        /// </summary>
+        private void EnableAI() {
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            // this needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
+            useAgent = true;
+            EnableAgent();
+
+            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+                ChangeState(new DeathState());
+            } else {
+                ChangeState(new IdleState());
+            }
+            SetAggroRange();
+        }
+
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
             this.unitControllerMode = unitControllerMode;
+        }
+
+        public void ActivateUnitControllerMode() {
             if (unitControllerMode == UnitControllerMode.AI) {
                 EnableAI();
             } else if (unitControllerMode == UnitControllerMode.Player) {
                 EnablePlayer();
+            } else if (unitControllerMode == UnitControllerMode.Mount) {
+                SetMountMode();
+            } else if (unitControllerMode == UnitControllerMode.Preview) {
+                SetPreviewMode();
+            } else if (unitControllerMode == UnitControllerMode.Pet) {
+                EnablePetMode();
             }
         }
 
         protected override void Awake() {
             Debug.Log(gameObject.name + ".UnitController.Awake()");
             base.Awake();
-            CreateEventSubscriptions();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             namePlateController = new UnitNamePlateController(this);
@@ -266,7 +368,7 @@ namespace AnyRPG {
             // if it does, attempt to spawn the character model referenced in it
             baseCharacter.Init();
             if (baseCharacter.UnitProfile != null) {
-                SetUnitProfile(baseCharacter.UnitProfile);
+                SetUnitProfile(baseCharacter.UnitProfile, UnitControllerMode.AI);
             }
 
             // setUnitProfile will have spawned a model if it contained one.  If it did not,
@@ -285,15 +387,11 @@ namespace AnyRPG {
 
             patrolController.Init();
 
-            // in the event that no unitprofile was set, the nameplate will not yet be initialized
-            // give it a chance to initalize if it has not already
-            InitializeNamePlateController();
-
             persistentObjectComponent.Setup(this);
 
             SetStartPosition();
 
-            SetUnitControllerMode(unitControllerMode);
+            ActivateUnitControllerMode();
         }
 
         public override void OnDisable() {
@@ -306,37 +404,41 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): searching for base character");
+            //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
             base.GetComponentReferences();
 
             UUID uuid = GetComponent<UUID>();
-            baseCharacter = GetComponent<BaseCharacter>();
             lootableCharacter = GetComponent<LootableCharacter>();
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
+
+            // if base character exists, create a character unit and link them
+            baseCharacter = GetComponent<BaseCharacter>();
+            if (baseCharacter != null) {
+                characterUnit = new CharacterUnit(this);
+                characterUnit.SetBaseCharacter(baseCharacter);
+                baseCharacter.CharacterUnit = characterUnit;
+                AddInteractable(characterUnit);
+            }
         }
 
         /// <summary>
         /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
         /// </summary>
         /// <param name="unitProfile"></param>
-        public void SetUnitProfile(UnitProfile unitProfile, bool updateBaseCharacter = false) {
+        public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode) {
             Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
-            if (baseCharacter != null && updateBaseCharacter == true) {
+            if (baseCharacter != null) {
                 baseCharacter.SetUnitProfile(unitProfile);
             }
-            InitializeNamePlateController();
-            SpawnUnitModel();
-        }
+            SetUnitControllerMode(unitControllerMode);
 
-        public void InitializeNamePlateController() {
-            Debug.Log(gameObject.name + "UnitController.InitializeNamePlateController()");
-            if (namePlateReady == true) {
-                return;
-            }
-            namePlateController.Init();
-            namePlateReady = true;
+            // testing, allow this to happen in start so the player reference to this has time to be set
+            // more testing - used a different way of setting reference before this point
+            Init();
+
+            SpawnUnitModel();
         }
 
         private void SetStartPosition() {
@@ -346,13 +448,6 @@ namespace AnyRPG {
             }
             MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
         }
-
-        public void EnablePlayer() {
-            unitComponentController.AggroRangeController.DisableAggro();
-            unitComponentController.InteractableRange.gameObject.SetActive(false);
-        }
-
-       
 
         public void SpawnUnitModel() {
             if (unitProfile != null && unitProfile.UnitPrefabProfile != null && unitProfile.UnitPrefabProfile.ModelPrefab != null) {
@@ -451,37 +546,6 @@ namespace AnyRPG {
                 this.movementSoundArea = null;
             }
         }
-
-        public void SetPreviewMode() {
-            SetUnitControllerMode(UnitControllerMode.Preview);
-            UIManager.MyInstance.SetLayerRecursive(gameObject, CharacterCreatorManager.MyInstance.PreviewLayer);
-
-            DisableAgent();
-
-            // prevent preview unit from moving around
-            if (rigidBody != null) {
-                rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-                rigidBody.isKinematic = true;
-                rigidBody.constraints = RigidbodyConstraints.FreezeAll;
-                rigidBody.useGravity = false;
-            }
-        }
-
-        public void EnableAI() {
-            // this needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
-            useAgent = true;
-            EnableAgent();
-
-            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
-                ChangeState(new DeathState());
-            } else {
-                ChangeState(new IdleState());
-            }
-
-            SetAggroRange();
-        }
-
-       
 
         public void EnableMotor() {
             motorEnabled = true;
@@ -1078,7 +1142,7 @@ namespace AnyRPG {
         // leave this function here for debugging hitboxes
         void OnDrawGizmos() {
             if (Application.isPlaying) {
-                if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>() == null) {
+                if (myCollider == null) {
                     return;
                 }
 
@@ -1133,13 +1197,14 @@ namespace AnyRPG {
         }
 
         public void EnableAgent() {
-            //Debug.Log(gameObject.name + ".AnimatedUnit.EnableAgent()");
+            Debug.Log(gameObject.name + ".UnitController.EnableAgent()");
             if (NavMeshAgent != null && useAgent == true) {
                 NavMeshAgent.enabled = true;
             }
         }
 
         public void DisableAgent() {
+            Debug.Log(gameObject.name + ".UnitController.DisableAgent()");
             if (NavMeshAgent != null) {
                 NavMeshAgent.enabled = false;
             }

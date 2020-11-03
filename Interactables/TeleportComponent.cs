@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class TeleportComponent : PortalComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private BaseAbility ability = null;
 

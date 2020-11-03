@@ -264,7 +264,7 @@ namespace AnyRPG {
         }
 
         public void InitializeMainCamera() {
-            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.PlayerUnitObject.transform);
+            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
         }
 
         public void DeactivatePlayerUI() {
@@ -333,7 +333,7 @@ namespace AnyRPG {
             floatingCastBarController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController as UnitNamePlateController);
 
             // intialize mini map
-            InitializeMiniMapTarget(PlayerManager.MyInstance.PlayerUnitObject);
+            InitializeMiniMapTarget(PlayerManager.MyInstance.ActiveUnitController.gameObject);
         }
 
         public void HandlePlayerUnitDespawn() {

@@ -47,6 +47,7 @@ namespace AnyRPG {
 
         private string currentPlayerName = string.Empty;
 
+        [Tooltip("If true, the system will enable the nav mesh agent for character navigation if a nav mesh exists in the scene")]
         [SerializeField]
         private bool autoDetectNavMeshes = false;
 
@@ -62,10 +63,8 @@ namespace AnyRPG {
 
         private PlayerController playerController = null;
 
-        /// <summary>
-        /// The actual movable rendered unit in the game world that we will be moving around
-        /// </summary>
-        private GameObject playerUnitObject = null;
+        // The actual movable rendered unit in the game world that we will be moving around
+        //private GameObject playerUnitObject = null;
 
         private bool playerUnitSpawned = false;
 
@@ -88,7 +87,7 @@ namespace AnyRPG {
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
-        public GameObject PlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
+        //public GameObject PlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
@@ -100,7 +99,7 @@ namespace AnyRPG {
         public PlayerUnitMovementController PlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
         public BaseCharacter ActiveCharacter { get => activeCharacter; set => activeCharacter = value; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
-        public UnitController ActiveUnitController { get => activeUnitController; set => activeUnitController = value; }
+        public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
 
         private void Awake() {
@@ -241,7 +240,7 @@ namespace AnyRPG {
                 //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
                 CameraManager.MyInstance.ActivateMainCamera();
-                CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, PlayerUnitObject.transform.forward);
+                CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
             }
         }
 
@@ -290,8 +289,8 @@ namespace AnyRPG {
             // trying this at top so subscribers can remove their methods before the object is destroyed
             SystemEventManager.MyInstance.NotifyOnPlayerUnitDespawn();
 
-            Destroy(playerUnitObject);
-            playerUnitObject = null;
+            Destroy(activeUnitController.gameObject);
+            activeUnitController = null;
             playerUnitSpawned = false;
         }
 
@@ -315,7 +314,7 @@ namespace AnyRPG {
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
             //Debug.Log("PlayerManager.SpawnPlayerUnit(" + spawnLocation + ")");
 
-            if (playerUnitObject != null) {
+            if (activeUnitController != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Player Unit already exists");
                 return;
             }
@@ -331,14 +330,15 @@ namespace AnyRPG {
             // spawn the player unit and set gameObject references
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
             //playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
-            unitController = activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation);
-            playerUnitObject = unitController.gameObject;
-            activeUnitController = unitController;
+            //unitController = activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
+            activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
+            //playerUnitObject = unitController.gameObject;
+            //SetUnitController(unitController);
+            activeUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
 
             // create a reference from the character (connection) to the character unit (interactable), and from the character unit (interactable) to the character (connection)
-            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(activeUnitController);
-            if (tmpCharacterUnit != null) {
-                activeCharacter.CharacterUnit = tmpCharacterUnit;
+            if (activeUnitController.CharacterUnit != null) {
+                activeCharacter.CharacterUnit = activeUnitController.CharacterUnit;
                 activeCharacter.CharacterUnit.SetBaseCharacter(activeCharacter);
             }
 
@@ -363,7 +363,12 @@ namespace AnyRPG {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
             }
+        }
 
+        public void SetUnitController(UnitController unitController) {
+            this.unitController = unitController;
+            activeUnitController = unitController;
+            activeCharacter.SetUnitController(activeUnitController);
         }
 
         public Vector3 SpawnPlayerUnit() {
@@ -581,6 +586,7 @@ namespace AnyRPG {
             activeCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
             activeCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
             activeCharacter.CharacterCombat.OnUpdate += HandleCombatUpdate;
+            activeCharacter.CharacterCombat.OnReceiveCombatMiss += HandleCombatMiss;
             activeCharacter.CharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
             activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities += HandleUnlearnClassAbilities;
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail += HandleLearnedCheckFail;
@@ -609,6 +615,7 @@ namespace AnyRPG {
             activeCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
             activeCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             activeCharacter.CharacterCombat.OnUpdate -= HandleCombatUpdate;
+            activeCharacter.CharacterCombat.OnReceiveCombatMiss -= HandleCombatMiss;
             activeCharacter.CharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
             activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities -= HandleUnlearnClassAbilities;
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail -= HandleLearnedCheckFail;
@@ -621,6 +628,10 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnUnlearnAbility -= HandleUnlearnAbility;
             activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
+        }
+
+        public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
+            CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {

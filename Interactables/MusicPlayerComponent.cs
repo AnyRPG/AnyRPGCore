@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class MusicPlayerComponent : InteractableOptionComponent {
 
-        public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private MusicPlayerProps interactableOptionProps = null;
 

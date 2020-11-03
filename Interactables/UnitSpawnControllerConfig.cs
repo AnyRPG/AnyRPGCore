@@ -21,8 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> unitProfileNames = new List<string>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyUnitSpawnControllerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
         public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
         public UnitSpawnControllerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
     }

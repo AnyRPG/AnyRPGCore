@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class SkillTrainerComponent : InteractableOptionComponent {
 
-        public override event System.Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private SkillTrainerProps interactableOptionProps = null;
 

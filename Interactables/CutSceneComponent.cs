@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CutSceneComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         [SerializeField]
         private CutsceneProps interactableOptionProps = new CutsceneProps();

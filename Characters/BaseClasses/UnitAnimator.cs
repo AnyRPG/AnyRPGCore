@@ -1424,11 +1424,18 @@ namespace AnyRPG {
                     }
                     //animator.transform.forward = varValue.normalized;
                 }
+                // if model is rotated, send through the magnitude so that all movement is considered in the forward direction
+                animator.SetFloat("Velocity X", 0f);
+                animator.SetFloat("Velocity Z", Mathf.Abs(varValue.magnitude));
+            } else {
+                // if model is not rotated, send through the normal values
+                animator.SetFloat("Velocity X", varValue.x);
+                animator.SetFloat("Velocity Z", varValue.z);
             }
-
-            animator.SetFloat("Velocity X", varValue.x);
             animator.SetFloat("Velocity Y", varValue.y);
-            animator.SetFloat("Velocity Z", varValue.z);
+
+
+
 
             float absXValue = Mathf.Abs(varValue.x);
             float absYValue = Mathf.Abs(varValue.y);

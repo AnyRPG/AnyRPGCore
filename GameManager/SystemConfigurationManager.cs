@@ -267,7 +267,11 @@ namespace AnyRPG {
 
         [Tooltip("character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
         [SerializeField]
-        private string defaultCharacterUnitLayer = string.Empty;
+        private string defaultCharacterUnitLayer = "CharacterUnit";
+
+        [Tooltip("player units will automatically be set to this layer.")]
+        [SerializeField]
+        private string defaultPlayerUnitLayer = "Player";
 
         [Header("SYSTEM ABILITIES")]
 
@@ -431,18 +435,18 @@ namespace AnyRPG {
         public Sprite MyBankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
         public Sprite MyVendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
         public Sprite MyVendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
-        public Sprite MyMultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
-        public string MyGameName { get => gameName; set => gameName = value; }
-        public string MyGameVersion { get => gameVersion; set => gameVersion = value; }
+        public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
+        public string GameName { get => gameName; set => gameName = value; }
+        public string GameVersion { get => gameVersion; set => gameVersion = value; }
         public Sprite MySystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
-        public Sprite MySystemBarAbilityBook { get => systemBarAbilityBook; set => systemBarAbilityBook = value; }
-        public Sprite MySystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
-        public Sprite MySystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
-        public Sprite MySystemBarMap { get => systemBarMap; set => systemBarMap = value; }
-        public Sprite MyUnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
-        public Sprite MyUnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
-        public Sprite MyMusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
-        public Sprite MyMusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
+        public Sprite SystemBarAbilityBook { get => systemBarAbilityBook; set => systemBarAbilityBook = value; }
+        public Sprite SystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
+        public Sprite SystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
+        public Sprite SystemBarMap { get => systemBarMap; set => systemBarMap = value; }
+        public Sprite UnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
+        public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
+        public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
+        public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
         public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile MyDefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
@@ -506,6 +510,7 @@ namespace AnyRPG {
 
         public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
+        public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

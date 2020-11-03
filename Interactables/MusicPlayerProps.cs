@@ -17,8 +17,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> musicProfileNames = new List<string>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyMusicPlayerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage : base.NamePlateImage); }
         public List<string> MusicProfileNames { get => musicProfileNames; set => musicProfileNames = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {

@@ -134,7 +134,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }
-            List<IInteractable> currentInteractables = interactable.GetCurrentInteractables();
+            List<InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables();
             if (currentInteractables.Count == 0) {
                 // this could have been a refresh from while a quest was open overtop.  close it if there are no valid interactables
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
@@ -143,7 +143,7 @@ namespace AnyRPG {
 
             // going to just pop the first available interaction window for now and see how that feels
             //bool optionOpened = false;
-            foreach (IInteractable _interactable in currentInteractables) {
+            foreach (InteractableOptionComponent _interactable in currentInteractables) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "; type: " + _interactable.GetType() + "; Checking for valid button");
                 // handle questgiver
                 if (_interactable is QuestGiverComponent) {

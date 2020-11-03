@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogComponent : InteractableOptionComponent {
 
-        public override event Action<IInteractable> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
         private DialogProps interactableOptionProps = null;
 
@@ -121,9 +121,13 @@ namespace AnyRPG {
                 interactable.StopCoroutine(dialogCoroutine);
             }
             dialogCoroutine = null;
+
+            // testing - is this needed ?  it should be cleaned up by namePlate removal anyway
+            /*
             if (interactable != null && interactable.NamePlateController.NamePlate != null) {
                 interactable.NamePlateController.NamePlate.HideSpeechBubble();
             }
+            */
         }
 
         public void BeginDialog(string dialogName) {
@@ -135,9 +139,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator playDialog(Dialog dialog) {
-            if (interactable != null && interactable.NamePlateController.NamePlate != null) {
-                interactable.NamePlateController.NamePlate.ShowSpeechBubble();
-            }
+            interactable.ProcessBeginDialog();
             float elapsedTime = 0f;
             dialogIndex = 0;
             DialogNode currentdialogNode = null;
@@ -149,15 +151,13 @@ namespace AnyRPG {
                 foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
                     if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
-                        if (interactable != null && interactable.NamePlateController.NamePlate != null) {
-                            interactable.NamePlateController.NamePlate.SetSpeechText(dialogNode.MyDescription);
-                        }
+                        interactable.ProcessDialogTextUpdate(dialogNode.MyDescription);
                         if (interactable != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.AudioClips != null && dialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
                             interactable.UnitComponentController.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitObject != null) {
-                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.PlayerUnitObject.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
+                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.ActiveUnitController != null) {
+                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.ActiveUnitController.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }
@@ -186,9 +186,7 @@ namespace AnyRPG {
             if (currentdialogNode != null) {
                 yield return new WaitForSeconds(currentdialogNode.MyShowTime);
             }
-            if (interactable != null && interactable.NamePlateController.NamePlate != null) {
-                interactable.NamePlateController.NamePlate.HideSpeechBubble();
-            }
+            interactable.ProcessEndDialog();
         }
 
         public override bool CanInteract() {

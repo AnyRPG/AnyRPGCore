@@ -12,7 +12,7 @@ namespace AnyRPG {
     public class UnitNamePlateController : BaseNamePlateController {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
-        public override event Action<Interactable> NamePlateNeedsRemoval = delegate { };
+        public override event Action<NamePlateUnit> NamePlateNeedsRemoval = delegate { };
         public override event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public override event Action OnNameChange = delegate { };
 
@@ -67,14 +67,14 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public UnitNamePlateController(Interactable interactable) : base(interactable) {
+        public UnitNamePlateController(NamePlateUnit namePlateUnit) : base(namePlateUnit) {
 
         }
 
         public override void Init() {
             Debug.Log("UnitNamePlateController.Init()");
-            if ((interactable as UnitController) is UnitController) {
-                unitController = (interactable as UnitController);
+            if ((namePlateUnit as UnitController) is UnitController) {
+                unitController = (namePlateUnit as UnitController);
             }
             base.Init();
         }
@@ -96,11 +96,16 @@ namespace AnyRPG {
                         _namePlate.transform.localPosition = NamePlatePosition;
                     }
                 }
-                OnInitializeNamePlate();
+                BroadcastInitializeNamePlate();
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate(): Character is null or start has not been run yet. exiting.");
                 return;
             }
+        }
+
+        public override void BroadcastInitializeNamePlate() {
+            OnInitializeNamePlate();
+
         }
 
         public override int CurrentHealth() {
