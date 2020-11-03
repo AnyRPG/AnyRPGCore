@@ -78,7 +78,7 @@ namespace AnyRPG {
 
         //private GameObject followGameObject = null;
 
-        private INamePlateController namePlateController = null;
+        private BaseNamePlateController namePlateController = null;
         //private CharacterUnit characterUnit = null;
 
         [Header("Status Effects")]
@@ -102,7 +102,7 @@ namespace AnyRPG {
 
         Color reputationColor;
 
-        public INamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
+        public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
         //public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
 
@@ -194,7 +194,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetTarget(INamePlateController namePlateController) {
+        public void SetTarget(BaseNamePlateController namePlateController) {
             //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + ")");
 
             // prevent old target from still sending us updates while we are focused on a new target

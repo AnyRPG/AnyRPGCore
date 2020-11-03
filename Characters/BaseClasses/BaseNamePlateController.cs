@@ -8,70 +8,70 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    public class BaseNamePlateController : INamePlateController {
+    public class BaseNamePlateController {
 
         public virtual event System.Action OnInitializeNamePlate = delegate { };
-        public virtual event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
+        public virtual event Action<Interactable> NamePlateNeedsRemoval = delegate { };
         public virtual event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public virtual event Action OnNameChange = delegate { };
 
         protected NamePlateController namePlate;
 
-        protected INamePlateUnit namePlateUnit;
+        protected Interactable interactable;
 
         public virtual NamePlateController NamePlate { get => namePlate; set => namePlate = value; }
 
         public virtual string UnitFrameTarget {
             get {
-                return namePlateUnit.NamePlateProps.UnitFrameTarget;
+                return interactable.NamePlateProps.UnitFrameTarget;
             }
         }
         public virtual string UnitPreviewTarget {
             get {
-                return namePlateUnit.NamePlateProps.UnitPreviewTarget;
+                return interactable.NamePlateProps.UnitPreviewTarget;
             }
         }
         public virtual Vector3 UnitFrameCameraLookOffset {
             get {
-                return namePlateUnit.NamePlateProps.UnitFrameCameraLookOffset;
+                return interactable.NamePlateProps.UnitFrameCameraLookOffset;
             }
         }
         public virtual Vector3 UnitFrameCameraPositionOffset {
             get {
-                return namePlateUnit.NamePlateProps.UnitFrameCameraPositionOffset;
+                return interactable.NamePlateProps.UnitFrameCameraPositionOffset;
             }
         }
         public virtual Vector3 UnitPreviewCameraLookOffset {
             get {
-                return namePlateUnit.NamePlateProps.UnitPreviewCameraLookOffset;
+                return interactable.NamePlateProps.UnitPreviewCameraLookOffset;
             }
         }
         public virtual Vector3 UnitPreviewCameraPositionOffset {
             get {
-                return namePlateUnit.NamePlateProps.UnitPreviewCameraPositionOffset;
+                return interactable.NamePlateProps.UnitPreviewCameraPositionOffset;
             }
         }
         public virtual bool SuppressFaction {
             get {
-                return namePlateUnit.NamePlateProps.SuppressFaction;
+                return interactable.NamePlateProps.SuppressFaction;
             }
         }
 
         public virtual bool SuppressNamePlate {
             get {
-                return namePlateUnit.NamePlateProps.SuppressNamePlate;
+                return interactable.NamePlateProps.SuppressNamePlate;
             }
         }
 
         public virtual bool OverrideNamePlatePosition {
             get {
-                return namePlateUnit.NamePlateProps.OverrideNameplatePosition;
+                return interactable.NamePlateProps.OverrideNameplatePosition;
             }
         }
 
         public Vector3 NamePlatePosition {
             get {
-                return namePlateUnit.NamePlateProps.NameplatePosition;
+                return interactable.NamePlateProps.NameplatePosition;
             }
         }
 
@@ -83,12 +83,12 @@ namespace AnyRPG {
 
         public virtual Interactable Interactable {
             get {
-                return namePlateUnit.Interactable;
+                return interactable;
             }
         }
         public virtual string UnitDisplayName {
             get {
-                return namePlateUnit.NamePlateProps.DisplayName;
+                return interactable.NamePlateProps.DisplayName;
             }
         }
         public virtual Faction Faction {
@@ -104,10 +104,10 @@ namespace AnyRPG {
 
         public virtual Transform NamePlateTransform {
             get {
-                if (namePlateUnit.UnitComponentController.NamePlateTransform != null) {
-                    return namePlateUnit.UnitComponentController.NamePlateTransform;
+                if (interactable.UnitComponentController.NamePlateTransform != null) {
+                    return interactable.UnitComponentController.NamePlateTransform;
                 }
-                return namePlateUnit.transform;
+                return interactable.transform;
             }
         }
         public virtual int Level {
@@ -116,27 +116,34 @@ namespace AnyRPG {
             }
         }
 
-        public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
+        public Interactable NamePlateUnit { get => interactable; set => interactable = value; }
 
-        public BaseNamePlateController(INamePlateUnit namePlateUnit) {
-            this.namePlateUnit = namePlateUnit;
+        public BaseNamePlateController(Interactable interactable) {
+            this.interactable = interactable;
         }
 
         public virtual void Init() {
+            Debug.Log(interactable.gameObject.name + "BasenamePlateController.Init()");
             InitializeNamePlate();
         }
 
+        public virtual void Cleanup() {
+            if (interactable != null) {
+                NamePlateNeedsRemoval(interactable);
+            }
+        }
+
         public virtual void InitializeNamePlate() {
-            Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
-            if (namePlateUnit.NamePlateProps.SuppressNamePlate == true) {
+            Debug.Log(interactable.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
+            if (interactable.NamePlateProps.SuppressNamePlate == true) {
                 return;
             }
-            if (namePlateUnit != null) {
+            if (interactable != null) {
                 //NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 if (OverrideNamePlatePosition) {
-                    namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
+                    interactable.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
                 }
-                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
+                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(interactable, false);
                 if (_namePlate != null) {
                     namePlate = _namePlate;
                 }
@@ -174,8 +181,9 @@ namespace AnyRPG {
 
         public virtual void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval()");
-            if (namePlateUnit != null && _characterStats != null) {
-                NamePlateNeedsRemoval(namePlateUnit);
+            //if (namePlateUnit != null && _characterStats != null) {
+            if (interactable != null) {
+                NamePlateNeedsRemoval(interactable);
             }
         }
 

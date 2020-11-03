@@ -25,9 +25,15 @@ namespace AnyRPG {
                     //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                     return false;
                 }
-                if (target == null || target.UnitController == null ||  target.UnitController.UnitProfile == null || target.UnitController.UnitProfile.IsPet == false) {
+                if (target == null) {
                     // has to be the right unit type plus needs to be capturable specifically
-                    Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
+                    //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
+                    return false;
+                }
+                UnitController unitController = target as UnitController;
+                if (unitController == null || unitController.UnitProfile == null || unitController.UnitProfile.IsPet == false) {
+                    // has to be the right unit type plus needs to be capturable specifically
+                    //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
                     return false;
                 }
             }

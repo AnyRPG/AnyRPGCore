@@ -89,8 +89,8 @@ namespace AnyRPG {
                 interactable.StopCoroutine(behaviorCoroutine);
             }
             behaviorCoroutine = null;
-            if (interactable.NamePlateUnit != null && interactable.NamePlateUnit.NamePlateController.NamePlate != null) {
-                interactable.NamePlateUnit.NamePlateController.NamePlate.HideSpeechBubble();
+            if (interactable != null && interactable.NamePlateController.NamePlate != null) {
+                interactable.NamePlateController.NamePlate.HideSpeechBubble();
             }
         }
 

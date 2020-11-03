@@ -40,7 +40,7 @@ namespace AnyRPG {
         }
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {
-            return searchInteractable.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;
+            return searchInteractable.CharacterUnit;
         }
 
         public void EnableCollider() {

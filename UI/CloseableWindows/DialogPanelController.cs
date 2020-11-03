@@ -138,7 +138,7 @@ namespace AnyRPG {
                 return;
             }
             if (characterNameText != null) {
-                characterNameText.text = MyInteractable.GetComponent<INamePlateUnit>().NamePlateController.UnitDisplayName;
+                characterNameText.text = MyInteractable.NamePlateController.UnitDisplayName;
             }
             
             if (dialogText != null) {

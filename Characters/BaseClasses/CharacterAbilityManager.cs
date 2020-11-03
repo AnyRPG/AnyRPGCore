@@ -576,7 +576,7 @@ namespace AnyRPG {
             if (target == null) {
                 if (abilityEffect.AutoSelfCast == true) {
                     //Debug.Log("target is null and autoselfcast is true.  setting target to self");
-                    target = baseCharacter.UnitController.Interactable;
+                    target = baseCharacter.UnitController;
                 }
             }
 
@@ -775,9 +775,9 @@ namespace AnyRPG {
         public override void AddPet(CharacterUnit target) {
             if (baseCharacter.MyCharacterPetManager != null
                 && target.Interactable != null
-                && target.Interactable.UnitController != null
-                && target.Interactable.UnitController.UnitProfile != null) {
-                baseCharacter.MyCharacterPetManager.AddPet(target.Interactable.UnitController.UnitProfile);
+                && target.Interactable is UnitController
+                && (target.Interactable as UnitController).UnitProfile != null) {
+                baseCharacter.MyCharacterPetManager.AddPet((target.Interactable as UnitController).UnitProfile);
             }
         }
 
@@ -1180,7 +1180,7 @@ namespace AnyRPG {
 
         public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
             //Debug.Log("CharacterAbilityManager.ReceiveKillDetails()");
-            if (BaseCharacter.UnitController.Target == killedcharacter.UnitController.Interactable) {
+            if (BaseCharacter.UnitController.Target == killedcharacter.UnitController) {
                 if (killStopCast) {
                     StopCasting();
                 }

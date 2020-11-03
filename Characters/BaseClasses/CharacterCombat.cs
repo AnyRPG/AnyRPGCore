@@ -219,7 +219,7 @@ namespace AnyRPG {
                     } else if ((abilityEffect as AttackEffect).DamageType == DamageType.ability) {
                         combatTextType = CombatTextType.ability;
                     }
-                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController.Interactable, damage, combatTextType, combatMagnitude, abilityEffectContext);
+                    CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
                     SystemEventManager.MyInstance.NotifyOnTakeDamage(target, MyBaseCharacter.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
@@ -581,7 +581,7 @@ namespace AnyRPG {
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.UseMeleeRange) {
-                    if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.UnitController.Interactable)) {
+                    if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.UnitController)) {
                         canPerformAbility = false;
                     }
                 }

@@ -434,7 +434,7 @@ namespace AnyRPG {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
                     ClearTarget();
-                    SetTarget(characterUnitList[closestTargetIndex].Interactable);
+                    SetTarget(characterUnitList[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
@@ -442,7 +442,7 @@ namespace AnyRPG {
                     if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
                         ClearTarget();
-                        SetTarget(characterUnitList[tabTargetIndex].Interactable);
+                        SetTarget(characterUnitList[tabTargetIndex]);
                     }
                 }
             } else {
@@ -450,7 +450,7 @@ namespace AnyRPG {
                 // we only want to clear the target if we are actually setting a new target
                 if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                     ClearTarget();
-                    SetTarget(characterUnitList[tabTargetIndex].Interactable);
+                    SetTarget(characterUnitList[tabTargetIndex]);
                 }
             }
         }
@@ -562,10 +562,10 @@ namespace AnyRPG {
                 return;
             }
             this.target = newTarget;
-            if (newTarget.NamePlateUnit != null) {
+            if (newTarget.NamePlateController != null && newTarget.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget.NamePlateUnit.NamePlateController);
-                NamePlateManager.MyInstance.SetFocus(newTarget.NamePlateUnit);
+                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(newTarget.NamePlateController);
+                NamePlateManager.MyInstance.SetFocus(newTarget);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }

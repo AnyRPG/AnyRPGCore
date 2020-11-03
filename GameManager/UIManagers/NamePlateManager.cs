@@ -29,9 +29,9 @@ namespace AnyRPG {
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline
         /// </summary>
-        private INamePlateUnit focus;
+        private Interactable focus;
 
-        private Dictionary<INamePlateUnit, NamePlateController> namePlates = new Dictionary<INamePlateUnit, NamePlateController>();
+        private Dictionary<Interactable, NamePlateController> namePlates = new Dictionary<Interactable, NamePlateController>();
 
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
@@ -42,13 +42,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NamePlateManager.Start()");
         }
 
-        public void SetFocus(INamePlateUnit namePlateUnit) {
+        public void SetFocus(Interactable newInteractable) {
             ClearFocus();
             //Debug.Log("NamePlateManager.SetFocus(" + characterUnit.MyCharacter.MyCharacterName + ")");
-            if (namePlates.ContainsKey(namePlateUnit)) {
-                focus = namePlateUnit;
+            if (namePlates.ContainsKey(newInteractable)) {
+                focus = newInteractable;
                 // enemy could be dead so we need to check if they exist in the nameplates dictionary
-                namePlates[namePlateUnit].Highlight();
+                namePlates[newInteractable].Highlight();
             }
         }
 
@@ -63,7 +63,7 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NamePlateController SpawnNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
+        public NamePlateController SpawnNamePlate(Interactable namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.UnitDisplayName + ")");
             NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
             namePlates.Add(namePlateUnit, namePlate);
@@ -71,18 +71,18 @@ namespace AnyRPG {
             return namePlate;
         }
 
-        public NamePlateController AddNamePlate(INamePlateUnit namePlateUnit, bool usePositionOffset) {
+        public NamePlateController AddNamePlate(Interactable interactable, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.UnitDisplayName + ")");
-            if (namePlates.ContainsKey(namePlateUnit) == false) {
-                NamePlateController namePlate = SpawnNamePlate(namePlateUnit, usePositionOffset);
-                namePlateUnit.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
+            if (namePlates.ContainsKey(interactable) == false) {
+                NamePlateController namePlate = SpawnNamePlate(interactable, usePositionOffset);
+                interactable.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
                 return namePlate;
             }
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.MyDisplayName + "): key already existed.  returning null!!!");
             return null;
         }
 
-        public void RemoveNamePlate(INamePlateUnit namePlateUnit) {
+        public void RemoveNamePlate(Interactable namePlateUnit) {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.MyDisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {

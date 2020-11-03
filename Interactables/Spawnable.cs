@@ -57,12 +57,8 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
-            Initialize();
-        }
-
-        public virtual void Initialize() {
-            SetupScriptableObjects();
             GetComponentReferences();
+            SetupScriptableObjects();
             Init();
             CreateEventSubscriptions();
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
@@ -75,7 +71,7 @@ namespace AnyRPG {
             // do nothing here
         }
 
-        public virtual void Start() {
+        protected virtual void Start() {
             //Debug.Log(gameObject.name + ".Spawnable.Start()");
             //InitializeComponents();
             //interactionTransform = transform;
@@ -87,6 +83,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
@@ -103,11 +100,20 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             if (SystemEventManager.MyInstance != null) {
                 //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            ProcessLevelUnload();
+        }
+
+        public virtual void ProcessLevelUnload() {
+            // nothing here
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -132,7 +138,6 @@ namespace AnyRPG {
             if (componentsInitialized == true) {
                 return;
             }
-
             componentsInitialized = true;
         }
 

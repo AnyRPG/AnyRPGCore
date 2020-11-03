@@ -12,7 +12,7 @@ namespace AnyRPG {
     public class UnitNamePlateController : BaseNamePlateController {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
-        public override event Action<INamePlateUnit> NamePlateNeedsRemoval = delegate { };
+        public override event Action<Interactable> NamePlateNeedsRemoval = delegate { };
         public override event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public override event Action OnNameChange = delegate { };
 
@@ -67,14 +67,14 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public UnitNamePlateController(INamePlateUnit namePlateUnit) : base(namePlateUnit) {
+        public UnitNamePlateController(Interactable interactable) : base(interactable) {
 
         }
 
         public override void Init() {
             Debug.Log("UnitNamePlateController.Init()");
-            if ((namePlateUnit as UnitController) is UnitController) {
-                unitController = (namePlateUnit as UnitController);
+            if ((interactable as UnitController) is UnitController) {
+                unitController = (interactable as UnitController);
             }
             base.Init();
         }

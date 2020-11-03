@@ -353,11 +353,7 @@ namespace AnyRPG {
 
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
             CharacterUnit _characterUnit = null;
-            if (unitController.Interactable == null) {
-                Debug.LogError("UnitController had no interactable");
-                return;
-            }
-            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(unitController.Interactable);
+            CharacterUnit tmpCharacterUnit = unitController.CharacterUnit;
             if (tmpCharacterUnit == null) {
                 Debug.LogError("Interactable had no characterUnit");
                 return;
@@ -367,7 +363,7 @@ namespace AnyRPG {
             if (respawnOn == respawnCondition.Despawn) {
                 _characterUnit.OnDespawn += HandleDespawn;
             } else if (respawnOn == respawnCondition.Loot) {
-                LootableCharacterComponent tmpLootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(unitController.Interactable);
+                LootableCharacterComponent tmpLootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(unitController);
                 if (tmpLootableCharacter != null) {
                     // there can only be one of these types of object on an interactable
                     // interesting note : there is no unsubscribe to this event.  Unit spawn nodes exist for the entire scene and are only destroyed at the same time as the interactables

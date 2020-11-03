@@ -312,17 +312,13 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
-                UnitController unitController = null;
-                if (target != null) {
-                    unitController = target.UnitController;
-                }
-                if (unitController == null) {
+                if (target.UnitComponentController == null) {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
-                if (audioSource != null || unitController != null) {
+                if (audioSource != null || target.UnitComponentController != null) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
                         usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
@@ -332,8 +328,8 @@ namespace AnyRPG {
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.AudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-                            if (unitController != null) {
-                                unitController.UnitComponentController.PlayEffect(audioProfile.AudioClip);
+                            if (target.UnitComponentController != null) {
+                                target.UnitComponentController.PlayEffect(audioProfile.AudioClip);
                             } else {
                                 audioSource.PlayOneShot(audioProfile.AudioClip);
                             }

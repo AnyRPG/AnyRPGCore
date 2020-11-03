@@ -199,15 +199,10 @@ namespace AnyRPG {
 
             unitController = GetComponent<UnitController>();
 
-            if (CharacterUnit == null && unitController != null) {
-                CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(unitController.Interactable);
-                if (_characterUnit != null) {
-                    CharacterUnit = _characterUnit;
-                }
+            if (CharacterUnit == null && unitController != null & UnitController.CharacterUnit != null) {
+                CharacterUnit = UnitController.CharacterUnit;
             }
-
         }
-
 
         public void JoinFaction(Faction newFaction) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");

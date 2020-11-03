@@ -14,14 +14,10 @@ namespace AnyRPG {
             if (target == null) {
                 return false;
             }
-            CharacterUnit characterUnit = CharacterUnit.GetCharacterUnit(target);
-            if (characterUnit == null) {
-                return false;
-            }
-            if (target.UnitController == null || target.UnitController.UnitProfile == null) {
-                return false;
-            }
-            if (!target.UnitController.UnitProfile.IsPet) {
+            UnitController unitController = target as UnitController;
+            if (unitController == null || unitController.UnitProfile == null || unitController.UnitProfile.IsPet == false) {
+                // has to be the right unit type plus needs to be capturable specifically
+                //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
                 return false;
             }
 

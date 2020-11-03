@@ -57,7 +57,7 @@ namespace AnyRPG {
         [SerializeField]
         private Canvas speechBubbleCanvas = null;
 
-        private INamePlateController unitNamePlateController = null;
+        private BaseNamePlateController unitNamePlateController = null;
 
         private int healthSliderWidth;
 
@@ -267,7 +267,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetNamePlateUnit(INamePlateUnit namePlateUnit, bool usePositionOffset) {
+        public void SetNamePlateUnit(Interactable namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.UnitDisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             unitNamePlateController = namePlateUnit.NamePlateController;
@@ -494,7 +494,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.ActiveUnitController == null) {
                 return;
             }
-            if (unitNamePlateController != (PlayerManager.MyInstance.ActiveUnitController as INamePlateUnit)) {
+            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.ActiveUnitController.gameObject)) {
                 PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
             }
         }
@@ -504,7 +504,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.ActiveUnitController == null) {
                 return;
             }
-            if (unitNamePlateController != (PlayerManager.MyInstance.ActiveUnitController as INamePlateUnit)) {
+            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.ActiveUnitController.gameObject)) {
                 PlayerManager.MyInstance.ActiveUnitController.SetTarget(unitNamePlateController.Interactable);
             }
         }

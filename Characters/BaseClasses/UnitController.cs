@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : MonoBehaviour, INamePlateUnit, IPersistentObjectOwner {
+    public class UnitController : Interactable, IPersistentObjectOwner {
 
         public event System.Action<Interactable> OnSetTarget = delegate { };
         public event System.Action OnClearTarget = delegate { };
@@ -16,13 +16,6 @@ namespace AnyRPG {
         public event System.Action OnModelReady = delegate { };
 
         private INamePlateTarget namePlateTarget = null;
-
-        [SerializeField]
-        private NamePlateProps namePlateProps = new NamePlateProps();
-
-        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
-        [SerializeField]
-        private UnitComponentController unitComponentController = null;
 
         // by default, a unit will enter AI mode if no mode is set before Start()
         [SerializeField]
@@ -54,21 +47,16 @@ namespace AnyRPG {
         // components
         private NavMeshAgent agent = null;
         private Rigidbody rigidBody = null;
-        private Collider myCollider = null;
         private UnitMotor unitMotor = null;
         private UnitAnimator unitAnimator = null;
-        private Interactable interactable = null;
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
-        private CharacterUnit characterUnit = null;
-        private BaseCharacter baseCharacter = null;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
-        private UnitNamePlateController namePlateController = null;
+        //private UnitNamePlateController namePlateController = null;
         private UUID uuid = null;
         private GameObject unitModel = null;
 
         // track startup state
-        private bool eventSubscriptionsInitialized = false;
         private bool profileReady = false;
         private bool modelReady = false;
         private bool namePlateReady = false;
@@ -78,8 +66,6 @@ namespace AnyRPG {
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
 
         // targeting
-        //private GameObject target;
-        // it's not possible to target anything that is not interactable, so change to Interactable target
         private Interactable target;
         private float distanceToTarget = 0f;
 
@@ -114,8 +100,7 @@ namespace AnyRPG {
         private MovementSoundArea movementSoundArea = null;
 
         public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
-        public INamePlateController NamePlateController { get => namePlateController; }
-        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
+        //public BaseNamePlateController NamePlateController { get => namePlateController; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
         public Rigidbody RigidBody { get => rigidBody; set => rigidBody = value; }
         public UnitMotor UnitMotor { get => unitMotor; set => unitMotor = value; }
@@ -181,7 +166,6 @@ namespace AnyRPG {
             get => unitControllerMode;
         }
         public LootableCharacter LootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
-        public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
         public bool Walking { get => walking; set => walking = value; }
         public AudioProfile MovementLoopProfile {
             get {
@@ -222,10 +206,8 @@ namespace AnyRPG {
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
-        public Interactable Interactable { get => interactable; set => interactable = value; }
-        public Collider Collider { get => myCollider; set => myCollider = value; }
         public bool ModelReady { get => modelReady; set => modelReady = value; }
-        public NamePlateProps NamePlateProps {
+        public override NamePlateProps NamePlateProps {
             get {
                 if (unitProfile != null && unitProfile.UnitPrefabProfile != null) {
                     return unitProfile.UnitPrefabProfile.NamePlateProps;
@@ -269,9 +251,9 @@ namespace AnyRPG {
             }
         }
 
-        protected void Awake() {
+        protected override void Awake() {
             Debug.Log(gameObject.name + ".UnitController.Awake()");
-            GetComponentReferences();
+            base.Awake();
             CreateEventSubscriptions();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
@@ -293,16 +275,12 @@ namespace AnyRPG {
                 ConfigureAnimator();
             }
 
-            // interactables will hold their initialization if they detect a Unit controller to give baseCharacter time to be initialized
-            // they must be activated manually in this case
-            if (interactable != null) {
-                interactable.Initialize();
-            }
             // if we got this far without an animator or model, this is probably the default character unit prefab
             // in that case, whatever spawned this will set the unit profile manually and spawn the model by calling SetUnitProfile()
         }
 
-        private void Start() {
+        protected override void Start() {
+            base.Start();
             Debug.Log(gameObject.name + ".UnitController.Start()");
 
             patrolController.Init();
@@ -318,6 +296,26 @@ namespace AnyRPG {
             SetUnitControllerMode(unitControllerMode);
         }
 
+        public override void OnDisable() {
+            //Debug.Log("PlayerManager.OnDisable()");
+            base.OnDisable();
+            if (NamePlateManager.MyInstance != null) {
+                NamePlateManager.MyInstance.RemoveNamePlate(this);
+            }
+            RemoveControlEffects();
+        }
+
+        public override void GetComponentReferences() {
+            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): searching for base character");
+            base.GetComponentReferences();
+
+            UUID uuid = GetComponent<UUID>();
+            baseCharacter = GetComponent<BaseCharacter>();
+            lootableCharacter = GetComponent<LootableCharacter>();
+            agent = GetComponent<NavMeshAgent>();
+            rigidBody = GetComponent<Rigidbody>();
+        }
+
         /// <summary>
         /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
         /// </summary>
@@ -325,7 +323,7 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, bool updateBaseCharacter = false) {
             Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
-            if (baseCharacter != null) {
+            if (baseCharacter != null && updateBaseCharacter == true) {
                 baseCharacter.SetUnitProfile(unitProfile);
             }
             InitializeNamePlateController();
@@ -354,48 +352,7 @@ namespace AnyRPG {
             unitComponentController.InteractableRange.gameObject.SetActive(false);
         }
 
-
-        public void CreateEventSubscriptions() {
-            //Debug.Log("UnitSpawnNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            eventSubscriptionsInitialized = true;
-        }
-
-        public void CleanupEventSubscriptions() {
-            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            if (NamePlateManager.MyInstance != null) {
-                NamePlateManager.MyInstance.RemoveNamePlate(this);
-            }
-
-            RemoveControlEffects();
-
-            CleanupEventSubscriptions();
-        }
-
-        public void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): searching for base character");
-
-            // first, get references to components that will exist on this unit
-            UUID uuid = GetComponent<UUID>();
-            baseCharacter = GetComponent<BaseCharacter>();
-            lootableCharacter = GetComponent<LootableCharacter>();
-            agent = GetComponent<NavMeshAgent>();
-            rigidBody = GetComponent<Rigidbody>();
-            interactable = GetComponent<Interactable>();
-            myCollider = GetComponent<Collider>();
-        }
+       
 
         public void SpawnUnitModel() {
             if (unitProfile != null && unitProfile.UnitPrefabProfile != null && unitProfile.UnitPrefabProfile.ModelPrefab != null) {
@@ -578,7 +535,8 @@ namespace AnyRPG {
             //CreateEventSubscriptions();
         }
 
-        public void Update() {
+        protected override void Update() {
+            base.Update();
             if (baseCharacter.CharacterStats.IsAlive == false) {
                 // can't handle movement when dead
                 return;
@@ -617,10 +575,6 @@ namespace AnyRPG {
                 unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, baseCharacter);
                 unitComponentController.AggroRangeController.StartEnableAggro();
             }
-        }
-
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            ProcessLevelUnload();
         }
 
         public bool StartCombatPhase(CombatStrategyNode combatStrategyNode) {
@@ -703,7 +657,7 @@ namespace AnyRPG {
         }
 
         public void OnMasterAttack(BaseCharacter target) {
-            SetTarget(target.UnitController.Interactable);
+            SetTarget(target.UnitController);
         }
 
         public void OnMasterDropCombat() {
@@ -909,7 +863,8 @@ namespace AnyRPG {
 
         }
 
-        public void ProcessLevelUnload() {
+        public override void ProcessLevelUnload() {
+            base.ProcessLevelUnload();
             ClearTarget();
             CancelMountEffects();
         }
@@ -1134,7 +1089,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnDestroy() {
+        protected override void OnDestroy() {
+            base.OnDestroy();
             StopAllCoroutines();
         }
 

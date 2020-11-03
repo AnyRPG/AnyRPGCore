@@ -12,117 +12,127 @@ namespace AnyRPG {
         public event System.Action OnPrerequisiteUpdates = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
-        private Sprite interactableIcon = null;
+        protected Sprite interactableIcon = null;
 
         [Header("Mouse Over")]
 
         [Tooltip("Show a tooltip when the mouse is over the object")]
         [SerializeField]
-        private bool showTooltip = true;
+        protected bool showTooltip = true;
 
         [Tooltip("This value will show in the mouseover tooltip.")]
         [SerializeField]
-        private string interactableName = string.Empty;
+        protected string interactableName = string.Empty;
 
         [Tooltip("Should the object glow when the mouse is over it or its nameplate")]
         [SerializeField]
-        private bool glowOnMouseOver = true;
+        protected bool glowOnMouseOver = true;
 
         [Tooltip("If true, the glow emits light on objects around it.")]
         [SerializeField]
-        private bool lightEmission = false;
+        protected bool lightEmission = false;
 
         [Tooltip("The time period in seconds between high and low intensity of the glow strength")]
         [SerializeField]
-        private float glowFlashSpeed = 1.5f;
+        protected float glowFlashSpeed = 1.5f;
 
         [Tooltip("The minimum intensity the object should glow with")]
         [SerializeField]
-        private float glowMinIntensity = 4.5f;
+        protected float glowMinIntensity = 4.5f;
 
         [Tooltip("The maximum intensity the object should glow with")]
         [SerializeField]
-        private float glowMaxIntensity = 6f;
+        protected float glowMaxIntensity = 6f;
 
         [Tooltip("The color of light to emit when glowing")]
         [SerializeField]
-        private Color glowColor = Color.yellow;
+        protected Color glowColor = Color.yellow;
 
         [Tooltip("The glow material that should replace any normal materials on this object while glowing")]
         [SerializeField]
-        private Material temporaryMaterial = null;
+        protected Material temporaryMaterial = null;
 
         [Header("Interaction Options")]
 
         [Tooltip("Set this value to prevent direct interaction from the player.  This can be useful for interactables that only need to be activated with control switches.")]
         [SerializeField]
-        private bool notInteractable = false;
+        protected bool notInteractable = false;
 
         [Tooltip("Set this to true to allow triggering interaction with anything that has a collider, not just players.")]
         [SerializeField]
-        private bool interactWithAny = false;
+        protected bool interactWithAny = false;
 
         [Tooltip("Set this to true to cause the interaction to trigger on when something exits the collider.")]
         [SerializeField]
-        private bool interactOnExit = false;
+        protected bool interactOnExit = false;
 
         [Tooltip("If true, interaction is triggered by a collider, and not by clicking with the mouse")]
         [SerializeField]
-        private bool isTrigger = false;
+        protected bool isTrigger = false;
 
         [Tooltip("Set this to true to automatically activate the first interactable instead of opening the interaction window and presenting the player with interaction options.")]
         [SerializeField]
-        private bool suppressInteractionWindow = false;
+        protected bool suppressInteractionWindow = false;
 
         [Header("Additional Spawn Options")]
 
         [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
         [SerializeField]
-        private bool checkOptionsToSpawn = false;
+        protected bool checkOptionsToSpawn = false;
 
         [Tooltip("Require a valid interactable option in addition to any preqrequisites.  For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
-        private bool spawnRequiresValidOption = false;
+        protected bool spawnRequiresValidOption = false;
 
         [Tooltip("require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
-        private bool despawnRequiresNoValidOption = false;
+        protected bool despawnRequiresNoValidOption = false;
 
-        private List<InteractableOptionComponent> interactables = new List<InteractableOptionComponent>();
+        [SerializeField]
+        protected NamePlateProps namePlateProps = new NamePlateProps();
 
-        private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
+        [SerializeField]
+        protected UnitComponentController unitComponentController = null;
 
-        private Material[] temporaryMaterials = null;
+        protected List<InteractableOptionComponent> interactables = new List<InteractableOptionComponent>();
 
-        private Renderer[] meshRenderers = null;
+        protected Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
-        private List<Shader> shaderList = new List<Shader>();
-        private List<Color> emissionColorList = new List<Color>();
-        private List<Texture> emissionTextureList = new List<Texture>();
-        private List<bool> emissionEnabledList = new List<bool>();
+        protected Material[] temporaryMaterials = null;
+        protected Renderer[] meshRenderers = null;
 
-        private GameObject miniMapIndicator = null;
+        protected List<Shader> shaderList = new List<Shader>();
+        protected List<Color> emissionColorList = new List<Color>();
+        protected List<Texture> emissionTextureList = new List<Texture>();
+        protected List<bool> emissionEnabledList = new List<bool>();
 
+        // state
         protected bool isInteracting = false;
-        private bool isFlashing = false;
+        protected bool isFlashing = false;
+        protected bool hasMeshRenderer = false;
+        protected bool miniMapIndicatorReady = false;
 
-        bool hasMeshRenderer = false;
+        // attached components
+        protected Collider myCollider;
+        protected GameObject miniMapIndicator = null;
+        protected BaseCharacter baseCharacter = null;
 
-        private bool miniMapIndicatorReady = false;
+        // created components
+        protected CharacterUnit characterUnit;
+        protected BaseNamePlateController namePlateController = null;
 
-        // components
-        private Collider myCollider;
-        private INamePlateUnit namePlateUnit = null;
-        protected UnitController unitController = null;
-
-
+        // properties
         public bool IsInteracting { get => isInteracting; }
-        public UnitController UnitController { get => unitController; set => unitController = value; }
         public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
 
         public Sprite Icon { get => interactableIcon; }
 
-        public string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : (namePlateUnit != null ? namePlateUnit.NamePlateController.UnitDisplayName : gameObject.name)); }
+        public virtual BaseNamePlateController NamePlateController { get => namePlateController; }
+        public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
+        public virtual NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
+
+        public virtual string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : gameObject.name); }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         //public BoxCollider MyBoxCollider { get => boxCollider;}
         public Collider Collider { get => myCollider; }
@@ -144,20 +154,10 @@ namespace AnyRPG {
         }
 
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
-        public INamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
+        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
 
         protected override void Awake() {
-            //Debug.Log(gameObject.name + ".Interactable.Awake()");
-            namePlateUnit = GetComponent<INamePlateUnit>();
-            if (namePlateUnit != null) {
-                // namePlateUnits control startup
-                return;
-            }
             base.Awake();
-        }
-
-        public override void Initialize() {
-            base.Initialize();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 if (SystemConfigurationManager.MyInstance == null) {
@@ -174,13 +174,6 @@ namespace AnyRPG {
         }
 
         public override void Init() {
-            // detect if this is a character and if so, add a characterUnit
-            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
-            if (baseCharacter != null) {
-                CharacterUnit characterUnit = new CharacterUnit(this);
-                characterUnit.SetBaseCharacter(baseCharacter);
-                AddInteractable(characterUnit);
-            }
 
             foreach (IInteractable interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found IInteractable: " + interactable.ToString());
@@ -198,9 +191,17 @@ namespace AnyRPG {
                 return;
             }
             base.GetComponentReferences();
-            //boxCollider = GetComponent<BoxCollider>();
+
             myCollider = GetComponent<Collider>();
-            unitController = GetComponent<UnitController>();
+
+            // if base character exists, create a character unit and link them
+            baseCharacter = GetComponent<BaseCharacter>();
+            if (baseCharacter != null) {
+                characterUnit = new CharacterUnit(this);
+                characterUnit.SetBaseCharacter(baseCharacter);
+                baseCharacter.CharacterUnit = characterUnit;
+                AddInteractable(characterUnit);
+            }
 
             // get monobehavior interactables
             InteractableOption[] interactableOptionMonoList = GetComponents<InteractableOption>();
@@ -209,8 +210,6 @@ namespace AnyRPG {
                     interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this));
                 }
             }
-
-            namePlateUnit = GetComponent<INamePlateUnit>();
         }
 
         public override void CleanupEverything() {
@@ -259,7 +258,7 @@ namespace AnyRPG {
             interactables.Add(interactableOption);
         }
 
-        private void Update() {
+        protected virtual void Update() {
             // if the item is highlighted, we will continue a pulsing glow
             //return;
             if (isFlashing) {
@@ -363,17 +362,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
-            if (namePlateUnit == null) {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): nameplateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.UnitDisplayName) + "; namePlateUnit.myNamePlate: " + (namePlateUnit != null && namePlateUnit.NamePlateController.NamePlate != null ? namePlateUnit.NamePlateController.NamePlate.name : "null"));
-                return;
-            }
-
             // if there is a nameplate unit give it a chance to initialize its nameplate.
             // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
             // this means the only way they can spawn their nameplate is through a direct call
-            if (namePlateUnit.NamePlateController.NamePlate == null) {
-                namePlateUnit.NamePlateController.InitializeNamePlate();
-                if (namePlateUnit.NamePlateController.NamePlate == null) {
+            if (NamePlateController.NamePlate == null) {
+                NamePlateController.InitializeNamePlate();
+                if (NamePlateController.NamePlate == null) {
                     return;
                 }
             }
@@ -391,7 +385,7 @@ namespace AnyRPG {
 
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
-                namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
+                NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
@@ -399,15 +393,15 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
                     if (GetCurrentInteractables()[0].NamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
-                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].NamePlateImage;
+                        NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].NamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
-                    namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                    namePlateUnit.NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
+                    NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
+                    NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
                 }
             }
         }
@@ -777,7 +771,7 @@ namespace AnyRPG {
             }
         }
 
-        private void OnMouseDown() {
+        protected void OnMouseDown() {
             //Debug.Log(gameObject.name + ": OnMouseDown()");
         }
 
@@ -858,10 +852,10 @@ namespace AnyRPG {
             }
             Color textColor = Color.white;
             string factionString = string.Empty;
-            if (namePlateUnit != null && namePlateUnit.NamePlateController.Faction != null) {
-                //Debug.Log(gameObject.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
-                textColor = Faction.GetFactionColor(namePlateUnit);
-                factionString = "\n" + namePlateUnit.NamePlateController.Faction.DisplayName;
+            if (NamePlateController != null && NamePlateController.Faction != null) {
+                //Debug.Log(.name + ".Interactable.GetDescription(): getting color for faction: " + namePlateUnit.MyFactionName);
+                textColor = Faction.GetFactionColor(this);
+                factionString = "\n" + NamePlateController.Faction.DisplayName;
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.GetDescription():  namePlateUnit is null: " + (namePlateUnit == null));
             }
@@ -882,10 +876,10 @@ namespace AnyRPG {
             // perform default interaction or open a window if there are multiple valid interactions
             List<string> returnStrings = new List<string>();
             foreach (IInteractable _interactable in currentInteractables) {
-                if (!(_interactable is INamePlateUnit)) {
+                //if (!(_interactable is INamePlateUnit)) {
                     // we already put the character name in the description so skip it here
                     returnStrings.Add(_interactable.GetSummary());
-                }
+                //}
             }
             returnString = string.Join("\n", returnStrings);
             return string.Format("{0}", returnString);
@@ -897,10 +891,8 @@ namespace AnyRPG {
             //public void InitializeMaterialsNew(Material temporaryMaterial) {
             //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew()");
             //this.temporaryMaterial = temporaryMaterial;
-            if (namePlateUnit != null) {
-                glowColor = Faction.GetFactionColor(namePlateUnit);
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): glowcolor set to: " + glowColor);
-            }
+            glowColor = Faction.GetFactionColor(this);
+            //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): glowcolor set to: " + glowColor);
 
             meshRenderers = GetComponentsInChildren<MeshRenderer>();
 

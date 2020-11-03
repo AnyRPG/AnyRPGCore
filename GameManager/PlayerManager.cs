@@ -255,7 +255,7 @@ namespace AnyRPG {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLevelUpAbility;
 
-                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.Interactable, abilityEffectContext);
+                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
             }
         }
 
@@ -266,7 +266,7 @@ namespace AnyRPG {
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
             abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.DeathAbility;
-            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController.Interactable, abilityEffectContext);
+            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
         }
 
         /*
@@ -336,7 +336,7 @@ namespace AnyRPG {
             activeUnitController = unitController;
 
             // create a reference from the character (connection) to the character unit (interactable), and from the character unit (interactable) to the character (connection)
-            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(activeUnitController.Interactable);
+            CharacterUnit tmpCharacterUnit = CharacterUnit.GetCharacterUnit(activeUnitController);
             if (tmpCharacterUnit != null) {
                 activeCharacter.CharacterUnit = tmpCharacterUnit;
                 activeCharacter.CharacterUnit.SetBaseCharacter(activeCharacter);

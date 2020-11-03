@@ -245,7 +245,8 @@ namespace AnyRPG {
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
-                    unitController.SetUnitProfile(this, true);
+                    //unitController.SetUnitProfile(this, true);
+                    unitController.SetUnitProfile(this);
                 }
             }
 

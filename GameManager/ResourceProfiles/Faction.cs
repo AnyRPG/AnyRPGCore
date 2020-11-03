@@ -66,16 +66,16 @@ namespace AnyRPG {
         public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
-        public static Color GetFactionColor(INamePlateUnit namePlateUnit) {
+        public static Color GetFactionColor(Interactable namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");
             if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.PlayerUnitObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if ((namePlateUnit is CharacterUnit) && PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (namePlateUnit.CharacterUnit != null && PlayerManager.MyInstance.PlayerUnitSpawned) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(PlayerManager.MyInstance.MyCharacter, (namePlateUnit as CharacterUnit).BaseCharacter);
+                return GetFactionColor(PlayerManager.MyInstance.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is NOT a character unit");
             }
