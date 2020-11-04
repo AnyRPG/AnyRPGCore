@@ -38,6 +38,12 @@ namespace AnyRPG {
         List<AnimationClip> GetDefaultAttackAnimations();
 
         /// <summary>
+        /// return a list of auto-attack animations for the current unit
+        /// </summary>
+        /// <returns></returns>
+        List<AnimationClip> GetUnitAttackAnimations();
+
+        /// <summary>
         /// false if the caster does not know that ability
         /// </summary>
         /// <param name="baseAbility"></param>

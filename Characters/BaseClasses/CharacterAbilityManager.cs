@@ -285,6 +285,18 @@ namespace AnyRPG {
             return base.GetDefaultAttackAnimations();
         }
 
+        public override List<AnimationClip> GetUnitAttackAnimations() {
+            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            if (baseCharacter.UnitProfile != null
+                && baseCharacter.UnitProfile.UnitPrefabProfile != null
+                && baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile != null) {
+                return baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile.AttackClips;
+            }
+            return base.GetUnitAttackAnimations();
+        }
+
+
+
         public override float GetMeleeRange() {
             if (baseCharacter != null && baseCharacter.UnitController.CharacterUnit != null) {
                 return baseCharacter.UnitController.CharacterUnit.HitBoxSize;
@@ -403,6 +415,7 @@ namespace AnyRPG {
         }
 
         public bool IsTargetInRange(Interactable target, bool useMeleeRange, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+            //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange()");
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
             if (useMeleeRange) {
@@ -417,6 +430,8 @@ namespace AnyRPG {
                     return false;
                 }
             }
+
+            //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange(): return true");
             return true;
         }
 
@@ -1224,7 +1239,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         public void BeginAbility(BaseAbility ability) {
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return;
@@ -1412,40 +1427,40 @@ namespace AnyRPG {
 
             // check if the ability is learned yet
             if (!PerformLearnedCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): Have not learned ability!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): Have not learned ability!");
                 return false;
             }
 
             // check if the ability is on cooldown
             if (!PerformCooldownCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): ability is on cooldown!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): ability is on cooldown!");
                 return false;
             }
 
             // check if we have enough mana
             if (!PerformPowerResourceCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): do not have sufficient power resource to cast!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): do not have sufficient power resource to cast!");
                 return false;
             }
 
             if (!PerformCombatCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast ability in combat!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast ability in combat!");
                 return false;
             }
 
             if (!PerformLivenessCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
                 return false;
             }
             
             if (!PerformMovementCheck(ability)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
                 return false;
             }
 
 
             // default is true, nothing has stopped us so far
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.MyName + "): returning true");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): returning true");
             return base.CanCastAbility(ability);
         }
 

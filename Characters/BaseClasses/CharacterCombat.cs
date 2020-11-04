@@ -209,7 +209,7 @@ namespace AnyRPG {
                 && baseCharacter != null
                 && baseCharacter.UnitController != null
                 && baseCharacter.UnitController.CharacterUnit != null) {
-                if (target == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster) ||
+                if (target == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster) ||
                     (PlayerManager.MyInstance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
                     target.AbilityManager.IsPlayerControlled()) {
                     // spawn text over enemies damaged by the player and over the player itself
@@ -355,24 +355,21 @@ namespace AnyRPG {
 
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                     if (baseAbility.CanCastOnEnemy &&
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
-                        baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter.CharacterAbilityManager as IAbilityCaster) &&
+                        baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
-                        //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
-                        //if (baseAbility.MyCanCastOnEnemy) {
+                        //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         returnList.Add(baseAbility);
                     }
-                    //}
                 }
             }
             if (returnList.Count > 0) {
                 int randomIndex = Random.Range(0, returnList.Count);
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
+                //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
                 return returnList[randomIndex];
             }
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
         }
 

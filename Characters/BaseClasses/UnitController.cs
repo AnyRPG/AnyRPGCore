@@ -19,6 +19,7 @@ namespace AnyRPG {
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
         public event System.Action<string> OnNameChange = delegate { };
+        public event System.Action<string> OnTitleChange = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
@@ -321,6 +322,10 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
                 KeyBindManager.MyInstance.SendKeyBindEvents();
             }
+
+            // test - move this here to its initialized
+            NamePlateController.NamePlate.SetPlayerOwnerShip();
+
         }
 
         /// <summary>
@@ -340,8 +345,15 @@ namespace AnyRPG {
             SetAggroRange();
         }
 
+        public void ConfigurePlayer() {
+            PlayerManager.MyInstance.SetUnitController(this);
+        }
+
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
             this.unitControllerMode = unitControllerMode;
+            if (unitControllerMode == UnitControllerMode.Player) {
+                ConfigurePlayer();
+            }
         }
 
         public void ActivateUnitControllerMode() {
@@ -432,7 +444,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode) {
-            Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
+            //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
             if (characterUnit.BaseCharacter != null) {
                 characterUnit.BaseCharacter.SetUnitProfile(unitProfile);
@@ -1081,7 +1093,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): characterUnit.BaseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            Vector3 returnValue = transform.TransformPoint(myCollider.bounds.center) + (transform.forward * (characterUnit.HitBoxSize / 2f));
+            Vector3 returnValue = myCollider.bounds.center + (transform.forward * (characterUnit.HitBoxSize / 2f));
+            //Vector3 returnValue = transform.TransformPoint(myCollider.bounds.center) + (transform.forward * (characterUnit.HitBoxSize / 2f));
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + characterUnit.BaseCharacter.MyCharacterUnit.transform.TransformPoint(characterUnit.BaseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
@@ -1097,16 +1110,17 @@ namespace AnyRPG {
         }
 
         public bool IsTargetInHitBox(Interactable newTarget) {
-            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + newTarget.name + ")");
+            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + ")");
             if (newTarget == null) {
                 return false;
             }
             Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, Quaternion.identity);
+            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "); center: " + GetHitBoxCenter() + "; size: " + GetHitBoxSize());
             int i = 0;
             //Check when there is a new collider coming into contact with the box
             while (i < hitColliders.Length) {
                 //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "]");
-                if (hitColliders[i].gameObject == newTarget) {
+                if (hitColliders[i].gameObject == newTarget.gameObject) {
                     //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "] MATCH!!");
                     return true;
                 }
@@ -1202,6 +1216,9 @@ namespace AnyRPG {
         }
         public void NotifyOnNameChange(string newName) {
             OnNameChange(newName);
+        }
+        public void NotifyOnTitleChange(string newTitle) {
+            OnTitleChange(newTitle);
         }
         public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             OnResourceAmountChanged(powerResource, maxAmount, currentAmount);

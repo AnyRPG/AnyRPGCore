@@ -180,10 +180,6 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual void HandleNameChange() {
-            OnNameChange();
-        }
-
         public virtual void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval()");
             //if (namePlateUnit != null && _characterStats != null) {

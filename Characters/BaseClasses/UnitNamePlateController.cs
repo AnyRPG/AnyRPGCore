@@ -159,10 +159,6 @@ namespace AnyRPG {
             //baseCharacter.MyCharacterStats.OnHealthChanged -= HealthBarNeedsUpdate;
         }
 
-        public override void HandleNameChange() {
-            OnNameChange();
-        }
-
         public override float GetPowerResourceMaxAmount(PowerResource powerResource) {
             if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource);

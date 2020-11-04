@@ -106,9 +106,6 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventSubscriptions;
-            if (unitNamePlateController != null) {
-                unitNamePlateController.OnNameChange += SetCharacterName;
-            }
 
             eventSubscriptionsInitialized = false;
         }
@@ -273,17 +270,26 @@ namespace AnyRPG {
             InitializeLocalComponents();
 
             if (unitNamePlateController.HasHealth()) {
-                (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
                 ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
                 if ((unitNamePlateController as UnitNamePlateController).UnitController != null) {
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnNameChange += HandleNameChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnTitleChange += HandleTitleChange;
                 }
             } else {
                 MyHealthBar.SetActive(false);
             }
             unitNamePlateController.NamePlate = this;
 
-            unitNamePlateController.OnNameChange += SetCharacterName;
+        }
+
+        public void HandleTitleChange(string newTitle) {
+            SetCharacterName();
+        }
+
+        public void HandleNameChange(string newName) {
+            SetCharacterName();
         }
 
         /// <summary>
@@ -309,9 +315,9 @@ namespace AnyRPG {
         public void CheckForDisabledHealthBar() {
             //Debug.Log(namePlateUnit.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (unitNamePlateController.HasHealth() && isPlayerUnitNamePlate) {
-                Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
+                //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                    Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + "; max: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource);
+                    //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + "; max: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource);
                     if (PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource == PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
@@ -326,7 +332,7 @@ namespace AnyRPG {
         }
 
         public void DisableHealthBar() {
-            Debug.Log(MyCharacterName.text + ".NamePlateController.DisableHealthBar()");
+            //Debug.Log(MyCharacterName.text + ".NamePlateController.DisableHealthBar()");
             if (healthBar.activeSelf) {
                 healthBar.SetActive(false);
             }
@@ -454,6 +460,8 @@ namespace AnyRPG {
                 if (unitNamePlateController.HasHealth()) {
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnTitleChange -= HandleTitleChange;
                 }
                 unitNamePlateController.NamePlate = null;
             }

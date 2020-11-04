@@ -60,7 +60,7 @@ namespace AnyRPG {
 
         private void OnTriggerEnter(Collider other) {
             //Debug.Log("ProjectileScript.OnTriggerEnter(" + other.name + ")");
-            if ((target != null && other.gameObject == target) || target == null) {
+            if ((target != null && other.gameObject == target.gameObject) || target == null) {
                 if (abilityEffectInput != null && abilityEffectInput.groundTargetLocation != null) {
                     abilityEffectInput.groundTargetLocation = transform.position;
                 }

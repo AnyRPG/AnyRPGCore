@@ -640,7 +640,7 @@ namespace AnyRPG {
 
         public bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
@@ -651,7 +651,7 @@ namespace AnyRPG {
 
         public bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
-                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
@@ -663,7 +663,7 @@ namespace AnyRPG {
         public bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
             if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
-                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
@@ -675,7 +675,7 @@ namespace AnyRPG {
         public bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
             if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
-                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+                if (sourceCharacter == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
@@ -772,6 +772,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.MyName + "): NOTIFYING STATUS EFFECT UPDATE");
             OnStatusEffectAdd(statusEffectNode);
             HandleChangedNotifications(statusEffectNode.StatusEffect);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnStatusEffectAdd(statusEffectNode);
+            }
         }
 
         public void HandleChangedNotifications(StatusEffect statusEffect) {
@@ -924,7 +927,7 @@ namespace AnyRPG {
         public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxValue, int CurrentValue) {
             OnResourceAmountChanged(powerResource, maxValue, CurrentValue);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnReputationChange();
+                baseCharacter.UnitController.NotifyOnResourceAmountChanged(powerResource, maxValue, CurrentValue);
             }
 
         }
@@ -1250,10 +1253,10 @@ namespace AnyRPG {
             //Debug.Log("CharacterStats.PerformResourceRegen()");
             if (baseCharacter == null || baseCharacter.UnitController == null || isAlive == false) {
                 // if the character is not spawned, we should not be regenerating their resources.
-                //Debug.Log("CharacterStats.PerformResourceRegen(): NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.CharacterUnit == null ? "null" : baseCharacter.CharacterUnit.DisplayName));
+                //Debug.Log("CharacterStats.PerformResourceRegen(): NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.UnitController == null ? "null" : baseCharacter.UnitController.DisplayName));
                 return;
             }
-            //Debug.Log("CharacterStats.PerformResourceRegen(): NOT NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.CharacterUnit == null ? "null" : baseCharacter.CharacterUnit.DisplayName));
+            //Debug.Log("CharacterStats.PerformResourceRegen(): NOT NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.UnitController == null ? "null" : baseCharacter.UnitController.DisplayName));
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 powerResourceDictionary[powerResource].elapsedTime += Time.deltaTime;
 
@@ -1288,7 +1291,7 @@ namespace AnyRPG {
                         // this is notifying on primary resource, but for now, we don't have multiples, so its ok
                         // this will need to be fixed when we add secondary resources
                         if (usedRegenAmount != 0f) {
-                            Debug.Log("CharacterStats.PerformResourceRegen(): Trigger OnResourceAmountChanged() regen: " + usedRegenAmount);
+                            //Debug.Log("CharacterStats.PerformResourceRegen(): Trigger OnResourceAmountChanged() regen: " + usedRegenAmount);
                             NotifyOnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
                         }
                     }

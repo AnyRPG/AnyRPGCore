@@ -251,6 +251,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering fall state");
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
             if ((PlayerManager.MyInstance.PlayerController.HasMoveInput() || PlayerManager.MyInstance.PlayerController.HasTurnInput()) && PlayerManager.MyInstance.PlayerController.canMove) {
@@ -303,6 +304,7 @@ namespace AnyRPG {
             if (!MaintainingGround()) {
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
 
@@ -402,10 +404,9 @@ namespace AnyRPG {
         }
 
         void Fall_EnterState() {
-            Debug.Log("Fall_EnterState()");
+            //Debug.Log("Fall_EnterState()");
             canJump = false;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetJumping(2);
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
         }
 
         void Fall_StateUpdate() {
@@ -494,7 +495,7 @@ namespace AnyRPG {
             }
             */
             if (hitColliders.Length > 0) {
-                Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
+                //Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
                 return true;
             }
             return false;

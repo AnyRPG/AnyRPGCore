@@ -151,11 +151,6 @@ namespace AnyRPG {
                 // we should not process events if we are disabled
                 return;
             }
-            if (this == null) {
-                //Debug.Log("ProcessLocalEvent(): this is NULL");
-            } else {
-                //Debug.Log("ProcessLocalEvent(): gameobject is " + (this.gameObject == null ? "null" : this.gameObject.name));
-            }
 
             if (localEventDictionary.ContainsKey(eventName)) {
                 //Debug.Log("ProcessLocalEvent(): Responding to event: " + eventName);

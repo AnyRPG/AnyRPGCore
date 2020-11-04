@@ -126,16 +126,16 @@ namespace AnyRPG {
         private AnimationClip levitatedClip;
 
         //public string MyProfileName { get => profileName; set => profileName = value; }
-        public List<AnimationClip> MyAttackClips { get => attackClips; set => attackClips = value; }
-        public List<AnimationClip> MyCastClips { get => castClips; set => castClips = value; }
-        public List<AnimationClip> MyTakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
-        public AnimationClip MyJumpClip { get => jumpClip; set => jumpClip = value; }
-        public AnimationClip MyFallClip { get => fallClip; set => fallClip = value; }
-        public AnimationClip MyLandClip { get => landClip; set => landClip = value; }
-        public AnimationClip MyIdleClip { get => idleClip; set => idleClip = value; }
-        public AnimationClip MyCombatIdleClip { get => combatIdleClip; set => combatIdleClip = value; }
-        public AnimationClip MyTurnLeftClip { get => turnLeftClip; set => turnLeftClip = value; }
-        public AnimationClip MyTurnRightClip { get => turnRightClip; set => turnRightClip = value; }
+        public List<AnimationClip> AttackClips { get => attackClips; set => attackClips = value; }
+        public List<AnimationClip> CastClips { get => castClips; set => castClips = value; }
+        public List<AnimationClip> TakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
+        public AnimationClip JumpClip { get => jumpClip; set => jumpClip = value; }
+        public AnimationClip FallClip { get => fallClip; set => fallClip = value; }
+        public AnimationClip LandClip { get => landClip; set => landClip = value; }
+        public AnimationClip IdleClip { get => idleClip; set => idleClip = value; }
+        public AnimationClip CombatIdleClip { get => combatIdleClip; set => combatIdleClip = value; }
+        public AnimationClip TurnLeftClip { get => turnLeftClip; set => turnLeftClip = value; }
+        public AnimationClip TurnRightClip { get => turnRightClip; set => turnRightClip = value; }
         public AnimationClip MyStrafeLeftClip { get => strafeLeftClip; set => strafeLeftClip = value; }
         public AnimationClip MyStrafeRightClip { get => strafeRightClip; set => strafeRightClip = value; }
         public AnimationClip MyStrafeForwardLeftClip { get => strafeForwardLeftClip; set => strafeForwardLeftClip = value; }

@@ -350,7 +350,7 @@ namespace AnyRPG {
                 characterName = newName;
                 OnNameChange(newName);
                 if (unitController != null) {
-                    unitController.NamePlateController.HandleNameChange();
+                    UnitController.NotifyOnNameChange(newName);
                 }
             }
         }
@@ -370,7 +370,7 @@ namespace AnyRPG {
                 title = newTitle;
                 OnTitleChange(newTitle);
                 if (unitController != null) {
-                    unitController.NamePlateController.HandleNameChange();
+                    unitController.NotifyOnTitleChange(newTitle);
                 }
             }
         }

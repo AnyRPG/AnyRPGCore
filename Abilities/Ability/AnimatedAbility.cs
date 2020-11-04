@@ -14,6 +14,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool isAutoAttack = false;
 
+        [Tooltip("If true, a random animation from the unit attack animations will be used")]
+        [SerializeField]
+        private bool useUnitAttackAnimations = true;
+
         [Tooltip("This option is only valid if this is not an auto attack ability.  If true, it will use the current auto-attack animations so it looks good with any weapon.")]
         [SerializeField]
         private bool useAutoAttackAnimations = false;
@@ -46,7 +50,9 @@ namespace AnyRPG {
 
         public List<AnimationClip> GetAnimationClips(IAbilityCaster sourceCharacter) {
             List<AnimationClip> animationClips = new List<AnimationClip>();
-            if (useAutoAttackAnimations == true) {
+            if (useUnitAttackAnimations == true) {
+                animationClips = sourceCharacter.AbilityManager.GetUnitAttackAnimations();
+            } else if (useAutoAttackAnimations == true) {
                 animationClips = sourceCharacter.AbilityManager.GetDefaultAttackAnimations();
             } else {
                 animationClips = AnimationClips;
@@ -123,12 +129,12 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
-            //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ")");
+            //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + ")");
             if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
-            
-            //Debug.Log("AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + source.MyCharacterName + ") returning base");
+
+            //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + "): returning base");
             return base.CanUseOn(target, source, performCooldownChecks);
         }
 

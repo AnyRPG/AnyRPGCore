@@ -339,6 +339,10 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return false;
             }
+            if (target == null) {
+                Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
+                return false;
+            }
             //if (IsTargetInHitBox(target)) {
             if (target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");

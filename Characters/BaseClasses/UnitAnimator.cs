@@ -414,16 +414,16 @@ namespace AnyRPG {
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJumpClip.name)) {
-                if (currentAnimationProfile.MyJumpClip != null) {
-                    if (overrideController[systemAnimations.MyJumpClip.name] != currentAnimationProfile.MyJumpClip) {
-                        overrideController[systemAnimations.MyJumpClip.name] = currentAnimationProfile.MyJumpClip;
-                        currentAnimations.MyJumpClip = currentAnimationProfile.MyJumpClip;
+            if (overrideControllerClipList.Contains(systemAnimations.JumpClip.name)) {
+                if (currentAnimationProfile.JumpClip != null) {
+                    if (overrideController[systemAnimations.JumpClip.name] != currentAnimationProfile.JumpClip) {
+                        overrideController[systemAnimations.JumpClip.name] = currentAnimationProfile.JumpClip;
+                        currentAnimations.JumpClip = currentAnimationProfile.JumpClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJumpClip != null && overrideController[systemAnimations.MyJumpClip.name] != defaultAnimationProfile.MyJumpClip) {
-                        overrideController[systemAnimations.MyJumpClip.name] = defaultAnimationProfile.MyJumpClip;
-                        currentAnimations.MyJumpClip = defaultAnimationProfile.MyJumpClip;
+                    if (defaultAnimationProfile.JumpClip != null && overrideController[systemAnimations.JumpClip.name] != defaultAnimationProfile.JumpClip) {
+                        overrideController[systemAnimations.JumpClip.name] = defaultAnimationProfile.JumpClip;
+                        currentAnimations.JumpClip = defaultAnimationProfile.JumpClip;
                     }
                 }
             }
@@ -442,46 +442,46 @@ namespace AnyRPG {
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyIdleClip.name)) {
-                if (currentAnimationProfile.MyIdleClip != null) {
-                    if (overrideController[systemAnimations.MyIdleClip.name] != currentAnimationProfile.MyIdleClip) {
-                        overrideController[systemAnimations.MyIdleClip.name] = currentAnimationProfile.MyIdleClip;
-                        currentAnimations.MyIdleClip = currentAnimationProfile.MyIdleClip;
+            if (overrideControllerClipList.Contains(systemAnimations.IdleClip.name)) {
+                if (currentAnimationProfile.IdleClip != null) {
+                    if (overrideController[systemAnimations.IdleClip.name] != currentAnimationProfile.IdleClip) {
+                        overrideController[systemAnimations.IdleClip.name] = currentAnimationProfile.IdleClip;
+                        currentAnimations.IdleClip = currentAnimationProfile.IdleClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyIdleClip != null && overrideController[systemAnimations.MyIdleClip.name] != defaultAnimationProfile.MyIdleClip) {
-                        overrideController[systemAnimations.MyIdleClip.name] = defaultAnimationProfile.MyIdleClip;
-                        currentAnimations.MyIdleClip = defaultAnimationProfile.MyIdleClip;
+                    if (defaultAnimationProfile.IdleClip != null && overrideController[systemAnimations.IdleClip.name] != defaultAnimationProfile.IdleClip) {
+                        overrideController[systemAnimations.IdleClip.name] = defaultAnimationProfile.IdleClip;
+                        currentAnimations.IdleClip = defaultAnimationProfile.IdleClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatIdleClip.name)) {
-                if (currentAnimationProfile.MyCombatIdleClip != null) {
+            if (overrideControllerClipList.Contains(systemAnimations.CombatIdleClip.name)) {
+                if (currentAnimationProfile.CombatIdleClip != null) {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is not null");
-                    if (overrideController[systemAnimations.MyCombatIdleClip.name] != currentAnimationProfile.MyCombatIdleClip) {
-                        overrideController[systemAnimations.MyCombatIdleClip.name] = currentAnimationProfile.MyCombatIdleClip;
-                        currentAnimations.MyCombatIdleClip = currentAnimationProfile.MyCombatIdleClip;
+                    if (overrideController[systemAnimations.CombatIdleClip.name] != currentAnimationProfile.CombatIdleClip) {
+                        overrideController[systemAnimations.CombatIdleClip.name] = currentAnimationProfile.CombatIdleClip;
+                        currentAnimations.CombatIdleClip = currentAnimationProfile.CombatIdleClip;
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is null");
-                    if (defaultAnimationProfile.MyCombatIdleClip != null && overrideController[systemAnimations.MyCombatIdleClip.name] != defaultAnimationProfile.MyCombatIdleClip) {
-                        overrideController[systemAnimations.MyCombatIdleClip.name] = defaultAnimationProfile.MyCombatIdleClip;
-                        currentAnimations.MyCombatIdleClip = defaultAnimationProfile.MyCombatIdleClip;
+                    if (defaultAnimationProfile.CombatIdleClip != null && overrideController[systemAnimations.CombatIdleClip.name] != defaultAnimationProfile.CombatIdleClip) {
+                        overrideController[systemAnimations.CombatIdleClip.name] = defaultAnimationProfile.CombatIdleClip;
+                        currentAnimations.CombatIdleClip = defaultAnimationProfile.CombatIdleClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyLandClip.name)) {
-                if (currentAnimationProfile.MyLandClip != null) {
-                    if (overrideController[systemAnimations.MyLandClip.name] != currentAnimationProfile.MyLandClip) {
-                        overrideController[systemAnimations.MyLandClip.name] = currentAnimationProfile.MyLandClip;
-                        currentAnimations.MyLandClip = currentAnimationProfile.MyLandClip;
+            if (overrideControllerClipList.Contains(systemAnimations.LandClip.name)) {
+                if (currentAnimationProfile.LandClip != null) {
+                    if (overrideController[systemAnimations.LandClip.name] != currentAnimationProfile.LandClip) {
+                        overrideController[systemAnimations.LandClip.name] = currentAnimationProfile.LandClip;
+                        currentAnimations.LandClip = currentAnimationProfile.LandClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyLandClip != null && overrideController[systemAnimations.MyLandClip.name] != defaultAnimationProfile.MyLandClip) {
-                        overrideController[systemAnimations.MyLandClip.name] = defaultAnimationProfile.MyLandClip;
-                        currentAnimations.MyLandClip = defaultAnimationProfile.MyLandClip;
+                    if (defaultAnimationProfile.LandClip != null && overrideController[systemAnimations.LandClip.name] != defaultAnimationProfile.LandClip) {
+                        overrideController[systemAnimations.LandClip.name] = defaultAnimationProfile.LandClip;
+                        currentAnimations.LandClip = defaultAnimationProfile.LandClip;
                     }
                 }
             }
@@ -500,16 +500,16 @@ namespace AnyRPG {
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyFallClip.name)) {
-                if (currentAnimationProfile.MyFallClip != null) {
-                    if (overrideController[systemAnimations.MyFallClip.name] != currentAnimationProfile.MyFallClip) {
-                        overrideController[systemAnimations.MyFallClip.name] = currentAnimationProfile.MyFallClip;
-                        currentAnimations.MyFallClip = currentAnimationProfile.MyFallClip;
+            if (overrideControllerClipList.Contains(systemAnimations.FallClip.name)) {
+                if (currentAnimationProfile.FallClip != null) {
+                    if (overrideController[systemAnimations.FallClip.name] != currentAnimationProfile.FallClip) {
+                        overrideController[systemAnimations.FallClip.name] = currentAnimationProfile.FallClip;
+                        currentAnimations.FallClip = currentAnimationProfile.FallClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyFallClip != null && overrideController[systemAnimations.MyFallClip.name] != defaultAnimationProfile.MyFallClip) {
-                        overrideController[systemAnimations.MyFallClip.name] = defaultAnimationProfile.MyFallClip;
-                        currentAnimations.MyFallClip = defaultAnimationProfile.MyFallClip;
+                    if (defaultAnimationProfile.FallClip != null && overrideController[systemAnimations.FallClip.name] != defaultAnimationProfile.FallClip) {
+                        overrideController[systemAnimations.FallClip.name] = defaultAnimationProfile.FallClip;
+                        currentAnimations.FallClip = defaultAnimationProfile.FallClip;
                     }
                 }
             }
@@ -1070,7 +1070,7 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null) {
                 // override the default attack animation
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyAttackClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AttackClips[0].name] = animationClip;
             }
             float animationLength = animationClip.length;
 
@@ -1115,7 +1115,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() Found clip from overrideController: " + tmpAnimationClip.name);
                 }
 
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyCastClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.CastClips[0].name] = animationClip;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyCastClips[0].name].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);

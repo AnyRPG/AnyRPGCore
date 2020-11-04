@@ -84,19 +84,22 @@ namespace AnyRPG {
         [SerializeField]
         private bool preventAutoDespawn = false;
 
-        [Header("Abilities")]
 
+        // disabled for now.  This should be an emergent property of the learned abilities
+        /*
         [Tooltip("When no weapons are equippped to learn auto-attack abilities from, this auto-attack ability will be used")]
         [SerializeField]
         private string defaultAutoAttackAbilityName = string.Empty;
+        */
 
-        private BaseAbility defaultAutoAttackAbility = null;
+        [Header("Abilities")]
 
         [Tooltip("Abilities this unit will know")]
         [SerializeField]
         private List<string> learnedAbilityNames = new List<string>();
 
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
+        private BaseAbility defaultAutoAttackAbility = null;
 
         [Header("Capabilities")]
 
@@ -246,17 +249,8 @@ namespace AnyRPG {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
 
-                    // set unit controller before setting profile so baseCharacter references are properly linked
-                    if (unitControllerMode == UnitControllerMode.Player) {
-                        PlayerManager.MyInstance.SetUnitController(unitController);
-                    }
-
+                    // test - set unitprofile first so we don't overwrite players baseCharacter settings
                     unitController.SetUnitProfile(this, unitControllerMode);
-                    
-                    // nameplate doesn't exist until profile is set so this has to be done after
-                    if (unitControllerMode == UnitControllerMode.Player) {
-                        unitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
-                    }
                 }
             }
 
@@ -282,11 +276,10 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
+            /*
             defaultAutoAttackAbility = null;
             if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
                 defaultAutoAttackAbility = SystemAbilityManager.MyInstance.GetResource(defaultAutoAttackAbilityName);
-            }/* else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + defaultAutoAttackAbilityName + " while inititalizing " + MyName + ".  CHECK INSPECTOR");
             }*/
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
@@ -303,6 +296,9 @@ namespace AnyRPG {
                 foreach (string baseAbilityName in learnedAbilityNames) {
                     BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
+                        if ((baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true && defaultAutoAttackAbility == null) {
+                            defaultAutoAttackAbility = baseAbility;
+                        }
                         learnedAbilities.Add(baseAbility);
                     } else {
                         Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");

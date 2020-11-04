@@ -253,7 +253,7 @@ namespace AnyRPG {
         protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         public AnimationClip CastingAnimationClip {
-            get => (animationProfile != null && animationProfile.MyAttackClips != null && animationProfile.MyAttackClips.Count > 0 ? animationProfile.MyAttackClips[0] : null);
+            get => (animationProfile != null && animationProfile.AttackClips != null && animationProfile.AttackClips.Count > 0 ? animationProfile.AttackClips[0] : null);
         }
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
@@ -296,7 +296,7 @@ namespace AnyRPG {
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.MyAttackClips : null); }
+        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.AttackClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }
         public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
@@ -419,7 +419,7 @@ namespace AnyRPG {
         public bool Use() {
             //Debug.Log("BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
-            if (CanCast(PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager as IAbilityCaster)) {
+            if (CanCast(PlayerManager.MyInstance.MyCharacter)) {
                 PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(this);
                 return true;
             }
@@ -558,10 +558,11 @@ namespace AnyRPG {
             // since the target is not ourself, and it is valid, we should perform a range check
 
             if (!sourceCharacter.AbilityManager.IsTargetInAbilityRange(this, target, abilityEffectContext)) {
+                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning false: NOT IN RANGE");
                 return false;
             }
 
-            //Debug.Log(MyName + ".BaseAbility.CanUseOn(): returning true");
+            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning true");
             return true;
         }
 
