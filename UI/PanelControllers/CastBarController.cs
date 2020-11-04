@@ -73,11 +73,9 @@ namespace AnyRPG {
         public void ClearTarget() {
             //Debug.Log(gameObject.name + ".CastBarController.ClearTarget()");
             if (unitNamePlateController != null
-                && unitNamePlateController.UnitController != null
-                && unitNamePlateController.UnitController.BaseCharacter != null
-                && unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager != null) {
-                unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager.OnCastTimeChanged -= OnCastTimeChanged;
-                unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager.OnCastStop -= OnCastStop;
+                && unitNamePlateController.UnitController != null) {
+                unitNamePlateController.UnitController.OnCastTimeChanged -= OnCastTimeChanged;
+                unitNamePlateController.UnitController.OnCastStop -= OnCastStop;
             }
             unitNamePlateController = null;
             targetInitialized = false;
@@ -88,11 +86,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CastBarController.InitializeCallbacks()");
 
             if (unitNamePlateController != null
-                && unitNamePlateController.UnitController != null
-                && unitNamePlateController.UnitController.BaseCharacter != null
-                && unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager != null) {
-                unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager.OnCastTimeChanged += OnCastTimeChanged;
-                unitNamePlateController.UnitController.BaseCharacter.CharacterAbilityManager.OnCastStop += OnCastStop;
+                && unitNamePlateController.UnitController != null) {
+                unitNamePlateController.UnitController.OnCastTimeChanged += OnCastTimeChanged;
+                unitNamePlateController.UnitController.OnCastStop += OnCastStop;
             }
 
         }

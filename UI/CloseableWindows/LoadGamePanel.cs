@@ -161,7 +161,7 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
 
             if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
-                BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter;
+                BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
                     //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
@@ -170,10 +170,13 @@ namespace AnyRPG {
             }
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            // should not be necessary anymore - handled in unitcontroller
+            //CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            /*
             foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
                 childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
             }
+            */
 
             // new code for weapons
 

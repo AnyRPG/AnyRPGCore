@@ -28,14 +28,14 @@ namespace AnyRPG {
         }
 
         public override void ProcessInit() {
-            Debug.Log(gameObject.name + ".NamePlateUnit.ProcessInit()");
+            //Debug.Log(gameObject.name + ".NamePlateUnit.ProcessInit()");
             base.ProcessInit();
             InitializeNamePlateController();
         }
 
 
         public void InitializeNamePlateController() {
-            Debug.Log(gameObject.name + "UnitController.InitializeNamePlateController()");
+            //Debug.Log(gameObject.name + "UnitController.InitializeNamePlateController()");
             if (namePlateReady == true) {
                 return;
             }
@@ -55,8 +55,8 @@ namespace AnyRPG {
 
         public void UpdateNamePlateImage() {
 
-            Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
-            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.MyCharacter.CharacterUnit == null) {
+            //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
+            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.ActiveUnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -161,7 +161,7 @@ namespace AnyRPG {
 
         protected override void OnDestroy() {
             base.OnDestroy();
-            Debug.Log(gameObject.name + ".NamePlateUnit.OnDestroy()");
+            //Debug.Log(gameObject.name + ".NamePlateUnit.OnDestroy()");
             if (NamePlateController != null) {
                 NamePlateController.Cleanup();
             }

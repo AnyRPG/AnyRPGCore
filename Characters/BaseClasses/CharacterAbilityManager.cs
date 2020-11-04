@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         public override GameObject UnitGameObject {
             get {
-                if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
+                if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
                     return baseCharacter.UnitController.gameObject;
                 }
                 return null;
@@ -286,8 +286,8 @@ namespace AnyRPG {
         }
 
         public override float GetMeleeRange() {
-            if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
-                return baseCharacter.CharacterUnit.HitBoxSize;
+            if (baseCharacter != null && baseCharacter.UnitController.CharacterUnit != null) {
+                return baseCharacter.UnitController.CharacterUnit.HitBoxSize;
             }
             return base.GetMeleeRange();
         }
@@ -312,8 +312,8 @@ namespace AnyRPG {
 
         public override void GenerateAgro(CharacterUnit targetCharacterUnit, int usedAgroValue) {
             base.GenerateAgro(targetCharacterUnit, usedAgroValue);
-            if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
-                AddToAggroTable(baseCharacter.CharacterUnit, usedAgroValue);
+            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
+                AddToAggroTable(baseCharacter.UnitController.CharacterUnit, usedAgroValue);
                 //AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
                 //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
                 targetCharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable.LockAgro();
@@ -481,7 +481,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (baseCharacter.CharacterCombat.MyAutoAttackActive == false) {
+            if (baseCharacter.CharacterCombat.AutoAttackActive == false) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
                 baseCharacter.CharacterCombat.ActivateAutoAttack();
             }
@@ -560,7 +560,7 @@ namespace AnyRPG {
                 targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (targetCharacterUnit != null) {
                     bool targetIsSelf = false;
-                    if (baseCharacter != null && baseCharacter.CharacterUnit != null) {
+                    if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
                         targetIsSelf = (target == baseCharacter.UnitController.gameObject);
                     }
                     if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
@@ -580,7 +580,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (!abilityEffect.CanCastOnSelf && baseCharacter != null && baseCharacter.CharacterUnit != null && target == baseCharacter.UnitController.gameObject) {
+            if (!abilityEffect.CanCastOnSelf && baseCharacter != null && baseCharacter.UnitController != null && target == baseCharacter.UnitController.gameObject) {
                 //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
                 target = null;
             }
@@ -644,7 +644,7 @@ namespace AnyRPG {
 
             if (newItem != null) {
                 if (newItem.OnEquipAbility != null) {
-                    if (baseCharacter.CharacterUnit != null) {
+                    if (baseCharacter.UnitController != null) {
                         BeginAbility(newItem.OnEquipAbility);
                     }
                 }
@@ -1119,6 +1119,9 @@ namespace AnyRPG {
                     // call this first because it updates the cast bar
                     //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
                     OnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                    if (baseCharacter.UnitController != null) {
+                        baseCharacter.UnitController.NotifyOnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                    }
 
                     // now call the ability on casttime changed (really only here for channeled stuff to do damage)
                     nextTickPercent = ability.OnCastTimeChanged(currentCastPercent, nextTickPercent, baseCharacter, target, abilityEffectContext);
@@ -1133,11 +1136,18 @@ namespace AnyRPG {
             if (canCast) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
                 if (!ability.CanSimultaneousCast) {
-                    OnCastStop(BaseCharacter as BaseCharacter);
+                    NotifyOnCastStop();
                     BaseCharacter.UnitController.UnitAnimator.SetCasting(false);
                 }
                 PerformAbility(ability, target, abilityEffectContext);
 
+            }
+        }
+
+        public void NotifyOnCastStop() {
+            OnCastStop(baseCharacter);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnCastStop(baseCharacter);
             }
         }
 
@@ -1250,9 +1260,9 @@ namespace AnyRPG {
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
             // handle weapon on hit effects
-            if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.MyOnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.MyOnHitEffect.DisplayName != attackEffect.DisplayName) {
+            if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.OnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.OnHitEffect.DisplayName != attackEffect.DisplayName) {
                 List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                onHitEffectList.Add(baseCharacter.CharacterCombat.MyOnHitEffect);
+                onHitEffectList.Add(baseCharacter.CharacterCombat.OnHitEffect);
                 attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectOutput, onHitEffectList);
             } else {
                 //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");
@@ -1576,7 +1586,7 @@ namespace AnyRPG {
             if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
                 BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
             }
-            OnCastStop(BaseCharacter as BaseCharacter);
+            NotifyOnCastStop();
         }
 
         public void ProcessLevelUnload() {

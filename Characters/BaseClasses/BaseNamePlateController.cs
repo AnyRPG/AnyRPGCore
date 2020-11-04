@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         public virtual event System.Action OnInitializeNamePlate = delegate { };
         public virtual event Action<NamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        public virtual event Action<int, int> ResourceBarNeedsUpdate = delegate { };
+        //public virtual event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public virtual event Action OnNameChange = delegate { };
 
         protected NamePlateController namePlate;
@@ -123,7 +123,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.Init()");
+            //Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.Init()");
             InitializeNamePlate();
         }
 
@@ -134,7 +134,7 @@ namespace AnyRPG {
         }
 
         public virtual void InitializeNamePlate() {
-            Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
+            //Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
             if (namePlateUnit.NamePlateProps.SuppressNamePlate == true) {
                 return;
             }

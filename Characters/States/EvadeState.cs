@@ -14,7 +14,7 @@ namespace AnyRPG {
             this.baseController.ClearTarget();
             this.baseController.SetDestination(baseController.LeashPosition);
             this.baseController.UnitMotor.MovementSpeed = baseController.EvadeRunSpeed;
-            this.baseController.BaseCharacter.CharacterCombat.MyAggroTable.ClearAndBroadcast();
+            this.baseController.CharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable.ClearAndBroadcast();
         }
 
         public void Exit() {

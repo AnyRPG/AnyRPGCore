@@ -135,15 +135,7 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite defaultFactionIcon;
 
-        [Header("ANIMATION")]
-
-        // this should contain references to all the default animations that are on the default animation controller for mapping overrides
-        [SerializeField]
-        private AnimationProfile systemAnimationProfile;
-
-
         [Header("SYSTEM BAR")]
-
 
         [SerializeField]
         private Sprite systemBarMainMenu;
@@ -159,6 +151,12 @@ namespace AnyRPG {
 
         [SerializeField]
         private Sprite systemBarMap;
+
+        [Header("ANIMATION")]
+
+        [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
+        [SerializeField]
+        private AnimationProfile systemAnimationProfile;
 
         [Header("CHARACTER ANIMATION CONFIGURATION")]
 

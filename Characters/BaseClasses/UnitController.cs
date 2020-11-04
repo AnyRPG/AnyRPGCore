@@ -14,6 +14,16 @@ namespace AnyRPG {
         public event System.Action OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
         public event System.Action OnModelReady = delegate { };
+        public event System.Action OnReputationChange = delegate { };
+        public event System.Action OnReviveComplete = delegate { };
+        public event System.Action<int> OnLevelChanged = delegate { };
+        public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+        public event System.Action<string> OnNameChange = delegate { };
+        public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
+        public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
+        public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
+        public event System.Action<BaseCharacter> OnCastStop = delegate { };
+
 
         private INamePlateTarget namePlateTarget = null;
 
@@ -119,13 +129,13 @@ namespace AnyRPG {
         public float LeashDistance { get => leashDistance; }
         public PatrolController PatrolController { get => patrolController; }
         public Interactable Target { get => target; }
-        public BaseCharacter BaseCharacter { get => baseCharacter; }
+        //public BaseCharacter BaseCharacter { get => characterUnit.BaseCharacter; }
         public float MovementSpeed {
             get {
                 if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
                     return MasterUnit.UnitController.MovementSpeed;
                 }
-                return (walking == false ? baseCharacter.CharacterStats.RunSpeed : baseCharacter.CharacterStats.WalkSpeed);
+                return (walking == false ? characterUnit.BaseCharacter.CharacterStats.RunSpeed : characterUnit.BaseCharacter.CharacterStats.WalkSpeed);
             }
         }
         public bool UnderControl { get => underControl; set => underControl = value; }
@@ -143,7 +153,7 @@ namespace AnyRPG {
         public float ApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
         public float AggroRadius {
             get {
-                if (baseCharacter != null && unitProfile != null) {
+                if (characterUnit.BaseCharacter != null && unitProfile != null) {
                     return unitProfile.AggroRadius;
                 }
                 return 20f;
@@ -154,7 +164,7 @@ namespace AnyRPG {
         }
         public CombatStrategy MyCombatStrategy {
             get {
-                if (baseCharacter != null && unitProfile != null) {
+                if (characterUnit.BaseCharacter != null && unitProfile != null) {
                     return unitProfile.CombatStrategy;
                 }
                 return null;
@@ -173,7 +183,7 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile;
                 }
-                if (baseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
                 }
                 return null;
@@ -189,7 +199,7 @@ namespace AnyRPG {
                 if (LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile != null) {
                     return LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile;
                 }
-                if (baseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
                 }
                 return null;
@@ -223,15 +233,12 @@ namespace AnyRPG {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
                 int finalmask = (1 << defaultLayer);
                 if (!IsInLayerMask(gameObject.layer, finalmask)) {
-                    //if (gameObject.layer != defaultLayer) {
                     gameObject.layer = defaultLayer;
-                    Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
+                    //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
                 }
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
-                    //if (gameObject.layer != defaultLayer) {
-                    //unitModel.layer = defaultLayer;
                     UIManager.MyInstance.SetLayerRecursive(unitModel, defaultLayer);
-                    Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
+                    //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
                 }
             }
         }
@@ -241,7 +248,7 @@ namespace AnyRPG {
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
-            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
             DisableAgent();
@@ -256,22 +263,22 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// set this unit to be the pet of baseCharacter
+        /// set this unit to be the pet of characterUnit.BaseCharacter
         /// </summary>
-        /// <param name="baseCharacter"></param>
+        /// <param name="characterUnit.BaseCharacter"></param>
         public void SetPetMode(BaseCharacter masterBaseCharacter) {
-            Debug.Log(gameObject.name + ".UnitController.SetPetMode()");
+            //Debug.Log(gameObject.name + ".UnitController.SetPetMode()");
             SetUnitControllerMode(UnitControllerMode.Pet);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
 
             if (masterBaseCharacter != null) {
-                baseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
-                baseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
+                characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
+                characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
             }
         }
 
         private void EnablePetMode() {
-            Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
+            //Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
             ChangeState(new IdleState());
         }
 
@@ -279,7 +286,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            Debug.Log(gameObject.name + ".UnitController.SetMountMode()");
+            //Debug.Log(gameObject.name + ".UnitController.SetMountMode()");
             SetUnitControllerMode(UnitControllerMode.Mount);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
             Collider anyCollider = GetComponent<Collider>();
@@ -295,27 +302,24 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
             unitComponentController.AggroRangeController.DisableAggro();
             unitComponentController.InteractableRange.gameObject.SetActive(false);
             DisableAgent();
 
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                // this code is a quick way to set speed on third party controllers when the player spawns
-                if (BaseCharacter.CharacterStats != null) {
-                    EventParamProperties eventParam = new EventParamProperties();
-                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.RunSpeed;
-                    SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
+            // this code is a quick way to set speed on third party controllers when the player spawns
+            if (characterUnit.BaseCharacter.CharacterStats != null) {
+                EventParamProperties eventParam = new EventParamProperties();
+                eventParam.simpleParams.FloatParam = characterUnit.BaseCharacter.CharacterStats.RunSpeed;
+                SystemEventManager.TriggerEvent("OnSetRunSpeed", eventParam);
 
-                    eventParam.simpleParams.FloatParam = BaseCharacter.CharacterStats.SprintSpeed;
-                    SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
+                eventParam.simpleParams.FloatParam = characterUnit.BaseCharacter.CharacterStats.SprintSpeed;
+                SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
-                }
-                if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
-                    KeyBindManager.MyInstance.SendKeyBindEvents();
-                }
-
+            }
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
+                KeyBindManager.MyInstance.SendKeyBindEvents();
             }
         }
 
@@ -328,7 +332,7 @@ namespace AnyRPG {
             useAgent = true;
             EnableAgent();
 
-            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+            if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.MySpawnDead == true) {
                 ChangeState(new DeathState());
             } else {
                 ChangeState(new IdleState());
@@ -355,7 +359,7 @@ namespace AnyRPG {
         }
 
         protected override void Awake() {
-            Debug.Log(gameObject.name + ".UnitController.Awake()");
+            //Debug.Log(gameObject.name + ".UnitController.Awake()");
             base.Awake();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
@@ -366,9 +370,9 @@ namespace AnyRPG {
 
             // allow the base character to initialize.  it can possibly contain a unit profile
             // if it does, attempt to spawn the character model referenced in it
-            baseCharacter.Init();
-            if (baseCharacter.UnitProfile != null) {
-                SetUnitProfile(baseCharacter.UnitProfile, UnitControllerMode.AI);
+            characterUnit.BaseCharacter.Init();
+            if (characterUnit.BaseCharacter.UnitProfile != null) {
+                SetUnitProfile(characterUnit.BaseCharacter.UnitProfile, UnitControllerMode.AI);
             }
 
             // setUnitProfile will have spawned a model if it contained one.  If it did not,
@@ -383,7 +387,7 @@ namespace AnyRPG {
 
         protected override void Start() {
             base.Start();
-            Debug.Log(gameObject.name + ".UnitController.Start()");
+            //Debug.Log(gameObject.name + ".UnitController.Start()");
 
             patrolController.Init();
 
@@ -413,13 +417,14 @@ namespace AnyRPG {
             rigidBody = GetComponent<Rigidbody>();
 
             // if base character exists, create a character unit and link them
-            baseCharacter = GetComponent<BaseCharacter>();
+            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
             if (baseCharacter != null) {
                 characterUnit = new CharacterUnit(this);
                 characterUnit.SetBaseCharacter(baseCharacter);
-                baseCharacter.CharacterUnit = characterUnit;
+                baseCharacter.SetUnitController(this);
                 AddInteractable(characterUnit);
             }
+
         }
 
         /// <summary>
@@ -429,8 +434,8 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode) {
             Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
-            if (baseCharacter != null) {
-                baseCharacter.SetUnitProfile(unitProfile);
+            if (characterUnit.BaseCharacter != null) {
+                characterUnit.BaseCharacter.SetUnitProfile(unitProfile);
             }
             SetUnitControllerMode(unitControllerMode);
 
@@ -559,7 +564,7 @@ namespace AnyRPG {
             if (mounted == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
 
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in characterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
                     if (statusEffectNode.StatusEffect is MountEffect) {
                         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
@@ -570,9 +575,7 @@ namespace AnyRPG {
             }
 
             // update apparent velocity so any spellcast that caused the cancel mount is not interrupted
-            if (baseCharacter != null) {
-                baseCharacter.UnitController.LastPosition = transform.position;
-            }
+            LastPosition = transform.position;
         }
 
 
@@ -580,7 +583,7 @@ namespace AnyRPG {
         public void FollowTarget(Interactable target, float minAttackRange = -1f) {
             //Debug.Log(gameObject.name + ": AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
             if (!(currentState is DeathState)) {
-                BaseCharacter.UnitController.UnitMotor.FollowTarget(target, minAttackRange);
+                UnitMotor.FollowTarget(target, minAttackRange);
             }
         }
 
@@ -601,7 +604,7 @@ namespace AnyRPG {
 
         protected override void Update() {
             base.Update();
-            if (baseCharacter.CharacterStats.IsAlive == false) {
+            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
                 // can't handle movement when dead
                 return;
             }
@@ -611,7 +614,7 @@ namespace AnyRPG {
             }
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
-                baseCharacter.CharacterAbilityManager.HandleManualMovement();
+                characterUnit.BaseCharacter.CharacterAbilityManager.HandleManualMovement();
             }
             HandleMovementAudio();
         }
@@ -636,7 +639,7 @@ namespace AnyRPG {
         public void SetAggroRange() {
             if (unitComponentController.AggroRangeController != null) {
                 //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
-                unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, baseCharacter);
+                unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, characterUnit.BaseCharacter);
                 unitComponentController.AggroRangeController.StartEnableAggro();
             }
         }
@@ -666,8 +669,8 @@ namespace AnyRPG {
                 masterUnit.UnitController.OnManualMovement += OnMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
-                BaseCharacter.CharacterCombat.MyAggroTable.ClearTable();
-                baseCharacter.CharacterFactionManager.NotifyOnReputationChange();
+                characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.ClearTable();
+                characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
                 SetMasterRelativeDestination();
             } else {
                 //Debug.Log("Can only be under the control of one master at a time");
@@ -704,7 +707,7 @@ namespace AnyRPG {
             // stand to the right of master by one meter
             Vector3 masterRelativeDestination = masterUnit.UnitController.gameObject.transform.position + masterUnit.UnitController.gameObject.transform.TransformDirection(Vector3.right);
             float usedMaxDistance = 0f;
-            if (baseCharacter.CharacterCombat.GetInCombat() == true) {
+            if (characterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
                 usedMaxDistance = maxCombatDistanceFromMasterOnMove;
             } else {
                 usedMaxDistance = maxDistanceFromMasterOnMove;
@@ -725,28 +728,28 @@ namespace AnyRPG {
         }
 
         public void OnMasterDropCombat() {
-            baseCharacter.CharacterCombat.TryToDropCombat();
+            characterUnit.BaseCharacter.CharacterCombat.TryToDropCombat();
         }
 
         public void UpdateTarget() {
             //Debug.Log(gameObject.name + ": UpdateTarget()");
-            if (baseCharacter == null) {
-                //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter is null!!!");
+            if (characterUnit.BaseCharacter == null) {
+                //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter is null!!!");
                 return;
             }
-            if (baseCharacter.CharacterCombat == null) {
-                //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat is null. (ok for non combat units)");
+            if (characterUnit.BaseCharacter.CharacterCombat == null) {
+                //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter.MyCharacterCombat is null. (ok for non combat units)");
                 return;
             }
-            if (baseCharacter.CharacterCombat.MyAggroTable == null) {
-                //Debug.Log(gameObject.name + ": UpdateTarget(): baseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
+            if (characterUnit.BaseCharacter.CharacterCombat.MyAggroTable == null) {
+                //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
                 return;
             }
             AggroNode topNode;
             if (underControl) {
                 topNode = masterUnit.CharacterCombat.MyAggroTable.MyTopAgroNode;
             } else {
-                topNode = baseCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
+                topNode = characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
             }
 
             if (topNode == null) {
@@ -754,8 +757,8 @@ namespace AnyRPG {
                 if (Target != null) {
                     ClearTarget();
                 }
-                if (baseCharacter.CharacterCombat.GetInCombat() == true) {
-                    baseCharacter.CharacterCombat.TryToDropCombat();
+                if (characterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                    characterUnit.BaseCharacter.CharacterCombat.TryToDropCombat();
                 }
                 return;
             }
@@ -781,7 +784,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 CommonMovementNotifier();
-                return BaseCharacter.UnitController.UnitMotor.MoveToPoint(destination);
+                return UnitMotor.MoveToPoint(destination);
             } else {
                 //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
             }
@@ -796,16 +799,16 @@ namespace AnyRPG {
             target = null;
             // testing - comment out below.  is there any time we ever expand or reduce it?  if not, then below line is not necessary ?
             //AggroRadius = initialAggroRange;
-            if (baseCharacter != null) {
-                baseCharacter.CharacterStats.ResetResourceAmounts();
-                if (baseCharacter.UnitController != null && baseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.MovementSpeed = MovementSpeed;
-                    BaseCharacter.UnitController.UnitMotor.ResetPath();
+            if (characterUnit.BaseCharacter != null) {
+                characterUnit.BaseCharacter.CharacterStats.ResetResourceAmounts();
+                if (UnitMotor != null) {
+                    UnitMotor.MovementSpeed = MovementSpeed;
+                    UnitMotor.ResetPath();
                 } else {
-                    //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter.myanimatedunit was null!");
+                    //Debug.Log(gameObject.name + ".AIController.Reset(): characterUnit.BaseCharacter.myanimatedunit was null!");
                 }
             } else {
-                //Debug.Log(gameObject.name + ".AIController.Reset(): baseCharacter was null!");
+                //Debug.Log(gameObject.name + ".AIController.Reset(): characterUnit.BaseCharacter was null!");
             }
         }
 
@@ -836,10 +839,10 @@ namespace AnyRPG {
 
             if (MyCombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                return BaseCharacter.CharacterCombat.GetMinAttackRange(MyCombatStrategy.GetAttackRangeAbilityList(BaseCharacter as BaseCharacter));
+                return characterUnit.BaseCharacter.CharacterCombat.GetMinAttackRange(MyCombatStrategy.GetAttackRangeAbilityList(characterUnit.BaseCharacter));
             } else {
                 // get random attack if no strategy exists
-                return BaseCharacter.CharacterCombat.GetMinAttackRange(BaseCharacter.CharacterCombat.GetAttackRangeAbilityList());
+                return characterUnit.BaseCharacter.CharacterCombat.GetMinAttackRange(characterUnit.BaseCharacter.CharacterCombat.GetAttackRangeAbilityList());
             }
         }
 
@@ -848,13 +851,13 @@ namespace AnyRPG {
 
             if (MyCombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility meleeAbility = MyCombatStrategy.GetMeleeAbility(BaseCharacter as BaseCharacter);
+                BaseAbility meleeAbility = MyCombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
                 if (meleeAbility != null) {
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = BaseCharacter.CharacterCombat.GetMeleeAbility();
+                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
                 if (validAttackAbility != null) {
                     //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
                     return true;
@@ -905,7 +908,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (apparentVelocity >= (baseCharacter.CharacterStats.RunSpeed / 2f)) {
+            if (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f)) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
                 if (!unitComponentController.MovementIsPlaying()) {
                     unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
@@ -920,10 +923,8 @@ namespace AnyRPG {
 
         public void UpdateApparentVelocity() {
             // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
-            if (BaseCharacter != null && BaseCharacter.CharacterUnit != null) {
-                apparentVelocity = Vector3.Distance(BaseCharacter.UnitController.transform.position, lastPosition) * (1 / Time.deltaTime);
-                lastPosition = BaseCharacter.UnitController.transform.position;
-            }
+            apparentVelocity = Vector3.Distance(transform.position, lastPosition) * (1 / Time.deltaTime);
+            lastPosition = transform.position;
 
         }
 
@@ -948,13 +949,13 @@ namespace AnyRPG {
             } else if (agroTarget.BaseCharacter.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
             } else {
-                if (baseCharacter.CharacterCombat == null) {
+                if (characterUnit.BaseCharacter.CharacterCombat == null) {
                     //Debug.Log("for some strange reason, combat is null????");
                     // like inanimate units
                 } else {
                     // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-                    agroTarget.BaseCharacter.CharacterCombat.EnterCombat(BaseCharacter);
-                    baseCharacter.CharacterCombat.EnterCombat(agroTarget.BaseCharacter);
+                    agroTarget.BaseCharacter.CharacterCombat.EnterCombat(characterUnit.BaseCharacter);
+                    characterUnit.BaseCharacter.CharacterCombat.EnterCombat(agroTarget.BaseCharacter);
                 }
                 //Debug.Log("combat is " + combat.ToString());
                 //Debug.Log("mytarget is " + MyTarget.ToString());
@@ -964,14 +965,12 @@ namespace AnyRPG {
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
             frozen = true;
-            if (BaseCharacter.UnitController != null) {
-                baseCharacter.UnitController.FreezePositionXZ();
-                if (BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.MyAnimator.enabled = false;
-                }
-                if (BaseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.FreezeCharacter();
-                }
+            FreezePositionXZ();
+            if (UnitAnimator != null) {
+                UnitAnimator.MyAnimator.enabled = false;
+            }
+            if (UnitMotor != null) {
+                UnitMotor.FreezeCharacter();
             }
         }
 
@@ -979,12 +978,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BaseController.UnFreezeCharacter(): ");
             frozen = false;
             FreezeRotation();
-                if (unitAnimator != null) {
-                    UnitAnimator.MyAnimator.enabled = true;
-                }
-                if (unitMotor != null) {
-                    unitMotor.UnFreezeCharacter();
-                }
+            if (unitAnimator != null) {
+                UnitAnimator.MyAnimator.enabled = true;
+            }
+            if (unitMotor != null) {
+                unitMotor.UnFreezeCharacter();
+            }
         }
 
         public void StunCharacter() {
@@ -994,68 +993,52 @@ namespace AnyRPG {
                 return;
             }
             stunned = true;
-            if (BaseCharacter.UnitController != null) {
-                baseCharacter.UnitController.FreezePositionXZ();
-                if (BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.HandleStunned();
-                } else {
-                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
-                }
-                if (BaseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.FreezeCharacter();
-                } else {
-                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
-                }
+            FreezePositionXZ();
+            if (UnitAnimator != null) {
+                UnitAnimator.HandleStunned();
             } else {
-                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): animated unit was null");
+                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
+            }
+            if (UnitMotor != null) {
+                UnitMotor.FreezeCharacter();
+            } else {
+                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
             }
         }
 
         public void UnStunCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnStunCharacter(): ");
             stunned = false;
-            if (BaseCharacter.UnitController != null) {
-                baseCharacter.UnitController.FreezeRotation();
-                if (BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.HandleUnStunned();
-                } else {
-                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): characteranimator was null");
-                }
-                if (BaseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.UnFreezeCharacter();
-                } else {
-                    //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): charactermotor was null");
-                }
-            } else {
-                //Debug.Log(gameObject.name + ".BaseController.StunCharacter(): animated unit was null");
+            FreezeRotation();
+            if (UnitAnimator != null) {
+                UnitAnimator.HandleUnStunned();
+            }
+            if (UnitMotor != null) {
+                UnitMotor.UnFreezeCharacter();
             }
         }
 
         public void LevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
             levitated = true;
-            if (BaseCharacter.UnitController != null) {
-                baseCharacter.UnitController.FreezePositionXZ();
-                if (BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.HandleLevitated();
-                }
-                if (BaseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.FreezeCharacter();
-                }
+            FreezePositionXZ();
+            if (UnitAnimator != null) {
+                UnitAnimator.HandleLevitated();
+            }
+            if (UnitMotor != null) {
+                UnitMotor.FreezeCharacter();
             }
         }
 
         public void UnLevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.UnLevitateCharacter(): ");
             levitated = false;
-            if (BaseCharacter.UnitController != null) {
-                baseCharacter.UnitController.FreezeRotation();
-                if (BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.HandleUnLevitated();
-                }
-                if (BaseCharacter.UnitController.UnitMotor != null) {
-                    BaseCharacter.UnitController.UnitMotor.UnFreezeCharacter();
-                }
+            FreezeRotation();
+            if (UnitAnimator != null) {
+                UnitAnimator.HandleUnLevitated();
+            }
+            if (UnitMotor != null) {
+                UnitMotor.UnFreezeCharacter();
             }
         }
 
@@ -1086,38 +1069,31 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
             target = null;
             // FIX ME (reenable possibly?)
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitMotor != null) {
-                baseCharacter.UnitController.UnitMotor.StopFollowingTarget();
+            if (UnitMotor != null) {
+                UnitMotor.StopFollowingTarget();
             }
             OnClearTarget();
         }
 
         private Vector3 GetHitBoxCenter() {
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter()");
-            if (baseCharacter == null) {
-                //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter is null!");
+            if (characterUnit == null) {
+                //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): characterUnit.BaseCharacter.MyCharacterUnit is null!");
                 return Vector3.zero;
             }
-            if (baseCharacter.CharacterUnit == null) {
-                //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): baseCharacter.MyCharacterUnit is null!");
-                return Vector3.zero;
-            }
-            Vector3 returnValue = baseCharacter.UnitController.transform.TransformPoint(baseCharacter.UnitController.gameObject.GetComponent<CapsuleCollider>().center) + (baseCharacter.UnitController.transform.forward * (baseCharacter.CharacterUnit.HitBoxSize / 2f));
-            //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + baseCharacter.MyCharacterUnit.transform.TransformPoint(baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
+            Vector3 returnValue = transform.TransformPoint(myCollider.bounds.center) + (transform.forward * (characterUnit.HitBoxSize / 2f));
+            //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter() Capsule Collider Center is:" + characterUnit.BaseCharacter.MyCharacterUnit.transform.TransformPoint(characterUnit.BaseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().center));
             return returnValue;
         }
 
         public Vector3 GetHitBoxSize() {
-            if (baseCharacter == null) {
-                return Vector3.zero;
-            }
-            if (baseCharacter.CharacterUnit == null) {
+            if (characterUnit == null) {
                 return Vector3.zero;
             }
             // testing disable size multiplier and just put it straight into the hitbox.  it is messing with character motor because we stop moving toward a character that is 0.5 units outside of the hitbox
-            //return new Vector3(baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, baseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, baseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
-            //return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, baseCharacter.CharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
-            return new Vector3(baseCharacter.CharacterUnit.HitBoxSize, myCollider.bounds.extents.y * 3f, baseCharacter.CharacterUnit.HitBoxSize);
+            //return new Vector3(characterUnit.BaseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier, characterUnit.BaseCharacter.MyCharacterUnit.gameObject.GetComponent<CapsuleCollider>().height * hitBoxSizeMultiplier, characterUnit.BaseCharacter.MyCharacterStats.MyHitBox * hitBoxSizeMultiplier);
+            //return new Vector3(characterUnit.BaseCharacter.CharacterUnit.HitBoxSize, characterUnit.BaseCharacter.CharacterUnit.MyCapsuleCollider.bounds.extents.y * 3f, characterUnit.BaseCharacter.CharacterUnit.HitBoxSize);
+            return new Vector3(characterUnit.HitBoxSize, myCollider.bounds.extents.y * 3f, characterUnit.HitBoxSize);
         }
 
         public bool IsTargetInHitBox(Interactable newTarget) {
@@ -1166,17 +1142,17 @@ namespace AnyRPG {
 
             if (MyCombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility validCombatStrategyAbility = MyCombatStrategy.GetValidAbility(BaseCharacter as BaseCharacter);
+                BaseAbility validCombatStrategyAbility = MyCombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
                 if (validCombatStrategyAbility != null) {
-                    BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = BaseCharacter.CharacterCombat.GetValidAttackAbility();
+                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
                 if (validAttackAbility != null) {
                     //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
-                    BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
                 }
             }
@@ -1197,18 +1173,50 @@ namespace AnyRPG {
         }
 
         public void EnableAgent() {
-            Debug.Log(gameObject.name + ".UnitController.EnableAgent()");
+            //Debug.Log(gameObject.name + ".UnitController.EnableAgent()");
             if (NavMeshAgent != null && useAgent == true) {
                 NavMeshAgent.enabled = true;
             }
         }
 
         public void DisableAgent() {
-            Debug.Log(gameObject.name + ".UnitController.DisableAgent()");
+            //Debug.Log(gameObject.name + ".UnitController.DisableAgent()");
             if (NavMeshAgent != null) {
                 NavMeshAgent.enabled = false;
             }
         }
+
+        #region EventNotifications
+
+        public void NotifyOnReputationChange() {
+            OnReputationChange();
+        }
+        public void NotifyOnReviveComplete() {
+            OnReviveComplete();
+        }
+        public void NotifyOnLevelChanged(int newLevel) {
+            OnLevelChanged(newLevel);
+        }
+        public void NotifyOnClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            OnClassChange(newCharacterClass, oldCharacterClass);
+        }
+        public void NotifyOnNameChange(string newName) {
+            OnNameChange(newName);
+        }
+        public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
+            OnResourceAmountChanged(powerResource, maxAmount, currentAmount);
+        }
+        public void NotifyOnStatusEffectAdd(StatusEffectNode statusEffectNode) {
+            OnStatusEffectAdd(statusEffectNode);
+        }
+        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbility baseAbility, float castPercent) {
+            OnCastTimeChanged(source, baseAbility, castPercent);
+        }
+        public void NotifyOnCastStop(BaseCharacter baseCharacter) {
+            OnCastStop(baseCharacter);
+        }
+
+        #endregion
     }
 
     public enum UnitControllerMode { Preview, Player, AI, Mount, Pet, Inanimate };

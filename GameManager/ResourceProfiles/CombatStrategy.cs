@@ -36,7 +36,7 @@ namespace AnyRPG {
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.AbilityEffects[0].DisplayName))
                                 && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
-                                && baseAbility.CanUseOn(sourceCharacter.CharacterUnit.Interactable, sourceCharacter)) {
+                                && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
                                 //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
                                 return baseAbility;
                             }

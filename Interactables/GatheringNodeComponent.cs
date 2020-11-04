@@ -101,8 +101,9 @@ namespace AnyRPG {
 
         public void Gather() {
             //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            base.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
-
+            if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                base.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
+            }
         }
 
         /*

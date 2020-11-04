@@ -150,7 +150,7 @@ namespace AnyRPG {
             }
             SpawnEquipmentObjects(equipmentSlotProfile, newItem);
             UnitAnimator characterAnimator = null;
-            if (baseCharacter != null && baseCharacter.CharacterUnit != null && baseCharacter.UnitController.UnitAnimator != null) {
+            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
                 characterAnimator = baseCharacter.UnitController.UnitAnimator;
                 if (characterAnimator != null) {
                     //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
@@ -292,8 +292,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterEquipmentManager.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
                 }
             }
-
-            Debug.Log("CharacterEquipmentManager.GetSheathedAttachmentPointNode(): Unable to return attachment point node!");
+            // enable for troubleshooting only.  It gets spammy with beast units that don't have attachments.
+            //Debug.Log("CharacterEquipmentManager.GetSheathedAttachmentPointNode(): Unable to return attachment point node!");
             return null;
         }
 

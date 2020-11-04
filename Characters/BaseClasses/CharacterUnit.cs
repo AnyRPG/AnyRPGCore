@@ -35,7 +35,7 @@ namespace AnyRPG {
         }
 
         public void SetBaseCharacter(BaseCharacter baseCharacter) {
-            Debug.Log("CharacterUnit.SetBaseCharacter: " + baseCharacter.gameObject.name);
+            //Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetBaseCharacter: " + baseCharacter.gameObject.name);
             this.baseCharacter = baseCharacter;
         }
 

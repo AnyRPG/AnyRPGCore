@@ -201,7 +201,7 @@ namespace AnyRPG {
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
         public CharacterStats(BaseCharacter baseCharacter) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
             this.baseCharacter = baseCharacter;
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
@@ -631,7 +631,7 @@ namespace AnyRPG {
                     if (Faction.RelationWith(target.BaseCharacter, (sourceCharacter as CharacterAbilityManager).BaseCharacter) <= -1) {
                         if (target.BaseCharacter.CharacterCombat != null) {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                            target.BaseCharacter.UnitController.Agro((sourceCharacter as CharacterAbilityManager).BaseCharacter.CharacterUnit);
+                            target.BaseCharacter.UnitController.Agro((sourceCharacter as CharacterAbilityManager).BaseCharacter.UnitController.CharacterUnit);
                         }
                     }
                 }
@@ -694,13 +694,11 @@ namespace AnyRPG {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
-            if (statusEffect == null) {
-                //Debug.Log("CharacterStats.ApplyAbilityEffect() abilityEffect is null");
+
+            if (baseCharacter.UnitController != null) {
+                // no need to agro if this is being applied from a character load
+                AttemptAgro(sourceCharacter, baseCharacter.UnitController.CharacterUnit);
             }
-            if (sourceCharacter == null) {
-                //Debug.Log("CharacterStats.ApplyAbilityEffect() source is null");
-            }
-            AttemptAgro(sourceCharacter, baseCharacter.CharacterUnit);
 
             // check for frozen
             if (WasImmuneToFreeze(statusEffect, sourceCharacter, abilityEffectContext)) {
@@ -755,8 +753,10 @@ namespace AnyRPG {
                 HandleAddNotifications(newStatusEffectNode);
 
                 if (newStatusEffectNode.StatusEffect.ControlTarget == true) {
-
-                    baseCharacter.UnitController.SetPetMode((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter);
+                    if (baseCharacter.UnitController != null) {
+                        // control effects really shouldn't be on saved characters, but just in case, check if no unit is spawned yet
+                        baseCharacter.UnitController.SetPetMode((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter);
+                    }
 
                     // any control effect will add the pet to the pet journal if this is used.  This is already done in capture pet effect so should not be needed
                     // see if leaving it commented out breaks anything
@@ -834,6 +834,9 @@ namespace AnyRPG {
             baseCharacter.CharacterSkillManager.UpdateSkillList(currentLevel);
             baseCharacter.CharacterAbilityManager.UpdateAbilityList(currentLevel);
             baseCharacter.CharacterRecipeManager.UpdateRecipeList(currentLevel);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnLevelChanged(currentLevel);
+            }
         }
 
         public void SetLevel(int newLevel) {
@@ -911,11 +914,19 @@ namespace AnyRPG {
             if (powerResourceDictionary.ContainsKey(powerResource)) {
                 powerResourceDictionary[powerResource].currentValue -= usedResourceAmount;
                 powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, int.MaxValue);
-                OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
+                NotifyOnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
             }
             if (powerResource.IsHealth == true) {
                 PerformDeathCheck();
             }
+        }
+
+        public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxValue, int CurrentValue) {
+            OnResourceAmountChanged(powerResource, maxValue, CurrentValue);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnReputationChange();
+            }
+
         }
 
         public void SetResourceAmount(string resourceName, float newAmount) {
@@ -929,7 +940,7 @@ namespace AnyRPG {
                     powerResourceDictionary[tmpPowerResource].currentValue,
                     0,
                     (int)GetPowerResourceMaxAmount(tmpPowerResource));
-                OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
+                NotifyOnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             }
         }
@@ -952,7 +963,7 @@ namespace AnyRPG {
                     powerResourceDictionary[tmpPowerResource].currentValue,
                     0,
                     (int)GetPowerResourceMaxAmount(tmpPowerResource));
-                OnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
+                NotifyOnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
                 returnValue = true;
                 //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             }
@@ -982,7 +993,7 @@ namespace AnyRPG {
 
             if (powerResource != null && powerResourceDictionary.ContainsKey(powerResource)) {
                 powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, GetPowerResourceMaxAmount(powerResource));
-                OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
+                NotifyOnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
             }
         }
 
@@ -1018,7 +1029,7 @@ namespace AnyRPG {
                         powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
                     }
                 }
-                OnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
+                NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
 
             
@@ -1033,7 +1044,7 @@ namespace AnyRPG {
                 SetResourceAmount(PrimaryResource.DisplayName, 0f);
 
                 // notify subscribers that our health has changed
-                OnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
+                NotifyOnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
             }
         }
 
@@ -1050,7 +1061,7 @@ namespace AnyRPG {
                 baseCharacter.UnitController.FreezePositionXZ();
                 baseCharacter.UnitController.UnitAnimator.HandleDie(this);
                 baseCharacter.UnitController.NamePlateController.HandleNamePlateNeedsRemoval(this);
-                baseCharacter.CharacterUnit.HandleDie(this);
+                baseCharacter.UnitController.CharacterUnit.HandleDie(this);
             }
         }
 
@@ -1076,14 +1087,17 @@ namespace AnyRPG {
             OnReviveComplete();
             baseCharacter.UnitController.FreezeRotation();
             baseCharacter.UnitController.NamePlateController.InitializeNamePlate();
-            baseCharacter.CharacterUnit.HandleReviveComplete();
+            baseCharacter.UnitController.CharacterUnit.HandleReviveComplete();
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnReviveComplete();
+            }
         }
 
         public void ReviveRaw() {
             //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
             isReviving = false;
-            baseCharacter.CharacterUnit.DisableCollider();
-            baseCharacter.CharacterUnit.EnableCollider();
+            baseCharacter.UnitController.CharacterUnit.DisableCollider();
+            baseCharacter.UnitController.CharacterUnit.EnableCollider();
             isAlive = true;
             ClearInvalidStatusEffects();
 
@@ -1140,7 +1154,7 @@ namespace AnyRPG {
             //TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
             if (statusEffect.MyCastZeroTick) {
-                if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
+                if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                     statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                 }
             }
@@ -1155,7 +1169,7 @@ namespace AnyRPG {
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
                     //Debug.Log(MyName + ".StatusEffect.Tick() TickTime!");
-                    if (baseCharacter != null && baseCharacter.CharacterUnit != null && characterSource != null) {
+                    if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                         statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                         elapsedTime -= statusEffect.TickRate;
                     }
@@ -1164,7 +1178,7 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             if (baseCharacter != null) {
-                if (characterSource != null & baseCharacter.CharacterUnit != null) {
+                if (characterSource != null & baseCharacter.UnitController != null) {
                     statusEffect.CastComplete(characterSource, baseCharacter.UnitController, abilityEffectContext);
                 }
             }
@@ -1233,10 +1247,13 @@ namespace AnyRPG {
         }
 
         protected void PerformResourceRegen() {
-            if (baseCharacter == null || baseCharacter.CharacterUnit == null || isAlive == false) {
+            //Debug.Log("CharacterStats.PerformResourceRegen()");
+            if (baseCharacter == null || baseCharacter.UnitController == null || isAlive == false) {
                 // if the character is not spawned, we should not be regenerating their resources.
+                //Debug.Log("CharacterStats.PerformResourceRegen(): NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.CharacterUnit == null ? "null" : baseCharacter.CharacterUnit.DisplayName));
                 return;
             }
+            //Debug.Log("CharacterStats.PerformResourceRegen(): NOT NULL! baseCharacter: " + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + "; characterunit: " + (baseCharacter.CharacterUnit == null ? "null" : baseCharacter.CharacterUnit.DisplayName));
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 powerResourceDictionary[powerResource].elapsedTime += Time.deltaTime;
 
@@ -1271,7 +1288,8 @@ namespace AnyRPG {
                         // this is notifying on primary resource, but for now, we don't have multiples, so its ok
                         // this will need to be fixed when we add secondary resources
                         if (usedRegenAmount != 0f) {
-                            OnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
+                            Debug.Log("CharacterStats.PerformResourceRegen(): Trigger OnResourceAmountChanged() regen: " + usedRegenAmount);
+                            NotifyOnResourceAmountChanged(powerResource, (int)GetPowerResourceMaxAmount(powerResource), (int)powerResourceDictionary[powerResource].currentValue);
                         }
                     }
                 }

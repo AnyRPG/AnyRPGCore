@@ -26,6 +26,9 @@ namespace AnyRPG {
 
         public virtual void NotifyOnReputationChange() {
             OnReputationChange();
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnReputationChange();
+            }
         }
 
         // ignores if existing, otherwise sets to amount.  This allows leaving and re-joining factions without losing reputation with them
@@ -40,7 +43,7 @@ namespace AnyRPG {
             _factionDisposition.MyFaction = newFaction;
             _factionDisposition.disposition = Faction.RelationWith(baseCharacter, newFaction);
             MyDispositionDictionary.Add(_factionDisposition);
-            OnReputationChange();
+            NotifyOnReputationChange();
         }
 
         // adds to existing amount or sets to amount if not existing
@@ -60,7 +63,7 @@ namespace AnyRPG {
             _factionDisposition.disposition = Faction.RelationWith(baseCharacter, faction) + (float)reputationAmount;
             MyDispositionDictionary.Add(_factionDisposition);
             if (notify) {
-                OnReputationChange();
+                NotifyOnReputationChange();
             }
         }
 

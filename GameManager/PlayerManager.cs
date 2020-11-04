@@ -327,19 +327,12 @@ namespace AnyRPG {
                 activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
             }
 
-            // spawn the player unit and set gameObject references
+            // spawn the player unit and set references
             Vector3 spawnRotation = LevelManager.MyInstance.GetSpawnRotation();
-            //playerUnitObject = Instantiate(activeCharacter.UnitProfile.UnitPrefab, spawnLocation, spawnQuaternion, playerUnitParent.transform);
-            //unitController = activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
             activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
-            //playerUnitObject = unitController.gameObject;
-            //SetUnitController(unitController);
-            activeUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
-
-            // create a reference from the character (connection) to the character unit (interactable), and from the character unit (interactable) to the character (connection)
-            if (activeUnitController.CharacterUnit != null) {
-                activeCharacter.CharacterUnit = activeUnitController.CharacterUnit;
-                activeCharacter.CharacterUnit.SetBaseCharacter(activeCharacter);
+            if (activeUnitController == null) {
+                Debug.LogError("PlayerManager.SpawnPlayerUnit(): No UnitController could be found, or player unit was not spawned properly");
+                return;
             }
 
             if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
@@ -365,10 +358,25 @@ namespace AnyRPG {
             }
         }
 
+        public void SetActiveUnitController(UnitController unitController) {
+            activeUnitController = unitController;
+            activeCharacter.SetUnitController(activeUnitController);
+        }
+
         public void SetUnitController(UnitController unitController) {
             this.unitController = unitController;
             activeUnitController = unitController;
+
             activeCharacter.SetUnitController(activeUnitController);
+
+            if (unitController.CharacterUnit != null) {
+                // erase the connection from the base character on the unit, back to its unit controller so it doesn't fire events
+                unitController.CharacterUnit.BaseCharacter.SetUnitController(null);
+                // connect the characterUnit back to the baseCharacter that the playerManager owns so we get logged in character settings, not the unit settings
+                unitController.CharacterUnit.SetBaseCharacter(activeCharacter);
+            } else {
+                Debug.LogError("UnitProfile.SpawnUnitPrefab(): active unit controller had no characterUnit!");
+            }
         }
 
         public Vector3 SpawnPlayerUnit() {
@@ -392,7 +400,7 @@ namespace AnyRPG {
 
             foreach (StatusEffectNode statusEffectNode in MyCharacter.CharacterStats.StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.StatusEffect.RawCast(MyCharacter, MyCharacter.CharacterUnit.Interactable, MyCharacter.CharacterUnit.Interactable, new AbilityEffectContext());
+                statusEffectNode.StatusEffect.RawCast(MyCharacter, activeUnitController, activeUnitController, new AbilityEffectContext());
             }
 
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
@@ -756,11 +764,11 @@ namespace AnyRPG {
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false) {
-                UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(statusEffectNode, activeCharacter.CharacterUnit);
+            if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
+                UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(statusEffectNode, activeUnitController.CharacterUnit);
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
-                    if (activeCharacter.CharacterUnit != null) {
-                        CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, statusEffectNode.StatusEffect, true);
+                    if (activeUnitController.CharacterUnit != null) {
+                        CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
                     }
                 }
             }
@@ -768,7 +776,9 @@ namespace AnyRPG {
 
         public void HandleGainXP(int xp) {
             CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
-            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+            if (activeUnitController != null) {
+                CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+            }
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }
 
@@ -779,7 +789,9 @@ namespace AnyRPG {
 
         public void HandleReviveComplete() {
             SystemEventManager.TriggerEvent("OnReviveComplete", new EventParamProperties());
-            activeUnitController.UnitAnimator.SetCorrectOverrideController();
+            if (activeUnitController != null) {
+                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+            }
         }
 
         public void HandleReviveBegin() {
@@ -792,7 +804,7 @@ namespace AnyRPG {
         }
 
         public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            CombatTextManager.MyInstance.SpawnCombatText(activeCharacter.CharacterUnit.Interactable, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 
     }

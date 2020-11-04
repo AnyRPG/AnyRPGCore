@@ -340,7 +340,7 @@ namespace AnyRPG {
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
-            if (target.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit)) {
+            if (target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 if (target != null) {
                     SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
@@ -382,7 +382,7 @@ namespace AnyRPG {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
                 UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
-                if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.BaseCharacter, PlayerManager.MyInstance.MyCharacter.Faction) <= -1) {
+                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, PlayerManager.MyInstance.MyCharacter.Faction) <= -1) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
@@ -500,7 +500,7 @@ namespace AnyRPG {
         private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
             //if (IsTargetInHitBox(target)) {
-            if (interactableOption.Interact(PlayerManager.MyInstance.ActiveCharacter.CharacterUnit)) {
+            if (interactableOption.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);

@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         public void SetPlayerOwnerShip() {
-            Debug.Log("NamePlateController.CheckForPlayerOwnerShip()");
+            //Debug.Log("NamePlateController.SetPlayerOwnerShip()");
             //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
             namePlateCanvasGroup.blocksRaycasts = false;
             UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
@@ -273,10 +273,10 @@ namespace AnyRPG {
             InitializeLocalComponents();
 
             if (unitNamePlateController.HasHealth()) {
-                (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
+                (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
                 ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
-                if ((unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager != null) {
-                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
+                if ((unitNamePlateController as UnitNamePlateController).UnitController != null) {
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
                 }
             } else {
                 MyHealthBar.SetActive(false);
@@ -295,9 +295,9 @@ namespace AnyRPG {
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
             //Debug.Log(gameObject.name + ".CharacterUnit.HandleHealthBarNeedsUpdate(" + currentHealth + ", " + maxHealth + ")");
             if (unitNamePlateController.HasHealth()
-                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
                 ProcessHealthChanged(currentHealth, maxHealth);
             }
         }
@@ -309,12 +309,15 @@ namespace AnyRPG {
         public void CheckForDisabledHealthBar() {
             //Debug.Log(namePlateUnit.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (unitNamePlateController.HasHealth() && isPlayerUnitNamePlate) {
-                //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
+                Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+                    Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + "; max: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource);
                     if (PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource == PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
                     }
+                } else {
+
                 }
             }
             if (unitNamePlateController.HasHealth()) {
@@ -323,7 +326,7 @@ namespace AnyRPG {
         }
 
         public void DisableHealthBar() {
-            //Debug.Log(MyCharacterName.text + ".NamePlateController.DisableHealthBar()");
+            Debug.Log(MyCharacterName.text + ".NamePlateController.DisableHealthBar()");
             if (healthBar.activeSelf) {
                 healthBar.SetActive(false);
             }
@@ -447,10 +450,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy()");
             if (unitNamePlateController != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
-                unitNamePlateController.ResourceBarNeedsUpdate -= ProcessHealthChanged;
+                //unitNamePlateController.ResourceBarNeedsUpdate -= ProcessHealthChanged;
                 if (unitNamePlateController.HasHealth()) {
-                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+                    (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
                 }
                 unitNamePlateController.NamePlate = null;
             }

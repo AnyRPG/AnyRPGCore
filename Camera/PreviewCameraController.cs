@@ -168,7 +168,7 @@ namespace AnyRPG {
 
 
         public void InitializeCamera(UnitController unitController) {
-            Debug.Log("AnyRPGCameraController.InitializeCamera(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+            //Debug.Log("AnyRPGCameraController.InitializeCamera(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
             SetTarget(unitController);
             //JumpToFollowSpot();
         }
@@ -344,7 +344,7 @@ namespace AnyRPG {
         }
 
         public void HandleModelReady() {
-            Debug.Log("PreviewCameraController.HandleModelReady()");
+            //Debug.Log("PreviewCameraController.HandleModelReady()");
             UnsubscribeFromModelReady();
             if (initialTargetString != string.Empty) {
                 Transform targetBone = unitController.transform.FindChildByRecursive(initialTargetString);

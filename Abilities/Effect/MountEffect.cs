@@ -97,7 +97,7 @@ namespace AnyRPG {
             if (mountUnitController != null) {
                 if (PlayerManager.MyInstance.UnitController != null) {
 
-                    PlayerManager.MyInstance.SetUnitController(PlayerManager.MyInstance.UnitController);
+                    PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);
                     ConfigureCharacterRegularPhysics();
 
                     // set player unit to normal state
@@ -130,10 +130,12 @@ namespace AnyRPG {
 
                 ConfigureCharacterMountedPhysics();
 
-                PlayerManager.MyInstance.SetUnitController(mountUnitController);
+                PlayerManager.MyInstance.SetActiveUnitController(mountUnitController);
 
-                // initialize the mount animator
-                PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.MyCharacter.CharacterUnit;
+                // set the mount character Unit to be the player unit that is on the mount.
+                // this will theoretically allow the character to be attacked while mounted.
+                // TODO : test that this works
+                PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.UnitController.CharacterUnit;
 
                 CameraManager.MyInstance.SwitchToMainCamera();
                 CameraManager.MyInstance.MainCameraController.InitializeCamera(mountUnitController.transform);

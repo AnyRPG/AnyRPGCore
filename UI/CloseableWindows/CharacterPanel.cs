@@ -332,7 +332,7 @@ namespace AnyRPG {
         public void TargetReadyCallbackCommon() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
@@ -341,10 +341,13 @@ namespace AnyRPG {
             }
 
             // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            // should not be necessary anymore - handled in unitcontroller
+            //CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
+            /*
             foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
                 childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
             }
+            */
 
             // new code for weapons
         }

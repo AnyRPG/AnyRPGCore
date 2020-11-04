@@ -239,7 +239,7 @@ namespace AnyRPG {
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
                 if (iPS.MyInteractableOption.CanInteract()) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+                    iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }

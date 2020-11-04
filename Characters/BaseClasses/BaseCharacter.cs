@@ -45,7 +45,6 @@ namespace AnyRPG {
 
         // components
         private UnitController unitController = null;
-        private CharacterUnit characterUnit = null;
 
         //private bool animationEnabled = false;
 
@@ -59,7 +58,6 @@ namespace AnyRPG {
         public CharacterAbilityManager CharacterAbilityManager { get => characterAbilityManager; }
         public IAbilityManager AbilityManager { get => characterAbilityManager; }
         public CharacterSkillManager CharacterSkillManager { get => characterSkillManager; }
-        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public CharacterFactionManager CharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
@@ -202,10 +200,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
             unitController = GetComponent<UnitController>();
-
-            if (characterUnit == null && unitController != null && unitController.CharacterUnit != null) {
-                characterUnit = unitController.CharacterUnit;
-            }
         }
 
         public void JoinFaction(Faction newFaction) {
@@ -305,7 +299,16 @@ namespace AnyRPG {
 
         public void Update() {
             if (!characterInitialized) {
-                // this is probably a player unit
+                return;
+            }
+
+            // no need to update if the player is not spawned or this is disabled due to player unit control
+            if (unitController == null) {
+                return;
+            }
+
+            // no need to update if this is a preview unit
+            if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
                 return;
             }
 
@@ -332,7 +335,7 @@ namespace AnyRPG {
         }
 
         public void Initialize(string characterName, int characterLevel = 1) {
-            Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
+            //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
         }
@@ -408,6 +411,9 @@ namespace AnyRPG {
                     OnClassChange(newCharacterClass, oldCharacterClass);
                     characterEquipmentManager.HandleClassChange(newCharacterClass, oldCharacterClass);
                     characterAbilityManager.HandleClassChange(newCharacterClass, oldCharacterClass);
+                    if (unitController != null) {
+                        unitController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+                    }
                 }
 
                 // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
@@ -438,16 +444,15 @@ namespace AnyRPG {
 
         public void DespawnImmediate() {
             //Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
-            if (characterUnit != null) {
-                characterUnit.Despawn(0, false, true);
+            if (unitController != null && unitController.CharacterUnit != null) {
+                unitController.CharacterUnit.Despawn(0, false, true);
             }
         }
 
-
         public void Despawn() {
             //Debug.Log(gameObject.name + ".AICharacter.Despawn()");
-            if (characterUnit != null) {
-                characterUnit.Despawn();
+            if (unitController != null && unitController.CharacterUnit != null) {
+                unitController.CharacterUnit.Despawn();
             }
         }
 

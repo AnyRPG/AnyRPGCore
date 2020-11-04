@@ -245,11 +245,18 @@ namespace AnyRPG {
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
-                    //unitController.SetUnitProfile(this, true);
+
+                    // set unit controller before setting profile so baseCharacter references are properly linked
                     if (unitControllerMode == UnitControllerMode.Player) {
                         PlayerManager.MyInstance.SetUnitController(unitController);
                     }
+
                     unitController.SetUnitProfile(this, unitControllerMode);
+                    
+                    // nameplate doesn't exist until profile is set so this has to be done after
+                    if (unitControllerMode == UnitControllerMode.Player) {
+                        unitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
+                    }
                 }
             }
 

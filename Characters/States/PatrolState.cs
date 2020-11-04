@@ -74,8 +74,8 @@ namespace AnyRPG {
                 // destination reached
                 if (baseController.PatrolController.MyCurrentPatrol.PatrolComplete()) {
                     if (baseController.PatrolController.MyCurrentPatrol.DespawnOnCompletion) {
-                        if (baseController.BaseCharacter.CharacterUnit != null) {
-                            baseController.BaseCharacter.CharacterUnit.Despawn(0, false, true);
+                        if (baseController.CharacterUnit != null) {
+                            baseController.CharacterUnit.Despawn(0, false, true);
                         }
                     } else {
                         TrySavePersistentData();

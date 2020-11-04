@@ -94,7 +94,7 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
                 characterEquipmentManager.UnequipAll(false);

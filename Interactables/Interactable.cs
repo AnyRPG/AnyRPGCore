@@ -113,7 +113,6 @@ namespace AnyRPG {
         // attached components
         protected Collider myCollider;
         protected GameObject miniMapIndicator = null;
-        protected BaseCharacter baseCharacter = null;
 
         // created components
         protected CharacterUnit characterUnit;
@@ -485,7 +484,7 @@ namespace AnyRPG {
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (validInteractables.Count > 0) {
                 if (suppressInteractionWindow == true) {
-                    validInteractables[0].Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+                    validInteractables[0].Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
                 } else {
                     OpenInteractionWindow();
                 }
@@ -732,8 +731,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
                     PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
-                    Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.ActiveUnitController.CharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
                 }
             }
         }
@@ -750,8 +749,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
                     PlayerManager.MyInstance.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && PlayerManager.MyInstance.MyCharacter.CharacterUnit != null) {
-                    Interact(PlayerManager.MyInstance.MyCharacter.CharacterUnit);
+                } else if (interactWithAny && PlayerManager.MyInstance.ActiveUnitController.CharacterUnit != null) {
+                    Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
                 }
             }
 

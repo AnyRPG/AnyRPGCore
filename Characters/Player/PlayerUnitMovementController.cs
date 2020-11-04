@@ -394,22 +394,15 @@ namespace AnyRPG {
             currentMoveVelocity = PlayerManager.MyInstance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity);
             Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, PlayerManager.MyInstance.ActiveUnitController.transform.forward) * PlayerManager.MyInstance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > lastJumpFrame + 2) {
-                if ((PlayerManager.MyInstance.PlayerController.HasMoveInput() || PlayerManager.MyInstance.PlayerController.HasTurnInput()) && PlayerManager.MyInstance.PlayerController.canMove) {
-                    // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
-                    //Debug.Log("Jump_StateUpdate() : Entering movement state on frame: " + Time.frameCount + "; Jumped: " + lastJumpFrame);
-                    currentState = AnyRPGCharacterState.Move;
-                    rpgCharacterState = AnyRPGCharacterState.Move;
-                    return;
-                }
-                currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
+            if (PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
+                currentState = AnyRPGCharacterState.Fall;
+                rpgCharacterState = AnyRPGCharacterState.Fall;
                 return;
             }
         }
 
         void Fall_EnterState() {
-            //Debug.Log("Fall_EnterState()");
+            Debug.Log("Fall_EnterState()");
             canJump = false;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetJumping(2);
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
@@ -501,7 +494,7 @@ namespace AnyRPG {
             }
             */
             if (hitColliders.Length > 0) {
-                //Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
+                Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
                 return true;
             }
             return false;

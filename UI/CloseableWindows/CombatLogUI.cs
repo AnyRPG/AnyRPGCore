@@ -314,7 +314,7 @@ namespace AnyRPG {
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;
-            if (target == PlayerManager.MyInstance.MyCharacter.CharacterUnit) {
+            if (PlayerManager.MyInstance.ActiveUnitController != null && target == PlayerManager.MyInstance.ActiveUnitController.CharacterUnit) {
                 textColor = Color.red;
             }
             string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.DisplayName, damage, source.AbilityManager.Name, abilityName);

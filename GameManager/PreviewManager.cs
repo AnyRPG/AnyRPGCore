@@ -53,8 +53,8 @@ namespace AnyRPG {
 
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
-                if (unitController.BaseCharacter != null) {
-                    unitController.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.UnitPrefabProfile.AttachmentProfile;
+                if (unitController.CharacterUnit.BaseCharacter != null) {
+                    unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.UnitPrefabProfile.AttachmentProfile;
                 }
 
             }

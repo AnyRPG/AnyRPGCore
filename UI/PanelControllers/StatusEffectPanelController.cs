@@ -12,21 +12,21 @@ namespace AnyRPG {
         [SerializeField]
         private int effectLimit = 0;
 
-        private CharacterUnit targetCharacterUnit = null;
+        private UnitController targetUnitController = null;
 
         private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
 
         public int MyEffectLimit { get => effectLimit; set => effectLimit = value; }
 
-        public void SetTarget(CharacterUnit characterUnit) {
+        public void SetTarget(UnitController unitController) {
             //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
-            this.targetCharacterUnit = characterUnit;
-            if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
+            this.targetUnitController = unitController;
+            if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
-                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
-                    SpawnStatusNode(statusEffectNode, characterUnit);
+                foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
+                    SpawnStatusNode(statusEffectNode, targetUnitController.CharacterUnit);
                 }
-                CreateEventSubscriptions(targetCharacterUnit.BaseCharacter.CharacterStats as CharacterStats);
+                CreateEventSubscriptions();
             }
         }
 
@@ -36,7 +36,7 @@ namespace AnyRPG {
             // do this first or there will be no character to unsubscribe from
             CleanupEventSubscriptions();
 
-            targetCharacterUnit = null;
+            targetUnitController = null;
             foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
                 if (_statusEffectNodeScript != null) {
                     Destroy(_statusEffectNodeScript.gameObject);
@@ -47,21 +47,21 @@ namespace AnyRPG {
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
             //Debug.Log("StatusEffectPanelController.HandleStatusEffectAdd(): character: " + (targetCharacterUnit == null ? "null" : targetCharacterUnit.MyDisplayName));
-            SpawnStatusNode(statusEffectNode, targetCharacterUnit);
+            SpawnStatusNode(statusEffectNode, targetUnitController.CharacterUnit);
         }
 
-        public void CreateEventSubscriptions(CharacterStats characterStats) {
+        public void CreateEventSubscriptions() {
             //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): character: " + (targetCharacterUnit == null ? "null" : targetCharacterUnit.MyDisplayName));
-            if (characterStats != null) {
+            if (targetUnitController != null) {
                 //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): characterStats is not null.");
-                characterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
+                targetUnitController.OnStatusEffectAdd += HandleStatusEffectAdd;
             }
         }
 
         public void CleanupEventSubscriptions() {
             //Debug.Log("StatusEffectPanelController.CleanupEventSubscriptions()");
-            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
-                targetCharacterUnit.BaseCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            if (targetUnitController != null) {
+                targetUnitController.OnStatusEffectAdd -= HandleStatusEffectAdd;
             }
         }
 
