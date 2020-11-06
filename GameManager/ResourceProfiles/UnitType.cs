@@ -9,8 +9,9 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Type", menuName = "AnyRPG/UnitType")]
     [System.Serializable]
-    public class UnitType : DescribableResource, IStatProvider {
-        [Header("Abilities")]
+    public class UnitType : DescribableResource, IStatProvider, IAbilityProvider {
+
+        [Header("Abilities and Traits")]
 
         [Tooltip("When no weapons are equippped to learn auto-attack abilities from, this auto-attack ability will be used")]
         [SerializeField]
@@ -19,10 +20,17 @@ namespace AnyRPG {
         private BaseAbility defaultAutoAttackAbility = null;
 
         [Tooltip("Abilities this unit will know")]
+        [FormerlySerializedAs("learnedAbilityNames")]
         [SerializeField]
-        private List<string> learnedAbilityNames = new List<string>();
+        private List<string> abilityNames = new List<string>();
 
-        private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
+        private List<BaseAbility> abilityList = new List<BaseAbility>();
+
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [SerializeField]
+        private List<string> traitNames = new List<string>();
+
+        private List<StatusEffect> traitList = new List<StatusEffect>();
 
         [Header("Capabilities")]
 
@@ -53,8 +61,9 @@ namespace AnyRPG {
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
+        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
 
         public override void SetupScriptableObjects() {
 
@@ -70,14 +79,29 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilities = new List<BaseAbility>();
-            if (learnedAbilityNames != null) {
-                foreach (string baseAbilityName in learnedAbilityNames) {
+            abilityList = new List<BaseAbility>();
+            if (abilityNames != null) {
+                foreach (string baseAbilityName in abilityNames) {
                     BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
-                        learnedAbilities.Add(baseAbility);
+                        if ((baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true && defaultAutoAttackAbility == null) {
+                            defaultAutoAttackAbility = baseAbility;
+                        }
+                        abilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            traitList = new List<StatusEffect>();
+            if (traitNames != null) {
+                foreach (string traitName in traitNames) {
+                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
+                    if (abilityEffect != null) {
+                        traitList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

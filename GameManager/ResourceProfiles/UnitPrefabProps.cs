@@ -1,13 +1,10 @@
 using AnyRPG;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Unit Prefab Profile", menuName = "AnyRPG/UnitPrefabProfile")]
-    public class UnitPrefabProfile : DescribableResource {
 
-        [SerializeField]
-        private UnitPrefabProps unitPrefabProps = new UnitPrefabProps();
+    [System.Serializable]
+    public class UnitPrefabProps {
 
         [Header("Prefab")]
 
@@ -45,7 +42,6 @@ namespace AnyRPG {
         [Header("Mount")]
 
         [Tooltip("The transform position of the physical prefab in relation to the target bone")]
-        [FormerlySerializedAs("physicalPosition")]
         [SerializeField]
         private Vector3 position = Vector3.zero;
 
@@ -54,12 +50,10 @@ namespace AnyRPG {
         private bool rotationIsGlobal = false;
 
         [Tooltip("The transform rotation of the physical prefab")]
-        [FormerlySerializedAs("physicalRotation")]
         [SerializeField]
         private Vector3 rotation = Vector3.zero;
 
         [Tooltip("The transform scale of the physical prefab")]
-        [FormerlySerializedAs("physicalScale")]
         [SerializeField]
         private Vector3 scale = Vector3.one;
 
@@ -88,17 +82,15 @@ namespace AnyRPG {
         public bool RotateModel { get => rotateModel; set => rotateModel = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
-        public UnitPrefabProps UnitPrefabProps { get => unitPrefabProps; set => unitPrefabProps = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public void SetupScriptableObjects() {
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
                 AttachmentProfile tmpAttachmentProfile = SystemAttachmentProfileManager.MyInstance.GetResource(attachmentProfileName);
                 if (tmpAttachmentProfile != null) {
                     attachmentProfile = tmpAttachmentProfile;
                 } else {
-                    Debug.LogError("PrefabProfile.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + attachmentProfileName + " while initializing " + DisplayName + ". CHECK INSPECTOR!");
+                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + attachmentProfileName + " while initializing. CHECK INSPECTOR!");
                 }
             }
         }

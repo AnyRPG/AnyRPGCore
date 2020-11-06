@@ -58,6 +58,7 @@ namespace AnyRPG {
             // format the button text
             string descriptionText = string.Empty;
             descriptionText += "Zone: " + mySaveData.CurrentScene + "\n";
+            descriptionText += "Race: " + (mySaveData.characterRace == null || mySaveData.characterRace == string.Empty ? "None" : mySaveData.characterRace) + "\n";
             descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
             descriptionText += "Level: " + mySaveData.PlayerLevel + "\n";
             descriptionText += "Experience: " + mySaveData.currentExperience + "\n";

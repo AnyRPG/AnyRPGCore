@@ -12,7 +12,7 @@ namespace AnyRPG {
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
         public event System.Action<BaseAbility> OnAttemptPerformAbility = delegate { };
         public event System.Action<BaseAbility> OnPerformAbility = delegate { };
-        public event System.Action OnUnlearnClassAbilities = delegate { };
+        public event System.Action OnUnlearnAbilities = delegate { };
         public event System.Action<BaseAbility> OnLearnedCheckFail = delegate { };
         public event System.Action<BaseAbility> OnCombatCheckFail = delegate { };
         public event System.Action<AnimatedAbility> OnAnimatedAbilityCheckFail = delegate { };
@@ -133,6 +133,13 @@ namespace AnyRPG {
         public void Init() {
             UpdateAbilityList(baseCharacter.CharacterStats.Level);
             LearnDefaultAutoAttackAbility();
+        }
+
+        public override List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {
+            if (baseCharacter.CharacterEquipmentManager != null) {
+                return baseCharacter.CharacterEquipmentManager.WeaponHoldableObjects;
+            }
+            return base.GetWeaponAbilityObjectList();
         }
 
         public void LoadAbility(string abilityName) {
@@ -290,7 +297,7 @@ namespace AnyRPG {
             if (baseCharacter.UnitProfile != null
                 && baseCharacter.UnitProfile.UnitPrefabProfile != null
                 && baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile != null) {
-                return baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile.AttackClips;
+                return baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile.AnimationProps.AttackClips;
             }
             return base.GetUnitAttackAnimations();
         }
@@ -728,37 +735,18 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleSpecializationChange(ClassSpecialization newClassSpecialization, ClassSpecialization oldClassSpecialization) {
-            RemoveSpecializationTraits(oldClassSpecialization);
-            UnLearnSpecializationAbilities(oldClassSpecialization);
-            LearnSpecializationAbilities(newClassSpecialization);
-            ApplySpecializationTraits(newClassSpecialization);
-        }
-
-        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+        public void HandleAbilityProviderChange(IAbilityProvider newAbilityProvider, IAbilityProvider oldAbilityProvider) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleClassChange(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
-            RemoveClassTraits(oldCharacterClass);
-            UnLearnClassAbilities(oldCharacterClass);
-            LearnClassAbilities(newCharacterClass);
-            ApplyClassTraits(newCharacterClass);
+            RemoveAbilityProviderTraits(oldAbilityProvider);
+            UnLearnAbilityProviderAbilities(oldAbilityProvider);
+            LearnAbilityProviderAbilities(newAbilityProvider);
+            ApplyAbilityProviderTraits(newAbilityProvider);
         }
 
-        public void ApplyClassTraits(CharacterClass newCharacterClass) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
-            if (newCharacterClass != null && newCharacterClass.TraitList != null && newCharacterClass.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in newCharacterClass.TraitList) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
-                    ApplyStatusEffect(classTrait);
-                }
-            }
-        }
-
-        public void ApplySpecializationTraits(ClassSpecialization newClassSpecialization) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
-            if (newClassSpecialization != null && newClassSpecialization.TraitList != null && newClassSpecialization.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in newClassSpecialization.TraitList) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.ApplyClassTraits(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + "): trait: " + classTrait);
-                    ApplyStatusEffect(classTrait);
+        public void ApplyAbilityProviderTraits(IAbilityProvider abilityProvider) {
+            if (abilityProvider != null && abilityProvider.TraitList != null && abilityProvider.TraitList.Count > 0) {
+                foreach (AbilityEffect abilityProviderTrait in abilityProvider.TraitList) {
+                    ApplyStatusEffect(abilityProviderTrait);
                 }
             }
         }
@@ -800,19 +788,9 @@ namespace AnyRPG {
             ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
-        public void RemoveClassTraits(CharacterClass oldCharacterClass) {
-            if (oldCharacterClass !=null && oldCharacterClass.TraitList != null && oldCharacterClass.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in oldCharacterClass.TraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
-                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
-                    }
-                }
-            }
-        }
-
-        public void RemoveSpecializationTraits(ClassSpecialization oldClassSpecialization) {
-            if (oldClassSpecialization != null && oldClassSpecialization.TraitList != null && oldClassSpecialization.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in oldClassSpecialization.TraitList) {
+        public void RemoveAbilityProviderTraits(IAbilityProvider oldAbilityProvider) {
+            if (oldAbilityProvider != null && oldAbilityProvider.TraitList != null && oldAbilityProvider.TraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in oldAbilityProvider.TraitList) {
                     if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
                         baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
                     }
@@ -834,55 +812,12 @@ namespace AnyRPG {
 
         }
 
-        public void LearnClassAbilities(CharacterClass characterClass) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + ")");
-            if (characterClass == null) {
+        public void LearnAbilityProviderAbilities(IAbilityProvider abilityProvider) {
+            if (abilityProvider == null) {
                 return;
             }
-            foreach (BaseAbility baseAbility in characterClass.AbilityList) {
-                //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + "); ability name: " + abilityName);
+            foreach (BaseAbility baseAbility in abilityProvider.AbilityList) {
                 if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
-                } else {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnClassAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
-                }
-            }
-        }
-
-        public void LearnSpecializationAbilities(ClassSpecialization classSpecialization) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + ")");
-            if (classSpecialization == null) {
-                return;
-            }
-            foreach (BaseAbility baseAbility in classSpecialization.AbilityList) {
-                //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
-                } else {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnSpecializationAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
-                }
-            }
-        }
-
-        public void LearnFactionAbilities(Faction newFaction) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + ")");
-            foreach (BaseAbility baseAbility in newFaction.AbilityList) {
-                //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName);
-                if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + " is not learned yet, LEARNING!");
-                    baseCharacter.CharacterAbilityManager.LearnAbility(baseAbility);
-                } else {
-                    //Debug.Log(gameObject.name + ".PlayerCharacter.LearnFactionAbilities(" + newFaction + "); ability name: " + abilityName + "; level: " + SystemAbilityManager.MyInstance.GetResource(abilityName).MyRequiredLevel + "; playerlevel: " + PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel + "; hasability: " + (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(abilityName)));
-                }
-            }
-        }
-
-        public void LearnUnitProfileAbilities() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnUnitProfileAbilities()");
-            if (baseCharacter != null && baseCharacter.UnitProfile != null) {
-                foreach (BaseAbility baseAbility in baseCharacter.UnitProfile.LearnedAbilities) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
                     }
@@ -891,25 +826,14 @@ namespace AnyRPG {
             }
         }
 
-        public void UnLearnClassAbilities (CharacterClass characterClass, bool updateActionBars = false) {
-            if (characterClass == null) {
+        public void UnLearnAbilityProviderAbilities (IAbilityProvider abilityProvider, bool updateActionBars = false) {
+            if (abilityProvider == null) {
                 return;
             }
-
-            // first, unlearn the abilities in the character class ability list
-            foreach (BaseAbility oldAbility in characterClass.AbilityList) {
+            foreach (BaseAbility oldAbility in abilityProvider.AbilityList) {
                 UnlearnAbility(oldAbility, updateActionBars);
             }
-            OnUnlearnClassAbilities();
-        }
-
-        public void UnLearnSpecializationAbilities(ClassSpecialization classSpecialization) {
-            if (classSpecialization == null) {
-                return;
-            }
-            foreach (BaseAbility oldAbility in classSpecialization.AbilityList) {
-                UnlearnAbility(oldAbility);
-            }
+            OnUnlearnAbilities();
         }
 
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
@@ -1001,22 +925,23 @@ namespace AnyRPG {
 
         public void UpdateAbilityList(int newLevel) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
-            LearnUnitProfileAbilities();
 
-            if (baseCharacter.UnitController == null || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                LearnSystemAbilities();
+            LearnSystemAbilities();
 
-                if (baseCharacter.CharacterClass != null) {
-                    LearnClassAbilities(baseCharacter.CharacterClass);
-                }
-
-                if (baseCharacter.ClassSpecialization != null) {
-                    LearnSpecializationAbilities(baseCharacter.ClassSpecialization);
-                }
-
-                if (baseCharacter.Faction != null) {
-                    LearnFactionAbilities(baseCharacter.Faction);
-                }
+            if (baseCharacter.UnitProfile != null) {
+                LearnAbilityProviderAbilities(baseCharacter.UnitProfile);
+            }
+            if (baseCharacter.CharacterRace != null) {
+                LearnAbilityProviderAbilities(baseCharacter.CharacterRace);
+            }
+            if (baseCharacter.CharacterClass != null) {
+                LearnAbilityProviderAbilities(baseCharacter.CharacterClass);
+            }
+            if (baseCharacter.ClassSpecialization != null) {
+                LearnAbilityProviderAbilities(baseCharacter.ClassSpecialization);
+            }
+            if (baseCharacter.Faction != null) {
+                LearnAbilityProviderAbilities(baseCharacter.Faction);
             }
 
         }
@@ -1112,11 +1037,10 @@ namespace AnyRPG {
                 float nextTickPercent = 0f;
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                if (baseCharacter != null && ability.HoldableObjectList.Count != 0) {
-                    //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
+                if (baseCharacter != null && ability.GetHoldableObjectList(baseCharacter).Count != 0) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
                     if (!ability.AnimatorCreatePrefabs) {
-                        SpawnAbilityObjects(ability.HoldableObjectList);
+                        SpawnAbilityObjects(ability.GetHoldableObjectList(baseCharacter));
                     }
                 }
                 if (ability.CastingAudioClip != null) {
@@ -1179,16 +1103,15 @@ namespace AnyRPG {
             if (baseCharacter != null &&
                 baseCharacter.CharacterEquipmentManager != null &&
                 usedBaseAbility != null &&
-                usedBaseAbility.HoldableObjectList != null &&
-                usedBaseAbility.HoldableObjectList.Count != 0) {
+                usedBaseAbility.GetHoldableObjectList(baseCharacter).Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.AnimatorCreatePrefabs) {
                     if (indexValue == -1) {
-                        SpawnAbilityObjects(usedBaseAbility.HoldableObjectList);
+                        SpawnAbilityObjects(usedBaseAbility.GetHoldableObjectList(baseCharacter));
                     } else {
                         List<AbilityAttachmentNode> passList = new List<AbilityAttachmentNode>();
-                        passList.Add(usedBaseAbility.HoldableObjectList[indexValue - 1]);
+                        passList.Add(usedBaseAbility.GetHoldableObjectList(baseCharacter)[indexValue - 1]);
                         SpawnAbilityObjects(passList);
                     }
                 }
@@ -1275,9 +1198,16 @@ namespace AnyRPG {
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
             // handle weapon on hit effects
-            if (baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.OnHitEffect != null && attackEffect.DamageType == DamageType.physical && baseCharacter.CharacterCombat.OnHitEffect.DisplayName != attackEffect.DisplayName) {
+            if (baseCharacter.CharacterCombat != null
+                && baseCharacter.CharacterCombat.OnHitEffects != null
+                && attackEffect.DamageType == DamageType.physical) {
                 List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                onHitEffectList.Add(baseCharacter.CharacterCombat.OnHitEffect);
+                foreach (AttackEffect _attackEffect in baseCharacter.CharacterCombat.OnHitEffects) {
+                    // prevent accidental infinite recursion of ability effect
+                    if (_attackEffect.DisplayName != attackEffect.DisplayName) {
+                        onHitEffectList.Add(_attackEffect);
+                    }
+                }
                 attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectOutput, onHitEffectList);
             } else {
                 //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");

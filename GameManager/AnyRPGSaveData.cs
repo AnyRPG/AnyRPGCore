@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         public string playerName;
         public string playerFaction;
+        public string characterRace;
         public string characterClass;
         public string classSpecialization;
         public string unitProfileName;

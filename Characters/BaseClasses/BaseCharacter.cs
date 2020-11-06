@@ -10,6 +10,7 @@ namespace AnyRPG {
         public event System.Action<string> OnTitleChange = delegate { };
         public event System.Action<Faction> OnFactionChange = delegate { };
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+        public event System.Action<CharacterRace, CharacterRace> OnRaceChange = delegate { };
         public event System.Action<ClassSpecialization, ClassSpecialization> OnSpecializationChange = delegate { };
         public event System.Action<UnitType, UnitType> OnUnitTypeChange = delegate { };
 
@@ -22,6 +23,7 @@ namespace AnyRPG {
         private string title = string.Empty;
         private Faction faction;
         private UnitType unitType;
+        private CharacterRace characterRace;
         private CharacterClass characterClass;
         private ClassSpecialization classSpecialization;
         private bool spawnDead = false;
@@ -77,6 +79,7 @@ namespace AnyRPG {
         }
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
@@ -206,7 +209,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newFaction != null && newFaction != faction) {
                 SetCharacterFaction(newFaction);
-                characterAbilityManager.LearnFactionAbilities(newFaction);
             }
         }
 
@@ -223,6 +225,15 @@ namespace AnyRPG {
                 SetCharacterClass(newCharacterClass);
             }
         }
+
+        /*
+        public void ChangeCharacterRace(CharacterRace newCharacterRace) {
+            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            if (newCharacterRace != null && newCharacterRace != characterRace) {
+                SetCharacterRace(newCharacterRace);
+            }
+        }
+        */
 
         public void SetUnitProfile(string unitProfileName) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
@@ -326,6 +337,9 @@ namespace AnyRPG {
             if (unitType != null) {
                 statProviders.Add(unitType);
             }
+            if (characterRace != null) {
+                statProviders.Add(characterRace);
+            }
             if (characterClass != null) {
                 statProviders.Add(characterClass);
             }
@@ -355,15 +369,6 @@ namespace AnyRPG {
             }
         }
 
-        public void SetCharacterFaction(Faction newFaction) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
-            if (newFaction != null) {
-                faction = newFaction;
-                OnFactionChange(newFaction);
-            }
-            characterFactionManager.SetReputation(newFaction);
-        }
-
         public void SetCharacterTitle(string newTitle) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
             if (newTitle != null) {
@@ -372,6 +377,32 @@ namespace AnyRPG {
                 if (unitController != null) {
                     unitController.NotifyOnTitleChange(newTitle);
                 }
+            }
+        }
+
+        public void SetCharacterFaction(Faction newFaction, bool notify = true, bool resetStats = true) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
+            if (newFaction != null) {
+                Faction oldFaction = faction;
+                faction = newFaction;
+                UpdateStatProviderList();
+                if (characterStats != null) {
+                    characterStats.HandleUpdateStatProviders();
+                }
+                if (notify) {
+                    OnFactionChange(newFaction);
+                    characterAbilityManager.HandleAbilityProviderChange(newFaction, oldFaction);
+                    characterEquipmentManager.UnequipUnwearableEquipment();
+                    if (unitController != null) {
+                        unitController.NotifyOnFactionChange(newFaction, oldFaction);
+                    }
+                }
+            }
+            characterFactionManager.SetReputation(newFaction);
+
+            // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
+            if (resetStats == true && characterStats != null) {
+                characterStats.SetLevel(characterStats.Level);
             }
         }
 
@@ -385,14 +416,19 @@ namespace AnyRPG {
                     characterStats.HandleUpdateStatProviders();
                 }
 
-                // resets character stats because classes and specializations can get bonuses
-                if (resetStats == true) {
-                    characterStats.SetLevel(characterStats.Level);
+                if (notify) {
+                    // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
+                    OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+                    characterAbilityManager.HandleAbilityProviderChange(newClassSpecialization, oldClassSpecialization);
+                    characterEquipmentManager.UnequipUnwearableEquipment();
+                    if (unitController != null) {
+                        unitController.NotifyOnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+                    }
                 }
 
-                if (notify == true) {
-                    OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
-                    characterAbilityManager.HandleSpecializationChange(newClassSpecialization, oldClassSpecialization);
+                // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
+                if (resetStats == true && characterStats != null) {
+                    characterStats.SetLevel(characterStats.Level);
                 }
             }
         }
@@ -409,10 +445,36 @@ namespace AnyRPG {
                 if (notify) {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnClassChange(newCharacterClass, oldCharacterClass);
-                    characterEquipmentManager.HandleClassChange(newCharacterClass, oldCharacterClass);
-                    characterAbilityManager.HandleClassChange(newCharacterClass, oldCharacterClass);
+                    characterEquipmentManager.UnequipUnwearableEquipment();
+                    characterAbilityManager.HandleAbilityProviderChange(newCharacterClass, oldCharacterClass);
                     if (unitController != null) {
                         unitController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+                    }
+                }
+
+                // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
+                if (resetStats == true && characterStats != null) {
+                    characterStats.SetLevel(characterStats.Level);
+                }
+            }
+        }
+
+        public void SetCharacterRace(CharacterRace newCharacterRace, bool notify = true, bool resetStats = true) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
+            if (newCharacterRace != null) {
+                CharacterRace oldCharacterRace = characterRace;
+                characterRace = newCharacterRace;
+                UpdateStatProviderList();
+                if (characterStats != null) {
+                    characterStats.HandleUpdateStatProviders();
+                }
+                if (notify) {
+                    // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
+                    OnRaceChange(newCharacterRace, oldCharacterRace);
+                    characterEquipmentManager.UnequipUnwearableEquipment();
+                    characterAbilityManager.HandleAbilityProviderChange(newCharacterRace, oldCharacterRace);
+                    if (unitController != null) {
+                        unitController.NotifyOnRaceChange(newCharacterRace, oldCharacterRace);
                     }
                 }
 
@@ -433,10 +495,15 @@ namespace AnyRPG {
                 if (notify) {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnUnitTypeChange(newUnitType, oldUnitType);
+                    characterEquipmentManager.UnequipUnwearableEquipment();
+                    characterAbilityManager.HandleAbilityProviderChange(newUnitType, oldUnitType);
+                    if (unitController != null) {
+                        unitController.NotifyOnUnitTypeChange(newUnitType, oldUnitType);
+                    }
                 }
 
                 // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
-                if (resetStats == true) {
+                if (resetStats == true && characterStats != null) {
                     characterStats.SetLevel(characterStats.Level);
                 }
             }

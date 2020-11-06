@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
-    public class UnitProfile : DescribableResource, IStatProvider {
+    public class UnitProfile : DescribableResource, IStatProvider, IAbilityProvider {
 
         [Header("Unit")]
 
@@ -19,6 +19,14 @@ namespace AnyRPG {
         [Tooltip("The name of the prefab profile that contains the gameObject that represents the unit")]
         [SerializeField]
         private string prefabProfileName = string.Empty;
+
+        [Tooltip("If true, the unit prefab is loaded from the inline prefab settings below, instead of the shared prefab profile above.")]
+        [SerializeField]
+        private bool useInlinePrefabProps = false;
+
+        [Tooltip("If useInlinePrefabProps is true, these values will be used instead of the shared prefab profile above")]
+        [SerializeField]
+        private UnitPrefabProps unitPrefabProps = new UnitPrefabProps();
 
         private UnitPrefabProfile unitPrefabProfile = null;
 
@@ -70,6 +78,12 @@ namespace AnyRPG {
 
         protected UnitType unitType;
 
+        [Tooltip("The race of the unit type")]
+        [SerializeField]
+        protected string characterRaceName;
+
+        protected CharacterRace characterRace;
+
         [Tooltip("The name of the class specialization")]
         [SerializeField]
         protected string classSpecializationName;
@@ -91,14 +105,21 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultAutoAttackAbilityName = string.Empty;
         */
-
-        [Header("Abilities")]
+        [Header("Abilities and Traits")]
 
         [Tooltip("Abilities this unit will know")]
+        [FormerlySerializedAs("learnedAbilityNames")]
         [SerializeField]
-        private List<string> learnedAbilityNames = new List<string>();
+        private List<string> abilityNames = new List<string>();
 
-        private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
+        private List<BaseAbility> abilityList = new List<BaseAbility>();
+
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [SerializeField]
+        private List<string> traitNames = new List<string>();
+
+        private List<StatusEffect> traitList = new List<StatusEffect>();
+
         private BaseAbility defaultAutoAttackAbility = null;
 
         [Header("Capabilities")]
@@ -211,7 +232,8 @@ namespace AnyRPG {
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
-        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
+        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
@@ -222,6 +244,7 @@ namespace AnyRPG {
         public string CharacterName { get => characterName; set => characterName = value; }
         public string Title { get => title; set => title = value; }
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public Faction Faction { get => faction; set => faction = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
@@ -291,17 +314,29 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilities = new List<BaseAbility>();
-            if (learnedAbilityNames != null) {
-                foreach (string baseAbilityName in learnedAbilityNames) {
+            abilityList = new List<BaseAbility>();
+            if (abilityNames != null) {
+                foreach (string baseAbilityName in abilityNames) {
                     BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
                         if ((baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true && defaultAutoAttackAbility == null) {
                             defaultAutoAttackAbility = baseAbility;
                         }
-                        learnedAbilities.Add(baseAbility);
+                        abilityList.Add(baseAbility);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            traitList = new List<StatusEffect>();
+            if (traitNames != null) {
+                foreach (string traitName in traitNames) {
+                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
+                    if (abilityEffect != null) {
+                        traitList.Add(abilityEffect);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -372,7 +407,16 @@ namespace AnyRPG {
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + characterClassName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (characterRace == null && characterRaceName != null && characterRaceName != string.Empty) {
+                CharacterRace tmpCharacterRace = SystemCharacterRaceManager.MyInstance.GetResource(characterRaceName);
+                if (tmpCharacterRace != null) {
+                    characterRace = tmpCharacterRace;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find race : " + characterRaceName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
             }
 

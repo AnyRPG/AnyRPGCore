@@ -596,7 +596,7 @@ namespace AnyRPG {
             activeCharacter.CharacterCombat.OnUpdate += HandleCombatUpdate;
             activeCharacter.CharacterCombat.OnReceiveCombatMiss += HandleCombatMiss;
             activeCharacter.CharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
-            activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities += HandleUnlearnClassAbilities;
+            activeCharacter.CharacterAbilityManager.OnUnlearnAbilities += HandleUnlearnClassAbilities;
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail += HandleLearnedCheckFail;
             activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail += HandleCombatCheckFail;
@@ -625,7 +625,7 @@ namespace AnyRPG {
             activeCharacter.CharacterCombat.OnUpdate -= HandleCombatUpdate;
             activeCharacter.CharacterCombat.OnReceiveCombatMiss -= HandleCombatMiss;
             activeCharacter.CharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
-            activeCharacter.CharacterAbilityManager.OnUnlearnClassAbilities -= HandleUnlearnClassAbilities;
+            activeCharacter.CharacterAbilityManager.OnUnlearnAbilities -= HandleUnlearnClassAbilities;
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail -= HandleLearnedCheckFail;
             activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail -= HandleCombatCheckFail;

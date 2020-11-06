@@ -33,6 +33,10 @@ namespace AnyRPG {
 
         [Header("Prefab Control")]
 
+        [Tooltip("Ability to use ability prefabs, both to use Weapon and ability prefabs, weapon to use only weapon prefabs")]
+        [SerializeField]
+        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Both;
+
         [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
         [SerializeField]
         protected bool animatorCreatePrefabs;
@@ -253,7 +257,7 @@ namespace AnyRPG {
         protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         public AnimationClip CastingAnimationClip {
-            get => (animationProfile != null && animationProfile.AttackClips != null && animationProfile.AttackClips.Count > 0 ? animationProfile.AttackClips[0] : null);
+            get => (animationProfile != null && animationProfile.AnimationProps.AttackClips != null && animationProfile.AnimationProps.AttackClips.Count > 0 ? animationProfile.AnimationProps.AttackClips[0] : null);
         }
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
@@ -296,7 +300,7 @@ namespace AnyRPG {
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.AttackClips : null); }
+        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }
         public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
@@ -319,7 +323,10 @@ namespace AnyRPG {
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
         public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
-        public virtual List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+
+        public virtual List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
+            return holdableObjectList;
+        }
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -466,7 +473,7 @@ namespace AnyRPG {
 
         public virtual void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
             //Debug.Log(MyName + ".BaseAbility.ProcessAbilityPrefabs()");
-            if (holdableObjectList == null || holdableObjectList.Count == 0) {
+            if (GetHoldableObjectList(sourceCharacter) == null || GetHoldableObjectList(sourceCharacter).Count == 0) {
                 return;
             }
 
@@ -814,5 +821,6 @@ namespace AnyRPG {
     }
 
     public enum PrefabSpawnLocation { None, Caster, Target, GroundTarget, OriginalTarget, targetPoint }
+    public enum AbilityPrefabSource { Both, Ability, Weapon }
 
 }

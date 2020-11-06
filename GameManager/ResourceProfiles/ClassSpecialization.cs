@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Class Specialization", menuName = "AnyRPG/CharacterClassSpecialization")]
     [System.Serializable]
-    public class ClassSpecialization : DescribableResource, IStatProvider {
+    public class ClassSpecialization : DescribableResource, IStatProvider, IAbilityProvider {
 
         //[Header("Class Specialization")]
 

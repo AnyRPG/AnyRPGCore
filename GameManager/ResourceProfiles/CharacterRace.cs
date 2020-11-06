@@ -7,22 +7,31 @@ using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Character Class", menuName = "AnyRPG/CharacterClass")]
-    public class CharacterClass : DescribableResource, IStatProvider, IAbilityProvider {
-
-        [Header("NewGame")]
-
-        [Tooltip("If true, this faction is available for Players to choose on the new game menu")]
-        [SerializeField]
-        private bool newGameOption = false;
+    [CreateAssetMenu(fileName = "New Character Race", menuName = "AnyRPG/CharacterRace")]
+    public class CharacterRace : DescribableResource, IStatProvider, IAbilityProvider {
 
         [Header("Start Equipment")]
 
-        [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
+        [Tooltip("The names of the equipment that will be worn by this race when a new game is started")]
         [SerializeField]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
+
+        [Header("Attack Effect Defaults")]
+
+        [Tooltip("Ability effects to cast on the target when the character does not have a weapon equipped and does damage from a standard (auto) attack")]
+        [SerializeField]
+        private List<string> defaultHitEffects = new List<string>();
+
+        private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
+
+        [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
+        [SerializeField]
+        private List<string> onHitEffects = new List<string>();
+
+        private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+
 
         [Header("Abilities and Traits")]
 
@@ -75,11 +84,43 @@ namespace AnyRPG {
         public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
-        public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
+        public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
+
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
+
+            if (onHitEffects != null) {
+                foreach (string onHitEffectName in onHitEffects) {
+                    if (onHitEffectName != null && onHitEffectName != string.Empty) {
+                        AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(onHitEffectName);
+                        if (abilityEffect != null) {
+                            onHitEffectList.Add(abilityEffect);
+                        } else {
+                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                        }
+                    } else {
+                        Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty on hit effect found while inititalizing.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (defaultHitEffects != null) {
+                foreach (string defaultHitEffectName in defaultHitEffects) {
+                    if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
+                        AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(defaultHitEffectName);
+                        if (abilityEffect != null) {
+                            defaultHitEffectList.Add(abilityEffect);
+                        } else {
+                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                        }
+                    } else {
+                        Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty default hit effect found while inititalizing.  CHECK INSPECTOR");
+                    }
+                }
+            }
 
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
@@ -147,69 +188,6 @@ namespace AnyRPG {
 
         }
 
-    }
-
-
-    [System.Serializable]
-    public class CharacterStatToResourceNode {
-
-        [Tooltip("The name of the resource that will receive points from the stat")]
-        [SerializeField]
-        private string resourceName = string.Empty;
-
-        private PowerResource powerResource = null;
-
-        [Tooltip("The amount of the resource to be gained per point of the stat")]
-        [SerializeField]
-        private float resourcePerPoint = 0;
-
-        public float ResourcePerPoint { get => resourcePerPoint; set => resourcePerPoint = value; }
-        public string ResourceName { get => resourceName; set => resourceName = value; }
-        public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
-
-        public void SetupScriptableObjects() {
-
-            if (resourceName != null && resourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
-                if (tmpPowerResource != null) {
-                    powerResource = tmpPowerResource;
-                } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + resourceName + " while inititalizing statresourceNode.  CHECK INSPECTOR");
-                }
-            }
-
-        }
-
-    }
-
-    [System.Serializable]
-    public class StatToResourceNode {
-
-        [Tooltip("Resource that will have its maximum amount increased by the stat")]
-        [SerializeField]
-        private string powerResourceName = string.Empty;
-
-        private PowerResource powerResource = null;
-
-        [Tooltip("List of stats that will contribute to this resource")]
-        [SerializeField]
-        private List<CharacterStatToResourceNode> statConversion = new List<CharacterStatToResourceNode>();
-
-        public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
-        public List<CharacterStatToResourceNode> StatConversion { get => statConversion; set => statConversion = value; }
-
-        public void SetupScriptableObjects() {
-
-            if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourceName);
-                if (tmpPowerResource != null) {
-                    powerResource = tmpPowerResource;
-                } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing statresourceNode.  CHECK INSPECTOR");
-                }
-            }
-
-        }
     }
 
 }

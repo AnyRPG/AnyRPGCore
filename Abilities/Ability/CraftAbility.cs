@@ -8,21 +8,18 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Craft Ability",menuName = "AnyRPG/Abilities/Effects/CraftAbility")]
     public class CraftAbility : DirectAbility {
 
-        public override List<AbilityAttachmentNode> HoldableObjectList {
-            get {
-                if (CraftingUI.MyInstance.CraftingQueue.Count > 0) {
-                    List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
-                    foreach (AbilityAttachmentNode prefabProfile in base.HoldableObjectList) {
-                        returnList.Add(prefabProfile);
-                    }
-                    foreach (AbilityAttachmentNode abilityAttachmentNode in CraftingUI.MyInstance.CraftingQueue[0].HoldableObjectList) {
-                        returnList.Add(abilityAttachmentNode);
-                    }
-                    return returnList;
+        public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
+            if (CraftingUI.MyInstance.CraftingQueue.Count > 0) {
+                List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
+                foreach (AbilityAttachmentNode prefabProfile in base.GetHoldableObjectList(abilityCaster)) {
+                    returnList.Add(prefabProfile);
                 }
-                return base.HoldableObjectList;
+                foreach (AbilityAttachmentNode abilityAttachmentNode in CraftingUI.MyInstance.CraftingQueue[0].HoldableObjectList) {
+                    returnList.Add(abilityAttachmentNode);
+                }
+                return returnList;
             }
-            set => base.HoldableObjectList = value;
+            return base.GetHoldableObjectList(abilityCaster);
         }
 
         public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {

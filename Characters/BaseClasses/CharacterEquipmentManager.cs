@@ -24,8 +24,12 @@ namespace AnyRPG {
         // need a local reference to this for preview characters which don't have a way to reference back to the base character to find this
         protected AttachmentProfile attachmentProfile;
 
+        // keep track of holdable objects to be used during weapon attacks such as arrows, glowing hand effects, weapon trails, etc
+        private List<AbilityAttachmentNode> weaponHoldableObjects = new List<AbilityAttachmentNode>();
+
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
+        public List<AbilityAttachmentNode> WeaponHoldableObjects { get => weaponHoldableObjects; }
 
         public CharacterEquipmentManager (BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
@@ -35,7 +39,7 @@ namespace AnyRPG {
             LoadDefaultEquipment();
         }
 
-        public void HandleClassChange(CharacterClass newClass, CharacterClass oldClass) {
+        public void UnequipUnwearableEquipment() {
             List<Equipment> equipmentToRemove = new List<Equipment>();
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null && equipment.CanEquip(baseCharacter) == false) {
@@ -448,7 +452,27 @@ namespace AnyRPG {
 
         }
 
+        public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            if (oldItem != null && (oldItem is Weapon) && (oldItem as Weapon).AbilityObjectList != null && (oldItem as Weapon).AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in (oldItem as Weapon).AbilityObjectList) {
+                    if (weaponHoldableObjects.Contains(abilityAttachmentNode)) {
+                        weaponHoldableObjects.Remove(abilityAttachmentNode);
+                    }
+                }
+            }
+
+            if (newItem != null && (newItem is Weapon) && (newItem as Weapon).AbilityObjectList != null && (newItem as Weapon).AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in (newItem as Weapon).AbilityObjectList) {
+                    if (!weaponHoldableObjects.Contains(abilityAttachmentNode)) {
+                        weaponHoldableObjects.Add(abilityAttachmentNode);
+                    }
+                }
+            }
+        }
+
         public void NotifyEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
+            HandleWeaponHoldableObjects(newItem, oldItem);
             OnEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex);
@@ -567,7 +591,7 @@ namespace AnyRPG {
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment is Weapon) {
                     weaponCount++;
-                    if (weaponAffinity == (equipment as Weapon).MyWeaponSkill) {
+                    if (weaponAffinity == (equipment as Weapon).WeaponSkill) {
                         return true;
                     }
                 }
@@ -577,7 +601,7 @@ namespace AnyRPG {
                 // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.CharacterClass != null) {
                     if (baseCharacter.CharacterClass.WeaponSkillList.Contains(weaponAffinity)) {
-                        if (weaponAffinity.MyDefaultWeaponSkill) {
+                        if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
                             return true;
                         }
                     }
@@ -586,7 +610,7 @@ namespace AnyRPG {
                 // check if the unit profile is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.UnitProfile != null) {
                     if (baseCharacter.UnitProfile.WeaponSkillList.Contains(weaponAffinity)) {
-                        if (weaponAffinity.MyDefaultWeaponSkill) {
+                        if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
                             return true;
                         }
                     }

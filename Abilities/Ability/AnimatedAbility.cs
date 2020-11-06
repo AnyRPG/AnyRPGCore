@@ -8,6 +8,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewAnimatedAbility",menuName = "AnyRPG/Abilities/AnimatedAbility")]
     public class AnimatedAbility : BaseAbility {
 
+
         [Header("Animated Ability")]
 
         [Tooltip("Is this an auto attack ability")]
@@ -26,12 +27,29 @@ namespace AnyRPG {
         [SerializeField]
         private bool useWeaponHitSound = false;
 
+
+        public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
+        public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+
         public override float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
             return 0f;
         }
 
-        public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
-        public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+        public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
+            if (abilityPrefabSource == AbilityPrefabSource.Both) {
+                List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
+                returnList.AddRange(base.GetHoldableObjectList(abilityCaster));
+                returnList.AddRange(abilityCaster.AbilityManager.GetWeaponAbilityObjectList());
+                return returnList;
+            }
+            if (abilityPrefabSource == AbilityPrefabSource.Weapon) {
+                return abilityCaster.AbilityManager.GetWeaponAbilityObjectList();
+            }
+
+            // abilityPrefabSource is AbilityPrefabSource.Ability since there are only 3 options
+            return base.GetHoldableObjectList(abilityCaster);
+        }
+
 
         /// <summary>
         /// weapon hit sound

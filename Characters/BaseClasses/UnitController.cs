@@ -17,7 +17,11 @@ namespace AnyRPG {
         public event System.Action OnReputationChange = delegate { };
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
+        public event System.Action<UnitType, UnitType> OnUnitTypeChange = delegate { };
+        public event System.Action<CharacterRace, CharacterRace> OnRaceChange = delegate { };
         public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
+        public event System.Action<ClassSpecialization, ClassSpecialization> OnSpecializationChange = delegate { };
+        public event System.Action<Faction, Faction> OnFactionChange = delegate { };
         public event System.Action<string> OnNameChange = delegate { };
         public event System.Action<string> OnTitleChange = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
@@ -1211,8 +1215,20 @@ namespace AnyRPG {
         public void NotifyOnLevelChanged(int newLevel) {
             OnLevelChanged(newLevel);
         }
+        public void NotifyOnUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
+            OnUnitTypeChange(newUnitType, oldUnitType);
+        }
+        public void NotifyOnRaceChange(CharacterRace newCharacterRace, CharacterRace oldCharacterRace) {
+            OnRaceChange(newCharacterRace, oldCharacterRace);
+        }
         public void NotifyOnClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
             OnClassChange(newCharacterClass, oldCharacterClass);
+        }
+        public void NotifyOnSpecializationChange(ClassSpecialization newClassSpecialization, ClassSpecialization oldClassSpecialization) {
+            OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+        }
+        public void NotifyOnFactionChange(Faction newFaction, Faction oldFaction) {
+            OnFactionChange(newFaction, oldFaction);
         }
         public void NotifyOnNameChange(string newName) {
             OnNameChange(newName);

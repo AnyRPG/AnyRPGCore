@@ -29,7 +29,8 @@ namespace AnyRPG {
         // components
         protected BaseCharacter baseCharacter;
 
-        protected AbilityEffect onHitEffect = null;
+        // list of on hit effects to cast on weapon hit from currently equipped weapons
+        protected List<AbilityEffect> onHitEffects = null;
 
         protected AggroTable aggroTable = null;
 
@@ -62,7 +63,7 @@ namespace AnyRPG {
         public AudioClip DefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
         public BaseCharacter SwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
-        public AbilityEffect OnHitEffect { get => onHitEffect; set => onHitEffect = value; }
+        public List<AbilityEffect> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
 
         public CharacterCombat(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
@@ -632,8 +633,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
 
             if (oldItem != null && oldItem is Weapon) {
-                if ((oldItem as Weapon).MyOnHitEffect != null) {
-                    onHitEffect = null;
+                if ((oldItem as Weapon).OnHitEffectList != null && (oldItem as Weapon).OnHitEffectList.Count > 0) {
+                    onHitEffects = null;
                 }
                 EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(oldItem);
                 if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
@@ -643,13 +644,13 @@ namespace AnyRPG {
 
             if (newItem != null) {
                 if (newItem is Weapon) {
-                    onHitEffect = null;
+                    onHitEffects = new List<AbilityEffect>();
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
-                    if ((newItem as Weapon).MyOnHitEffect != null) {
+                    if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
                         //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
-                        onHitEffect = (newItem as Weapon).MyOnHitEffect;
+                        onHitEffects = (newItem as Weapon).OnHitEffectList;
                     }
                     EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {

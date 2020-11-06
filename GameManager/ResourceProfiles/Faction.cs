@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Factions/Faction")]
-    public class Faction : DescribableResource {
+    public class Faction : DescribableResource, IAbilityProvider {
 
         [Header("NewGame")]
 

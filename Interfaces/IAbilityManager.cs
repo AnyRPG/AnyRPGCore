@@ -32,6 +32,12 @@ namespace AnyRPG {
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
 
         /// <summary>
+        /// return a list of weapon ability objects
+        /// </summary>
+        /// <returns></returns>
+        List<AbilityAttachmentNode> GetWeaponAbilityObjectList();
+
+        /// <summary>
         /// return a list of auto-attack animations for the currently equipped weapon
         /// </summary>
         /// <returns></returns>

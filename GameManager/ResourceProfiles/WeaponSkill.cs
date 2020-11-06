@@ -8,16 +8,17 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Weapon Skill", menuName = "AnyRPG/WeaponSkill")]
-    [System.Serializable]
     public class WeaponSkill : DescribableResource {
 
-        [Header("Weapon Skill")]
-
-        [Tooltip("this skill is considered to be in use by an unarmed character if set to true")]
         [SerializeField]
-        private bool defaultWeaponSkill;
+        private WeaponSkillProps weaponSkillProps = new WeaponSkillProps();
 
-        public bool MyDefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
+        public WeaponSkillProps WeaponSkillProps { get => weaponSkillProps; set => weaponSkillProps = value; }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            weaponSkillProps.SetupScriptableObjects();
+        }
     }
 
 }

@@ -364,7 +364,7 @@ namespace AnyRPG {
                 if ((Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
-                        if (equipment != null && equipment is Weapon && (equipment as Weapon).MyUseDamagePerSecond == true) {
+                        if (equipment != null && equipment is Weapon && (equipment as Weapon).UseDamagePerSecond == true) {
                             if (MyIcon.sprite != equipment.Icon) {
                                 MyIcon.sprite = equipment.Icon;
                                 break;

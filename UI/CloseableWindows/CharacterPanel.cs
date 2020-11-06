@@ -211,6 +211,7 @@ namespace AnyRPG {
             updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.ClassSpecialization.DisplayName) + "\n";
             updateString += "Faction: " + (PlayerManager.MyInstance.MyCharacter.Faction == null ? "None" : PlayerManager.MyInstance.MyCharacter.Faction.DisplayName) + "\n";
             updateString += "Unit Type: " + (PlayerManager.MyInstance.MyCharacter.UnitType == null ? "None" : PlayerManager.MyInstance.MyCharacter.UnitType.DisplayName) + "\n";
+            updateString += "Race: " + (PlayerManager.MyInstance.MyCharacter.CharacterRace == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterRace.DisplayName) + "\n";
             updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
             updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
 

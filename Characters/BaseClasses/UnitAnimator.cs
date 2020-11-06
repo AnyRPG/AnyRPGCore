@@ -260,784 +260,784 @@ namespace AnyRPG {
                 return;
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardClip.name)) {
-                if (currentAnimationProfile.MyMoveForwardClip != null) {
-                    if (overrideController[systemAnimations.MyMoveForwardClip.name] != currentAnimationProfile.MyMoveForwardClip) {
-                        overrideController[systemAnimations.MyMoveForwardClip.name] = currentAnimationProfile.MyMoveForwardClip;
-                        currentAnimations.MyMoveForwardClip = currentAnimationProfile.MyMoveForwardClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.MoveForwardClip.name)) {
+                if (currentAnimationProfile.AnimationProps.MoveForwardClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.MoveForwardClip.name] != currentAnimationProfile.AnimationProps.MoveForwardClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveForwardClip.name] = currentAnimationProfile.AnimationProps.MoveForwardClip;
+                        currentAnimations.AnimationProps.MoveForwardClip = currentAnimationProfile.AnimationProps.MoveForwardClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyMoveForwardClip != null && overrideController[systemAnimations.MyMoveForwardClip.name] != defaultAnimationProfile.MyMoveForwardClip) {
-                        overrideController[systemAnimations.MyMoveForwardClip.name] = defaultAnimationProfile.MyMoveForwardClip;
-                        currentAnimations.MyMoveForwardClip = defaultAnimationProfile.MyMoveForwardClip;
+                    if (defaultAnimationProfile.AnimationProps.MoveForwardClip != null && overrideController[systemAnimations.AnimationProps.MoveForwardClip.name] != defaultAnimationProfile.AnimationProps.MoveForwardClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveForwardClip.name] = defaultAnimationProfile.AnimationProps.MoveForwardClip;
+                        currentAnimations.AnimationProps.MoveForwardClip = defaultAnimationProfile.AnimationProps.MoveForwardClip;
                     }
                 }
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): MyMoveForwardClip." + currentAttackAnimationProfile.MyMoveForwardClip.averageSpeed);
-                if (currentAnimations.MyMoveForwardClip.averageSpeed.z > 0.1) {
+                if (currentAnimations.AnimationProps.MoveForwardClip.averageSpeed.z > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 1
-                    baseWalkAnimationSpeed = currentAnimations.MyMoveForwardClip.averageSpeed.z;
+                    baseWalkAnimationSpeed = currentAnimations.AnimationProps.MoveForwardClip.averageSpeed.z;
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardClip.name)) {
-                if (currentAnimationProfile.MyCombatMoveForwardClip != null) {
-                    if (overrideController[systemAnimations.MyCombatMoveForwardClip.name] != currentAnimationProfile.MyCombatMoveForwardClip) {
-                        overrideController[systemAnimations.MyCombatMoveForwardClip.name] = currentAnimationProfile.MyCombatMoveForwardClip;
-                        currentAnimations.MyCombatMoveForwardClip = currentAnimationProfile.MyCombatMoveForwardClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatMoveForwardClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatMoveForwardClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatMoveForwardClip.name] != currentAnimationProfile.AnimationProps.CombatMoveForwardClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveForwardClip.name] = currentAnimationProfile.AnimationProps.CombatMoveForwardClip;
+                        currentAnimations.AnimationProps.CombatMoveForwardClip = currentAnimationProfile.AnimationProps.CombatMoveForwardClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatMoveForwardClip != null && overrideController[systemAnimations.MyCombatMoveForwardClip.name] != defaultAnimationProfile.MyCombatMoveForwardClip) {
-                        overrideController[systemAnimations.MyCombatMoveForwardClip.name] = defaultAnimationProfile.MyCombatMoveForwardClip;
-                        currentAnimations.MyCombatMoveForwardClip = defaultAnimationProfile.MyCombatMoveForwardClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatMoveForwardClip != null && overrideController[systemAnimations.AnimationProps.CombatMoveForwardClip.name] != defaultAnimationProfile.AnimationProps.CombatMoveForwardClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveForwardClip.name] = defaultAnimationProfile.AnimationProps.CombatMoveForwardClip;
+                        currentAnimations.AnimationProps.CombatMoveForwardClip = defaultAnimationProfile.AnimationProps.CombatMoveForwardClip;
                     }
                 }
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): MyCombatMoveForwardClip.averageSpeed: " + currentAttackAnimationProfile.MyMoveForwardClip.averageSpeed + "; apparentSpeed: " + currentAttackAnimationProfile.MyCombatMoveForwardClip.apparentSpeed + "; averageAngularSpeed: " + currentAttackAnimationProfile.MyCombatMoveForwardClip.averageAngularSpeed);
-                if (currentAnimations.MyCombatMoveForwardClip.averageSpeed.z > 0.1) {
+                if (currentAnimations.AnimationProps.CombatMoveForwardClip.averageSpeed.z > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 1
-                    baseCombatWalkAnimationSpeed = currentAnimations.MyCombatMoveForwardClip.averageSpeed.z;
+                    baseCombatWalkAnimationSpeed = currentAnimations.AnimationProps.CombatMoveForwardClip.averageSpeed.z;
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation walk speed: " + baseWalkAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveForwardFastClip.name)) {
-                if (currentAnimationProfile.MyMoveForwardFastClip != null) {
-                    if (overrideController[systemAnimations.MyMoveForwardFastClip.name] != currentAnimationProfile.MyMoveForwardFastClip) {
-                        overrideController[systemAnimations.MyMoveForwardFastClip.name] = currentAnimationProfile.MyMoveForwardFastClip;
-                        currentAnimations.MyMoveForwardFastClip = currentAnimationProfile.MyMoveForwardFastClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.MoveForwardFastClip.name)) {
+                if (currentAnimationProfile.AnimationProps.MoveForwardFastClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.MoveForwardFastClip.name] != currentAnimationProfile.AnimationProps.MoveForwardFastClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveForwardFastClip.name] = currentAnimationProfile.AnimationProps.MoveForwardFastClip;
+                        currentAnimations.AnimationProps.MoveForwardFastClip = currentAnimationProfile.AnimationProps.MoveForwardFastClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyMoveForwardFastClip != null && overrideController[systemAnimations.MyMoveForwardFastClip.name] != defaultAnimationProfile.MyMoveForwardFastClip) {
-                        overrideController[systemAnimations.MyMoveForwardFastClip.name] = defaultAnimationProfile.MyMoveForwardFastClip;
-                        currentAnimations.MyMoveForwardFastClip = defaultAnimationProfile.MyMoveForwardFastClip;
+                    if (defaultAnimationProfile.AnimationProps.MoveForwardFastClip != null && overrideController[systemAnimations.AnimationProps.MoveForwardFastClip.name] != defaultAnimationProfile.AnimationProps.MoveForwardFastClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveForwardFastClip.name] = defaultAnimationProfile.AnimationProps.MoveForwardFastClip;
+                        currentAnimations.AnimationProps.MoveForwardFastClip = defaultAnimationProfile.AnimationProps.MoveForwardFastClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyMoveForwardFastClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.MoveForwardFastClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseRunAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveForwardFastClip.averageSpeed.z);
+                    baseRunAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.MoveForwardFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveForwardFastClip.name)) {
-                if (currentAnimationProfile.MyCombatMoveForwardFastClip != null) {
-                    if (overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] != currentAnimationProfile.MyCombatMoveForwardFastClip) {
-                        overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] = currentAnimationProfile.MyCombatMoveForwardFastClip;
-                        currentAnimations.MyCombatMoveForwardFastClip = currentAnimationProfile.MyCombatMoveForwardFastClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatMoveForwardFastClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatMoveForwardFastClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatMoveForwardFastClip.name] != currentAnimationProfile.AnimationProps.CombatMoveForwardFastClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveForwardFastClip.name] = currentAnimationProfile.AnimationProps.CombatMoveForwardFastClip;
+                        currentAnimations.AnimationProps.CombatMoveForwardFastClip = currentAnimationProfile.AnimationProps.CombatMoveForwardFastClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatMoveForwardFastClip != null && overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] != defaultAnimationProfile.MyCombatMoveForwardFastClip) {
-                        overrideController[systemAnimations.MyCombatMoveForwardFastClip.name] = defaultAnimationProfile.MyCombatMoveForwardFastClip;
-                        currentAnimations.MyCombatMoveForwardFastClip = defaultAnimationProfile.MyCombatMoveForwardFastClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatMoveForwardFastClip != null && overrideController[systemAnimations.AnimationProps.CombatMoveForwardFastClip.name] != defaultAnimationProfile.AnimationProps.CombatMoveForwardFastClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveForwardFastClip.name] = defaultAnimationProfile.AnimationProps.CombatMoveForwardFastClip;
+                        currentAnimations.AnimationProps.CombatMoveForwardFastClip = defaultAnimationProfile.AnimationProps.CombatMoveForwardFastClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatMoveForwardFastClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatMoveForwardFastClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatRunAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveForwardFastClip.averageSpeed.z);
+                    baseCombatRunAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatMoveForwardFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackClip.name)) {
-                if (currentAnimationProfile.MyMoveBackClip != null) {
-                    if (overrideController[systemAnimations.MyMoveBackClip.name] != currentAnimationProfile.MyMoveBackClip) {
-                        overrideController[systemAnimations.MyMoveBackClip.name] = currentAnimationProfile.MyMoveBackClip;
-                        currentAnimations.MyMoveBackClip = currentAnimationProfile.MyMoveBackClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.MoveBackClip.name)) {
+                if (currentAnimationProfile.AnimationProps.MoveBackClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.MoveBackClip.name] != currentAnimationProfile.AnimationProps.MoveBackClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveBackClip.name] = currentAnimationProfile.AnimationProps.MoveBackClip;
+                        currentAnimations.AnimationProps.MoveBackClip = currentAnimationProfile.AnimationProps.MoveBackClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyMoveBackClip != null && overrideController[systemAnimations.MyMoveBackClip.name] != defaultAnimationProfile.MyMoveBackClip) {
-                        overrideController[systemAnimations.MyMoveBackClip.name] = defaultAnimationProfile.MyMoveBackClip;
-                        currentAnimations.MyMoveBackClip = defaultAnimationProfile.MyMoveBackClip;
+                    if (defaultAnimationProfile.AnimationProps.MoveBackClip != null && overrideController[systemAnimations.AnimationProps.MoveBackClip.name] != defaultAnimationProfile.AnimationProps.MoveBackClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveBackClip.name] = defaultAnimationProfile.AnimationProps.MoveBackClip;
+                        currentAnimations.AnimationProps.MoveBackClip = defaultAnimationProfile.AnimationProps.MoveBackClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyMoveBackClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.MoveBackClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveBackClip.averageSpeed.z);
+                    baseWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.MoveBackClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackClip.name)) {
-                if (currentAnimationProfile.MyCombatMoveBackClip != null) {
-                    if (overrideController[systemAnimations.MyCombatMoveBackClip.name] != currentAnimationProfile.MyCombatMoveBackClip) {
-                        overrideController[systemAnimations.MyCombatMoveBackClip.name] = currentAnimationProfile.MyCombatMoveBackClip;
-                        currentAnimations.MyCombatMoveBackClip = currentAnimationProfile.MyCombatMoveBackClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatMoveBackClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatMoveBackClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatMoveBackClip.name] != currentAnimationProfile.AnimationProps.CombatMoveBackClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveBackClip.name] = currentAnimationProfile.AnimationProps.CombatMoveBackClip;
+                        currentAnimations.AnimationProps.CombatMoveBackClip = currentAnimationProfile.AnimationProps.CombatMoveBackClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatMoveBackClip != null && overrideController[systemAnimations.MyCombatMoveBackClip.name] != defaultAnimationProfile.MyCombatMoveBackClip) {
-                        overrideController[systemAnimations.MyCombatMoveBackClip.name] = defaultAnimationProfile.MyCombatMoveBackClip;
-                        currentAnimations.MyCombatMoveBackClip = defaultAnimationProfile.MyCombatMoveBackClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatMoveBackClip != null && overrideController[systemAnimations.AnimationProps.CombatMoveBackClip.name] != defaultAnimationProfile.AnimationProps.CombatMoveBackClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveBackClip.name] = defaultAnimationProfile.AnimationProps.CombatMoveBackClip;
+                        currentAnimations.AnimationProps.CombatMoveBackClip = defaultAnimationProfile.AnimationProps.CombatMoveBackClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatMoveBackClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatMoveBackClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveBackClip.averageSpeed.z);
+                    baseCombatWalkBackAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatMoveBackClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyMoveBackFastClip.name)) {
-                if (currentAnimationProfile.MyMoveBackFastClip != null) {
-                    if (overrideController[systemAnimations.MyMoveBackFastClip.name] != currentAnimationProfile.MyMoveBackFastClip) {
-                        overrideController[systemAnimations.MyMoveBackFastClip.name] = currentAnimationProfile.MyMoveBackFastClip;
-                        currentAnimations.MyMoveBackFastClip = currentAnimationProfile.MyMoveBackFastClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.MoveBackFastClip.name)) {
+                if (currentAnimationProfile.AnimationProps.MoveBackFastClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.MoveBackFastClip.name] != currentAnimationProfile.AnimationProps.MoveBackFastClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveBackFastClip.name] = currentAnimationProfile.AnimationProps.MoveBackFastClip;
+                        currentAnimations.AnimationProps.MoveBackFastClip = currentAnimationProfile.AnimationProps.MoveBackFastClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyMoveBackFastClip != null && overrideController[systemAnimations.MyMoveBackFastClip.name] != defaultAnimationProfile.MyMoveBackFastClip) {
-                        overrideController[systemAnimations.MyMoveBackFastClip.name] = defaultAnimationProfile.MyMoveBackFastClip;
-                        currentAnimations.MyMoveBackFastClip = defaultAnimationProfile.MyMoveBackFastClip;
+                    if (defaultAnimationProfile.AnimationProps.MoveBackFastClip != null && overrideController[systemAnimations.AnimationProps.MoveBackFastClip.name] != defaultAnimationProfile.AnimationProps.MoveBackFastClip) {
+                        overrideController[systemAnimations.AnimationProps.MoveBackFastClip.name] = defaultAnimationProfile.AnimationProps.MoveBackFastClip;
+                        currentAnimations.AnimationProps.MoveBackFastClip = defaultAnimationProfile.AnimationProps.MoveBackFastClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyMoveBackFastClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.MoveBackFastClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseRunBackAnimationSpeed = Mathf.Abs(currentAnimations.MyMoveBackFastClip.averageSpeed.z);
+                    baseRunBackAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.MoveBackFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatMoveBackFastClip.name)) {
-                if (currentAnimationProfile.MyCombatMoveBackFastClip != null) {
-                    if (overrideController[systemAnimations.MyCombatMoveBackFastClip.name] != currentAnimationProfile.MyCombatMoveBackFastClip) {
-                        overrideController[systemAnimations.MyCombatMoveBackFastClip.name] = currentAnimationProfile.MyCombatMoveBackFastClip;
-                        currentAnimations.MyCombatMoveBackFastClip = currentAnimationProfile.MyCombatMoveBackFastClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatMoveBackFastClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatMoveBackFastClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatMoveBackFastClip.name] != currentAnimationProfile.AnimationProps.CombatMoveBackFastClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveBackFastClip.name] = currentAnimationProfile.AnimationProps.CombatMoveBackFastClip;
+                        currentAnimations.AnimationProps.CombatMoveBackFastClip = currentAnimationProfile.AnimationProps.CombatMoveBackFastClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatMoveBackFastClip != null && overrideController[systemAnimations.MyCombatMoveBackFastClip.name] != defaultAnimationProfile.MyCombatMoveBackFastClip) {
-                        overrideController[systemAnimations.MyCombatMoveBackFastClip.name] = defaultAnimationProfile.MyCombatMoveBackFastClip;
-                        currentAnimations.MyCombatMoveBackFastClip = defaultAnimationProfile.MyCombatMoveBackFastClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatMoveBackFastClip != null && overrideController[systemAnimations.AnimationProps.CombatMoveBackFastClip.name] != defaultAnimationProfile.AnimationProps.CombatMoveBackFastClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatMoveBackFastClip.name] = defaultAnimationProfile.AnimationProps.CombatMoveBackFastClip;
+                        currentAnimations.AnimationProps.CombatMoveBackFastClip = defaultAnimationProfile.AnimationProps.CombatMoveBackFastClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatMoveBackFastClip.averageSpeed.z) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatMoveBackFastClip.averageSpeed.z) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatRunBackAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatMoveBackFastClip.averageSpeed.z);
+                    baseCombatRunBackAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatMoveBackFastClip.averageSpeed.z);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.JumpClip.name)) {
-                if (currentAnimationProfile.JumpClip != null) {
-                    if (overrideController[systemAnimations.JumpClip.name] != currentAnimationProfile.JumpClip) {
-                        overrideController[systemAnimations.JumpClip.name] = currentAnimationProfile.JumpClip;
-                        currentAnimations.JumpClip = currentAnimationProfile.JumpClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JumpClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JumpClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JumpClip.name] != currentAnimationProfile.AnimationProps.JumpClip) {
+                        overrideController[systemAnimations.AnimationProps.JumpClip.name] = currentAnimationProfile.AnimationProps.JumpClip;
+                        currentAnimations.AnimationProps.JumpClip = currentAnimationProfile.AnimationProps.JumpClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.JumpClip != null && overrideController[systemAnimations.JumpClip.name] != defaultAnimationProfile.JumpClip) {
-                        overrideController[systemAnimations.JumpClip.name] = defaultAnimationProfile.JumpClip;
-                        currentAnimations.JumpClip = defaultAnimationProfile.JumpClip;
+                    if (defaultAnimationProfile.AnimationProps.JumpClip != null && overrideController[systemAnimations.AnimationProps.JumpClip.name] != defaultAnimationProfile.AnimationProps.JumpClip) {
+                        overrideController[systemAnimations.AnimationProps.JumpClip.name] = defaultAnimationProfile.AnimationProps.JumpClip;
+                        currentAnimations.AnimationProps.JumpClip = defaultAnimationProfile.AnimationProps.JumpClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJumpClip.name)) {
-                if (currentAnimationProfile.MyCombatJumpClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJumpClip.name] != currentAnimationProfile.MyCombatJumpClip) {
-                        overrideController[systemAnimations.MyCombatJumpClip.name] = currentAnimationProfile.MyCombatJumpClip;
-                        currentAnimations.MyCombatJumpClip = currentAnimationProfile.MyCombatJumpClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJumpClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJumpClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJumpClip.name] != currentAnimationProfile.AnimationProps.CombatJumpClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJumpClip.name] = currentAnimationProfile.AnimationProps.CombatJumpClip;
+                        currentAnimations.AnimationProps.CombatJumpClip = currentAnimationProfile.AnimationProps.CombatJumpClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJumpClip != null && overrideController[systemAnimations.MyCombatJumpClip.name] != defaultAnimationProfile.MyCombatJumpClip) {
-                        overrideController[systemAnimations.MyCombatJumpClip.name] = defaultAnimationProfile.MyCombatJumpClip;
-                        currentAnimations.MyCombatJumpClip = defaultAnimationProfile.MyCombatJumpClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJumpClip != null && overrideController[systemAnimations.AnimationProps.CombatJumpClip.name] != defaultAnimationProfile.AnimationProps.CombatJumpClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJumpClip.name] = defaultAnimationProfile.AnimationProps.CombatJumpClip;
+                        currentAnimations.AnimationProps.CombatJumpClip = defaultAnimationProfile.AnimationProps.CombatJumpClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.IdleClip.name)) {
-                if (currentAnimationProfile.IdleClip != null) {
-                    if (overrideController[systemAnimations.IdleClip.name] != currentAnimationProfile.IdleClip) {
-                        overrideController[systemAnimations.IdleClip.name] = currentAnimationProfile.IdleClip;
-                        currentAnimations.IdleClip = currentAnimationProfile.IdleClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.IdleClip.name)) {
+                if (currentAnimationProfile.AnimationProps.IdleClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.IdleClip.name] != currentAnimationProfile.AnimationProps.IdleClip) {
+                        overrideController[systemAnimations.AnimationProps.IdleClip.name] = currentAnimationProfile.AnimationProps.IdleClip;
+                        currentAnimations.AnimationProps.IdleClip = currentAnimationProfile.AnimationProps.IdleClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.IdleClip != null && overrideController[systemAnimations.IdleClip.name] != defaultAnimationProfile.IdleClip) {
-                        overrideController[systemAnimations.IdleClip.name] = defaultAnimationProfile.IdleClip;
-                        currentAnimations.IdleClip = defaultAnimationProfile.IdleClip;
+                    if (defaultAnimationProfile.AnimationProps.IdleClip != null && overrideController[systemAnimations.AnimationProps.IdleClip.name] != defaultAnimationProfile.AnimationProps.IdleClip) {
+                        overrideController[systemAnimations.AnimationProps.IdleClip.name] = defaultAnimationProfile.AnimationProps.IdleClip;
+                        currentAnimations.AnimationProps.IdleClip = defaultAnimationProfile.AnimationProps.IdleClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.CombatIdleClip.name)) {
-                if (currentAnimationProfile.CombatIdleClip != null) {
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatIdleClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatIdleClip != null) {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is not null");
-                    if (overrideController[systemAnimations.CombatIdleClip.name] != currentAnimationProfile.CombatIdleClip) {
-                        overrideController[systemAnimations.CombatIdleClip.name] = currentAnimationProfile.CombatIdleClip;
-                        currentAnimations.CombatIdleClip = currentAnimationProfile.CombatIdleClip;
+                    if (overrideController[systemAnimations.AnimationProps.CombatIdleClip.name] != currentAnimationProfile.AnimationProps.CombatIdleClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatIdleClip.name] = currentAnimationProfile.AnimationProps.CombatIdleClip;
+                        currentAnimations.AnimationProps.CombatIdleClip = currentAnimationProfile.AnimationProps.CombatIdleClip;
                     }
                 } else {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): combat idle clip is null");
-                    if (defaultAnimationProfile.CombatIdleClip != null && overrideController[systemAnimations.CombatIdleClip.name] != defaultAnimationProfile.CombatIdleClip) {
-                        overrideController[systemAnimations.CombatIdleClip.name] = defaultAnimationProfile.CombatIdleClip;
-                        currentAnimations.CombatIdleClip = defaultAnimationProfile.CombatIdleClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatIdleClip != null && overrideController[systemAnimations.AnimationProps.CombatIdleClip.name] != defaultAnimationProfile.AnimationProps.CombatIdleClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatIdleClip.name] = defaultAnimationProfile.AnimationProps.CombatIdleClip;
+                        currentAnimations.AnimationProps.CombatIdleClip = defaultAnimationProfile.AnimationProps.CombatIdleClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.LandClip.name)) {
-                if (currentAnimationProfile.LandClip != null) {
-                    if (overrideController[systemAnimations.LandClip.name] != currentAnimationProfile.LandClip) {
-                        overrideController[systemAnimations.LandClip.name] = currentAnimationProfile.LandClip;
-                        currentAnimations.LandClip = currentAnimationProfile.LandClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.LandClip.name)) {
+                if (currentAnimationProfile.AnimationProps.LandClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.LandClip.name] != currentAnimationProfile.AnimationProps.LandClip) {
+                        overrideController[systemAnimations.AnimationProps.LandClip.name] = currentAnimationProfile.AnimationProps.LandClip;
+                        currentAnimations.AnimationProps.LandClip = currentAnimationProfile.AnimationProps.LandClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.LandClip != null && overrideController[systemAnimations.LandClip.name] != defaultAnimationProfile.LandClip) {
-                        overrideController[systemAnimations.LandClip.name] = defaultAnimationProfile.LandClip;
-                        currentAnimations.LandClip = defaultAnimationProfile.LandClip;
+                    if (defaultAnimationProfile.AnimationProps.LandClip != null && overrideController[systemAnimations.AnimationProps.LandClip.name] != defaultAnimationProfile.AnimationProps.LandClip) {
+                        overrideController[systemAnimations.AnimationProps.LandClip.name] = defaultAnimationProfile.AnimationProps.LandClip;
+                        currentAnimations.AnimationProps.LandClip = defaultAnimationProfile.AnimationProps.LandClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatLandClip.name)) {
-                if (currentAnimationProfile.MyCombatLandClip != null) {
-                    if (overrideController[systemAnimations.MyCombatLandClip.name] != currentAnimationProfile.MyCombatLandClip) {
-                        overrideController[systemAnimations.MyCombatLandClip.name] = currentAnimationProfile.MyCombatLandClip;
-                        currentAnimations.MyCombatLandClip = currentAnimationProfile.MyCombatLandClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatLandClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatLandClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatLandClip.name] != currentAnimationProfile.AnimationProps.CombatLandClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatLandClip.name] = currentAnimationProfile.AnimationProps.CombatLandClip;
+                        currentAnimations.AnimationProps.CombatLandClip = currentAnimationProfile.AnimationProps.CombatLandClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatLandClip != null && overrideController[systemAnimations.MyCombatLandClip.name] != defaultAnimationProfile.MyCombatLandClip) {
-                        overrideController[systemAnimations.MyCombatLandClip.name] = defaultAnimationProfile.MyCombatLandClip;
-                        currentAnimations.MyCombatLandClip = defaultAnimationProfile.MyCombatLandClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatLandClip != null && overrideController[systemAnimations.AnimationProps.CombatLandClip.name] != defaultAnimationProfile.AnimationProps.CombatLandClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatLandClip.name] = defaultAnimationProfile.AnimationProps.CombatLandClip;
+                        currentAnimations.AnimationProps.CombatLandClip = defaultAnimationProfile.AnimationProps.CombatLandClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.FallClip.name)) {
-                if (currentAnimationProfile.FallClip != null) {
-                    if (overrideController[systemAnimations.FallClip.name] != currentAnimationProfile.FallClip) {
-                        overrideController[systemAnimations.FallClip.name] = currentAnimationProfile.FallClip;
-                        currentAnimations.FallClip = currentAnimationProfile.FallClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.FallClip.name)) {
+                if (currentAnimationProfile.AnimationProps.FallClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.FallClip.name] != currentAnimationProfile.AnimationProps.FallClip) {
+                        overrideController[systemAnimations.AnimationProps.FallClip.name] = currentAnimationProfile.AnimationProps.FallClip;
+                        currentAnimations.AnimationProps.FallClip = currentAnimationProfile.AnimationProps.FallClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.FallClip != null && overrideController[systemAnimations.FallClip.name] != defaultAnimationProfile.FallClip) {
-                        overrideController[systemAnimations.FallClip.name] = defaultAnimationProfile.FallClip;
-                        currentAnimations.FallClip = defaultAnimationProfile.FallClip;
+                    if (defaultAnimationProfile.AnimationProps.FallClip != null && overrideController[systemAnimations.AnimationProps.FallClip.name] != defaultAnimationProfile.AnimationProps.FallClip) {
+                        overrideController[systemAnimations.AnimationProps.FallClip.name] = defaultAnimationProfile.AnimationProps.FallClip;
+                        currentAnimations.AnimationProps.FallClip = defaultAnimationProfile.AnimationProps.FallClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatFallClip.name)) {
-                if (currentAnimationProfile.MyCombatFallClip != null) {
-                    if (overrideController[systemAnimations.MyCombatFallClip.name] != currentAnimationProfile.MyCombatFallClip) {
-                        overrideController[systemAnimations.MyCombatFallClip.name] = currentAnimationProfile.MyCombatFallClip;
-                        currentAnimations.MyCombatFallClip = currentAnimationProfile.MyCombatFallClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatFallClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatFallClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatFallClip.name] != currentAnimationProfile.AnimationProps.CombatFallClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatFallClip.name] = currentAnimationProfile.AnimationProps.CombatFallClip;
+                        currentAnimations.AnimationProps.CombatFallClip = currentAnimationProfile.AnimationProps.CombatFallClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatFallClip != null && overrideController[systemAnimations.MyCombatFallClip.name] != defaultAnimationProfile.MyCombatFallClip) {
-                        overrideController[systemAnimations.MyCombatFallClip.name] = defaultAnimationProfile.MyCombatFallClip;
-                        currentAnimations.MyCombatFallClip = defaultAnimationProfile.MyCombatFallClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatFallClip != null && overrideController[systemAnimations.AnimationProps.CombatFallClip.name] != defaultAnimationProfile.AnimationProps.CombatFallClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatFallClip.name] = defaultAnimationProfile.AnimationProps.CombatFallClip;
+                        currentAnimations.AnimationProps.CombatFallClip = defaultAnimationProfile.AnimationProps.CombatFallClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeLeftClip.name)) {
-                if (currentAnimationProfile.MyStrafeLeftClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeLeftClip.name] != currentAnimationProfile.MyStrafeLeftClip) {
-                        overrideController[systemAnimations.MyStrafeLeftClip.name] = currentAnimationProfile.MyStrafeLeftClip;
-                        currentAnimations.MyStrafeLeftClip = currentAnimationProfile.MyStrafeLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeLeftClip.name] != currentAnimationProfile.AnimationProps.StrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeLeftClip.name] = currentAnimationProfile.AnimationProps.StrafeLeftClip;
+                        currentAnimations.AnimationProps.StrafeLeftClip = currentAnimationProfile.AnimationProps.StrafeLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeLeftClip != null && overrideController[systemAnimations.MyStrafeLeftClip.name] != defaultAnimationProfile.MyStrafeLeftClip) {
-                        overrideController[systemAnimations.MyStrafeLeftClip.name] = defaultAnimationProfile.MyStrafeLeftClip;
-                        currentAnimations.MyStrafeLeftClip = defaultAnimationProfile.MyStrafeLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeLeftClip != null && overrideController[systemAnimations.AnimationProps.StrafeLeftClip.name] != defaultAnimationProfile.AnimationProps.StrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeLeftClip.name] = defaultAnimationProfile.AnimationProps.StrafeLeftClip;
+                        currentAnimations.AnimationProps.StrafeLeftClip = defaultAnimationProfile.AnimationProps.StrafeLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeLeftClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeLeftClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeLeftClip.averageSpeed.x);
+                    baseWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeLeftClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeLeftClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeLeftClip.name] != currentAnimationProfile.MyJogStrafeLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeLeftClip.name] = currentAnimationProfile.MyJogStrafeLeftClip;
-                        currentAnimations.MyJogStrafeLeftClip = currentAnimationProfile.MyJogStrafeLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeLeftClip.name] != currentAnimationProfile.AnimationProps.JogStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeLeftClip.name] = currentAnimationProfile.AnimationProps.JogStrafeLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeLeftClip = currentAnimationProfile.AnimationProps.JogStrafeLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeLeftClip != null && overrideController[systemAnimations.MyJogStrafeLeftClip.name] != defaultAnimationProfile.MyJogStrafeLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeLeftClip.name] = defaultAnimationProfile.MyJogStrafeLeftClip;
-                        currentAnimations.MyJogStrafeLeftClip = defaultAnimationProfile.MyJogStrafeLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeLeftClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeLeftClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeLeftClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeLeftClip = defaultAnimationProfile.AnimationProps.JogStrafeLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeLeftClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeLeftClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeLeftClip.averageSpeed.x);
+                    baseJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeRightClip.name)) {
-                if (currentAnimationProfile.MyStrafeRightClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeRightClip.name] != currentAnimationProfile.MyStrafeRightClip) {
-                        overrideController[systemAnimations.MyStrafeRightClip.name] = currentAnimationProfile.MyStrafeRightClip;
-                        currentAnimations.MyStrafeRightClip = currentAnimationProfile.MyStrafeRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeRightClip.name] != currentAnimationProfile.AnimationProps.StrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeRightClip.name] = currentAnimationProfile.AnimationProps.StrafeRightClip;
+                        currentAnimations.AnimationProps.StrafeRightClip = currentAnimationProfile.AnimationProps.StrafeRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeRightClip != null && overrideController[systemAnimations.MyStrafeRightClip.name] != defaultAnimationProfile.MyStrafeRightClip) {
-                        overrideController[systemAnimations.MyStrafeRightClip.name] = defaultAnimationProfile.MyStrafeRightClip;
-                        currentAnimations.MyStrafeRightClip = defaultAnimationProfile.MyStrafeRightClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeRightClip != null && overrideController[systemAnimations.AnimationProps.StrafeRightClip.name] != defaultAnimationProfile.AnimationProps.StrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeRightClip.name] = defaultAnimationProfile.AnimationProps.StrafeRightClip;
+                        currentAnimations.AnimationProps.StrafeRightClip = defaultAnimationProfile.AnimationProps.StrafeRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeRightClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeRightClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeRightClip.averageSpeed.x);
+                    baseWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeRightClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeRightClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeRightClip.name] != currentAnimationProfile.MyJogStrafeRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeRightClip.name] = currentAnimationProfile.MyJogStrafeRightClip;
-                        currentAnimations.MyJogStrafeRightClip = currentAnimationProfile.MyJogStrafeRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeRightClip.name] != currentAnimationProfile.AnimationProps.JogStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeRightClip.name] = currentAnimationProfile.AnimationProps.JogStrafeRightClip;
+                        currentAnimations.AnimationProps.JogStrafeRightClip = currentAnimationProfile.AnimationProps.JogStrafeRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeRightClip != null && overrideController[systemAnimations.MyJogStrafeRightClip.name] != defaultAnimationProfile.MyJogStrafeRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeRightClip.name] = defaultAnimationProfile.MyJogStrafeRightClip;
-                        currentAnimations.MyJogStrafeRightClip = defaultAnimationProfile.MyJogStrafeRightClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeRightClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeRightClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeRightClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeRightClip;
+                        currentAnimations.AnimationProps.JogStrafeRightClip = defaultAnimationProfile.AnimationProps.JogStrafeRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeRightClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeRightClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeRightClip.averageSpeed.x);
+                    baseJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardRightClip.name)) {
-                if (currentAnimationProfile.MyStrafeForwardRightClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeForwardRightClip.name] != currentAnimationProfile.MyStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyStrafeForwardRightClip.name] = currentAnimationProfile.MyStrafeForwardRightClip;
-                        currentAnimations.MyStrafeForwardRightClip = currentAnimationProfile.MyStrafeForwardRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeForwardRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeForwardRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeForwardRightClip.name] != currentAnimationProfile.AnimationProps.StrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeForwardRightClip.name] = currentAnimationProfile.AnimationProps.StrafeForwardRightClip;
+                        currentAnimations.AnimationProps.StrafeForwardRightClip = currentAnimationProfile.AnimationProps.StrafeForwardRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeForwardRightClip != null && overrideController[systemAnimations.MyStrafeForwardRightClip.name] != defaultAnimationProfile.MyStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyStrafeForwardRightClip.name] = defaultAnimationProfile.MyStrafeForwardRightClip;
-                        currentAnimations.MyStrafeForwardRightClip = defaultAnimationProfile.MyStrafeForwardRightClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeForwardRightClip != null && overrideController[systemAnimations.AnimationProps.StrafeForwardRightClip.name] != defaultAnimationProfile.AnimationProps.StrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeForwardRightClip.name] = defaultAnimationProfile.AnimationProps.StrafeForwardRightClip;
+                        currentAnimations.AnimationProps.StrafeForwardRightClip = defaultAnimationProfile.AnimationProps.StrafeForwardRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeForwardRightClip.averageSpeed.magnitude);
+                    baseWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardRightClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeForwardRightClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] != currentAnimationProfile.MyJogStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] = currentAnimationProfile.MyJogStrafeForwardRightClip;
-                        currentAnimations.MyJogStrafeForwardRightClip = currentAnimationProfile.MyJogStrafeForwardRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeForwardRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeForwardRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeForwardRightClip.name] != currentAnimationProfile.AnimationProps.JogStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeForwardRightClip.name] = currentAnimationProfile.AnimationProps.JogStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.JogStrafeForwardRightClip = currentAnimationProfile.AnimationProps.JogStrafeForwardRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeForwardRightClip != null && overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] != defaultAnimationProfile.MyJogStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeForwardRightClip.name] = defaultAnimationProfile.MyJogStrafeForwardRightClip;
-                        currentAnimations.MyJogStrafeForwardRightClip = defaultAnimationProfile.MyJogStrafeForwardRightClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeForwardRightClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeForwardRightClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeForwardRightClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.JogStrafeForwardRightClip = defaultAnimationProfile.AnimationProps.JogStrafeForwardRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeForwardRightClip.averageSpeed.magnitude);
+                    baseJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeForwardLeftClip.name)) {
-                if (currentAnimationProfile.MyStrafeForwardLeftClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeForwardLeftClip.name] != currentAnimationProfile.MyStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyStrafeForwardLeftClip.name] = currentAnimationProfile.MyStrafeForwardLeftClip;
-                        currentAnimations.MyStrafeForwardLeftClip = currentAnimationProfile.MyStrafeForwardLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeForwardLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeForwardLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeForwardLeftClip.name] != currentAnimationProfile.AnimationProps.StrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeForwardLeftClip.name] = currentAnimationProfile.AnimationProps.StrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.StrafeForwardLeftClip = currentAnimationProfile.AnimationProps.StrafeForwardLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeForwardLeftClip != null && overrideController[systemAnimations.MyStrafeForwardLeftClip.name] != defaultAnimationProfile.MyStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyStrafeForwardLeftClip.name] = defaultAnimationProfile.MyStrafeForwardLeftClip;
-                        currentAnimations.MyStrafeForwardLeftClip = defaultAnimationProfile.MyStrafeForwardLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeForwardLeftClip != null && overrideController[systemAnimations.AnimationProps.StrafeForwardLeftClip.name] != defaultAnimationProfile.AnimationProps.StrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeForwardLeftClip.name] = defaultAnimationProfile.AnimationProps.StrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.StrafeForwardLeftClip = defaultAnimationProfile.AnimationProps.StrafeForwardLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeForwardLeftClip.averageSpeed.magnitude);
+                    baseWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeForwardLeftClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeForwardLeftClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] != currentAnimationProfile.MyJogStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] = currentAnimationProfile.MyJogStrafeForwardLeftClip;
-                        currentAnimations.MyJogStrafeForwardLeftClip = currentAnimationProfile.MyJogStrafeForwardLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeForwardLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeForwardLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeForwardLeftClip.name] != currentAnimationProfile.AnimationProps.JogStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeForwardLeftClip.name] = currentAnimationProfile.AnimationProps.JogStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeForwardLeftClip = currentAnimationProfile.AnimationProps.JogStrafeForwardLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeForwardLeftClip != null && overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] != defaultAnimationProfile.MyJogStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeForwardLeftClip.name] = defaultAnimationProfile.MyJogStrafeForwardLeftClip;
-                        currentAnimations.MyJogStrafeForwardLeftClip = defaultAnimationProfile.MyJogStrafeForwardLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeForwardLeftClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeForwardLeftClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeForwardLeftClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeForwardLeftClip = defaultAnimationProfile.AnimationProps.JogStrafeForwardLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeForwardLeftClip.averageSpeed.magnitude);
+                    baseJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackLeftClip.name)) {
-                if (currentAnimationProfile.MyStrafeBackLeftClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeBackLeftClip.name] != currentAnimationProfile.MyStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyStrafeBackLeftClip.name] = currentAnimationProfile.MyStrafeBackLeftClip;
-                        currentAnimations.MyStrafeBackLeftClip = currentAnimationProfile.MyStrafeBackLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeBackLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeBackLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeBackLeftClip.name] != currentAnimationProfile.AnimationProps.StrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeBackLeftClip.name] = currentAnimationProfile.AnimationProps.StrafeBackLeftClip;
+                        currentAnimations.AnimationProps.StrafeBackLeftClip = currentAnimationProfile.AnimationProps.StrafeBackLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeBackLeftClip != null && overrideController[systemAnimations.MyStrafeBackLeftClip.name] != defaultAnimationProfile.MyStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyStrafeBackLeftClip.name] = defaultAnimationProfile.MyStrafeBackLeftClip;
-                        currentAnimations.MyStrafeBackLeftClip = defaultAnimationProfile.MyStrafeBackLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeBackLeftClip != null && overrideController[systemAnimations.AnimationProps.StrafeBackLeftClip.name] != defaultAnimationProfile.AnimationProps.StrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeBackLeftClip.name] = defaultAnimationProfile.AnimationProps.StrafeBackLeftClip;
+                        currentAnimations.AnimationProps.StrafeBackLeftClip = defaultAnimationProfile.AnimationProps.StrafeBackLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeBackLeftClip.averageSpeed.magnitude);
+                    baseWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackLeftClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeBackLeftClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] != currentAnimationProfile.MyJogStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] = currentAnimationProfile.MyJogStrafeBackLeftClip;
-                        currentAnimations.MyJogStrafeBackLeftClip = currentAnimationProfile.MyJogStrafeBackLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeBackLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeBackLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeBackLeftClip.name] != currentAnimationProfile.AnimationProps.JogStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeBackLeftClip.name] = currentAnimationProfile.AnimationProps.JogStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeBackLeftClip = currentAnimationProfile.AnimationProps.JogStrafeBackLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeBackLeftClip != null && overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] != defaultAnimationProfile.MyJogStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyJogStrafeBackLeftClip.name] = defaultAnimationProfile.MyJogStrafeBackLeftClip;
-                        currentAnimations.MyJogStrafeBackLeftClip = defaultAnimationProfile.MyJogStrafeBackLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeBackLeftClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeBackLeftClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeBackLeftClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.JogStrafeBackLeftClip = defaultAnimationProfile.AnimationProps.JogStrafeBackLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeBackLeftClip.averageSpeed.magnitude);
+                    baseJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStrafeBackRightClip.name)) {
-                if (currentAnimationProfile.MyStrafeBackRightClip != null) {
-                    if (overrideController[systemAnimations.MyStrafeBackRightClip.name] != currentAnimationProfile.MyStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyStrafeBackRightClip.name] = currentAnimationProfile.MyStrafeBackRightClip;
-                        currentAnimations.MyStrafeBackRightClip = currentAnimationProfile.MyStrafeBackRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StrafeBackRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StrafeBackRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StrafeBackRightClip.name] != currentAnimationProfile.AnimationProps.StrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeBackRightClip.name] = currentAnimationProfile.AnimationProps.StrafeBackRightClip;
+                        currentAnimations.AnimationProps.StrafeBackRightClip = currentAnimationProfile.AnimationProps.StrafeBackRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStrafeBackRightClip != null && overrideController[systemAnimations.MyStrafeBackRightClip.name] != defaultAnimationProfile.MyStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyStrafeBackRightClip.name] = defaultAnimationProfile.MyStrafeBackRightClip;
-                        currentAnimations.MyStrafeBackRightClip = defaultAnimationProfile.MyStrafeBackRightClip;
+                    if (defaultAnimationProfile.AnimationProps.StrafeBackRightClip != null && overrideController[systemAnimations.AnimationProps.StrafeBackRightClip.name] != defaultAnimationProfile.AnimationProps.StrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.StrafeBackRightClip.name] = defaultAnimationProfile.AnimationProps.StrafeBackRightClip;
+                        currentAnimations.AnimationProps.StrafeBackRightClip = defaultAnimationProfile.AnimationProps.StrafeBackRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.StrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyStrafeBackRightClip.averageSpeed.magnitude);
+                    baseWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.StrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyJogStrafeBackRightClip.name)) {
-                if (currentAnimationProfile.MyJogStrafeBackRightClip != null) {
-                    if (overrideController[systemAnimations.MyJogStrafeBackRightClip.name] != currentAnimationProfile.MyJogStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeBackRightClip.name] = currentAnimationProfile.MyJogStrafeBackRightClip;
-                        currentAnimations.MyJogStrafeBackRightClip = currentAnimationProfile.MyJogStrafeBackRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.JogStrafeBackRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.JogStrafeBackRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.JogStrafeBackRightClip.name] != currentAnimationProfile.AnimationProps.JogStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeBackRightClip.name] = currentAnimationProfile.AnimationProps.JogStrafeBackRightClip;
+                        currentAnimations.AnimationProps.JogStrafeBackRightClip = currentAnimationProfile.AnimationProps.JogStrafeBackRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyJogStrafeBackRightClip != null && overrideController[systemAnimations.MyJogStrafeBackRightClip.name] != defaultAnimationProfile.MyJogStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyJogStrafeBackRightClip.name] = defaultAnimationProfile.MyJogStrafeBackRightClip;
-                        currentAnimations.MyJogStrafeBackRightClip = defaultAnimationProfile.MyJogStrafeBackRightClip;
+                    if (defaultAnimationProfile.AnimationProps.JogStrafeBackRightClip != null && overrideController[systemAnimations.AnimationProps.JogStrafeBackRightClip.name] != defaultAnimationProfile.AnimationProps.JogStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.JogStrafeBackRightClip.name] = defaultAnimationProfile.AnimationProps.JogStrafeBackRightClip;
+                        currentAnimations.AnimationProps.JogStrafeBackRightClip = defaultAnimationProfile.AnimationProps.JogStrafeBackRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyJogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.JogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyJogStrafeBackRightClip.averageSpeed.magnitude);
+                    baseJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.JogStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeLeftClip.name] != currentAnimationProfile.MyCombatStrafeLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeLeftClip.name] = currentAnimationProfile.MyCombatStrafeLeftClip;
-                        currentAnimations.MyCombatStrafeLeftClip = currentAnimationProfile.MyCombatStrafeLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeLeftClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeLeftClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeLeftClip = currentAnimationProfile.AnimationProps.CombatStrafeLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeLeftClip != null && overrideController[systemAnimations.MyCombatStrafeLeftClip.name] != defaultAnimationProfile.MyCombatStrafeLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeLeftClip.name] = defaultAnimationProfile.MyCombatStrafeLeftClip;
-                        currentAnimations.MyCombatStrafeLeftClip = defaultAnimationProfile.MyCombatStrafeLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeLeftClip = defaultAnimationProfile.AnimationProps.CombatStrafeLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeLeftClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeLeftClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeLeftClip.averageSpeed.x);
+                    baseCombatWalkStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeLeftClip;
-                        currentAnimations.MyCombatJogStrafeLeftClip = currentAnimationProfile.MyCombatJogStrafeLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeLeftClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeLeftClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeLeftClip = currentAnimationProfile.AnimationProps.CombatJogStrafeLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeLeftClip != null && overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeLeftClip.name] = defaultAnimationProfile.MyCombatJogStrafeLeftClip;
-                        currentAnimations.MyCombatJogStrafeLeftClip = defaultAnimationProfile.MyCombatJogStrafeLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeLeftClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeLeftClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeLeftClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeLeftClip.averageSpeed.x);
+                    baseCombatJogStrafeLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeLeftClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeRightClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeRightClip.name] != currentAnimationProfile.MyCombatStrafeRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeRightClip.name] = currentAnimationProfile.MyCombatStrafeRightClip;
-                        currentAnimations.MyCombatStrafeRightClip = currentAnimationProfile.MyCombatStrafeRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeRightClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeRightClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeRightClip = currentAnimationProfile.AnimationProps.CombatStrafeRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeRightClip != null && overrideController[systemAnimations.MyCombatStrafeRightClip.name] != defaultAnimationProfile.MyCombatStrafeRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeRightClip.name] = defaultAnimationProfile.MyCombatStrafeRightClip;
-                        currentAnimations.MyCombatStrafeRightClip = defaultAnimationProfile.MyCombatStrafeRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeRightClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeRightClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeRightClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeRightClip = defaultAnimationProfile.AnimationProps.CombatStrafeRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeRightClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeRightClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeRightClip.averageSpeed.x);
+                    baseCombatWalkStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeRightClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] != currentAnimationProfile.MyCombatJogStrafeRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] = currentAnimationProfile.MyCombatJogStrafeRightClip;
-                        currentAnimations.MyCombatJogStrafeRightClip = currentAnimationProfile.MyCombatJogStrafeRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeRightClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeRightClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeRightClip = currentAnimationProfile.AnimationProps.CombatJogStrafeRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeRightClip != null && overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeRightClip.name] = defaultAnimationProfile.MyCombatJogStrafeRightClip;
-                        currentAnimations.MyCombatJogStrafeRightClip = defaultAnimationProfile.MyCombatJogStrafeRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeRightClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeRightClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeRightClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeRightClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeRightClip.averageSpeed.x) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeRightClip.averageSpeed.x) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeRightClip.averageSpeed.x);
+                    baseCombatJogStrafeRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeRightClip.averageSpeed.x);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardRightClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeForwardRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] != currentAnimationProfile.MyCombatStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] = currentAnimationProfile.MyCombatStrafeForwardRightClip;
-                        currentAnimations.MyCombatStrafeForwardRightClip = currentAnimationProfile.MyCombatStrafeForwardRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeForwardRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeForwardRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeForwardRightClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeForwardRightClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeForwardRightClip = currentAnimationProfile.AnimationProps.CombatStrafeForwardRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeForwardRightClip != null && overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] != defaultAnimationProfile.MyCombatStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeForwardRightClip.name] = defaultAnimationProfile.MyCombatStrafeForwardRightClip;
-                        currentAnimations.MyCombatStrafeForwardRightClip = defaultAnimationProfile.MyCombatStrafeForwardRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeForwardRightClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeForwardRightClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeForwardRightClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeForwardRightClip = defaultAnimationProfile.AnimationProps.CombatStrafeForwardRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeForwardRightClip.averageSpeed.magnitude);
+                    baseCombatWalkStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardRightClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeForwardRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] != currentAnimationProfile.MyCombatJogStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] = currentAnimationProfile.MyCombatJogStrafeForwardRightClip;
-                        currentAnimations.MyCombatJogStrafeForwardRightClip = currentAnimationProfile.MyCombatJogStrafeForwardRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeForwardRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardRightClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardRightClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeForwardRightClip = currentAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeForwardRightClip != null && overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeForwardRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeForwardRightClip.name] = defaultAnimationProfile.MyCombatJogStrafeForwardRightClip;
-                        currentAnimations.MyCombatJogStrafeForwardRightClip = defaultAnimationProfile.MyCombatJogStrafeForwardRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardRightClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardRightClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeForwardRightClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeForwardRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardRightClip.averageSpeed.magnitude);
+                    baseCombatJogStrafeForwardRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeForwardRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeForwardLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeForwardLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] != currentAnimationProfile.MyCombatStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] = currentAnimationProfile.MyCombatStrafeForwardLeftClip;
-                        currentAnimations.MyCombatStrafeForwardLeftClip = currentAnimationProfile.MyCombatStrafeForwardLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeForwardLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeForwardLeftClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeForwardLeftClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeForwardLeftClip = currentAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeForwardLeftClip != null && overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] != defaultAnimationProfile.MyCombatStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeForwardLeftClip.name] = defaultAnimationProfile.MyCombatStrafeForwardLeftClip;
-                        currentAnimations.MyCombatStrafeForwardLeftClip = defaultAnimationProfile.MyCombatStrafeForwardLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeForwardLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeForwardLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeForwardLeftClip = defaultAnimationProfile.AnimationProps.CombatStrafeForwardLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeForwardLeftClip.averageSpeed.magnitude);
+                    baseCombatWalkStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeForwardLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeForwardLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeForwardLeftClip;
-                        currentAnimations.MyCombatJogStrafeForwardLeftClip = currentAnimationProfile.MyCombatJogStrafeForwardLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeForwardLeftClip = currentAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeForwardLeftClip != null && overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeForwardLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeForwardLeftClip.name] = defaultAnimationProfile.MyCombatJogStrafeForwardLeftClip;
-                        currentAnimations.MyCombatJogStrafeForwardLeftClip = defaultAnimationProfile.MyCombatJogStrafeForwardLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeForwardLeftClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeForwardLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeForwardLeftClip.averageSpeed.magnitude);
+                    baseCombatJogStrafeForwardLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeForwardLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeBackLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] != currentAnimationProfile.MyCombatStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] = currentAnimationProfile.MyCombatStrafeBackLeftClip;
-                        currentAnimations.MyCombatStrafeBackLeftClip = currentAnimationProfile.MyCombatStrafeBackLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeBackLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeBackLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeBackLeftClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeBackLeftClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeBackLeftClip = currentAnimationProfile.AnimationProps.CombatStrafeBackLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeBackLeftClip != null && overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] != defaultAnimationProfile.MyCombatStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyCombatStrafeBackLeftClip.name] = defaultAnimationProfile.MyCombatStrafeBackLeftClip;
-                        currentAnimations.MyCombatStrafeBackLeftClip = defaultAnimationProfile.MyCombatStrafeBackLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeBackLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeBackLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeBackLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.CombatStrafeBackLeftClip = defaultAnimationProfile.AnimationProps.CombatStrafeBackLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeBackLeftClip.averageSpeed.magnitude);
+                    baseCombatWalkStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackLeftClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeBackLeftClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] != currentAnimationProfile.MyCombatJogStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] = currentAnimationProfile.MyCombatJogStrafeBackLeftClip;
-                        currentAnimations.MyCombatJogStrafeBackLeftClip = currentAnimationProfile.MyCombatJogStrafeBackLeftClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeBackLeftClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackLeftClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackLeftClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeBackLeftClip = currentAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeBackLeftClip != null && overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] != defaultAnimationProfile.MyCombatJogStrafeBackLeftClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeBackLeftClip.name] = defaultAnimationProfile.MyCombatJogStrafeBackLeftClip;
-                        currentAnimations.MyCombatJogStrafeBackLeftClip = defaultAnimationProfile.MyCombatJogStrafeBackLeftClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackLeftClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackLeftClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeBackLeftClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeBackLeftClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeBackLeftClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeBackLeftClip.averageSpeed.magnitude);
+                    baseCombatJogStrafeBackLeftAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeBackLeftClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatStrafeBackRightClip.name)) {
-                if (currentAnimationProfile.MyCombatStrafeBackRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] != currentAnimationProfile.MyCombatStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] = currentAnimationProfile.MyCombatStrafeBackRightClip;
-                        currentAnimations.MyCombatStrafeBackRightClip = currentAnimationProfile.MyCombatStrafeBackRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatStrafeBackRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatStrafeBackRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatStrafeBackRightClip.name] != currentAnimationProfile.AnimationProps.CombatStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeBackRightClip.name] = currentAnimationProfile.AnimationProps.CombatStrafeBackRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeBackRightClip = currentAnimationProfile.AnimationProps.CombatStrafeBackRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatStrafeBackRightClip != null && overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] != defaultAnimationProfile.MyCombatStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyCombatStrafeBackRightClip.name] = defaultAnimationProfile.MyCombatStrafeBackRightClip;
-                        currentAnimations.MyCombatStrafeBackRightClip = defaultAnimationProfile.MyCombatStrafeBackRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatStrafeBackRightClip != null && overrideController[systemAnimations.AnimationProps.CombatStrafeBackRightClip.name] != defaultAnimationProfile.AnimationProps.CombatStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatStrafeBackRightClip.name] = defaultAnimationProfile.AnimationProps.CombatStrafeBackRightClip;
+                        currentAnimations.AnimationProps.CombatStrafeBackRightClip = defaultAnimationProfile.AnimationProps.CombatStrafeBackRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatStrafeBackRightClip.averageSpeed.magnitude);
+                    baseCombatWalkStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyCombatJogStrafeBackRightClip.name)) {
-                if (currentAnimationProfile.MyCombatJogStrafeBackRightClip != null) {
-                    if (overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] != currentAnimationProfile.MyCombatJogStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] = currentAnimationProfile.MyCombatJogStrafeBackRightClip;
-                        currentAnimations.MyCombatJogStrafeBackRightClip = currentAnimationProfile.MyCombatJogStrafeBackRightClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.CombatJogStrafeBackRightClip.name)) {
+                if (currentAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackRightClip.name] != currentAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackRightClip.name] = currentAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeBackRightClip = currentAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyCombatJogStrafeBackRightClip != null && overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] != defaultAnimationProfile.MyCombatJogStrafeBackRightClip) {
-                        overrideController[systemAnimations.MyCombatJogStrafeBackRightClip.name] = defaultAnimationProfile.MyCombatJogStrafeBackRightClip;
-                        currentAnimations.MyCombatJogStrafeBackRightClip = defaultAnimationProfile.MyCombatJogStrafeBackRightClip;
+                    if (defaultAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip != null && overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackRightClip.name] != defaultAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip) {
+                        overrideController[systemAnimations.AnimationProps.CombatJogStrafeBackRightClip.name] = defaultAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip;
+                        currentAnimations.AnimationProps.CombatJogStrafeBackRightClip = defaultAnimationProfile.AnimationProps.CombatJogStrafeBackRightClip;
                     }
                 }
-                if (Mathf.Abs(currentAnimations.MyCombatJogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
+                if (Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeBackRightClip.averageSpeed.magnitude) > 0.1) {
                     // our clip has forward motion.  override the default animation motion speed of 2
-                    baseCombatJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.MyCombatJogStrafeBackRightClip.averageSpeed.magnitude);
+                    baseCombatJogStrafeBackRightAnimationSpeed = Mathf.Abs(currentAnimations.AnimationProps.CombatJogStrafeBackRightClip.averageSpeed.magnitude);
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): set base animation run speed: " + baseRunAnimationSpeed);
                 }
             }
 
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationClipOverrides(): Death is not null.");
-            if (overrideControllerClipList.Contains(systemAnimations.MyDeathClip.name)) {
-                if (currentAnimationProfile.MyDeathClip != null) {
-                    if (overrideController[systemAnimations.MyDeathClip.name] != currentAnimationProfile.MyDeathClip) {
-                        overrideController[systemAnimations.MyDeathClip.name] = currentAnimationProfile.MyDeathClip;
-                        currentAnimations.MyDeathClip = currentAnimationProfile.MyDeathClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.DeathClip.name)) {
+                if (currentAnimationProfile.AnimationProps.DeathClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.DeathClip.name] != currentAnimationProfile.AnimationProps.DeathClip) {
+                        overrideController[systemAnimations.AnimationProps.DeathClip.name] = currentAnimationProfile.AnimationProps.DeathClip;
+                        currentAnimations.AnimationProps.DeathClip = currentAnimationProfile.AnimationProps.DeathClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyDeathClip != null && overrideController[systemAnimations.MyDeathClip.name] != defaultAnimationProfile.MyDeathClip) {
-                        overrideController[systemAnimations.MyDeathClip.name] = defaultAnimationProfile.MyDeathClip;
-                        currentAnimations.MyDeathClip = defaultAnimationProfile.MyDeathClip;
+                    if (defaultAnimationProfile.AnimationProps.DeathClip != null && overrideController[systemAnimations.AnimationProps.DeathClip.name] != defaultAnimationProfile.AnimationProps.DeathClip) {
+                        overrideController[systemAnimations.AnimationProps.DeathClip.name] = defaultAnimationProfile.AnimationProps.DeathClip;
+                        currentAnimations.AnimationProps.DeathClip = defaultAnimationProfile.AnimationProps.DeathClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyStunnedClip.name)) {
-                if (currentAnimationProfile.MyStunnedClip != null) {
-                    if (overrideController[systemAnimations.MyStunnedClip.name] != currentAnimationProfile.MyStunnedClip) {
-                        overrideController[systemAnimations.MyStunnedClip.name] = currentAnimationProfile.MyStunnedClip;
-                        currentAnimations.MyStunnedClip = currentAnimationProfile.MyStunnedClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.StunnedClip.name)) {
+                if (currentAnimationProfile.AnimationProps.StunnedClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.StunnedClip.name] != currentAnimationProfile.AnimationProps.StunnedClip) {
+                        overrideController[systemAnimations.AnimationProps.StunnedClip.name] = currentAnimationProfile.AnimationProps.StunnedClip;
+                        currentAnimations.AnimationProps.StunnedClip = currentAnimationProfile.AnimationProps.StunnedClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyStunnedClip != null && overrideController[systemAnimations.MyStunnedClip.name] != defaultAnimationProfile.MyStunnedClip) {
-                        overrideController[systemAnimations.MyStunnedClip.name] = defaultAnimationProfile.MyStunnedClip;
-                        currentAnimations.MyStunnedClip = defaultAnimationProfile.MyStunnedClip;
+                    if (defaultAnimationProfile.AnimationProps.StunnedClip != null && overrideController[systemAnimations.AnimationProps.StunnedClip.name] != defaultAnimationProfile.AnimationProps.StunnedClip) {
+                        overrideController[systemAnimations.AnimationProps.StunnedClip.name] = defaultAnimationProfile.AnimationProps.StunnedClip;
+                        currentAnimations.AnimationProps.StunnedClip = defaultAnimationProfile.AnimationProps.StunnedClip;
                     }
                 }
             }
 
-            if (overrideControllerClipList.Contains(systemAnimations.MyLevitatedClip.name)) {
-                if (currentAnimationProfile.MyLevitatedClip != null) {
-                    if (overrideController[systemAnimations.MyLevitatedClip.name] != currentAnimationProfile.MyLevitatedClip) {
-                        overrideController[systemAnimations.MyLevitatedClip.name] = currentAnimationProfile.MyLevitatedClip;
-                        currentAnimations.MyLevitatedClip = currentAnimationProfile.MyLevitatedClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.LevitatedClip.name)) {
+                if (currentAnimationProfile.AnimationProps.LevitatedClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.LevitatedClip.name] != currentAnimationProfile.AnimationProps.LevitatedClip) {
+                        overrideController[systemAnimations.AnimationProps.LevitatedClip.name] = currentAnimationProfile.AnimationProps.LevitatedClip;
+                        currentAnimations.AnimationProps.LevitatedClip = currentAnimationProfile.AnimationProps.LevitatedClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyLevitatedClip != null && overrideController[systemAnimations.MyLevitatedClip.name] != defaultAnimationProfile.MyLevitatedClip) {
-                        overrideController[systemAnimations.MyLevitatedClip.name] = defaultAnimationProfile.MyLevitatedClip;
-                        currentAnimations.MyLevitatedClip = defaultAnimationProfile.MyLevitatedClip;
+                    if (defaultAnimationProfile.AnimationProps.LevitatedClip != null && overrideController[systemAnimations.AnimationProps.LevitatedClip.name] != defaultAnimationProfile.AnimationProps.LevitatedClip) {
+                        overrideController[systemAnimations.AnimationProps.LevitatedClip.name] = defaultAnimationProfile.AnimationProps.LevitatedClip;
+                        currentAnimations.AnimationProps.LevitatedClip = defaultAnimationProfile.AnimationProps.LevitatedClip;
                     }
                 }
             }
 
             //Debug.Log("CharacterAnimator.SetAnimationClipOverrides() Current Animation Profile Contains Revive Clip");
-            if (overrideControllerClipList.Contains(systemAnimations.MyReviveClip.name)) {
-                if (currentAnimationProfile.MyReviveClip != null) {
-                    if (overrideController[systemAnimations.MyReviveClip.name] != currentAnimationProfile.MyReviveClip) {
-                        overrideController[systemAnimations.MyReviveClip.name] = currentAnimationProfile.MyReviveClip;
-                        currentAnimations.MyReviveClip = currentAnimationProfile.MyReviveClip;
+            if (overrideControllerClipList.Contains(systemAnimations.AnimationProps.ReviveClip.name)) {
+                if (currentAnimationProfile.AnimationProps.ReviveClip != null) {
+                    if (overrideController[systemAnimations.AnimationProps.ReviveClip.name] != currentAnimationProfile.AnimationProps.ReviveClip) {
+                        overrideController[systemAnimations.AnimationProps.ReviveClip.name] = currentAnimationProfile.AnimationProps.ReviveClip;
+                        currentAnimations.AnimationProps.ReviveClip = currentAnimationProfile.AnimationProps.ReviveClip;
                     }
                 } else {
-                    if (defaultAnimationProfile.MyReviveClip != null && overrideController[systemAnimations.MyReviveClip.name] != defaultAnimationProfile.MyReviveClip) {
-                        overrideController[systemAnimations.MyReviveClip.name] = defaultAnimationProfile.MyReviveClip;
-                        currentAnimations.MyReviveClip = defaultAnimationProfile.MyReviveClip;
+                    if (defaultAnimationProfile.AnimationProps.ReviveClip != null && overrideController[systemAnimations.AnimationProps.ReviveClip.name] != defaultAnimationProfile.AnimationProps.ReviveClip) {
+                        overrideController[systemAnimations.AnimationProps.ReviveClip.name] = defaultAnimationProfile.AnimationProps.ReviveClip;
+                        currentAnimations.AnimationProps.ReviveClip = defaultAnimationProfile.AnimationProps.ReviveClip;
                     }
                 }
             }
@@ -1070,7 +1070,7 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null) {
                 // override the default attack animation
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AttackClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
             }
             float animationLength = animationClip.length;
 
@@ -1115,7 +1115,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() Found clip from overrideController: " + tmpAnimationClip.name);
                 }
 
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.CastClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyCastClips[0].name].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
@@ -1124,7 +1124,7 @@ namespace AnyRPG {
                 //lastAnimationLength = animationLength;
 
             }
-            if (baseAbility.AnimationProfile.MyUseRootMotion == true) {
+            if (baseAbility.AnimationProfile.AnimationProps.UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);
@@ -1282,7 +1282,7 @@ namespace AnyRPG {
             SetTrigger("ReviveTrigger");
             // add 1 to account for the transition
             if (SystemConfigurationManager.MyInstance != null) {
-                float animationLength = overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyReviveClip.name].length + 2;
+                float animationLength = overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
                 resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrectionAnimation(animationLength));
             }
         }
@@ -1447,7 +1447,7 @@ namespace AnyRPG {
             float usedBaseAnimationSpeed = 1;
             float multiplier = 1;
 
-            if (!currentAnimationProfile.MySuppressAdjustAnimatorSpeed) {
+            if (!currentAnimationProfile.AnimationProps.SuppressAdjustAnimatorSpeed) {
                 // nothing more to do if we are leaving animations at normal speed
 
                 float usedBaseMoveForwardAnimationSpeed;

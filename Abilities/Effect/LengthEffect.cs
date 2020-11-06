@@ -12,6 +12,10 @@ namespace AnyRPG {
 
         [Header("Prefab")]
 
+        [Tooltip("Ability: use ability prefabs, Both: use weapon and ability prefabs, Weapon: use only weapon prefabs")]
+        [SerializeField]
+        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Ability;
+
         [SerializeField]
         private List<string> prefabNames = new List<string>();
 
@@ -72,18 +76,43 @@ namespace AnyRPG {
         //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
         public bool MyCastZeroTick { get => castZeroTick; set => castZeroTick = value; }
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
+        public List<PrefabProfile> GetPrefabProfileList(IAbilityCaster abilityCaster) {
+            if (abilityPrefabSource == AbilityPrefabSource.Both) {
+                List<PrefabProfile> returnList = new List<PrefabProfile>();
+                returnList.AddRange(prefabProfileList);
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityCaster.AbilityManager.GetWeaponAbilityObjectList()) {
+                    if (abilityAttachmentNode.HoldableObject != null) {
+                        returnList.Add(abilityAttachmentNode.HoldableObject);
+                    }
+                }
+                return returnList;
+            }
+            if (abilityPrefabSource == AbilityPrefabSource.Weapon) {
+                List<PrefabProfile> returnList = new List<PrefabProfile>();
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityCaster.AbilityManager.GetWeaponAbilityObjectList()) {
+                    if (abilityAttachmentNode.HoldableObject != null) {
+                        returnList.Add(abilityAttachmentNode.HoldableObject);
+                    }
+                }
+                return returnList;
+            }
+
+            // abilityPrefabSource is AbilityPrefabSource.Ability since there are only 3 options
+            return prefabProfileList;
+
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ", " + (target == null ? "null" : target.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
-            if (prefabProfileList != null) {
+            if (GetPrefabProfileList(source) != null) {
                 List<PrefabProfile> usedPrefabProfileList = new List<PrefabProfile>();
                 if (randomPrefabs == false) {
-                    usedPrefabProfileList = prefabProfileList;
+                    usedPrefabProfileList = GetPrefabProfileList(source);
                 } else {
                     //PrefabProfile copyProfile = prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count -1)];
-                    usedPrefabProfileList.Add(prefabProfileList[UnityEngine.Random.Range(0, prefabProfileList.Count)]);
+                    usedPrefabProfileList.Add(GetPrefabProfileList(source)[UnityEngine.Random.Range(0, GetPrefabProfileList(source).Count)]);
                 }
                 foreach (PrefabProfile prefabProfile in usedPrefabProfileList) {
                     Vector3 spawnLocation = Vector3.zero;
@@ -234,7 +263,6 @@ namespace AnyRPG {
                 }
             }
 
-            prefabProfileList = new List<PrefabProfile>();
             if (prefabNames != null) {
                 if (prefabNames.Count > 0 && prefabSpawnLocation == PrefabSpawnLocation.None) {
                     Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + DisplayName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");

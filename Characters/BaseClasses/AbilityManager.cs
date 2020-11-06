@@ -1,5 +1,3 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,6 +55,10 @@ namespace AnyRPG {
 
         public AbilityManager(MonoBehaviour abilityCaster) {
             this.abilityCaster = abilityCaster;
+        }
+
+        public virtual List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {
+            return null;
         }
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
