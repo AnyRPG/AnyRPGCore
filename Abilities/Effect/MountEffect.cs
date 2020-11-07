@@ -76,9 +76,9 @@ namespace AnyRPG {
 
         private void HandleMountUnitSpawn() {
 
-            string originalPrefabSourceBone = unitProfile.UnitPrefabProfile.TargetBone;
+            string originalPrefabSourceBone = unitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
-            Vector3 originalPrefabOffset = unitProfile.UnitPrefabProfile.Position;
+            Vector3 originalPrefabOffset = unitProfile.UnitPrefabProps.Position;
 
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
@@ -86,7 +86,7 @@ namespace AnyRPG {
                     PlayerManager.MyInstance.UnitController.transform.parent = mountPoint;
                     //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     PlayerManager.MyInstance.UnitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                    PlayerManager.MyInstance.UnitController.transform.localEulerAngles = unitProfile.UnitPrefabProfile.Rotation;
+                    PlayerManager.MyInstance.UnitController.transform.localEulerAngles = unitProfile.UnitPrefabProps.Rotation;
                     ActivateMountedState();
                 }
             }

@@ -80,8 +80,19 @@ namespace AnyRPG {
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
         public bool RotateModel { get => rotateModel; set => rotateModel = value; }
-        public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
+        public AnimationProps AnimationProps {
+            get {
+                if (useInlineAnimationProps) {
+                    return animationProps;
+                }
+                if (animationProfile != null) {
+                    return animationProfile.AnimationProps;
+                }
+                return null;
+            }
+        }
+
 
         public void SetupScriptableObjects() {
 

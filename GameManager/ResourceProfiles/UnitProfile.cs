@@ -1,22 +1,18 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
     public class UnitProfile : DescribableResource, IStatProvider, IAbilityProvider {
 
-        [Header("Unit")]
+        [Header("Unit Prefab")]
 
         [Tooltip("If true, the unit prefab is loaded by searching for a UnitPrefabProfile with the same name as this resource.")]
         [SerializeField]
         private bool automaticPrefabProfile = true;
 
-        [Tooltip("The name of the prefab profile that contains the gameObject that represents the unit")]
+        [Tooltip("The name of the prefab profile that contains the gameObject that represents the unit.  Only used if Automatic Prefab Profile, and use Inline props are not checked.")]
         [SerializeField]
         private string prefabProfileName = string.Empty;
 
@@ -28,13 +24,15 @@ namespace AnyRPG {
         [SerializeField]
         private UnitPrefabProps unitPrefabProps = new UnitPrefabProps();
 
-        private UnitPrefabProfile unitPrefabProfile = null;
+        private UnitPrefabProps unitPrefabProfileProps = null;
 
         // The physical game object to spawn for this unit
         private GameObject unitPrefab = null;
 
         // the physical game object to spawn for the model, if any (units can already have models if configured that way)
         private GameObject modelPrefab = null;
+
+        [Header("Unit Settings")]
 
         [Tooltip("Mark this if true is the unit is an UMA unit")]
         [SerializeField]
@@ -43,12 +41,6 @@ namespace AnyRPG {
         [Tooltip("If true, this unit can be charmed and made into a pet")]
         [SerializeField]
         private bool isPet = false;
-
-        [Tooltip("If this is set, when the unit spawns, it will use this toughness")]
-        [SerializeField]
-        private string defaultToughness = string.Empty;
-
-        protected UnitToughness unitToughness = null;
 
         [Header("Character")]
 
@@ -98,6 +90,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool preventAutoDespawn = false;
 
+        [Tooltip("If this is set, when the unit spawns, it will use this toughness")]
+        [SerializeField]
+        private string defaultToughness = string.Empty;
+
+        protected UnitToughness unitToughness = null;
 
         // disabled for now.  This should be an emergent property of the learned abilities
         /*
@@ -252,12 +249,19 @@ namespace AnyRPG {
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
-        public UnitPrefabProfile UnitPrefabProfile { get => unitPrefabProfile; set => unitPrefabProfile = value; }
         public LootableCharacterProps LootableCharacterProps { get => lootableCharacter; set => lootableCharacter = value; }
         public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
         public DialogProps DialogProps { get => dialogConfig; set => dialogConfig = value; }
         public QuestGiverProps QuestGiverProps { get => questGiverConfig; set => questGiverConfig = value; }
         public VendorProps VendorProps { get => vendorConfig; set => vendorConfig = value; }
+        public UnitPrefabProps UnitPrefabProps {
+            get {
+                if (useInlinePrefabProps) {
+                    return unitPrefabProps;
+                }
+                return unitPrefabProfileProps;
+            }
+        }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -436,14 +440,15 @@ namespace AnyRPG {
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null) {
-                    unitPrefabProfile = tmpPrefabProfile;
-                    unitPrefab = tmpPrefabProfile.UnitPrefab;
-                    modelPrefab = tmpPrefabProfile.ModelPrefab;
+                    unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
+                    unitPrefab = tmpPrefabProfile.UnitPrefabProps.UnitPrefab;
+                    modelPrefab = tmpPrefabProfile.UnitPrefabProps.ModelPrefab;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
             }
 
+            unitPrefabProps.SetupScriptableObjects();
 
 
         }

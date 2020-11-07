@@ -179,9 +179,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile != null) {
-                    if (baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
-                        return baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
+                        return baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
                     }
                 }
             }
@@ -295,9 +295,9 @@ namespace AnyRPG {
         public override List<AnimationClip> GetUnitAttackAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
             if (baseCharacter.UnitProfile != null
-                && baseCharacter.UnitProfile.UnitPrefabProfile != null
-                && baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile != null) {
-                return baseCharacter.UnitProfile.UnitPrefabProfile.AnimationProfile.AnimationProps.AttackClips;
+                && baseCharacter.UnitProfile != null
+                && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
+                return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps.AttackClips;
             }
             return base.GetUnitAttackAnimations();
         }

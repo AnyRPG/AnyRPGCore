@@ -222,8 +222,8 @@ namespace AnyRPG {
         public bool ModelReady { get => modelReady; set => modelReady = value; }
         public override NamePlateProps NamePlateProps {
             get {
-                if (unitProfile != null && unitProfile.UnitPrefabProfile != null) {
-                    return unitProfile.UnitPrefabProfile.NamePlateProps;
+                if (unitProfile != null && unitProfile != null) {
+                    return unitProfile.UnitPrefabProps.NamePlateProps;
                 }
                 return namePlateProps;
             }
@@ -471,7 +471,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            if (unitProfile != null && unitProfile.UnitPrefabProfile != null && unitProfile.UnitPrefabProfile.ModelPrefab != null) {
+            if (unitProfile != null && unitProfile != null && unitProfile.UnitPrefabProps.ModelPrefab != null) {
                 unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
                 ConfigureAnimator(unitModel);
             }

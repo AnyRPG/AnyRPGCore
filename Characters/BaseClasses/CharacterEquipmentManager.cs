@@ -283,9 +283,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile != null) {
-                    if (baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
-                        return baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else if (attachmentProfile != null) {
                     if (attachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
@@ -312,9 +312,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile != null && baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile != null) {
-                    if (baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
-                        return baseCharacter.UnitProfile.UnitPrefabProfile.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
+                if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
+                    if (baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
+                        return baseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
                     }
                 }
             }

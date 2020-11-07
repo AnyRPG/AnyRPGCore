@@ -655,9 +655,9 @@ namespace AnyRPG {
                     EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
                         defaultHitSoundEffect = null;
-                        if ((newItem as Weapon).MyDefaultHitSoundEffect != null) {
+                        if ((newItem as Weapon).DefaultHitSoundEffect != null) {
                             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): setting default hit sound");
-                            defaultHitSoundEffect = (newItem as Weapon).MyDefaultHitSoundEffect;
+                            defaultHitSoundEffect = (newItem as Weapon).DefaultHitSoundEffect;
                         }
                     }
                 }
