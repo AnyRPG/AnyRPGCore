@@ -50,6 +50,12 @@ namespace AnyRPG {
         List<AnimationClip> GetUnitAttackAnimations();
 
         /// <summary>
+        /// return a list of cast animations for the current unit
+        /// </summary>
+        /// <returns></returns>
+        List<AnimationClip> GetUnitCastAnimations();
+
+        /// <summary>
         /// false if the caster does not know that ability
         /// </summary>
         /// <param name="baseAbility"></param>

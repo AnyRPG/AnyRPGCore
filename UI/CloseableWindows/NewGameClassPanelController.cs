@@ -102,14 +102,15 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (characterClass != null && characterClass.TraitList.Count > 0) {
+            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
                 traitLabel.gameObject.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
-                for (int i = 0; i < characterClass.TraitList.Count; i++) {
-                    if (characterClass.TraitList[i] != null) {
+                for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
+                    if (capabilityProps.TraitList[i] != null) {
                         NewGameAbilityButton rewardIcon = Instantiate(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
-                        rewardIcon.AddAbility(characterClass.TraitList[i]);
+                        rewardIcon.AddAbility(capabilityProps.TraitList[i]);
                         traitRewardIcons.Add(rewardIcon);
                         /*
                         if ((characterClass.TraitList[i] as StatusEffect).MyRequiredLevel > 1) {
@@ -129,13 +130,14 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            if (characterClass != null && characterClass.AbilityList.Count > 0) {
+            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
                 abilityLabel.gameObject.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
-                for (int i = 0; i < characterClass.AbilityList.Count; i++) {
-                    if (characterClass.AbilityList[i] != null) {
+                for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
+                    if (capabilityProps.AbilityList[i] != null) {
                         NewGameAbilityButton rewardIcon = Instantiate(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
-                        rewardIcon.AddAbility(characterClass.AbilityList[i]);
+                        rewardIcon.AddAbility(capabilityProps.AbilityList[i]);
                         abilityRewardIcons.Add(rewardIcon);
                         /*
                         if (characterClass.AbilityList[i].MyRequiredLevel > 1) {

@@ -302,6 +302,15 @@ namespace AnyRPG {
             return base.GetUnitAttackAnimations();
         }
 
+        public override List<AnimationClip> GetUnitCastAnimations() {
+            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            if (baseCharacter.UnitProfile != null
+                && baseCharacter.UnitProfile != null
+                && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
+                return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps.CastClips;
+            }
+            return base.GetUnitCastAnimations();
+        }
 
 
         public override float GetMeleeRange() {
@@ -735,17 +744,21 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleAbilityProviderChange(IAbilityProvider newAbilityProvider, IAbilityProvider oldAbilityProvider) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleClassChange(" + (newCharacterClass == null ? "null" : newCharacterClass.MyName) + ")");
+        public void HandleAbilityProviderChange(ICapabilityProvider newAbilityProvider, ICapabilityProvider oldAbilityProvider) {
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleAbilityProviderChange(" + (newAbilityProvider == null ? "null" : newAbilityProvider.DisplayName) + ")");
             RemoveAbilityProviderTraits(oldAbilityProvider);
             UnLearnAbilityProviderAbilities(oldAbilityProvider);
-            LearnAbilityProviderAbilities(newAbilityProvider);
-            ApplyAbilityProviderTraits(newAbilityProvider);
+            LearnCapabilityProviderAbilities(newAbilityProvider);
+            ApplyCapabilityProviderTraits(newAbilityProvider);
         }
 
-        public void ApplyAbilityProviderTraits(IAbilityProvider abilityProvider) {
-            if (abilityProvider != null && abilityProvider.TraitList != null && abilityProvider.TraitList.Count > 0) {
-                foreach (AbilityEffect abilityProviderTrait in abilityProvider.TraitList) {
+        public void ApplyCapabilityProviderTraits(ICapabilityProvider capabilityProvider) {
+            if (capabilityProvider == null) {
+                return;
+            }
+            CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(baseCharacter);
+            if (capabilityProps.TraitList != null && capabilityProps.TraitList.Count > 0) {
+                foreach (AbilityEffect abilityProviderTrait in capabilityProps.TraitList) {
                     ApplyStatusEffect(abilityProviderTrait);
                 }
             }
@@ -788,9 +801,13 @@ namespace AnyRPG {
             ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
-        public void RemoveAbilityProviderTraits(IAbilityProvider oldAbilityProvider) {
-            if (oldAbilityProvider != null && oldAbilityProvider.TraitList != null && oldAbilityProvider.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in oldAbilityProvider.TraitList) {
+        public void RemoveAbilityProviderTraits(ICapabilityProvider oldAbilityProvider) {
+            if (oldAbilityProvider == null) {
+                return;
+            }
+            CapabilityProps capabilityProps = oldAbilityProvider.GetFilteredCapabilities(baseCharacter);
+            if (capabilityProps.TraitList != null && capabilityProps.TraitList.Count > 0) {
+                foreach (AbilityEffect classTrait in capabilityProps.TraitList) {
                     if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
                         baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
                     }
@@ -812,11 +829,12 @@ namespace AnyRPG {
 
         }
 
-        public void LearnAbilityProviderAbilities(IAbilityProvider abilityProvider) {
-            if (abilityProvider == null) {
+        public void LearnCapabilityProviderAbilities(ICapabilityProvider capabilityProvider) {
+            if (capabilityProvider == null) {
                 return;
             }
-            foreach (BaseAbility baseAbility in abilityProvider.AbilityList) {
+            CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(baseCharacter);
+            foreach (BaseAbility baseAbility in capabilityProps.AbilityList) {
                 if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
@@ -826,11 +844,12 @@ namespace AnyRPG {
             }
         }
 
-        public void UnLearnAbilityProviderAbilities (IAbilityProvider abilityProvider, bool updateActionBars = false) {
+        public void UnLearnAbilityProviderAbilities (ICapabilityProvider abilityProvider, bool updateActionBars = false) {
             if (abilityProvider == null) {
                 return;
             }
-            foreach (BaseAbility oldAbility in abilityProvider.AbilityList) {
+            CapabilityProps capabilityProps = abilityProvider.GetFilteredCapabilities(baseCharacter);
+            foreach (BaseAbility oldAbility in capabilityProps.AbilityList) {
                 UnlearnAbility(oldAbility, updateActionBars);
             }
             OnUnlearnAbilities();
@@ -929,19 +948,19 @@ namespace AnyRPG {
             LearnSystemAbilities();
 
             if (baseCharacter.UnitProfile != null) {
-                LearnAbilityProviderAbilities(baseCharacter.UnitProfile);
+                LearnCapabilityProviderAbilities(baseCharacter.UnitProfile);
             }
             if (baseCharacter.CharacterRace != null) {
-                LearnAbilityProviderAbilities(baseCharacter.CharacterRace);
+                LearnCapabilityProviderAbilities(baseCharacter.CharacterRace);
             }
             if (baseCharacter.CharacterClass != null) {
-                LearnAbilityProviderAbilities(baseCharacter.CharacterClass);
+                LearnCapabilityProviderAbilities(baseCharacter.CharacterClass);
             }
             if (baseCharacter.ClassSpecialization != null) {
-                LearnAbilityProviderAbilities(baseCharacter.ClassSpecialization);
+                LearnCapabilityProviderAbilities(baseCharacter.ClassSpecialization);
             }
             if (baseCharacter.Faction != null) {
-                LearnAbilityProviderAbilities(baseCharacter.Faction);
+                LearnCapabilityProviderAbilities(baseCharacter.Faction);
             }
 
         }

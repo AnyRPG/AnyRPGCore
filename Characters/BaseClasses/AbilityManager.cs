@@ -84,6 +84,10 @@ namespace AnyRPG {
             return new List<AnimationClip>();
         }
 
+        public virtual List<AnimationClip> GetUnitCastAnimations() {
+            return new List<AnimationClip>();
+        }
+
         public virtual bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }

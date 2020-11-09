@@ -53,6 +53,10 @@ namespace AnyRPG {
 
         protected AnimationProfile animationProfile;
 
+        [Tooltip("If true, the ability will use the casting animations from the caster.")]
+        [SerializeField]
+        protected bool useUnitCastAnimations = false;
+
         [Header("Audio")]
 
         [Tooltip("If the animation has hit events while it is playing (such as when a hammer strike occurs), this audio profile will be played in response to those events.")]
@@ -264,14 +268,6 @@ namespace AnyRPG {
         public bool AutoAddToBars { get => autoAddToBars; }
         public bool UseableWithoutLearning { get => useableWithoutLearning; }
 
-
-        public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
-            if (useSpeedMultipliers) {
-                return BaseAbilityCastingTime * abilityCaster.AbilityManager.GetSpeed();
-            }
-            return BaseAbilityCastingTime;
-        }
-
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
         /// </summary>
@@ -327,6 +323,24 @@ namespace AnyRPG {
         public virtual List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
             return holdableObjectList;
         }
+
+        public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
+            if (useSpeedMultipliers) {
+                return BaseAbilityCastingTime * abilityCaster.AbilityManager.GetSpeed();
+            }
+            return BaseAbilityCastingTime;
+        }
+
+        public List<AnimationClip> GetCastClips(IAbilityCaster sourceCharacter) {
+            List<AnimationClip> animationClips = new List<AnimationClip>();
+            if (useUnitCastAnimations == true) {
+                animationClips = sourceCharacter.AbilityManager.GetUnitCastAnimations();
+            } else {
+                animationClips = AnimationClips;
+            }
+            return animationClips;
+        }
+
 
         public override string GetSummary() {
             string requireString = string.Empty;
@@ -642,8 +656,18 @@ namespace AnyRPG {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
             //Debug.Log("setting casting animation");
             if (CastingAnimationClip != null) {
-                source.AbilityManager.PerformCastingAnimation(CastingAnimationClip, this);
             }
+            List<AnimationClip> usedCastAnimationClips = GetCastClips(source);
+            if (usedCastAnimationClips != null && usedCastAnimationClips.Count > 0) {
+                int clipIndex = UnityEngine.Random.Range(0, usedCastAnimationClips.Count);
+                if (usedCastAnimationClips[clipIndex] != null) {
+                    // perform the actual animation
+                    source.AbilityManager.PerformCastingAnimation(usedCastAnimationClips[clipIndex], this);
+                }
+
+            }
+
+
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
             // NEXT LINE NO LONGER NEEDED SINCE WE NOW ACTUALLY CHECK THE REAL DISTANCE MOVED BY THE CHARACTER AND DON'T CANCEL CAST UNTIL DISTANCE IS > 0.1F

@@ -600,7 +600,7 @@ namespace AnyRPG {
                 // there are no weapons equipped
                 // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.CharacterClass != null) {
-                    if (baseCharacter.CharacterClass.WeaponSkillList.Contains(weaponAffinity)) {
+                    if (baseCharacter.CharacterClass.GetFilteredCapabilities(baseCharacter).WeaponSkillList.Contains(weaponAffinity)) {
                         if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
                             return true;
                         }
@@ -609,7 +609,7 @@ namespace AnyRPG {
 
                 // check if the unit profile is set and contains a weapon skill that is considered to be active when no weapon is equipped
                 if (baseCharacter.UnitProfile != null) {
-                    if (baseCharacter.UnitProfile.WeaponSkillList.Contains(weaponAffinity)) {
+                    if (baseCharacter.UnitProfile.GetFilteredCapabilities(baseCharacter).WeaponSkillList.Contains(weaponAffinity)) {
                         if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
                             return true;
                         }

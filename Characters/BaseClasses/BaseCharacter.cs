@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class BaseCharacter : MonoBehaviour, IAbilityCaster {
+    public class BaseCharacter : MonoBehaviour, IAbilityCaster, ICapabilityConsumer {
 
         public event System.Action<string> OnNameChange = delegate { };
         public event System.Action<string> OnTitleChange = delegate { };
@@ -486,12 +486,11 @@ namespace AnyRPG {
         }
 
         public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
+            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
             if (newUnitType != null) {
                 UnitType oldUnitType = unitType;
                 unitType = newUnitType;
                 UpdateStatProviderList();
-                //characterStats. SetCharacterClass(newUnitType);
                 if (notify) {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnUnitTypeChange(newUnitType, oldUnitType);

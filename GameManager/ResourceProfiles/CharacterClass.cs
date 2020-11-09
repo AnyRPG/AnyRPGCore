@@ -8,11 +8,11 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Character Class", menuName = "AnyRPG/CharacterClass")]
-    public class CharacterClass : DescribableResource, IStatProvider, IAbilityProvider {
+    public class CharacterClass : DescribableResource, IStatProvider, ICapabilityProvider {
 
         [Header("NewGame")]
 
-        [Tooltip("If true, this faction is available for Players to choose on the new game menu")]
+        [Tooltip("If true, this character class is available for players to choose on the new game menu")]
         [SerializeField]
         private bool newGameOption = false;
 
@@ -24,34 +24,15 @@ namespace AnyRPG {
 
         private List<Equipment> equipmentList = new List<Equipment>();
 
-        [Header("Abilities and Traits")]
-
-        [Tooltip("Abilities available to this class")]
-        [SerializeField]
-        private List<string> abilityNames = new List<string>();
-
-        // reference to the actual ability
-        private List<BaseAbility> abilityList = new List<BaseAbility>();
-
-        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
-        [SerializeField]
-        private List<string> traitNames = new List<string>();
-
-        private List<StatusEffect> traitList = new List<StatusEffect>();
-
         [Header("Capabilities")]
 
-        [Tooltip("Armor classes that can be equipped by this class")]
+        [Tooltip("Capabilities that apply to all characters of this class")]
         [SerializeField]
-        private List<string> armorClassList = new List<string>();
+        private CapabilityProps capabilities = new CapabilityProps();
 
-        [Tooltip("Weapon skills known by this class")]
-        [FormerlySerializedAs("weaponSkillList")]
+        [Tooltip("Capabilities that only apply to specific unit types")]
         [SerializeField]
-        private List<string> weaponSkills = new List<string>();
-
-        // reference to the actual weapon skills
-        private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
+        private List<UnitTypeCapabilityNode> unitTypeCapabilities = new List<UnitTypeCapabilityNode>();
 
         [Header("Stats and Scaling")]
 
@@ -69,14 +50,22 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
-        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
-        public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
-        public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+
+
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+            CapabilityProps returnValue = capabilities;
+            foreach (UnitTypeCapabilityNode unitTypeCapabilityNode in unitTypeCapabilities) {
+                if (capabilityConsumer != null && capabilityConsumer.UnitType != null && unitTypeCapabilityNode.UnitTypeList.Contains(capabilityConsumer.UnitType)) {
+                    returnValue = returnValue.Join(unitTypeCapabilityNode.Capabilities);
+                }
+            }
+            return returnValue;
+        }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -89,42 +78,6 @@ namespace AnyRPG {
                         equipmentList.Add(tmpEquipment);
                     } else {
                         Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            abilityList = new List<BaseAbility>();
-            if (abilityNames != null) {
-                foreach (string baseAbilityName in abilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
-                    if (baseAbility != null) {
-                        abilityList.Add(baseAbility);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            traitList = new List<StatusEffect>();
-            if (traitNames != null) {
-                foreach (string traitName in traitNames) {
-                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
-                    if (abilityEffect != null) {
-                        traitList.Add(abilityEffect);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            weaponSkillList = new List<WeaponSkill>();
-            if (weaponSkills != null) {
-                foreach (string weaponSkillName in weaponSkills) {
-                    WeaponSkill weaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponSkillName);
-                    if (weaponSkill != null) {
-                        weaponSkillList.Add(weaponSkill);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -143,6 +96,11 @@ namespace AnyRPG {
 
             foreach (StatScalingNode statScalingNode in primaryStats) {
                 statScalingNode.SetupScriptableObjects();
+            }
+
+            capabilities.SetupScriptableObjects();
+            foreach (UnitTypeCapabilityNode unitTypeCapabilityNode in unitTypeCapabilities) {
+                unitTypeCapabilityNode.SetupScriptableObjects();
             }
 
         }
@@ -209,6 +167,41 @@ namespace AnyRPG {
                 }
             }
 
+        }
+    }
+
+    [System.Serializable]
+    public class UnitTypeCapabilityNode {
+
+        [Tooltip("The unit types that will have these capabilities")]
+        [SerializeField]
+        private List<string> unitTypes = new List<string>();
+
+        private List<UnitType> unitTypeList = new List<UnitType>();
+
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [SerializeField]
+        private CapabilityProps capabilities = new CapabilityProps();
+
+        public List<UnitType> UnitTypeList { get => unitTypeList; set => unitTypeList = value; }
+        public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+
+        public void SetupScriptableObjects() {
+
+            foreach (string unitTypeName in unitTypes) {
+                if (unitTypeName != null && unitTypeName != string.Empty) {
+                    UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
+                    if (tmpUnitType != null) {
+                        unitTypeList.Add(tmpUnitType);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + unitTypeName + " while inititalizing characterClassAbilityNode.  CHECK INSPECTOR");
+                    }
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty character class name while inititalizing characterClassAbilityNode.  CHECK INSPECTOR");
+                }
+            }
+
+            capabilities.SetupScriptableObjects();
         }
     }
 

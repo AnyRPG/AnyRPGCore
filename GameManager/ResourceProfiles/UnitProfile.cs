@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
-    public class UnitProfile : DescribableResource, IStatProvider, IAbilityProvider {
+    public class UnitProfile : DescribableResource, IStatProvider, ICapabilityProvider {
 
         [Header("Unit Prefab")]
 
@@ -102,32 +102,13 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultAutoAttackAbilityName = string.Empty;
         */
-        [Header("Abilities and Traits")]
-
-        [Tooltip("Abilities this unit will know")]
-        [FormerlySerializedAs("learnedAbilityNames")]
-        [SerializeField]
-        private List<string> abilityNames = new List<string>();
-
-        private List<BaseAbility> abilityList = new List<BaseAbility>();
-
-        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
-        [SerializeField]
-        private List<string> traitNames = new List<string>();
-
-        private List<StatusEffect> traitList = new List<StatusEffect>();
-
-        private BaseAbility defaultAutoAttackAbility = null;
-
         [Header("Capabilities")]
 
-        [Tooltip("Weapon skills known by this class")]
-        [FormerlySerializedAs("weaponSkillList")]
+        [Tooltip("Capabilities that apply to this unit")]
         [SerializeField]
-        private List<string> weaponSkills = new List<string>();
+        private CapabilityProps capabilities = new CapabilityProps();
 
-        // reference to the actual weapon skills
-        private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
+        private BaseAbility defaultAutoAttackAbility = null;
 
         [Header("Control")]
 
@@ -229,11 +210,8 @@ namespace AnyRPG {
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
-        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
-        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
-        public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<string> EquipmentNameList { get => equipmentNameList; set => equipmentNameList = value; }
@@ -262,6 +240,12 @@ namespace AnyRPG {
                 return unitPrefabProfileProps;
             }
         }
+
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+            return capabilities;
+        }
+
+        public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -318,33 +302,6 @@ namespace AnyRPG {
                 }
             }
 
-            abilityList = new List<BaseAbility>();
-            if (abilityNames != null) {
-                foreach (string baseAbilityName in abilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
-                    if (baseAbility != null) {
-                        if ((baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true && defaultAutoAttackAbility == null) {
-                            defaultAutoAttackAbility = baseAbility;
-                        }
-                        abilityList.Add(baseAbility);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            traitList = new List<StatusEffect>();
-            if (traitNames != null) {
-                foreach (string traitName in traitNames) {
-                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
-                    if (abilityEffect != null) {
-                        traitList.Add(abilityEffect);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
             if (movementAudioProfileNames != null) {
                 foreach (string movementAudioProfileName in movementAudioProfileNames) {
                     AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(movementAudioProfileName);
@@ -352,18 +309,6 @@ namespace AnyRPG {
                         movementAudioProfiles.Add(tmpAudioProfile);
                     } else {
                         Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            weaponSkillList = new List<WeaponSkill>();
-            if (weaponSkills != null) {
-                foreach (string weaponSkillName in weaponSkills) {
-                    WeaponSkill weaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponSkillName);
-                    if (weaponSkill != null) {
-                        weaponSkillList.Add(weaponSkill);
-                    } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGamePanel : WindowContentController {
+    public class NewGamePanel : WindowContentController, ICapabilityConsumer {
 
         #region Singleton
         private static NewGamePanel instance;
@@ -21,13 +21,6 @@ namespace AnyRPG {
                 return instance;
             }
         }
-
-        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
-        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public Faction Faction { get => faction; set => faction = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
-        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
-        public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
         #endregion
 
@@ -58,14 +51,25 @@ namespace AnyRPG {
         private NewGameSpecializationPanelController specializationPanel = null;
 
         private string playerName = "Player Name";
+        private Faction faction = null;
+        private UnitType unitType = null;
+        private CharacterRace characterRace = null;
         private CharacterClass characterClass = null;
         private ClassSpecialization classSpecialization = null;
-        private Faction faction = null;
         private UnitProfile unitProfile = null;
 
         private AnyRPGSaveData saveData;
 
         private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
+
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
+        public Faction Faction { get => faction; set => faction = value; }
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
+        public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");

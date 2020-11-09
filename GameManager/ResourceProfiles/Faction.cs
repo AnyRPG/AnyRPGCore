@@ -1,10 +1,11 @@
 using AnyRPG;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Factions/Faction")]
-    public class Faction : DescribableResource, IAbilityProvider {
+    public class Faction : DescribableResource, ICapabilityProvider {
 
         [Header("NewGame")]
 
@@ -46,25 +47,30 @@ namespace AnyRPG {
 
         [Header("Capabilities")]
 
-        [Tooltip("abilities learned when joining this faction")]
+        [Tooltip("Capabilities that apply to all characters of this faction")]
         [SerializeField]
-        private List<string> learnedAbilityNames = new List<string>();
+        private CapabilityProps capabilities = new CapabilityProps();
 
-        private List<BaseAbility> learnedAbilityList = new List<BaseAbility>();
-
-        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [Tooltip("Capabilities that only apply to specific character classes")]
         [SerializeField]
-        private List<string> traitNames = new List<string>();
+        private List<CharacterClassCapabilityNode> classCapabilityList = new List<CharacterClassCapabilityNode>();
 
-        private List<StatusEffect> traitList = new List<StatusEffect>();
 
-        public List<BaseAbility> AbilityList { get => learnedAbilityList; set => learnedAbilityList = value; }
-        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
         public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+            CapabilityProps returnValue = capabilities;
+            foreach (CharacterClassCapabilityNode characterClassCapabilityNode in classCapabilityList) {
+                if (capabilityConsumer != null && capabilityConsumer.CharacterClass != null && characterClassCapabilityNode.CharacterClassList.Contains(capabilityConsumer.CharacterClass)) {
+                    returnValue = returnValue.Join(characterClassCapabilityNode.Capabilities);
+                }
+            }
+            return returnValue;
+        }
 
         public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");
@@ -248,18 +254,6 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilityList = new List<BaseAbility>();
-            if (learnedAbilityNames != null) {
-                foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
-                    if (baseAbility != null) {
-                        learnedAbilityList.Add(baseAbility);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
             if (dispositionList != null) {
                 foreach (FactionDisposition factionDisposition in dispositionList) {
                     if (factionDisposition != null) {
@@ -288,10 +282,46 @@ namespace AnyRPG {
                 }
             }
 
-
-
         }
 
     }
+
+    [System.Serializable]
+    public class CharacterClassCapabilityNode {
+
+        [Tooltip("The character classes that will have these capabilities")]
+        [SerializeField]
+        private List<string> characterClasses = new List<string>();
+
+        private List<CharacterClass> characterClassList = new List<CharacterClass>();
+
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [SerializeField]
+        private CapabilityProps capabilities = new CapabilityProps();
+
+        public List<CharacterClass> CharacterClassList { get => characterClassList; set => characterClassList = value; }
+        public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+
+        public void SetupScriptableObjects() {
+
+            foreach (string characterClassName in characterClasses) {
+                if (characterClassName != null && characterClassName != string.Empty) {
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    if (tmpCharacterClass != null) {
+                        characterClassList.Add(tmpCharacterClass);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + characterClassName + " while inititalizing characterClassAbilityNode.  CHECK INSPECTOR");
+                    }
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty character class name while inititalizing characterClassAbilityNode.  CHECK INSPECTOR");
+                }
+            }
+
+            capabilities.SetupScriptableObjects();
+        }
+    }
+
+
+   
 
 }

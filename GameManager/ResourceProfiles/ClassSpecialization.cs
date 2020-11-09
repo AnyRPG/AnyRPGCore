@@ -8,8 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Class Specialization", menuName = "AnyRPG/CharacterClassSpecialization")]
-    [System.Serializable]
-    public class ClassSpecialization : DescribableResource, IStatProvider, IAbilityProvider {
+    public class ClassSpecialization : DescribableResource, IStatProvider, ICapabilityProvider {
 
         //[Header("Class Specialization")]
 
@@ -35,26 +34,11 @@ namespace AnyRPG {
 
         private List<CharacterClass> characterClasses = new List<CharacterClass>();
 
-
         [Header("Capabilities")]
 
-        [Tooltip("Weapon skills known by this specialization")]
-        [FormerlySerializedAs("weaponSkillList")]
+        [Tooltip("Capabilities that apply to all characters of this specialization")]
         [SerializeField]
-        private List<string> weaponSkillNames = new List<string>();
-
-        private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
-
-        [Tooltip("Abilities this specialization will know")]
-        [SerializeField]
-        private List<string> abilityNames = new List<string>();
-
-        private List<BaseAbility> realAbilityList = new List<BaseAbility>();
-
-        [SerializeField]
-        private List<string> traitNames = new List<string>();
-
-        private List<StatusEffect> realTraitList = new List<StatusEffect>();
+        private CapabilityProps capabilities = new CapabilityProps();
 
         [Header("Stats and Scaling")]
 
@@ -75,15 +59,16 @@ namespace AnyRPG {
         [SerializeField]
         private List<PowerEnhancerNode> powerEnhancerStats = new List<PowerEnhancerNode>();
 
-        public List<BaseAbility> AbilityList { get => realAbilityList; set => realAbilityList = value; }
-        public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
-        public List<StatusEffect> TraitList { get => realTraitList; set => realTraitList = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<PowerEnhancerNode> PowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public List<CharacterClass> CharacterClasses { get => characterClasses; set => characterClasses = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+            return capabilities;
+        }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
@@ -107,42 +92,6 @@ namespace AnyRPG {
                         characterClasses.Add(tmpClass);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + className + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            realAbilityList = new List<BaseAbility>();
-            if (abilityNames != null) {
-                foreach (string baseAbilityName in abilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
-                    if (baseAbility != null) {
-                        realAbilityList.Add(baseAbility);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            realTraitList = new List<StatusEffect>();
-            if (traitNames != null) {
-                foreach (string traitName in traitNames) {
-                    StatusEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(traitName) as StatusEffect;
-                    if (abilityEffect != null) {
-                        realTraitList.Add(abilityEffect);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            weaponSkillList = new List<WeaponSkill>();
-            if (weaponSkillNames != null) {
-                foreach (string weaponSkillName in weaponSkillNames) {
-                    WeaponSkill weaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponSkillName);
-                    if (weaponSkill != null) {
-                        weaponSkillList.Add(weaponSkill);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

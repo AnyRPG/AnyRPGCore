@@ -128,6 +128,7 @@ namespace AnyRPG {
             if (abilitiesList.Count > 0) {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
+            // TODO: this code does not yet account for all the new capabilityProviders and will show red if something like faction provides the capability
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
@@ -148,9 +149,9 @@ namespace AnyRPG {
         public List<CharacterClass> GetAllowedCharacterClasses() {
             List<CharacterClass> returnValue = new List<CharacterClass>();
             foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.WeaponSkillList != null && characterClass.WeaponSkillList.Count > 0) {
+                if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList != null && characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList.Count > 0) {
                     //bool foundMatch = false;
-                    if (characterClass.WeaponSkillList.Contains(weaponSkill)) {
+                    if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList.Contains(weaponSkill)) {
                         returnValue.Add(characterClass);
                     }
                 }
