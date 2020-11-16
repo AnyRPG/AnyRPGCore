@@ -21,13 +21,13 @@ namespace AnyRPG {
         // properties that come from the unit profile
         private string characterName = string.Empty;
         private string title = string.Empty;
-        private Faction faction;
-        private UnitType unitType;
-        private CharacterRace characterRace;
-        private CharacterClass characterClass;
-        private ClassSpecialization classSpecialization;
+        private Faction faction = null;
+        private UnitType unitType = null;
+        private CharacterRace characterRace = null;
+        private CharacterClass characterClass = null;
+        private ClassSpecialization classSpecialization = null;
         private bool spawnDead = false;
-        private UnitToughness unitToughness;
+        private UnitToughness unitToughness = null;
 
         private UnitProfile unitProfile = null;
 
@@ -391,7 +391,7 @@ namespace AnyRPG {
                 }
                 if (notify) {
                     OnFactionChange(newFaction);
-                    characterAbilityManager.HandleAbilityProviderChange(newFaction, oldFaction);
+                    characterAbilityManager.HandleCapabilityProviderChange(newFaction, oldFaction);
                     characterEquipmentManager.UnequipUnwearableEquipment();
                     if (unitController != null) {
                         unitController.NotifyOnFactionChange(newFaction, oldFaction);
@@ -408,9 +408,17 @@ namespace AnyRPG {
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
+
+            // get a snapshot of the current state
+            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
+
             if (newClassSpecialization != null) {
                 ClassSpecialization oldClassSpecialization = classSpecialization;
                 classSpecialization = newClassSpecialization;
+
+                // get a snapshot of the new state
+                CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+
                 UpdateStatProviderList();
                 if (characterStats != null) {
                     characterStats.HandleUpdateStatProviders();
@@ -419,7 +427,7 @@ namespace AnyRPG {
                 if (notify) {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
-                    characterAbilityManager.HandleAbilityProviderChange(newClassSpecialization, oldClassSpecialization);
+                    characterAbilityManager.HandleCapabilityProviderChange(newClassSpecialization, oldClassSpecialization);
                     characterEquipmentManager.UnequipUnwearableEquipment();
                     if (unitController != null) {
                         unitController.NotifyOnSpecializationChange(newClassSpecialization, oldClassSpecialization);
@@ -446,7 +454,7 @@ namespace AnyRPG {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnClassChange(newCharacterClass, oldCharacterClass);
                     characterEquipmentManager.UnequipUnwearableEquipment();
-                    characterAbilityManager.HandleAbilityProviderChange(newCharacterClass, oldCharacterClass);
+                    characterAbilityManager.HandleCapabilityProviderChange(newCharacterClass, oldCharacterClass);
                     if (unitController != null) {
                         unitController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
                     }
@@ -472,7 +480,7 @@ namespace AnyRPG {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnRaceChange(newCharacterRace, oldCharacterRace);
                     characterEquipmentManager.UnequipUnwearableEquipment();
-                    characterAbilityManager.HandleAbilityProviderChange(newCharacterRace, oldCharacterRace);
+                    characterAbilityManager.HandleCapabilityProviderChange(newCharacterRace, oldCharacterRace);
                     if (unitController != null) {
                         unitController.NotifyOnRaceChange(newCharacterRace, oldCharacterRace);
                     }
@@ -495,7 +503,7 @@ namespace AnyRPG {
                     // give equipment manager time to remove equipment that this class cannot equip and ability manager time to apply class traits
                     OnUnitTypeChange(newUnitType, oldUnitType);
                     characterEquipmentManager.UnequipUnwearableEquipment();
-                    characterAbilityManager.HandleAbilityProviderChange(newUnitType, oldUnitType);
+                    characterAbilityManager.HandleCapabilityProviderChange(newUnitType, oldUnitType);
                     if (unitController != null) {
                         unitController.NotifyOnUnitTypeChange(newUnitType, oldUnitType);
                     }

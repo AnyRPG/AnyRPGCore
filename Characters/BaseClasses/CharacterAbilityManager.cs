@@ -744,7 +744,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleAbilityProviderChange(ICapabilityProvider newAbilityProvider, ICapabilityProvider oldAbilityProvider) {
+        public void HandleCapabilityProviderChange(ICapabilityProvider newAbilityProvider, ICapabilityProvider oldAbilityProvider) {
             Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleAbilityProviderChange(" + (newAbilityProvider == null ? "null" : newAbilityProvider.DisplayName) + ")");
             RemoveAbilityProviderTraits(oldAbilityProvider);
             UnLearnAbilityProviderAbilities(oldAbilityProvider);
