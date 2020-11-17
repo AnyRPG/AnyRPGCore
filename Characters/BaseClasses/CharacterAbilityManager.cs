@@ -744,23 +744,20 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleCapabilityProviderChange(ICapabilityProvider newAbilityProvider, ICapabilityProvider oldAbilityProvider) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleAbilityProviderChange(" + (newAbilityProvider == null ? "null" : newAbilityProvider.DisplayName) + ")");
-            RemoveAbilityProviderTraits(oldAbilityProvider);
-            UnLearnAbilityProviderAbilities(oldAbilityProvider);
-            LearnCapabilityProviderAbilities(newAbilityProvider);
-            ApplyCapabilityProviderTraits(newAbilityProvider);
+        public void HandleCapabilityProviderChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleAbilityProviderChange()");
+            RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
+            UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
+            LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot));
+            ApplyCapabilityProviderTraits(oldSnapshot.GetTraitsToAdd(newSnapshot));
         }
 
-        public void ApplyCapabilityProviderTraits(ICapabilityProvider capabilityProvider) {
-            if (capabilityProvider == null) {
+        public void ApplyCapabilityProviderTraits(List<StatusEffect> statusEffects) {
+            if (statusEffects == null) {
                 return;
             }
-            CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(baseCharacter);
-            if (capabilityProps.TraitList != null && capabilityProps.TraitList.Count > 0) {
-                foreach (AbilityEffect abilityProviderTrait in capabilityProps.TraitList) {
-                    ApplyStatusEffect(abilityProviderTrait);
-                }
+            foreach (StatusEffect statusEffect in statusEffects) {
+                ApplyStatusEffect(statusEffect);
             }
         }
 
@@ -801,16 +798,13 @@ namespace AnyRPG {
             ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
-        public void RemoveAbilityProviderTraits(ICapabilityProvider oldAbilityProvider) {
-            if (oldAbilityProvider == null) {
+        public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
+            if (statusEffects == null) {
                 return;
             }
-            CapabilityProps capabilityProps = oldAbilityProvider.GetFilteredCapabilities(baseCharacter);
-            if (capabilityProps.TraitList != null && capabilityProps.TraitList.Count > 0) {
-                foreach (AbilityEffect classTrait in capabilityProps.TraitList) {
-                    if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(classTrait.DisplayName))) {
-                        baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(classTrait.DisplayName)].CancelStatusEffect();
-                    }
+            foreach (StatusEffect statusEffect in statusEffects) {
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+                    baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                 }
             }
         }
@@ -829,12 +823,11 @@ namespace AnyRPG {
 
         }
 
-        public void LearnCapabilityProviderAbilities(ICapabilityProvider capabilityProvider) {
-            if (capabilityProvider == null) {
+        public void LearnCapabilityProviderAbilities(List<BaseAbility> abilities) {
+            if (abilities == null) {
                 return;
             }
-            CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(baseCharacter);
-            foreach (BaseAbility baseAbility in capabilityProps.AbilityList) {
+            foreach (BaseAbility baseAbility in abilities) {
                 if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
@@ -844,12 +837,11 @@ namespace AnyRPG {
             }
         }
 
-        public void UnLearnAbilityProviderAbilities (ICapabilityProvider abilityProvider, bool updateActionBars = false) {
-            if (abilityProvider == null) {
+        public void UnLearnCapabilityProviderAbilities (List<BaseAbility> abilities, bool updateActionBars = false) {
+            if (abilities == null) {
                 return;
             }
-            CapabilityProps capabilityProps = abilityProvider.GetFilteredCapabilities(baseCharacter);
-            foreach (BaseAbility oldAbility in capabilityProps.AbilityList) {
+            foreach (BaseAbility oldAbility in abilities) {
                 UnlearnAbility(oldAbility, updateActionBars);
             }
             OnUnlearnAbilities();
@@ -947,22 +939,15 @@ namespace AnyRPG {
 
             LearnSystemAbilities();
 
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter);
+
+            // TODO : still need to work out how unit profile fits into this
+            /*
             if (baseCharacter.UnitProfile != null) {
                 LearnCapabilityProviderAbilities(baseCharacter.UnitProfile);
             }
-            if (baseCharacter.CharacterRace != null) {
-                LearnCapabilityProviderAbilities(baseCharacter.CharacterRace);
-            }
-            if (baseCharacter.CharacterClass != null) {
-                LearnCapabilityProviderAbilities(baseCharacter.CharacterClass);
-            }
-            if (baseCharacter.ClassSpecialization != null) {
-                LearnCapabilityProviderAbilities(baseCharacter.ClassSpecialization);
-            }
-            if (baseCharacter.Faction != null) {
-                LearnCapabilityProviderAbilities(baseCharacter.Faction);
-            }
-
+            */
+            LearnCapabilityProviderAbilities(capabilityConsumerSnapshot.GetAbilityList());
         }
 
         public bool LearnAbility(BaseAbility newAbility) {

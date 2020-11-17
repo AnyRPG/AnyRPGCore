@@ -32,11 +32,25 @@ namespace AnyRPG {
         public List<StatusEffect> GetTraitList() {
             List<StatusEffect> returnList = new List<StatusEffect>();
 
-            returnList.AddRange(faction.GetFilteredCapabilities(this).TraitList);
-            returnList.AddRange(unitType.GetFilteredCapabilities(this).TraitList);
-            returnList.AddRange(characterRace.GetFilteredCapabilities(this).TraitList);
-            returnList.AddRange(characterClass.GetFilteredCapabilities(this).TraitList);
-            returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).TraitList);
+            if (faction != null) {
+                returnList.AddRange(faction.GetFilteredCapabilities(this).TraitList);
+            }
+
+            if (unitType != null) {
+                returnList.AddRange(unitType.GetFilteredCapabilities(this).TraitList);
+            }
+
+            if (characterRace != null) {
+                returnList.AddRange(characterRace.GetFilteredCapabilities(this).TraitList);
+            }
+
+            if (characterClass != null) {
+                returnList.AddRange(characterClass.GetFilteredCapabilities(this).TraitList);
+            }
+
+            if (classSpecialization != null) {
+                returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).TraitList);
+            }
 
             return returnList;
         }
@@ -74,11 +88,21 @@ namespace AnyRPG {
         public List<BaseAbility> GetAbilityList() {
             List<BaseAbility> returnList = new List<BaseAbility>();
 
-            returnList.AddRange(faction.GetFilteredCapabilities(this).AbilityList);
-            returnList.AddRange(unitType.GetFilteredCapabilities(this).AbilityList);
-            returnList.AddRange(characterRace.GetFilteredCapabilities(this).AbilityList);
-            returnList.AddRange(characterClass.GetFilteredCapabilities(this).AbilityList);
-            returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).AbilityList);
+            if (faction != null) {
+                returnList.AddRange(faction.GetFilteredCapabilities(this).AbilityList);
+            }
+            if (unitType != null) {
+                returnList.AddRange(unitType.GetFilteredCapabilities(this).AbilityList);
+            }
+            if (characterRace != null) {
+                returnList.AddRange(characterRace.GetFilteredCapabilities(this).AbilityList);
+            }
+            if (characterClass != null) {
+                returnList.AddRange(characterClass.GetFilteredCapabilities(this).AbilityList);
+            }
+            if (classSpecialization != null) {
+                returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).AbilityList);
+            }
 
             return returnList;
         }
