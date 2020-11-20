@@ -236,7 +236,7 @@ namespace AnyRPG {
         */
 
         public void SetUnitProfile(string unitProfileName) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
+            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             unitProfile = null;
             this.unitProfileName = unitProfileName;
@@ -245,6 +245,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile (UnitProfile unitProfile) {
+            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
             this.unitProfileName = unitProfile.DisplayName;
             this.unitProfile = unitProfile;
             SetUnitProfileProperties();
@@ -272,6 +273,8 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         private void SetUnitProfileProperties() {
+            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
+
             if (unitProfile != null) {
                 if (unitProfile.CharacterName != null && unitProfile.CharacterName != string.Empty) {
                     SetCharacterName(unitProfile.CharacterName);
@@ -559,27 +562,28 @@ namespace AnyRPG {
         }
 
         public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
+            Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
             characterEquipmentManager.UnequipUnwearableEquipment();
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
 
         }
 
         public void DespawnImmediate() {
-            //Debug.Log(gameObject.name + ".AICharacter.DespawnImmediate()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.DespawnImmediate()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn(0, false, true);
             }
         }
 
         public void Despawn() {
-            //Debug.Log(gameObject.name + ".AICharacter.Despawn()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn();
             }
         }
 
         public void TryToDespawn() {
-            //Debug.Log(gameObject.name + ".AICharacter.TryToDespawn()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.TryToDespawn()");
             if (unitProfile != null && unitProfile.PreventAutoDespawn == true) {
                 return;
             }

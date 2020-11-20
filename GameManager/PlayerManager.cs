@@ -518,7 +518,9 @@ namespace AnyRPG {
         public void HandleEndAttacking(bool swapAnimator) {
             EventParamProperties eventParam = new EventParamProperties();
             if (swapAnimator) {
-                activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                if (activeUnitController != null) {
+                    activeUnitController.UnitAnimator.SetCorrectOverrideController();
+                }
                 SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
             }
         }

@@ -96,6 +96,8 @@ namespace AnyRPG {
                 }
             }
 
+            capabilities.SetupScriptableObjects();
+
         }
 
     }

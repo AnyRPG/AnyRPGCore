@@ -745,7 +745,7 @@ namespace AnyRPG {
         }
 
         public void HandleCapabilityProviderChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleAbilityProviderChange()");
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleCapabilityProviderChange()");
             RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
             UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
             LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot));

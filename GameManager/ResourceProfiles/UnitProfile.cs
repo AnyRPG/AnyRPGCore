@@ -395,6 +395,8 @@ namespace AnyRPG {
 
             unitPrefabProps.SetupScriptableObjects();
 
+            capabilities.SetupScriptableObjects();
+
 
         }
 

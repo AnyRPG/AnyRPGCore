@@ -40,6 +40,9 @@ namespace AnyRPG {
         }
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {
+            if (searchInteractable == null) {
+                return null;
+            }
             return searchInteractable.CharacterUnit;
         }
 

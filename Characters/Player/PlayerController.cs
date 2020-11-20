@@ -37,7 +37,7 @@ namespace AnyRPG {
         public float tabTargetMaxDistance = 20f;
 
         private List<Interactable> interactables = new List<Interactable>();
-        private Interactable target = null;
+        //private Interactable target = null;
         private Interactable mouseOverInteractable = null;
 
         private int tabTargetIndex = 0;
@@ -323,7 +323,10 @@ namespace AnyRPG {
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
         private void CheckForInteraction() {
-            if (target == null) {
+            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+                return;
+            }
+            if (PlayerManager.MyInstance.ActiveUnitController.Target == null) {
                 return;
             }
             if (InteractionSucceeded()) {
@@ -336,19 +339,19 @@ namespace AnyRPG {
         private bool InteractionSucceeded() {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance.ActiveUnitController == null) {
                 return false;
             }
-            if (target == null) {
+            if (PlayerManager.MyInstance.ActiveUnitController.Target == null) {
                 Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
-            if (target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
+            if (PlayerManager.MyInstance.ActiveUnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                if (target != null) {
-                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
-                    target = null;
+                if (PlayerManager.MyInstance.ActiveUnitController.Target != null) {
+                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
+                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
                 }
                 return true;
             }
@@ -506,9 +509,9 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(target.DisplayName);
+                SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
-                target = null;
+                PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -555,7 +558,9 @@ namespace AnyRPG {
 
         public void ClearTarget() {
             //Debug.Log("PlayerController.ClearTarget()");
-            target = null;
+
+            // comment next line to avoid stack overflow.  player controller no longer tracks target
+            //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
             UIManager.MyInstance.MyFocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
         }
@@ -565,7 +570,8 @@ namespace AnyRPG {
             if (newTarget == null) {
                 return;
             }
-            this.target = newTarget;
+            // comment next line to avoid stack overflow - playercontroller no longer tracks target
+            //PlayerManager.MyInstance.ActiveUnitController.SetTarget(newTarget);
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
             if (namePlateUnit != null && namePlateUnit.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");

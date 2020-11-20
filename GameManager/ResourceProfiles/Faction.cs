@@ -74,7 +74,7 @@ namespace AnyRPG {
 
         public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");
-            if ((namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+            if (PlayerManager.MyInstance.ActiveUnitController != null && (namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
@@ -281,6 +281,13 @@ namespace AnyRPG {
 
                 }
             }
+
+            foreach (CharacterClassCapabilityNode classCapabilityNode in classCapabilityList) {
+                classCapabilityNode.SetupScriptableObjects();
+            }
+
+            capabilities.SetupScriptableObjects();
+
 
         }
 

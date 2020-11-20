@@ -1150,6 +1150,9 @@ namespace AnyRPG {
 
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
+            // done by setting profile ?
+            //PlayerManager.MyInstance.MyCharacter.SetUnitType(SystemUnitTypeManager.MyInstance.GetResource(anyRPGSaveData.unittyp));
+
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             SetPlayerManagerPrefab(anyRPGSaveData);
 

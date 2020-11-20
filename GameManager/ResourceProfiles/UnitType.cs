@@ -55,6 +55,8 @@ namespace AnyRPG {
                 }
             }
 
+            capabilities.SetupScriptableObjects();
+
             foreach (StatScalingNode statScalingNode in primaryStats) {
                 statScalingNode.SetupScriptableObjects();
             }

@@ -337,9 +337,18 @@ namespace AnyRPG {
         /// </summary>
         private void EnableAI() {
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
-            // this needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
+
+            // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
             useAgent = true;
             EnableAgent();
+
+            // ensure player cannot physically push AI units around
+            // first set collision mode to avoid unity errors about dynamic detection not supported for kinematic rigidbodies
+            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            rigidBody.isKinematic = true;
+
+            // ensure player is not physically blocked or pushed around by AI units
+            myCollider.isTrigger = true;
 
             if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.MySpawnDead == true) {
                 ChangeState(new DeathState());
