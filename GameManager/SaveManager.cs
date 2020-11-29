@@ -1145,13 +1145,14 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
-            PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
-            PlayerManager.MyInstance.MyCharacter.SetCharacterRace(SystemCharacterRaceManager.MyInstance.GetResource(anyRPGSaveData.characterRace));
 
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
+            PlayerManager.MyInstance.MyCharacter.SetCharacterRace(SystemCharacterRaceManager.MyInstance.GetResource(anyRPGSaveData.characterRace));
+            PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
+
             // done by setting profile ?
-            //PlayerManager.MyInstance.MyCharacter.SetUnitType(SystemUnitTypeManager.MyInstance.GetResource(anyRPGSaveData.unittyp));
+            //PlayerManager.MyInstance.MyCharacter.SetUnitType(SystemUnitTypeManager.MyInstance.GetResource(anyRPGSaveData.unitType));
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             SetPlayerManagerPrefab(anyRPGSaveData);
@@ -1163,7 +1164,6 @@ namespace AnyRPG {
 
             // testing allow notification so class trats can be applied
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), true);
-
             PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
             // testing - move here to prevent learning auto-attack ability twice

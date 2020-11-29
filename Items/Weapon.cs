@@ -129,36 +129,33 @@ namespace AnyRPG {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
             // TODO: this code does not yet account for all the new capabilityProviders and will show red if something like faction provides the capability
-            List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
-            if (allowedCharacterClasses.Count > 0) {
-                string colorString = "red";
+            // DONE : testing new code below
+            //List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
+            //if (allowedCharacterClasses.Count > 0) {
+                //string colorString = "red";
                 /*
                 CharacterClass playerClass = null;
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterClassName != null && (PlayerManager.MyInstance.MyCharacter.MyCharacterClassName != string.Empty) {
                     playerClass = SystemCharacterClassManager.MyInstance.GetResource(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName);
                 }
                 */
-                if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
-                    colorString = "white";
+                //if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
+                    //colorString = "white";
+                //}
+                //abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
+            //}
+
+            if (weaponSkill != null) {
+                string colorString = "white";
+                if (!CanEquip(PlayerManager.MyInstance.ActiveCharacter)) {
+                    colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
             }
             return base.GetSummary() + abilitiesString;
         }
 
-        public List<CharacterClass> GetAllowedCharacterClasses() {
-            List<CharacterClass> returnValue = new List<CharacterClass>();
-            foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList != null && characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList.Count > 0) {
-                    //bool foundMatch = false;
-                    if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).WeaponSkillList.Contains(weaponSkill)) {
-                        returnValue.Add(characterClass);
-                    }
-                }
-            }
-            return returnValue;
-        }
-
+        /*
         public override bool CanEquip(BaseCharacter baseCharacter) {
             bool returnValue = base.CanEquip(baseCharacter);
             if (returnValue == false) {
@@ -171,6 +168,12 @@ namespace AnyRPG {
             }
             return true;
         }
+        */
+
+        public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            return capabilityConsumer.CapabilityConsumerProcessor.IsWeaponSupported(this);
+        }
+
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

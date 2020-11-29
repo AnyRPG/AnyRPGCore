@@ -454,6 +454,9 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="item"></param>
         public bool AddItem(Item item, bool addToBank = false) {
+            if (item == null) {
+                return false;
+            }
             if (item.MyUniqueItem == true && GetItemCount(item.DisplayName) > 0) {
                 MessageFeedManager.MyInstance.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;

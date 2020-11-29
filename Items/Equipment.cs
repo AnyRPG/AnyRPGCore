@@ -209,10 +209,22 @@ namespace AnyRPG {
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
             if (!CharacterClassRequirementIsMet()) {
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right class to equip " + DisplayName);
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to equip " + DisplayName);
+                return false;
+            }
+            if (!CapabilityConsumerSupported(baseCharacter)) {
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// meant to be overwritten by specific equipment types
+        /// </summary>
+        /// <param name="capabilityConsumer"></param>
+        /// <returns></returns>
+        public virtual bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            return false;
         }
 
         public override string GetSummary() {

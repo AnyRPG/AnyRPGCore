@@ -44,6 +44,7 @@ namespace AnyRPG {
         private CharacterStats characterStats = null;
         private CharacterCurrencyManager characterCurrencyManager = null;
         private CharacterRecipeManager characterRecipeManager = null;
+        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
         // components
         private UnitController unitController = null;
@@ -66,8 +67,12 @@ namespace AnyRPG {
         public string CharacterName { get => characterName; }
         public string MyName { get => CharacterName; }
 
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public CharacterRace CharacterRace { get => characterRace; }
+        public CharacterClass CharacterClass { get => characterClass; }
+        public ClassSpecialization ClassSpecialization { get => classSpecialization; }
         public Faction Faction {
-
             get {
                 if (UnitController != null && UnitController.UnderControl) {
                     //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
@@ -75,22 +80,17 @@ namespace AnyRPG {
                 }
                 return faction;
             }
-            set => faction = value;
         }
 
-        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
-        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
-        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
-        public UnitType UnitType { get => unitType; set => unitType = value; }
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
         public string Title { get => title; set => title = value; }
         public List<IStatProvider> StatProviders { get => statProviders; set => statProviders = value; }
         public UnitToughness UnitToughness { get => unitToughness; set => unitToughness = value; }
         public CharacterRecipeManager CharacterRecipeManager { get => characterRecipeManager; set => characterRecipeManager = value; }
         public CharacterCurrencyManager CharacterCurrencyManager { get => characterCurrencyManager; set => characterCurrencyManager = value; }
+        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         /*
         private void Awake() {
@@ -137,6 +137,7 @@ namespace AnyRPG {
         public void CreateCharacterComponents() {
 
             // get character components ready for intitalization by allowing them to construct needed internal objects and references back to the character
+            capabilityConsumerProcessor = new CapabilityConsumerProcessor(this);
             characterStats = new CharacterStats(this);
             characterEquipmentManager = new CharacterEquipmentManager(this);
             characterFactionManager = new CharacterFactionManager(this);
@@ -238,35 +239,36 @@ namespace AnyRPG {
         public void SetUnitProfile(string unitProfileName) {
             Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            unitProfile = null;
-            this.unitProfileName = unitProfileName;
-            GetUnitProfileReference();
-            SetUnitProfileProperties();
+            SetUnitProfile(GetUnitProfileReference(unitProfileName));
         }
 
         public void SetUnitProfile (UnitProfile unitProfile) {
             Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
-            this.unitProfileName = unitProfile.DisplayName;
+
             this.unitProfile = unitProfile;
+
             SetUnitProfileProperties();
+
+            capabilityConsumerProcessor.UpdateCapabilityProviderList();
         }
 
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        private void GetUnitProfileReference() {
+        private UnitProfile GetUnitProfileReference(string unitProfileName) {
             if (SystemUnitProfileManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + ".GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
-                return;
+                return null;
             }
             if (unitProfileName != null && unitProfileName != string.Empty) {
                 UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
                 if (tmpUnitProfile != null) {
-                    unitProfile = tmpUnitProfile;
+                    return tmpUnitProfile;
                 } else {
                     Debug.LogError(gameObject.name + ".GetUnitProfileReference(): Unit Profile " + unitProfileName + " could not be found.  Check Inspector.");
                 }
             }
+            return null;
         }
 
         /// <summary>
@@ -393,6 +395,8 @@ namespace AnyRPG {
                 Faction oldFaction = faction;
                 faction = newFaction;
 
+                capabilityConsumerProcessor.UpdateCapabilityProviderList();
+
                 // get a snapshot of the new state
                 CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
 
@@ -428,6 +432,8 @@ namespace AnyRPG {
             if (newClassSpecialization != null) {
                 ClassSpecialization oldClassSpecialization = classSpecialization;
                 classSpecialization = newClassSpecialization;
+
+                capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                 // get a snapshot of the new state
                 CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
@@ -466,6 +472,8 @@ namespace AnyRPG {
                 CharacterClass oldCharacterClass = characterClass;
                 characterClass = newCharacterClass;
 
+                capabilityConsumerProcessor.UpdateCapabilityProviderList();
+
                 // get a snapshot of the new state
                 CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
 
@@ -501,6 +509,8 @@ namespace AnyRPG {
             if (newCharacterRace != null) {
                 CharacterRace oldCharacterRace = characterRace;
                 characterRace = newCharacterRace;
+
+                capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                 // get a snapshot of the new state
                 CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
@@ -538,6 +548,8 @@ namespace AnyRPG {
                 UnitType oldUnitType = unitType;
                 unitType = newUnitType;
 
+                capabilityConsumerProcessor.UpdateCapabilityProviderList();
+
                 // get a snapshot of the new state
                 CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
 
@@ -565,7 +577,11 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
             characterEquipmentManager.UnequipUnwearableEquipment();
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
+        }
 
+        public void HandleCharacterUnitSpawn() {
+            Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
+            characterEquipmentManager.HandleCharacterUnitSpawn();
         }
 
         public void DespawnImmediate() {
@@ -595,7 +611,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            GetUnitProfileReference();
+            GetUnitProfileReference(unitProfileName);
         }
 
         public void OnDestroy() {

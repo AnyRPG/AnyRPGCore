@@ -51,12 +51,14 @@ namespace AnyRPG {
         private NewGameSpecializationPanelController specializationPanel = null;
 
         private string playerName = "Player Name";
-        private Faction faction = null;
+        private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
         private CharacterClass characterClass = null;
         private ClassSpecialization classSpecialization = null;
-        private UnitProfile unitProfile = null;
+        private Faction faction = null;
+
+        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
         private AnyRPGSaveData saveData;
 
@@ -70,6 +72,7 @@ namespace AnyRPG {
         public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
+        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");

@@ -7,12 +7,14 @@ using UnityEngine;
 namespace AnyRPG {
     public class CapabilityConsumerSnapshot : ICapabilityConsumer {
 
-        private Faction faction = null;
+        private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
         private CharacterClass characterClass = null;
         private ClassSpecialization classSpecialization = null;
-        private UnitProfile unitProfile = null;
+        private Faction faction = null;
+
+        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
         public Faction Faction { get => faction; set => faction = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -20,6 +22,7 @@ namespace AnyRPG {
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer) {
             faction = capabilityConsumer.Faction;

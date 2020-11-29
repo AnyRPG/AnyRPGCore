@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void HandleWeaponSlot(EquipmentSlotProfile equipmentSlotProfile) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + ")");
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + ")");
             if (currentEquipment == null) {
                 Debug.LogError("CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;
@@ -639,9 +639,7 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterUnitSpawn() {
-            //Debug.Log(gameObject.name + ".EquipmentManager.OnPlayerUnitSpawn()");
-            // handled differently in player, and already in ai
-            //CreateComponentReferences();
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
             EquipCharacter();
         }
 

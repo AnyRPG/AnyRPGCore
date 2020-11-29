@@ -10,19 +10,19 @@ namespace AnyRPG {
 
         [Header("Armor")]
 
-        // the armor class required to wear this item
+        [Tooltip("the armor class required to wear this item")]
         [SerializeField]
         private string armorClassName = string.Empty;
 
         private ArmorClass armorClass = null;
 
-        public ArmorClass MyArmorClass { get => armorClass; set => armorClass = value; }
+        public ArmorClass ArmorClass { get => armorClass; set => armorClass = value; }
 
         public override float GetArmorModifier(int characterLevel) {
             float returnValue = base.GetArmorModifier(characterLevel);
             if (useArmorModifier && !useManualArmor) {
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(MyArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
+                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Count - 2))),
                     0f,
                     Mathf.Infinity
                     ));
@@ -40,6 +40,7 @@ namespace AnyRPG {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
             // TODO: this code does not yet account for all the new capabilityProviders and will show red if something like faction provides the capability
+            /*
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
@@ -48,22 +49,25 @@ namespace AnyRPG {
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
             }
+            */
+            // testing replacement for above code
+            if (armorClassName != null && armorClassName != string.Empty) {
+                string colorString = "white";
+                if (!CanEquip(PlayerManager.MyInstance.ActiveCharacter)) {
+                    colorString = "red";
+                }
+                abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
+            }
+
             return base.GetSummary() + abilitiesString;
         }
 
-        public List<CharacterClass> GetAllowedCharacterClasses() {
-            List<CharacterClass> returnValue = new List<CharacterClass>();
-            foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.MyResourceList.Values) {
-                if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).ArmorClassList != null && characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).ArmorClassList.Count > 0) {
-                    //bool foundMatch = false;
-                    if (characterClass.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter).ArmorClassList.Contains(armorClassName)) {
-                        returnValue.Add(characterClass);
-                    }
-                }
-            }
-            return returnValue;
+        public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            return capabilityConsumer.CapabilityConsumerProcessor.IsArmorSupported(this);
+
         }
 
+        /*
         public override bool CanEquip(BaseCharacter baseCharacter) {
             bool returnValue = base.CanEquip(baseCharacter);
             if (returnValue == false) {
@@ -76,6 +80,7 @@ namespace AnyRPG {
             }
             return true;
         }
+        */
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

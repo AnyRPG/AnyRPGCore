@@ -180,6 +180,10 @@ namespace AnyRPG {
             return true;
         }
 
+        /// <summary>
+        /// return true if the character class requirement of this item is met
+        /// </summary>
+        /// <returns></returns>
         public bool CharacterClassRequirementIsMet() {
             //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet()");
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {

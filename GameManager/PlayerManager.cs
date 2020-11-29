@@ -289,6 +289,8 @@ namespace AnyRPG {
             // trying this at top so subscribers can remove their methods before the object is destroyed
             SystemEventManager.MyInstance.NotifyOnPlayerUnitDespawn();
 
+            playerController.UnsubscribeFromUnitEvents();
+
             Destroy(activeUnitController.gameObject);
             activeUnitController = null;
             playerUnitSpawned = false;
@@ -405,133 +407,9 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 
-            SubscribeToUnitEvents();
+            playerController.SubscribeToUnitEvents();
 
             playerUnitMovementController.Init();
-        }
-
-        public void SubscribeToUnitEvents() {
-            activeUnitController.OnSetTarget += HandleSetTarget;
-            activeUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
-            activeUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
-            activeUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
-            activeUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
-            activeUnitController.UnitAnimator.OnStartRiding += HandleStartRiding;
-            activeUnitController.UnitAnimator.OnEndRiding += HandleEndRiding;
-            activeUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
-            activeUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
-            activeUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
-            activeUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
-            activeUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
-            activeUnitController.UnitAnimator.OnDeath += HandleDeath;
-        }
-
-        public void UnsubscribeFromUnitEvents() {
-            activeUnitController.OnSetTarget -= HandleSetTarget;
-            activeUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
-            activeUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
-            activeUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
-            activeUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
-            activeUnitController.UnitAnimator.OnStartRiding -= HandleStartRiding;
-            activeUnitController.UnitAnimator.OnEndRiding -= HandleEndRiding;
-            activeUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
-            activeUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
-            activeUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
-            activeUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
-            activeUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
-            activeUnitController.UnitAnimator.OnDeath += HandleDeath;
-        }
-
-        public void HandleDeath() {
-            activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
-        }
-
-        public void HandleStartRevive() {
-            activeUnitController.UnitAnimator.SetDefaultOverrideController();
-        }
-
-        public void HandleStartLevitated() {
-            activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnStartLevitated", eventParam);
-        }
-
-        public void HandleEndLevitated(bool swapAnimator) {
-            if (swapAnimator) {
-                activeUnitController.UnitAnimator.SetCorrectOverrideController();
-                EventParamProperties eventParam = new EventParamProperties();
-                SystemEventManager.TriggerEvent("OnEndLevitated", eventParam);
-            }
-        }
-
-        public void HandleStartStunned() {
-            activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnStartStunned", eventParam);
-        }
-
-        public void HandleEndStunned(bool swapAnimator) {
-            if (swapAnimator) {
-                activeUnitController.UnitAnimator.SetCorrectOverrideController();
-                EventParamProperties eventParam = new EventParamProperties();
-                SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
-            }
-        }
-
-        public void HandleStartRiding() {
-            activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
-        }
-
-        public void HandleEndRiding() {
-            activeUnitController.UnitAnimator.SetCorrectOverrideController();
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
-        }
-
-        public void HandleStartCasting(bool swapAnimator) {
-            EventParamProperties eventParam = new EventParamProperties();
-            if (swapAnimator == true) {
-                activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            }
-            SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
-        }
-
-        public void HandleEndCasting(bool swapAnimator) {
-            EventParamProperties eventParam = new EventParamProperties();
-            if (swapAnimator) {
-                activeUnitController.UnitAnimator.SetCorrectOverrideController();
-                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
-            }
-        }
-
-        public void HandleStartAttacking(bool swapAnimator) {
-            EventParamProperties eventParam = new EventParamProperties();
-            if (swapAnimator) {
-                activeUnitController.UnitAnimator.SetDefaultOverrideController();
-            }
-            SystemEventManager.TriggerEvent("OnStartAttacking", eventParam);
-        }
-
-        public void HandleEndAttacking(bool swapAnimator) {
-            EventParamProperties eventParam = new EventParamProperties();
-            if (swapAnimator) {
-                if (activeUnitController != null) {
-                    activeUnitController.UnitAnimator.SetCorrectOverrideController();
-                }
-                SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
-            }
-        }
-
-
-        public void HandleSetTarget(Interactable newTarget) {
-            playerController.SetTarget(newTarget);
-        }
-
-        public void HandleClearTarget() {
-            playerController.ClearTarget();
         }
 
         public void SubscribeToModelReady() {
@@ -723,7 +601,7 @@ namespace AnyRPG {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
                     InventoryManager.MyInstance.AddItem(oldItem, slotIndex);
-                } else {
+                } else if (oldItem != null) {
                     InventoryManager.MyInstance.AddItem(oldItem);
                 }
             }

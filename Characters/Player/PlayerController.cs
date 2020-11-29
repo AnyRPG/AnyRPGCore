@@ -37,7 +37,6 @@ namespace AnyRPG {
         public float tabTargetMaxDistance = 20f;
 
         private List<Interactable> interactables = new List<Interactable>();
-        //private Interactable target = null;
         private Interactable mouseOverInteractable = null;
 
         private int tabTargetIndex = 0;
@@ -205,7 +204,10 @@ namespace AnyRPG {
         }
 
         protected void FixedUpdate() {
-            CheckForInteraction();
+            // TODO : work out click to move and delayed interaction logic in a way that properly tracks the target you are trying to get to
+            // instead of just using the generic target variable
+            // disabled until click-to-move is re-enabled in a consistent way
+            //CheckForInteraction();
         }
 
         private void HandleMouseOver() {
@@ -304,9 +306,9 @@ namespace AnyRPG {
             if (mouseOverInteractable == null && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
                 // Stop focusing any object
                 //RemoveFocus();
-                ClearTarget();
+                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
             } else if (mouseOverInteractable != null) {
-                SetTarget(mouseOverInteractable);
+                PlayerManager.MyInstance.ActiveUnitController.SetTarget(mouseOverInteractable);
             }
             //}
 
@@ -366,7 +368,7 @@ namespace AnyRPG {
                 //Debug.Log("Tab Target Registered");
                 Interactable oldTarget = PlayerManager.MyInstance.ActiveUnitController.Target;
                 // moving this inside getnexttabtarget
-                //ClearTarget();
+                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
                 GetNextTabTarget(oldTarget);
             }
         }
@@ -440,24 +442,24 @@ namespace AnyRPG {
                 if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
-                    ClearTarget();
-                    SetTarget(characterUnitList[closestTargetIndex]);
+                    PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
                 } else {
                     if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
-                        ClearTarget();
-                        SetTarget(characterUnitList[tabTargetIndex]);
+                        PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                        PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[tabTargetIndex]);
                     }
                 }
             } else {
                 //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
                 // we only want to clear the target if we are actually setting a new target
                 if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
-                    ClearTarget();
-                    SetTarget(characterUnitList[tabTargetIndex]);
+                    PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[tabTargetIndex]);
                 }
             }
         }
@@ -465,8 +467,8 @@ namespace AnyRPG {
         public void InterActWithTarget(Interactable interactable) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + "); my current target: " + target);
             if (PlayerManager.MyInstance.ActiveUnitController.Target != interactable) {
-                ClearTarget();
-                SetTarget(interactable);
+                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                PlayerManager.MyInstance.ActiveUnitController.SetTarget(interactable);
             }
             if (InteractionSucceeded()) {
                 //Debug.Log("We were able to interact with the target");
@@ -485,7 +487,7 @@ namespace AnyRPG {
 
         public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + ")");
-            SetTarget(interactable);
+            PlayerManager.MyInstance.ActiveUnitController.SetTarget(interactable);
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
             }
@@ -535,7 +537,7 @@ namespace AnyRPG {
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
             if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
-                ClearTarget();
+                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
                 if (PlayerManager.MyInstance.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
                     PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.StopCasting();
@@ -556,22 +558,18 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearTarget() {
-            //Debug.Log("PlayerController.ClearTarget()");
+        public void HandleClearTarget() {
+            Debug.Log("PlayerController.HandleClearTarget()");
 
-            // comment next line to avoid stack overflow.  player controller no longer tracks target
-            //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
             UIManager.MyInstance.MyFocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
         }
 
-        public void SetTarget(Interactable newTarget) {
-            //Debug.Log("PlayerController.SetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
+        public void HandleSetTarget(Interactable newTarget) {
+            Debug.Log("PlayerController.HandleSetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
             if (newTarget == null) {
                 return;
             }
-            // comment next line to avoid stack overflow - playercontroller no longer tracks target
-            //PlayerManager.MyInstance.ActiveUnitController.SetTarget(newTarget);
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
             if (namePlateUnit != null && namePlateUnit.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
@@ -671,7 +669,126 @@ namespace AnyRPG {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
             if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null) {
-                ClearTarget();
+                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+            }
+        }
+
+        public void SubscribeToUnitEvents() {
+            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget += HandleClearTarget;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRiding += HandleStartRiding;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndRiding += HandleEndRiding;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+
+        }
+
+        public void UnsubscribeFromUnitEvents() {
+            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRiding -= HandleStartRiding;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndRiding -= HandleEndRiding;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+
+        }
+
+        public void HandleDeath() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
+        }
+
+        public void HandleStartRevive() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+        }
+
+        public void HandleStartLevitated() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartLevitated", eventParam);
+        }
+
+        public void HandleEndLevitated(bool swapAnimator) {
+            if (swapAnimator) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndLevitated", eventParam);
+            }
+        }
+
+        public void HandleStartStunned() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartStunned", eventParam);
+        }
+
+        public void HandleEndStunned(bool swapAnimator) {
+            if (swapAnimator) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                EventParamProperties eventParam = new EventParamProperties();
+                SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
+            }
+        }
+
+        public void HandleStartRiding() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
+        }
+
+        public void HandleEndRiding() {
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
+        }
+
+        public void HandleStartCasting(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator == true) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            }
+            SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
+        }
+
+        public void HandleEndCasting(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
+            }
+        }
+
+        public void HandleStartAttacking(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            }
+            SystemEventManager.TriggerEvent("OnStartAttacking", eventParam);
+        }
+
+        public void HandleEndAttacking(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                }
+                SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
             }
         }
 

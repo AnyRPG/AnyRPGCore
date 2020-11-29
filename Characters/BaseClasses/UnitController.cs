@@ -414,6 +414,10 @@ namespace AnyRPG {
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");
 
+            // equip weapon models first
+            // moved to SetModelReady because this could be an UMA unit
+            //characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
+
             patrolController.Init();
 
             persistentObjectComponent.Setup(this);
@@ -516,9 +520,16 @@ namespace AnyRPG {
                     SubscribeToUMACreate();
                 } else {
                     // this is not an UMA model, therefore it is ready and its bone structure is already created
-                    modelReady = true;
+                    SetModelReady();
                 }
             }
+        }
+
+        public void SetModelReady() {
+            Debug.Log("UnitController.SetModelReady()");
+            modelReady = true;
+            characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
+            OnModelReady();
         }
 
         public void UnsubscribeFromUMACreate() {
@@ -542,8 +553,7 @@ namespace AnyRPG {
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
             UnsubscribeFromUMACreate();
-            modelReady = true;
-            OnModelReady();
+            SetModelReady();
         }
 
         public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
