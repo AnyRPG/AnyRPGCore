@@ -76,6 +76,14 @@ namespace AnyRPG {
                 return;
             }
             ProcessInit();
+
+            // moved here from awake because processinit must run to get scriptableobject references
+            /*
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+                //this allows us to spawn things with no prerequisites that don't need to check against the player
+                PrerequisiteCheck();
+            }
+            */
             initialized = true;
         }
 

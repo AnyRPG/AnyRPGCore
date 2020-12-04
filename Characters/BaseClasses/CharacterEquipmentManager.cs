@@ -68,9 +68,12 @@ namespace AnyRPG {
         /// </summary>
         public void LoadDefaultEquipment() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
+
             if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentNameList == null) {
                 return;
             }
+            // always skipping models from now on since the model will never be spawned at this point
+            /*
             bool skipModels = false;
             if (baseCharacter.UnitProfile.IsUMAUnit == true) {
                 // quick check to avoid lookup
@@ -81,12 +84,13 @@ namespace AnyRPG {
                     skipModels = true;
                 }
             }
+            */
 
 
             foreach (string equipmentName in baseCharacter.UnitProfile.EquipmentNameList) {
                 Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
                 if (equipment != null) {
-                    Equip(equipment, null, skipModels);
+                    Equip(equipment, null, true);
                 }
             }
         }

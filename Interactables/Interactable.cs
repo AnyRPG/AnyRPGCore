@@ -163,10 +163,13 @@ namespace AnyRPG {
                 //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
                 glowOnMouseOver = false;
             }
+
         }
 
         public override void ProcessInit() {
             base.ProcessInit();
+            // moved to processInit()
+            /*
             foreach (InteractableOptionComponent interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
                 if (interactable != null) {
@@ -174,6 +177,7 @@ namespace AnyRPG {
                     interactable.Init();
                 }
             }
+            */
         }
 
         public override void GetComponentReferences() {
@@ -938,16 +942,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
             base.SetupScriptableObjects();
 
-            // this next bit should not be necessary since each interactable option can setup scriptable objects in its orchestratorstart method
-            /*
-            if (interactables != null) {
-                foreach (InteractableOptionComponent interactable in interactables) {
-                    if (interactable != null) {
-                        interactable.SetupScriptableObjects();
-                    }
+            // moved here from processInit
+            foreach (InteractableOptionComponent interactable in interactables) {
+                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
+                if (interactable != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    interactable.Init();
                 }
             }
-            */
         }
 
         protected override void OnDestroy() {
