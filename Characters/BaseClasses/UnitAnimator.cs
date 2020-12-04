@@ -1633,7 +1633,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex = -1) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
+            Debug.Log("UnitAnimator.PerformEquipmentChange(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
             if (animator == null) {
                 // this unit isn't animated
                 return;
@@ -1642,17 +1642,17 @@ namespace AnyRPG {
             // Animate grip for weapon when an item is added or removed from hand
             if (newItem != null
                 && newItem is Weapon
-                && (newItem as Weapon).DefaultAttackAnimationProfile != null
-                && (newItem as Weapon).DefaultAttackAnimationProfile.AnimationProps != null) {
+                && (newItem as Weapon).AnimationProfile != null
+                && (newItem as Weapon).AnimationProfile.AnimationProps != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");
                 //animator.SetLayerWeight(1, 1);
                 //if (weaponAnimationsDict.ContainsKey(newItem)) {
-                SetAnimationProfileOverride((newItem as Weapon).DefaultAttackAnimationProfile.AnimationProps);
+                SetAnimationProfileOverride((newItem as Weapon).AnimationProfile.AnimationProps);
             } else if (newItem == null
                 && oldItem != null
                 && oldItem is Weapon
-                && (oldItem as Weapon).DefaultAttackAnimationProfile != null
-                && (oldItem as Weapon).DefaultAttackAnimationProfile.AnimationProps != null) {
+                && (oldItem as Weapon).AnimationProfile != null
+                && (oldItem as Weapon).AnimationProfile.AnimationProps != null) {
                 //animator.SetLayerWeight(1, 0);
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: resetting the animation profile");
                 ResetAnimationProfile();

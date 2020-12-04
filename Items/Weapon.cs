@@ -34,16 +34,17 @@ namespace AnyRPG {
         [Header("Animation and Sound Defaults")]
 
         [Tooltip("An animation profile that can overwrite default animations to match the weapon")]
+        [FormerlySerializedAs("defaultAttackAnimationProfileName")]
         [SerializeField]
-        protected string defaultAttackAnimationProfileName = string.Empty;
+        protected string animationProfileName = string.Empty;
 
-        protected AnimationProfile defaultAttackAnimationProfile = null;
+        protected AnimationProfile animationProfile = null;
 
         [Tooltip("An audio effect that can be used by any physical ability cast while this weapon is equippped")]
         [SerializeField]
         private string defaultHitAudioProfile = string.Empty;
 
-        private AudioClip defaultHitSoundEffect;
+        private List<AudioClip> defaultHitSoundEffects = new List<AudioClip>();
 
         [Header("Ability Prefab Defaults")]
 
@@ -69,8 +70,28 @@ namespace AnyRPG {
         [SerializeField]
         protected float damagePerSecond = 0f;
 
-        public AnimationProfile DefaultAttackAnimationProfile { get => defaultAttackAnimationProfile; set => defaultAttackAnimationProfile = value; }
-        public AudioClip DefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
+        public AnimationProfile AnimationProfile {
+            get {
+                if (animationProfile != null) {
+                    return animationProfile;
+                }
+                if (weaponSkill != null && weaponSkill.WeaponSkillProps.AnimationProfile != null) {
+                    return weaponSkill.WeaponSkillProps.AnimationProfile;
+                }
+                return null;
+            }
+        }
+        public List<AudioClip> DefaultHitSoundEffects {
+            get {
+                if (defaultHitSoundEffects != null && defaultHitSoundEffects.Count > 0) {
+                    return defaultHitSoundEffects;
+                }
+                if (weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.DefaultHitSoundEffects;
+                }
+                return new List<AudioClip>();
+            }
+        }
 
         /*
         public override int MyDamageModifier {
@@ -87,8 +108,28 @@ namespace AnyRPG {
         public WeaponSkill WeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool UseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
         public bool UseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
-        public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
-        public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
+        public List<AbilityEffect> DefaultHitEffectList {
+            get {
+                if (defaultHitEffectList != null) {
+                    return defaultHitEffectList;
+                }
+                if (weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.DefaultHitEffectList;
+                }
+                return new List<AbilityEffect>();
+            }
+        }
+        public List<AbilityEffect> OnHitEffectList {
+            get {
+                if (onHitEffectList != null) {
+                    return onHitEffectList;
+                }
+                if (weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.OnHitEffectList;
+                }
+                return new List<AbilityEffect>();
+            }
+        }
         public List<AbilityAttachmentNode> AbilityObjectList {
             get {
                 if (useWeaponTypeObjects && weaponSkill != null) {
@@ -209,21 +250,20 @@ namespace AnyRPG {
             }
 
 
-            defaultAttackAnimationProfile = null;
-            if (defaultAttackAnimationProfileName != null && defaultAttackAnimationProfileName != string.Empty) {
-                AnimationProfile animationProfile = SystemAnimationProfileManager.MyInstance.GetResource(defaultAttackAnimationProfileName);
-                if (animationProfile != null) {
-                    defaultAttackAnimationProfile = animationProfile;
+            animationProfile = null;
+            if (animationProfileName != null && animationProfileName != string.Empty) {
+                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.MyInstance.GetResource(animationProfileName);
+                if (tmpAnimationProfile != null) {
+                    animationProfile = tmpAnimationProfile;
                 } else {
-                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find attack animation profile : " + defaultAttackAnimationProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
             if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
-                defaultHitSoundEffect = null;
                 AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(defaultHitAudioProfile);
                 if (audioProfile != null) {
-                    defaultHitSoundEffect = audioProfile.AudioClip;
+                    defaultHitSoundEffects = audioProfile.AudioClips;
                 } else {
                     Debug.LogError("Weapon.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

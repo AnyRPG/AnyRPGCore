@@ -153,13 +153,8 @@ namespace AnyRPG {
                 return;
             }
             SpawnEquipmentObjects(equipmentSlotProfile, newItem);
-            UnitAnimator characterAnimator = null;
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
-                characterAnimator = baseCharacter.UnitController.UnitAnimator;
-                if (characterAnimator != null) {
-                    //Debug.Log(gameObject.name + ".EquipmentManager.HandleWeaponSlot(): about to animate equipment");
-                    characterAnimator.HandleEquipmentChanged(newItem, null);
-                }
+                baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, null);
             }
         }
 

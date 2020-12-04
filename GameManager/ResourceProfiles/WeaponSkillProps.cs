@@ -56,7 +56,7 @@ namespace AnyRPG {
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
         public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
         public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
-        public AnimationProfile DefaultAttackAnimationProfile { get => animationProfile; set => animationProfile = value; }
+        public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
 

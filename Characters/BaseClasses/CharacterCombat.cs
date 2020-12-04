@@ -35,7 +35,7 @@ namespace AnyRPG {
         protected AggroTable aggroTable = null;
 
         // this is what the current weapon defaults to
-        protected AudioClip defaultHitSoundEffect = null;
+        protected List<AudioClip> defaultHitSoundEffects = new List<AudioClip>();
 
         /// <summary>
         ///  waiting for the animator to let us know we can hit again
@@ -60,7 +60,7 @@ namespace AnyRPG {
             }
         }
 
-        public AudioClip DefaultHitSoundEffect { get => defaultHitSoundEffect; set => defaultHitSoundEffect = value; }
+        public List<AudioClip> DefaultHitSoundEffects { get => defaultHitSoundEffects; set => defaultHitSoundEffects = value; }
         public BaseCharacter SwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
         public List<AbilityEffect> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
@@ -638,7 +638,7 @@ namespace AnyRPG {
                 }
                 EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(oldItem);
                 if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                    defaultHitSoundEffect = null;
+                    defaultHitSoundEffects.Clear();
                 }
             }
 
@@ -654,10 +654,9 @@ namespace AnyRPG {
                     }
                     EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                        defaultHitSoundEffect = null;
-                        if ((newItem as Weapon).DefaultHitSoundEffect != null) {
+                        if ((newItem as Weapon).DefaultHitSoundEffects != null) {
                             //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): setting default hit sound");
-                            defaultHitSoundEffect = (newItem as Weapon).DefaultHitSoundEffect;
+                            defaultHitSoundEffects.AddRange((newItem as Weapon).DefaultHitSoundEffects);
                         }
                     }
                 }
