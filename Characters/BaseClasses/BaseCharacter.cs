@@ -250,6 +250,8 @@ namespace AnyRPG {
             SetUnitProfileProperties();
 
             capabilityConsumerProcessor.UpdateCapabilityProviderList();
+
+            // TODO: equip the character here with any equipment found in the unit profile
         }
 
         /// <summary>

@@ -526,7 +526,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            Debug.Log("UnitController.SetModelReady()");
+            Debug.Log(gameObject.name + "UnitController.SetModelReady()");
             modelReady = true;
             characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             OnModelReady();

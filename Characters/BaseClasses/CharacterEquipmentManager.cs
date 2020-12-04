@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void HandleWeaponSlot(EquipmentSlotProfile equipmentSlotProfile) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + ")");
             if (currentEquipment == null) {
                 Debug.LogError("CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;

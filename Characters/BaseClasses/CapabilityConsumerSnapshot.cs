@@ -5,6 +5,10 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
+
+    /// <summary>
+    /// this class stores snapshots of capabilities to determine what to add or remove when a provider is added or changed
+    /// </summary>
     public class CapabilityConsumerSnapshot : ICapabilityConsumer {
 
         private UnitProfile unitProfile = null;
@@ -16,43 +20,50 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        public Faction Faction { get => faction; set => faction = value; }
+        private List<ICapabilityProvider> capabilityProviders = new List<ICapabilityProvider>();
+
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public Faction Faction { get => faction; set => faction = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer) {
-            faction = capabilityConsumer.Faction;
-            unitType = capabilityConsumer.UnitType;
-            characterRace = capabilityConsumer.CharacterRace;
-            characterClass = capabilityConsumer.CharacterClass;
-            classSpecialization = capabilityConsumer.ClassSpecialization;
+            if (capabilityConsumer.UnitProfile != null) {
+                unitProfile = capabilityConsumer.UnitProfile;
+                capabilityProviders.Add(capabilityConsumer.UnitProfile);
+            }
+            if (capabilityConsumer.UnitType != null) {
+                unitType = capabilityConsumer.UnitType;
+                capabilityProviders.Add(capabilityConsumer.UnitType);
+            }
+            if (capabilityConsumer.CharacterRace != null) {
+                characterRace = capabilityConsumer.CharacterRace;
+                capabilityProviders.Add(capabilityConsumer.CharacterRace);
+            }
+            if (capabilityConsumer.CharacterClass != null) {
+                characterClass = capabilityConsumer.CharacterClass;
+                capabilityProviders.Add(capabilityConsumer.CharacterClass);
+            }
+            if (capabilityConsumer.ClassSpecialization != null) {
+                classSpecialization = capabilityConsumer.ClassSpecialization;
+                capabilityProviders.Add(capabilityConsumer.ClassSpecialization);
+            }
+            if (capabilityConsumer.Faction != null) {
+                faction = capabilityConsumer.Faction;
+                capabilityProviders.Add(capabilityConsumer.Faction);
+            }
         }
 
         public List<StatusEffect> GetTraitList() {
             List<StatusEffect> returnList = new List<StatusEffect>();
 
-            if (faction != null) {
-                returnList.AddRange(faction.GetFilteredCapabilities(this).TraitList);
-            }
-
-            if (unitType != null) {
-                returnList.AddRange(unitType.GetFilteredCapabilities(this).TraitList);
-            }
-
-            if (characterRace != null) {
-                returnList.AddRange(characterRace.GetFilteredCapabilities(this).TraitList);
-            }
-
-            if (characterClass != null) {
-                returnList.AddRange(characterClass.GetFilteredCapabilities(this).TraitList);
-            }
-
-            if (classSpecialization != null) {
-                returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).TraitList);
+            foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
+                if (capabilityProvider != null) {
+                    returnList.AddRange(capabilityProvider.GetFilteredCapabilities(this).TraitList);
+                }
             }
 
             return returnList;
@@ -91,20 +102,10 @@ namespace AnyRPG {
         public List<BaseAbility> GetAbilityList() {
             List<BaseAbility> returnList = new List<BaseAbility>();
 
-            if (faction != null) {
-                returnList.AddRange(faction.GetFilteredCapabilities(this).AbilityList);
-            }
-            if (unitType != null) {
-                returnList.AddRange(unitType.GetFilteredCapabilities(this).AbilityList);
-            }
-            if (characterRace != null) {
-                returnList.AddRange(characterRace.GetFilteredCapabilities(this).AbilityList);
-            }
-            if (characterClass != null) {
-                returnList.AddRange(characterClass.GetFilteredCapabilities(this).AbilityList);
-            }
-            if (classSpecialization != null) {
-                returnList.AddRange(classSpecialization.GetFilteredCapabilities(this).AbilityList);
+            foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
+                if (capabilityProvider != null) {
+                    returnList.AddRange(capabilityProvider.GetFilteredCapabilities(this).AbilityList);
+                }
             }
 
             return returnList;
