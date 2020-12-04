@@ -154,7 +154,8 @@ namespace AnyRPG {
             characterStats.Init();
 
             // equipment manager should load default equipment
-            characterEquipmentManager.Init();
+            // moved to direct call from setunitprofile since this call happens before any unit profile is set
+            //characterEquipmentManager.Init();
 
             // learn any skills for the level
             characterSkillManager.Init();
@@ -237,13 +238,13 @@ namespace AnyRPG {
         */
 
         public void SetUnitProfile(string unitProfileName) {
-            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             SetUnitProfile(GetUnitProfileReference(unitProfileName));
         }
 
         public void SetUnitProfile (UnitProfile unitProfile) {
-            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             this.unitProfile = unitProfile;
 
@@ -251,7 +252,7 @@ namespace AnyRPG {
 
             capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
-            // TODO: equip the character here with any equipment found in the unit profile
+            characterEquipmentManager.LoadDefaultEquipment();
         }
 
         /// <summary>
@@ -277,7 +278,7 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         private void SetUnitProfileProperties() {
-            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
 
             if (unitProfile != null) {
                 if (unitProfile.CharacterName != null && unitProfile.CharacterName != string.Empty) {
@@ -541,7 +542,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true) {
-            Debug.Log(gameObject.name + ".BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
 
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
@@ -576,13 +577,13 @@ namespace AnyRPG {
         }
 
         public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
-            Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
             characterEquipmentManager.UnequipUnwearableEquipment();
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
         }
 
         public void HandleCharacterUnitSpawn() {
-            Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
             characterEquipmentManager.HandleCharacterUnitSpawn();
         }
 

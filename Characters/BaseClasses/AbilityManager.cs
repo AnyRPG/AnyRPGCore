@@ -269,7 +269,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }

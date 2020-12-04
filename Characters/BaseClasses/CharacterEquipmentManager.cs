@@ -35,9 +35,11 @@ namespace AnyRPG {
             this.baseCharacter = baseCharacter;
         }
 
+        /*
         public void Init() {
             LoadDefaultEquipment();
         }
+        */
 
         public void UnequipUnwearableEquipment() {
             List<Equipment> equipmentToRemove = new List<Equipment>();
@@ -61,6 +63,9 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        /// <summary>
+        /// meant to be called by SetUnitProfile since it relies on that for the equipment list
+        /// </summary>
         public void LoadDefaultEquipment() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
             if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentNameList == null) {
@@ -72,7 +77,7 @@ namespace AnyRPG {
                 skipModels = true;
             } else {
                 // try lookup just in case unit profile wasn't set properly or unit is uma / non uma in different regions (which profile doesn't handle yet)
-                if (baseCharacter.UnitController.DynamicCharacterAvatar != null) {
+                if (baseCharacter.UnitController != null && baseCharacter.UnitController.DynamicCharacterAvatar != null) {
                     skipModels = true;
                 }
             }
@@ -634,7 +639,7 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterUnitSpawn() {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
             EquipCharacter();
         }
 

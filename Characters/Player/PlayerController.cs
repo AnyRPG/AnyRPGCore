@@ -353,7 +353,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 if (PlayerManager.MyInstance.ActiveUnitController.Target != null) {
                     SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
-                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
+                    // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
+                    //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
                 }
                 return true;
             }
@@ -513,7 +514,8 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
-                PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
+                // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
+                //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");

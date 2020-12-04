@@ -122,7 +122,7 @@ namespace AnyRPG {
 
         public void SetPreviewTarget(UnitProfile unitProfile) {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null && CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }

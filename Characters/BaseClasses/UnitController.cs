@@ -411,6 +411,9 @@ namespace AnyRPG {
         }
 
         protected override void Start() {
+
+
+
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");
 
@@ -484,6 +487,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
+            //Debug.Log(gameObject.name + "UnitController.SpawnUnitModel()");
             if (unitProfile != null && unitProfile != null && unitProfile.UnitPrefabProps.ModelPrefab != null) {
                 unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
                 ConfigureAnimator(unitModel);
@@ -526,7 +530,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            Debug.Log(gameObject.name + "UnitController.SetModelReady()");
+            //Debug.Log(gameObject.name + "UnitController.SetModelReady()");
             modelReady = true;
             characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             OnModelReady();
