@@ -35,12 +35,6 @@ namespace AnyRPG {
             this.baseCharacter = baseCharacter;
         }
 
-        /*
-        public void Init() {
-            LoadDefaultEquipment();
-        }
-        */
-
         public void UnequipUnwearableEquipment() {
             List<Equipment> equipmentToRemove = new List<Equipment>();
             foreach (Equipment equipment in currentEquipment.Values) {
@@ -397,19 +391,25 @@ namespace AnyRPG {
             return null;
         }
 
-        public void Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildUMA = true) {
+        public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildUMA = true) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)+ ")");
             //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
-                return;
+                return false;
             }
             //currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
             //Unequip(newItem.equipSlot);
             if (newItem.EquipmentSlotType == null) {
                 Debug.LogError("CharacterEquipmentManager.Equip() " + newItem.DisplayName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
-                return;
+                return false;
             }
+
+            if (newItem.CanEquip(baseCharacter) == false) {
+                //Debug.Log("CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; could not equip");
+                return false;
+            }
+            
 
             // get list of compatible slots that can take this slot type
             List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
@@ -426,7 +426,7 @@ namespace AnyRPG {
                 }
                 if (emptySlotProfile == null) {
                     Debug.LogError("CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                    return;
+                    return false;
                 }
             }
 
@@ -454,6 +454,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip() FIRING ONEQUIPMENTCHANGED");
             NotifyEquipmentChanged(newItem, null, -1);
 
+            //Debug.Log("CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; successfully equipped");
+
+            return true;
         }
 
         public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {

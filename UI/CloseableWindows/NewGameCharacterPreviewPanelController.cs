@@ -81,8 +81,22 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
 
+            // set character class etc first so preview works and can equip character
+            SetCharacterProperties();
+
             EquipCharacter();
             StartCoroutine(PointlessDelay());
+        }
+
+        public void SetCharacterProperties() {
+            //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
+
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(NewGamePanel.MyInstance.UnitProfile);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(NewGamePanel.MyInstance.UnitType);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(NewGamePanel.MyInstance.CharacterRace);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(NewGamePanel.MyInstance.CharacterClass);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(NewGamePanel.MyInstance.ClassSpecialization);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(NewGamePanel.MyInstance.Faction);
         }
 
         public void EquipCharacter() {

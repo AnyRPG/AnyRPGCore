@@ -172,7 +172,7 @@ namespace AnyRPG {
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
-            if (!CharacterClassRequirementIsMet()) {
+            if (!CharacterClassRequirementIsMet(PlayerManager.MyInstance.MyCharacter)) {
                 MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
@@ -184,10 +184,10 @@ namespace AnyRPG {
         /// return true if the character class requirement of this item is met
         /// </summary>
         /// <returns></returns>
-        public bool CharacterClassRequirementIsMet() {
+        public bool CharacterClassRequirementIsMet(BaseCharacter baseCharacter) {
             //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet()");
             if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
-                if (!MyCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
+                if (!MyCharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
                     //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return false");
                     return false;
                 }
@@ -198,7 +198,11 @@ namespace AnyRPG {
 
         public virtual bool RequirementsAreMet() {
             //Debug.Log(DisplayName + ".Item.RequirementsAreMet()");
-            if (!CharacterClassRequirementIsMet()) {
+
+            // NOTE : currently this is only called from places that apply to characters (quest and loot)
+            // if in the future this function is called from somewhere an npc or preview character is used, it would be better to accept the
+            // character as a parameter, rather than hard coding to the player
+            if (!CharacterClassRequirementIsMet(PlayerManager.MyInstance.MyCharacter)) {
                 //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
                 return false;
             }

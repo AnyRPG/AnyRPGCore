@@ -196,8 +196,7 @@ namespace AnyRPG {
                 if (returnValue == false) {
                     return false;
                 }
-                if (CanEquip(PlayerManager.MyInstance.MyCharacter)) {
-                    PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(this);
+                if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
                     Remove();
                     return true;
                 } else {
@@ -208,7 +207,9 @@ namespace AnyRPG {
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
-            if (!CharacterClassRequirementIsMet()) {
+            //Debug.Log(DisplayName + ".Equipment.CanEquip()");
+            if (!CharacterClassRequirementIsMet(baseCharacter)) {
+                //Debug.Log(DisplayName + ".Equipment.CanEquip(): not the right character class");
                 MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to equip " + DisplayName);
                 return false;
             }

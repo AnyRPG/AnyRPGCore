@@ -26,12 +26,6 @@ namespace AnyRPG {
 
         private UnitPrefabProps unitPrefabProfileProps = null;
 
-        // The physical game object to spawn for this unit
-        private GameObject unitPrefab = null;
-
-        // the physical game object to spawn for the model, if any (units can already have models if configured that way)
-        private GameObject modelPrefab = null;
-
         [Header("Unit Settings")]
 
         [Tooltip("Mark this if true is the unit is an UMA unit")]
@@ -204,8 +198,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> interactableOptions = new List<string>();
 
-
-        public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
@@ -254,7 +246,7 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode) {
-            GameObject prefabObject = SpawnPrefab(unitPrefab, parentTransform, position, forward);
+            GameObject prefabObject = SpawnPrefab(UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
             UnitController unitController = null;
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
@@ -275,10 +267,14 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public GameObject SpawnModelPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
-            return SpawnPrefab(modelPrefab, parentTransform, position, forward);
+            return SpawnPrefab(UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
         }
 
         public GameObject SpawnPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+            if (spawnPrefab == null) {
+                return null;
+            }
+
             GameObject prefabObject = Instantiate(spawnPrefab, position, Quaternion.LookRotation(forward), parentTransform);
 
             return prefabObject;
@@ -386,8 +382,6 @@ namespace AnyRPG {
                 UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null) {
                     unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
-                    unitPrefab = tmpPrefabProfile.UnitPrefabProps.UnitPrefab;
-                    modelPrefab = tmpPrefabProfile.UnitPrefabProps.ModelPrefab;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }

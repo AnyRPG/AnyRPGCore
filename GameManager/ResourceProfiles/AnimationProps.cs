@@ -283,7 +283,7 @@ namespace AnyRPG {
 
         public AnimationClip CombatIdleClip {
             get {
-                if (fullCombatMirror || combatIdleMirror == true) {
+                if (fullCombatMirror == true || combatIdleMirror == true) {
                     return idleClip;
                 }
                 return combatIdleClip;
@@ -292,8 +292,8 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJumpClip {
             get {
-                if (fullCombatMirror || combatJumpMirror == true) {
-                    return combatJumpClip;
+                if (fullCombatMirror == true || combatJumpMirror == true) {
+                    return jumpClip;
                 }
                 return combatJumpClip;
             }
@@ -301,7 +301,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatFallClip {
             get {
-                if (fullCombatMirror || combatFallMirror == true) {
+                if (fullCombatMirror == true || combatFallMirror == true) {
                     return fallClip;
                 }
                 return combatFallClip;
@@ -310,7 +310,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatLandClip {
             get {
-                if (fullCombatMirror || combatLandMirror == true) {
+                if (fullCombatMirror == true || combatLandMirror == true) {
                     return landClip;
                 }
                 return combatLandClip;
@@ -319,7 +319,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatMoveForwardClip {
             get {
-                if (fullCombatMirror || combatMoveForwardMirror == true) {
+                if (fullCombatMirror == true || combatMoveForwardMirror == true) {
                     return moveForwardClip;
                 }
                 return combatMoveForwardClip;
@@ -328,7 +328,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatMoveForwardFastClip {
             get {
-                if (fullCombatMirror || combatMoveForwardFastMirror == true) {
+                if (fullCombatMirror == true || combatMoveForwardFastMirror == true) {
                     return moveForwardFastClip;
                 }
                 return combatMoveForwardFastClip;
@@ -337,7 +337,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatMoveBackClip {
             get {
-                if (fullCombatMirror || combatMoveBackMirror) {
+                if (fullCombatMirror == true || combatMoveBackMirror) {
                     return moveBackClip;
                 }
                 return combatMoveBackClip;
@@ -346,7 +346,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatMoveBackFastClip {
             get {
-                if (fullCombatMirror || combatMoveBackFastMirror) {
+                if (fullCombatMirror == true || combatMoveBackFastMirror) {
                     return moveBackFastClip;
                 }
                 return combatMoveBackFastClip;
@@ -355,7 +355,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatTurnLeftClip {
             get {
-                if (fullCombatMirror || combatTurnLeftMirror) {
+                if (fullCombatMirror == true || combatTurnLeftMirror) {
                     return turnLeftClip;
                 }
                 return combatTurnLeftClip;
@@ -364,7 +364,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatTurnRightClip {
             get {
-                if (fullCombatMirror || combatTurnRightMirror) {
+                if (fullCombatMirror == true || combatTurnRightMirror) {
                     return turnRightClip;
                 }
                 return combatTurnRightClip;
@@ -373,7 +373,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeLeftClip {
             get {
-                if (fullCombatMirror || combatStrafeLeftMirror) {
+                if (fullCombatMirror == true || combatStrafeLeftMirror) {
                     return strafeLeftClip;
                 }
                 return combatStrafeLeftClip;
@@ -382,7 +382,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeLeftClip {
             get {
-                if (fullCombatMirror || combatJogStrafeLeftMirror) {
+                if (fullCombatMirror == true || combatJogStrafeLeftMirror) {
                     return jogStrafeLeftClip;
                 }
                 return combatJogStrafeLeftClip;
@@ -391,7 +391,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeRightClip {
             get {
-                if (fullCombatMirror || combatStrafeRightMirror) {
+                if (fullCombatMirror == true || combatStrafeRightMirror) {
                     return strafeRightClip;
                 }
                 return combatStrafeRightClip;
@@ -400,7 +400,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeRightClip {
             get {
-                if (fullCombatMirror || combatJogStrafeRightMirror) {
+                if (fullCombatMirror == true || combatJogStrafeRightMirror) {
                     return jogStrafeRightClip;
                 }
                 return combatJogStrafeRightClip;
@@ -409,7 +409,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeForwardLeftClip {
             get {
-                if (fullCombatMirror || combatStrafeForwardLeftMirror) {
+                if (fullCombatMirror == true || combatStrafeForwardLeftMirror) {
                     return StrafeForwardLeftClip;
                 }
                 return combatStrafeForwardLeftClip;
@@ -418,7 +418,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeForwardLeftClip {
             get {
-                if (fullCombatMirror || combatJogStrafeForwardLeftMirror) {
+                if (fullCombatMirror == true || combatJogStrafeForwardLeftMirror) {
                     return jogStrafeForwardLeftClip;
                 }
                 return combatJogStrafeForwardLeftClip;
@@ -427,7 +427,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeForwardRightClip {
             get {
-                if (fullCombatMirror || combatStrafeForwardRightMirror) {
+                if (fullCombatMirror == true || combatStrafeForwardRightMirror) {
                     return strafeForwardRightClip;
                 }
                 return combatStrafeForwardRightClip;
@@ -436,7 +436,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeForwardRightClip {
             get {
-                if (fullCombatMirror || combatJogStrafeForwardRightMirror) {
+                if (fullCombatMirror == true || combatJogStrafeForwardRightMirror) {
                     return jogStrafeForwardRightClip;
                 }
                 return combatJogStrafeForwardRightClip;
@@ -445,7 +445,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeBackLeftClip {
             get {
-                if (fullCombatMirror || combatStrafeBackLeftMirror) {
+                if (fullCombatMirror == true || combatStrafeBackLeftMirror) {
                     return StrafeBackLeftClip;
                 }
                 return combatStrafeBackLeftClip;
@@ -454,7 +454,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeBackLeftClip {
             get {
-                if (fullCombatMirror || combatJogStrafeBackLeftMirror) {
+                if (fullCombatMirror == true || combatJogStrafeBackLeftMirror) {
                     return JogStrafeBackLeftClip;
                 }
                 return combatJogStrafeBackLeftClip;
@@ -463,7 +463,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStrafeBackRightClip {
             get {
-                if (fullCombatMirror || combatStrafeBackRightMirror) {
+                if (fullCombatMirror == true || combatStrafeBackRightMirror) {
                     return strafeBackRightClip;
                 }
                 return combatStrafeBackRightClip;
@@ -472,7 +472,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatJogStrafeBackRightClip {
             get {
-                if (fullCombatMirror || combatJogStrafeBackRightMirror) {
+                if (fullCombatMirror == true || combatJogStrafeBackRightMirror) {
                     return jogStrafeBackRightClip;
                 }
                 return combatJogStrafeBackRightClip;
@@ -481,7 +481,7 @@ namespace AnyRPG {
         }
         public AnimationClip CombatStunnedClip {
             get {
-                if (fullCombatMirror || combatStunnedMirror) {
+                if (fullCombatMirror == true || combatStunnedMirror) {
                     return stunnedClip;
                 }
                 return combatStunnedClip;
