@@ -220,11 +220,22 @@ namespace AnyRPG {
         }
 
         public void EquipCharacter() {
+            //Debug.Log("NameGamePanel.EquipCharacter()");
 
-            equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
+            equipmentList.Clear();
 
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true && faction != null) {
-                foreach (Equipment equipment in faction.EquipmentList) {
+            if (unitProfile != null) {
+                foreach (Equipment equipment in unitProfile.EquipmentList) {
+                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
+                        equipmentList[equipment.EquipmentSlotType] = equipment;
+                    } else {
+                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
+                    }
+                }
+            }
+
+            if (characterRace != null) {
+                foreach (Equipment equipment in characterRace.EquipmentList) {
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;
                     } else {
@@ -248,6 +259,16 @@ namespace AnyRPG {
                         } else {
                             equipmentList.Add(equipment.EquipmentSlotType, equipment);
                         }
+                    }
+                }
+            }
+
+            if (SystemConfigurationManager.MyInstance.NewGameFaction == true && faction != null) {
+                foreach (Equipment equipment in faction.EquipmentList) {
+                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
+                        equipmentList[equipment.EquipmentSlotType] = equipment;
+                    } else {
+                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
                     }
                 }
             }

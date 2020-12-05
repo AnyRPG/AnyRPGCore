@@ -146,6 +146,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> equipmentNameList = new List<string>();
 
+        private List<Equipment> equipmentList = new List<Equipment>();
+
         [Header("Movement")]
 
         [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
@@ -206,7 +208,6 @@ namespace AnyRPG {
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
-        public List<string> EquipmentNameList { get => equipmentNameList; set => equipmentNameList = value; }
         public CombatStrategy CombatStrategy { get => combatStrategy; set => combatStrategy = value; }
         public string CharacterName { get => characterName; set => characterName = value; }
         public string Title { get => title; set => title = value; }
@@ -238,6 +239,7 @@ namespace AnyRPG {
         }
 
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -308,6 +310,18 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (equipmentNameList != null) {
+                foreach (string equipmentName in equipmentNameList) {
+                    Equipment tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    if (tmpEquipment != null) {
+                        equipmentList.Add(tmpEquipment);
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
 
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {

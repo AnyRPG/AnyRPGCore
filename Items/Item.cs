@@ -157,7 +157,7 @@ namespace AnyRPG {
             }
         }
 
-        public List<CharacterClass> MyCharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
+        public List<CharacterClass> CharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
         public bool RandomItemQuality { get => randomItemQuality; set => randomItemQuality = value; }
         public bool FreezeDropLevel { get => freezeDropLevel; set => freezeDropLevel = value; }
         public int DropLevel {
@@ -186,8 +186,8 @@ namespace AnyRPG {
         /// <returns></returns>
         public bool CharacterClassRequirementIsMet(BaseCharacter baseCharacter) {
             //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet()");
-            if (MyCharacterClassRequirementList != null && MyCharacterClassRequirementList.Count > 0) {
-                if (!MyCharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
+            if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
+                if (!CharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
                     //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return false");
                     return false;
                 }

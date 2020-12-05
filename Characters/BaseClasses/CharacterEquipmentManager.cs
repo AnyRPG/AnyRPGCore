@@ -63,26 +63,11 @@ namespace AnyRPG {
         public void LoadDefaultEquipment() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
 
-            if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentNameList == null) {
+            if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentList == null) {
                 return;
             }
-            // always skipping models from now on since the model will never be spawned at this point
-            /*
-            bool skipModels = false;
-            if (baseCharacter.UnitProfile.IsUMAUnit == true) {
-                // quick check to avoid lookup
-                skipModels = true;
-            } else {
-                // try lookup just in case unit profile wasn't set properly or unit is uma / non uma in different regions (which profile doesn't handle yet)
-                if (baseCharacter.UnitController != null && baseCharacter.UnitController.DynamicCharacterAvatar != null) {
-                    skipModels = true;
-                }
-            }
-            */
 
-
-            foreach (string equipmentName in baseCharacter.UnitProfile.EquipmentNameList) {
-                Equipment equipment = SystemItemManager.MyInstance.GetNewResource(equipmentName) as Equipment;
+            foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
                 if (equipment != null) {
                     Equip(equipment, null, true);
                 }

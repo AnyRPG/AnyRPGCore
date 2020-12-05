@@ -214,6 +214,7 @@ namespace AnyRPG {
                 return false;
             }
             if (!CapabilityConsumerSupported(baseCharacter)) {
+                //Debug.Log(DisplayName + "CapabilityConsumer unsupported");
                 return false;
             }
             return true;

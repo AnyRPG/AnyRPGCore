@@ -89,7 +89,6 @@ namespace AnyRPG {
                 }
             }
 
-            weaponSkillList = new List<WeaponSkill>();
             if (weaponSkills != null) {
                 foreach (string weaponSkillName in weaponSkills) {
                     if (weaponSkillName != null && weaponSkillName != string.Empty) {

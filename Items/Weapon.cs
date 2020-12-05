@@ -169,22 +169,6 @@ namespace AnyRPG {
             if (abilitiesList.Count > 0) {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
-            // TODO: this code does not yet account for all the new capabilityProviders and will show red if something like faction provides the capability
-            // DONE : testing new code below
-            //List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
-            //if (allowedCharacterClasses.Count > 0) {
-                //string colorString = "red";
-                /*
-                CharacterClass playerClass = null;
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterClassName != null && (PlayerManager.MyInstance.MyCharacter.MyCharacterClassName != string.Empty) {
-                    playerClass = SystemCharacterClassManager.MyInstance.GetResource(PlayerManager.MyInstance.MyCharacter.MyCharacterClassName);
-                }
-                */
-                //if (allowedCharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
-                    //colorString = "white";
-                //}
-                //abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
-            //}
 
             if (weaponSkill != null) {
                 string colorString = "white";
@@ -212,6 +196,7 @@ namespace AnyRPG {
         */
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            //Debug.Log(DisplayName + ".Weapon.CapabilityConsumerSupported");
             return capabilityConsumer.CapabilityConsumerProcessor.IsWeaponSupported(this);
         }
 

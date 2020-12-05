@@ -111,12 +111,27 @@ namespace AnyRPG {
             CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
-                characterEquipmentManager.UnequipAll(false);
+                
+                // unequip equipment not in current list
+                //characterEquipmentManager.UnequipAll(false);
+                List<Equipment> removeList = new List<Equipment>();
+                foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
+                    if (!NewGamePanel.MyInstance.EquipmentList.ContainsValue(equipment)) {
+                        removeList.Add(equipment);
+                    }
+                }
+                foreach (Equipment equipment in removeList) {
+                    characterEquipmentManager.Unequip(equipment);
+                }
+
+                // equip equipment in list but not yet equipped
                 if (NewGamePanel.MyInstance.EquipmentList != null) {
                     //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): equipment list is not null");
                     foreach (Equipment equipment in NewGamePanel.MyInstance.EquipmentList.Values) {
                         //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
-                        characterEquipmentManager.Equip(equipment, null, false, false);
+                        if (!characterEquipmentManager.CurrentEquipment.ContainsValue(equipment)) {
+                            characterEquipmentManager.Equip(equipment, null, false, false);
+                        }
                     }
                     RebuildUMA();
                 }
