@@ -360,7 +360,7 @@ namespace AnyRPG {
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
-                        Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+                        //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         returnList.Add(baseAbility);
                     }
                 }

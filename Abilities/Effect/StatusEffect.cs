@@ -316,9 +316,8 @@ namespace AnyRPG {
             if ((classTrait || abilityEffectInput.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
                 targetCharacterStats = (source as BaseCharacter).CharacterStats;
             } else {
-                BaseCharacter baseCharacter = target.GetComponent<BaseCharacter>();
-                if (baseCharacter != null) {
-                    targetCharacterStats = baseCharacter.CharacterStats;
+                if (target.CharacterUnit != null && target.CharacterUnit.BaseCharacter != null) {
+                    targetCharacterStats = target.CharacterUnit.BaseCharacter.CharacterStats;
                 }
             }
 
@@ -501,13 +500,18 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter targetCharacter) {
+            //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects(" + (targetCharacter == null ? "null" : targetCharacter.CharacterName) + ")");
+            if (targetCharacter == null) {
+                //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects() targetCharacter is null");
+                return;
+            }
+
             if (DisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
                 targetCharacter.UnitController.FreezeCharacter();
             }
 
             if (Stun == true) {
-                //Debug.Log(abilityEffectName + ".StatusEffect.Tick() stunning");
                 targetCharacter.UnitController.StunCharacter();
             }
             if (Levitate == true) {

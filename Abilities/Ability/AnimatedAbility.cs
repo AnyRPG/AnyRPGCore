@@ -107,9 +107,9 @@ namespace AnyRPG {
                 }
                 return true;
             } else {
-                Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
+                //Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
             }
-            Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY (RETURN FALSE): sourceCharacter: " + sourceCharacter);
+            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY (RETURN FALSE): sourceCharacter: " + sourceCharacter);
             return false;
         }
 
