@@ -350,7 +350,7 @@ namespace AnyRPG {
                 AddToAggroTable(baseCharacter.UnitController.CharacterUnit, usedAgroValue);
                 //AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
                 //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
-                targetCharacterUnit.BaseCharacter.CharacterCombat.MyAggroTable.LockAgro();
+                targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable.LockAgro();
             }
 
         }

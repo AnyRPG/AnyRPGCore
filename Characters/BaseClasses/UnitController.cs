@@ -708,7 +708,7 @@ namespace AnyRPG {
                 masterUnit.UnitController.OnManualMovement += OnMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
-                characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.ClearTable();
+                characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
                 characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
                 SetMasterRelativeDestination();
             } else {
@@ -780,15 +780,15 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter.MyCharacterCombat is null. (ok for non combat units)");
                 return;
             }
-            if (characterUnit.BaseCharacter.CharacterCombat.MyAggroTable == null) {
+            if (characterUnit.BaseCharacter.CharacterCombat.AggroTable == null) {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
                 return;
             }
             AggroNode topNode;
             if (underControl) {
-                topNode = masterUnit.CharacterCombat.MyAggroTable.MyTopAgroNode;
+                topNode = masterUnit.CharacterCombat.AggroTable.MyTopAgroNode;
             } else {
-                topNode = characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.MyTopAgroNode;
+                topNode = characterUnit.BaseCharacter.CharacterCombat.AggroTable.MyTopAgroNode;
             }
 
             if (topNode == null) {

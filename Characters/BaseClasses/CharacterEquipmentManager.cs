@@ -210,6 +210,7 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HoldWeapons()");
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
                     //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {

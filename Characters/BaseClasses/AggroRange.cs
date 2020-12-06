@@ -18,7 +18,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoEnableAgro = true;
 
-        public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         private void Awake() {
             SetLayer();
@@ -83,8 +83,9 @@ namespace AnyRPG {
             }
             BaseCharacter otherBaseCharacter = _characterUnit.BaseCharacter;
             if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
-                if (Faction.RelationWith(otherBaseCharacter, MyBaseCharacter) <= -1) {
-                    baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
+                if (Faction.RelationWith(otherBaseCharacter, BaseCharacter) <= -1) {
+                    //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
+                    baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
                 }
             }
         }

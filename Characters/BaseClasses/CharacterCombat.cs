@@ -45,7 +45,7 @@ namespace AnyRPG {
         // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
         protected BaseCharacter swingTarget = null;
 
-        public AggroTable MyAggroTable {
+        public AggroTable AggroTable {
             get {
                 return aggroTable;
             }
@@ -232,7 +232,7 @@ namespace AnyRPG {
                 if (_interactable != null) {
                     CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
                     if (_characterUnit != null) {
-                        MyAggroTable.AddToAggroTable(_characterUnit, (int)totalThreat);
+                        AggroTable.AddToAggroTable(_characterUnit, (int)totalThreat);
                         EnterCombat(_interactable);
                     }
                 }
@@ -253,7 +253,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
                 // this next condition should prevent crashes as a result of level unloads
                 if (BaseCharacter.UnitController.CharacterUnit != null) {
-                    foreach (AggroNode aggroNode in MyAggroTable.MyAggroNodes) {
+                    foreach (AggroNode aggroNode in AggroTable.MyAggroNodes) {
                         UnitController _aiController = aggroNode.aggroTarget.BaseCharacter.UnitController as UnitController;
                         // since players don't have an agro radius, we can skip the check and drop combat automatically
                         if (_aiController != null) {
@@ -341,7 +341,9 @@ namespace AnyRPG {
                 baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", true);
             }
             inCombat = true;
-            OnEnterCombat(target);
+            if (!aggroTable.AggroTableContains(CharacterUnit.GetCharacterUnit(target))) {
+                OnEnterCombat(target);
+            }
             baseCharacter.CharacterEquipmentManager.HoldWeapons();
             return aggroTable.AddToAggroTable(CharacterUnit.GetCharacterUnit(target) , 0);
         }
@@ -609,7 +611,7 @@ namespace AnyRPG {
                 // putting this here because it can be overwritten easier than the event handler that calls it
                 //Debug.Log(gameObject.name + " broadcasting death to aggro table");
                 Dictionary<CharacterCombat, float> broadcastDictionary = new Dictionary<CharacterCombat, float>();
-                foreach (AggroNode _aggroNode in MyAggroTable.MyAggroNodes) {
+                foreach (AggroNode _aggroNode in AggroTable.MyAggroNodes) {
                     if (_aggroNode.aggroTarget == null) {
                         //Debug.Log(gameObject.name + ": aggronode.aggrotarget is null!");
                     } else {
