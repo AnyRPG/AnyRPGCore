@@ -57,7 +57,6 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
 
-            abilityList = new List<BaseAbility>();
             if (abilityNames != null) {
                 foreach (string baseAbilityName in abilityNames) {
                     if (baseAbilityName != null && baseAbilityName != string.Empty) {
@@ -73,7 +72,6 @@ namespace AnyRPG {
                 }
             }
 
-            traitList = new List<StatusEffect>();
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
                     if (traitName != null && traitName != string.Empty) {

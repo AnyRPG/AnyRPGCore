@@ -1327,7 +1327,9 @@ namespace AnyRPG {
                 return;
             }
             if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
-                Debug.Log("CharacterAbilityManager.BeginAbilityCommon(): LOS check failed. exiting");
+                if (playerInitiated) {
+                    Debug.Log("CharacterAbilityManager.BeginAbilityCommon(): LOS check failed. exiting");
+                }
                 return;
             }
 

@@ -561,7 +561,7 @@ namespace AnyRPG {
         }
 
         public void HandleClearTarget() {
-            Debug.Log("PlayerController.HandleClearTarget()");
+            //Debug.Log("PlayerController.HandleClearTarget()");
 
             UIManager.MyInstance.MyFocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
