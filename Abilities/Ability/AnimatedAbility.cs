@@ -102,11 +102,14 @@ namespace AnyRPG {
                         sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
                     }
 
+                } else {
+                    Debug.LogError(DisplayName + "AnimatedAbility.Cast(): no animation clips returned");
                 }
                 return true;
             } else {
-                //Debug.Log(MyName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
+                Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
             }
+            Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY (RETURN FALSE): sourceCharacter: " + sourceCharacter);
             return false;
         }
 
@@ -146,14 +149,14 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + ")");
             if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
 
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + "): returning base");
-            return base.CanUseOn(target, source, performCooldownChecks);
+            return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated);
         }
 
         public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {

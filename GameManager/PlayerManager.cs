@@ -487,6 +487,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnUnlearnAbility += HandleUnlearnAbility;
             activeCharacter.CharacterAbilityManager.OnLearnAbility += HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode += HandleActivateTargetingMode;
+            activeCharacter.CharacterAbilityManager.OnCombatMessage += HandleCombatMessage;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -516,6 +517,11 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnUnlearnAbility -= HandleUnlearnAbility;
             activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
+            activeCharacter.CharacterAbilityManager.OnCombatMessage -= HandleCombatMessage;
+        }
+
+        public void HandleCombatMessage(string messageText) {
+            CombatLogUI.MyInstance.WriteCombatMessage(messageText);
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {

@@ -33,7 +33,7 @@ namespace AnyRPG {
             characterUnit.BaseCharacter.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             if (target == null) {
                 return false;
             }
@@ -43,6 +43,16 @@ namespace AnyRPG {
             }
             if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false && characterUnit.BaseCharacter.CharacterStats.IsReviving == false) {
                 return true;
+            }
+            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already alive");
+                }
+            }
+            if (characterUnit.BaseCharacter.CharacterStats.IsReviving == true) {
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already reviving");
+                }
             }
             return false;
         }

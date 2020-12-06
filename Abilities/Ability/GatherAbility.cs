@@ -26,14 +26,14 @@ namespace AnyRPG {
             return returnResult;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
             if (target != null) {
                 //Debug.Log("GatherAbility.CanUseOn(" + target.name + ")");
             } else {
                 //Debug.Log("GatherAbility.CanUseOn(null)");
             }
-            if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext)) {
+            if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated)) {
                 return false;
             }
             // distance from center of character to whereever the raycast hit the object
@@ -51,6 +51,9 @@ namespace AnyRPG {
             GatheringNodeComponent gatheringNodeComponent = GatheringNodeComponent.GetGatheringNodeComponent(target);
             if (gatheringNodeComponent == null) {
                 //Debug.Log("You cannot use " + MyName + " on: " + target.name);
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This ability must target a gathering node");
+                }
                 return false;
             }
 
@@ -58,6 +61,9 @@ namespace AnyRPG {
                 return true;
             } else {
                 //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This gathering node requires the skill : " + gatheringNodeComponent.BaseAbility.DisplayName);
+                }
                 return false;
             }
         }

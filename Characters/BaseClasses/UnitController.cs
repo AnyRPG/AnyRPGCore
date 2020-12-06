@@ -1153,6 +1153,7 @@ namespace AnyRPG {
                 }
                 i++;
             }
+            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "): return false");
             return false;
         }
 

@@ -276,14 +276,17 @@ namespace AnyRPG {
             base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
                 return true;
             }
             if (!ZoneRequirementMet()) {
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". You are in the wrong zone");
+                }
                 return false;
             }
-            return base.CanUseOn(target, sourceCharacter, abilityEffectContext);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
         }
 
         public bool ZoneRequirementMet() {

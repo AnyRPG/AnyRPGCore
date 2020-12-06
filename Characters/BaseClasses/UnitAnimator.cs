@@ -108,6 +108,7 @@ namespace AnyRPG {
         }
         public float LastAnimationLength { get => lastAnimationLength; set => lastAnimationLength = value; }
         public int LastAnimationHits { get => lastAnimationHits; set => lastAnimationHits = value; }
+        public AnimationProps CurrentAnimations { get => currentAnimations; }
 
         public UnitAnimator(UnitController unitController) {
             this.unitController = unitController;
@@ -1045,6 +1046,22 @@ namespace AnyRPG {
                 }
             }
 
+            // handle animation lists
+
+            // attacks
+            if (currentAnimationProps.AttackClips != null && currentAnimationProps.AttackClips.Count > 0) {
+                currentAnimations.AttackClips = currentAnimationProps.AttackClips;
+            } else {
+                currentAnimations.AttackClips = defaultAnimationProps.AttackClips;
+            }
+
+            // casting
+            if (currentAnimationProps.CastClips != null && currentAnimationProps.CastClips.Count > 0) {
+                currentAnimations.CastClips = currentAnimationProps.CastClips;
+            } else {
+                currentAnimations.CastClips = defaultAnimationProps.CastClips;
+            }
+
             //overrideController = tempOverrideController;
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
             //SetOverrideController(overrideController);
@@ -1064,7 +1081,7 @@ namespace AnyRPG {
 
         // special melee attack
         public float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ")");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
             if (animator == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
                 return 0f;

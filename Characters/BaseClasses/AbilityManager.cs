@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
-        public virtual bool CanCastAbility(BaseAbility ability) {
+        public virtual bool CanCastAbility(BaseAbility ability, bool playerInitiated = false) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             return true;
@@ -279,7 +279,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
+        public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility, bool playerInitiated = false) {
             return true;
         }
 
@@ -310,6 +310,11 @@ namespace AnyRPG {
 
         public virtual bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
             return true;
+        }
+
+        public virtual void ReceiveCombatMessage(string messageText) {
+            // do nothing
+            return;
         }
 
     }

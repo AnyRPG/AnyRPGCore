@@ -21,6 +21,7 @@ namespace AnyRPG {
         public event System.Action<bool> OnUnlearnAbility = delegate { };
         public event System.Action<BaseAbility> OnLearnAbility = delegate { };
         public event System.Action<BaseAbility> OnActivateTargetingMode = delegate { };
+        public event System.Action<string> OnCombatMessage = delegate { };
 
         protected BaseCharacter baseCharacter;
 
@@ -292,18 +293,23 @@ namespace AnyRPG {
             return base.GetDefaultAttackAnimations();
         }
 
+        /// <summary>
+        /// get the current attack animations, accounting for any equippped weapon
+        /// </summary>
+        /// <returns></returns>
         public override List<AnimationClip> GetUnitAttackAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
-            if (baseCharacter.UnitProfile != null
-                && baseCharacter.UnitProfile != null
-                && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
-                return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps.AttackClips;
+            if (baseCharacter.UnitController != null
+                && baseCharacter.UnitController.UnitAnimator != null
+                && baseCharacter.UnitController.UnitAnimator.CurrentAnimations != null) {
+                return baseCharacter.UnitController.UnitAnimator.CurrentAnimations.AttackClips;
             }
             return base.GetUnitAttackAnimations();
         }
 
         public override List<AnimationClip> GetUnitCastAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            // TODO : use current cast animation set instead, which should include overwritten weapon base casts
             if (baseCharacter.UnitProfile != null
                 && baseCharacter.UnitProfile != null
                 && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
@@ -380,6 +386,7 @@ namespace AnyRPG {
         }
 
         public override bool IsTargetInMeleeRange(Interactable target) {
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.IsTargetInMeleeRange()");
             return baseCharacter.UnitController.IsTargetInHitBox(target);
         }
 
@@ -471,6 +478,7 @@ namespace AnyRPG {
         }
 
         public override float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAnimatedAbility(" + animatedAbility.DisplayName + ")");
             // this type of ability is allowed to interrupt other types of animations, so clear them all
             baseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
 
@@ -519,13 +527,16 @@ namespace AnyRPG {
             return base.ProcessAnimatedAbilityHit(target, deactivateAutoAttack);
         }
 
-        public override bool PerformWeaponAffinityCheck(BaseAbility baseAbility) {
+        public override bool PerformWeaponAffinityCheck(BaseAbility baseAbility, bool playerInitiated = false) {
             foreach (WeaponSkill _weaponAffinity in baseAbility.WeaponAffinityList) {
                 if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null && baseCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                     return true;
                 }
             }
 
+            if (playerInitiated) {
+                OnCombatMessage("Cannot cast " + baseAbility.name + ". Required weapon not equipped!");
+            }
             // intentionally not calling base because it's always true
             return false;
         }
@@ -1007,7 +1018,8 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformAbilityCast(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
             float startTime = Time.time;
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
+
             bool canCast = true;
             if (ability.RequiresTarget == false || ability.CanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
@@ -1077,13 +1089,14 @@ namespace AnyRPG {
             EndCastCleanup();
 
             if (canCast) {
-                //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete currentCastTime: " + currentCastTime + "; abilitycastintime: " + ability.MyAbilityCastingTime);
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and can cast");
                 if (!ability.CanSimultaneousCast) {
                     NotifyOnCastStop();
                     BaseCharacter.UnitController.UnitAnimator.SetCasting(false);
                 }
                 PerformAbility(ability, target, abilityEffectContext);
-
+            } else {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and cannot cast");
             }
         }
 
@@ -1165,7 +1178,7 @@ namespace AnyRPG {
         /// The entrypoint to Casting a spell.  handles all logic such as instant/timed cast, current cast in progress, enough mana, target being alive etc
         /// </summary>
         /// <param name="ability"></param>
-        public void BeginAbility(BaseAbility ability) {
+        public void BeginAbility(BaseAbility ability, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
@@ -1173,7 +1186,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
             }
-            BeginAbilityCommon(ability, baseCharacter.UnitController.Target);
+            BeginAbilityCommon(ability, baseCharacter.UnitController.Target, playerInitiated);
         }
 
         public void BeginAbility(BaseAbility ability, Interactable target) {
@@ -1263,16 +1276,18 @@ namespace AnyRPG {
             return base.GetCritChance();
         }
 
-        protected void BeginAbilityCommon(BaseAbility ability, Interactable target) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ")");
+        protected void BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ")");
             BaseAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.DisplayName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
             }
 
-            if (!CanCastAbility(usedAbility)) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+            if (!CanCastAbility(usedAbility, playerInitiated)) {
+                if (playerInitiated) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
+                }
                 return;
             }
 
@@ -1280,8 +1295,7 @@ namespace AnyRPG {
             abilityEffectContext.baseAbility = ability;
 
             // get final target before beginning casting
-            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext);
-
+            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
 
             CharacterUnit targetCharacterUnit = null;
             if (finalTarget != null) {
@@ -1307,7 +1321,9 @@ namespace AnyRPG {
             OnAttemptPerformAbility(ability);
 
             if (finalTarget == null && usedAbility.RequiresTarget == true) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                if (playerInitiated) {
+                    Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                }
                 return;
             }
             if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
@@ -1339,7 +1355,7 @@ namespace AnyRPG {
                 } else {
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
                 }
             }
 
@@ -1355,43 +1371,65 @@ namespace AnyRPG {
             }
         }
 
+        public override void ReceiveCombatMessage(string messageText) {
+            base.ReceiveCombatMessage(messageText);
+            OnCombatMessage(messageText);
+        }
+
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
-        public override bool CanCastAbility(BaseAbility ability) {
+        public override bool CanCastAbility(BaseAbility ability, bool playerInitiated = false) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             // check if the ability is learned yet
             if (!PerformLearnedCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): Have not learned ability!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): Have not learned ability!");
+                }
                 return false;
             }
 
             // check if the ability is on cooldown
             if (!PerformCooldownCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): ability is on cooldown!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): ability is on cooldown!");
+                }
                 return false;
             }
 
             // check if we have enough mana
             if (!PerformPowerResourceCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): do not have sufficient power resource to cast!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): do not have sufficient power resource!");
+                }
                 return false;
             }
 
             if (!PerformCombatCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast ability in combat!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): cannot cast ability in combat!");
+                }
                 return false;
             }
 
             if (!PerformLivenessCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): cannot cast while dead!");
+                }
                 return false;
             }
             
             if (!PerformMovementCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): cannot cast while moving!");
+                }
                 return false;
             }
-
 
             // default is true, nothing has stopped us so far
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): returning true");
@@ -1459,7 +1497,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         public void PerformAbility(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ")");
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability;

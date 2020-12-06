@@ -151,7 +151,7 @@ namespace AnyRPG {
         }
 
 
-        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             //Debug.Log(MyName + ".AbilityEffect.CanUseOn()");
 
             // create target booleans
@@ -196,12 +196,16 @@ namespace AnyRPG {
                     // liveness checks
                     if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
                         //Debug.Log("This ability requires a live target");
-                        //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a live target!");
+                        if (playerInitiated) {
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires a live target!");
+                        }
                         return false;
                     }
                     if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && requireDeadTarget == true) {
                         //Debug.Log("This ability requires a dead target");
-                        //CombatLogUI.MyInstance.WriteCombatMessage(resourceName + " requires a dead target!");
+                        if (playerInitiated) {
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires a dead target!");
+                        }
                         return false;
                     }
 
@@ -212,10 +216,16 @@ namespace AnyRPG {
                 } else {
                     if (requiresLiveTarget == true || requireDeadTarget == true) {
                         // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
+                        if (playerInitiated) {
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires an animate target");
+                        }
                         return false;
                     }
                     if (canCastOnFriendly == true || CanCastOnNeutral == true || canCastOnEnemy == true) {
                         // something that is not a character unit cannot satisfy the relationship conditions because it is inanimate
+                        if (playerInitiated) {
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires an animate target");
+                        }
                         return false;
                     }
 
@@ -226,6 +236,9 @@ namespace AnyRPG {
             // since the target is not ourself, and it is valid, we should perform a range check
 
             if (!sourceCharacter.AbilityManager.IsTargetInAbilityEffectRange(this, target, abilityEffectContext)) {
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". target is not in range");
+                }
                 return false;
             }
 

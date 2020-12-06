@@ -568,7 +568,7 @@ namespace AnyRPG {
         }
 
         public void HandleSetTarget(Interactable newTarget) {
-            Debug.Log("PlayerController.HandleSetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
+            //Debug.Log("PlayerController.HandleSetTarget(" + (newTarget == null ? "null" : newTarget.name) + ")");
             if (newTarget == null) {
                 return;
             }

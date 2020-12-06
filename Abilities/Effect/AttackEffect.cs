@@ -33,9 +33,11 @@ namespace AnyRPG {
             return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
         }
 
+        /*
         public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log("AttackEffect.CanUseOn(" + (target == null ? " null" : target.name) + ", " + source.gameObject.name + ")");
             return base.CanUseOn(target, source, abilityEffectContext);
         }
+        */
     }
 }

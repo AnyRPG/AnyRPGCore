@@ -347,7 +347,7 @@ namespace AnyRPG {
         }
 
         public BaseAbility GetValidAttackAbility() {
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility()");
 
             List<BaseAbility> returnList = new List<BaseAbility>();
 
@@ -355,12 +355,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
-                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                    //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
                     if (baseAbility.CanCastOnEnemy &&
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
-                        //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+                        Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         returnList.Add(baseAbility);
                     }
                 }

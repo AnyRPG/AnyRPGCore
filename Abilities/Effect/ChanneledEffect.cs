@@ -71,12 +71,15 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Channneled abilities must always have a target");
+                }
                 return false;
             }
-            return base.CanUseOn(target, sourceCharacter, abilityEffectContext);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
         }
 
     }

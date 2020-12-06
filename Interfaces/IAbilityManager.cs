@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         void GeneratePower(BaseAbility ability);
 
-        bool CanCastAbility(BaseAbility ability);
+        bool CanCastAbility(BaseAbility ability, bool playerInitiated = false);
 
         AudioClip GetAnimatedAbilityHitSound();
 
@@ -186,7 +186,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="baseAbility"></param>
         /// <returns></returns>
-        bool PerformWeaponAffinityCheck(BaseAbility baseAbility);
+        bool PerformWeaponAffinityCheck(BaseAbility baseAbility, bool playerInitiated = false);
 
         /// <summary>
         /// True if an animated ability can be performed
@@ -256,6 +256,11 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         bool IsPlayerControlled();
+
+        /// <summary>
+        /// pass a message to be emitted as an event
+        /// </summary>
+        void ReceiveCombatMessage(string messageText);
 
     }
 

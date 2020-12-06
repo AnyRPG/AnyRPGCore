@@ -403,7 +403,7 @@ namespace AnyRPG {
                 primaryResourceText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentResource, displayedMaxResource, percentText);
             }
 
-            if (displayedCurrentResource <= 0) {
+            if (displayedCurrentResource <= 0 && namePlateController.HasHealth() == true) {
                 Color tmp = Color.gray;
                 //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
                 tmp.a = 0.5f;
