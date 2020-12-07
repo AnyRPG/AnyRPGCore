@@ -358,7 +358,7 @@ namespace AnyRPG {
 
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
-                    if (baseAbility.CanCastOnEnemy &&
+                    if (baseAbility.TargetOptions.CanCastOnEnemy &&
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
@@ -385,7 +385,7 @@ namespace AnyRPG {
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == true) {
+                    if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == true) {
                         //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         //if (baseAbility.MyCanCastOnEnemy) {
                         return baseAbility;
@@ -420,7 +420,7 @@ namespace AnyRPG {
 
                 foreach (BaseAbility baseAbility in baseAbilityList) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                    if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == false && baseAbility.MaxRange > 0f) {
+                    if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == false && baseAbility.TargetOptions.MaxRange > 0f) {
                         float returnedMaxRange = baseAbility.GetLOSMaxRange(baseCharacter, baseCharacter.UnitController.Target);
                         if (returnValue == 0f || returnedMaxRange < returnValue) {
                             //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
@@ -509,7 +509,7 @@ namespace AnyRPG {
                 return true;
             } else {
                 if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null && baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.RequiresTarget == false) {
+                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.TargetOptions.RequiresTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, BaseCharacter.UnitController.Target);
                         return true;
                     }
@@ -578,7 +578,7 @@ namespace AnyRPG {
                     damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
-                if (abilityEffect.UseMeleeRange) {
+                if (abilityEffect.TargetOptions.UseMeleeRange) {
                     if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.UnitController)) {
                         canPerformAbility = false;
                     }

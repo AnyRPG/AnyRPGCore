@@ -167,10 +167,10 @@ namespace AnyRPG {
         [SerializeField]
         public float abilityCoolDown = 0f;
 
-
+        /*
         [Header("Ground Target")]
 
-        [Tooltip("If true, casting this spell will require choosing a target on the ground, instead of a target character.")]
+        [Tooltip("If true, casting this spell will require choosing a target point on the ground, instead of a target character or object.")]
         [SerializeField]
         private bool requiresGroundTarget = false;
 
@@ -181,13 +181,17 @@ namespace AnyRPG {
         [Tooltip("How big should the projector be on the ground if this is ground targeted. Used to show accurate effect size.")]
         [SerializeField]
         protected float groundTargetRadius = 0f;
+        */
 
-        [Header("Standard Target")]
+        [Header("Target Properties")]
 
-        [Tooltip("Ignore requireTarget and canCast variables and use the check from the first ability effect instead")]
+        [Tooltip("Ignore the below target options and use the check from the first ability effect instead")]
         [SerializeField]
         private bool useAbilityEffectTargetting = false;
 
+        [SerializeField]
+        private AbilityTargetProps targetOptions = new AbilityTargetProps();
+        /*
         [Tooltip("If true, the character must have a target selected to cast this ability.")]
         [SerializeField]
         private bool requiresTarget = false;
@@ -237,6 +241,7 @@ namespace AnyRPG {
         [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
         [SerializeField]
         protected int maxRange;
+        */
 
         [Header("Cast Complete Ability Effects")]
 
@@ -284,30 +289,30 @@ namespace AnyRPG {
             }
             set => abilityCastingTime = value;
         }
-        public bool RequiresTarget { get => requiresTarget; set => requiresTarget = value; }
-        public bool RequiresGroundTarget { get => requiresGroundTarget; set => requiresGroundTarget = value; }
-        public Color GroundTargetColor { get => groundTargetColor; set => groundTargetColor = value; }
-        public bool CanCastOnSelf { get => canCastOnSelf; }
-        public bool CanCastOnEnemy { get => canCastOnEnemy; }
-        public bool CanCastOnFriendly { get => canCastOnFriendly; }
+        //public bool RequiresTarget { get => requiresTarget; set => requiresTarget = value; }
+        //public bool RequiresGroundTarget { get => requiresGroundTarget; set => requiresGroundTarget = value; }
+        //public Color GroundTargetColor { get => groundTargetColor; set => groundTargetColor = value; }
+        //public bool CanCastOnSelf { get => canCastOnSelf; }
+        //public bool CanCastOnEnemy { get => canCastOnEnemy; }
+        //public bool CanCastOnFriendly { get => canCastOnFriendly; }
         public bool CanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
-        public bool RequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
+        //public bool RequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool IgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
         public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : null); }
-        public int MaxRange { get => maxRange; set => maxRange = value; }
-        public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
+        //public int MaxRange { get => maxRange; set => maxRange = value; }
+        //public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> AbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
         public List<AbilityEffect> AbilityEffects { get => abilityEffects; set => abilityEffects = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
-        public float GroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
+        //public float GroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
-        public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
+        //public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
         public List<CharacterClass> CharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
         public PowerResource GeneratePowerResource { get => generatePowerResource; set => generatePowerResource = value; }
@@ -318,10 +323,18 @@ namespace AnyRPG {
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
-        public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
-        public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
-        public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
-        public bool AutoSelfCast { get => autoSelfCast; set => autoSelfCast = value; }
+        //public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
+        //public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
+        //public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
+        //public bool AutoSelfCast { get => autoSelfCast; set => autoSelfCast = value; }
+        public TargetProps TargetOptions {
+            get {
+                if (AbilityEffects != null && AbilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
+                    return AbilityEffects[0].TargetOptions;
+                }
+                return targetOptions;
+            }
+        }
 
         public virtual List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
             return holdableObjectList;
@@ -370,7 +383,7 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            string abilityRange = (useMeleeRange == true ? "melee" : MaxRange + " meters");
+            string abilityRange = (TargetOptions.UseMeleeRange == true ? "melee" : TargetOptions.MaxRange + " meters");
 
             string costString = string.Empty;
             if (powerResource != null) {
@@ -414,7 +427,7 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source.AbilityManager.PerformLOSCheck(target, this)) {
                 //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + MaxRange);
-                return MaxRange;
+                return TargetOptions.MaxRange;
             }
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + source.GetMeleeRange());
             return source.AbilityManager.GetMeleeRange();
@@ -518,7 +531,7 @@ namespace AnyRPG {
             }
 
             // perform hit / miss check only if baseability requires target and return false if miss
-            if (requiresTarget) {
+            if (TargetOptions.RequiresTarget) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
                     //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(): miss");
                     return false;
@@ -564,7 +577,7 @@ namespace AnyRPG {
             // perform ability dependent checks
             if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated) == false) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
-                if (canCastOnSelf && autoSelfCast) {
+                if (TargetOptions.CanCastOnSelf && TargetOptions.AutoSelfCast) {
                     target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;

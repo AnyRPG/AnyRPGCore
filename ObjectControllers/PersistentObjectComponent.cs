@@ -48,7 +48,6 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-
         public void Init() {
             if (persistObjectPosition == false) {
                 return;

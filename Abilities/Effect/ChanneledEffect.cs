@@ -41,7 +41,7 @@ namespace AnyRPG {
                         }
                         Vector3 endPosition = Vector3.zero;
                         Interactable usedTarget = target;
-                        if (abilityEffectInput.baseAbility != null && abilityEffectInput.baseAbility.RequiresGroundTarget == true) {
+                        if (abilityEffectInput.baseAbility != null && abilityEffectInput.baseAbility.TargetOptions.RequiresGroundTarget == true) {
                             endPosition = abilityEffectInput.groundTargetLocation;
                             usedTarget = null;
                             //Debug.Log(MyName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);

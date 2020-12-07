@@ -349,13 +349,11 @@ namespace AnyRPG {
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
+            // get reference to name now since interactable could change scene and then target reference is lost
+            string targetDisplayName = PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName;
             if (PlayerManager.MyInstance.ActiveUnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                if (PlayerManager.MyInstance.ActiveUnitController.Target != null) {
-                    SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
-                    // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
-                    //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
-                }
+                SystemEventManager.MyInstance.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");

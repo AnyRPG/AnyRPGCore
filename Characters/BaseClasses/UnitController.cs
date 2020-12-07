@@ -402,6 +402,7 @@ namespace AnyRPG {
             unitMotor = new UnitMotor(this);
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
+            persistentObjectComponent.Setup(this);
 
             // allow the base character to initialize.  it can possibly contain a unit profile
             // if it does, attempt to spawn the character model referenced in it
@@ -422,8 +423,6 @@ namespace AnyRPG {
 
         protected override void Start() {
 
-
-
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");
 
@@ -433,7 +432,7 @@ namespace AnyRPG {
 
             patrolController.Init();
 
-            persistentObjectComponent.Setup(this);
+            persistentObjectComponent.Init();
 
             SetStartPosition();
 
@@ -453,7 +452,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
             base.GetComponentReferences();
 
-            UUID uuid = GetComponent<UUID>();
+            uuid = GetComponent<UUID>();
             lootableCharacter = GetComponent<LootableCharacter>();
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
@@ -1184,6 +1183,7 @@ namespace AnyRPG {
         protected override void OnDestroy() {
             base.OnDestroy();
             StopAllCoroutines();
+            persistentObjectComponent.Cleanup();
         }
 
         public void CommonMovementNotifier() {

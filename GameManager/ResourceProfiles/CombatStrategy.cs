@@ -88,7 +88,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (baseAbility.CanCastOnEnemy && baseAbility.UseMeleeRange == true) {
+                            if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == true) {
                                 //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 return baseAbility;
                             }

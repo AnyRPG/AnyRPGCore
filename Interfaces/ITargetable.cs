@@ -9,6 +9,7 @@ namespace AnyRPG {
     public interface ITargetable {
 
         string DisplayName { get; }
+        /*
         bool RequiresTarget { get; }
         bool RequiresGroundTarget { get; }
         bool RequiresLiveTarget { get; }
@@ -24,6 +25,8 @@ namespace AnyRPG {
         int MaxRange { get; }
         LineOfSightSourceLocation LineOfSightSourceLocation { get; }
         TargetRangeSourceLocation TargetRangeSourceLocation { get; }
+        */
+        TargetProps TargetOptions { get; }
     }
 
 }
