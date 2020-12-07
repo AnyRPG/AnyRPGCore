@@ -306,7 +306,7 @@ namespace AnyRPG {
 
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
+            //Debug.Log("StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
             if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
                 return null;
             }

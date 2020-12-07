@@ -73,7 +73,7 @@ namespace AnyRPG {
             } else if (useAutoAttackAnimations == true) {
                 animationClips = sourceCharacter.AbilityManager.GetDefaultAttackAnimations();
             } else {
-                animationClips = AnimationClips;
+                animationClips = AttackClips;
             }
             return animationClips;
         }

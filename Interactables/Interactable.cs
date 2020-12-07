@@ -125,7 +125,17 @@ namespace AnyRPG {
 
         public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
 
-        public virtual string DisplayName { get => (interactableName != null && interactableName != string.Empty ? interactableName : gameObject.name); }
+        public virtual string DisplayName {
+            get {
+                if (interactableName != null && interactableName != string.Empty) {
+                    return interactableName;
+                }
+                if (characterUnit != null) {
+                    return characterUnit.BaseCharacter.CharacterName;
+                }
+                return gameObject.name;
+            }
+        }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public Collider Collider { get => myCollider; }
 
@@ -347,15 +357,15 @@ namespace AnyRPG {
             EnableInteraction();
         }
 
-        public void EnableInteraction() {
-            // interactables have box colliders and units have capsule so this should not interfere with units
+        public virtual void EnableInteraction() {
+            // meant to be overwritten on characters
             if (myCollider != null) {
                 myCollider.enabled = true;
             }
         }
 
-        public void DisableInteraction() {
-            // interactables have box colliders and units have capsule so this should not interfere with units
+        public virtual void DisableInteraction() {
+            // meant to be overwritten on characters
             if (myCollider != null) {
                 myCollider.enabled = false;
             }

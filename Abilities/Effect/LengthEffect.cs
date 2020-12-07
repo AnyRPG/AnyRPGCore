@@ -132,8 +132,8 @@ namespace AnyRPG {
                     if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                         //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                         //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
-                        spawnLocation =source.AbilityManager.UnitGameObject.transform.position;
-                        prefabParent =source.AbilityManager.UnitGameObject.transform;
+                        spawnLocation = source.AbilityManager.UnitGameObject.transform.position;
+                        prefabParent = source.AbilityManager.UnitGameObject.transform;
                         Transform usedPrefabSourceBone = null;
                         if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
                             usedPrefabSourceBone = prefabParent.FindChildByRecursive(prefabProfile.TargetBone);
@@ -165,8 +165,8 @@ namespace AnyRPG {
                         // CORRECT WAY BELOW
                         //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.AbilityManager.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                         Vector3 usedForwardDirection = Vector3.forward;
-                        if (source != null &&source.AbilityManager.UnitGameObject != null) {
-                            usedForwardDirection =source.AbilityManager.UnitGameObject.transform.forward;
+                        if (source != null && source.AbilityManager.UnitGameObject != null) {
+                            usedForwardDirection = source.AbilityManager.UnitGameObject.transform.forward;
                         }
                         if (prefabParent != null) {
                             usedForwardDirection = prefabParent.transform.forward;

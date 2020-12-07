@@ -288,7 +288,7 @@ namespace AnyRPG {
         public override List<AnimationClip> GetDefaultAttackAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
             if (autoAttackAbility != null) {
-                return autoAttackAbility.AnimationClips;
+                return autoAttackAbility.AttackClips;
             }
             return base.GetDefaultAttackAnimations();
         }
@@ -371,12 +371,10 @@ namespace AnyRPG {
             }
         }
 
-        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false) {
+        /*
+        public override bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             bool returnResult = IsTargetInRange(target, baseAbility.UseMeleeRange, baseAbility.MaxRange, baseAbility, abilityEffectContext);
-            if (returnResult == false && notify == true) {
-                OnTargetInAbilityRangeFail(baseAbility, target);
-            }
             return returnResult;
         }
 
@@ -384,6 +382,7 @@ namespace AnyRPG {
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
             return IsTargetInRange(target, abilityEffect.UseMeleeRange, abilityEffect.MaxRange, abilityEffect, abilityEffectContext);
         }
+        */
 
         public override bool IsTargetInMeleeRange(Interactable target) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.IsTargetInMeleeRange()");
@@ -437,16 +436,16 @@ namespace AnyRPG {
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
-        public bool IsTargetInRange(Interactable target, bool useMeleeRange, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+        public override bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange()");
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
-            if (useMeleeRange) {
+            if (targetable.UseMeleeRange) {
                 if (!IsTargetInMeleeRange(target)) {
                     return false;
                 }
             } else {
-                if (!IsTargetInMaxRange(target, maxRange, targetable, abilityEffectContext)) {
+                if (!IsTargetInMaxRange(target, targetable.MaxRange, targetable, abilityEffectContext)) {
                     return false;
                 }
                 if (!PerformLOSCheck(target, targetable, abilityEffectContext)) {
@@ -455,7 +454,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange(): return true");
-            return true;
+            return base.IsTargetInRange(target, targetable, abilityEffectContext);
         }
 
         public bool IsTargetInMaxRange(Interactable target, float maxRange, ITargetable targetable, AbilityEffectContext abilityEffectContext) {
@@ -535,7 +534,7 @@ namespace AnyRPG {
             }
 
             if (playerInitiated) {
-                OnCombatMessage("Cannot cast " + baseAbility.name + ". Required weapon not equipped!");
+                OnCombatMessage("Cannot cast " + baseAbility.DisplayName + ". Required weapon not equipped!");
             }
             // intentionally not calling base because it's always true
             return false;
@@ -603,7 +602,7 @@ namespace AnyRPG {
                 if (targetCharacterUnit != null) {
                     bool targetIsSelf = false;
                     if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
-                        targetIsSelf = (target == baseCharacter.UnitController.gameObject);
+                        targetIsSelf = (target.gameObject == baseCharacter.UnitController.gameObject);
                     }
                     if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
                         target = null;
@@ -622,7 +621,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (!abilityEffect.CanCastOnSelf && baseCharacter != null && baseCharacter.UnitController != null && target == baseCharacter.UnitController.gameObject) {
+            if (!abilityEffect.CanCastOnSelf && baseCharacter != null && baseCharacter.UnitController != null && target.gameObject == baseCharacter.UnitController.gameObject) {
                 //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
                 target = null;
             }
@@ -836,9 +835,11 @@ namespace AnyRPG {
 
         public void LearnCapabilityProviderAbilities(List<BaseAbility> abilities) {
             if (abilities == null) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities(): abilities is null");
                 return;
             }
             foreach (BaseAbility baseAbility in abilities) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities(): process: " + baseAbility.DisplayName);
                 if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
                     if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                         UnLearnDefaultAutoAttackAbility();
@@ -946,23 +947,17 @@ namespace AnyRPG {
         }
 
         public void UpdateAbilityList(int newLevel) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
 
             LearnSystemAbilities();
 
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter);
 
-            // TODO : still need to work out how unit profile fits into this
-            /*
-            if (baseCharacter.UnitProfile != null) {
-                LearnCapabilityProviderAbilities(baseCharacter.UnitProfile);
-            }
-            */
             LearnCapabilityProviderAbilities(capabilityConsumerSnapshot.GetAbilityList());
         }
 
         public bool LearnAbility(BaseAbility newAbility) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + ")");
             if (newAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
@@ -1322,13 +1317,13 @@ namespace AnyRPG {
 
             if (finalTarget == null && usedAbility.RequiresTarget == true) {
                 if (playerInitiated) {
-                    Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 }
                 return;
             }
             if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
                 if (playerInitiated) {
-                    Debug.Log("CharacterAbilityManager.BeginAbilityCommon(): LOS check failed. exiting");
+                    ReceiveCombatMessage("Target is not in line of sight");
                 }
                 return;
             }
@@ -1403,9 +1398,12 @@ namespace AnyRPG {
             // check if we have enough mana
             if (!PerformPowerResourceCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): do not have sufficient power resource to cast!");
+                // not needed, handled in performpowerresourcecheck
+                /*
                 if (playerInitiated) {
-                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): do not have sufficient power resource!");
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + ". That ability requires " + ability.GetResourceCost(baseCharacter) + " " + ability.PowerResource.DisplayName);
                 }
+                */
                 return false;
             }
 

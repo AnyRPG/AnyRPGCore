@@ -269,8 +269,10 @@ namespace AnyRPG {
 
             InitializeLocalComponents();
 
-            if (unitNamePlateController.HasHealth()) {
-                ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
+            if (unitNamePlateController.Interactable.CharacterUnit != null) {
+                if (unitNamePlateController.HasHealth() == true) {
+                    ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
+                }
                 if ((unitNamePlateController as UnitNamePlateController).UnitController != null) {
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
@@ -328,6 +330,8 @@ namespace AnyRPG {
             }
             if (unitNamePlateController.HasHealth()) {
                 EnableHealthBar();
+            } else {
+                DisableHealthBar();
             }
         }
 
@@ -457,7 +461,7 @@ namespace AnyRPG {
             if (unitNamePlateController != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
                 //unitNamePlateController.ResourceBarNeedsUpdate -= ProcessHealthChanged;
-                if (unitNamePlateController.HasHealth()) {
+                if (unitNamePlateController.Interactable.CharacterUnit != null) {
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;

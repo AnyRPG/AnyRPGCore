@@ -81,9 +81,6 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
 
-            // set character class etc first so preview works and can equip character
-            SetCharacterProperties();
-
             EquipCharacter();
             StartCoroutine(PointlessDelay());
         }
@@ -107,6 +104,9 @@ namespace AnyRPG {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): character not ready yet, exiting.");
                 return;
             }
+
+            // set character class etc first so preview works and can equip character
+            SetCharacterProperties();
 
             CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {

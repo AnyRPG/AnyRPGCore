@@ -135,6 +135,7 @@ namespace AnyRPG {
         /// <returns></returns>
         bool IsTargetInMeleeRange(Interactable target);
 
+        /*
         /// <summary>
         /// True if the target is in the correct range for the ability
         /// </summary>
@@ -146,6 +147,13 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false);
+        */
+
+        /// <summary>
+        /// True if the target is in the correct range for the targetable
+        /// </summary>
+        /// <returns></returns>
+        bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null);
 
         /// <summary>
         /// Put an ability on cooldown and prevent it from being cast for x seconds

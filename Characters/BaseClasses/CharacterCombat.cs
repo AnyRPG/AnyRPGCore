@@ -196,7 +196,7 @@ namespace AnyRPG {
                     // this could maybe be done better through an event subscription
                     if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
                         // we can't reflect on system attackers, so check if this is an interactable
-                        Interactable targetInteractable = target.gameObject.GetComponent<Interactable>();
+                        Interactable targetInteractable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
                         if (targetInteractable != null) {
                             statusEffectNode.StatusEffect.CastReflect(BaseCharacter, targetInteractable, abilityEffectContext);
                         }
@@ -228,7 +228,7 @@ namespace AnyRPG {
                 totalThreat *= abilityEffect.ThreatMultiplier * target.AbilityManager.GetThreatModifiers();
 
                 // determine if this target is capable of fighting (ie, not environmental effect), and if so, enter combat
-                Interactable _interactable = target.gameObject.GetComponent<Interactable>();
+                Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
                 if (_interactable != null) {
                     CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
                     if (_characterUnit != null) {
@@ -306,7 +306,7 @@ namespace AnyRPG {
         }
 
         public bool EnterCombat(IAbilityCaster target) {
-            Interactable _interactable = target.gameObject.GetComponent<Interactable>();
+            Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
             if (_interactable != null) {
                 CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
                 if (_characterUnit != null) {

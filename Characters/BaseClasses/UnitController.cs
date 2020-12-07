@@ -229,6 +229,16 @@ namespace AnyRPG {
             }
         }
 
+        public override void EnableInteraction() {
+            // do nothing intentionally, don't want collider disabled or unit will fall through world
+            //base.EnableInteraction();
+        }
+
+        public override void DisableInteraction() {
+            // do nothing intentionally, don't want collider disabled or unit will fall through world
+            //base.DisableInteraction();
+        }
+
         public static bool IsInLayerMask(int layer, LayerMask layermask) {
             return layermask == (layermask | (1 << layer));
         }
@@ -1264,6 +1274,7 @@ namespace AnyRPG {
             OnResourceAmountChanged(powerResource, maxAmount, currentAmount);
         }
         public void NotifyOnStatusEffectAdd(StatusEffectNode statusEffectNode) {
+            //Debug.Log(gameObject.name + ".NotifyOnStatusEffectAdd()");
             OnStatusEffectAdd(statusEffectNode);
         }
         public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbility baseAbility, float castPercent) {

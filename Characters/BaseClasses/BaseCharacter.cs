@@ -44,6 +44,8 @@ namespace AnyRPG {
         private CharacterStats characterStats = null;
         private CharacterCurrencyManager characterCurrencyManager = null;
         private CharacterRecipeManager characterRecipeManager = null;
+
+        // logic for processing capabilities lives here
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
         // components
@@ -246,13 +248,18 @@ namespace AnyRPG {
         public void SetUnitProfile (UnitProfile unitProfile) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
+            // get a snapshot of the current state
+            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
+
+            // set the new unit profile
             this.unitProfile = unitProfile;
 
+            // get a snapshot of the new state
+            CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+
+            ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+
             SetUnitProfileProperties();
-
-            capabilityConsumerProcessor.UpdateCapabilityProviderList();
-
-            characterEquipmentManager.LoadDefaultEquipment();
         }
 
         /// <summary>
@@ -287,6 +294,12 @@ namespace AnyRPG {
                 if (unitProfile.Title != null && unitProfile.Title != string.Empty) {
                     SetCharacterTitle(unitProfile.Title);
                 }
+                if (unitProfile.UnitType != null) {
+                    SetUnitType(unitProfile.UnitType, true, false);
+                }
+                if (unitProfile.CharacterRace != null) {
+                    SetCharacterRace(unitProfile.CharacterRace, true, false);
+                }
                 if (unitProfile.CharacterClass != null) {
                     SetCharacterClass(unitProfile.CharacterClass, true, false);
                 }
@@ -296,14 +309,15 @@ namespace AnyRPG {
                 if (unitProfile.Faction != null) {
                     SetCharacterFaction(unitProfile.Faction);
                 }
-                if (unitProfile.UnitType != null) {
-                    SetUnitType(unitProfile.UnitType, true, false);
-                }
                 if (unitProfile.DefaultToughness != null) {
                     SetUnitToughness(unitProfile.DefaultToughness);
                 }
                 spawnDead = unitProfile.SpawnDead;
             }
+
+            capabilityConsumerProcessor.UpdateCapabilityProviderList();
+
+            characterEquipmentManager.LoadDefaultEquipment();
 
             UpdateStatProviderList();
 

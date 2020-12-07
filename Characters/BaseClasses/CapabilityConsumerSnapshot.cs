@@ -100,9 +100,11 @@ namespace AnyRPG {
         }
 
         public List<BaseAbility> GetAbilityList() {
+            //Debug.Log("CapabilityConsumerSnapshot.GetAbilityList()");
             List<BaseAbility> returnList = new List<BaseAbility>();
 
             foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
+                //Debug.Log("CapabilityConsumerSnapshot.GetAbilityList() process capabilityProvder: " + capabilityProvider.DisplayName);
                 if (capabilityProvider != null) {
                     returnList.AddRange(capabilityProvider.GetFilteredCapabilities(this).AbilityList);
                 }

@@ -547,7 +547,7 @@ namespace AnyRPG {
                         }
                     }
                     if (rebuildUMA) {
-                        Debug.Log("EquipmentManager.Unequip(): BuildCharacter()");
+                        //Debug.Log("EquipmentManager.Unequip(): BuildCharacter()");
                         baseCharacter.UnitController.DynamicCharacterAvatar.BuildCharacter();
                     }
                 }

@@ -685,7 +685,7 @@ namespace AnyRPG {
         }
 
         public StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.MyDisplayName + ", " + sourceCharacter.AbilityManager.Name + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.DisplayName + ", " + sourceCharacter.AbilityManager.Name + ")");
             if (IsAlive == false && statusEffect.RequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
@@ -769,7 +769,7 @@ namespace AnyRPG {
         }
 
         private void HandleAddNotifications(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.MyName + "): NOTIFYING STATUS EFFECT UPDATE");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.DisplayName + "): NOTIFYING STATUS EFFECT UPDATE");
             OnStatusEffectAdd(statusEffectNode);
             HandleChangedNotifications(statusEffectNode.StatusEffect);
             if (baseCharacter.UnitController != null) {

@@ -304,15 +304,17 @@ namespace AnyRPG {
         }
 
         private void DisableCoolDownIcon() {
-            if (coolDownIcon.isActiveAndEnabled != false) {
+            // testing
+            // this was preventing cooldown icons from being reset on logout
+            //if (coolDownIcon.isActiveAndEnabled != false) {
                 coolDownIcon.sprite = null;
                 coolDownIcon.color = new Color32(0, 0, 0, 0);
                 coolDownIcon.enabled = false;
-            }
+            //}
         }
 
         /// <summary>
-        /// UPdates the visual representation of the actionbutton
+        /// Updates the visual representation of the actionbutton
         /// </summary>
         public void UpdateVisual(bool removeStaleActions = false) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.MyName));
@@ -359,6 +361,7 @@ namespace AnyRPG {
             } else if (Useable is BaseAbility) {
                 UIManager.MyInstance.ClearStackCount(this);
 
+
                 //TESTING MOVING TO BEFORE BASEABILTY AND WEAPONAFFINITY CHECKS
                 // auto-attack buttons are special and display the current weapon of the character
                 if ((Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
@@ -372,6 +375,15 @@ namespace AnyRPG {
                         }
                     }
                 }
+
+                // set cooldown icon on abilities that don't have enough resources to cast
+                if ((Useable as BaseAbility).PowerResource != null
+                    && ((Useable as BaseAbility).GetResourceCost(PlayerManager.MyInstance.ActiveCharacter) >= PlayerManager.MyInstance.ActiveCharacter.CharacterStats.GetPowerResourceAmount((Useable as BaseAbility).PowerResource))) {
+                    //Debug.Log("ActionButton.UpdateVisual(): not enough resources to cast this ability.  enabling full cooldown");
+                    EnableFullCoolDownIcon();
+                    return;
+                }
+
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
 
                     /*

@@ -62,6 +62,7 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerConnectionDespawn() {
+            //Debug.Log("ActionBarManager.HandlePlayerConnectionDespawn()");
             ClearActionBars(true);
         }
 
@@ -236,7 +237,7 @@ namespace AnyRPG {
         }
 
         public void ClearActionBars(bool clearSavedUseables = false) {
-            //Debug.Log("ActionBarManager.AddNewAbility()");
+            //Debug.Log("ActionBarManager.ClearActionBars()");
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 actionBarController.ClearActionBar(clearSavedUseables);

@@ -296,7 +296,8 @@ namespace AnyRPG {
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> AnimationClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
+        public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
+        public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : null); }
         public int MaxRange { get => maxRange; set => maxRange = value; }
         public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
@@ -319,6 +320,8 @@ namespace AnyRPG {
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
         public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
+        public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
+        public bool AutoSelfCast { get => autoSelfCast; set => autoSelfCast = value; }
 
         public virtual List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
             return holdableObjectList;
@@ -336,7 +339,7 @@ namespace AnyRPG {
             if (useUnitCastAnimations == true) {
                 animationClips = sourceCharacter.AbilityManager.GetUnitCastAnimations();
             } else {
-                animationClips = AnimationClips;
+                animationClips = CastClips;
             }
             return animationClips;
         }
@@ -451,8 +454,7 @@ namespace AnyRPG {
         public virtual bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             if (!CanCast(sourceCharacter)) {
-                //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ", " + groundTarget + "): CAN'T CAST!!!");
-                //CombatLogUI.MyInstance.WriteCombatMessage("BaseAbility.Cast(): You do not have the right weapon to cast: " + MyName);
+                //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + " CAN'T CAST!!!");
                 return false;
             }
 
@@ -504,120 +506,12 @@ namespace AnyRPG {
                 return abilityEffects[0].CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
             }
 
-            // create target booleans
-            bool targetIsSelf = false;
-            CharacterUnit targetCharacterUnit = null;
-
-            // special case for ground targeted spells cast by AI since AI currently has to cast a ground targeted spell on its current target
-            if (requiresGroundTarget == true
-                && maxRange > 0
-                && target != null
-                && ((sourceCharacter as BaseCharacter) is BaseCharacter)
-                && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > maxRange) {
-                return false;
-            }
-
-            // if this ability requires no target, then we can always cast it
-            if (requiresTarget == false) {
-                return true;
-            }
-
-            // if we got here, we require a target, therefore if we don't have one, we can't cast
-            if (target == null) {
-                if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires a target!");
-                }
-                return false;
-            }
-
-            // determine if we are casting on ourself
-            if (target == sourceCharacter.AbilityManager.UnitGameObject) {
-                targetIsSelf = true;
-            }
-
-            // first check if the target is ourself
-            if (targetIsSelf == true) {
-                if (canCastOnSelf == false) {
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " cannot be cast on self!");
-                    }
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            // if we made it this far, the target is not ourself
-
-            // the target is another unit, but this ability cannot be cast on others
-            if (canCastOnOthers == false) {
-                if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " cannot be cast on others");
-                }
-                return false;
-            }
-
-            targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-            if (targetCharacterUnit != null) {
-
-                // liveness checks
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && requiresLiveTarget == true) {
-                    //Debug.Log("This ability requires a live target");
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires a live target!");
-                    }
-                    return false;
-                }
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && requireDeadTarget == true) {
-                    //Debug.Log("This ability requires a dead target");
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires a dead target!");
-                    }
-                    return false;
-                }
-
-                if (!sourceCharacter.AbilityManager.PerformFactionCheck(this, targetCharacterUnit, targetIsSelf)) {
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + ". faction check failed!");
-                    }
-                    return false;
-                }
-
-            } else {
-                if (requiresLiveTarget == true || requireDeadTarget == true) {
-                    // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires an animate target");
-                    }
-                    return false;
-                }
-                if (canCastOnFriendly == true || CanCastOnNeutral == true || canCastOnEnemy == true) {
-                    // something that is not a character unit cannot satisfy the relationship conditions because it is inanimate
-                    if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(resourceName + " requires an animate target");
-                    }
-                    return false;
-                }
-            }
-
-            // if we made it this far we passed liveness and relationship checks.
-            // since the target is not ourself, and it is valid, we should perform a range check
-
-            if (!sourceCharacter.AbilityManager.IsTargetInAbilityRange(this, target, abilityEffectContext)) {
-                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning false: NOT IN RANGE");
-                if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". target is not in range");
-                }
-                return false;
-            }
-
-            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning true");
-            return true;
+            return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated);
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
         public virtual bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ")");
+            //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             if (abilityEffects.Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
                 // this is fine for channeled abilities
@@ -626,6 +520,7 @@ namespace AnyRPG {
             // perform hit / miss check only if baseability requires target and return false if miss
             if (requiresTarget) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
+                    //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(): miss");
                     return false;
                 }
             }
@@ -642,7 +537,7 @@ namespace AnyRPG {
                 if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
-                    //Debug.Log(MyName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + ", " + groundTarget + ") COULD NOT FIND " + abilityEffect.MyName);
+                    //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ") COULD NOT FIND " + abilityEffect.DisplayName);
                     //return;
                 }
             }
@@ -670,8 +565,8 @@ namespace AnyRPG {
             if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated) == false) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
                 if (canCastOnSelf && autoSelfCast) {
-                    target = (sourceCharacter as MonoBehaviour).GetComponent<Interactable>();
-                    //Debug.Log(MyName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
+                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                    //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;
                 } else {
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning null");
@@ -764,7 +659,7 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
-            abilityEffects = new List<AbilityEffect>();
+
             if (AbilityEffectNames != null) {
                 foreach (string abilityEffectName in AbilityEffectNames) {
                     AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);

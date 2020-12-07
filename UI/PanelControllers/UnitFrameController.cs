@@ -195,7 +195,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(BaseNamePlateController namePlateController) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + target.name + ")");
+            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget()");
 
             // prevent old target from still sending us updates while we are focused on a new target
             ClearTarget(false);
@@ -209,7 +209,7 @@ namespace AnyRPG {
             this.namePlateController = namePlateController;
 
             CalculateResourceColors();
-            if (namePlateController.HasHealth()) {
+            if (namePlateController.Interactable.CharacterUnit != null) {
                 castBarController.SetTarget(namePlateController as UnitNamePlateController);
                 statusEffectPanelController.SetTarget((namePlateController as UnitNamePlateController).UnitController);
             }
@@ -262,7 +262,7 @@ namespace AnyRPG {
         public void ClearTarget(bool closeWindowOnClear = true) {
             //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
 
-            if (namePlateController != null && namePlateController.HasHealth()) {
+            if (namePlateController != null && namePlateController.Interactable.CharacterUnit != null) {
                 (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                 (namePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;
                 (namePlateController as UnitNamePlateController).UnitController.OnClassChange -= HandleClassChange;
@@ -312,12 +312,14 @@ namespace AnyRPG {
                 }
 
             // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
-            (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
-            (namePlateController as UnitNamePlateController).UnitController.OnNameChange += HandleNameChange;
-            (namePlateController as UnitNamePlateController).UnitController.OnLevelChanged += HandleLevelChanged;
-            (namePlateController as UnitNamePlateController).UnitController.OnReviveComplete += HandleReviveComplete;
-            (namePlateController as UnitNamePlateController).UnitController.OnClassChange += HandleClassChange;
-            (namePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
+            if ((namePlateController as UnitNamePlateController) is UnitNamePlateController) {
+                (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
+                (namePlateController as UnitNamePlateController).UnitController.OnNameChange += HandleNameChange;
+                (namePlateController as UnitNamePlateController).UnitController.OnLevelChanged += HandleLevelChanged;
+                (namePlateController as UnitNamePlateController).UnitController.OnReviveComplete += HandleReviveComplete;
+                (namePlateController as UnitNamePlateController).UnitController.OnClassChange += HandleClassChange;
+                (namePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
+            }
 
             HandleLevelChanged(namePlateController.Level);
         }
