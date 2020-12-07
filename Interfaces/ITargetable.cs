@@ -26,7 +26,7 @@ namespace AnyRPG {
         LineOfSightSourceLocation LineOfSightSourceLocation { get; }
         TargetRangeSourceLocation TargetRangeSourceLocation { get; }
         */
-        TargetProps TargetOptions { get; }
+        TargetProps GetTargetOptions(IAbilityCaster abilityCaster);
     }
 
 }

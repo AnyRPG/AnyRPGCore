@@ -686,11 +686,11 @@ namespace AnyRPG {
 
         public StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.DisplayName + ", " + sourceCharacter.AbilityManager.Name + ")");
-            if (IsAlive == false && statusEffect.TargetOptions.RequiresLiveTarget == true) {
+            if (IsAlive == false && statusEffect.GetTargetOptions(sourceCharacter).RequiresLiveTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
-            if (IsAlive == true && statusEffect.TargetOptions.RequireDeadTarget == true) {
+            if (IsAlive == true && statusEffect.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
                 return null;
             }
@@ -1128,7 +1128,8 @@ namespace AnyRPG {
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
-                if (statusEffectNode.StatusEffect.TargetOptions.RequireDeadTarget == true) {
+                // TODO : pass in the original source caster of the status effect for more accurate character based check
+                if (statusEffectNode.StatusEffect.GetTargetOptions(baseCharacter).RequireDeadTarget == true) {
                     //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
                     statusEffectNodes.Add(statusEffectNode);
                 }

@@ -29,8 +29,11 @@ namespace AnyRPG {
         // components
         protected BaseCharacter baseCharacter;
 
+        // list of on hit effects to cast on weapon hit if the weapon hit is an auto attack
+        private List<AbilityEffect> defaultHitEffects = new List<AbilityEffect>();
+
         // list of on hit effects to cast on weapon hit from currently equipped weapons
-        protected List<AbilityEffect> onHitEffects = null;
+        protected List<AbilityEffect> onHitEffects = new List<AbilityEffect>();
 
         protected AggroTable aggroTable = null;
 
@@ -64,6 +67,7 @@ namespace AnyRPG {
         public BaseCharacter SwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
         public List<AbilityEffect> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
+        public List<AbilityEffect> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
 
         public CharacterCombat(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
@@ -358,7 +362,7 @@ namespace AnyRPG {
 
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
-                    if (baseAbility.TargetOptions.CanCastOnEnemy &&
+                    if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy &&
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
@@ -385,7 +389,7 @@ namespace AnyRPG {
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                    if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == true) {
+                    if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == true) {
                         //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
                         //if (baseAbility.MyCanCastOnEnemy) {
                         return baseAbility;
@@ -420,7 +424,9 @@ namespace AnyRPG {
 
                 foreach (BaseAbility baseAbility in baseAbilityList) {
                     //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                    if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == false && baseAbility.TargetOptions.MaxRange > 0f) {
+                    if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy
+                        && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == false
+                        && baseAbility.GetTargetOptions(baseCharacter).MaxRange > 0f) {
                         float returnedMaxRange = baseAbility.GetLOSMaxRange(baseCharacter, baseCharacter.UnitController.Target);
                         if (returnValue == 0f || returnedMaxRange < returnValue) {
                             //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
@@ -509,7 +515,7 @@ namespace AnyRPG {
                 return true;
             } else {
                 if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null && baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.TargetOptions.RequiresTarget == false) {
+                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequiresTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, BaseCharacter.UnitController.Target);
                         return true;
                     }
@@ -578,7 +584,7 @@ namespace AnyRPG {
                     damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
-                if (abilityEffect.TargetOptions.UseMeleeRange) {
+                if (abilityEffect.GetTargetOptions(sourceCharacter).UseMeleeRange) {
                     if (!sourceCharacter.AbilityManager.IsTargetInMeleeRange(baseCharacter.UnitController)) {
                         canPerformAbility = false;
                     }
@@ -636,7 +642,10 @@ namespace AnyRPG {
 
             if (oldItem != null && oldItem is Weapon) {
                 if ((oldItem as Weapon).OnHitEffectList != null && (oldItem as Weapon).OnHitEffectList.Count > 0) {
-                    onHitEffects = null;
+                    onHitEffects.Clear();
+                }
+                if ((oldItem as Weapon).DefaultHitEffectList != null && (oldItem as Weapon).DefaultHitEffectList.Count > 0) {
+                    defaultHitEffects.Clear();
                 }
                 EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(oldItem);
                 if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
@@ -646,13 +655,18 @@ namespace AnyRPG {
 
             if (newItem != null) {
                 if (newItem is Weapon) {
-                    onHitEffects = new List<AbilityEffect>();
+                    onHitEffects.Clear();
+                    defaultHitEffects.Clear();
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
                     if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
                         //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
                         onHitEffects = (newItem as Weapon).OnHitEffectList;
+                    }
+                    if ((newItem as Weapon).DefaultHitEffectList != null && (newItem as Weapon).DefaultHitEffectList.Count > 0) {
+                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
+                        defaultHitEffects = (newItem as Weapon).DefaultHitEffectList;
                     }
                     EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {

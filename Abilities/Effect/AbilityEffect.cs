@@ -133,7 +133,9 @@ namespace AnyRPG {
         //public bool RequiresGroundTarget { get => false; }
         //public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
         //public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
-        public TargetProps TargetOptions { get => targetOptions; }
+        public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
+            return targetOptions;
+        }
 
         //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 

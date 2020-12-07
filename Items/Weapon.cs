@@ -110,7 +110,7 @@ namespace AnyRPG {
         public bool UseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
         public List<AbilityEffect> DefaultHitEffectList {
             get {
-                if (defaultHitEffectList != null) {
+                if (defaultHitEffectList != null && defaultHitEffectList.Count > 0) {
                     return defaultHitEffectList;
                 }
                 if (weaponSkill != null) {
@@ -121,7 +121,7 @@ namespace AnyRPG {
         }
         public List<AbilityEffect> OnHitEffectList {
             get {
-                if (onHitEffectList != null) {
+                if (onHitEffectList != null && onHitEffectList.Count > 0) {
                     return onHitEffectList;
                 }
                 if (weaponSkill != null) {

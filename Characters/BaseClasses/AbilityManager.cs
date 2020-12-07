@@ -57,6 +57,10 @@ namespace AnyRPG {
             this.abilityCaster = abilityCaster;
         }
 
+        public virtual List<AbilityEffect> GetDefaultHitEffects() {
+            return new List<AbilityEffect>();
+        }
+
         public virtual List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {
             return null;
         }
@@ -272,7 +276,7 @@ namespace AnyRPG {
         public virtual bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
-
+        /*
         public virtual bool IsTargetInAbilityRange(BaseAbility baseAbility, Interactable target, AbilityEffectContext abilityEffectContext = null, bool notify = false) {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
@@ -282,6 +286,7 @@ namespace AnyRPG {
             // environmental effects only target things inside their collider, so everything is always in range
             return true;
         }
+        */
 
         public virtual bool PerformWeaponAffinityCheck(BaseAbility baseAbility, bool playerInitiated = false) {
             return true;

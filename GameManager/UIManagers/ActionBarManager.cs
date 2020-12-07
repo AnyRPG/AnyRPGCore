@@ -142,7 +142,7 @@ namespace AnyRPG {
                         //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, target.transform.position);
                         inRange = false;
                         if (finalTarget != null) {
-                            inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInAbilityRange(baseAbility, finalTarget);
+                            inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
                         }
                         /*
                         if (baseAbility.UseMeleeRange == true) {

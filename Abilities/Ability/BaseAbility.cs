@@ -263,7 +263,7 @@ namespace AnyRPG {
 
         protected List<AbilityEffect> channeledAbilityEffects = new List<AbilityEffect>();
 
-        protected List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
+        private List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         public AnimationClip CastingAnimationClip {
             get => (animationProfile != null && animationProfile.AnimationProps.AttackClips != null && animationProfile.AnimationProps.AttackClips.Count > 0 ? animationProfile.AnimationProps.AttackClips[0] : null);
@@ -308,7 +308,13 @@ namespace AnyRPG {
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> AbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
-        public List<AbilityEffect> AbilityEffects { get => abilityEffects; set => abilityEffects = value; }
+        /*
+        public List<AbilityEffect> AbilityEffects {
+            get {
+                 return abilityEffects;
+            }
+        }
+        */
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         //public float GroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
@@ -327,13 +333,15 @@ namespace AnyRPG {
         //public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
         //public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
         //public bool AutoSelfCast { get => autoSelfCast; set => autoSelfCast = value; }
-        public TargetProps TargetOptions {
-            get {
-                if (AbilityEffects != null && AbilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
-                    return AbilityEffects[0].TargetOptions;
-                }
-                return targetOptions;
+        public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
+            if (useAbilityEffectTargetting == true && GetAbilityEffects(abilityCaster).Count > 0) {
+                return GetAbilityEffects(abilityCaster)[0].GetTargetOptions(abilityCaster);
             }
+            return targetOptions;
+        }
+
+        public virtual List<AbilityEffect> GetAbilityEffects(IAbilityCaster abilityCaster) {
+            return abilityEffects;
         }
 
         public virtual List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
@@ -383,7 +391,7 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            string abilityRange = (TargetOptions.UseMeleeRange == true ? "melee" : TargetOptions.MaxRange + " meters");
+            string abilityRange = (GetTargetOptions(PlayerManager.MyInstance.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(PlayerManager.MyInstance.MyCharacter).MaxRange + " meters");
 
             string costString = string.Empty;
             if (powerResource != null) {
@@ -427,7 +435,7 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source.AbilityManager.PerformLOSCheck(target, this)) {
                 //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + MaxRange);
-                return TargetOptions.MaxRange;
+                return GetTargetOptions(source).MaxRange;
             }
             //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + source.GetMeleeRange());
             return source.AbilityManager.GetMeleeRange();
@@ -515,23 +523,25 @@ namespace AnyRPG {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
             }
 
-            if (abilityEffects != null && abilityEffects.Count > 0 && useAbilityEffectTargetting == true) {
-                return abilityEffects[0].CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
+            if (useAbilityEffectTargetting == true
+                && GetAbilityEffects(sourceCharacter).Count > 0) {
+                return TargetProps.CanUseOn(GetAbilityEffects(sourceCharacter)[0], target, sourceCharacter, abilityEffectContext, playerInitiated);
             }
 
             return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated);
+
         }
 
         //public virtual void PerformAbilityEffect(BaseAbility ability, GameObject source, GameObject target) {
         public virtual bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
-            if (abilityEffects.Count == 0) {
+            if (GetAbilityEffects(source).Count == 0) {
                 //Debug.Log(resourceName + ".BaseAbility.PerformAbilityEffects(" + source.name + ", " + (target ? target.name : "null") + "): THERE ARE NO EFFECTS ATTACHED TO THIS ABILITY!");
                 // this is fine for channeled abilities
             }
 
             // perform hit / miss check only if baseability requires target and return false if miss
-            if (TargetOptions.RequiresTarget) {
+            if (GetTargetOptions(source).RequiresTarget) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
                     //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(): miss");
                     return false;
@@ -541,7 +551,7 @@ namespace AnyRPG {
             // generate power resource
             source.AbilityManager.GeneratePower(this);
 
-            foreach (AbilityEffect abilityEffect in abilityEffects) {
+            foreach (AbilityEffect abilityEffect in GetAbilityEffects(source)) {
                 if (abilityEffect == null) {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
@@ -577,7 +587,7 @@ namespace AnyRPG {
             // perform ability dependent checks
             if (CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated) == false) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
-                if (TargetOptions.CanCastOnSelf && TargetOptions.AutoSelfCast) {
+                if (GetTargetOptions(sourceCharacter).CanCastOnSelf && GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
                     //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
                     return target;

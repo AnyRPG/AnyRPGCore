@@ -152,7 +152,7 @@ namespace AnyRPG {
                         spawnLocation = originalTarget.transform.position;
                         prefabParent = originalTarget.transform;
                     }
-                    if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || TargetOptions.RequiresTarget == false)) {
+                    if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || GetTargetOptions(source).RequiresTarget == false)) {
                         //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
                         //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);

@@ -80,22 +80,22 @@ namespace AnyRPG {
             CharacterUnit targetCharacterUnit = null;
 
             // special case for ground targeted spells cast by AI since AI currently has to cast a ground targeted spell on its current target
-            if (targetable.TargetOptions.RequiresGroundTarget == true
-                && targetable.TargetOptions.MaxRange > 0
+            if (targetable.GetTargetOptions(sourceCharacter).RequiresGroundTarget == true
+                && targetable.GetTargetOptions(sourceCharacter).MaxRange > 0
                 && target != null
                 && ((sourceCharacter as BaseCharacter) is BaseCharacter)
-                && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.TargetOptions.MaxRange) {
+                && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
                 return false;
             }
 
             // if this ability requires no target, then we can always cast it
-            if (targetable.TargetOptions.RequiresTarget == false) {
+            if (targetable.GetTargetOptions(sourceCharacter).RequiresTarget == false) {
                 return true;
             }
 
             // if we got here, we require a target, therefore if we don't have one, we can't cast
             if (target == null) {
-                if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a target!");
                 }
                 return false;
@@ -108,7 +108,7 @@ namespace AnyRPG {
 
             // first check if the target is ourself
             if (targetIsSelf == true) {
-                if (targetable.TargetOptions.CanCastOnSelf == false) {
+                if (targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf == false) {
                     if (playerInitiated) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on self!");
                     }
@@ -121,8 +121,8 @@ namespace AnyRPG {
             // if we made it this far, the target is not ourself
 
             // the target is another unit, but this ability cannot be cast on others
-            if (targetable.TargetOptions.CanCastOnOthers == false) {
-                if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+            if (targetable.GetTargetOptions(sourceCharacter).CanCastOnOthers == false) {
+                if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on others");
                 }
                 return false;
@@ -132,39 +132,39 @@ namespace AnyRPG {
             if (targetCharacterUnit != null) {
 
                 // liveness checks
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.TargetOptions.RequiresLiveTarget == true) {
+                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequiresLiveTarget == true) {
                     //Debug.Log("This ability requires a live target");
-                    if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a live target!");
                     }
                     return false;
                 }
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && targetable.TargetOptions.RequireDeadTarget == true) {
+                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                     //Debug.Log("This ability requires a dead target");
-                    if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a dead target!");
                     }
                     return false;
                 }
 
                 if (!sourceCharacter.AbilityManager.PerformFactionCheck(targetable, targetCharacterUnit, targetIsSelf)) {
-                    if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Faction reputation requirement not met!");
                     }
                     return false;
                 }
 
             } else {
-                if (targetable.TargetOptions.RequiresLiveTarget == true || targetable.TargetOptions.RequireDeadTarget == true) {
+                if (targetable.GetTargetOptions(sourceCharacter).RequiresLiveTarget == true || targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                     // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
-                    if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
                     }
                     return false;
                 }
-                if (targetable.TargetOptions.CanCastOnFriendly == true || targetable.TargetOptions.CanCastOnNeutral == true || targetable.TargetOptions.CanCastOnEnemy == true) {
+                if (targetable.GetTargetOptions(sourceCharacter).CanCastOnFriendly == true || targetable.GetTargetOptions(sourceCharacter).CanCastOnNeutral == true || targetable.GetTargetOptions(sourceCharacter).CanCastOnEnemy == true) {
                     // something that is not a character unit cannot satisfy the relationship conditions because it is inanimate
-                    if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
                     }
                     return false;
@@ -176,7 +176,7 @@ namespace AnyRPG {
 
             if (!sourceCharacter.AbilityManager.IsTargetInRange(target, targetable, abilityEffectContext)) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning false: NOT IN RANGE");
-                if (playerInitiated && !targetable.TargetOptions.CanCastOnSelf && !targetable.TargetOptions.AutoSelfCast) {
+                if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + ". target is not in range!");
                 }
                 return false;

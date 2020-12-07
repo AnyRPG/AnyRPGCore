@@ -152,7 +152,8 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
 
                 // cancel loot sparkle here because despawn takes a while
-                List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.LootSparkleAbility.AbilityEffects;
+                // TODO : this will always be the same no matter who calls it.  Better to just have the effects directly in the system configuration manager
+                List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.LootSparkleAbility.GetAbilityEffects(PlayerManager.MyInstance.MyCharacter);
                 foreach (AbilityEffect abilityEffect in sparkleEffects) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
                     if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.DisplayName))) {

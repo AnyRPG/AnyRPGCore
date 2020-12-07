@@ -34,7 +34,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.AbilityEffects[0].DisplayName))
+                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
                                 && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
                                 //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
@@ -88,7 +88,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (baseAbility.TargetOptions.CanCastOnEnemy && baseAbility.TargetOptions.UseMeleeRange == true) {
+                            if (baseAbility.GetTargetOptions(sourceCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(sourceCharacter).UseMeleeRange == true) {
                                 //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 return baseAbility;
                             }
