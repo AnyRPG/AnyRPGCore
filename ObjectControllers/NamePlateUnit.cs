@@ -89,10 +89,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
-                    if (GetCurrentInteractables()[0].NamePlateImage != null) {
+                    if (GetCurrentInteractables()[0].InteractableOptionProps.NamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].NamePlateImage;
+                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].InteractableOptionProps.NamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }

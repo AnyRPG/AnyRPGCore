@@ -9,28 +9,23 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private VendorProps interactableOptionProps = null;
+        public VendorProps Props { get => interactableOptionProps as VendorProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
-
-        public VendorComponent(Interactable interactable, VendorProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            interactionPanelTitle = "Purchase Items";
+        public VendorComponent(Interactable interactable, VendorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            interactableOptionProps.InteractionPanelTitle = "Purchase Items";
         }
 
+        /*
         protected override void AddUnitProfileSettings() {
             if (unitProfile != null) {
                 interactableOptionProps = unitProfile.VendorProps;
             }
             HandlePrerequisiteUpdates();
         }
-
+        */
 
         public void InitWindow(ICloseableWindowContents vendorUI) {
-            (vendorUI as VendorUI).PopulateDropDownList(vendorCollections);
+            (vendorUI as VendorUI).PopulateDropDownList(Props.VendorCollections);
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -60,24 +55,6 @@ namespace AnyRPG {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
         }
-
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-
-            if (interactableOptionProps.VendorCollectionNames != null && interactableOptionProps.VendorCollectionNames.Count > 0) {
-                foreach (string vendorCollectionName in interactableOptionProps.VendorCollectionNames) {
-                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
-                    if (tmpVendorCollection != null) {
-                        vendorCollections.Add(tmpVendorCollection);
-                    } else {
-                        Debug.LogError("Vendor.SetupScriptableObjects(): Could not find vendor collection : " + vendorCollectionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-        }
-
 
     }
 

@@ -17,10 +17,26 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
-        public string AbilityName { get => abilityName; set => abilityName = value; }
+        private BaseAbility ability = null;
+
+        public BaseAbility BaseAbility { get => ability; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new TeleportComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (abilityName != null && abilityName != string.Empty) {
+                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                if (baseAbility != null) {
+                    ability = baseAbility;
+                } else {
+                    Debug.LogError("TeleportComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing.");
+                }
+            }
+
         }
 
     }

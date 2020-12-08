@@ -10,42 +10,29 @@ namespace AnyRPG {
 
         public abstract event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler;
 
-        [Header("Interaction Panel")]
-
-        [Tooltip("The text to display for the clickable option in the interaction panel if this object has multiple interaction options.")]
-        [SerializeField]
-        protected string interactionPanelTitle;
-
-        [Tooltip("The image to display beside the text for the clickable option in the interaction panel if this object has multiple interaction options.")]
-        [SerializeField]
-        protected Sprite interactionPanelImage;
-
-        [Header("Nameplate")]
-
-        [Tooltip("If there is no system option set for the nameplate image of this interactable option type, this will be used instead.")]
-        [SerializeField]
-        protected Sprite namePlateImage;
-
-        [Header("Interaction")]
-
-        [Tooltip("These game conditions must be satisfied to be able to interact with this option.")]
-        [SerializeField]
-        protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
-
         protected Interactable interactable = null;
+        protected InteractableOptionProps interactableOptionProps = null;
 
-        protected UnitProfile unitProfile = null;
-
-        protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
 
-        public virtual string InteractionPanelTitle { get => interactionPanelTitle; set => interactionPanelTitle = value; }
         public Interactable Interactable { get => interactable; set => interactable = value; }
+        public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
+        public virtual string DisplayName {
+            get {
+                if (interactableOptionProps.InteractionPanelTitle != null && interactableOptionProps.InteractionPanelTitle != string.Empty) {
+                    return interactableOptionProps.InteractionPanelTitle;
+                }
+                if (interactable != null) {
+                    return interactable.DisplayName;
+                }
+                return "interactable is null!";
+            }
+        }
 
         public virtual bool MyPrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".InteractableOption.MyPrerequisitesMet");
-                foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                foreach (PrerequisiteConditions prerequisiteCondition in interactableOptionProps.PrerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
                     }
@@ -55,29 +42,30 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Sprite Icon { get => interactionPanelImage; }
-        public virtual Sprite NamePlateImage { get => namePlateImage; }
-
-        public string DisplayName { get => (InteractionPanelTitle != null && InteractionPanelTitle != string.Empty ? InteractionPanelTitle : (interactable != null ? interactable.DisplayName : "interactable is null!")); }
-
-        public InteractableOptionComponent(Interactable interactable) {
+        public InteractableOptionComponent(Interactable interactable, InteractableOptionProps interactableOptionProps) {
             this.interactable = interactable;
-        }
-
-        public virtual void Init() {
+            this.interactableOptionProps = interactableOptionProps;
             SetupScriptableObjects();
-            AddUnitProfileSettings();
             CreateEventSubscriptions();
         }
+
+        /*
+        public virtual void Init() {
+            //AddUnitProfileSettings();
+            CreateEventSubscriptions();
+        }
+        */
 
         public virtual void Cleanup() {
             CleanupEventSubscriptions();
             CleanupScriptableObjects();
         }
 
+        /*
         protected virtual void AddUnitProfileSettings() {
             // do nothing here
         }
+        */
 
         public virtual void ProcessStatusIndicatorSourceInit() {
         }
@@ -131,7 +119,7 @@ namespace AnyRPG {
         }
 
         public virtual bool HasMiniMapIcon() {
-            return (NamePlateImage != null);
+            return (interactableOptionProps.NamePlateImage != null);
         }
 
         public virtual bool SetMiniMapText(TextMeshProUGUI text) {
@@ -141,7 +129,7 @@ namespace AnyRPG {
         public virtual void SetMiniMapIcon(Image icon) {
             //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
-                icon.sprite = NamePlateImage;
+                icon.sprite = interactableOptionProps.NamePlateImage;
                 icon.color = Color.white;
             } else {
                 icon.sprite = null;
@@ -160,13 +148,14 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
-            return string.Format("{0}", DisplayName);
+            return string.Format("{0}", interactableOptionProps.InteractionPanelTitle);
         }
+        
 
         public virtual void HandlePlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
-            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (interactableOptionProps.PrerequisiteConditions != null && interactableOptionProps.PrerequisiteConditions.Count > 0) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
@@ -205,8 +194,8 @@ namespace AnyRPG {
 
         public virtual void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".InteractableOption.SetupScriptableObjects()");
-            if (prerequisiteConditions != null) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (interactableOptionProps.PrerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.SetupScriptableObjects(this);
                     }
@@ -215,8 +204,8 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupScriptableObjects() {
-            if (prerequisiteConditions != null) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (interactableOptionProps.PrerequisiteConditions != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.CleanupScriptableObjects();
                     }

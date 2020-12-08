@@ -13,11 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         private ClassChangeProps interactableOptionProps = new ClassChangeProps();
 
-        [Tooltip("the class that this interactable option offers")]
-        [SerializeField]
-        private string className = string.Empty;
-
-        public ClassChangeProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

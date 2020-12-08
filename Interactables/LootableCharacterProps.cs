@@ -21,13 +21,28 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> lootTableNames = new List<string>();
 
+        private List<LootTable> lootTables = new List<LootTable>();
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyLootableCharacterNamePlateImage : base.NamePlateImage); }
-        public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
+        public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new LootableCharacterComponent(interactable, this);
+        }
+
+
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            foreach (string lootTableName in lootTableNames) {
+                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                if (lootTable != null) {
+                    lootTables.Add(lootTable);
+                }
+            }
         }
     }
 

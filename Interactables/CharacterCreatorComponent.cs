@@ -10,13 +10,9 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private CharacterCreatorProps interactableOptionProps = new CharacterCreatorProps();
+        public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+        public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

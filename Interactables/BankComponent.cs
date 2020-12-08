@@ -8,22 +8,10 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private BankProps interactableOptionProps = null;
+        public BankProps Props { get => interactableOptionProps as BankProps; }
 
-        public override Sprite Icon {
-            get {
-                return interactableOptionProps.Icon;
-            } 
-        }
-        public override Sprite NamePlateImage {
-            get {
-                return interactableOptionProps.NamePlateImage;
-            }
-        }
-
-        public BankComponent(Interactable interactable, BankProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            interactionPanelTitle = "Bank";
+        public BankComponent(Interactable interactable, BankProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            interactableOptionProps.InteractionPanelTitle = "Bank";
         }
 
         public override bool Interact(CharacterUnit source) {

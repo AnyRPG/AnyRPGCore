@@ -10,17 +10,11 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private SpecializationChangeProps interactableOptionProps = null;
-
-        private ClassSpecialization classSpecialization;
+        public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public ClassSpecialization MyClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-
-        public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            SetupScriptableObjects();
+        public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -57,7 +51,7 @@ namespace AnyRPG {
             }
             base.Interact(source);
 
-            (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).Setup(MyClassSpecialization);
+            (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
@@ -102,21 +96,6 @@ namespace AnyRPG {
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
-        }
-
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if (classSpecialization == null && interactableOptionProps.SpecializationName != null && interactableOptionProps.SpecializationName != string.Empty) {
-                ClassSpecialization tmpClassSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(interactableOptionProps.SpecializationName);
-                if (tmpClassSpecialization != null) {
-                    classSpecialization = tmpClassSpecialization;
-                } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find specialization : " + interactableOptionProps.SpecializationName + " while inititalizing.  CHECK INSPECTOR");
-                }
-
-            }
-
         }
 
     }

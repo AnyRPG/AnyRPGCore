@@ -14,12 +14,30 @@ namespace AnyRPG {
         [SerializeField]
         private string className = string.Empty;
 
+        private CharacterClass characterClass;
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyClassChangeNamePlateImage : base.NamePlateImage); }
-        public string ClassName { get => className; set => className = value; }
+
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new ClassChangeComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (className != null && className != string.Empty) {
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(className);
+                if (tmpCharacterClass != null) {
+                    characterClass = tmpCharacterClass;
+                } else {
+                    Debug.LogError("ClassChangeComponent.SetupScriptableObjects(): Could not find faction : " + className + " while inititalizing.  CHECK INSPECTOR");
+                }
+
+            }
+
         }
     }
 

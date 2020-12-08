@@ -14,12 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private SkillTrainerProps interactableOptionProps = new SkillTrainerProps();
 
-        [Tooltip("the skills that this interactable option offers")]
-        [SerializeField]
-        private List<string> skillNames = new List<string>();
-
-        public List<string> SkillNames { get => skillNames; set => skillNames = value; }
-        public SkillTrainerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

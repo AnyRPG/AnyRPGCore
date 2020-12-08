@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        protected ControlSwitchProps interactableOptionProps = null;
+        public ControlSwitchProps Props { get => interactableOptionProps as ControlSwitchProps; }
 
         // keep track of the number of times this switch has been activated
         protected int activationCount = 0;
@@ -18,29 +18,28 @@ namespace AnyRPG {
 
         public bool MyOnState { get => onState; set => onState = value; }
 
-        public ControlSwitchComponent(Interactable interactable, ControlSwitchProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            interactionPanelTitle = "Interactable";
+        public ControlSwitchComponent(Interactable interactable, ControlSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            interactableOptionProps.InteractionPanelTitle = "Interactable";
         }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (interactableOptionProps.ActivationLimit > 0 && activationCount >= interactableOptionProps.ActivationLimit) {
+            if (Props.ActivationLimit > 0 && activationCount >= Props.ActivationLimit) {
                 // this has already been activated the number of allowed times
                 return false;
             }
             activationCount++;
-            if (interactableOptionProps.SwitchGroup != null && interactableOptionProps.SwitchGroup.Count > 0) {
+            if (Props.SwitchGroup != null && Props.SwitchGroup.Count > 0) {
                 int activeSwitches = 0;
-                foreach (ControlSwitchComponent controlSwitch in interactableOptionProps.SwitchGroup) {
+                foreach (ControlSwitchComponent controlSwitch in Props.SwitchGroup) {
                     if (controlSwitch.MyOnState) {
                         activeSwitches++;
                     }
                 }
-                if (onState == false && activeSwitches < interactableOptionProps.SwitchGroup.Count) {
+                if (onState == false && activeSwitches < Props.SwitchGroup.Count) {
                     return false;
-                } else if (onState == true && activeSwitches >= interactableOptionProps.SwitchGroup.Count) {
+                } else if (onState == true && activeSwitches >= Props.SwitchGroup.Count) {
                     return false;
                 }
 
@@ -48,9 +47,9 @@ namespace AnyRPG {
             onState = !onState;
             base.Interact(source);
 
-            if (interactableOptionProps.ControlObjects != null) {
+            if (Props.ControlObjects != null) {
                 //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): coroutine is not null, exiting");
-                foreach (InteractableOptionComponent interactableOption in interactableOptionProps.ControlObjects) {
+                foreach (InteractableOptionComponent interactableOption in Props.ControlObjects) {
                     interactableOption.Interact(source);
                 }
             }

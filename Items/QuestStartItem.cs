@@ -12,9 +12,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<QuestNode> quests = new List<QuestNode>();
 
-        public List<QuestNode> MyQuests { get => quests; }
+        private QuestGiverProps questGiverProps = new QuestGiverProps();
 
         public Interactable Interactable { get => null; }
+        public QuestGiverProps Props { get => questGiverProps; set => questGiverProps = value; }
 
         public override bool Use() {
             //Debug.Log("QuestStartItem.Use()");
@@ -23,8 +24,8 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (MyQuests != null) {
-                if (QuestLog.MyInstance.HasQuest(MyQuests[0].MyQuest.DisplayName)) {
+            if (questGiverProps.Quests != null) {
+                if (QuestLog.MyInstance.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
                     MessageFeedManager.MyInstance.WriteMessage("You are already on that quest");
                 } else {
                     //Debug.Log("QuestStartItem.Use(): showing quests");
@@ -35,7 +36,7 @@ namespace AnyRPG {
                     }
                     QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
                     OpenQuestGiverWindow();
-                    QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).MyQuests[0].MyQuest);
+                    QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).Props.Quests[0].MyQuest);
                 }
             }
             return returnValue;
@@ -43,8 +44,8 @@ namespace AnyRPG {
 
         public bool QuestRequirementsAreMet() {
             //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet()");
-            if (MyQuests != null) {
-                foreach (QuestNode questNode in MyQuests) {
+            if (questGiverProps.Quests != null) {
+                foreach (QuestNode questNode in questGiverProps.Quests) {
                     if (questNode.MyQuest.MyPrerequisitesMet
                         // the next condition is failing on raw complete quest start items because they are always considered complete
                         //&& questNode.MyQuest.IsComplete == false
@@ -110,7 +111,7 @@ namespace AnyRPG {
         }
 
         public bool EndsQuest(string questName) {
-            foreach (QuestNode questNode in quests) {
+            foreach (QuestNode questNode in questGiverProps.Quests) {
                 if (SystemResourceManager.MatchResource(questNode.MyQuest.DisplayName, questName)) {
                     if (questNode.MyEndQuest == true) {
                         return true;
@@ -130,6 +131,7 @@ namespace AnyRPG {
                     questNode.SetupScriptableObjects();
                 }
             }
+            questGiverProps.Quests = quests;
         }
     }
 

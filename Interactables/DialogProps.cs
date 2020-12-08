@@ -17,12 +17,46 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> dialogNames = new List<string>();
 
+        private List<Dialog> dialogList = new List<Dialog>();
+
+        // need to track this for access to some of its functions
+        private DialogComponent dialogComponent = null;
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.NamePlateImage); }
-        public List<string> DialogNames { get => dialogNames; set => dialogNames = value; }
+
+        public override string InteractionPanelTitle {
+            get {
+                List<Dialog> currentList = dialogComponent.GetCurrentOptionList();
+                if (currentList.Count > 0) {
+                    return currentList[0].DisplayName;
+                }
+                return base.InteractionPanelTitle;
+            }
+        }
+
+        public List<Dialog> DialogList { get => dialogList; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new DialogComponent(interactable, this);
+            dialogComponent = new DialogComponent(interactable, this);
+            return dialogComponent;
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+
+            if (dialogNames != null) {
+                foreach (string dialogName in dialogNames) {
+                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+                    if (tmpDialog != null) {
+                        tmpDialog.RegisterPrerequisiteOwner(dialogComponent);
+                        dialogList.Add(tmpDialog);
+                    } else {
+                        Debug.LogError("DialogComponent.SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
+                    }
+                }
+            }
+
         }
     }
 

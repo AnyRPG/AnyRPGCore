@@ -536,17 +536,6 @@ namespace AnyRPG {
                 return null;
             }
 
-            //public List<InteractableOptionComponent> GetValidInteractables(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables()");
-            //GetComponentReferences();
-
-            /*
-            if (source == null) {
-                //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): source is null.  returning null!");
-                return null;
-            }
-            */
-
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
                 return null;
@@ -581,15 +570,6 @@ namespace AnyRPG {
             if (notInteractable == true) {
                 return null;
             }
-
-            //GetComponentReferences();
-
-            /*
-            if (source == null) {
-                //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): source is null.  returning null!");
-                return null;
-            }
-            */
 
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
@@ -952,6 +932,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
             base.SetupScriptableObjects();
 
+            //Init functionality moved to constructor : monitor for breakage
+            /*
             // moved here from processInit
             foreach (InteractableOptionComponent interactable in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
@@ -960,6 +942,7 @@ namespace AnyRPG {
                     interactable.Init();
                 }
             }
+            */
         }
 
         protected override void OnDestroy() {

@@ -8,30 +8,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class GatheringNodeComponent : LootableNodeComponent {
 
-        //public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
+        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        // gathering nodes are special.  The image is based on what ability it supports
-        public override Sprite Icon {
-            get {
-                return (BaseAbility.Icon != null ? BaseAbility.Icon : base.Icon);
-            }
-        }
-
-        public override Sprite NamePlateImage {
-            get {
-                return (BaseAbility.Icon != null ? BaseAbility.Icon : base.NamePlateImage);
-            }
-        }
-        public override string InteractionPanelTitle { get => (BaseAbility != null ? BaseAbility.DisplayName : base.InteractionPanelTitle); }
-
-        private GatherAbility baseAbility = null;
-
-        public GatherAbility BaseAbility { get => baseAbility; }
+        public GatheringNodeProps GatheringNodeProps { get => interactableOptionProps as GatheringNodeProps; }
 
         public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            this.interactableOptionProps = interactableOptionProps;
         }
-
 
         public override void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
@@ -72,7 +54,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
-            if (lootTables == null) {
+            if (Props.LootTables == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
@@ -92,7 +74,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather();
             } else {
-                source.BaseCharacter.CharacterAbilityManager.BeginAbility(BaseAbility, interactable);
+                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
             }
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             return true;
@@ -117,7 +99,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(BaseAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
+            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
         }
 
         /*
@@ -131,18 +113,6 @@ namespace AnyRPG {
         }
         */
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if ((interactableOptionProps as GatheringNodeProps).AbilityName != null && (interactableOptionProps as GatheringNodeProps).AbilityName != string.Empty) {
-                GatherAbility tmpBaseAbility = SystemAbilityManager.MyInstance.GetResource((interactableOptionProps as GatheringNodeProps).AbilityName) as GatherAbility;
-                if (tmpBaseAbility != null) {
-                    baseAbility = tmpBaseAbility;
-                } else {
-                    Debug.LogError("GatheringNode.SetupScriptableObjects(): could not find ability " + (interactableOptionProps as GatheringNodeProps).AbilityName);
-                }
-            }
-
-        }
     }
 
 }

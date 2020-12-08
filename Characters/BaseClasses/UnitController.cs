@@ -460,7 +460,7 @@ namespace AnyRPG {
             // if base character exists, create a character unit and link them
             BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
             if (baseCharacter != null) {
-                characterUnit = new CharacterUnit(this);
+                characterUnit = new CharacterUnit(this, new InteractableOptionProps());
                 characterUnit.SetBaseCharacter(baseCharacter);
                 baseCharacter.SetUnitController(this);
                 AddInteractable(characterUnit);
@@ -480,11 +480,51 @@ namespace AnyRPG {
             }
             SetUnitControllerMode(unitControllerMode);
 
-            // testing, allow this to happen in start so the player reference to this has time to be set
-            // more testing - used a different way of setting reference before this point
             Init();
 
             SpawnUnitModel();
+
+            SetUnitProfileInteractables();
+        }
+
+        private void SetUnitProfileInteractables() {
+            Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
+
+            if (unitProfile == null) {
+                return;
+            }
+
+            if (unitProfile.UseLootableCharacter == true) {
+                InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
+                interactables.Add(interactableOptionComponent);
+                interactableOptionComponent.HandlePrerequisiteUpdates();
+            }
+
+            if (unitProfile.UseDialog == true) {
+                InteractableOptionComponent interactableOptionComponent = unitProfile.DialogProps.GetInteractableOption(this);
+                interactables.Add(interactableOptionComponent);
+                interactableOptionComponent.HandlePrerequisiteUpdates();
+            }
+
+            if (unitProfile.UseQuestGiver == true) {
+                InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
+                interactables.Add(interactableOptionComponent);
+                interactableOptionComponent.HandlePrerequisiteUpdates();
+            }
+
+            if (unitProfile.UseVendor == true) {
+                InteractableOptionComponent interactableOptionComponent = unitProfile.VendorProps.GetInteractableOption(this);
+                interactables.Add(interactableOptionComponent);
+                interactableOptionComponent.HandlePrerequisiteUpdates();
+            }
+
+            foreach (InteractableOptionConfig interactableOption in unitProfile.InteractableOptionConfigs) {
+                if (interactableOption.InteractableOptionProps != null) {
+                    InteractableOptionComponent interactableOptionComponent = interactableOption.InteractableOptionProps.GetInteractableOption(this);
+                    interactables.Add(interactableOptionComponent);
+                    interactableOptionComponent.HandlePrerequisiteUpdates();
+                }
+            }
         }
 
         private void SetStartPosition() {

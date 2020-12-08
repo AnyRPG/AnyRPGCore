@@ -11,19 +11,9 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private UnitSpawnControllerProps interactableOptionProps = null;
+        public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.Icon; }
-
-        private List<UnitProfile> unitProfileList = new List<UnitProfile>();
-
-        [Tooltip("List of Unit Spawn Nodes to control")]
-        [SerializeField]
-        private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
-
-        public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+        public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -44,8 +34,8 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = unitProfileList;
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = unitSpawnNodeList;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
             SystemWindowManager.MyInstance.unitSpawnWindow.OpenWindow();
             (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
             (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
@@ -94,19 +84,5 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            unitProfileList = new List<UnitProfile>();
-            if (interactableOptionProps.UnitProfileNames != null) {
-                foreach (string unitProfileName in interactableOptionProps.UnitProfileNames) {
-                    UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
-                    if (tmpUnitProfile != null) {
-                        unitProfileList.Add(tmpUnitProfile);
-                    } else {
-                        Debug.LogError("UnitSpawnControllerComponent.SetupScriptableObjects(): COULD NOT FIND UNIT PROFILE: " + unitProfileName + " while initializing");
-                    }
-                }
-            }
-        }
     }
 }

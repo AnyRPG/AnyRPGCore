@@ -14,7 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private ItemPickupProps interactableOptionProps = new ItemPickupProps();
 
-        public ItemPickupProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

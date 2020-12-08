@@ -21,14 +21,33 @@ namespace AnyRPG {
         [SerializeField]
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
 
+        private List<UnitProfile> unitProfileList = new List<UnitProfile>();
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
-        public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
+
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
+        public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new UnitSpawnControllerComponent(interactable, this);
         }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (unitProfileNames != null) {
+                foreach (string unitProfileName in unitProfileNames) {
+                    UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                    if (tmpUnitProfile != null) {
+                        unitProfileList.Add(tmpUnitProfile);
+                    } else {
+                        Debug.LogError("UnitSpawnControllerComponent.SetupScriptableObjects(): COULD NOT FIND UNIT PROFILE: " + unitProfileName + " while initializing");
+                    }
+                }
+            }
+
+        }
+
     }
 
 }

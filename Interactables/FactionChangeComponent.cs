@@ -10,20 +10,11 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private FactionChangeProps interactableOptionProps = null;
-
-        private Faction faction;
+        public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public Faction MyFaction { get => faction; set => faction = value; }
-
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            SetupScriptableObjects();
+        public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -32,7 +23,10 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.factionChangeWindow != null && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
+            if (PopupWindowManager.MyInstance != null
+                && PopupWindowManager.MyInstance.factionChangeWindow != null
+                && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null
+                && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
                 (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
                 (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
@@ -58,7 +52,7 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source);
-            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).Setup(MyFaction);
+            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
@@ -105,20 +99,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if (interactableOptionProps != null && interactableOptionProps.FactionName != null && interactableOptionProps.FactionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(interactableOptionProps.FactionName);
-                if (tmpFaction != null) {
-                    faction = tmpFaction;
-                } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find faction : " + interactableOptionProps.FactionName + " while inititalizing.  CHECK INSPECTOR");
-                }
-
-            }
-
-        }
     }
 
 }

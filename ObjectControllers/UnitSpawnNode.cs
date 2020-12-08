@@ -420,9 +420,21 @@ namespace AnyRPG {
                     }
 
                     // now that we have spawned the mob (or at least started its additional delay timer), we will start the regular countdown
-                    countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
+                    if (CanTriggerCountdown()) {
+                        countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
+                    }
                 }
             }
+        }
+
+        public bool CanTriggerCountdown() {
+            if (delayRoutine == null && CanTriggerSpawn()) {
+                return true;
+            }
+            if (delayRoutine != null && GetMaxUnits() > (spawnReferences.Count + 1)) {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -458,6 +470,10 @@ namespace AnyRPG {
         private IEnumerator StartSpawnCountdown(int countdownTime) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.StartSpawnCountdown(" + countdownTime + ")");
             float currentTimer = countdownTime;
+
+            // single frame delay to prevent spawning more units in a single frame than the stack size, which would cause a stack overflow
+            yield return null;
+
             while (currentTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
                 yield return new WaitForSeconds(1);

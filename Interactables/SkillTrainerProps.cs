@@ -15,13 +15,30 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> skillNames = new List<string>();
 
+        private List<Skill> skills = new List<Skill>();
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MySkillTrainerNamePlateImage : base.NamePlateImage); }
 
-        public List<string> SkillNames { get => skillNames; set => skillNames = value; }
+        public List<Skill> Skills { get => skills; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new SkillTrainerComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (skillNames != null) {
+                foreach (string skillName in skillNames) {
+                    Skill tmpSkill = SystemSkillManager.MyInstance.GetResource(skillName);
+                    if (tmpSkill != null) {
+                        skills.Add(tmpSkill);
+                    } else {
+                        Debug.LogError("SkillTrainerProps.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
         }
     }
 

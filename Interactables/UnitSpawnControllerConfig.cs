@@ -9,22 +9,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New Unit Spawn Controller Config", menuName = "AnyRPG/Interactable/UnitSpawnControllerConfig")]
-    [System.Serializable]
     public class UnitSpawnControllerConfig : InteractableOptionConfig {
 
         [SerializeField]
         private UnitSpawnControllerProps interactableOptionProps = new UnitSpawnControllerProps();
 
-        [Header("Unit Spawn Controller")]
-
-        [Tooltip("The names of the unit profiles that will be available to spawn with this controller")]
-        [SerializeField]
-        private List<string> unitProfileNames = new List<string>();
-
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
-        public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
-        public UnitSpawnControllerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

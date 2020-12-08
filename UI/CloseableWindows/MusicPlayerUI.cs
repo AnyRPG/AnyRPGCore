@@ -86,7 +86,7 @@ namespace AnyRPG {
 
             MusicPlayerHighlightButton firstAvailableMusicProfile = null;
 
-            foreach (AudioProfile musicProfile in musicPlayer.MyMusicProfileList) {
+            foreach (AudioProfile musicProfile in musicPlayer.Props.MusicProfileList) {
                 GameObject go = Instantiate(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.MyText.text = musicProfile.DisplayName;

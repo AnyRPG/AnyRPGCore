@@ -10,35 +10,15 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private CraftingNodeProps interactableOptionProps = null;
+        public CraftingNodeProps Props { get => interactableOptionProps as CraftingNodeProps; }
 
-        private BaseAbility ability;
-
-        // crafting nodes are special.  The image is based on what ability it supports
-        public override Sprite Icon {
-            get {
-                return (MyAbility.Icon != null ? MyAbility.Icon : base.Icon);
-            }
+        public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
-
-        public override Sprite NamePlateImage {
-            get {
-                return (MyAbility.Icon != null ? MyAbility.Icon : base.NamePlateImage);
-            }
-        }
-
-        public override string InteractionPanelTitle { get => (MyAbility != null ? MyAbility.DisplayName : base.InteractionPanelTitle); }
-        public BaseAbility MyAbility { get => ability; }
-
-        public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-        }
-
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);
 
-            CraftingUI.MyInstance.ViewRecipes(ability as CraftAbility);
+            CraftingUI.MyInstance.ViewRecipes(Props.Ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
             //return PickUp();
@@ -75,20 +55,6 @@ namespace AnyRPG {
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
-        }
-
-
-        public override void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + "CraftingNode.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
-            if (interactableOptionProps.AbilityName != null && interactableOptionProps.AbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(interactableOptionProps.AbilityName);
-                if (baseAbility != null) {
-                    ability = baseAbility;
-                } else {
-                    Debug.LogError("CraftingNodeComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + interactableOptionProps.AbilityName + " while initializing ");
-                }
-            }
         }
 
     }

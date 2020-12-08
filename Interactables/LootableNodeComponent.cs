@@ -11,9 +11,7 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        protected LootableNodeProps interactableOptionProps = null;
-
-        protected List<LootTable> lootTables = new List<LootTable>();
+        public LootableNodeProps Props { get => interactableOptionProps as LootableNodeProps; }
 
         protected float currentTimer = 0f;
 
@@ -37,13 +35,7 @@ namespace AnyRPG {
             }
         }
 
-        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable) {
-            //this.interactableOptionProps = interactableOptionProps;
-        }
-
-        public override void Init() {
-            base.Init();
-            CreateLootTables();
+        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public override void Cleanup() {
@@ -53,7 +45,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".LootableNode.Interact(" + source.name + ")");
-            if (lootTables == null) {
+            if (Props.LootTables == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
@@ -71,7 +63,7 @@ namespace AnyRPG {
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
             HandlePrerequisiteUpdates();
 
-            currentTimer = interactableOptionProps.SpawnTimer;
+            currentTimer = Props.SpawnTimer;
             while (currentTimer > 0) {
                 //Debug.Log("Spawn Timer: " + currentTimer);
                 yield return new WaitForSeconds(1);
@@ -94,7 +86,7 @@ namespace AnyRPG {
                 return;
             }
             List<LootDrop> lootDrops = new List<LootDrop>();
-            foreach (LootTable lootTable in lootTables) {
+            foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
             }
             LootUI.MyInstance.CreatePages(lootDrops);
@@ -141,29 +133,14 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public void CreateLootTables() {
-            if (SystemLootTableManager.MyInstance == null) {
-                Debug.LogError("SystemLootTableManager not found.  Is the GameManager in the scene?");
-                return;
-            }
-            foreach (string lootTableName in interactableOptionProps.LootTableNames) {
-                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
-                if (lootTable != null) {
-                    lootTables.Add(lootTable);
-                } else {
-                    Debug.LogError("Could not find loot table " + lootTableName + " while initializing Loot Node");
-                }
-            }
-        }
-
         public void ClearLootTables() {
-            lootTables.Clear();
+            Props.LootTables.Clear();
         }
 
         public void CheckDropListSize() {
             //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize()");
             int lootCount = 0;
-            foreach (LootTable lootTable in lootTables) {
+            foreach (LootTable lootTable in Props.LootTables) {
                 lootCount += lootTable.MyDroppedItems.Count;
             }
             if (lootCount == 0) {
@@ -174,12 +151,12 @@ namespace AnyRPG {
                 //if (lootTable.MyDroppedItems.Count == 0) {
                 PlayerManager.MyInstance.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
-                foreach (LootTable lootTable in lootTables) {
+                foreach (LootTable lootTable in Props.LootTables) {
                     lootTable.Reset();
                 }
 
                 // spawn timer of -1 means don't spawn again
-                if (spawnCoroutine == null && interactableOptionProps.SpawnTimer >= 0f) {
+                if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
                     //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize(): starting countdown; spawnTimer: " + spawnTimer);
                     spawnCoroutine = interactable.StartCoroutine(StartSpawnCountdown());
                 }

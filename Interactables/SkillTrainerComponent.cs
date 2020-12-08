@@ -9,25 +9,12 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private SkillTrainerProps interactableOptionProps = null;
+        public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
-        private List<Skill> skills = new List<Skill>();
-
-        public List<Skill> MySkills { get => skills; }
-
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            SetupScriptableObjects();
-        }
-
-        public override void Init() {
-            base.Init();
-            if (interactionPanelTitle == string.Empty) {
+        public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
-                interactionPanelTitle = "Train Me";
+                interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
         }
 
@@ -79,7 +66,7 @@ namespace AnyRPG {
 
         public void HandleSkillListChanged(Skill skill) {
             // this is a special case.  since skill is not a prerequisites, we need to subscribe directly to the event to get notified things have changed
-            if (skills.Contains(skill)) {
+            if (Props.Skills.Contains(skill)) {
                 HandlePrerequisiteUpdates();
             }
         }
@@ -91,7 +78,7 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount()");
             int optionCount = 0;
-            foreach (Skill skill in skills) {
+            foreach (Skill skill in Props.Skills) {
                 if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
@@ -122,22 +109,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if (interactableOptionProps.SkillNames != null) {
-                skills = new List<Skill>();
-                foreach (string skillName in interactableOptionProps.SkillNames) {
-                    Skill tmpSkill = SystemSkillManager.MyInstance.GetResource(skillName);
-                    if (tmpSkill != null) {
-                        skills.Add(tmpSkill);
-                    } else {
-                        Debug.LogError("SkillTrainerComponent.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing.  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-        }
     }
 
 }

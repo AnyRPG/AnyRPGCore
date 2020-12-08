@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [System.Serializable]
-    public abstract class InteractableOptionProps {
+    public class InteractableOptionProps {
 
         [Header("Interaction Panel")]
 
@@ -39,6 +39,10 @@ namespace AnyRPG {
 
         public virtual InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return null;
+        }
+
+        public virtual void SetupScriptableObjects() {
+            // nothing here
         }
 
     }

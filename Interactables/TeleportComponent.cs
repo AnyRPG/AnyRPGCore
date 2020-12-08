@@ -10,12 +10,10 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private BaseAbility ability = null;
+        public TeleportProps TeleportProps { get => interactableOptionProps as TeleportProps; }
 
-        public BaseAbility BaseAbility { get => ability; }
 
         public TeleportComponent(Interactable interactable, TeleportProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            this.interactableOptionProps = interactableOptionProps;
         }
 
 
@@ -23,20 +21,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
-            source.BaseCharacter.CharacterAbilityManager.BeginAbility(ability);
+            source.BaseCharacter.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility);
             return true;
-        }
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if ((interactableOptionProps as TeleportProps).AbilityName != null && (interactableOptionProps as TeleportProps).AbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource((interactableOptionProps as TeleportProps).AbilityName);
-                if (baseAbility != null) {
-                    ability = baseAbility;
-                } else {
-                    Debug.LogError("TeleportComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + (interactableOptionProps as TeleportProps).AbilityName + " while initializing.");
-                }
-            }
         }
 
 

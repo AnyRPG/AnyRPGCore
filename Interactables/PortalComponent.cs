@@ -10,11 +10,9 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        protected PortalProps interactableOptionProps = null;
+        public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
-        
-        public PortalComponent(Interactable interactable, PortalProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+        public PortalComponent(Interactable interactable, PortalProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
         
 
@@ -24,8 +22,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
-            if (interactableOptionProps.LocationTag != null && interactableOptionProps.LocationTag != string.Empty) {
-                LevelManager.MyInstance.OverrideSpawnLocationTag = interactableOptionProps.LocationTag;
+            if (Props.LocationTag != null && Props.LocationTag != string.Empty) {
+                LevelManager.MyInstance.OverrideSpawnLocationTag = Props.LocationTag;
             }
             return true;
         }

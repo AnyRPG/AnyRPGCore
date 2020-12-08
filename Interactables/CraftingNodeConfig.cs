@@ -15,11 +15,7 @@ namespace AnyRPG {
         [SerializeField]
         private CraftingNodeProps interactableOptionProps = new CraftingNodeProps();
 
-        [Tooltip("The ability to cast in order to craft with this node")]
-        [SerializeField]
-        private string abilityName = string.Empty;
-
-        public CraftingNodeProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

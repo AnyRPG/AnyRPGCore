@@ -14,15 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private VendorProps interactableOptionProps = new VendorProps();
 
-        [Header("Vendor")]
-
-        [SerializeField]
-        private List<string> vendorCollectionNames = new List<string>();
-
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.NamePlateImage); }
-        public List<string> VendorCollectionNames { get => vendorCollectionNames; set => vendorCollectionNames = value; }
-        public VendorProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

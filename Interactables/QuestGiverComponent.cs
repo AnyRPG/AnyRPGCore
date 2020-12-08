@@ -11,30 +11,30 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private QuestGiverProps interactableOptionProps = null;
-
-        private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();
-
-        private List<QuestNode> quests = new List<QuestNode>();
-
         private bool questGiverInitialized = false;
 
-        public List<QuestNode> MyQuests { get => quests; }
+        public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
+        public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            foreach (QuestNode questNode in Props.Quests) {
+                questNode.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
+            }
 
-        public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+            // moved here from Init() monitor for breakage
+            InitializeQuestGiver();
+            UpdateQuestStatus();
         }
 
+        /*
         public override void Init() {
             InitializeQuestGiver();
             base.Init();
             // this could run after the character spawn.  check it just in case
             UpdateQuestStatus();
         }
+        */
 
+        /*
         protected override void AddUnitProfileSettings() {
             base.AddUnitProfileSettings();
             if (unitProfile != null) {
@@ -42,7 +42,7 @@ namespace AnyRPG {
                 HandlePrerequisiteUpdates();
             }
         }
-
+        */
 
         public override void ProcessStatusIndicatorSourceInit() {
             base.ProcessStatusIndicatorSourceInit();
@@ -64,7 +64,7 @@ namespace AnyRPG {
 
         public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
-            if (Quest.GetCompleteQuests(MyQuests).Count + Quest.GetAvailableQuests(MyQuests).Count == 0) {
+            if (Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count == 0) {
                 return false;
             }
             return base.CanInteract();
@@ -77,8 +77,8 @@ namespace AnyRPG {
                 return;
             }
 
-            interactionPanelTitle = "Quests";
-            foreach (QuestNode questNode in quests) {
+            interactableOptionProps.InteractionPanelTitle = "Quests";
+            foreach (QuestNode questNode in Props.Quests) {
                 //Type questType = questNode.MyQuestTemplate.GetType();
                 if (questNode.MyQuest == null) {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
@@ -99,7 +99,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
             base.HandlePlayerUnitSpawn();
             InitializeQuestGiver();
-            foreach (QuestNode questNode in quests) {
+            foreach (QuestNode questNode in Props.Quests) {
                 //if (questNode.MyQuest.TurnedIn != true) {
                     questNode.MyQuest.UpdatePrerequisites(false);
                 //}
@@ -132,12 +132,12 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".QuestGiver.Interact()");
             base.Interact(source);
-            if (Quest.GetCompleteQuests(MyQuests, true).Count + Quest.GetAvailableQuests(MyQuests).Count > 1) {
+            if (Quest.GetCompleteQuests(Props.Quests, true).Count + Quest.GetAvailableQuests(Props.Quests).Count > 1) {
                 interactable.OpenInteractionWindow();
                 return true;
-            } else if (Quest.GetAvailableQuests(MyQuests).Count == 1 && Quest.GetCompleteQuests(MyQuests).Count == 0) {
-                if (Quest.GetAvailableQuests(MyQuests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(MyQuests)[0].MyOpeningDialog.TurnedIn == false) {
-                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(MyQuests)[0], interactable);
+            } else if (Quest.GetAvailableQuests(Props.Quests).Count == 1 && Quest.GetCompleteQuests(Props.Quests).Count == 0) {
+                if (Quest.GetAvailableQuests(Props.Quests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].MyOpeningDialog.TurnedIn == false) {
+                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
@@ -213,7 +213,7 @@ namespace AnyRPG {
             int inProgressCount = 0;
             int availableCount = 0;
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
-            foreach (QuestNode questNode in quests) {
+            foreach (QuestNode questNode in Props.Quests) {
                 if (questNode != null && questNode.MyQuest != null) {
                     if (QuestLog.MyInstance.HasQuest(questNode.MyQuest.DisplayName)) {
                         if (questNode.MyQuest.IsComplete && !questNode.MyQuest.TurnedIn && questNode.MyEndQuest) {
@@ -284,7 +284,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            return Quest.GetCompleteQuests(MyQuests).Count + Quest.GetAvailableQuests(MyQuests).Count;
+            return Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count;
         }
 
         public void HandleAcceptQuest() {
@@ -305,7 +305,7 @@ namespace AnyRPG {
 
 
         public bool EndsQuest(string questName) {
-            foreach (QuestNode questNode in quests) {
+            foreach (QuestNode questNode in Props.Quests) {
                 if (SystemResourceManager.MatchResource(questNode.MyQuest.DisplayName, questName)) {
                     if (questNode.MyEndQuest == true) {
                         return true;
@@ -317,38 +317,9 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".QuestGiver.SetupScriptableObjects()");
-            
-            base.SetupScriptableObjects();
-
-            questGiverProfiles = new List<QuestGiverProfile>();
-            if (interactableOptionProps.QuestGiverProfileNames != null) {
-                foreach (string questGiverProfileName in interactableOptionProps.QuestGiverProfileNames) {
-                    QuestGiverProfile tmpQuestGiverProfile = SystemQuestGiverProfileManager.MyInstance.GetResource(questGiverProfileName);
-                    if (tmpQuestGiverProfile != null) {
-                        questGiverProfiles.Add(tmpQuestGiverProfile);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find QuestGiverProfile : " + questGiverProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-            foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
-                if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
-                    foreach (QuestNode questNode in questGiverProfile.MyQuests) {
-                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
-                        quests.Add(questNode);
-                        questNode.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
-                    }
-                }
-            }
-
-        }
-
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
-            foreach (QuestNode questNode in quests) {
+            foreach (QuestNode questNode in Props.Quests) {
                 questNode.MyQuest.OnQuestStatusUpdated -= HandlePrerequisiteUpdates;
             }
         }

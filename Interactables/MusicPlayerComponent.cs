@@ -9,20 +9,12 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private MusicPlayerProps interactableOptionProps = null;
+        public MusicPlayerProps Props { get => interactableOptionProps as MusicPlayerProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        private List<AudioProfile> musicProfileList = new List<AudioProfile>();
-
-        public List<AudioProfile> MyMusicProfileList { get => musicProfileList; set => musicProfileList = value; }
-
-        public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            if (interactionPanelTitle == string.Empty) {
+        public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
-                interactionPanelTitle = "Music Player";
+                interactableOptionProps.InteractionPanelTitle = "Music Player";
             }
         }
 
@@ -80,21 +72,6 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            musicProfileList = new List<AudioProfile>();
-            if (interactableOptionProps.MusicProfileNames != null) {
-                foreach (string musicProfileName in interactableOptionProps.MusicProfileNames) {
-                    AudioProfile tmpMusicProfile = SystemAudioProfileManager.MyInstance.GetResource(musicProfileName);
-                    if (tmpMusicProfile != null) {
-                        musicProfileList.Add(tmpMusicProfile);
-                    } else {
-                        Debug.LogError("MusicPlayerCompoennt.SetupScriptableObjects(): COULD NOT FIND AUDIO PROFILE: " + interactableOptionProps.MusicProfileNames + " while initializing");
-                    }
-                }
-            }
-        }
     }
 
 }

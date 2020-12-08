@@ -10,20 +10,11 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private ClassChangeProps interactableOptionProps = null;
-
-        private CharacterClass characterClass;
+        public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public CharacterClass MyCharacterClass { get => characterClass; set => characterClass = value; }
-
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            SetupScriptableObjects();
+        public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -82,7 +73,7 @@ namespace AnyRPG {
             }
             base.Interact(source);
 
-            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(MyCharacterClass);
+            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
             (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
@@ -130,20 +121,6 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            if (interactableOptionProps != null && interactableOptionProps.ClassName != null && interactableOptionProps.ClassName != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(interactableOptionProps.ClassName);
-                if (tmpCharacterClass != null) {
-                    characterClass = tmpCharacterClass;
-                } else {
-                    Debug.LogError("ClassChangeComponent.SetupScriptableObjects(): Could not find faction : " + interactableOptionProps.ClassName + " while inititalizing.  CHECK INSPECTOR");
-                }
-
-            }
-
-        }
-
         // character class is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
@@ -151,7 +128,7 @@ namespace AnyRPG {
                 if (returnValue == false) {
                     return false;
                 }
-                if (PlayerManager.MyInstance.MyCharacter.CharacterClass == characterClass) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterClass == Props.CharacterClass) {
                     return false;
                 }
                 return returnValue;

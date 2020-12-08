@@ -17,12 +17,29 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> musicProfileNames = new List<string>();
 
+        private List<AudioProfile> musicProfileList = new List<AudioProfile>();
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage : base.NamePlateImage); }
-        public List<string> MusicProfileNames { get => musicProfileNames; set => musicProfileNames = value; }
+        public List<AudioProfile> MusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new MusicPlayerComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (musicProfileNames != null) {
+                foreach (string musicProfileName in musicProfileNames) {
+                    AudioProfile tmpMusicProfile = SystemAudioProfileManager.MyInstance.GetResource(musicProfileName);
+                    if (tmpMusicProfile != null) {
+                        musicProfileList.Add(tmpMusicProfile);
+                    } else {
+                        Debug.LogError("MusicPlayerCompoennt.SetupScriptableObjects(): COULD NOT FIND AUDIO PROFILE: " + musicProfileName + " while initializing");
+                    }
+                }
+            }
+
         }
     }
 

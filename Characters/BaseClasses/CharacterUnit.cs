@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         private BaseCharacter baseCharacter = null;
 
+        public override string DisplayName { get => (BaseCharacter != null ? BaseCharacter.CharacterName : interactableOptionProps.InteractionPanelTitle); }
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
         }
@@ -28,7 +29,7 @@ namespace AnyRPG {
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
-        public CharacterUnit(Interactable interactable) : base(interactable) {
+        public CharacterUnit(Interactable interactable, InteractableOptionProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             if (interactable.Collider != null) {
                 hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
             }
@@ -156,7 +157,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }
         }
-
+        /*
         public override string GetDescription() {
             //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription()");
             if (interactionPanelTitle == null || interactionPanelTitle == string.Empty) {
@@ -167,6 +168,7 @@ namespace AnyRPG {
                 return interactionPanelTitle;
             }
         }
+        */
 
         // CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
         public override int GetValidOptionCount() {

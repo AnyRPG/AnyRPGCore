@@ -178,17 +178,33 @@ namespace AnyRPG {
 
         [Header("Builtin Interactables")]
 
+        [Tooltip("If true, a lootable character component will be created with the below settings.")]
+        [SerializeField]
+        private bool useLootableCharacter = false;
+
         [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private LootableCharacterProps lootableCharacter = new LootableCharacterProps();
+
+        [Tooltip("If true, a dialog component will be created with the below settings.")]
+        [SerializeField]
+        private bool useDialog = false;
 
         [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private DialogProps dialogConfig = new DialogProps();
 
+        [Tooltip("If true, a quest giver component will be created with the below settings.")]
+        [SerializeField]
+        private bool useQuestGiver = false;
+
         [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private QuestGiverProps questGiverConfig = new QuestGiverProps();
+
+        [Tooltip("If true, a vendor component will be created with the below settings.")]
+        [SerializeField]
+        private bool useVendor = false;
 
         [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
@@ -199,6 +215,8 @@ namespace AnyRPG {
         [Tooltip("The names of the interactable options available on this character")]
         [SerializeField]
         private List<string> interactableOptions = new List<string>();
+
+        private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();
 
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
@@ -240,6 +258,11 @@ namespace AnyRPG {
 
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
+        public bool UseLootableCharacter { get => useLootableCharacter; set => useLootableCharacter = value; }
+        public bool UseDialog { get => useDialog; set => useDialog = value; }
+        public bool UseQuestGiver { get => useQuestGiver; set => useQuestGiver = value; }
+        public bool UseVendor { get => useVendor; set => useVendor = value; }
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -400,6 +423,20 @@ namespace AnyRPG {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
             }
+
+            if (interactableOptions != null) {
+                foreach (string interactableOptionName in interactableOptions) {
+                    if (interactableOptionName != null && interactableOptionName != string.Empty) {
+                        InteractableOptionConfig interactableOptionConfig = SystemInteractableOptionConfigManager.MyInstance.GetResource(interactableOptionName);
+                        if (interactableOptionConfig != null) {
+                            interactableOptionConfigs.Add(interactableOptionConfig);
+                        } else {
+                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        }
+                    }
+                }
+            }
+
 
             unitPrefabProps.SetupScriptableObjects();
 

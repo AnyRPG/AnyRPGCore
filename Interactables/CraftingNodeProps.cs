@@ -15,10 +15,39 @@ namespace AnyRPG {
         [SerializeField]
         private string abilityName = string.Empty;
 
-        public string AbilityName { get => abilityName; set => abilityName = value; }
+        private BaseAbility ability;
+
+
+        // crafting nodes are special.  The image is based on what ability it supports
+        public override Sprite Icon {
+            get {
+                return (Ability.Icon != null ? Ability.Icon : base.Icon);
+            }
+        }
+
+        public override Sprite NamePlateImage {
+            get {
+                return (Ability.Icon != null ? Ability.Icon : base.NamePlateImage);
+            }
+        }
+
+        public override string InteractionPanelTitle { get => (Ability != null ? Ability.DisplayName : base.InteractionPanelTitle); }
+        public BaseAbility Ability { get => ability; set => ability = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new CraftingNodeComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (abilityName != null && abilityName != string.Empty) {
+                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                if (baseAbility != null) {
+                    ability = baseAbility;
+                } else {
+                    Debug.LogError("CraftingNodeComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing ");
+                }
+            }
         }
     }
 

@@ -11,9 +11,7 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private BehaviorProps interactableOptionProps = null;
-
-        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
+        public BehaviorProps Props { get => interactableOptionProps as BehaviorProps; }
 
         private int behaviorIndex = 0;
 
@@ -23,23 +21,27 @@ namespace AnyRPG {
 
         private bool suppressNameplateImage = false;
 
-        public int MyBehaviorIndex { get => behaviorIndex; }
-        public List<BehaviorProfile> MyDialogList { get => behaviorList; set => behaviorList = value; }
+        public int BehaviorIndex { get => behaviorIndex; }
 
-        public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+        public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            foreach (BehaviorProfile behaviorProfile in Props.BehaviorList) {
+                behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+            }
         }
 
+        /*
         public override void Init() {
             base.Init();
             HandlePrerequisiteUpdates();
         }
+        */
 
         public override void Cleanup() {
             base.Cleanup();
             CleanupDialog();
         }
 
+        /*
         protected override void AddUnitProfileSettings() {
             if (unitProfile != null) {
                 if (unitProfile.BehaviorProps.BehaviorNames != null) {
@@ -59,6 +61,7 @@ namespace AnyRPG {
             }
             HandlePrerequisiteUpdates();
         }
+        */
 
 
         public override bool Interact(CharacterUnit source) {
@@ -157,7 +160,7 @@ namespace AnyRPG {
         public List<BehaviorProfile> GetCurrentOptionList() {
             //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in Props.BehaviorList) {
                 if (behaviorProfile.MyPrerequisitesMet == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
@@ -234,7 +237,7 @@ namespace AnyRPG {
 
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in Props.BehaviorList) {
                 behaviorProfile.UpdatePrerequisites(false);
             }
             MiniMapStatusUpdateHandler(this);
@@ -251,28 +254,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            behaviorList = new List<BehaviorProfile>();
-            if (interactableOptionProps.BehaviorNames != null) {
-                foreach (string behaviorName in interactableOptionProps.BehaviorNames) {
-                    BehaviorProfile tmpBehaviorProfile = null;
-                    if (interactableOptionProps.UseBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
-                    } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
-                    }
-                    if (tmpBehaviorProfile != null) {
-                        behaviorList.Add(tmpBehaviorProfile);
-                        tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
-                    }
-                }
-            }
-        }
-
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in Props.BehaviorList) {
                 behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
             }
         }

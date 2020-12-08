@@ -29,8 +29,8 @@ namespace AnyRPG {
         public InteractableOptionComponent MyInteractableOption {
             get => interactableOption;
             set {
-                if (value.Icon != null) {
-                    icon.sprite = value.Icon;
+                if (value.InteractableOptionProps.Icon != null) {
+                    icon.sprite = value.InteractableOptionProps.Icon;
                     icon.color = Color.white;
                 } else {
                     icon.sprite = null;

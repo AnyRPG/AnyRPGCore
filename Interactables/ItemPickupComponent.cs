@@ -10,8 +10,9 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
+        public ItemPickupProps ItemPickupProps { get => interactableOptionProps as ItemPickupProps; }
+
         public ItemPickupComponent(Interactable interactable, ItemPickupProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            this.interactableOptionProps = interactableOptionProps;
         }
 
         public override int GetValidOptionCount() {
@@ -19,7 +20,7 @@ namespace AnyRPG {
             if (returnValue == 0) {
                 return returnValue;
             }
-            if ((interactableOptionProps.SpawnTimer == -1  && pickupCount > 0) || spawnCoroutine != null) {
+            if ((ItemPickupProps.SpawnTimer == -1  && pickupCount > 0) || spawnCoroutine != null) {
                 return 0;
             }
             return returnValue;

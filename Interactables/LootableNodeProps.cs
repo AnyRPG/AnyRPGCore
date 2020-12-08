@@ -16,18 +16,31 @@ namespace AnyRPG {
         [SerializeField]
         protected List<string> lootTableNames = new List<string>();
 
+        protected List<LootTable> lootTables = new List<LootTable>();
+
         [SerializeField]
         protected float spawnTimer = 5f;
 
-        public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
         public float SpawnTimer { get => spawnTimer; set => spawnTimer = value; }
+        public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
 
         /*
-        public virtual InteractableOption GetInteractableOption(Interactable interactable) {
-            return new LootableNode(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            return new LootableNodeComponent(interactable, this);
         }
         */
-        
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            foreach (string lootTableName in lootTableNames) {
+                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                if (lootTable != null) {
+                    lootTables.Add(lootTable);
+                } else {
+                    Debug.LogError("Could not find loot table " + lootTableName + " while initializing Loot Node");
+                }
+            }
+        }
     }
 
 }

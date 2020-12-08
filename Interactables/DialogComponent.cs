@@ -11,23 +11,7 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private DialogProps interactableOptionProps = null;
-
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        public override string InteractionPanelTitle {
-            get {
-                List<Dialog> currentList = GetCurrentOptionList();
-                if (currentList.Count > 0) {
-                    return currentList[0].DisplayName;
-                }
-                return base.InteractionPanelTitle;
-            }
-            set => base.InteractionPanelTitle = value;
-        }
-
-        private List<Dialog> dialogList = new List<Dialog>();
+        public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
         private int dialogIndex = 0;
 
@@ -36,13 +20,12 @@ namespace AnyRPG {
         private Coroutine dialogCoroutine = null;
 
         public int DialogIndex { get => dialogIndex; }
-        public List<Dialog> DialogList { get => dialogList; set => dialogList = value; }
 
-        public DialogComponent(Interactable interactable, DialogProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            AddUnitProfileSettings();
+        public DialogComponent(Interactable interactable, DialogProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            //AddUnitProfileSettings();
         }
 
+        /*
         protected override void AddUnitProfileSettings() {
             base.AddUnitProfileSettings();
             if (unitProfile != null) {
@@ -53,6 +36,7 @@ namespace AnyRPG {
             // this is necessary because addUnitProfileSettings is called late in startup order
             HandlePrerequisiteUpdates();
         }
+        */
 
         public override void Cleanup() {
             base.Cleanup();
@@ -84,7 +68,7 @@ namespace AnyRPG {
         public List<Dialog> GetCurrentOptionList() {
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
-            foreach (Dialog dialog in dialogList) {
+            foreach (Dialog dialog in Props.DialogList) {
                 if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
                     currentList.Add(dialog);
                 }
@@ -243,12 +227,12 @@ namespace AnyRPG {
         }
 
         public void UpdateDialogStatuses() {
-            foreach (Dialog dialog in dialogList) {
+            foreach (Dialog dialog in Props.DialogList) {
                 dialog.UpdatePrerequisites(false);
             }
 
             bool preRequisitesUpdated = false;
-            foreach (Dialog dialog in dialogList) {
+            foreach (Dialog dialog in Props.DialogList) {
                 if (dialog.MyPrerequisitesMet == true) {
                     preRequisitesUpdated = true;
                 }
@@ -259,24 +243,6 @@ namespace AnyRPG {
             }
 
         }
-
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            dialogList = new List<Dialog>();
-            if (interactableOptionProps.DialogNames != null) {
-                foreach (string dialogName in interactableOptionProps.DialogNames) {
-                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
-                    if (tmpDialog != null) {
-                        tmpDialog.RegisterPrerequisiteOwner(this);
-                        dialogList.Add(tmpDialog);
-                    } else {
-                        Debug.LogError("DialogComponent.SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");
-                    }
-                }
-            }
-        }
-
 
     }
 

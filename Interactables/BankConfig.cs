@@ -14,7 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private BankProps interactableOptionProps = new BankProps();
 
-        public BankProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

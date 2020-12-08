@@ -8,9 +8,9 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
+        public PressureSwitchProps PressureSwitchProps { get => interactableOptionProps as PressureSwitchProps; }
+
         public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            // done in base
-            //this.interactableOptionProps = interactableOptionProps;
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -34,10 +34,10 @@ namespace AnyRPG {
                 }
             }
             //Debug.Log(gameObject.name + " totalWeight: " + totalWeight + "; minimumWeight: " + minimumWeight);
-            if (totalWeight >= (interactableOptionProps as PressureSwitchProps).MinimumWeight && onState == false) {
+            if (totalWeight >= PressureSwitchProps.MinimumWeight && onState == false) {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
                 base.Interact(source);
-            } else if (totalWeight < (interactableOptionProps as PressureSwitchProps).MinimumWeight && onState == true) {
+            } else if (totalWeight < PressureSwitchProps.MinimumWeight && onState == true) {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
                 base.Interact(source);
             } else {

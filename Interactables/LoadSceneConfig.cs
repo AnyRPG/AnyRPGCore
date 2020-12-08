@@ -14,14 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private LoadSceneProps interactableOptionProps = new LoadSceneProps();
 
-        [Header("Scene Options")]
-
-        [Tooltip("When interacted with, this scene will load directly.")]
-        [SerializeField]
-        private string sceneName = string.Empty;
-
-        public string SceneName { get => sceneName; set => sceneName = value; }
-        public LoadSceneProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

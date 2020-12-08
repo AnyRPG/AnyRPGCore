@@ -17,12 +17,27 @@ namespace AnyRPG {
         [SerializeField]
         private string cutsceneName = string.Empty;
 
+        private Cutscene cutscene = null;
+
+
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyCutSceneInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyCutSceneNamePlateImage : base.NamePlateImage); }
-        public string CutsceneName { get => cutsceneName; set => cutsceneName = value; }
+        public Cutscene Cutscene { get => cutscene; set => cutscene = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new CutSceneComponent(interactable, this);
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (cutsceneName != null && cutsceneName != string.Empty) {
+                Cutscene tmpCutscene = SystemCutsceneManager.MyInstance.GetResource(cutsceneName);
+                if (tmpCutscene != null) {
+                    cutscene = tmpCutscene;
+                } else {
+                    Debug.LogError("CutsceneProps.SetupScriptableObjects(): Could not find cutscene : " + cutsceneName + " while inititalizing.  CHECK INSPECTOR");
+                }
+            }
         }
     }
 

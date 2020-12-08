@@ -11,19 +11,9 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        [SerializeField]
-        private CutsceneProps interactableOptionProps = new CutsceneProps();
+        public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
-        public override Sprite Icon { get => interactableOptionProps.Icon; }
-        public override Sprite NamePlateImage { get => interactableOptionProps.NamePlateImage; }
-
-        [SerializeField]
-        private string cutsceneName = string.Empty;
-
-        private Cutscene cutscene = null;
-
-        public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
+        public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -31,13 +21,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (cutscene != null) {
-                if (cutscene.Viewed == false || cutscene.Repeatable == true) {
-                    if (cutscene.RequirePlayerUnitSpawn == false || (cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
-                        if (cutscene.MyLoadScene != null) {
-                            LevelManager.MyInstance.LoadCutSceneWithDelay(cutscene);
+            if (Props.Cutscene != null) {
+                if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
+                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
+                        if (Props.Cutscene.MyLoadScene != null) {
+                            LevelManager.MyInstance.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
-                            UIManager.MyInstance.MyCutSceneBarController.StartCutScene(cutscene);
+                            UIManager.MyInstance.MyCutSceneBarController.StartCutScene(Props.Cutscene);
                         }
                     }
                 }
@@ -81,21 +71,6 @@ namespace AnyRPG {
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
-        }
-
-
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-
-            if (cutsceneName != null && cutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemCutsceneManager.MyInstance.GetResource(cutsceneName);
-                if (tmpCutscene != null) {
-                    cutscene = tmpCutscene;
-                } else {
-                    Debug.LogError("CutSceneInteractable.SetupScriptableObjects(): Could not find cutscene : " + cutsceneName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                }
-            }
-
         }
 
     }

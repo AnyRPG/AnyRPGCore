@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             SkillTrainerSkillScript firstAvailableSkill = null;
 
-            foreach (Skill skill in skillTrainer.MySkills) {
+            foreach (Skill skill in skillTrainer.Props.Skills) {
                 if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     GameObject go = Instantiate(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();

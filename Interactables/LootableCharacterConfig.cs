@@ -15,7 +15,7 @@ namespace AnyRPG {
         [SerializeField]
         private LootableCharacterProps interactableOptionProps = new LootableCharacterProps();
 
-        public LootableCharacterProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

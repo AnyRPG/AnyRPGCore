@@ -14,15 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private MusicPlayerProps interactableOptionProps = new MusicPlayerProps();
 
-        [Header("Music Player")]
-
-        [Tooltip("The names of the audio profiles available on this music player")]
-        [SerializeField]
-        private List<string> musicProfileNames = new List<string>();
-
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage : base.NamePlateImage); }
-        public MusicPlayerProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public override InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
     }
 
 }

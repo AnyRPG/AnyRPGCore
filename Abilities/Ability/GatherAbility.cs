@@ -57,12 +57,12 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (gatheringNodeComponent.BaseAbility == this) {
+            if (gatheringNodeComponent.GatheringNodeProps.BaseAbility == this) {
                 return true;
             } else {
                 //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This gathering node requires the skill : " + gatheringNodeComponent.BaseAbility.DisplayName);
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This gathering node requires the skill : " + gatheringNodeComponent.GatheringNodeProps.BaseAbility.DisplayName);
                 }
                 return false;
             }

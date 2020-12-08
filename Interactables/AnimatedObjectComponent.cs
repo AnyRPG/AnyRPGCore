@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
-        private AnimatedObjectProps interactableOptionProps = null;
+        public AnimatedObjectProps Props { get => interactableOptionProps as AnimatedObjectProps; }
 
         // by default it is considered closed when not using the sheathed position
         private bool objectOpen = false;
@@ -16,9 +16,8 @@ namespace AnyRPG {
         // keep track of opening and closing
         private Coroutine coroutine = null;
 
-        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable) {
-            this.interactableOptionProps = interactableOptionProps;
-            interactionPanelTitle = "Interactable";
+        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            interactableOptionProps.InteractionPanelTitle = "Interactable";
         }
 
         public override void Cleanup() {
@@ -77,10 +76,10 @@ namespace AnyRPG {
                 //Quaternion tmpRotation = interactable.MySpawnReference.transform.localRotation * Quaternion.Euler(newAngle);
                 //Vector3 realNewAngle = tmpRotation.eulerAngles;
 
-                Quaternion newRotation = Quaternion.RotateTowards(Quaternion.Euler(interactable.MySpawnReference.transform.localEulerAngles), Quaternion.Euler(newAngle), interactableOptionProps.RotationSpeed);
+                Quaternion newRotation = Quaternion.RotateTowards(Quaternion.Euler(interactable.MySpawnReference.transform.localEulerAngles), Quaternion.Euler(newAngle), Props.RotationSpeed);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(realNewAngle), rotationSpeed);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, tmpRotation, rotationSpeed);
-                Vector3 newLocation = Vector3.MoveTowards(interactable.MySpawnReference.transform.localPosition, newPosition, interactableOptionProps.MovementSpeed);
+                Vector3 newLocation = Vector3.MoveTowards(interactable.MySpawnReference.transform.localPosition, newPosition, Props.MovementSpeed);
                 interactable.MySpawnReference.transform.localPosition = newLocation;
                 interactable.MySpawnReference.transform.localRotation = newRotation;
                 yield return null;

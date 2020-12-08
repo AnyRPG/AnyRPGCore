@@ -10,15 +10,16 @@ namespace AnyRPG {
 
         public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
 
+        public LoadSceneProps LoadSceneProps { get => interactableOptionProps as LoadSceneProps; }
+
         public LoadSceneComponent(Interactable interactable, LoadSceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            this.interactableOptionProps = interactableOptionProps;
         }
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
             base.Interact(source);
 
-            LevelManager.MyInstance.LoadLevel((interactableOptionProps as LoadSceneProps).SceneName);
+            LevelManager.MyInstance.LoadLevel(LoadSceneProps.SceneName);
             return true;
         }
 
