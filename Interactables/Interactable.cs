@@ -204,6 +204,7 @@ namespace AnyRPG {
             InteractableOption[] interactableOptionMonoList = GetComponents<InteractableOption>();
             foreach (InteractableOption interactableOption in interactableOptionMonoList) {
                 if (interactableOption.InteractableOptionProps != null) {
+                    interactableOption.SetupScriptableObjects();
                     interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this));
                 }
             }

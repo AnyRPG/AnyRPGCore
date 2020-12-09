@@ -72,7 +72,7 @@ namespace AnyRPG {
         }
 
         public void InitializeQuestGiver() {
-            //Debug.Log(gameObject.name + ".QuestGiver.InitializeQuestGiver()");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.InitializeQuestGiver()");
             if (questGiverInitialized == true) {
                 return;
             }
@@ -96,7 +96,8 @@ namespace AnyRPG {
         }
 
         public override void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
+            Debug.Log(interactable.gameObject.name + ".QuestGiver.HandleCharacterSpawn()");
+
             base.HandlePlayerUnitSpawn();
             InitializeQuestGiver();
             foreach (QuestNode questNode in Props.Quests) {
@@ -284,6 +285,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
+            Debug.Log(interactable.gameObject.name + ".QuestGiver.GetCurrentOptionCount()");
             return Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count;
         }
 
@@ -296,7 +298,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
+            Debug.Log(interactable.gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
             UpdateQuestStatus();

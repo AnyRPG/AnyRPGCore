@@ -25,8 +25,6 @@ namespace AnyRPG {
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyQuestGiverNamePlateImage : base.NamePlateImage); }
 
-        public List<string> QuestGiverProfileNames { get => questGiverProfileNames; set => questGiverProfileNames = value; }
-
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new QuestGiverComponent(interactable, this);
         }
@@ -44,6 +42,16 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
+                if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
+                    foreach (QuestNode questNode in questGiverProfile.MyQuests) {
+                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
+                        quests.Add(questNode);
+                    }
+                }
+            }
+
         }
 
     }

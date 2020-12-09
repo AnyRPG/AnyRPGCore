@@ -11,6 +11,13 @@ namespace AnyRPG {
 
         public virtual InteractableOptionProps InteractableOptionProps { get => null; }
 
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            if (InteractableOptionProps != null) {
+                InteractableOptionProps.SetupScriptableObjects();
+            }
+        }
+
     }
 
 }

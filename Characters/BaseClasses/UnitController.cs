@@ -488,31 +488,32 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileInteractables() {
-            Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
+            //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
 
             if (unitProfile == null) {
                 return;
             }
 
-            if (unitProfile.UseLootableCharacter == true) {
+            if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTables.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
-            if (unitProfile.UseDialog == true) {
+            if (unitProfile.DialogProps.DialogList.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.DialogProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
-            if (unitProfile.UseQuestGiver == true) {
+            if (unitProfile.QuestGiverProps.Quests.Count > 0) {
+                //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables(): add questgiver");
                 InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
-            if (unitProfile.UseVendor == true) {
+            if (unitProfile.VendorProps.VendorCollections.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.VendorProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();

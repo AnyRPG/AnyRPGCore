@@ -153,7 +153,8 @@ namespace AnyRPG {
         
 
         public virtual void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
+            //Debug.Log(interactable.gameObject.name + ".InteractableOption.HandlePlayerUnitSpawn()");
+
             if (interactableOptionProps.PrerequisiteConditions != null && interactableOptionProps.PrerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -188,12 +189,12 @@ namespace AnyRPG {
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
             } else {
-                //Debug.Log(gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates(): interactable was null");
+                Debug.Log("InteractableOption.HandlePrerequisiteUpdates(): interactable was null");
             }
         }
 
         public virtual void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".InteractableOption.SetupScriptableObjects()");
+            //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.SetupScriptableObjects()");
             if (interactableOptionProps.PrerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -201,6 +202,8 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            //interactableOptionProps.SetupScriptableObjects();
         }
 
         public virtual void CleanupScriptableObjects() {
