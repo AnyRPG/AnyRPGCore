@@ -84,7 +84,6 @@ namespace AnyRPG {
             }
         }
 
-        public string MyUnitProfileName { get => unitProfileName; set => unitProfileName = value; }
         public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
         public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
         public string Title { get => title; set => title = value; }
@@ -431,8 +430,8 @@ namespace AnyRPG {
                         unitController.NotifyOnFactionChange(newFaction, oldFaction);
                     }
                 }
+                characterFactionManager.SetReputation(newFaction);
             }
-            characterFactionManager.SetReputation(newFaction);
 
             // now it is safe to setlevel because when we set level we will calculate stats that require the traits and equipment to be properly set for the class
             if (resetStats == true && characterStats != null) {
@@ -628,7 +627,9 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            GetUnitProfileReference(unitProfileName);
+            if (unitProfileName != null && unitProfileName != string.Empty) {
+                SetUnitProfile(GetUnitProfileReference(unitProfileName));
+            }
         }
 
         public void OnDestroy() {

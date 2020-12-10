@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public float disposition = 0f;
 
-        public Faction MyFaction { get => faction; set => faction = value; }
+        public Faction Faction { get => faction; set => faction = value; }
 
         public void SetupScriptableObjects() {
             faction = null;

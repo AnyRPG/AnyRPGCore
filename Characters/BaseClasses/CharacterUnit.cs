@@ -135,15 +135,18 @@ namespace AnyRPG {
 
         public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
             //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
-            // add all possible delays together
-            float extraTime = 0f;
-            if (addSystemDefaultTime) {
-                extraTime = SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
-            }
-            float totalDelay = despawnDelay + this.despawnDelay + extraTime;
-            while (totalDelay > 0f) {
-                yield return null;
-                totalDelay -= Time.deltaTime;
+
+            if (forceDespawn == false) {
+                // add all possible delays together
+                float extraTime = 0f;
+                if (addSystemDefaultTime) {
+                    extraTime = SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
+                }
+                float totalDelay = despawnDelay + this.despawnDelay + extraTime;
+                while (totalDelay > 0f) {
+                    yield return null;
+                    totalDelay -= Time.deltaTime;
+                }
             }
 
             if (baseCharacter.CharacterStats.IsAlive == false || forceDespawn == true) {
@@ -152,7 +155,6 @@ namespace AnyRPG {
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
                 OnDespawn(baseCharacter.UnitController);
                 UnityEngine.Object.Destroy(baseCharacter.UnitController.gameObject);
-
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }

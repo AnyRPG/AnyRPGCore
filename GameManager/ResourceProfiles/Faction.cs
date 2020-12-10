@@ -215,7 +215,7 @@ namespace AnyRPG {
 
                 //Debug.Log("Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + sourceFactionName + "): factions are not null or identical, searching my dictionary");
                 foreach (FactionDisposition _factionDisposition in thisFaction.dispositionList) {
-                    if (_factionDisposition.MyFaction == otherFaction) {
+                    if (_factionDisposition.Faction == otherFaction) {
                         // There is a specific entry for the other faction in our disposition table, return it.
                         //Debug.Log("Faction.relationWith(): There is a specific entry for " + otherFaction.MyName + " in our disposition table, return it: " + _factionDisposition.factionName);
                         return _factionDisposition.disposition;

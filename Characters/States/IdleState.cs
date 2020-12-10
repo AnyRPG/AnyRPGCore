@@ -20,14 +20,28 @@ namespace AnyRPG {
         }
 
         public void TryToEnterPatrolState() {
-            Debug.Log("IdleState.TryToEnterPatrolState()");
+            //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState()");
             if (unitController.UnitControllerMode == UnitControllerMode.AI
                 && unitController.PatrolController != null
                 && unitController.PatrolController.CurrentPatrol != null
                 && unitController.PatrolController.CurrentPatrol.PatrolComplete() == false) {
                 unitController.ChangeState(new PatrolState());
                 return;
+            }/*
+            else {
+                if (unitController.PatrolController == null) {
+                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): patrol controller is null");
+                    return;
+                }
+                if (unitController.PatrolController.CurrentPatrol == null) {
+                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is null");
+                    return;
+                }
+                if (unitController.PatrolController.CurrentPatrol.PatrolComplete() == true) {
+                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is complete");
+                }
             }
+            */
         }
 
         public void Update() {

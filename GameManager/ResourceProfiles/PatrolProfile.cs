@@ -123,7 +123,7 @@ namespace AnyRPG {
         }
 
         public bool PatrolComplete() {
-            //Debug.Log("AIPatrol.PatrolComplete(): loopDestination: " + loopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + maxDestinations + "; destinationListCount: " + destinationList.Count);
+            //Debug.Log("PatrolProfile.PatrolComplete(): loopDestination: " + loopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + maxDestinations + "; destinationListCount: " + destinationList.Count);
 
             if (randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations)) {
                 //Debug.Log("AIPatrol.PatrolComplete() randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations); return false");

@@ -16,7 +16,7 @@ namespace AnyRPG {
         private float originalMovementSpeed = 0f;
 
         public void Enter(UnitController baseController) {
-            Debug.Log(baseController.gameObject.name + ".PatrolState.Enter() position: " + baseController.transform.position);
+            //Debug.Log(baseController.gameObject.name + ".PatrolState.Enter() position: " + baseController.transform.position);
             this.baseController = baseController;
             if (!baseController.PatrolController.CurrentPatrol.PatrolComplete()) {
                 originalMovementSpeed = this.baseController.UnitMotor.MovementSpeed;
@@ -34,7 +34,7 @@ namespace AnyRPG {
         }
 
         public void SetMovementSpeed() {
-            Debug.Log(baseController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + baseController.PatrolController.CurrentPatrol.MovementSpeed + " motor: " + this.baseController.UnitMotor.MovementSpeed + "; " + "; aicontroller: " + this.baseController.MovementSpeed);
+            //Debug.Log(baseController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + baseController.PatrolController.CurrentPatrol.MovementSpeed + " motor: " + this.baseController.UnitMotor.MovementSpeed + "; " + "; aicontroller: " + this.baseController.MovementSpeed);
             if (baseController.PatrolController.CurrentPatrol.MovementSpeed == 0) {
                 this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
             } else {
@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
+            //Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
             if (baseController.UnitControllerMode != UnitControllerMode.AI) {
                 baseController.ChangeState(new IdleState());
                 return;

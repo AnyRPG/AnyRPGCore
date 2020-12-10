@@ -26,12 +26,13 @@ namespace AnyRPG {
 
         public PatrolController(UnitController unitController) {
             this.unitController = unitController;
-            SetupScriptableObjects();
         }
 
         // this should be run after the unit profile is set
         public void Init() {
-            Debug.Log("PatrolController.Init()");
+            //Debug.Log("PatrolController.Init()");
+
+            SetupScriptableObjects();
 
             FindAutomaticPatrol();
         }
@@ -46,7 +47,7 @@ namespace AnyRPG {
         }
 
         public void BeginPatrol(string patrolName) {
-            //Debug.Log(gameObject.name + ".AIPatrol.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
+            //Debug.Log(gameObject.name + ".patrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
             PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
             if (tmpPatrolProfile != null) {
                 tmpPatrolProfile.CurrentUnitController = unitController;
@@ -60,8 +61,12 @@ namespace AnyRPG {
         }
 
         private void FindAutomaticPatrol() {
+            //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol()");
+
             foreach (PatrolProfile patrolProfile in patrolProfiles) {
+                //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
                 if (patrolProfile.AutoStart == true) {
+                    //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found autostart profile");
                     currentPatrol = patrolProfile;
                     currentPatrol.CurrentUnitController = unitController;
                     break;
@@ -70,6 +75,7 @@ namespace AnyRPG {
         }
 
         private void SetupScriptableObjects() {
+            //Debug.Log(unitController.gameObject.name + ".patrolController.SetupScriptableObjects()");
 
 
             // local patrols

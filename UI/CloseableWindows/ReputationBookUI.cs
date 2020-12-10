@@ -45,8 +45,8 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
         //Debug.Log("ReputationBookUI.CreatePages()");
         ClearPages();
         List<FactionDisposition> page = new List<FactionDisposition>();
-        for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary.Count; i++) {
-            page.Add(PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary[i]);
+        for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
+            page.Add(PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
             if (page.Count == pageSize) {
                 pages.Add(page);
                 page = new List<FactionDisposition>();
@@ -69,7 +69,7 @@ public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
                 if (i < pages[pageIndex].Count) {
                     //Debug.Log("adding ability");
                     factionButtons[i].gameObject.SetActive(true);
-                    factionButtons[i].AddFaction(pages[pageIndex][i].MyFaction);
+                    factionButtons[i].AddFaction(pages[pageIndex][i].Faction);
                 } else {
                     //Debug.Log("clearing ability");
                     factionButtons[i].ClearFaction();

@@ -371,7 +371,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.MyCharacter.ClassSpecialization != null) {
                 anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.ClassSpecialization.DisplayName;
             }
-            anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.MyUnitProfileName;
+            anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.UnitProfile.DisplayName;
 
             // moved to resource power data
             //anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
@@ -697,9 +697,17 @@ namespace AnyRPG {
 
         public void SaveReputationData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveReputationData()");
-            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.MyDispositionDictionary) {
+            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary) {
+                if (factionDisposition == null) {
+                    Debug.Log("Savemanager.SaveReputationData(): no disposition");
+                    continue;
+                }
+                if (factionDisposition.Faction == null) {
+                    Debug.Log("Savemanager.SaveReputationData() no faction");
+                    continue;
+                }
                 ReputationSaveData saveData = new ReputationSaveData();
-                saveData.MyName = factionDisposition.MyFaction.DisplayName;
+                saveData.MyName = factionDisposition.Faction.DisplayName;
                 saveData.MyAmount = factionDisposition.disposition;
                 anyRPGSaveData.reputationSaveData.Add(saveData);
             }
@@ -955,9 +963,9 @@ namespace AnyRPG {
             //int counter = 0;
             foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
-                factionDisposition.MyFaction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
+                factionDisposition.Faction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.MyFaction, (int)factionDisposition.disposition, false);
+                PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
                 //counter++;
             }
         }
@@ -1149,6 +1157,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
             PlayerManager.MyInstance.MyCharacter.SetCharacterRace(SystemCharacterRaceManager.MyInstance.GetResource(anyRPGSaveData.characterRace));
+
             PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
 
             // done by setting profile ?
