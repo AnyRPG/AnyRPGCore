@@ -50,6 +50,8 @@ namespace AnyRPG {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
                 SystemWindowManager.MyInstance.confirmCancelCutsceneMenuWindow.OpenWindow();
             }
+
+            SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
         }
 
         public void EndCutScene() {

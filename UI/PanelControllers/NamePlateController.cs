@@ -366,7 +366,10 @@ namespace AnyRPG {
             CheckForDisabledHealthBar();
         }
 
-        private void LateUpdate() {
+        //private void Update() {
+        //private void LateUpdate() {
+        public void UpdatePosition() {   
+            //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
             if (unitNamePlateController != null && (PlayerManager.MyInstance.ActiveUnitController != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
@@ -399,7 +402,12 @@ namespace AnyRPG {
                 }
                 if (renderNamePlate) {
                     //Debug.Log("renderNamePlate");
-                    Vector3 usedPosition = currentCamera.WorldToScreenPoint(unitNamePlateController.NamePlateTransform.position + Vector3.up * positionOffset);
+                    Vector3 worldPosition = new Vector3(unitNamePlateController.NamePlateTransform.position.x,
+                        unitNamePlateController.NamePlateTransform.position.y,
+                        unitNamePlateController.NamePlateTransform.position.z);
+                    //currentCamera.ResetWorldToCameraMatrix();
+                    Vector3 usedPosition = currentCamera.WorldToScreenPoint(worldPosition);
+                    //Vector3 usedPosition = currentCamera.WorldToScreenPoint(unitNamePlateController.NamePlateTransform.position + Vector3.up * positionOffset);
                     namePlateContents.position = usedPosition;
                     speechBubbleContents.position = usedPosition;
                     //Debug.Log(characterUnit.gameObject.name + ".distance to player: " + Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.MyPlayerUnitObject.transform.position, characterUnit.transform.position)));

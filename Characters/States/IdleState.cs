@@ -20,10 +20,11 @@ namespace AnyRPG {
         }
 
         public void TryToEnterPatrolState() {
+            Debug.Log("IdleState.TryToEnterPatrolState()");
             if (unitController.UnitControllerMode == UnitControllerMode.AI
                 && unitController.PatrolController != null
-                && unitController.PatrolController.MyCurrentPatrol != null
-                && unitController.PatrolController.MyCurrentPatrol.PatrolComplete() == false) {
+                && unitController.PatrolController.CurrentPatrol != null
+                && unitController.PatrolController.CurrentPatrol.PatrolComplete() == false) {
                 unitController.ChangeState(new PatrolState());
                 return;
             }

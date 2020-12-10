@@ -17,7 +17,7 @@ namespace AnyRPG {
         // state
         private PatrolProfile currentPatrol = null;
 
-        public PatrolProfile MyCurrentPatrol {
+        public PatrolProfile CurrentPatrol {
             get {
                 return currentPatrol;
             }
@@ -29,8 +29,10 @@ namespace AnyRPG {
             SetupScriptableObjects();
         }
 
+        // this should be run after the unit profile is set
         public void Init() {
-            // this should be run after the unit profile is set
+            Debug.Log("PatrolController.Init()");
+
             FindAutomaticPatrol();
         }
 

@@ -426,17 +426,14 @@ namespace AnyRPG {
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");
 
-            // equip weapon models first
-            // moved to SetModelReady because this could be an UMA unit
-            //characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
-
-            patrolController.Init();
-
             persistentObjectComponent.Init();
 
             SetStartPosition();
 
             ActivateUnitControllerMode();
+
+            patrolController.Init();
+
         }
 
         public override void OnDisable() {

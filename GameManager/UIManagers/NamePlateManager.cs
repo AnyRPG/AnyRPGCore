@@ -36,10 +36,22 @@ namespace AnyRPG {
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
             string wakeupString = NamePlateManager.MyInstance.gameObject.name;
+            SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
         }
 
         private void Start() {
             //Debug.Log(gameObject.name + ".NamePlateManager.Start()");
+        }
+
+        public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
+            UpdateNamePlates();
+        }
+
+        
+        private void UpdateNamePlates() {
+            foreach (NamePlateController namePlateController in namePlates.Values) {
+                namePlateController.UpdatePosition();
+            }
         }
 
         public void SetFocus(NamePlateUnit newInteractable) {
@@ -99,6 +111,14 @@ namespace AnyRPG {
                 }
             }
             return false;
+        }
+
+        public void CleanupEventSubscriptions() {
+            SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+        }
+
+        public void OnDestroy() {
+            CleanupEventSubscriptions();
         }
 
     }

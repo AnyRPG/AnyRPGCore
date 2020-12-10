@@ -99,6 +99,8 @@ namespace AnyRPG {
                 // camera has nothing to follow so don't calculate movement
                 return;
             }
+            //Debug.Log("CameraController.LateUpdate(): frame " + Time.frameCount);
+
 
             /*
             if (SystemConfigurationManager.MyInstance != null && SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
@@ -174,6 +176,8 @@ namespace AnyRPG {
                 SmoothToWantedPosition();
             }
             transform.LookAt(targetPosition);
+
+            SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
         }
 
         private void CompensateForWalls() {
