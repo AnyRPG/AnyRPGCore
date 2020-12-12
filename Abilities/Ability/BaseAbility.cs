@@ -266,7 +266,7 @@ namespace AnyRPG {
         private List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         public AnimationClip CastingAnimationClip {
-            get => (animationProfile != null && animationProfile.AnimationProps.AttackClips != null && animationProfile.AnimationProps.AttackClips.Count > 0 ? animationProfile.AnimationProps.AttackClips[0] : null);
+            get => (animationProfile != null && animationProfile.AnimationProps.CastClips != null && animationProfile.AnimationProps.CastClips.Count > 0 ? animationProfile.AnimationProps.CastClips[0] : null);
         }
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
