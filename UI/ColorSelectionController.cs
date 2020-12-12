@@ -48,8 +48,10 @@ namespace AnyRPG {
             ch.SetupRemover(Avatar, ColorName);
             Image i = go.GetComponent<Image>();
             i.color = Color.white;
+            /*
             TextMeshProUGUI t = go.GetComponentInChildren<TextMeshProUGUI>();
             t.text = "<default>";
+            */
             go.transform.SetParent(ColorPanel.transform);
         }
 

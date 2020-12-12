@@ -112,12 +112,17 @@ namespace AnyRPG {
 
             factionPanel.ReceiveOpenWindowNotification();
 
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
-                // faction panel should be opened first in non uma mode to allow filtering of faction based models
-                characterPanel.ReceiveOpenWindowNotification();
+            // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
+            // inform the preview panel so the character can be rendered
+            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
 
-                // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
-                characterPreviewPanel.ReceiveOpenWindowNotification();
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+                umaCharacterPanel.ReceiveOpenWindowNotification();
+            }
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
+                characterPanel.ReceiveOpenWindowNotification();
             }
 
             // class goes before specialization because it acts as a filter for it
@@ -131,13 +136,6 @@ namespace AnyRPG {
 
             // testing appearance last since it relies on at very minimum the unit profile being set
             
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveOpenWindowNotification();
-            }
-            // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.CapabilityConsumer = this;
-            characterPreviewPanel.ReceiveOpenWindowNotification();
 
 
 
@@ -203,6 +201,8 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel() {
+            //Debug.Log("NewGamePanel.OpenFactionPanel()");
+
             ClosePanels();
             factionPanel.ShowPanel();
         }

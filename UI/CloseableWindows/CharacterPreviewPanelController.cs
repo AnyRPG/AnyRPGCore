@@ -36,14 +36,14 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
+            //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
 
             characterReady = false;
             SetPreviewTarget();
         }
 
         public void ReloadUnit() {
-            //Debug.Log("NewGameCharacterPanelController.ReloadUnit()");
+            //Debug.Log("CharacterPreviewPanelController.ReloadUnit()");
             if (characterReady == false) {
                 // the window has not been opened (initialized) yet, so don't try to spawn any unit
                 return;
@@ -53,16 +53,22 @@ namespace AnyRPG {
         }
 
         public void ClearPreviewTarget() {
-            //Debug.Log("NewGameCharacterPanelController.ClearPreviewTarget()");
+            //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("NewGameCharacterPanelController.SetPreviewTarget()");
+            //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
             if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
+            }
+
+            if (capabilityConsumer == null) {
+                Debug.LogError("CharacterPreviewPanelController.ClearPreviewTarget(): capabilityConsumer is null");
+            } else if (capabilityConsumer.UnitProfile == null) {
+                Debug.LogError("CharacterPreviewPanelController.ClearPreviewTarget(): capabilityConsumer.UnitProfile is null");
             }
             //spawn correct preview unit
             CharacterCreatorManager.MyInstance.HandleOpenWindow(capabilityConsumer.UnitProfile);
@@ -80,7 +86,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
+            //Debug.Log("CharacterPreviewPanelController.TargetReadyCallback()");
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
 
@@ -90,7 +96,7 @@ namespace AnyRPG {
 
 
         public IEnumerator PointlessDelay() {
-            //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
+            //Debug.Log("CharacterPreviewPanelController.EquipCharacter(): found equipment manager");
             yield return null;
             RebuildUMA();
         }
@@ -98,7 +104,7 @@ namespace AnyRPG {
 
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            //Debug.Log("NewGameCharacterPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
+            //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
             if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
                 CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
             }

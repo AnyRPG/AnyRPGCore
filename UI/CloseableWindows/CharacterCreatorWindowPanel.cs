@@ -116,6 +116,7 @@ namespace AnyRPG {
 
         public void HandleTargetReady() {
             LoadUMARecipe();
+            umaCharacterPanel.HandleTargetReady();
         }
 
     }

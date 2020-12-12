@@ -52,16 +52,13 @@ namespace AnyRPG {
             canvasGroup.interactable = true;
         }
 
-        /*
-        public void TargetReadyCallback() {
+        public void HandleTargetReady() {
             //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
-
 
             CloseOptionsAreas();
             OpenAppearanceOptionsArea();
             InitializeSexButtons();
         }
-        */
 
 
     }
