@@ -48,7 +48,7 @@ namespace AnyRPG {
 
         // adds to existing amount or sets to amount if not existing
         public virtual void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ")");
             //bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in DispositionDictionary) {
                 //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");

@@ -30,7 +30,7 @@ namespace AnyRPG {
         private TextMeshProUGUI playerNameLabel = null;
 
         [SerializeField]
-        private NewGameCharacterPreviewPanelController characterPreviewPanel = null;
+        private CharacterPreviewPanelController characterPreviewPanel = null;
 
         [SerializeField]
         private NewGameDetailsPanelController detailsPanel = null;
@@ -39,7 +39,7 @@ namespace AnyRPG {
         private NewGameMecanimCharacterPanelController characterPanel = null;
 
         [SerializeField]
-        private NewGameCharacterPanelController umaCharacterPanel = null;
+        private UMACharacterEditorPanelController umaCharacterPanel = null;
 
         [SerializeField]
         private NewGameClassPanelController classPanel = null;
@@ -79,6 +79,7 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
 
             SaveManager.MyInstance.ClearSharedData();
+            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.RecieveClosedWindowNotification();
@@ -99,12 +100,15 @@ namespace AnyRPG {
 
             SetupSaveData();
 
-
+            /*
             if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.ReceiveOpenWindowNotification();
                 // first, inform the preview panel so the character can be rendered
-                characterPreviewPanel.ReceiveOpenWindowNotification();
             }
+            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
+            */
 
             factionPanel.ReceiveOpenWindowNotification();
 
@@ -124,6 +128,18 @@ namespace AnyRPG {
             detailsPanel.ReceiveOpenWindowNotification();
 
             OpenDetailsPanel();
+
+            // testing appearance last since it relies on at very minimum the unit profile being set
+            
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+                umaCharacterPanel.ReceiveOpenWindowNotification();
+            }
+            // inform the preview panel so the character can be rendered
+            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
+
+
 
             if (SystemConfigurationManager.MyInstance.NewGameAudioProfile != null) {
                 AudioManager.MyInstance.StopMusic();
@@ -203,7 +219,7 @@ namespace AnyRPG {
             // since a new character class is chosen, the specialization list must be updated to match the class
             specializationPanel.ShowOptionButtonsCommon();
 
-            EquipCharacter();
+            UpdateEquipmentList();
 
             detailsPanel.SetCharacterClass(characterClass);
 
@@ -219,7 +235,7 @@ namespace AnyRPG {
             }
         }
 
-        public void EquipCharacter() {
+        public void UpdateEquipmentList() {
             //Debug.Log("NameGamePanel.EquipCharacter()");
 
             equipmentList.Clear();
@@ -277,8 +293,65 @@ namespace AnyRPG {
             SaveEquipmentData();
 
             // show the equipment
-            characterPreviewPanel.EquipCharacter();
+            EquipCharacter();
 
+        }
+
+        public void SetCharacterProperties() {
+            //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
+
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
+        }
+
+        public void HandleTargetReady() {
+            EquipCharacter();
+        }
+
+        public void EquipCharacter() {
+            //Debug.Log("NewGameCharacterPanelController.EquipCharacter()");
+
+            if (characterPreviewPanel.CharacterReady == false) {
+                // attempting this before the character is spawned will make it go invisible (UMA bug)
+                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): character not ready yet, exiting.");
+                return;
+            }
+
+            // set character class etc first so preview works and can equip character
+            SetCharacterProperties();
+
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            if (characterEquipmentManager != null) {
+                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
+
+                // unequip equipment not in current list
+                //characterEquipmentManager.UnequipAll(false);
+                List<Equipment> removeList = new List<Equipment>();
+                foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
+                    if (!EquipmentList.ContainsValue(equipment)) {
+                        removeList.Add(equipment);
+                    }
+                }
+                foreach (Equipment equipment in removeList) {
+                    characterEquipmentManager.Unequip(equipment);
+                }
+
+                // equip equipment in list but not yet equipped
+                if (EquipmentList != null) {
+                    //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): equipment list is not null");
+                    foreach (Equipment equipment in EquipmentList.Values) {
+                        //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
+                        if (!characterEquipmentManager.CurrentEquipment.ContainsValue(equipment)) {
+                            characterEquipmentManager.Equip(equipment, null, false, false);
+                        }
+                    }
+                    //RebuildUMA();
+                }
+            }
         }
 
         public void SaveEquipmentData() {
@@ -310,7 +383,7 @@ namespace AnyRPG {
                 classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
             }
 
-            EquipCharacter();
+            UpdateEquipmentList();
 
             detailsPanel.SetClassSpecialization(classSpecialization);
 
@@ -328,7 +401,7 @@ namespace AnyRPG {
             factionPanel.ShowFaction(newGameFactionButton);
             faction = newGameFactionButton.Faction;
 
-            EquipCharacter();
+            UpdateEquipmentList();
 
             detailsPanel.SetFaction(faction);
 

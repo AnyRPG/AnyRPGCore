@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class NewGameCharacterPreviewPanelController : WindowContentController {
+    public class CharacterPreviewPanelController : WindowContentController {
 
+
+        public event Action OnTargetReady = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -17,7 +19,12 @@ namespace AnyRPG {
         // track whether targetreadycallback has been activated or not
         private bool characterReady = false;
 
+        // need a reference to the capabilityConsumer calling window to get Unit Profile
+        private ICapabilityConsumer capabilityConsumer = null;
+
         public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public bool CharacterReady { get => characterReady; }
+        public ICapabilityConsumer CapabilityConsumer { get => capabilityConsumer; set => capabilityConsumer = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
@@ -33,10 +40,6 @@ namespace AnyRPG {
 
             characterReady = false;
             SetPreviewTarget();
-        }
-
-        public void SetPlayerName(string newPlayerName) {
-            NewGamePanel.MyInstance.SetPlayerName(newPlayerName);
         }
 
         public void ReloadUnit() {
@@ -62,7 +65,7 @@ namespace AnyRPG {
                 return;
             }
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(NewGamePanel.MyInstance.UnitProfile);
+            CharacterCreatorManager.MyInstance.HandleOpenWindow(capabilityConsumer.UnitProfile);
 
             if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
@@ -81,62 +84,10 @@ namespace AnyRPG {
             MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
             characterReady = true;
 
-            EquipCharacter();
+            OnTargetReady();
             StartCoroutine(PointlessDelay());
         }
 
-        public void SetCharacterProperties() {
-            //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
-
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(NewGamePanel.MyInstance.UnitProfile);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(NewGamePanel.MyInstance.UnitType);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(NewGamePanel.MyInstance.CharacterRace);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(NewGamePanel.MyInstance.CharacterClass);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(NewGamePanel.MyInstance.ClassSpecialization);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(NewGamePanel.MyInstance.Faction);
-        }
-
-        public void EquipCharacter() {
-            //Debug.Log("NewGameCharacterPanelController.EquipCharacter()");
-
-            if (characterReady == false) {
-                // attempting this before the character is spawned will make it go invisible (UMA bug)
-                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): character not ready yet, exiting.");
-                return;
-            }
-
-            // set character class etc first so preview works and can equip character
-            SetCharacterProperties();
-
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
-            if (characterEquipmentManager != null) {
-                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
-                
-                // unequip equipment not in current list
-                //characterEquipmentManager.UnequipAll(false);
-                List<Equipment> removeList = new List<Equipment>();
-                foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
-                    if (!NewGamePanel.MyInstance.EquipmentList.ContainsValue(equipment)) {
-                        removeList.Add(equipment);
-                    }
-                }
-                foreach (Equipment equipment in removeList) {
-                    characterEquipmentManager.Unequip(equipment);
-                }
-
-                // equip equipment in list but not yet equipped
-                if (NewGamePanel.MyInstance.EquipmentList != null) {
-                    //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): equipment list is not null");
-                    foreach (Equipment equipment in NewGamePanel.MyInstance.EquipmentList.Values) {
-                        //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
-                        if (!characterEquipmentManager.CurrentEquipment.ContainsValue(equipment)) {
-                            characterEquipmentManager.Equip(equipment, null, false, false);
-                        }
-                    }
-                    RebuildUMA();
-                }
-            }
-        }
 
         public IEnumerator PointlessDelay() {
             //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");

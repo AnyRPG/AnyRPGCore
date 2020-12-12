@@ -12,92 +12,72 @@ using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 
-    public class NewGameCharacterPanelController : WindowContentController {
-
-        #region Singleton
-        private static NewGameCharacterPanelController instance;
-
-        public static NewGameCharacterPanelController MyInstance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<NewGameCharacterPanelController>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
+    public class CharacterAppearancePanel : WindowContentController {
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-
-        [Header("Name")]
-        public InputField textInput;
 
         [Header("Appearance")]
 
         [SerializeField]
-        private HighlightButton appearanceButton = null;
+        protected HighlightButton appearanceButton = null;
 
         [SerializeField]
-        private HighlightButton colorsButton = null;
+        protected HighlightButton colorsButton = null;
 
         [SerializeField]
-        private HighlightButton hairColorsButton = null;
+        protected HighlightButton hairColorsButton = null;
 
         [SerializeField]
-        private HighlightButton skinColorsButton = null;
+        protected HighlightButton skinColorsButton = null;
 
         [SerializeField]
-        private HighlightButton eyesColorsButton = null;
+        protected HighlightButton eyesColorsButton = null;
 
         [SerializeField]
-        private HighlightButton sexButton = null;
+        protected HighlightButton sexButton = null;
 
         [SerializeField]
-        private HighlightButton maleButton = null;
+        protected HighlightButton maleButton = null;
 
         [SerializeField]
-        private HighlightButton femaleButton = null;
+        protected HighlightButton femaleButton = null;
 
         [SerializeField]
-        private GameObject appearanceOptionsArea = null;
+        protected GameObject appearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject hairAppearanceOptionsArea = null;
+        protected GameObject hairAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject eyebrowsAppearanceOptionsArea = null;
+        protected GameObject eyebrowsAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject beardAppearanceOptionsArea = null;
+        protected GameObject beardAppearanceOptionsArea = null;
 
         [SerializeField]
-        private GameObject colorsOptionsArea = null;
+        protected GameObject colorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject hairColorsOptionsArea = null;
+        protected GameObject hairColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject skinColorsOptionsArea = null;
+        protected GameObject skinColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject eyesColorsOptionsArea = null;
+        protected GameObject eyesColorsOptionsArea = null;
 
         [SerializeField]
-        private GameObject sexOptionsArea = null;
+        protected GameObject sexOptionsArea = null;
 
         [SerializeField]
-        private TMP_Dropdown hairAppearanceDropdown = null;
+        protected TMP_Dropdown hairAppearanceDropdown = null;
 
         [SerializeField]
-        private TMP_Dropdown eyebrowsAppearanceDropdown = null;
+        protected TMP_Dropdown eyebrowsAppearanceDropdown = null;
 
         [SerializeField]
-        private TMP_Dropdown beardAppearanceDropdown = null;
+        protected TMP_Dropdown beardAppearanceDropdown = null;
 
-        [SerializeField]
-        private CanvasGroup canvasGroup = null;
 
         public GameObject ColorPrefab;
 
@@ -107,14 +87,12 @@ namespace AnyRPG {
         public SharedColorTable ClothingColor;
 
         // hold data so changes are not reset on switch between male and female
-        private string maleRecipe = string.Empty;
-        private string femaleRecipe = string.Empty;
+        protected string maleRecipe = string.Empty;
+        protected string femaleRecipe = string.Empty;
 
-        //private DynamicCharacterAvatar umaAvatar;
-
-        private List<UMATextRecipe> hairRecipes = new List<UMATextRecipe>();
-        private List<UMATextRecipe> eyebrowsRecipes = new List<UMATextRecipe>();
-        private List<UMATextRecipe> beardRecipes = new List<UMATextRecipe>();
+        protected List<UMATextRecipe> hairRecipes = new List<UMATextRecipe>();
+        protected List<UMATextRecipe> eyebrowsRecipes = new List<UMATextRecipe>();
+        protected List<UMATextRecipe> beardRecipes = new List<UMATextRecipe>();
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
@@ -122,25 +100,7 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
-
-        }
-
-        public void HidePanel() {
-            canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.interactable = false;
-        }
-
-        public void ShowPanel() {
-            canvasGroup.alpha = 1;
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.interactable = true;
-        }
-
-
-        private void InitializeSexButtons() {
+        protected void InitializeSexButtons() {
             //Debug.Log("CharacterCreatorPanel.InitializeSexButtons()");
 
             if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS" || CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
@@ -160,6 +120,7 @@ namespace AnyRPG {
             }
         }
         
+        /*
         public void TargetReadyCallback() {
             //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
 
@@ -168,6 +129,7 @@ namespace AnyRPG {
             OpenAppearanceOptionsArea();
             InitializeSexButtons();
         }
+        */
 
         public void OpenAppearanceOptionsArea() {
             //Debug.Log("CharacterCreatorPanel.OpenAppearanceOptions()");
@@ -225,6 +187,7 @@ namespace AnyRPG {
             // configure sex options display
             sexButton.Select();
             sexOptionsArea.gameObject.SetActive(true);
+            InitializeSexButtons();
         }
 
         public void CloseEyesColorsOptionsArea() {
