@@ -305,15 +305,15 @@ namespace AnyRPG {
         }
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
-            if (!abilityEffectInput.savedEffect && !CanUseOn(target, source)) {
+            if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
                 return null;
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             CharacterStats targetCharacterStats = null;
 
-            if ((classTrait || abilityEffectInput.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
+            if ((classTrait || abilityEffectContext.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
                 targetCharacterStats = (source as BaseCharacter).CharacterStats;
             } else {
                 if (target.CharacterUnit != null && target.CharacterUnit.BaseCharacter != null) {
@@ -322,18 +322,18 @@ namespace AnyRPG {
             }
 
             // prevent status effect from sending scaled up damage to its ticks
-            abilityEffectInput.castTimeMultiplier = 1f;
+            abilityEffectContext.castTimeMultiplier = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(DisplayName) as StatusEffect, source, abilityEffectInput);
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(DisplayName) as StatusEffect, source, abilityEffectContext);
             if (_statusEffectNode == null) {
                 //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
-                returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+                returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
                 if (returnObjects != null) {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                     _statusEffectNode.StatusEffect.MyPrefabObjects = returnObjects;
                 }
-                PerformAbilityHit(source, target, abilityEffectInput);
+                PerformAbilityHit(source, target, abilityEffectContext);
             }
             return returnObjects;
         }

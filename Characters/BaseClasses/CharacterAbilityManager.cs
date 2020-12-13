@@ -781,14 +781,15 @@ namespace AnyRPG {
         }
 
         public void ApplyStatusEffect(AbilityEffect statusEffect, int overrideDuration = 0) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ApplyStatusEffect(" + statusEffect.DisplayName + ")");
             if (baseCharacter.CharacterStats != null) {
-                AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
-                abilityEffectOutput.overrideDuration = overrideDuration;
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                abilityEffectContext.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
-                abilityEffectOutput.savedEffect = true;
+                abilityEffectContext.savedEffect = true;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName);
                 if (_abilityEffect != null) {
-                    _abilityEffect.Cast(baseCharacter, null, null, abilityEffectOutput);
+                    _abilityEffect.Cast(baseCharacter, null, null, abilityEffectContext);
                 }
             }
         }

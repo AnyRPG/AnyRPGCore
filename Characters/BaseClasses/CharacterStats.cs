@@ -336,10 +336,14 @@ namespace AnyRPG {
             secondaryStats[SecondaryStatType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
 
-
+        
         public void ProcessLevelUnload() {
-            ClearStatusEffects();
+            // commented out for now.  should not clear all effects because some are self casted buffs
+            // i think the point was to dismount, but unit controller now handles that
+            // TODO: possibly should clear pet effects ?
+            //ClearStatusEffects();
         }
+        
 
         public void CalculateRunSpeed() {
             float oldRunSpeed = currentRunSpeed;
@@ -741,6 +745,8 @@ namespace AnyRPG {
                     return null;
                 }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
+
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.DisplayName + ", " + sourceCharacter.AbilityManager.Name + "): adding effect");
 
                 statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.DisplayName), newStatusEffectNode);
 

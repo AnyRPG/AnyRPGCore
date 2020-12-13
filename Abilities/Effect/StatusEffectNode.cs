@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void CancelStatusEffect() {
-            //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + MyStatusEffect.MyName);
+            //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + StatusEffect.DisplayName);
             StatusEffect.CancelEffect(characterStats.BaseCharacter);
             characterStats.HandleStatusEffectRemoval(statusEffect);
         }

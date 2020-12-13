@@ -882,7 +882,9 @@ namespace AnyRPG {
         
 
         public void LoadStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadStatusEffectData()");
             foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
+                //Debug.Log("Savemanager.LoadStatusEffectData(): applying " + statusEffectSaveData.MyName);
                 PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
