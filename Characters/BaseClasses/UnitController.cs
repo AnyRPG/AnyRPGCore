@@ -501,7 +501,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTables.Count > 0) {
+            if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
                 //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables(): creating lootableCharacter");
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);

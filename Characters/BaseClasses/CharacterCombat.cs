@@ -450,7 +450,7 @@ namespace AnyRPG {
         /// After the attack animation reaches the point where it contacts the enemy, do damage to it
         /// </summary>
         public virtual bool AttackHit_AnimationEvent() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
             //bool hitSucceeded = false;
             // The character could die mid swing before the attack event fires.  We can't let a dead character do damage
             if (!baseCharacter.CharacterStats.IsAlive) {
@@ -642,10 +642,26 @@ namespace AnyRPG {
 
             if (oldItem != null && oldItem is Weapon) {
                 if ((oldItem as Weapon).OnHitEffectList != null && (oldItem as Weapon).OnHitEffectList.Count > 0) {
-                    onHitEffects.Clear();
+                    //onHitEffects.Clear();
+                    foreach (AbilityEffect abilityEffect in (oldItem as Weapon).OnHitEffectList) {
+                        // TODO: fix this code. it would remove a sword hit if swords are dual wielded
+                        // check all equipped weapons and compare similar to ability providers logic
+                        if (defaultHitEffects.Contains(abilityEffect)) {
+                            Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
+                            onHitEffects.Remove(abilityEffect);
+                        }
+                    }
                 }
                 if ((oldItem as Weapon).DefaultHitEffectList != null && (oldItem as Weapon).DefaultHitEffectList.Count > 0) {
-                    defaultHitEffects.Clear();
+                    //defaultHitEffects.Clear();
+                    foreach (AbilityEffect abilityEffect in (oldItem as Weapon).DefaultHitEffectList) {
+                        // TODO: fix this code. it would remove a sword hit if swords are dual wielded
+                        // check all equipped weapons and compare similar to ability providers logic
+                        if (defaultHitEffects.Contains(abilityEffect)) {
+                            Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
+                            defaultHitEffects.Remove(abilityEffect);
+                        }
+                    }
                 }
                 EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(oldItem);
                 if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
@@ -655,18 +671,19 @@ namespace AnyRPG {
 
             if (newItem != null) {
                 if (newItem is Weapon) {
-                    onHitEffects.Clear();
-                    defaultHitEffects.Clear();
+                    // testing: disabled these because equipping a shield after a sword would clear the hit effects
+                    //onHitEffects.Clear();
+                    //defaultHitEffects.Clear();
                     //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
                     //overrideHitSoundEffect = null;
                     //defaultHitSoundEffect = null;
                     if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
                         //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
-                        onHitEffects = (newItem as Weapon).OnHitEffectList;
+                        onHitEffects.AddRange((newItem as Weapon).OnHitEffectList);
                     }
                     if ((newItem as Weapon).DefaultHitEffectList != null && (newItem as Weapon).DefaultHitEffectList.Count > 0) {
-                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
-                        defaultHitEffects = (newItem as Weapon).DefaultHitEffectList;
+                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item (" + newItem.DisplayName + ") is a weapon and has default hit effects");
+                        defaultHitEffects.AddRange((newItem as Weapon).DefaultHitEffectList);
                     }
                     EquipmentSlotProfile equipmentSlotProfile = baseCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(newItem);
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
