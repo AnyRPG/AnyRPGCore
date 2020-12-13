@@ -28,24 +28,21 @@ namespace AnyRPG {
         // hold the rolled currency amount
         private CurrencyNode currencyNode;
 
+        private List<LootTable> lootTables = new List<LootTable>();
+
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public bool CurrencyRolled { get => currencyRolled; }
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
+        public List<LootTable> LootTables { get => lootTables; }
 
         public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            //CreateLootTables();
+            CreateLootTables();
         }
 
         public static LootableCharacterComponent GetLootableCharacterComponent(Interactable searchInteractable) {
             return searchInteractable.GetFirstInteractableOption(typeof(LootableCharacterComponent)) as LootableCharacterComponent;
         }
-
-        /*
-        public override void Init() {
-            base.Init();
-        }
-        */
 
         public override void Cleanup() {
             base.Cleanup();
@@ -91,7 +88,6 @@ namespace AnyRPG {
             }
         }
 
-        /*
         public void CreateLootTables() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateLootTables()");
             foreach (string lootTableName in Props.LootTableNames) {
@@ -101,10 +97,9 @@ namespace AnyRPG {
                 }
             }
         }
-        */
 
         public void ClearLootTables() {
-            Props.LootTables.Clear();
+            lootTables.Clear();
         }
 
         public void HandleDeath(CharacterStats characterStats) {
@@ -116,7 +111,7 @@ namespace AnyRPG {
             int lootCount = 0;
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
-            if (Props.LootTables != null && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
+            if (lootTables != null && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
                 lootCount = GetLootCount();
             }
@@ -139,9 +134,9 @@ namespace AnyRPG {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
             }
-            if (Props.LootTables == null || Props.LootTables.Count == 0) {
+            if (lootTables == null || lootTables.Count == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table was null, despawning");
-                if (interactable.gameObject != null) {
+                if (interactable != null && interactable.gameObject != null) {
                     AdvertiseLootComplete();
                 }
                 Despawn();
@@ -197,7 +192,7 @@ namespace AnyRPG {
 
             int lootCount = GetLootCount();
             // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
-            if (Props.LootTables != null && lootCount > 0) {
+            if (lootTables != null && lootCount > 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
                 return true;
             }
@@ -208,7 +203,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount()");
             int lootCount = 0;
             
-            foreach (LootTable lootTable in Props.LootTables) {
+            foreach (LootTable lootTable in lootTables) {
                 if (lootTable != null) {
                     lootTable.GetLoot(!lootCalculated);
                     lootCount += lootTable.MyDroppedItems.Count;
@@ -284,7 +279,7 @@ namespace AnyRPG {
                     LootableCharacterComponent lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(interactable);
                     if (lootableCharacter != null) {
                         CharacterStats characterStats = CharacterUnit.GetCharacterUnit(interactable).BaseCharacter.CharacterStats as CharacterStats;
-                        if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.Props.LootTables != null) {
+                        if (characterStats != null && characterStats.IsAlive == false && lootableCharacter.LootTables != null) {
                             //Debug.Log("Adding drops to loot table from: " + lootableCharacter.gameObject.name);
 
                             // get currency loot
@@ -297,7 +292,7 @@ namespace AnyRPG {
                             }
 
                             // get item loot
-                            foreach (LootTable lootTable in lootableCharacter.Props.LootTables) {
+                            foreach (LootTable lootTable in lootableCharacter.LootTables) {
                                 itemDrops.AddRange(lootTable.GetLoot());
                                 lootableCharacter.MonitorLootTable();
                             }
@@ -396,7 +391,7 @@ namespace AnyRPG {
         }
 
         public void ClearLootTable() {
-            foreach (LootTable lootTable in Props.LootTables) {
+            foreach (LootTable lootTable in lootTables) {
                 if (lootTable != null) {
                     lootTable.HandleRevive();
                 }
@@ -413,11 +408,10 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        /*
         public override string GetSummary() {
             return "Lootable";
         }
-        */
+        
     }
 
 }
