@@ -461,7 +461,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToPlayerEvents() {
-            activeCharacter.OnClassChange -= HandleClassChange;
+            activeCharacter.OnClassChange += HandleClassChange;
             activeCharacter.CharacterStats.OnImmuneToEffect += HandleImmuneToEffect;
             activeCharacter.CharacterStats.OnDie += HandleDie;
             activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;

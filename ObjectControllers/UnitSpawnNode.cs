@@ -325,7 +325,7 @@ namespace AnyRPG {
             }
 
             // give this unit a unique name
-            unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.MyInstance.GetSpawnCount();
+            //unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.MyInstance.GetSpawnCount();
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;

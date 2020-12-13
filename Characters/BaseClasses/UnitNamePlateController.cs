@@ -95,7 +95,8 @@ namespace AnyRPG {
                 if (_namePlate != null) {
                     namePlate = _namePlate;
                     if (OverrideNamePlatePosition) {
-                        _namePlate.transform.localPosition = NamePlatePosition;
+                        //_namePlate.transform.localPosition = NamePlatePosition;
+                        namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
                     }
                 }
                 BroadcastInitializeNamePlate();

@@ -57,21 +57,6 @@ namespace AnyRPG {
             return false;
         }
 
-        public override Interactable ReturnTarget(Interactable target) {
-            if (target == null) {
-                //Debug.Log("Ressurect spell cast, but there was no target");
-                return null;
-            }
-            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-            if (targetCharacterUnit == null) {
-                return null;
-            }
-            if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
-                return target;
-            }
-            return null;
-        }
-
         /*
         public override void CastComplete(CharacterUnit source, GameObject target, AbilityEffectOutput abilityEffectInput) {
             base.CastComplete(source, target, abilityEffectInput);

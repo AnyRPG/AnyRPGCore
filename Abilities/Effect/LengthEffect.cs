@@ -123,7 +123,7 @@ namespace AnyRPG {
                         spawnLocation = abilityEffectInput.groundTargetLocation;
                         prefabParent = null;
                     }
-                    if (prefabSpawnLocation == PrefabSpawnLocation.targetPoint) {
+                    if (prefabSpawnLocation == PrefabSpawnLocation.targetPoint && target != null) {
                         //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                         spawnLocation = target.transform.position;

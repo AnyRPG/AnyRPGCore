@@ -1049,6 +1049,9 @@ namespace AnyRPG {
                     UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SetUseable(useable);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
+                    // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
+                    // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
+                    UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].ClearUseable();
                 }
                 counter++;
             }
@@ -1153,6 +1156,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
             PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
+            // testing: load this before setting providers so no duplicates on bars
+            //LoadActionBarData(anyRPGSaveData);
 
             PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
 
@@ -1171,7 +1176,7 @@ namespace AnyRPG {
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
-            // testing allow notification so class trats can be applied
+            // testing allow notification so class traits can be applied
             PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), true);
             PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
@@ -1190,7 +1195,9 @@ namespace AnyRPG {
             // quest data gets loaded last because it could rely on other data such as dialog completion status, which don't get saved because they are inferred
             LoadQuestData(anyRPGSaveData);
 
+            // test loading this earlier to avoid having duplicates on bars
             LoadActionBarData(anyRPGSaveData);
+
             LoadCurrencyData(anyRPGSaveData);
             LoadStatusEffectData(anyRPGSaveData);
             LoadPetData(anyRPGSaveData);

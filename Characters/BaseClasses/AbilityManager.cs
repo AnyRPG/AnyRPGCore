@@ -306,9 +306,11 @@ namespace AnyRPG {
             return true;
         }
 
+        /*
         public virtual Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
             return target;
         }
+        */
 
 
         public virtual float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {

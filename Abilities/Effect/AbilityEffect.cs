@@ -177,7 +177,25 @@ namespace AnyRPG {
         }
 
         
-        public virtual Interactable ReturnTarget(Interactable target) {
+        public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext = null) {
+            if (sourceCharacter == null || sourceCharacter.AbilityManager.UnitGameObject == null) {
+                //Debug.Log("BaseAbility.ReturnTarget(): source is null! This should never happen!!!!!");
+                return null;
+            }
+
+            // perform ability dependent checks
+            if (CanUseOn(target, sourceCharacter, abilityEffectContext) == false) {
+                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + " was false");
+                if (GetTargetOptions(sourceCharacter).CanCastOnSelf && GetTargetOptions(sourceCharacter).AutoSelfCast) {
+                    target = sourceCharacter.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                    //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning target as sourcecharacter: " + target.name);
+                    return target;
+                } else {
+                    //Debug.Log(DisplayName + ".BaseAbility.ReturnTarget(): returning null");
+                    return null;
+                }
+            }
+
             return target;
         }
         
@@ -188,7 +206,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
-            Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
@@ -213,20 +231,30 @@ namespace AnyRPG {
             return returnList;
         }
 
+        /// <summary>
+        /// allow ability effects to chain and perform proper retargeting
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="abilityEffectContext"></param>
+        /// <param name="abilityEffect"></param>
+        /// <returns></returns>
         protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffect abilityEffect) {
-            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
 
             // perform ability dependent target check
-            Interactable finalTarget = ReturnTarget(target);
+            Interactable finalTarget = abilityEffect.ReturnTarget(source, target, abilityEffectContext);
 
+            // no longer used with targetProps
             // perform source dependent target check
-            finalTarget = source.AbilityManager.ReturnTarget(abilityEffect, target);
+            //finalTarget = source.AbilityManager.ReturnTarget(abilityEffect, target);
 
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(): FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
-            if (abilityEffect.CanUseOn(finalTarget, source, abilityEffectContext)) {
+            //if (abilityEffect.CanUseOn(finalTarget, source, abilityEffectContext)) {
+            if (target != null) { 
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
                 returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext);
@@ -242,16 +270,16 @@ namespace AnyRPG {
         }
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target) {
-            Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
-                if (target.UnitComponentController == null) {
+                if (target == null || target.UnitComponentController == null) {
                     if (prefabObjects != null && prefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
-                if (audioSource != null || target.UnitComponentController != null) {
+                if (audioSource != null || (target != null && target.UnitComponentController != null)) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
                         usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
@@ -261,7 +289,7 @@ namespace AnyRPG {
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.AudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-                            if (target.UnitComponentController != null) {
+                            if (target != null && target.UnitComponentController != null) {
                                 target.UnitComponentController.PlayEffect(audioProfile.AudioClip);
                             } else {
                                 audioSource.PlayOneShot(audioProfile.AudioClip);

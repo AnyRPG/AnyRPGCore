@@ -601,6 +601,7 @@ namespace AnyRPG {
         }
 
         // this ability exists to allow a caster to auto-self cast
+        /*
         public override Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
             //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ", " + (target == null ? "null" : target.name) + ")");
             CharacterUnit targetCharacterUnit = null;
@@ -636,6 +637,7 @@ namespace AnyRPG {
             // intentionally not calling base as it always returns the original target
             return target;
         }
+        */
 
         public override void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
 

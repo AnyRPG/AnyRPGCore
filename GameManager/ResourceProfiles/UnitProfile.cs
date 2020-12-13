@@ -287,7 +287,9 @@ namespace AnyRPG {
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
-
+                    
+                    // give this unit a unique name
+                    unitController.gameObject.name = DisplayName.Replace(" ", "") + SystemGameManager.MyInstance.GetSpawnCount();
                     // test - set unitprofile first so we don't overwrite players baseCharacter settings
                     unitController.SetUnitProfile(this, unitControllerMode);
                 }

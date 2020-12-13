@@ -30,6 +30,7 @@ namespace AnyRPG {
 
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            //Debug.Log("CharacterClassPrerequisite.HandleClassChange()");
             UpdateStatus();
         }
 

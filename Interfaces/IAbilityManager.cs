@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         AudioClip GetAnimatedAbilityHitSound();
 
-        Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
+        //Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
 
         /// <summary>
