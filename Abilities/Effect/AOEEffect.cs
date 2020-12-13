@@ -42,7 +42,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AOEEffect.Cast(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            Debug.Log(DisplayName + ".AOEEffect.Cast(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
             }

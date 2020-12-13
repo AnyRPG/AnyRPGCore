@@ -42,6 +42,7 @@ namespace AnyRPG {
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {
             if (searchInteractable == null) {
+                Debug.Log("CharacterUnit.GetCharacterUnit: searchInteractable is null");
                 return null;
             }
             return searchInteractable.CharacterUnit;

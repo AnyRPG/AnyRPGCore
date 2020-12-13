@@ -34,7 +34,6 @@ namespace AnyRPG {
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
 
         public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            characterUnit = CharacterUnit.GetCharacterUnit(interactable);
             //CreateLootTables();
         }
 
@@ -72,17 +71,20 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions(): subscribing to handledeath");
-            characterUnit.BaseCharacter.CharacterStats.BeforeDie += HandleDeath;
-            characterUnit.BaseCharacter.CharacterStats.OnReviveComplete += HandleRevive;
+
+            // have to set this here instead of constructor because the base constructor will call this before the local constructor runs
+            characterUnit = CharacterUnit.GetCharacterUnit(interactable);
+
+            (characterUnit.Interactable as UnitController).OnBeforeDie += HandleDeath;
+            (characterUnit.Interactable as UnitController).OnReviveComplete += HandleRevive;
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
-                characterUnit.BaseCharacter.CharacterStats.BeforeDie -= HandleDeath;
-                characterUnit.BaseCharacter.CharacterStats.OnReviveComplete -= HandleRevive;
+                (characterUnit.Interactable as UnitController).OnBeforeDie -= HandleDeath;
+                (characterUnit.Interactable as UnitController).OnReviveComplete -= HandleRevive;
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;

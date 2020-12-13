@@ -1058,6 +1058,7 @@ namespace AnyRPG {
                 ClearStatusEffects(false);
                 ClearPowerAmounts();
                 BeforeDie(this);
+                baseCharacter.UnitController.NotifyOnBeforeDie(this);
                 OnDie(this);
                 baseCharacter.CharacterCombat.HandleDie();
                 baseCharacter.CharacterAbilityManager.HandleDie(this);

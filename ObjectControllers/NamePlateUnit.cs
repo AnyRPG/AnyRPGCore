@@ -21,6 +21,14 @@ namespace AnyRPG {
 
         public virtual BaseNamePlateController NamePlateController { get => namePlateController; }
         public virtual NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
+        public override string DisplayName {
+            get {
+                if (namePlateProps.DisplayName != string.Empty) {
+                    return namePlateProps.DisplayName;
+                }
+                return base.DisplayName;
+            }
+        }
 
         protected override void Awake() {
             base.Awake();

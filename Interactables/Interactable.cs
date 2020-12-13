@@ -253,6 +253,7 @@ namespace AnyRPG {
         }
 
         public void AddInteractable(InteractableOptionComponent interactableOption) {
+            //Debug.Log(gameObject.name + ".Interactable.AddInteractable()");
             interactables.Add(interactableOption);
         }
 

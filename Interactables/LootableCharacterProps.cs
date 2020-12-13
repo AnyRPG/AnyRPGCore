@@ -29,6 +29,7 @@ namespace AnyRPG {
         public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+            //Debug.Log("InteractableOptionComponent().GetInteractableOption: (" + (interactable == null ? "null" : interactable.DisplayName) + ")");
             return new LootableCharacterComponent(interactable, this);
         }
 

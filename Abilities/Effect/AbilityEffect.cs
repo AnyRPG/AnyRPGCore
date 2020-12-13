@@ -188,7 +188,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
-            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.Name + ", " + (target ? target.name : "null") + ")");
+            Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
@@ -242,7 +242,7 @@ namespace AnyRPG {
         }
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target) {
-            //Debug.Log(MyName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
+            Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
                 if (target.UnitComponentController == null) {

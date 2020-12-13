@@ -16,6 +16,7 @@ namespace AnyRPG {
         public event System.Action OnModelReady = delegate { };
         public event System.Action OnReputationChange = delegate { };
         public event System.Action OnReviveComplete = delegate { };
+        public event System.Action<CharacterStats> OnBeforeDie = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action<UnitType, UnitType> OnUnitTypeChange = delegate { };
         public event System.Action<CharacterRace, CharacterRace> OnRaceChange = delegate { };
@@ -447,6 +448,22 @@ namespace AnyRPG {
 
         public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
+
+            if (componentReferencesInitialized == true) {
+                return;
+            }
+            
+            // if base character exists, create a character unit and link them
+            // do this before the base because the base will create things that need to query the character
+            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
+            if (baseCharacter != null) {
+                //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): found baseCharacter, creating characterUnit");
+                characterUnit = new CharacterUnit(this as Interactable, new InteractableOptionProps());
+                characterUnit.SetBaseCharacter(baseCharacter);
+                baseCharacter.SetUnitController(this);
+                AddInteractable(characterUnit);
+            }
+
             base.GetComponentReferences();
 
             uuid = GetComponent<UUID>();
@@ -454,14 +471,7 @@ namespace AnyRPG {
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
 
-            // if base character exists, create a character unit and link them
-            BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
-            if (baseCharacter != null) {
-                characterUnit = new CharacterUnit(this, new InteractableOptionProps());
-                characterUnit.SetBaseCharacter(baseCharacter);
-                baseCharacter.SetUnitController(this);
-                AddInteractable(characterUnit);
-            }
+            
 
         }
 
@@ -492,6 +502,7 @@ namespace AnyRPG {
             }
 
             if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTables.Count > 0) {
+                //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables(): creating lootableCharacter");
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
@@ -1280,6 +1291,9 @@ namespace AnyRPG {
 
         public void NotifyOnReputationChange() {
             OnReputationChange();
+        }
+        public void NotifyOnBeforeDie(CharacterStats characterStats) {
+            OnBeforeDie(characterStats);
         }
         public void NotifyOnReviveComplete() {
             OnReviveComplete();
