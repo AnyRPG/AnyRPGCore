@@ -750,14 +750,14 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(BaseCharacter source) {
-            //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects()");
+            //Debug.Log(gameObject.name + ".UnitController.ApplyControlEffects()");
             if (!underControl) {
                 underControl = true;
                 masterUnit = source;
                 // done so pets of player unit wouldn't attempt to attack npcs questgivers etc
                 //masterUnit.MyCharacterController.OnSetTarget += SetTarget;
                 if (masterUnit == null) {
-                    Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
+                    //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
                     return;
                 }
                 masterUnit.UnitController.OnClearTarget += ClearTarget;
@@ -821,6 +821,7 @@ namespace AnyRPG {
         }
 
         public void OnMasterAttack(BaseCharacter target) {
+            //Debug.Log(gameObject.name + ".OnMasterAttack()");
             SetTarget(target.UnitController);
         }
 
@@ -1032,6 +1033,7 @@ namespace AnyRPG {
         }
 
         public void Agro(CharacterUnit agroTarget) {
+            //Debug.Log(gameObject.name + ".UnitController.Agro(" + agroTarget.DisplayName + ")");
             // at this level, we are just pulling both parties into combat.
 
             if (currentState is DeathState) {
@@ -1142,7 +1144,7 @@ namespace AnyRPG {
 
         public void SetTarget(Interactable newTarget) {
             //Debug.Log(gameObject.name + ": BaseController: setting target: " + newTarget.name);
-            if (unitControllerMode == UnitControllerMode.AI) {
+            if (unitControllerMode == UnitControllerMode.AI || unitControllerMode == UnitControllerMode.Pet) {
                 if (currentState is DeathState || currentState is EvadeState) {
                     return;
                 }
@@ -1258,6 +1260,7 @@ namespace AnyRPG {
                 }
             }
 
+            //Debug.Log(gameObject.name + ".CanGetValidAttack(): return false");
             return false;
         }
 

@@ -50,6 +50,7 @@ namespace AnyRPG {
             baseController.UnitMotor.FaceTarget(baseController.Target);
 
             if (baseController.CanGetValidAttack(true)) {
+                //Debug.Log(baseController.gameObject.name + ".AttackState.Update(): got valid ability");
                 return;
             }
 

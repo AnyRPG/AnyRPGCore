@@ -1,5 +1,6 @@
 using AnyRPG;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
@@ -9,16 +10,18 @@ namespace AnyRPG {
         [Header("Standard Target")]
 
         [Tooltip("If true, the character must have a target selected to cast this ability.")]
+        [FormerlySerializedAs("requiresTarget")]
         [SerializeField]
-        private bool requiresTarget = false;
+        private bool requireTarget = false;
 
         [Tooltip("If true, the ability source must have an uninterrupted line of sight to the target.")]
         [SerializeField]
         private bool requireLineOfSight = false;
 
         [Tooltip("If true, the target must be a character and must be alive.")]
+        [FormerlySerializedAs("requiresLiveTarget")]
         [SerializeField]
-        private bool requiresLiveTarget = true;
+        private bool requireLiveTarget = true;
 
         [Tooltip("If true, the target must be a character and must be dead.")]
         [SerializeField]
@@ -58,9 +61,9 @@ namespace AnyRPG {
         [SerializeField]
         private int maxRange;
 
-        public bool RequiresTarget { get => requiresTarget; set => requiresTarget = value; }
+        public bool RequireTarget { get => requireTarget; set => requireTarget = value; }
         public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
-        public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
+        public bool RequireLiveTarget { get => requireLiveTarget; set => requireLiveTarget = value; }
         public bool RequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
         public bool CanCastOnSelf { get => canCastOnSelf; set => canCastOnSelf = value; }
         public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
@@ -84,12 +87,12 @@ namespace AnyRPG {
                 && targetable.GetTargetOptions(sourceCharacter).MaxRange > 0
                 && target != null
                 && ((sourceCharacter as BaseCharacter) is BaseCharacter)
-                && (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
+                && ((sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI || (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.Pet) && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
                 return false;
             }
 
             // if this ability requires no target, then we can always cast it
-            if (targetable.GetTargetOptions(sourceCharacter).RequiresTarget == false) {
+            if (targetable.GetTargetOptions(sourceCharacter).RequireTarget == false) {
                 return true;
             }
 
@@ -132,15 +135,14 @@ namespace AnyRPG {
             if (targetCharacterUnit != null) {
 
                 // liveness checks
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequiresLiveTarget == true) {
+                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
                     //Debug.Log("This ability requires a live target");
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a live target!");
                     }
                     return false;
                 }
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
-                    //Debug.Log("This ability requires a dead target");
+                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a dead target!");
                     }
@@ -155,7 +157,7 @@ namespace AnyRPG {
                 }
 
             } else {
-                if (targetable.GetTargetOptions(sourceCharacter).RequiresLiveTarget == true || targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
+                if (targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true || targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                     // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
@@ -182,7 +184,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning true");
+            //Debug.Log(targetable.DisplayName + ".CanUseOn(): return true");
             return true;
         }
 

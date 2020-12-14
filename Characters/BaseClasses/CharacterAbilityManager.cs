@@ -927,7 +927,8 @@ namespace AnyRPG {
         public void ActivateTargettingMode(BaseAbility baseAbility, Interactable target) {
             //Debug.Log("CharacterAbilityManager.ActivateTargettingMode()");
             targettingModeActive = true;
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI) {
+            if (baseCharacter != null && baseCharacter.UnitController != null
+                && (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet)) {
                 targettingModeActive = false;
                 groundTarget = target.transform.position;
             }
@@ -1026,7 +1027,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
             bool canCast = true;
-            if (ability.GetTargetOptions(baseCharacter).RequiresTarget == false || ability.GetTargetOptions(baseCharacter).CanCastOnEnemy == false) {
+            if (ability.GetTargetOptions(baseCharacter).RequireTarget == false || ability.GetTargetOptions(baseCharacter).CanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
                 KillStopCastOverride();
             } else {
@@ -1071,7 +1072,7 @@ namespace AnyRPG {
 
                 // added target condition to allow channeled spells to stop casting if target disappears
                 while (currentCastPercent < 1f
-                    && (ability.GetTargetOptions(baseCharacter).RequiresTarget == false
+                    && (ability.GetTargetOptions(baseCharacter).RequireTarget == false
                     || (target != null && target.gameObject.activeInHierarchy == true))) {
                     yield return null;
                     currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(baseCharacter));
@@ -1327,7 +1328,7 @@ namespace AnyRPG {
 
             OnAttemptPerformAbility(ability);
 
-            if (finalTarget == null && usedAbility.GetTargetOptions(baseCharacter).RequiresTarget == true) {
+            if (finalTarget == null && usedAbility.GetTargetOptions(baseCharacter).RequireTarget == true) {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 }
@@ -1368,7 +1369,8 @@ namespace AnyRPG {
                 }
             }
 
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI) {
+            if (baseCharacter != null && baseCharacter.UnitController != null
+                && (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet)) {
                 if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true) {
                     Vector3 groundTarget = Vector3.zero;
                     if (baseCharacter.UnitController.Target != null) {
@@ -1410,12 +1412,6 @@ namespace AnyRPG {
             // check if we have enough mana
             if (!PerformPowerResourceCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): do not have sufficient power resource to cast!");
-                // not needed, handled in performpowerresourcecheck
-                /*
-                if (playerInitiated) {
-                    OnCombatMessage("Cannot cast " + ability.DisplayName + ". That ability requires " + ability.GetResourceCost(baseCharacter) + " " + ability.PowerResource.DisplayName);
-                }
-                */
                 return false;
             }
 

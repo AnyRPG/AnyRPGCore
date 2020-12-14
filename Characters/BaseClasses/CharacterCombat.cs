@@ -153,7 +153,8 @@ namespace AnyRPG {
 
             BroadcastCharacterDeath();
 
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI && !(baseCharacter.UnitController.CurrentState is DeathState)) {
+            if ((baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet)
+                && !(baseCharacter.UnitController.CurrentState is DeathState)) {
                 (baseCharacter.UnitController as UnitController).ChangeState(new DeathState());
             }
 
@@ -515,7 +516,7 @@ namespace AnyRPG {
                 return true;
             } else {
                 if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null && baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequiresTarget == false) {
+                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, BaseCharacter.UnitController.Target);
                         return true;
                     }
@@ -568,7 +569,7 @@ namespace AnyRPG {
 
         public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI) {
+            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet) {
                 if (baseCharacter.UnitController.CurrentState is EvadeState || baseCharacter.UnitController.CurrentState is DeathState) {
                     return false;
                 }

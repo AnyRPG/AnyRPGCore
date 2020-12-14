@@ -45,14 +45,14 @@ namespace AnyRPG {
 
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
-                        //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
+                        //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".CombatStrategy.GetValidAttackAbility(): Checking if ability known: " + baseAbility.DisplayName);
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
-                            //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
+                            //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController.Target, sourceCharacter)
                                 && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.UnitController.Target, baseAbility)) {
-                                //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
+                                //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.DisplayName);
                                 returnList.Add(baseAbility);
                             }
                         } else {
@@ -67,7 +67,7 @@ namespace AnyRPG {
                 //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
                 return returnList[randomIndex];
             }
-            //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+            //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".CombatStrategy.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
 
         }

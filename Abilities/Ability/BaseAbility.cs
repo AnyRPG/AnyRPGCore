@@ -541,7 +541,7 @@ namespace AnyRPG {
             }
 
             // perform hit / miss check only if baseability requires target and return false if miss
-            if (GetTargetOptions(source).RequiresTarget) {
+            if (GetTargetOptions(source).RequireTarget) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
                     //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(): miss");
                     return false;

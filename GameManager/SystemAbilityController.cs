@@ -73,8 +73,8 @@ namespace AnyRPG {
                 }
 
                 if (fixedLengthEffect.MyPrefabSpawnLocation != PrefabSpawnLocation.GroundTarget
-                    && fixedLengthEffect.GetTargetOptions(source).RequiresTarget == true
-                    && (target == null || (targetStats.IsAlive == true && fixedLengthEffect.GetTargetOptions(source).RequireDeadTarget == true) || (targetStats.IsAlive == false && fixedLengthEffect.GetTargetOptions(source).RequiresLiveTarget == true))) {
+                    && fixedLengthEffect.GetTargetOptions(source).RequireTarget == true
+                    && (target == null || (targetStats.IsAlive == true && fixedLengthEffect.GetTargetOptions(source).RequireDeadTarget == true) || (targetStats.IsAlive == false && fixedLengthEffect.GetTargetOptions(source).RequireLiveTarget == true))) {
                     //Debug.Log("BREAKING!!!!!!!!!!!!!!!!!");
                     break;
                 } else {
