@@ -33,7 +33,10 @@ namespace AnyRPG {
 
         public override List<AbilityEffect> GetAbilityEffects(IAbilityCaster abilityCaster) {
             if (isAutoAttack) {
-                return abilityCaster.AbilityManager.GetDefaultHitEffects();
+                List<AbilityEffect> weaponAbilityList = abilityCaster.AbilityManager.GetDefaultHitEffects();
+                if (weaponAbilityList != null && weaponAbilityList.Count > 0) {
+                    return weaponAbilityList;
+                }
             }
             return base.GetAbilityEffects(abilityCaster);
         }
