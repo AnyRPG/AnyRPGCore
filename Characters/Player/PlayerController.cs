@@ -668,7 +668,7 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null) {
+            if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.ActiveUnitController != null) {
                 PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
             }
         }
@@ -688,6 +688,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+            PlayerManager.MyInstance.ActiveUnitController.OnClassChange += HandleClassChange;
+
 
         }
 
@@ -706,7 +708,12 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+            PlayerManager.MyInstance.ActiveUnitController.OnClassChange -= HandleClassChange;
+        }
 
+        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 
         public void HandleDeath() {

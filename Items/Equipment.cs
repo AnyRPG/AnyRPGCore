@@ -210,7 +210,6 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".Equipment.CanEquip()");
             if (!CharacterClassRequirementIsMet(baseCharacter)) {
                 //Debug.Log(DisplayName + ".Equipment.CanEquip(): not the right character class");
-                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to equip " + DisplayName);
                 return false;
             }
             if (!CapabilityConsumerSupported(baseCharacter)) {

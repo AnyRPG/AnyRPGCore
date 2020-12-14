@@ -57,6 +57,9 @@ namespace AnyRPG {
             }
         }
 
+        public CapabilityConsumerSnapshot() {
+        }
+
         public List<StatusEffect> GetTraitList() {
             List<StatusEffect> returnList = new List<StatusEffect>();
 

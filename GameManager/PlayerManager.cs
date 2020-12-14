@@ -91,7 +91,7 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        public int MyInitialLevel { get => initialLevel; set => initialLevel = value; }
+        public int InitialLevel { get => initialLevel; set => initialLevel = value; }
         public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
         public GameObject PlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
@@ -461,7 +461,6 @@ namespace AnyRPG {
         }
 
         public void SubscribeToPlayerEvents() {
-            activeCharacter.OnClassChange += HandleClassChange;
             activeCharacter.CharacterStats.OnImmuneToEffect += HandleImmuneToEffect;
             activeCharacter.CharacterStats.OnDie += HandleDie;
             activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
@@ -491,7 +490,6 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromPlayerEvents() {
-            activeCharacter.OnClassChange -= HandleClassChange;
             activeCharacter.CharacterStats.OnImmuneToEffect -= HandleImmuneToEffect;
             activeCharacter.CharacterStats.OnDie -= HandleDie;
             activeCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
@@ -526,11 +524,6 @@ namespace AnyRPG {
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
             CombatTextManager.MyInstance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
-        }
-
-        public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
-            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 
         public void HandleActivateTargetingMode(BaseAbility baseAbility) {

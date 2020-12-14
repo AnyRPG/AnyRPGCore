@@ -60,16 +60,13 @@ namespace AnyRPG {
 
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null
+                || capabilityConsumer == null
+                || capabilityConsumer.UnitProfile == null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
 
-            if (capabilityConsumer == null) {
-                Debug.LogError("CharacterPreviewPanelController.ClearPreviewTarget(): capabilityConsumer is null");
-            } else if (capabilityConsumer.UnitProfile == null) {
-                Debug.LogError("CharacterPreviewPanelController.ClearPreviewTarget(): capabilityConsumer.UnitProfile is null");
-            }
             //spawn correct preview unit
             CharacterCreatorManager.MyInstance.HandleOpenWindow(capabilityConsumer.UnitProfile);
 

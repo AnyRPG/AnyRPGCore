@@ -45,13 +45,13 @@ namespace AnyRPG {
 
         private AnyRPGSaveData saveData;
 
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public Faction Faction { get => faction; set => faction = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
-        public UnitType UnitType { get => unitType; set => unitType = value; }
-        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public override void RecieveClosedWindowNotification() {

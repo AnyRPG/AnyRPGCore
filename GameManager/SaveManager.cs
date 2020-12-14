@@ -1103,7 +1103,7 @@ namespace AnyRPG {
         }
 
         // data needed by both the load window and in game play
-        public void SetPlayerManagerPrefab(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadUMARecipe(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadSharedData()");
 
             // appearance
@@ -1119,6 +1119,16 @@ namespace AnyRPG {
                 //PlayerManager.MyInstance.SetDefaultPrefab();
             }
 
+        }
+
+        public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
+            CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot();
+            returnValue.UnitProfile = UnitProfile.GetUnitProfileReference(saveData.unitProfileName);
+            returnValue.CharacterRace = SystemCharacterRaceManager.MyInstance.GetResource(saveData.characterRace);
+            returnValue.CharacterClass = SystemCharacterClassManager.MyInstance.GetResource(saveData.characterClass);
+            returnValue.ClassSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(saveData.classSpecialization);
+            returnValue.Faction = SystemFactionManager.MyInstance.GetResource(saveData.playerFaction);
+            return returnValue;
         }
 
         public void ClearSharedData() {
@@ -1143,7 +1153,7 @@ namespace AnyRPG {
             InventoryManager.MyInstance.PerformSetupActivities();
 
             // player level
-            PlayerManager.MyInstance.MyInitialLevel = anyRPGSaveData.PlayerLevel;
+            PlayerManager.MyInstance.InitialLevel = anyRPGSaveData.PlayerLevel;
 
             // scene and location
             Vector3 playerLocation = new Vector3(anyRPGSaveData.PlayerLocationX, anyRPGSaveData.PlayerLocationY, anyRPGSaveData.PlayerLocationZ);
@@ -1161,26 +1171,18 @@ namespace AnyRPG {
             // testing: load this before setting providers so no duplicates on bars
             //LoadActionBarData(anyRPGSaveData);
 
-            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(anyRPGSaveData.unitProfileName);
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
-            PlayerManager.MyInstance.MyCharacter.SetCharacterRace(SystemCharacterRaceManager.MyInstance.GetResource(anyRPGSaveData.characterRace));
-
-            PlayerManager.MyInstance.MyCharacter.SetCharacterFaction(SystemFactionManager.MyInstance.GetResource(anyRPGSaveData.playerFaction));
-
-            // done by setting profile ?
-            //PlayerManager.MyInstance.MyCharacter.SetUnitType(SystemUnitTypeManager.MyInstance.GetResource(anyRPGSaveData.unitType));
+            PlayerManager.MyInstance.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
-            SetPlayerManagerPrefab(anyRPGSaveData);
+            LoadUMARecipe(anyRPGSaveData);
 
             // complex data
             LoadEquippedBagData(anyRPGSaveData);
             LoadInventorySlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
-            // testing allow notification so class traits can be applied
-            PlayerManager.MyInstance.MyCharacter.SetCharacterClass(SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass), true);
-            PlayerManager.MyInstance.MyCharacter.SetClassSpecialization(SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization));
 
             // testing - move here to prevent learning auto-attack ability twice
             LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager);
@@ -1203,14 +1205,6 @@ namespace AnyRPG {
             LoadCurrencyData(anyRPGSaveData);
             LoadStatusEffectData(anyRPGSaveData);
             LoadPetData(anyRPGSaveData);
-
-            // class traits are applied here because we need the notification to happen
-            //CharacterClass characterClass = SystemCharacterClassManager.MyInstance.GetResource(anyRPGSaveData.characterClass);
-            //PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplyClassTraits(characterClass);
-
-            // is this necessary ?  - commented - monitor for breakage - the class above was commented, yet class traits were still applied ?
-            //ClassSpecialization classSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(anyRPGSaveData.classSpecialization);
-            //PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySpecializationTraits(classSpecialization);
 
             // now that we have loaded the quest data, we can re-enable references
             SystemQuestManager.MyInstance.CreateEventSubscriptions();

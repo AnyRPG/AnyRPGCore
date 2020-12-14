@@ -12,11 +12,11 @@ namespace AnyRPG {
         public int currentExperience;
 
         public string playerName;
-        public string playerFaction;
+        public string unitProfileName;
         public string characterRace;
         public string characterClass;
         public string classSpecialization;
-        public string unitProfileName;
+        public string playerFaction;
         public float PlayerLocationX;
         public float PlayerLocationY;
         public float PlayerLocationZ;

@@ -276,6 +276,21 @@ namespace AnyRPG {
         */
 
         /// <summary>
+        /// This will retrieve a unit profile from the system unit profile manager
+        /// </summary>
+        public static UnitProfile GetUnitProfileReference(string unitProfileName) {
+            if (unitProfileName != null && unitProfileName != string.Empty) {
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                if (tmpUnitProfile != null) {
+                    return tmpUnitProfile;
+                } else {
+                    Debug.LogError("GetUnitProfileReference(): Unit Profile " + unitProfileName + " could not be found.");
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// spawn unit with parent. rotation and position from settings
         /// </summary>
         /// <param name="parentTransform"></param>

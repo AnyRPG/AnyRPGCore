@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class LoadGamePanel : WindowContentController {
+    public class LoadGamePanel : WindowContentController, ICapabilityConsumer {
 
         #region Singleton
         private static LoadGamePanel instance;
@@ -26,10 +26,8 @@ namespace AnyRPG {
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
-        private LoadGameButton selectedLoadGameButton;
-
         [SerializeField]
-        private CharacterPreviewCameraController previewCameraController = null;
+        private CharacterPreviewPanelController characterPreviewPanel = null;
 
         [SerializeField]
         private GameObject buttonPrefab = null;
@@ -39,22 +37,36 @@ namespace AnyRPG {
 
         private List<LoadGameButton> loadGameButtons = new List<LoadGameButton>();
 
-        // hold data so changes are not reset on switch between male and female
-        private string maleRecipe = string.Empty;
-        private string femaleRecipe = string.Empty;
+        private UnitProfile unitProfile = null;
+        private UnitType unitType = null;
+        private CharacterRace characterRace = null;
+        private CharacterClass characterClass = null;
+        private ClassSpecialization classSpecialization = null;
+        private Faction faction = null;
 
-        //private DynamicCharacterAvatar umaAvatar;
+        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
         private AnyRPGSaveData anyRPGSaveData;
 
-        public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        private LoadGameButton selectedLoadGameButton = null;
+
+        private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
+
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
+        public Faction Faction { get => faction; set => faction = value; }
+        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
+
         public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            previewCameraController.ClearTarget();
-            CharacterCreatorManager.MyInstance.HandleCloseWindow();
+            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            characterPreviewPanel.RecieveClosedWindowNotification();
             //SaveManager.MyInstance.ClearSharedData();
             OnCloseWindow(this);
         }
@@ -63,26 +75,43 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
 
             ShowLoadButtonsCommon();
+
+            // inform the preview panel so the character can be rendered
+            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
+
+            // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
+            LoadUMARecipe();
         }
 
         public void ShowSavedGame(LoadGameButton loadGameButton) {
             //Debug.Log("LoadGamePanel.ShowSavedGame()");
 
             selectedLoadGameButton = loadGameButton;
+            anyRPGSaveData = loadGameButton.MySaveData;
+
+            capabilityConsumerSnapshot = SaveManager.MyInstance.GetCapabilityConsumerSnapshot(selectedLoadGameButton.MySaveData);
+
+            unitProfile = capabilityConsumerSnapshot.UnitProfile;
+            UnitType = capabilityConsumerSnapshot.UnitProfile.UnitType;
+            characterRace = capabilityConsumerSnapshot.CharacterRace;
+            characterClass = capabilityConsumerSnapshot.CharacterClass;
+            classSpecialization = capabilityConsumerSnapshot.ClassSpecialization;
+            faction = capabilityConsumerSnapshot.Faction;
 
             SaveManager.MyInstance.ClearSharedData();
-            SaveManager.MyInstance.SetPlayerManagerPrefab(loadGameButton.MySaveData);
+            SaveManager.MyInstance.LoadUMARecipe(loadGameButton.MySaveData);
 
-            ClearPreviewTarget();
-            SetPreviewTarget(loadGameButton.MyUnitProfile);
+            // testing avoid naked spawn
+            LoadUMARecipe();
 
-            anyRPGSaveData = loadGameButton.MySaveData;
-        }
+            // ensure the correct unit and character model is spawned
+            characterPreviewPanel.ReloadUnit();
 
-        public void ClearPreviewTarget() {
-            //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
-            // not really close window, but it will despawn the preview unit
-            CharacterCreatorManager.MyInstance.HandleCloseWindow();
+            // apply capabilities to it so equipment can work
+            //CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+
         }
 
 
@@ -101,7 +130,6 @@ namespace AnyRPG {
 
         public void ShowLoadButtonsCommon() {
             //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
-            ClearPreviewTarget();
             ClearLoadButtons();
 
             foreach (AnyRPGSaveData anyRPGSaveData in SaveManager.MyInstance.GetSaveDataList()) {
@@ -120,34 +148,6 @@ namespace AnyRPG {
         }
 
 
-        public void SetPreviewTarget(UnitProfile unitProfile) {
-            //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController != null && CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
-                return;
-            }
-            if (unitProfile == null) {
-                Debug.Log("CharacterPanel.SetPreviewTarget(): unit profile was null, setting to character creator default");
-                unitProfile = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfile;
-            }
-            //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(unitProfile);
-
-            // testing avoid naked spawn
-            LoadUMARecipe();
-
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
-                if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnitController);
-                    //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                } else {
-                    Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
-                }
-            }
-        }
-
         public void LoadUMARecipe() {
             if (CharacterCreatorManager.MyInstance.PreviewUnitController == null) {
                 //Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
@@ -156,11 +156,16 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
-        public void TargetReadyCallback() {
-            //Debug.Log("LoadGamePanel.TargetReadyCallback()");
-            MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+        public void HandleTargetReady() {
+            //LoadUMARecipe();
 
             if (CharacterCreatorManager.MyInstance.PreviewUnitController != null) {
+
+                //LoadUMARecipe();
+
+                // apply capabilities to it so equipment can work
+                CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+
                 BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
                     //SaveManager.MyInstance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
@@ -168,18 +173,6 @@ namespace AnyRPG {
                     SaveManager.MyInstance.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
-
-            // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            // should not be necessary anymore - handled in unitcontroller
-            //CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
-            /*
-            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
-            }
-            */
-
-            // new code for weapons
-
         }
 
         public void UnHighlightAllButtons() {
@@ -199,25 +192,6 @@ namespace AnyRPG {
             umaAvatar.BuildCharacter();
             //umaAvatar.BuildCharacter(true);
             //umaAvatar.ForceUpdate(true, true, true);
-        }
-        */
-
-        /*
-        public void SaveCharacter() {
-            Debug.Log("LoadGamePanel.SaveCharacter()");
-            SaveManager.MyInstance.SaveUMASettings(umaAvatar.GetCurrentRecipe());
-
-            // replace a default player unit with an UMA player unit when a save occurs
-            if (PlayerManager.MyInstance.MyAvatar == null) {
-                Vector3 currentPlayerLocation = PlayerManager.MyInstance.PlayerUnitObject.transform.position;
-                PlayerManager.MyInstance.DespawnPlayerUnit();
-                PlayerManager.MyInstance.SetUMAPrefab();
-                PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
-            }
-            SaveManager.MyInstance.LoadUMASettings();
-            //ClosePanel();
-
-            OnConfirmAction();
         }
         */
 
