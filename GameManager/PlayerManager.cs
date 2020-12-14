@@ -651,7 +651,6 @@ namespace AnyRPG {
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
             if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
-                UIManager.MyInstance.MyStatusEffectPanelController.SpawnStatusNode(statusEffectNode, activeUnitController.CharacterUnit);
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
                     if (activeUnitController.CharacterUnit != null) {
                         CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);

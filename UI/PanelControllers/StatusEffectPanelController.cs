@@ -19,7 +19,7 @@ namespace AnyRPG {
         public int MyEffectLimit { get => effectLimit; set => effectLimit = value; }
 
         public void SetTarget(UnitController unitController) {
-            //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + ")");
+            //Debug.Log(gameObject.name + "StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
             if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");

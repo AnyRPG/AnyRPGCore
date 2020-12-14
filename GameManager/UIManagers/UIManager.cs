@@ -331,6 +331,7 @@ namespace AnyRPG {
             // initialize unit frame
             playerUnitFrameController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController);
             floatingCastBarController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController as UnitNamePlateController);
+            statusEffectPanelController.SetTarget(PlayerManager.MyInstance.ActiveUnitController);
 
             // intialize mini map
             InitializeMiniMapTarget(PlayerManager.MyInstance.ActiveUnitController.gameObject);
@@ -340,7 +341,10 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HandleCharacterDespawn()");
             //SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
             DeInitializeMiniMapTarget();
-            DeactivateUnitFrames();
+            statusEffectPanelController.ClearTarget();
+            focusUnitFrameController.ClearTarget();
+            floatingCastBarController.ClearTarget();
+            playerUnitFrameController.ClearTarget();
             DeactivatePlayerUI();
         }
 
@@ -523,13 +527,6 @@ namespace AnyRPG {
             } else {
                 HideToolTip();
             }
-        }
-
-        public void DeactivateUnitFrames() {
-            //Debug.Log("UIManager.DeactivateUnitFrames()");
-            focusUnitFrameController.ClearTarget();
-            floatingCastBarController.ClearTarget();
-            playerUnitFrameController.ClearTarget();
         }
 
         public void CheckQuestTrackerSettings() {
