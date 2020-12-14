@@ -1224,10 +1224,10 @@ namespace AnyRPG {
                 && baseCharacter.CharacterCombat.OnHitEffects != null
                 && attackEffect.DamageType == DamageType.physical) {
                 List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                foreach (AttackEffect _attackEffect in baseCharacter.CharacterCombat.OnHitEffects) {
+                foreach (AbilityEffect abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
                     // prevent accidental infinite recursion of ability effect
-                    if (_attackEffect.DisplayName != attackEffect.DisplayName) {
-                        onHitEffectList.Add(_attackEffect);
+                    if (abilityEffect.DisplayName != attackEffect.DisplayName) {
+                        onHitEffectList.Add(abilityEffect);
                     }
                 }
                 attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectOutput, onHitEffectList);
