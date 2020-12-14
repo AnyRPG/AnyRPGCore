@@ -225,7 +225,9 @@ namespace AnyRPG {
         /// <param name="capabilityConsumer"></param>
         /// <returns></returns>
         public virtual bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
-            return false;
+            //return false;
+            // change default to true, or accessories cannot be equipped
+            return true;
         }
 
         public override string GetSummary() {
