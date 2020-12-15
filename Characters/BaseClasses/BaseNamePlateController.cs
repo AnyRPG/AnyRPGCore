@@ -122,10 +122,12 @@ namespace AnyRPG {
             this.namePlateUnit = namePlateUnit;
         }
 
+        /*
         public virtual void Init() {
             //Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.Init()");
             InitializeNamePlate();
         }
+        */
 
         public virtual void Cleanup() {
             if (namePlateUnit != null) {

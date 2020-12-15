@@ -160,6 +160,7 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
+            DisableInteraction();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 if (SystemConfigurationManager.MyInstance == null) {
@@ -339,7 +340,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
-            if (spawnReference == null && CanInteract() == false) {
+            if (spawnReference == null && MyPrerequisitesMet == false) {
                 DisableInteraction();
             }
 
@@ -349,6 +350,7 @@ namespace AnyRPG {
                 _interactable.HandlePrerequisiteUpdates();
             }
             */
+
             OnPrerequisiteUpdates();
         }
 
@@ -359,15 +361,17 @@ namespace AnyRPG {
             EnableInteraction();
         }
 
+        // meant to be overwritten on characters
         public virtual void EnableInteraction() {
-            // meant to be overwritten on characters
+            //Debug.Log(gameObject.name + ".Interactable.EnableInteraction()");
             if (myCollider != null) {
                 myCollider.enabled = true;
             }
         }
 
+        // meant to be overwritten on characters
         public virtual void DisableInteraction() {
-            // meant to be overwritten on characters
+            //Debug.Log(gameObject.name + ".Interactable.DisableInteraction()");
             if (myCollider != null) {
                 myCollider.enabled = false;
             }
@@ -632,6 +636,10 @@ namespace AnyRPG {
                 return;
             }
 
+            if (MyPrerequisitesMet == false) {
+                return;
+            }
+
             // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
             // added pivot so the tooltip doesn't bounce around
             UIManager.MyInstance.ShowToolTip(new Vector2(0, 1), UIManager.MyInstance.MouseOverWindow.transform.position, this);
@@ -679,6 +687,10 @@ namespace AnyRPG {
             }
 
             if (PlayerManager.MyInstance.ActiveUnitController.gameObject == gameObject) {
+                return;
+            }
+
+            if (MyPrerequisitesMet == false) {
                 return;
             }
 

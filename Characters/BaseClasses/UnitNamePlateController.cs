@@ -71,6 +71,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public override void Init() {
             //Debug.Log("UnitNamePlateController.Init()");
             if ((namePlateUnit as UnitController) is UnitController) {
@@ -78,11 +79,15 @@ namespace AnyRPG {
             }
             base.Init();
         }
+        */
 
         public override void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
                 return;
+            }
+            if ((namePlateUnit as UnitController) is UnitController) {
+                unitController = (namePlateUnit as UnitController);
             }
             if (unitController != null) {
                 if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null

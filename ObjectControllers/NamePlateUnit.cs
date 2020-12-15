@@ -38,7 +38,9 @@ namespace AnyRPG {
         public override void ProcessInit() {
             //Debug.Log(gameObject.name + ".NamePlateUnit.ProcessInit()");
             base.ProcessInit();
-            InitializeNamePlateController();
+
+            // InitializeNamePlateController called from interactable.HandlePrerequisiteUpdates
+            //InitializeNamePlateController();
         }
 
 
@@ -47,7 +49,7 @@ namespace AnyRPG {
             if (namePlateReady == true) {
                 return;
             }
-            namePlateController.Init();
+            namePlateController.InitializeNamePlate();
             namePlateReady = true;
         }
 
@@ -72,7 +74,7 @@ namespace AnyRPG {
             // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
             // this means the only way they can spawn their nameplate is through a direct call
             if (NamePlateController.NamePlate == null) {
-                NamePlateController.InitializeNamePlate();
+                InitializeNamePlateController();
                 if (NamePlateController.NamePlate == null) {
                     return;
                 }

@@ -431,6 +431,8 @@ namespace AnyRPG {
 
             SetStartPosition();
 
+            InitializeNamePlateController();
+
             ActivateUnitControllerMode();
 
             patrolController.Init();

@@ -265,8 +265,10 @@ namespace AnyRPG {
                     return true;
                 }
             } else {
-                HandlePrerequisiteUpdates();
-                return true;
+                if (MyPrerequisitesMet) {
+                    HandlePrerequisiteUpdates();
+                    return true;
+                }
             }
             return false;
 

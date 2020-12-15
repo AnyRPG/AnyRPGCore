@@ -77,8 +77,8 @@ namespace AnyRPG {
         public Canvas MyNamePlateCanvas { get => namePlateCanvas; set => namePlateCanvas = value; }
         public Canvas MySpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
-        private void Start() {
-            //Debug.Log("NamePlateController.Start(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
+        private void Awake() {
+            //Debug.Log("NamePlateController.Awake(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
             CreateEventSubscriptions();
             HideSpeechBubble();
         }
@@ -284,6 +284,8 @@ namespace AnyRPG {
             }
             unitNamePlateController.NamePlate = this;
 
+            // testing - does this prevent nameplate blinks on bottom of screen as units spawn
+            UpdatePosition();
         }
 
         public void HandleTitleChange(string newTitle) {

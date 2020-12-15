@@ -14,6 +14,17 @@ namespace AnyRPG {
             base.Awake();
             namePlateController = new BaseNamePlateController(this);
         }
+
+        /*
+        public override void HandlePrerequisiteUpdates() {
+            base.HandlePrerequisiteUpdates();
+            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
+                //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
+                return;
+            }
+            UpdateNamePlateImage();
+        }
+        */
     }
 
 }
