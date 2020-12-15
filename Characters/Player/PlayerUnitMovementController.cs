@@ -32,7 +32,6 @@ namespace AnyRPG {
         //Movement.
         [HideInInspector] public Vector3 currentMoveVelocity;
         [HideInInspector] public Vector3 currentTurnVelocity;
-        [HideInInspector] public bool isMoving = false;
         public float rotationSpeed = 5f;
 
         //Air control.
@@ -137,10 +136,13 @@ namespace AnyRPG {
             }
 
             // testing: do nothing if idle state to prevent resetting movement to zero and interfering with moving platforms
+            // testing: unit still launching up.  I think platforms was rigidbody, not clamped movement so disable for now again
+            /*
             if (rpgCharacterState == AnyRPGCharacterState.Idle) {
                 //Debug.Log("Idle state active, not moving");
                 return;
             }
+            */
 
             //Move the player by our velocity every frame.
             // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
@@ -170,11 +172,9 @@ namespace AnyRPG {
                     } else {
                         PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetStrafing(false);
                     }
-                    isMoving = true;
                     PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetMoving(true);
                     PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
                 }/* else {
-                    isMoving = false;
                     PlayerManager.MyInstance.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
                     PlayerManager.MyInstance.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
                     PlayerManager.MyInstance.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
@@ -220,7 +220,6 @@ namespace AnyRPG {
             currentMoveVelocity = Vector3.zero;
             EnterGroundStateCommon();
 
-            isMoving = false;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetMoving(false);
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetStrafing(false);
 
@@ -265,7 +264,8 @@ namespace AnyRPG {
             if (Mathf.Abs(PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
 
                 // note: disabled this to test if it was causing issues with moving platforms
-                //currentMoveVelocity = new Vector3(0, 0, 0);
+                // note : re-enabled to see if it was not preventing launching up hills
+                currentMoveVelocity = new Vector3(0, 0, 0);
                 
                 // disable gravity while this close to the ground so we don't slide down slight inclines
                 // freezing y position was causing character to not get lifted by bridges
@@ -277,7 +277,8 @@ namespace AnyRPG {
                 PlayerManager.MyInstance.ActiveUnitController.FreezePositionXZ();
 
                 // note: disabled this to test if it was causing issues with moving platforms
-                //currentMoveVelocity = new Vector3(0, Mathf.Clamp(PlayerManager.MyInstance.ActiveUnitController.MyRigidBody.velocity.y, -53, 0), 0);
+                // note : re-enabled to see if it was not preventing launching up hills
+                currentMoveVelocity = new Vector3(0, Mathf.Clamp(PlayerManager.MyInstance.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
             }
         }
 
