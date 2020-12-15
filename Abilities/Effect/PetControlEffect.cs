@@ -13,76 +13,53 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> petEffectNames = new List<string>();
 
-        /*
-        [SerializeField]
-        private List<string> petEffectList = new List<string>();
-        */
-
-        private List<AbilityEffect> realPetEffectList = new List<AbilityEffect>();
-
-        private List<CharacterUnit> petUnits = new List<CharacterUnit>();
+        private List<SummonEffect> petEffectList = new List<SummonEffect>();
 
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".PetEffect.CastTick()");
+            //Debug.Log(DisplayName + ".PetControlEffect.CastTick()");
             base.CastTick(source, target, abilityEffectInput);
 
-            // FIX ME : TEMPORARILY DISABLED TO PREVENT INFINITE PET SPAWN
-            //CheckPetSpawn(source, target, abilityEffectInput);
+            CheckPetSpawn(source, target, abilityEffectInput);
         }
 
         public void CheckPetSpawn(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn()");
-            List<CharacterUnit> unitsToRemove = new List<CharacterUnit>();
-            foreach (CharacterUnit characterUnit in petUnits) {
-                //if (characterUnit != null) {
-                    if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
-                    //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING DEAD PET TO REMOVE LIST");
-                    unitsToRemove.Add(characterUnit);
-                    }
-                //}
+            //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn()");
+            CharacterPetManager characterPetManager = null;
+            if ((source as BaseCharacter) is BaseCharacter) {
+                characterPetManager = (source as BaseCharacter).CharacterPetManager;
+            } else {
+                //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): source is not basecharacter");
+                return;
             }
-            foreach (CharacterUnit characterUnit in unitsToRemove) {
-                //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): REMOVING DEAD PET");
-                petUnits.Remove(characterUnit);
-            }
-            if (petUnits.Count == 0) {
-                //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): SPAWNING PETS");
-                // spawn pet
-                List<AbilityEffect> castList = new List<AbilityEffect>();
-                foreach (AbilityEffect petEffect in realPetEffectList) {
-                    //if (source.MyCharacterAbilityManager.HasAbility(petAbilityName)) {
-                        if (SystemResourceManager.MatchResource(petEffect.DisplayName, DisplayName)) {
-                            Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
-                        } else {
-                            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
-                            castList.Add(petEffect);
-                        }
-                    //}
-                }
-                if (castList.Count > 0) {
-                    //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
-                    Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
-                    foreach (KeyValuePair<PrefabProfile, GameObject> tmpObject in rawObjectList) {
-                        //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): LOOPING THROUGH RAW OBJECT LIST ");
 
-                        // FIX ME : NEED TO TRACK PETS SOMEHOW - MAYBE INTEGRATE WITH PET JOURNAL
-                        /*
-                        CharacterUnit _characterUnit = tmpObject.Value.GetComponent<CharacterUnit>();
-                        if (_characterUnit != null) {
-                            //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): ADDING PET TO UNIT LIST");
-                            petUnits.Add(_characterUnit);
-                        }
-                        */
+            List<AbilityEffect> castList = new List<AbilityEffect>();
+            foreach (SummonEffect petEffect in petEffectList) {
+                if (SystemResourceManager.MatchResource(petEffect.DisplayName, DisplayName)) {
+                    Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
+                } else {
+                    //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
+                    if (petEffect.UnitProfile != null
+                        && characterPetManager.MyActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == false) {
+                        //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding cast:" + petEffect.DisplayName);
+                        castList.Add(petEffect);
                     }
                 }
             }
+            if (castList.Count > 0) {
+                //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
+                Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
+            }
+
         }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
-            //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
-            foreach (CharacterUnit characterUnit in petUnits) {
-                if (characterUnit != null) {
-                    characterUnit.Despawn(0, false, true);
+            //Debug.Log("PetControlEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
+
+            foreach (SummonEffect petEffect in petEffectList) {
+                //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
+                if (petEffect.UnitProfile != null
+                    && targetCharacter.CharacterPetManager.MyActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
+                    targetCharacter.CharacterPetManager.DespawnPet(petEffect.UnitProfile);
                 }
             }
 
@@ -92,12 +69,11 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
 
-            realPetEffectList = new List<AbilityEffect>();
             if (petEffectNames != null) {
                 foreach (string petEffectName in petEffectNames) {
                     AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(petEffectName);
-                    if (abilityEffect != null) {
-                        realPetEffectList.Add(abilityEffect);
+                    if (abilityEffect != null && ((abilityEffect as SummonEffect) is SummonEffect)) {
+                        petEffectList.Add(abilityEffect as SummonEffect);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

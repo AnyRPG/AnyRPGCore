@@ -746,7 +746,7 @@ namespace AnyRPG {
 
         public void SavePetData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.MyUnitProfiles) {
+            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyUnitProfiles) {
                 PetSaveData saveData = new PetSaveData();
                 saveData.MyName = unitProfile.DisplayName;
                 anyRPGSaveData.petSaveData.Add(saveData);
@@ -994,7 +994,7 @@ namespace AnyRPG {
 
             foreach (PetSaveData petSaveData in anyRPGSaveData.petSaveData) {
                 if (petSaveData.MyName != string.Empty) {
-                    PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.AddPet(petSaveData.MyName);
+                    PlayerManager.MyInstance.MyCharacter.CharacterPetManager.AddPet(petSaveData.MyName);
                 }
             }
 

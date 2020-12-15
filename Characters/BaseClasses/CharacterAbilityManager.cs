@@ -371,10 +371,10 @@ namespace AnyRPG {
 
         public override void CapturePet(UnitController targetUnitController) {
             base.CapturePet(targetUnitController);
-            if (baseCharacter.MyCharacterPetManager != null && targetUnitController != null) {
+            if (baseCharacter.CharacterPetManager != null && targetUnitController != null) {
                 //Debug.Log(gameObject.name + ".CapturePet(): adding to pet manager");
-                baseCharacter.MyCharacterPetManager.AddPet(targetUnitController.UnitProfile);
-                baseCharacter.MyCharacterPetManager.MyActiveUnitProfiles.Add(targetUnitController.UnitProfile, targetUnitController);
+                baseCharacter.CharacterPetManager.AddPet(targetUnitController.UnitProfile);
+                baseCharacter.CharacterPetManager.MyActiveUnitProfiles.Add(targetUnitController.UnitProfile, targetUnitController);
             }
         }
 
@@ -806,11 +806,11 @@ namespace AnyRPG {
         }
 
         public override void AddPet(CharacterUnit target) {
-            if (baseCharacter.MyCharacterPetManager != null
+            if (baseCharacter.CharacterPetManager != null
                 && target.Interactable != null
                 && target.Interactable is UnitController
                 && (target.Interactable as UnitController).UnitProfile != null) {
-                baseCharacter.MyCharacterPetManager.AddPet((target.Interactable as UnitController).UnitProfile);
+                baseCharacter.CharacterPetManager.AddPet((target.Interactable as UnitController).UnitProfile);
             }
         }
 

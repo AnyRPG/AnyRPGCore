@@ -45,13 +45,22 @@ namespace AnyRPG {
         }
 
         public virtual void DespawnPet(UnitProfile unitProfile) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.DeSpawnPet(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
-                UnityEngine.Object.Destroy(activeUnitProfiles[unitProfile]);
+                UnityEngine.Object.Destroy(activeUnitProfiles[unitProfile].gameObject);
             }
             activeUnitProfiles.Remove(unitProfile);
         }
 
+        public virtual void HandleUnitDestroy(UnitProfile unitProfile) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.HandleUnitDestroy(" + unitProfile.DisplayName + ")");
+            if (activeUnitProfiles.ContainsKey(unitProfile)) {
+                activeUnitProfiles.Remove(unitProfile);
+            }
+        }
+
         public virtual void SpawnPet(UnitProfile unitProfile) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.SpawnPet(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
                 // can't add the same dictionary key twice
                 return;
@@ -59,6 +68,7 @@ namespace AnyRPG {
             UnitController unitController = unitProfile.SpawnUnitPrefab(baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward, UnitControllerMode.Pet);
             if (unitController != null) {
                 unitController.SetPetMode(baseCharacter);
+                unitController.OnUnitDestroy += HandleUnitDestroy;
             }
             activeUnitProfiles.Add(unitProfile, unitController);
         }

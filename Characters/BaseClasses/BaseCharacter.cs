@@ -84,8 +84,8 @@ namespace AnyRPG {
             }
         }
 
-        public CharacterPetManager MyCharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
-        public bool MySpawnDead { get => spawnDead; set => spawnDead = value; }
+        public CharacterPetManager CharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
+        public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
         public string Title { get => title; set => title = value; }
         public List<IStatProvider> StatProviders { get => statProviders; set => statProviders = value; }
         public UnitToughness UnitToughness { get => unitToughness; set => unitToughness = value; }

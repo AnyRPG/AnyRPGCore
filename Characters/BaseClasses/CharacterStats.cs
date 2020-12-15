@@ -1046,7 +1046,7 @@ namespace AnyRPG {
 
         public void TrySpawnDead() {
             //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead()");
-            if (baseCharacter != null && baseCharacter.MySpawnDead == true) {
+            if (baseCharacter != null && baseCharacter.SpawnDead == true) {
                 //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
 

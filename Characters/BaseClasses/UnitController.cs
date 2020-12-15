@@ -29,6 +29,7 @@ namespace AnyRPG {
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
+        public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
 
 
         private INamePlateTarget namePlateTarget = null;
@@ -295,7 +296,9 @@ namespace AnyRPG {
 
         private void EnablePetMode() {
             //Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
+            EnableAICommon();
             ChangeState(new IdleState());
+            SetAggroRange();
         }
 
         /// <summary>
@@ -347,6 +350,17 @@ namespace AnyRPG {
         /// set this unit to be an AI unit
         /// </summary>
         private void EnableAI() {
+            EnableAICommon();
+
+            if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.SpawnDead == true) {
+                ChangeState(new DeathState());
+            } else {
+                ChangeState(new IdleState());
+            }
+            SetAggroRange();
+        }
+
+        private void EnableAICommon() {
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
@@ -360,13 +374,6 @@ namespace AnyRPG {
 
             // ensure player is not physically blocked or pushed around by AI units
             myCollider.isTrigger = true;
-
-            if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.MySpawnDead == true) {
-                ChangeState(new DeathState());
-            } else {
-                ChangeState(new IdleState());
-            }
-            SetAggroRange();
         }
 
         public void ConfigurePlayer() {
@@ -1237,6 +1244,7 @@ namespace AnyRPG {
             base.OnDestroy();
             StopAllCoroutines();
             persistentObjectComponent.Cleanup();
+            OnUnitDestroy(unitProfile);
         }
 
         public void CommonMovementNotifier() {

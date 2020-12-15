@@ -84,7 +84,7 @@ namespace AnyRPG {
 
         public void UpdateButtons(PetSpawnButton petSpawnButton) {
             if (petSpawnButton.MyUnitProfile != null) {
-                if (PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.MyActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
                     spawnButton.interactable = false;
                     despawnButton.interactable = true;
                 } else {
@@ -145,8 +145,8 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
 
-            if (PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager != null) {
-                unitProfileList = PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.MyUnitProfiles;
+            if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager != null) {
+                unitProfileList = PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyUnitProfiles;
             }
             ShowPreviewButtonsCommon();
         }
@@ -185,12 +185,12 @@ namespace AnyRPG {
         }
 
         public void SpawnUnit() {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
+            PlayerManager.MyInstance.MyCharacter.CharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             ClosePanel();
         }
 
         public void DespawnUnit() {
-            PlayerManager.MyInstance.MyCharacter.MyCharacterPetManager.DespawnPet(MySelectedPetSpawnButton.MyUnitProfile);
+            PlayerManager.MyInstance.MyCharacter.CharacterPetManager.DespawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             UpdateButtons(selectedPetSpawnButton);
             //ClosePanel();
         }

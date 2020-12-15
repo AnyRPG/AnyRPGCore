@@ -92,7 +92,7 @@ namespace AnyRPG {
             if (unitController != null) {
                 if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
                     && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
-                    && unitController.CharacterUnit.BaseCharacter.MySpawnDead == false) {
+                    && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
                     // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                     return;
                 }
