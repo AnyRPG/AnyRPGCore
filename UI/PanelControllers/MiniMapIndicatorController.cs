@@ -117,9 +117,16 @@ namespace AnyRPG {
         }
 
         public void SetInteractable(Interactable interactable) {
-            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.name + ")");
+            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
             this.interactable = interactable;
+            interactable.OnInteractableDestroy += HandleInteractableDestroy;
             SetupMiniMap();
+        }
+
+        public void HandleInteractableDestroy() {
+            if (gameObject != null) {
+                Destroy(gameObject, 0);
+            }
         }
 
         private void LateUpdate() {
@@ -128,6 +135,7 @@ namespace AnyRPG {
                 //Debug.Log("MiniMapIndicatorController.LateUpdate(): namePlateUnit: " + (interactable == null ? "null" : interactable.MyName) + ": setup has not completed yet!");
                 return;
             }
+
             Vector2 viewportPosition = CameraManager.MyInstance.MiniMapCamera.WorldToViewportPoint(interactable.gameObject.transform.position);
             Vector2 proportionalPosition = new Vector2(viewportPosition.x * rectTransform.sizeDelta.x, viewportPosition.y * rectTransform.sizeDelta.y);
             //Debug.Log(interactable.gameObject.name + ".MiniMapIndicatorController.LateUpdate(). interactable position: " + interactable.gameObject.transform.position + "; viewportPosition: " + viewportPosition + "; proportionalPosition: " + proportionalPosition);
@@ -157,13 +165,13 @@ namespace AnyRPG {
             Destroy(gameObject, 0);
         }
 
-        /*
         private void OnDestroy() {
-            if (characterUnit != null) {
-                characterUnit.MyMiniMapIndicator = null;
+            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.OnDestroy(): interactable: " + interactable.gameObject.name);
+            if (interactable != null) {
+                interactable.OnInteractableDestroy -= HandleInteractableDestroy;
             }
         }
-        */
+
         /*
         public void OnPointerEnter(BaseEventData eventData) {
             if (characterUnit.MyInteractable != null) {

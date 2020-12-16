@@ -10,6 +10,7 @@ namespace AnyRPG {
     public class Interactable : Spawnable, IDescribable {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
+        public event System.Action OnInteractableDestroy = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         protected Sprite interactableIcon = null;
@@ -214,7 +215,6 @@ namespace AnyRPG {
         public override void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
             base.CleanupEverything();
-            CleanupMiniMapIndicator();
             ClearFromPlayerRangeTable();
         }
 
@@ -335,23 +335,19 @@ namespace AnyRPG {
 
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+
             base.HandlePrerequisiteUpdates();
             if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
             if (spawnReference == null && MyPrerequisitesMet == false) {
                 DisableInteraction();
             }
 
-            InstantiateMiniMapIndicator();
-            /*
-            foreach (InteractableOptionComponent _interactable in interactables) {
-                _interactable.HandlePrerequisiteUpdates();
-            }
-            */
-
+            // give interaction panel a chance to update or close
             OnPrerequisiteUpdates();
+
+            InstantiateMiniMapIndicator();
         }
 
         public override void Spawn() {
@@ -431,9 +427,12 @@ namespace AnyRPG {
         public void CleanupMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
             if (miniMapIndicator != null) {
-                //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
+                Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
                 Destroy(miniMapIndicator);
-                miniMapIndicatorReady = false;
+
+                // keeping this set to true so any other update can't respawn it
+                // if there is a situation where we re-enable interactables, then we should set it to false in OnEnable instead
+                // miniMapIndicatorReady = false;
             }
         }
 
@@ -968,7 +967,7 @@ namespace AnyRPG {
                     interactable.Cleanup();
                 }
             }
-
+            OnInteractableDestroy();
         }
 
 

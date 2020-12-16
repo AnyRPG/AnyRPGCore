@@ -31,7 +31,6 @@ namespace AnyRPG {
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
 
-
         private INamePlateTarget namePlateTarget = null;
 
         // by default, a unit will enter AI mode if no mode is set before Start()
