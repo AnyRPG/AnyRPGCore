@@ -69,6 +69,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             foreach (Dialog dialog in Props.DialogList) {
+                //Debug.Log(interactable.gameObject.name + ".DialogInteractable.GetCurrentOptionList() : found dialog: " + dialog.DisplayName);
                 if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
                     currentList.Add(dialog);
                 }
@@ -216,6 +217,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
+            //Debug.Log(interactable.gameObject.name + ".DialogComponent.HandlePrerequisiteUpdates(): " + GetCurrentOptionList().Count);
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }

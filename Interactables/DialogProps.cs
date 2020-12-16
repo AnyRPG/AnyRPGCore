@@ -39,17 +39,20 @@ namespace AnyRPG {
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             dialogComponent = new DialogComponent(interactable, this);
+            foreach (Dialog dialog in dialogList) {
+                dialog.RegisterPrerequisiteOwner(dialogComponent);
+            }
             return dialogComponent;
         }
 
         public override void SetupScriptableObjects() {
+            //Debug.Log("DialogProps.SetupScriptableObjects()");
             base.SetupScriptableObjects();
 
             if (dialogNames != null) {
                 foreach (string dialogName in dialogNames) {
                     Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
                     if (tmpDialog != null) {
-                        tmpDialog.RegisterPrerequisiteOwner(dialogComponent);
                         dialogList.Add(tmpDialog);
                     } else {
                         Debug.LogError("DialogComponent.SetupScriptableObjects(): Could not find dialog " + dialogName + " while initializing Dialog Interactable.");

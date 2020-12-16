@@ -185,11 +185,9 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates()");
+            //Debug.Log(interactable.gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates()");
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
-            } else {
-                Debug.Log("InteractableOption.HandlePrerequisiteUpdates(): interactable was null");
             }
         }
 

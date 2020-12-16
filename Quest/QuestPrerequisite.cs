@@ -26,11 +26,12 @@ namespace AnyRPG {
         private bool requireTurnedIn = true;
 
         public void HandleQuestStatusUpdated() {
+            //Debug.Log("QuestPrerequisite.HandleQuestStatusUpdated()" + prerequisiteQuest.DisplayName);
             UpdateStatus();
         }
 
         public void UpdateStatus(bool notify = true) {
-            //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName);
+            //Debug.Log("QuestPrerequisite.UpdateStatus(" + notify + "): " + prerequisiteQuest.DisplayName);
             bool originalResult = prerequisiteMet;
             if (prerequisiteQuest == null) {
                 Debug.LogError("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
@@ -47,7 +48,7 @@ namespace AnyRPG {
                 prerequisiteMet = false;
             }
             if (prerequisiteMet != originalResult && notify == true) {
-                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + "; calling OnStatusUpated; originalresult: " + originalResult + "; notify: " + notify);
+                //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.DisplayName + "; calling OnStatusUpated; originalresult: " + originalResult + "; notify: " + notify);
                 OnStatusUpdated();
             } else {
                 //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + "; STATUS DID NOT CHANGE; originalresult: " + originalResult + "; notify: " + notify);

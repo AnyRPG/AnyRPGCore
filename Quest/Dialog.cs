@@ -61,6 +61,7 @@ namespace AnyRPG {
         }
 
         public void RegisterPrerequisiteOwner(IPrerequisiteOwner prerequisiteOwner) {
+            //Debug.Log(DisplayName + ".Dialog.RegisterPrerequisiteOwner()");
             this.prerequisiteOwner = prerequisiteOwner;
         }
 
@@ -142,9 +143,13 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates() {
+            //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
             if (prerequisiteOwner != null) {
                 // this event is for the interactable that will display this dialog and needs to know when it becomes available
+                //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
                 prerequisiteOwner.HandlePrerequisiteUpdates();
+            } else {
+
             }
         }
     }
