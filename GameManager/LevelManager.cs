@@ -332,7 +332,10 @@ namespace AnyRPG {
         /// <param name="levelName"></param>
         public void LoadLevel(string levelName) {
             //Debug.Log("LevelManager.LoadLevel(" + levelName + ")");
+            PlayerManager.MyInstance.ProcessLevelUnload();
+
             SystemEventManager.TriggerEvent("OnLevelUnload", new EventParamProperties());
+            // playerManager needs to do this last so other objects can respond before we despawn the character
 
             UIManager.MyInstance.DeactivateInGameUI();
             UIManager.MyInstance.DeactivateSystemMenuUI();

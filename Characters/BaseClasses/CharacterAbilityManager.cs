@@ -1582,13 +1582,23 @@ namespace AnyRPG {
                     DespawnAbilityObjects();
                 }
 
+                // testing put below logic inside this condition
+                // it is causing unnecessary setting of animator speed in clearAnimationBlockers, which interferes with movement speed
+                if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
+                    BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
+                }
+                NotifyOnCastStop();
+
             } else {
                 //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
             }
+            /*
+            // testing moved above
             if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
                 BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
             }
             NotifyOnCastStop();
+            */
         }
 
         public void ProcessLevelUnload() {

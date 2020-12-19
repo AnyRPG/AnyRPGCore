@@ -148,7 +148,8 @@ namespace AnyRPG {
 
         public virtual void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Spawnable.CleanupEverything()");
-            CleanupEventSubscriptions();
+            // moved to OnDestroy so disabled object can still respond to levelUnload
+            //CleanupEventSubscriptions();
             CleanupScriptableObjects();
         }
 
@@ -282,6 +283,7 @@ namespace AnyRPG {
 
         protected virtual void OnDestroy() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDestroy()");
+            CleanupEventSubscriptions();
         }
 
         public virtual void SetupScriptableObjects() {

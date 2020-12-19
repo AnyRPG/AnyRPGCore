@@ -96,14 +96,18 @@ namespace AnyRPG {
             // TODO : should this just set to trigger instead so player go through portals and be attacked on mount?
             //PlayerManager.MyInstance.ActiveUnitController.Collider.enabled = false;
             // TESTING IT NOW
-            unitController.Collider.isTrigger = true;
+            // duplicate collider triggers since mount is redirected - disabling
+            //unitController.Collider.isTrigger = true;
+            unitController.Collider.enabled = false;
+
 
             unitController.RigidBody.WakeUp();
         }
 
         public void DeActivateMountedState() {
             //Debug.Log(unitController.gameObject.name + ".UnitMountManager.DeActivateMountedState()");
-            if (mountUnitController != null) {
+            UnsubscribeFromMountModelReady();
+            if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
                 unitController.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
 
@@ -112,8 +116,6 @@ namespace AnyRPG {
 
                 // we could skip this and just let the player fall through gravity
                 unitController.transform.position = mountUnitController.transform.position;
-
-                UnsubscribeFromMountModelReady();
 
                 ConfigureCharacterRegularPhysics();
 
@@ -128,12 +130,14 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetRiding(false);
                 //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
+                unitController.NotifyOnDeActivateMountedState();
+            }
+            if (mountUnitController != null) { 
                 GameObject.Destroy(mountUnitController.gameObject);
 
                 mountUnitController = null;
                 mountUnitProfile = null;
 
-                unitController.NotifyOnDeActivateMountedState();
             }
         }
 
@@ -147,7 +151,9 @@ namespace AnyRPG {
             unitController.FreezeRotation();
 
             // testing - this used to disable the collider
-            unitController.Collider.isTrigger = false;
+            // since mounts redirect to character, this results in 2 collider triggers
+            //unitController.Collider.isTrigger = false;
+            unitController.Collider.enabled = true;
 
             unitController.RigidBody.WakeUp();
         }

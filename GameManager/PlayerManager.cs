@@ -144,7 +144,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            //SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.MyInstance.OnExitGame += ExitGameHandler;
             SystemEventManager.MyInstance.OnLevelChanged += PlayLevelUpEffects;
@@ -158,7 +158,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+                //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.MyInstance.OnExitGame -= ExitGameHandler;
                 SystemEventManager.MyInstance.OnLevelChanged -= PlayLevelUpEffects;
@@ -171,11 +171,12 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
-
+        /*
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            Debug.Log("PlayerManager.HandleLevelUnload()");
             ProcessLevelUnload();
         }
-
+        */
 
         public void ResetInitialLevel() {
             initialLevel = 1;
@@ -291,7 +292,10 @@ namespace AnyRPG {
 
             playerController.UnsubscribeFromUnitEvents();
 
-            Destroy(activeUnitController.gameObject);
+            // set active false first because destroy is not done until the end of frame
+            // use regular unitController in case player is mounted
+            unitController.gameObject.SetActive(false);
+            Destroy(unitController.gameObject);
             activeUnitController = null;
             playerUnitSpawned = false;
         }

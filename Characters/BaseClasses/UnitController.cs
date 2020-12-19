@@ -470,7 +470,7 @@ namespace AnyRPG {
         }
 
         public override void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
+            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
             base.OnDisable();
             if (NamePlateManager.MyInstance != null) {
                 NamePlateManager.MyInstance.RemoveNamePlate(this);
@@ -690,6 +690,8 @@ namespace AnyRPG {
         }
 
         public virtual void CancelMountEffects() {
+            //Debug.Log(gameObject.name + ".UnitController.CancelMountEffects()");
+
             if (mounted == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
 
@@ -1059,6 +1061,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessLevelUnload() {
+            //Debug.Log(gameObject.name + ".UnitController.ProcessLevelUnload()");
             base.ProcessLevelUnload();
             ClearTarget();
             CancelMountEffects();

@@ -1108,9 +1108,7 @@ namespace AnyRPG {
                 speedNormalizedAnimationLength = (1f / (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f)) * animationLength;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
             }
-            if (ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f));
-            }
+            SetAnimationSpeed(unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f);
 
             // wait for the animation to play before allowing the character to attack again
             attackCoroutine = unitController.StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).IsAutoAttack, !(baseAbility as AnimatedAbility).IsAutoAttack, false));
@@ -1181,7 +1179,7 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + "Setting MyWaitingForAutoAttack to false after countdown (" + remainingTime + ") MyWaitingForAutoAttack: " + unitController.MyBaseCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + unitController.MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + unitController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting + "animationSpeed: " + animator.GetFloat("AnimationSpeed"));
             attackCoroutine = null;
-            animator.SetFloat("AnimationSpeed", 1);
+            SetAnimationSpeed(1);
             if (clearAutoAttack) {
                 ClearAutoAttack();
             }
@@ -1239,9 +1237,7 @@ namespace AnyRPG {
                 attackCoroutine = null;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
-            if (animator != null && ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", 1);
-            }
+            SetAnimationSpeed(1);
         }
 
         private bool ParameterExists(string parameterName) {
@@ -1269,9 +1265,7 @@ namespace AnyRPG {
             HandleUnLevitated(false);
             HandleUnStunned(false);
 
-            if (ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", 1);
-            }
+            SetAnimationSpeed(1);
 
             SetAttacking(false, false);
             SetCasting(false, false);
@@ -1339,9 +1333,7 @@ namespace AnyRPG {
             if (varValue == true) {
                 OnStartCasting(swapAnimator);
             }
-            if (ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", castingSpeed);
-            }
+            SetAnimationSpeed(castingSpeed);
             if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.IsCasting = varValue;
             }
@@ -1457,9 +1449,6 @@ namespace AnyRPG {
             }
             animator.SetFloat("Velocity Y", varValue.y);
 
-
-
-
             float absXValue = Mathf.Abs(varValue.x);
             float absYValue = Mathf.Abs(varValue.y);
             float absZValue = Mathf.Abs(varValue.z);
@@ -1469,7 +1458,7 @@ namespace AnyRPG {
             float usedBaseAnimationSpeed = 1;
             float multiplier = 1;
 
-            if (!currentAnimationProps.SuppressAdjustAnimatorSpeed) {
+            if (currentAnimationProps.SuppressAdjustAnimatorSpeed == false) {
                 // nothing more to do if we are leaving animations at normal speed
 
                 float usedBaseMoveForwardAnimationSpeed;
@@ -1482,10 +1471,13 @@ namespace AnyRPG {
                 float usedBaseStrafeForwardRightAnimationSpeed;
 
 
-                if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null && unitController.CharacterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                if (unitController != null
+                    && unitController.CharacterUnit.BaseCharacter != null
+                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null
+                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
                     // in combat
-                    usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
-                    usedbaseWalkBackAnimationSpeed = (absZValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);
+                    usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
+                    usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);
                     usedBaseStrafeLeftAnimationSpeed = (absValue > baseCombatJogStrafeLeftAnimationSpeed ? baseCombatJogStrafeLeftAnimationSpeed : baseCombatWalkStrafeLeftAnimationSpeed);
                     usedBaseStrafeRightAnimationSpeed = (absValue > baseCombatJogStrafeRightAnimationSpeed ? baseCombatJogStrafeRightAnimationSpeed : baseCombatWalkStrafeRightAnimationSpeed);
                     usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseCombatJogStrafeBackRightAnimationSpeed ? baseCombatJogStrafeBackRightAnimationSpeed : baseCombatWalkStrafeBackRightAnimationSpeed);
@@ -1494,8 +1486,8 @@ namespace AnyRPG {
                     usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseCombatJogStrafeForwardRightAnimationSpeed ? baseCombatJogStrafeForwardRightAnimationSpeed : baseCombatWalkStrafeForwardRightAnimationSpeed);
                 } else {
                     // out of combat
-                    usedBaseMoveForwardAnimationSpeed = (absZValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
-                    usedbaseWalkBackAnimationSpeed = (absZValue >= 2 ? baseRunBackAnimationSpeed : baseWalkBackAnimationSpeed);
+                    usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+                    usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseRunBackAnimationSpeed : baseWalkBackAnimationSpeed);
                     usedBaseStrafeLeftAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
                     usedBaseStrafeRightAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
                     usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseJogStrafeBackRightAnimationSpeed ? baseJogStrafeBackRightAnimationSpeed : baseWalkStrafeBackRightAnimationSpeed);
@@ -1504,7 +1496,8 @@ namespace AnyRPG {
                     usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
                 }
 
-                if (absXValue < (absZValue / 2) && varValue.z > 0) {
+                // if the model is being rotated, animation speed is always based on the forward animation since that is what will be playing
+                if (unitController.UnitProfile.UnitPrefabProps.RotateModel || (absXValue < (absZValue / 2) && varValue.z > 0)) {
                     // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
                     //} else if (varValue.x == 0 && varValue.z > 0) {
                     // run forward
@@ -1545,9 +1538,9 @@ namespace AnyRPG {
                     usedBaseAnimationSpeed = usedBaseStrafeForwardRightAnimationSpeed;
                     multiplier = (absValue / usedBaseAnimationSpeed);
                 }
-                //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed);
+                //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed + "; multiplier: " + multiplier);
 
-                if (varValue.magnitude != 0) {
+                if (varValue.magnitude != 0f) {
                     //animationSpeed = (1 / usedBaseAnimationSpeed) * Mathf.Abs(multiplier);
                     animationSpeed = multiplier;
                     //animationSpeed = (1 / baseWalkAnimationSpeed);
@@ -1555,10 +1548,12 @@ namespace AnyRPG {
                 }
             }
 
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
-            animator.SetFloat("AnimationSpeed", animationSpeed);
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): animationSpeed: " + animationSpeed);
+            SetAnimationSpeed(animationSpeed);
         }
 
+        // seems unused.  probably replaced by SetVelocity
+        /*
         public void SetVelocityZ(float varValue) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + ")");
             if (animator == null) {
@@ -1577,10 +1572,17 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
             }
             //Debug.Log("CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
-
-            animator.SetFloat("AnimationSpeed", animationSpeed);
+            SetAnimationSpeed(animationSpeed);
             if (absValue != 0) {
                 //Debug.Log(gameObject.name + ": SetVelocityZ: " + varValue + "; Setting animationSpeed: " + animationSpeed);
+            }
+        }
+        */
+
+        public void SetAnimationSpeed(float animationSpeed) {
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimation.SetAnimationSpeed(" + animationSpeed + ")");
+            if (animator != null && ParameterExists("AnimationSpeed")) {
+                animator.SetFloat("AnimationSpeed", animationSpeed);
             }
         }
 

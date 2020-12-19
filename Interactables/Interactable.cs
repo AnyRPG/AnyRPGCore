@@ -725,7 +725,7 @@ namespace AnyRPG {
         }
 
         public void OnTriggerEnter(Collider other) {
-            //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter()");
+            //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(" + other.gameObject.name + ")");
 
             if (notInteractable == true) {
                 return;

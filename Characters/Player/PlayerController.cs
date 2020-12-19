@@ -781,7 +781,9 @@ namespace AnyRPG {
         }
 
         public void HandleEndRiding() {
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+            if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+            }
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
         }
