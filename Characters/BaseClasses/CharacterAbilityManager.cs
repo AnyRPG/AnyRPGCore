@@ -136,6 +136,13 @@ namespace AnyRPG {
             LearnDefaultAutoAttackAbility();
         }
 
+        public override void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+            base.SetMountedState(mountUnitController, mountUnitProfile);
+            if (baseCharacter != null && baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.SetMountedState(mountUnitController, mountUnitProfile);
+            }
+        }
+
         public override List<AbilityEffect> GetDefaultHitEffects() {
             if (baseCharacter.CharacterCombat.DefaultHitEffects.Count > 0) {
                 return baseCharacter.CharacterCombat.DefaultHitEffects;

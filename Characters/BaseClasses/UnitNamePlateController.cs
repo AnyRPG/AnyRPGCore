@@ -38,11 +38,11 @@ namespace AnyRPG {
 
         public override Transform NamePlateTransform {
             get {
-                if (unitController.Mounted) {
-                    if (unitController.NamePlateTarget != null) {
-                        return unitController.NamePlateTarget.NamePlateTransform;
-                    }
-                    return unitController.transform;
+                if (unitController.Mounted == true
+                    && unitController.UnitMountManager.MountUnitController != null
+                    && unitController.UnitMountManager.MountUnitController.NamePlateController != null
+                    && unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform != null) {
+                    return unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform;
                 }
                 return base.NamePlateTransform;
             }
@@ -68,26 +68,15 @@ namespace AnyRPG {
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
         public UnitNamePlateController(NamePlateUnit namePlateUnit) : base(namePlateUnit) {
-
-        }
-
-        /*
-        public override void Init() {
-            //Debug.Log("UnitNamePlateController.Init()");
             if ((namePlateUnit as UnitController) is UnitController) {
                 unitController = (namePlateUnit as UnitController);
             }
-            base.Init();
         }
-        */
 
         public override void InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
                 return;
-            }
-            if ((namePlateUnit as UnitController) is UnitController) {
-                unitController = (namePlateUnit as UnitController);
             }
             if (unitController != null) {
                 if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
@@ -96,13 +85,10 @@ namespace AnyRPG {
                     // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                     return;
                 }
+                SetNamePlatePosition();
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 if (_namePlate != null) {
                     namePlate = _namePlate;
-                    if (OverrideNamePlatePosition) {
-                        //_namePlate.transform.localPosition = NamePlatePosition;
-                        namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
-                    }
                 }
                 BroadcastInitializeNamePlate();
             } else {

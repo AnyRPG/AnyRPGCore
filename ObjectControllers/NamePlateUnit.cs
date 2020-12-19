@@ -44,8 +44,8 @@ namespace AnyRPG {
         }
 
 
-        public void InitializeNamePlateController() {
-            //Debug.Log(gameObject.name + "UnitController.InitializeNamePlateController()");
+        public virtual void InitializeNamePlateController() {
+            //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
             if (namePlateReady == true) {
                 return;
             }

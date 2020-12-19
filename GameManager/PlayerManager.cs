@@ -362,7 +362,9 @@ namespace AnyRPG {
 
         public void SetActiveUnitController(UnitController unitController) {
             activeUnitController = unitController;
-            activeCharacter.SetUnitController(activeUnitController);
+
+            // this should not be needed, baseCharacter should always point to the proper unit
+            //activeCharacter.SetUnitController(activeUnitController);
         }
 
         public void SetUnitController(UnitController unitController) {

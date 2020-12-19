@@ -1429,7 +1429,9 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
+            // testing, no real need to restrict this to player.  anything should be able to rotate instead of strafe?
+            //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (unitController.UnitProfile.UnitPrefabProps.RotateModel) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
 
                 if (varValue == Vector3.zero) {

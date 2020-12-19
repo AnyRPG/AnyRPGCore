@@ -30,8 +30,8 @@ namespace AnyRPG {
         public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastStop = delegate { };
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
-
-        private INamePlateTarget namePlateTarget = null;
+        public event System.Action<UnitController> OnActivateMountedState = delegate { };
+        public event System.Action OnDeActivateMountedState = delegate { };
 
         // by default, a unit will enter AI mode if no mode is set before Start()
         [SerializeField]
@@ -68,6 +68,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
+        private UnitMountManager unitMountManager = null;
         //private UnitNamePlateController namePlateController = null;
         private UUID uuid = null;
         private GameObject unitModel = null;
@@ -79,6 +80,7 @@ namespace AnyRPG {
         // control logic
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
+        //private INamePlateTarget namePlateTarget = null;
 
         // targeting
         private Interactable target;
@@ -114,7 +116,7 @@ namespace AnyRPG {
         // track the current movement sound overrides
         private MovementSoundArea movementSoundArea = null;
 
-        public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
+        //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
         public Rigidbody RigidBody { get => rigidBody; set => rigidBody = value; }
         public UnitMotor UnitMotor { get => unitMotor; set => unitMotor = value; }
@@ -223,11 +225,17 @@ namespace AnyRPG {
         public bool ModelReady { get => modelReady; set => modelReady = value; }
         public override NamePlateProps NamePlateProps {
             get {
-                if (unitProfile != null && unitProfile != null) {
+                if (unitProfile != null) {
                     return unitProfile.UnitPrefabProps.NamePlateProps;
                 }
                 return namePlateProps;
             }
+        }
+
+        public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
+
+        public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+            unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
         }
 
         public override void EnableInteraction() {
@@ -295,6 +303,7 @@ namespace AnyRPG {
 
         private void EnablePetMode() {
             //Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
+            InitializeNamePlateController();
             EnableAICommon();
             ChangeState(new IdleState());
             SetAggroRange();
@@ -305,11 +314,14 @@ namespace AnyRPG {
         /// </summary>
         private void SetMountMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetMountMode()");
+
+            // mount namePlates do not need full initialization, only the position to be set
+            namePlateController.SetNamePlatePosition();
+
             SetUnitControllerMode(UnitControllerMode.Mount);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
-            Collider anyCollider = GetComponent<Collider>();
-            if (anyCollider != null) {
-                anyCollider.isTrigger = false;
+            if (myCollider != null) {
+                myCollider.isTrigger = false;
             }
             rigidBody.isKinematic = false;
             rigidBody.useGravity = true;
@@ -321,6 +333,8 @@ namespace AnyRPG {
         /// </summary>
         private void EnablePlayer() {
             //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            InitializeNamePlateController();
+
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
             unitComponentController.AggroRangeController.DisableAggro();
             unitComponentController.InteractableRange.gameObject.SetActive(false);
@@ -349,6 +363,7 @@ namespace AnyRPG {
         /// set this unit to be an AI unit
         /// </summary>
         private void EnableAI() {
+            InitializeNamePlateController();
             EnableAICommon();
 
             if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.SpawnDead == true) {
@@ -409,6 +424,7 @@ namespace AnyRPG {
             unitMotor = new UnitMotor(this);
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
+            unitMountManager = new UnitMountManager(this);
             persistentObjectComponent.Setup(this);
 
             // allow the base character to initialize.  it can possibly contain a unit profile
@@ -437,12 +453,20 @@ namespace AnyRPG {
 
             SetStartPosition();
 
-            InitializeNamePlateController();
+            // testing move to individual controller modes
+            //InitializeNamePlateController();
 
             ActivateUnitControllerMode();
 
             patrolController.Init();
 
+        }
+
+        public override void InitializeNamePlateController() {
+            // mounts and preview units shouldn't have a namePlateController active
+            if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
+                base.InitializeNamePlateController();
+            }
         }
 
         public override void OnDisable() {
@@ -1299,6 +1323,10 @@ namespace AnyRPG {
             }
         }
 
+        public void DeActivateMountedState() {
+            unitMountManager.DeActivateMountedState();
+        }
+
         #region EventNotifications
 
         public void NotifyOnReputationChange() {
@@ -1346,6 +1374,12 @@ namespace AnyRPG {
         }
         public void NotifyOnCastStop(BaseCharacter baseCharacter) {
             OnCastStop(baseCharacter);
+        }
+        public void NotifyOnActivateMountedState(UnitController mountUnitController) {
+            OnActivateMountedState(mountUnitController);
+        }
+        public void NotifyOnDeActivateMountedState() {
+            OnDeActivateMountedState();
         }
 
         #endregion

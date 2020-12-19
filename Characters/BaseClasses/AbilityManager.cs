@@ -53,6 +53,11 @@ namespace AnyRPG {
         public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
         public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
 
+        public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+            // nothing here for now
+        }
+
+
         public AbilityManager(MonoBehaviour abilityCaster) {
             this.abilityCaster = abilityCaster;
         }

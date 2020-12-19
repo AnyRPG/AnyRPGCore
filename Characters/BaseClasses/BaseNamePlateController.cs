@@ -122,16 +122,16 @@ namespace AnyRPG {
             this.namePlateUnit = namePlateUnit;
         }
 
-        /*
-        public virtual void Init() {
-            //Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.Init()");
-            InitializeNamePlate();
-        }
-        */
-
         public virtual void Cleanup() {
             if (namePlateUnit != null) {
                 NamePlateNeedsRemoval(namePlateUnit);
+            }
+        }
+
+        public void SetNamePlatePosition() {
+            if (OverrideNamePlatePosition) {
+                //_namePlate.transform.localPosition = NamePlatePosition;
+                namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
             }
         }
 
@@ -142,9 +142,7 @@ namespace AnyRPG {
             }
             if (namePlateUnit != null) {
                 //NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
-                if (OverrideNamePlatePosition) {
-                    namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
-                }
+                SetNamePlatePosition();
                 NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
                 if (_namePlate != null) {
                     namePlate = _namePlate;

@@ -689,8 +689,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange += HandleClassChange;
-
-
+            PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
+            PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
         }
 
         public void UnsubscribeFromUnitEvents() {
@@ -707,8 +707,29 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath -= HandleDeath;
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange -= HandleClassChange;
+            PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
+            PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
+        }
+
+        public void HandleActivateMountedState(UnitController mountUnitController) {
+
+            PlayerManager.MyInstance.SetActiveUnitController(mountUnitController);
+
+            // set the mount character Unit to be the player unit that is on the mount.
+            // this will theoretically allow the character to be attacked while mounted.
+            // TODO : test that this works
+            PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.UnitController.CharacterUnit;
+
+            CameraManager.MyInstance.SwitchToMainCamera();
+            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+        }
+
+        public void HandleDeActivateMountedState() {
+            PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);
+            CameraManager.MyInstance.ActivateMainCamera();
+            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {

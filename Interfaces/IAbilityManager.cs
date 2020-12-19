@@ -31,6 +31,8 @@ namespace AnyRPG {
         //Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
         float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbility animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
 
+        void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile);
+
         /// <summary>
         /// return a list of weapon ability objects
         /// </summary>
