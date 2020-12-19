@@ -240,7 +240,7 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log("NamePlateController.SetCharacterName(): namePlateUnit has no faction!");
                         Color textColor;
-                        if (PlayerManager.MyInstance.ActiveUnitController != null && unitNamePlateController.NamePlateUnit.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+                        if (PlayerManager.MyInstance.UnitController != null && unitNamePlateController.NamePlateUnit.gameObject == PlayerManager.MyInstance.UnitController.gameObject) {
                             textColor = Color.green;
                         } else {
                             textColor = Color.white;
@@ -372,7 +372,7 @@ namespace AnyRPG {
         //private void LateUpdate() {
         public void UpdatePosition() {   
             //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
-            if (unitNamePlateController != null && (PlayerManager.MyInstance.ActiveUnitController != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
+            if (unitNamePlateController != null && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
@@ -511,21 +511,21 @@ namespace AnyRPG {
 
         private void HandleRightClick() {
             //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.MyDisplayName);
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.MyInstance.UnitController == null) {
                 return;
             }
-            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.ActiveUnitController.gameObject)) {
+            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.UnitController.gameObject)) {
                 PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
             }
         }
 
         private void HandleLeftClick() {
             //Debug.Log("NamePlateController: HandleLeftClick(): " + namePlateUnit.MyDisplayName);
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.MyInstance.UnitController == null) {
                 return;
             }
-            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.ActiveUnitController.gameObject)) {
-                PlayerManager.MyInstance.ActiveUnitController.SetTarget(unitNamePlateController.Interactable);
+            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.UnitController.gameObject)) {
+                PlayerManager.MyInstance.UnitController.SetTarget(unitNamePlateController.Interactable);
             }
         }
 

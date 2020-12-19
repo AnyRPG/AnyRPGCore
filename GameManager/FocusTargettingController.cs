@@ -86,14 +86,14 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget += HandleSetTarget;
-            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget += HandleClearTarget;
+            PlayerManager.MyInstance.UnitController.OnSetTarget += HandleSetTarget;
+            PlayerManager.MyInstance.UnitController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
-            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.MyInstance.UnitController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.MyInstance.UnitController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(Interactable target) {

@@ -306,9 +306,9 @@ namespace AnyRPG {
             if (mouseOverInteractable == null && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
                 // Stop focusing any object
                 //RemoveFocus();
-                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                PlayerManager.MyInstance.UnitController.ClearTarget();
             } else if (mouseOverInteractable != null) {
-                PlayerManager.MyInstance.ActiveUnitController.SetTarget(mouseOverInteractable);
+                PlayerManager.MyInstance.UnitController.SetTarget(mouseOverInteractable);
             }
             //}
 
@@ -325,10 +325,10 @@ namespace AnyRPG {
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
         private void CheckForInteraction() {
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.MyInstance.UnitController == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.ActiveUnitController.Target == null) {
+            if (PlayerManager.MyInstance.UnitController.Target == null) {
                 return;
             }
             if (InteractionSucceeded()) {
@@ -341,17 +341,17 @@ namespace AnyRPG {
         private bool InteractionSucceeded() {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.MyInstance.UnitController == null) {
                 return false;
             }
-            if (PlayerManager.MyInstance.ActiveUnitController.Target == null) {
+            if (PlayerManager.MyInstance.UnitController.Target == null) {
                 Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
             // get reference to name now since interactable could change scene and then target reference is lost
-            string targetDisplayName = PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName;
-            if (PlayerManager.MyInstance.ActiveUnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
+            string targetDisplayName = PlayerManager.MyInstance.UnitController.Target.DisplayName;
+            if (PlayerManager.MyInstance.UnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 SystemEventManager.MyInstance.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
@@ -365,9 +365,9 @@ namespace AnyRPG {
         private void RegisterTab() {
             if (InputManager.MyInstance.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                Interactable oldTarget = PlayerManager.MyInstance.ActiveUnitController.Target;
+                Interactable oldTarget = PlayerManager.MyInstance.UnitController.Target;
                 // moving this inside getnexttabtarget
-                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                PlayerManager.MyInstance.UnitController.ClearTarget();
                 GetNextTabTarget(oldTarget);
             }
         }
@@ -438,36 +438,36 @@ namespace AnyRPG {
             // otherwise, just keep going through the index
             if (timeSinceLastTab.TotalSeconds > 3f) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
-                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
+                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
-                    PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
-                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[closestTargetIndex]);
+                    PlayerManager.MyInstance.UnitController.ClearTarget();
+                    PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
                 } else {
-                    if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
+                    if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
-                        PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
-                        PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                        PlayerManager.MyInstance.UnitController.ClearTarget();
+                        PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
                     }
                 }
             } else {
                 //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
                 // we only want to clear the target if we are actually setting a new target
-                if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.ActiveUnitController.Target) {
-                    PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
-                    PlayerManager.MyInstance.ActiveUnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
+                    PlayerManager.MyInstance.UnitController.ClearTarget();
+                    PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
                 }
             }
         }
 
         public void InterActWithTarget(Interactable interactable) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + "); my current target: " + target);
-            if (PlayerManager.MyInstance.ActiveUnitController.Target != interactable) {
-                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
-                PlayerManager.MyInstance.ActiveUnitController.SetTarget(interactable);
+            if (PlayerManager.MyInstance.UnitController.Target != interactable) {
+                PlayerManager.MyInstance.UnitController.ClearTarget();
+                PlayerManager.MyInstance.UnitController.SetTarget(interactable);
             }
             if (InteractionSucceeded()) {
                 //Debug.Log("We were able to interact with the target");
@@ -477,7 +477,7 @@ namespace AnyRPG {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
                 if (PlayerManager.MyInstance.PlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.ActiveUnitController.Target);
+                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.UnitController.Target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -486,7 +486,7 @@ namespace AnyRPG {
 
         public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + ")");
-            PlayerManager.MyInstance.ActiveUnitController.SetTarget(interactable);
+            PlayerManager.MyInstance.UnitController.SetTarget(interactable);
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
             }
@@ -498,7 +498,7 @@ namespace AnyRPG {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
                 if (PlayerManager.MyInstance.PlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.ActiveUnitController.Target);
+                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.UnitController.Target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -510,7 +510,7 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.ActiveUnitController.Target.DisplayName);
+                SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.UnitController.Target.DisplayName);
                 SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
                 // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
                 //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
@@ -537,7 +537,7 @@ namespace AnyRPG {
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
             if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
-                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+                PlayerManager.MyInstance.UnitController.ClearTarget();
                 if (PlayerManager.MyInstance.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
                     PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.StopCasting();
@@ -668,8 +668,8 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.ActiveUnitController != null) {
-                PlayerManager.MyInstance.ActiveUnitController.ClearTarget();
+            if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.UnitController != null) {
+                PlayerManager.MyInstance.UnitController.ClearTarget();
             }
         }
 

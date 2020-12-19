@@ -986,7 +986,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (showCombatText && (baseCharacter.UnitController.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.UnitController.gameObject)) {
+            if (showCombatText && (baseCharacter.UnitController.gameObject == PlayerManager.MyInstance.UnitController.gameObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.UnitController.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }

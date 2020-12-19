@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         private void Awake() {
             rangeCollider = GetComponent<SphereCollider>();
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.MyInstance.UnitController == null) {
                 // player unit not spawned yet, so this can't be the player.  Disable collider
                 rangeCollider.enabled = false;
                 return;
