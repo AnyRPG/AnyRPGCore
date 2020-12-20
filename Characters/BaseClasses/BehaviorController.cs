@@ -21,20 +21,29 @@ namespace AnyRPG {
 
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
+        private BehaviorComponent behaviorComponent = null;
+
         public int MyBehaviorIndex { get => behaviorIndex; }
         public Coroutine BehaviorCoroutine { get => behaviorCoroutine; }
         public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
 
         public BehaviorController(UnitController unitController) {
+            //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");
+
             this.unitController = unitController;
+
+            SetupScriptableObjects();
             //HandlePrerequisiteUpdates();
         }
 
         // this should be run after the unit profile is set
         public void Init() {
-            //Debug.Log("BehaviorController.Init()");
+            //Debug.Log(unitController.gameObject.name + "BehaviorController.Init()");
 
-            SetupScriptableObjects();
+            behaviorComponent = BehaviorComponent.GetBehaviorComponent(unitController);
+
+            // testing move this to constructor since it doesn't need unitProfile anymore
+            //SetupScriptableObjects();
 
             PlayAutomaticBehaviors();
         }
@@ -47,7 +56,7 @@ namespace AnyRPG {
         }
 
         public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
-            Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
+            //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
 
             if (behaviorCoroutine == null) {
                 behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller));
@@ -133,15 +142,25 @@ namespace AnyRPG {
         */
 
         public void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".BehaviorInteractable.HandlePrerequisiteUpdates()");
+            //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePrerequisiteUpdates()");
             PlayAutomaticBehaviors();
+
+            if (behaviorComponent != null) {
+                behaviorComponent.HandlePrerequisiteUpdates();
+            }
         }
 
         public void HandlePlayerUnitSpawn() {
+            //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePlayerUnitSpawn()");
+            // since player unit spawn doesn't trigger prerequisite update on individual behaviors, a manual check is needed
             foreach (BehaviorProfile behaviorProfile in behaviorList) {
                 behaviorProfile.UpdatePrerequisites(false);
             }
             PlayAutomaticBehaviors();
+            // the behavior component may have already triggered on this event, so trigger it manually since a prerequisite update was just performed
+            if (behaviorComponent != null) {
+                behaviorComponent.HandlePlayerUnitSpawn();
+            }
         }
 
 
@@ -158,7 +177,8 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList) {
-                if (behaviorProfile.MyPrerequisitesMet == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                if (behaviorProfile.MyPrerequisitesMet == true
+                    && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
                 }
@@ -167,6 +187,10 @@ namespace AnyRPG {
             return currentList;
         }
 
+        public void AddToBehaviorList(BehaviorProfile behaviorProfile) {
+            behaviorList.Add(behaviorProfile);
+            behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+        }
 
         public void SetupScriptableObjects() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.SetupScriptableObjects()");
@@ -181,8 +205,7 @@ namespace AnyRPG {
                         tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
                     }
                     if (tmpBehaviorProfile != null) {
-                        behaviorList.Add(tmpBehaviorProfile);
-                        tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+                        AddToBehaviorList(tmpBehaviorProfile);
                     }
                 }
             }

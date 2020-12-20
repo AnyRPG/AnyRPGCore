@@ -197,6 +197,11 @@ namespace AnyRPG {
         public void SheathWeapons() {
             // loop through all the equipmentslots and check if they have equipment that is of type weapon
             //if they do, run sheathobject on that slot
+
+            if (baseCharacter == null || baseCharacter.UnitController == null) {
+                // cannot sheath a physical item if there is no unit
+                return;
+            }
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
                     //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {

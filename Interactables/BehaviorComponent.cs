@@ -17,13 +17,17 @@ namespace AnyRPG {
 
         private UnitController unitController = null;
 
-        //private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
+        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
         public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             if ((interactable as UnitController) is UnitController) {
                 unitController = (interactable as UnitController);
             }
             InitBehaviors();
+        }
+
+        public static BehaviorComponent GetBehaviorComponent(Interactable searchInteractable) {
+            return searchInteractable.GetFirstInteractableOption(typeof(BehaviorComponent)) as BehaviorComponent;
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -53,8 +57,7 @@ namespace AnyRPG {
                         tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
                     }
                     if (tmpBehaviorProfile != null) {
-                        tmpBehaviorProfile.OnPrerequisiteUpdates += unitController.BehaviorController.HandlePrerequisiteUpdates;
-                        unitController.BehaviorController.BehaviorList.Add(tmpBehaviorProfile);
+                        unitController.BehaviorController.AddToBehaviorList(tmpBehaviorProfile);
                     }
                 }
             }
@@ -62,13 +65,14 @@ namespace AnyRPG {
         }
 
         public List<BehaviorProfile> GetCurrentOptionList() {
-            //Debug.Log("BehaviorInteractable.GetCurrentOptionList()");
+            //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList) {
+                //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
                 if (behaviorProfile.MyPrerequisitesMet == true
                     && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)
                     && behaviorProfile.AllowManualStart == true) {
-                    //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.MyName + "; id: " + behaviorProfile.GetInstanceID());
+                    //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);
                 }
             }
@@ -87,10 +91,6 @@ namespace AnyRPG {
             return true;
 
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
@@ -114,12 +114,13 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount()");
+            //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionCount()");
 
             if (unitController != null && unitController.BehaviorController.BehaviorCoroutine == null) {
                 //return GetCurrentOptionList().Count;
                 int count = 0;
                 foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
+                    //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount(): found behaviorProfile: " + behaviorProfile);
                     if (behaviorProfile.AllowManualStart == true) {
                         count++;
                     }
@@ -136,23 +137,17 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePrerequisiteUpdates()");
+            //Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
 
+        // testing - since behavior component requires behavior controller, let it handle player unit spawn calls for proper ordering
+        /*
         public override void HandlePlayerUnitSpawn() {
             Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePlayerUnitSpawn()");
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
-        }
-
-        /*
-        public override void CleanupScriptableObjects() {
-            base.CleanupScriptableObjects();
-            foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList) {
-                behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
-            }
         }
         */
 

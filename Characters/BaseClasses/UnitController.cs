@@ -531,7 +531,7 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileInteractables() {
-            Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
+            //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
 
             if (unitProfile == null) {
                 return;
@@ -1339,6 +1339,12 @@ namespace AnyRPG {
 
         public void DeActivateMountedState() {
             unitMountManager.DeActivateMountedState();
+        }
+
+        public override void ProcessPlayerUnitSpawn() {
+            //Debug.Log(gameObject.name + ".UnitController.ProcessPlayerUnitSpawn()");
+            behaviorController.HandlePlayerUnitSpawn();
+            base.ProcessPlayerUnitSpawn();
         }
 
         #region EventNotifications

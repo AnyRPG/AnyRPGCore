@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class InstantEffect : DirectEffect {
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".InstantEffect.Cast()");
+            Debug.Log(DisplayName + ".InstantEffect.Cast()");
             if (abilityEffectInput == null) {
                 abilityEffectInput = new AbilityEffectContext();
             }
