@@ -321,6 +321,16 @@ namespace AnyRPG {
             return base.GetUnitAttackAnimations();
         }
 
+        public override AnimationProps GetUnitAnimationProps() {
+            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            if (baseCharacter.UnitProfile != null
+                && baseCharacter.UnitProfile.UnitPrefabProps != null
+                && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
+                return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
+            }
+            return base.GetUnitAnimationProps();
+        }
+
         public override List<AnimationClip> GetUnitCastAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
             // TODO : use current cast animation set instead, which should include overwritten weapon base casts
@@ -1177,8 +1187,8 @@ namespace AnyRPG {
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>
         /// <param name="abilityName"></param>
-        public void BeginAbility(string abilityName) {
-            //Debug.Log(gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
+        public override void BeginAbility(string abilityName) {
+            Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             // these have to be new resources because the ability stores a tick time
             //BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetNewResource(abilityName);

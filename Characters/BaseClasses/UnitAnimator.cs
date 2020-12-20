@@ -1142,7 +1142,7 @@ namespace AnyRPG {
                 //lastAnimationLength = animationLength;
 
             }
-            if (baseAbility.AnimationProfile.AnimationProps.UseRootMotion == true) {
+            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);

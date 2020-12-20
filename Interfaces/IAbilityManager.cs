@@ -24,6 +24,8 @@ namespace AnyRPG {
 
         void GeneratePower(BaseAbility ability);
 
+        void BeginAbility(string abilityName);
+
         bool CanCastAbility(BaseAbility ability, bool playerInitiated = false);
 
         AudioClip GetAnimatedAbilityHitSound();
@@ -56,6 +58,12 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         List<AnimationClip> GetUnitAttackAnimations();
+
+        /// <summary>
+        /// return an AnimationProps object for the unit
+        /// </summary>
+        /// <returns></returns>
+        AnimationProps GetUnitAnimationProps();
 
         /// <summary>
         /// return a list of cast animations for the current unit

@@ -68,6 +68,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
+        private BehaviorController behaviorController = null;
         private UnitMountManager unitMountManager = null;
         //private UnitNamePlateController namePlateController = null;
         private UUID uuid = null;
@@ -233,6 +234,7 @@ namespace AnyRPG {
         }
 
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
+        public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
@@ -424,6 +426,7 @@ namespace AnyRPG {
             unitMotor = new UnitMotor(this);
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
+            behaviorController = new BehaviorController(this);
             unitMountManager = new UnitMountManager(this);
             persistentObjectComponent.Setup(this);
 
@@ -458,6 +461,7 @@ namespace AnyRPG {
 
             ActivateUnitControllerMode();
 
+            behaviorController.Init();
             patrolController.Init();
 
         }
@@ -527,14 +531,14 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileInteractables() {
-            //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
+            Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables()");
 
             if (unitProfile == null) {
                 return;
             }
 
+            // built-in interactable options
             if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
-                //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables(): creating lootableCharacter");
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
@@ -547,7 +551,6 @@ namespace AnyRPG {
             }
 
             if (unitProfile.QuestGiverProps.Quests.Count > 0) {
-                //Debug.Log(gameObject.name + "UnitController.SetUnitProfileInteractables(): add questgiver");
                 InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
                 interactableOptionComponent.HandlePrerequisiteUpdates();
@@ -559,6 +562,13 @@ namespace AnyRPG {
                 interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
+            if (unitProfile.BehaviorProps.BehaviorNames.Count > 0) {
+                InteractableOptionComponent interactableOptionComponent = unitProfile.BehaviorProps.GetInteractableOption(this);
+                interactables.Add(interactableOptionComponent);
+                interactableOptionComponent.HandlePrerequisiteUpdates();
+            }
+
+            // named interactable options
             foreach (InteractableOptionConfig interactableOption in unitProfile.InteractableOptionConfigs) {
                 if (interactableOption.InteractableOptionProps != null) {
                     InteractableOptionComponent interactableOptionComponent = interactableOption.InteractableOptionProps.GetInteractableOption(this);
@@ -1270,6 +1280,7 @@ namespace AnyRPG {
             base.OnDestroy();
             StopAllCoroutines();
             persistentObjectComponent.Cleanup();
+            behaviorController.Cleanup();
             OnUnitDestroy(unitProfile);
         }
 
@@ -1383,6 +1394,30 @@ namespace AnyRPG {
         }
         public void NotifyOnDeActivateMountedState() {
             OnDeActivateMountedState();
+        }
+
+        #endregion
+
+        #region MessagePassthroughs
+
+        public void BeginDialog(string dialogName) {
+            dialogController.BeginDialog(dialogName);
+        }
+
+        public void BeginPatrol(string patrolName) {
+            patrolController.BeginPatrol(patrolName);
+        }
+
+        public void BeginAbility(string abilityName) {
+            characterUnit.BaseCharacter.AbilityManager.BeginAbility(abilityName);
+        }
+
+        public void StopBackgroundMusic() {
+            behaviorController.StopBackgroundMusic();
+        }
+
+        public void StartBackgroundMusic() {
+            behaviorController.StartBackgroundMusic();
         }
 
         #endregion

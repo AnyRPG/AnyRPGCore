@@ -16,8 +16,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> behaviorNames = new List<string>();
 
-        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
-
         [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
         [SerializeField]
         private bool useBehaviorCopy = false;
@@ -25,13 +23,14 @@ namespace AnyRPG {
         public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.NamePlateImage); }
 
-        public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
-        public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
+        public bool UseBehaviorCopy { get => useBehaviorCopy; }
+        public List<string> BehaviorNames { get => behaviorNames; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
             return new BehaviorComponent(interactable, this);
         }
 
+        /*
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (behaviorNames != null) {
@@ -47,8 +46,9 @@ namespace AnyRPG {
                     }
                 }
             }
-
         }
+        */
+
     }
 
 }

@@ -116,7 +116,8 @@ namespace AnyRPG {
         protected GameObject miniMapIndicator = null;
 
         // created components
-        protected CharacterUnit characterUnit;
+        protected CharacterUnit characterUnit = null;
+        protected DialogController dialogController = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -158,9 +159,11 @@ namespace AnyRPG {
 
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public DialogController DialogController { get => dialogController; }
 
         protected override void Awake() {
             base.Awake();
+            dialogController = new DialogController(this);
             DisableInteraction();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
@@ -216,6 +219,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
             base.CleanupEverything();
             ClearFromPlayerRangeTable();
+            dialogController.Cleanup();
         }
 
 

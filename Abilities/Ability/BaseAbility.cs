@@ -266,7 +266,14 @@ namespace AnyRPG {
         private List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
         public AnimationClip CastingAnimationClip {
-            get => (animationProfile != null && animationProfile.AnimationProps.CastClips != null && animationProfile.AnimationProps.CastClips.Count > 0 ? animationProfile.AnimationProps.CastClips[0] : null);
+            get {
+                if (animationProfile != null
+                    && animationProfile.AnimationProps.CastClips != null
+                    && animationProfile.AnimationProps.CastClips.Count > 0) {
+                    return animationProfile.AnimationProps.CastClips[0];
+                }
+                return null;
+            }
         }
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
@@ -281,6 +288,7 @@ namespace AnyRPG {
                 if (useAnimationCastTime == false) {
                     return abilityCastingTime;
                 } else {
+                    // TODO : FIX : get casting animation clip based on source caster
                     if (CastingAnimationClip != null) {
                         return CastingAnimationClip.length;
                     }
@@ -315,7 +323,7 @@ namespace AnyRPG {
             }
         }
         */
-        public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
+        //public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         //public float GroundTargetRadius { get => groundTargetRadius; set => groundTargetRadius = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
         //public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
@@ -364,6 +372,15 @@ namespace AnyRPG {
             }
             return animationClips;
         }
+
+        public AnimationProps GetUnitAnimationProps(IAbilityCaster sourceCharacter) {
+            if (useUnitCastAnimations == true) {
+                return sourceCharacter.AbilityManager.GetUnitAnimationProps();
+            } else {
+                return animationProfile.AnimationProps;
+            }
+        }
+
 
 
         public override string GetSummary() {
@@ -602,9 +619,6 @@ namespace AnyRPG {
 
         public virtual void StartCasting(IAbilityCaster source) {
             //Debug.Log("BaseAbility.OnCastStart(" + source.name + ")");
-            //Debug.Log("setting casting animation");
-            if (CastingAnimationClip != null) {
-            }
             List<AnimationClip> usedCastAnimationClips = GetCastClips(source);
             if (usedCastAnimationClips != null && usedCastAnimationClips.Count > 0) {
                 int clipIndex = UnityEngine.Random.Range(0, usedCastAnimationClips.Count);

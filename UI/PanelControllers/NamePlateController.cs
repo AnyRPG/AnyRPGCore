@@ -536,6 +536,7 @@ namespace AnyRPG {
         }
 
         public void ShowSpeechBubble() {
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController: ShowSpeechBubble()");
             if (speechBubbleBackground != null) {
                 speechBubbleBackground.SetActive(true);
             }

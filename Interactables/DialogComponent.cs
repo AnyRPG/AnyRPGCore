@@ -13,14 +13,6 @@ namespace AnyRPG {
 
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
-        private int dialogIndex = 0;
-
-        private float maxDialogTime = 300f;
-
-        private Coroutine dialogCoroutine = null;
-
-        public int DialogIndex { get => dialogIndex; }
-
         public DialogComponent(Interactable interactable, DialogProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             //AddUnitProfileSettings();
         }
@@ -41,7 +33,6 @@ namespace AnyRPG {
         public override void Cleanup() {
             base.Cleanup();
             CleanupConfirm();
-            CleanupDialog();
         }
 
         public override void HandleConfirmAction() {
@@ -85,9 +76,7 @@ namespace AnyRPG {
                 return false;
             } else if (currentList.Count == 1) {
                 if (currentList[0].MyAutomatic) {
-                    if (dialogCoroutine == null) {
-                        dialogCoroutine = interactable.StartCoroutine(playDialog(currentList[0]));
-                    }
+                    interactable.DialogController.PlayDialog(currentList[0]);
                 } else {
                     (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(currentList[0], this.interactable);
                     (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
@@ -100,80 +89,6 @@ namespace AnyRPG {
             return true;
         }
 
-        private void CleanupDialog() {
-            //nameplate
-            if (dialogCoroutine != null) {
-                interactable.StopCoroutine(dialogCoroutine);
-            }
-            dialogCoroutine = null;
-
-            // testing - is this needed ?  it should be cleaned up by namePlate removal anyway
-            /*
-            if (interactable != null && interactable.NamePlateController.NamePlate != null) {
-                interactable.NamePlateController.NamePlate.HideSpeechBubble();
-            }
-            */
-        }
-
-        public void BeginDialog(string dialogName) {
-            // is there a better way avoid runtime lookups like requiring the dialog to already be available on the character?
-            Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
-            if (tmpDialog != null) {
-                dialogCoroutine = interactable.StartCoroutine(playDialog(tmpDialog));
-            }
-        }
-
-        public IEnumerator playDialog(Dialog dialog) {
-            interactable.ProcessBeginDialog();
-            float elapsedTime = 0f;
-            dialogIndex = 0;
-            DialogNode currentdialogNode = null;
-
-            // this needs to be reset to allow for repeatable dialogs to replay
-            dialog.ResetStatus();
-
-            while (dialog.TurnedIn == false) {
-                foreach (DialogNode dialogNode in dialog.MyDialogNodes) {
-                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
-                        currentdialogNode = dialogNode;
-                        interactable.ProcessDialogTextUpdate(dialogNode.MyDescription);
-                        if (interactable != null && dialog.MyAudioProfile != null && dialog.MyAudioProfile.AudioClips != null && dialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
-                            interactable.UnitComponentController.PlayVoice(dialog.MyAudioProfile.AudioClips[dialogIndex]);
-                        }
-                        bool writeMessage = true;
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.ActiveUnitController != null) {
-                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.ActiveUnitController.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
-                                writeMessage = false;
-                            }
-                        }
-                        if (writeMessage && CombatLogUI.MyInstance != null) {
-                            CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
-                        }
-
-                        dialogNode.Shown = true;
-                        dialogIndex++;
-                    }
-                }
-                if (dialogIndex >= dialog.MyDialogNodes.Count) {
-                    dialog.TurnedIn = true;
-                    HandleConfirmAction();
-                }
-                elapsedTime += Time.deltaTime;
-
-                // circuit breaker
-                if (elapsedTime >= maxDialogTime) {
-                    break;
-                }
-                yield return null;
-                dialogCoroutine = null;
-            }
-
-            if (currentdialogNode != null) {
-                yield return new WaitForSeconds(currentdialogNode.MyShowTime);
-            }
-            interactable.ProcessEndDialog();
-        }
-
         public override bool CanInteract() {
             //Debug.Log(gameObject.name + ".DialogInteractable.CanInteract()");
             if (!base.CanInteract()) {
@@ -183,7 +98,6 @@ namespace AnyRPG {
                 return false;
             }
             return true;
-
         }
 
         /// <summary>

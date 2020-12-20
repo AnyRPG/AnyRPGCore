@@ -97,6 +97,10 @@ namespace AnyRPG {
             return new List<AnimationClip>();
         }
 
+        public virtual AnimationProps GetUnitAnimationProps() {
+            return null;
+        }
+
         public virtual bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             return true;
         }
@@ -158,6 +162,15 @@ namespace AnyRPG {
         public virtual void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
             // do nothing
         }
+
+        /// <summary>
+        /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
+        /// </summary>
+        /// <param name="abilityName"></param>
+        public virtual void BeginAbility(string abilityName) {
+            // nothing here
+        }
+
 
         public virtual void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             // do nothing
