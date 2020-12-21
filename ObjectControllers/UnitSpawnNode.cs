@@ -317,7 +317,8 @@ namespace AnyRPG {
                 return;
             }
 
-            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI);
+            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
 
             if (unitController == null) {
                 // something went wrong.  None of the code below will work, so might as well return
@@ -381,8 +382,6 @@ namespace AnyRPG {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
                 _characterUnit.BaseCharacter.SetUnitToughness(toughness);
             }
-            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
-            _characterUnit.BaseCharacter.CharacterStats.SetLevel(_unitLevel);
             spawnReferences.Add(unitController);
         }
 

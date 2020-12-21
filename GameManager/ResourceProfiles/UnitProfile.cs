@@ -306,7 +306,7 @@ namespace AnyRPG {
         /// <param name="parentTransform"></param>
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
-        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode) {
+        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             GameObject prefabObject = SpawnPrefab(UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
             UnitController unitController = null;
             if (prefabObject != null) {
@@ -316,7 +316,7 @@ namespace AnyRPG {
                     // give this unit a unique name
                     unitController.gameObject.name = DisplayName.Replace(" ", "") + SystemGameManager.MyInstance.GetSpawnCount();
                     // test - set unitprofile first so we don't overwrite players baseCharacter settings
-                    unitController.SetUnitProfile(this, unitControllerMode);
+                    unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
                 }
             }
 

@@ -365,10 +365,12 @@ namespace AnyRPG {
         /// set this unit to be an AI unit
         /// </summary>
         private void EnableAI() {
+            Debug.Log(gameObject.name + ".UnitController.EnableAI()");
             InitializeNamePlateController();
             EnableAICommon();
 
             if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.SpawnDead == true) {
+                Debug.Log(gameObject.name + ".UnitController.EnableAI() entering death state");
                 ChangeState(new DeathState());
             } else {
                 ChangeState(new IdleState());
@@ -513,11 +515,11 @@ namespace AnyRPG {
         /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
         /// </summary>
         /// <param name="unitProfile"></param>
-        public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode) {
+        public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
             if (characterUnit.BaseCharacter != null) {
-                characterUnit.BaseCharacter.SetUnitProfile(unitProfile);
+                characterUnit.BaseCharacter.SetUnitProfile(unitProfile, true, unitLevel);
             }
             SetUnitControllerMode(unitControllerMode);
 
@@ -1186,7 +1188,7 @@ namespace AnyRPG {
 
 
         public void SetTarget(Interactable newTarget) {
-            //Debug.Log(gameObject.name + ": BaseController: setting target: " + newTarget.name);
+            //Debug.Log(gameObject.name + ": UnitController: setting target: " + (newTarget == null ? "null" : newTarget.gameObject.name));
             if (unitControllerMode == UnitControllerMode.AI || unitControllerMode == UnitControllerMode.Pet) {
                 if (currentState is DeathState || currentState is EvadeState) {
                     return;

@@ -209,7 +209,7 @@ namespace AnyRPG {
 
         public void Init() {
             SetLevel(level);
-            TrySpawnDead();
+            //TrySpawnDead();
         }
 
         public void CalculatePrimaryStats() {
@@ -849,7 +849,7 @@ namespace AnyRPG {
         }
 
         public void SetLevel(int newLevel) {
-            //Debug.Log(gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetLevel(" + newLevel + ")");
 
             Dictionary<string, float> multiplierValues = new Dictionary<string, float>();
             foreach (string statName in primaryStats.Keys) {
@@ -1045,9 +1045,9 @@ namespace AnyRPG {
         }
 
         public void TrySpawnDead() {
-            //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.TrySpawnDead()");
             if (baseCharacter != null && baseCharacter.SpawnDead == true) {
-                //Debug.Log(gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
 
                 SetResourceAmount(PrimaryResource.DisplayName, 0f);

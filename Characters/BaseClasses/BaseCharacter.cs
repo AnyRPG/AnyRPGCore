@@ -264,13 +264,13 @@ namespace AnyRPG {
         }
         */
 
-        public void SetUnitProfile(string unitProfileName, bool notify = true) {
+        public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify);
         }
 
-        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true) {
+        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             // get a snapshot of the current state
@@ -286,13 +286,16 @@ namespace AnyRPG {
                 ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
             }
 
-            SetUnitProfileProperties(notify);
+            SetUnitProfileProperties(notify, unitLevel);
+
+            // Trying to spawn dead relies on reading properties set in the previous method
+            characterStats.TrySpawnDead();
         }
 
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        private void SetUnitProfileProperties(bool notify = true) {
+        private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
 
             if (unitProfile != null) {
@@ -332,7 +335,11 @@ namespace AnyRPG {
 
                 if (characterStats != null) {
                     // cause stats to be recalculated
-                    characterStats.SetLevel(characterStats.Level);
+                    int newLevel = characterStats.Level;
+                    if (unitLevel != -1) {
+                        newLevel = unitLevel;
+                    }
+                    characterStats.SetLevel(newLevel);
                 }
             }
 
