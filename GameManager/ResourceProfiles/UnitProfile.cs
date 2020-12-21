@@ -279,6 +279,10 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         public static UnitProfile GetUnitProfileReference(string unitProfileName) {
+            if (SystemUnitProfileManager.MyInstance == null) {
+                Debug.LogError("UnitProfile.GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
+                return null;
+            }
             if (unitProfileName != null && unitProfileName != string.Empty) {
                 UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
                 if (tmpUnitProfile != null) {
@@ -332,7 +336,6 @@ namespace AnyRPG {
 
             return prefabObject;
         }
-
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();

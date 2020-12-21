@@ -455,8 +455,9 @@ namespace AnyRPG {
         }
 
         private void DestroySpawns() {
-            //Debug.Log("UnitSpawnNode.DestroySpawn(): Destroying spawns");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.DestroySpawn(): Destroying spawns");
             foreach (UnitController unitController in spawnReferences) {
+                //Debug.Log(gameObject.name + ".UnitSpawnNode.DestroySpawn(): Destroying spawn: " + unitController.gameObject.name + "; delay: " + despawnDelay);
                 Destroy(unitController.gameObject, despawnDelay);
             }
             spawnReferences.Clear();
@@ -485,6 +486,7 @@ namespace AnyRPG {
         }
 
         public void ProcessRespawn(UnitController unitController) {
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.ProcessRespawn()");
             if (spawnReferences.Contains(unitController)) {
                 spawnReferences.Remove(unitController);
             }

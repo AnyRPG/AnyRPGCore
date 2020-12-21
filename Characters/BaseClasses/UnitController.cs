@@ -430,24 +430,22 @@ namespace AnyRPG {
             unitMountManager = new UnitMountManager(this);
             persistentObjectComponent.Setup(this);
 
-            // allow the base character to initialize.  it can possibly contain a unit profile
-            // if it does, attempt to spawn the character model referenced in it
+            // allow the base character to initialize.
             characterUnit.BaseCharacter.Init();
-            if (characterUnit.BaseCharacter.UnitProfile != null) {
-                SetUnitProfile(characterUnit.BaseCharacter.UnitProfile, UnitControllerMode.AI);
-            }
-
-            // setUnitProfile will have spawned a model if it contained one.  If it did not,
-            // look for an animator.  If one is found, the model is already attached to this unit.
-            if (unitModel == null) {
-                ConfigureAnimator();
-            }
-
-            // if we got this far without an animator or model, this is probably the default character unit prefab
-            // in that case, whatever spawned this will set the unit profile manually and spawn the model by calling SetUnitProfile()
         }
 
         protected override void Start() {
+
+            if (characterUnit.BaseCharacter.UnitProfile == null
+                && characterUnit.BaseCharacter.UnitProfileName != null
+                && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
+                SetUnitProfile(UnitProfile.GetUnitProfileReference(characterUnit.BaseCharacter.UnitProfileName), UnitControllerMode.AI);
+                // setUnitProfile will have spawned a model if it contained one.  If it did not,
+                // look for an animator.  If one is found, the model is already attached to this unit.
+                if (unitModel == null) {
+                    ConfigureAnimator();
+                }
+            }
 
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");

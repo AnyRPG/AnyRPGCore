@@ -92,6 +92,7 @@ namespace AnyRPG {
         public CharacterRecipeManager CharacterRecipeManager { get => characterRecipeManager; set => characterRecipeManager = value; }
         public CharacterCurrencyManager CharacterCurrencyManager { get => characterCurrencyManager; set => characterCurrencyManager = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
+        public string UnitProfileName { get => unitProfileName; }
 
         /*
         private void Awake() {
@@ -123,14 +124,15 @@ namespace AnyRPG {
             GetComponentReferences();
 
             // get reference to any hard coded unit profile
-            SetupScriptableObjects();
+            // testing : disabled for now.  let this happen later in the process
+            //SetupScriptableObjects();
 
             // setup the objects that handle different character mechanics
             CreateCharacterComponents();
 
             InitCharacterComponents();
 
-            SetUnitProfileProperties();
+            //SetUnitProfileProperties();
 
             characterInitialized = true;
         }
@@ -265,7 +267,7 @@ namespace AnyRPG {
         public void SetUnitProfile(string unitProfileName, bool notify = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            SetUnitProfile(GetUnitProfileReference(unitProfileName), notify);
+            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify);
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true) {
@@ -285,25 +287,6 @@ namespace AnyRPG {
             }
 
             SetUnitProfileProperties(notify);
-        }
-
-        /// <summary>
-        /// This will retrieve a unit profile from the system unit profile manager
-        /// </summary>
-        private UnitProfile GetUnitProfileReference(string unitProfileName) {
-            if (SystemUnitProfileManager.MyInstance == null) {
-                Debug.LogError(gameObject.name + ".GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
-                return null;
-            }
-            if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
-                if (tmpUnitProfile != null) {
-                    return tmpUnitProfile;
-                } else {
-                    Debug.LogError(gameObject.name + ".GetUnitProfileReference(): Unit Profile " + unitProfileName + " could not be found.  Check Inspector.");
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -658,9 +641,11 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
+            /*
             if (unitProfileName != null && unitProfileName != string.Empty) {
-                SetUnitProfile(GetUnitProfileReference(unitProfileName));
+                SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName));
             }
+            */
         }
 
         public void OnDestroy() {

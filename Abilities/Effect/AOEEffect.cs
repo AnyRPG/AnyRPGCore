@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         protected virtual float TargetAOEHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + "AOEEffect.TargetAOEHit(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectContext, hitAbilityEffectList);
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
@@ -194,7 +194,7 @@ namespace AnyRPG {
         }
 
         public virtual void PerformAOEHit(IAbilityCaster source, Interactable target, float outputShare, AbilityEffectContext abilityEffectInput, float castDelay) {
-            //Debug.Log(MyName + ".AOEEffect.PerformAOEHit(): outputShare: " + outputShare);
+            //Debug.Log(DisplayName + ".AOEEffect.PerformAOEHit(): outputShare: " + outputShare);
             AbilityEffectContext modifiedOutput = GetSharedOutput(outputShare, abilityEffectInput);
             (source as MonoBehaviour).StartCoroutine(WaitForHitDelay(source, target, modifiedOutput, castDelay));
         }

@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         public void BeginDialog(string dialogName, DialogComponent caller = null) {
-            Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog(" + dialogName + ")");
+            //Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog(" + dialogName + ")");
             Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
             if (tmpDialog != null) {
                 BeginDialog(tmpDialog, caller);
@@ -52,14 +52,14 @@ namespace AnyRPG {
         }
 
         public void BeginDialog(Dialog dialog, DialogComponent caller = null) {
-            Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog()");
+            //Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog()");
             if (dialog != null && dialogCoroutine == null) {
                 dialogCoroutine = interactable.StartCoroutine(PlayDialog(dialog, caller));
             }
         }
 
         public IEnumerator PlayDialog(Dialog dialog, DialogComponent caller = null) {
-            Debug.Log(interactable.gameObject.name + ".DialogController.PlayDialog(" + dialog.DisplayName + ")");
+            //Debug.Log(interactable.gameObject.name + ".DialogController.PlayDialog(" + dialog.DisplayName + ")");
 
             interactable.ProcessBeginDialog();
             float elapsedTime = 0f;
