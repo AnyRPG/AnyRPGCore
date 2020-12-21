@@ -106,6 +106,10 @@ namespace AnyRPG {
 
         [Header("Control")]
 
+        [Tooltip("If true, the unit will attack anything in its aggro radius based on faction relationship")]
+        [SerializeField]
+        private bool isAggressive = true;
+
         [Tooltip("The radius of the aggro sphere around the unit.  If any hostile characters enter this range, the character will attack them. Set to 0 to disable aggro")]
         [FormerlySerializedAs("aggroRange")]
         [SerializeField]
@@ -241,7 +245,7 @@ namespace AnyRPG {
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public Faction Faction { get => faction; set => faction = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
-        public bool SpawnDead { get => spawnDead; set => spawnDead = value; }
+        public bool SpawnDead { get => spawnDead; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
@@ -267,6 +271,8 @@ namespace AnyRPG {
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
+        public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
+
         // disabled because it was too high maintenance
         /*
         public bool UseLootableCharacter { get => useLootableCharacter; set => useLootableCharacter = value; }

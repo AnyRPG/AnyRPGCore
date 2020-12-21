@@ -34,7 +34,8 @@ namespace AnyRPG {
         /// </summary>
         public void StartEnableAggro() {
             //Debug.Log("AggroRange.StartEnableAggro()");
-            if (autoEnableAgro || (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitProfile != null && baseCharacter.UnitController.UnitProfile.AggroRadius > 0f)) {
+            if (autoEnableAgro
+                || (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitProfile != null && baseCharacter.UnitController.UnitProfile.IsAggressive == true)) {
                 EnableAggro();
             }
         }
