@@ -17,6 +17,8 @@ namespace AnyRPG {
 
         private Coroutine behaviorCoroutine = null;
 
+        private bool behaviorPlaying = false;
+
         private bool suppressNameplateImage = false;
 
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
@@ -24,8 +26,8 @@ namespace AnyRPG {
         private BehaviorComponent behaviorComponent = null;
 
         public int MyBehaviorIndex { get => behaviorIndex; }
-        public Coroutine BehaviorCoroutine { get => behaviorCoroutine; }
         public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
+        public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
 
         public BehaviorController(UnitController unitController) {
             //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");
@@ -55,10 +57,14 @@ namespace AnyRPG {
             CleanupScriptableObjects();
         }
 
+        public void SetBehaviorPlaying(bool newValue) {
+            behaviorPlaying = newValue;
+        }
+
         public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
             //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
 
-            if (behaviorCoroutine == null) {
+            if (behaviorPlaying == false) {
                 behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller));
             }
         }
@@ -69,6 +75,7 @@ namespace AnyRPG {
                 unitController.StopCoroutine(behaviorCoroutine);
             }
             behaviorCoroutine = null;
+            SetBehaviorPlaying(false);
             if (unitController != null && unitController.NamePlateController.NamePlate != null) {
                 unitController.NamePlateController.NamePlate.HideSpeechBubble();
             }
@@ -76,6 +83,9 @@ namespace AnyRPG {
 
         public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.PlayBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ")");
+
+            SetBehaviorPlaying(true);
+
             float elapsedTime = 0f;
             behaviorIndex = 0;
             BehaviorNode currentbehaviorNode = null;
@@ -120,6 +130,7 @@ namespace AnyRPG {
             }
             //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ") : END LOOP");
             behaviorCoroutine = null;
+            SetBehaviorPlaying(false);
             suppressNameplateImage = false;
             behaviorProfile.Completed = true;
 

@@ -116,7 +116,7 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionCount()");
 
-            if (unitController != null && unitController.BehaviorController.BehaviorCoroutine == null) {
+            if (unitController != null && unitController.BehaviorController.BehaviorPlaying == false) {
                 //return GetCurrentOptionList().Count;
                 int count = 0;
                 foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
@@ -132,6 +132,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBehaviorBeginEnd() {
+            //Debug.Log(interactable.gameObject.name + ".BehaviorComponent.ProcessBehaviorBeginEnd()");
             base.HandlePrerequisiteUpdates();
             MiniMapStatusUpdateHandler(this);
         }
