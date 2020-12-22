@@ -154,6 +154,10 @@ namespace AnyRPG {
 
         [Header("Movement")]
 
+        [Tooltip("If false, the unit will not have the Nav Mesh Agent enabled, and gravity will be disabled.")]
+        [SerializeField]
+        private bool isMobile = true;
+
         [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
         [SerializeField]
         private bool playOnFootstep = false;
@@ -272,6 +276,7 @@ namespace AnyRPG {
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
         public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
+        public bool IsMobile { get => isMobile; set => isMobile = value; }
 
         // disabled because it was too high maintenance
         /*

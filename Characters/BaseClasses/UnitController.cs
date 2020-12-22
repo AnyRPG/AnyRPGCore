@@ -381,7 +381,9 @@ namespace AnyRPG {
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
-            useAgent = true;
+            if (unitProfile != null && unitProfile.IsMobile == true) {
+                useAgent = true;
+            }
             EnableAgent();
 
             // ensure player cannot physically push AI units around

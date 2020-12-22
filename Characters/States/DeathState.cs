@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         public void Exit() {
             //Debug.Log(aiController.gameObject.name + ".DeathState.Exit()");
-            this.baseController.UnitMotor.StartNavAgent();
+            this.baseController.EnableAgent();
             this.baseController.EnableMotor();
             baseController.EnableAggro();
         }

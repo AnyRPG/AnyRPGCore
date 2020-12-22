@@ -492,6 +492,7 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void StartNavAgent() {
             //Debug.Log(gameObject.name + ".CharacterMotor.StartNavAgent()");
             if (!unitController.NavMeshAgent.enabled) {
@@ -499,6 +500,7 @@ namespace AnyRPG {
                 unitController.RigidBody.isKinematic = true;
             }
         }
+        */
 
         public void StopNavAgent() {
             //Debug.Log(gameObject.name + ".CharacterMotor.StopNavAgent()");
