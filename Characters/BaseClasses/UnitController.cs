@@ -477,9 +477,6 @@ namespace AnyRPG {
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
             base.OnDisable();
-            if (NamePlateManager.MyInstance != null) {
-                NamePlateManager.MyInstance.RemoveNamePlate(this);
-            }
             RemoveControlEffects();
         }
 
@@ -737,11 +734,6 @@ namespace AnyRPG {
             currentState = newState;
 
             currentState.Enter(this);
-        }
-
-        public void OnEnable() {
-            // TESTING DISABLE - THIS IS RUN IN START
-            //CreateEventSubscriptions();
         }
 
         protected override void Update() {

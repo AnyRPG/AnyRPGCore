@@ -179,6 +179,21 @@ namespace AnyRPG {
             }
         }
 
+        public override void OnDisable() {
+            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
+            base.OnDisable();
+            if (NamePlateManager.MyInstance != null) {
+                NamePlateManager.MyInstance.RemoveNamePlate(this);
+            }
+        }
+
+        public virtual void OnEnable() {
+            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            if (startHasRun) {
+                namePlateController.InitializeNamePlate();
+            }
+        }
+
     }
 
 }

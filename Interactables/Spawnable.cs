@@ -31,6 +31,9 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
+        // state management
+        protected bool startHasRun = false;
+
         // get references step tracker
         protected bool componentReferencesInitialized = false;
 
@@ -102,6 +105,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
+            startHasRun = true;
         }
 
         public virtual void CreateEventSubscriptions() {
