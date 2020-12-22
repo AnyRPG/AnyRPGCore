@@ -11,7 +11,7 @@ namespace AnyRPG {
         public float projectileSpeed = 0;
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".ProjectileEffect.Cast(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".ProjectileEffect.Cast(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             if (returnObjects != null) {
                 foreach (GameObject go in returnObjects.Values) {

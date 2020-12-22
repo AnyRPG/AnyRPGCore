@@ -200,7 +200,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForHitDelay(IAbilityCaster source, Interactable target, AbilityEffectContext modifiedOutput, float castDelay) {
-            //Debug.Log(MyName + ".AOEEffect.WaitForHitDelay(" + source.MyName + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AOEEffect.WaitForHitDelay(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             float accumulatedTime = 0f;
             while (accumulatedTime < castDelay) {
                 yield return null;

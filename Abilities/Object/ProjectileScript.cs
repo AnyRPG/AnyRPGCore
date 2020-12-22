@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         private void OnDestroy() {
-            //Debug.Log("ProjectileScript.OnDestroy()");
+            //Debug.Log(abilityEffectInput.baseAbility + ".ProjectileScript.OnDestroy()");
         }
     }
 

@@ -87,7 +87,8 @@ namespace AnyRPG {
                 && targetable.GetTargetOptions(sourceCharacter).MaxRange > 0
                 && target != null
                 && ((sourceCharacter as BaseCharacter) is BaseCharacter)
-                && ((sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI || (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.Pet) && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
+                && ((sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI || (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.Pet)
+                && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
                 return false;
             }
 

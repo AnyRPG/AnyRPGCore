@@ -10,7 +10,7 @@ namespace AnyRPG {
 
 
         protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
-            //Debug.Log(MyName + ".RainEffect.GetValidTargets()");
+            //Debug.Log(DisplayName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 
             // max targets determines how many objects to spawn

@@ -1188,7 +1188,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="abilityName"></param>
         public override void BeginAbility(string abilityName) {
-            Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             // these have to be new resources because the ability stores a tick time
             //BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetNewResource(abilityName);

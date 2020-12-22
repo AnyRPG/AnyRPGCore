@@ -254,7 +254,8 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(): FinalTarget: " + (finalTarget == null ? "null" : finalTarget.name));
 
             //if (abilityEffect.CanUseOn(finalTarget, source, abilityEffectContext)) {
-            if (target != null) { 
+            // null targets must be allowed for things like meteors or other projectiles that are colission based
+            if (GetTargetOptions(source).RequireTarget == false || target != null) { 
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
                 returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext);
@@ -265,7 +266,7 @@ namespace AnyRPG {
         }
 
         public virtual Dictionary<PrefabProfile, GameObject> PerformAbilityHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
-            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHitEffects(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHitEffects(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
@@ -301,7 +302,7 @@ namespace AnyRPG {
         }
 
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             Dictionary<PrefabProfile, GameObject> effectObjects = PerformAbilityHitEffects(source, target, abilityEffectInput);
             if (target == null) {
                 return;

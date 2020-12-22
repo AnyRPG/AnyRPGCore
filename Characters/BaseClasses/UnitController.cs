@@ -338,7 +338,7 @@ namespace AnyRPG {
             InitializeNamePlateController();
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
-            unitComponentController.AggroRangeController.DisableAggro();
+            DisableAggro();
             unitComponentController.InteractableRange.gameObject.SetActive(false);
             DisableAgent();
 
@@ -365,12 +365,11 @@ namespace AnyRPG {
         /// set this unit to be an AI unit
         /// </summary>
         private void EnableAI() {
-            Debug.Log(gameObject.name + ".UnitController.EnableAI()");
+            //Debug.Log(gameObject.name + ".UnitController.EnableAI()");
             InitializeNamePlateController();
             EnableAICommon();
 
             if (characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.SpawnDead == true) {
-                Debug.Log(gameObject.name + ".UnitController.EnableAI() entering death state");
                 ChangeState(new DeathState());
             } else {
                 ChangeState(new IdleState());
@@ -781,7 +780,9 @@ namespace AnyRPG {
             if (unitComponentController.AggroRangeController != null) {
                 //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
                 unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, characterUnit.BaseCharacter);
-                unitComponentController.AggroRangeController.StartEnableAggro();
+                if (!(currentState is DeathState)) {
+                    unitComponentController.AggroRangeController.StartEnableAggro();
+                }
             }
         }
 
