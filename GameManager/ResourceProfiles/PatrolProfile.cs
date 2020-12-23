@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         public Vector3 GetDestination(bool destinationReached) {
-            //Debug.Log("AIPatrol.GetDestination(" + destinationReached + ")");
+            //Debug.Log("PatrolProfile.GetDestination(" + destinationReached + ")");
             Vector3 returnValue = Vector3.zero;
 
             if (destinationReached || destinationRetrievedCount == 0) {
@@ -184,13 +184,17 @@ namespace AnyRPG {
         /// <param name="listIndex"></param>
         /// <returns></returns>
         public Vector3 GetDestinationByIndex(int listIndex) {
+            //Debug.Log("PatrolProfile.GetLinearDestination(): destinationIndex: " + destinationIndex);
             Vector3 returnValue = Vector3.zero;
             if (useTags == false) {
                 returnValue = destinationList[listIndex];
             } else {
                 GameObject tagObject = GameObject.FindGameObjectWithTag(destinationTagList[listIndex]);
                 if (tagObject != null) {
+                    //Debug.Log("PatrolProfile.GetLinearDestination(): destinationIndex: " + destinationIndex + "; tag object " + destinationTagList[listIndex] + " found at " + tagObject.transform.position);
                     returnValue = tagObject.transform.position;
+                } else {
+                    //Debug.Log("PatrolProfile.GetLinearDestination(): destinationIndex: " + destinationIndex + "; tag object " + destinationTagList[listIndex] + " not found!");
                 }
             }
             return returnValue;

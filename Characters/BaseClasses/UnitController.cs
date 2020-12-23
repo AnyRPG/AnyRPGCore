@@ -918,7 +918,7 @@ namespace AnyRPG {
         }
 
         public Vector3 SetDestination(Vector3 destination) {
-            //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position);
+            //Debug.Log(gameObject.name + ".UnitController.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 CommonMovementNotifier();
                 return UnitMotor.MoveToPoint(destination);
@@ -1410,6 +1410,7 @@ namespace AnyRPG {
         }
 
         public void BeginAbility(string abilityName) {
+            //Debug.Log(gameObject.name + ".UnitController.BeginAbility()");
             characterUnit.BaseCharacter.AbilityManager.BeginAbility(abilityName);
         }
 

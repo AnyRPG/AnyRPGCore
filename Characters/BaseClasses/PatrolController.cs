@@ -47,12 +47,14 @@ namespace AnyRPG {
         }
 
         public void BeginPatrol(string patrolName) {
-            //Debug.Log(gameObject.name + ".patrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
+            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
             PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
             if (tmpPatrolProfile != null) {
                 tmpPatrolProfile.CurrentUnitController = unitController;
                 SetCurrentPatrol(tmpPatrolProfile);
                 unitController.ChangeState(new PatrolState());
+            } else {
+                Debug.LogError(unitController.gameObject.name + ".PatrolController.BeginPatrol() could not find patrol: " + (patrolName != null ? patrolName : "null") + ")");
             }
         }
 

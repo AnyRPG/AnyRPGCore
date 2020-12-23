@@ -9,8 +9,12 @@ namespace AnyRPG {
         private UnitController baseController;
 
         public void Enter(UnitController baseController) {
-            //Debug.Log(aiController.gameObject.name + ": Enter return state at position: " + aiController.transform.position);
+            //Debug.Log(baseController.gameObject.name + ": Enter return state at position: " + baseController.transform.position);
             this.baseController = baseController;
+            if (baseController.UnitProfile.IsMobile == false) {
+                baseController.ChangeState(new IdleState());
+                return;
+            }
             this.baseController.SetDestination(baseController.LeashPosition);
             this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
             if (this.baseController.MyCombatStrategy != null) {

@@ -196,7 +196,7 @@ namespace AnyRPG {
         }
 
         public Vector3 CorrectedNavmeshPosition(Vector3 testPosition, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.CorrectedNavmeshPosition(" + testPosition + ")");
 
             if (minAttackRange > 0f) {
                 currentMaxSampleRadius = minAttackRange;
@@ -300,7 +300,7 @@ namespace AnyRPG {
 
         // move toward the position at a normal speed
         public Vector3 MoveToPoint(Vector3 point, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount);
+            //Debug.Log(unitController.gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + unitController.transform.position + "; frame: " + Time.frameCount);
             if (frozen) {
                 //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");
                 return Vector3.zero;
@@ -321,6 +321,8 @@ namespace AnyRPG {
             setMoveDestination = true;
             // leaving this unset so it gets picked up in the next fixedupdate because navmeshagent doesn't actually reset path until after current frame.
             //unitController.MyAgent.SetDestination(point);
+
+            //Debug.Log(unitController.gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + unitController.transform.position + "; frame: " + Time.frameCount + "; return: " + destinationPosition);
             return destinationPosition;
         }
 
@@ -425,7 +427,7 @@ namespace AnyRPG {
 
 
         public void FollowTarget(Interactable newTarget, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + ".CharacterMotor.FollowTarget(" + (newTarget == null ? "null" : newTarget.name) + ", " + minAttackRange + ")");
+            //Debug.Log(unitController.gameObject.name + ".CharacterMotor.FollowTarget(" + (newTarget == null ? "null" : newTarget.name) + ", " + minAttackRange + ")");
             if (frozen) {
                 return;
             }
