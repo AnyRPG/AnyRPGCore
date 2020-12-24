@@ -21,8 +21,12 @@ namespace AnyRPG {
 
         public BaseAbility BaseAbility { get => ability; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new TeleportComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new TeleportComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

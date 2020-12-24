@@ -21,6 +21,7 @@ namespace AnyRPG {
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             this.mountUnitController = mountUnitController;
             this.mountUnitProfile = mountUnitProfile;
+            mountUnitController.SetRider(unitController);
             if (mountUnitController != null && mountUnitController.ModelReady == false) {
                 SubscribeToMountModelReady();
             } else {
@@ -76,6 +77,10 @@ namespace AnyRPG {
             unitController.Mounted = true;
 
             ConfigureCharacterMountedPhysics();
+
+            // set the mount character Unit to be the player unit that is on the mount.
+            // this will allow the character to be attacked while mounted.
+            mountUnitController.CharacterUnit = unitController.CharacterUnit;
 
             unitController.NotifyOnActivateMountedState(mountUnitController);
         }

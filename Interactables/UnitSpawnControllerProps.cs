@@ -29,8 +29,12 @@ namespace AnyRPG {
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new UnitSpawnControllerComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new UnitSpawnControllerComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

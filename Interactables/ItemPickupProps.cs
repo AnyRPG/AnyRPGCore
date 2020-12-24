@@ -12,8 +12,12 @@ namespace AnyRPG {
     public class ItemPickupProps : LootableNodeProps {
 
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new ItemPickupComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new ItemPickupComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
     }
 

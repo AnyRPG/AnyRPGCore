@@ -112,7 +112,10 @@ namespace AnyRPG {
 
         // is this unit under the control of a master unit
         private bool underControl = false;
-        private BaseCharacter masterUnit;
+        private BaseCharacter masterUnit = null;
+
+        // rider information
+        private UnitController riderUnitController = null;
 
         // track the current movement sound overrides
         private MovementSoundArea movementSoundArea = null;
@@ -236,8 +239,22 @@ namespace AnyRPG {
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
+        // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
+        public override GameObject InteractableGameObject {
+            get {
+                if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
+                    return riderUnitController.gameObject;
+                }
+                return base.InteractableGameObject;
+            }
+        } 
+
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
+        }
+
+        public void SetRider(UnitController riderUnitController) {
+            this.riderUnitController = riderUnitController;
         }
 
         public override void EnableInteraction() {
@@ -1247,7 +1264,7 @@ namespace AnyRPG {
             //Check when there is a new collider coming into contact with the box
             while (i < hitColliders.Length) {
                 //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "]");
-                if (hitColliders[i].gameObject == newTarget.gameObject) {
+                if (hitColliders[i].gameObject == newTarget.InteractableGameObject) {
                     //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "] MATCH!!");
                     return true;
                 }

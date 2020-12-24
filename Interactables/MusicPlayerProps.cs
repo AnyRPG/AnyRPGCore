@@ -23,8 +23,12 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage != null ? SystemConfigurationManager.MyInstance.MusicPlayerNamePlateImage : base.NamePlateImage); }
         public List<AudioProfile> MusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new MusicPlayerComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new MusicPlayerComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

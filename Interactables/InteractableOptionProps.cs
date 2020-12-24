@@ -37,7 +37,8 @@ namespace AnyRPG {
 
         public List<PrerequisiteConditions> PrerequisiteConditions { get => prerequisiteConditions; set => prerequisiteConditions = value; }
 
-        public virtual InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+        public virtual InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+
             return null;
         }
 

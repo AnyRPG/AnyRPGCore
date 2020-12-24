@@ -9,10 +9,6 @@ namespace AnyRPG {
         [SerializeField]
         private PressureSwitchProps pressureSwitchProps = new PressureSwitchProps();
 
-        [Tooltip("the minimum amount of weight needed to activate this switch")]
-        [SerializeField]
-        private float minimumWeight = 0f;
-
         public override InteractableOptionProps InteractableOptionProps { get => pressureSwitchProps; }
     }
 

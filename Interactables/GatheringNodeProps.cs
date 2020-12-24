@@ -35,8 +35,12 @@ namespace AnyRPG {
 
         public GatherAbility BaseAbility { get => baseAbility; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new GatheringNodeComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new GatheringNodeComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

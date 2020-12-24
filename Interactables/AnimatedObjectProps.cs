@@ -20,8 +20,12 @@ namespace AnyRPG {
         public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
         public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new AnimatedObjectComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new AnimatedObjectComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
     }
 

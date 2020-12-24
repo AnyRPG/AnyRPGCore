@@ -30,8 +30,12 @@ namespace AnyRPG {
             }
         }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new BankComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new BankComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
     }
 

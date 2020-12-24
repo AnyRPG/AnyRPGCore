@@ -6,6 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class ControlSwitch : InteractableOption {
 
+        /*
         [SerializeField]
         private ControlSwitchProps controlSwitchProps = new ControlSwitchProps();
 
@@ -24,7 +25,7 @@ namespace AnyRPG {
         private int activationLimit = 0;
 
         public override InteractableOptionProps InteractableOptionProps { get => controlSwitchProps; }
-
+        */
     }
 
 }

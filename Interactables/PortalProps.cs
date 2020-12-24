@@ -21,7 +21,7 @@ namespace AnyRPG {
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyPortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyPortalNamePlateImage : base.NamePlateImage); }
         public string LocationTag { get => locationTag; set => locationTag = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             return null;
         }
     }

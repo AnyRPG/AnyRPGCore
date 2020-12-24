@@ -22,8 +22,12 @@ namespace AnyRPG {
 
         public List<Skill> Skills { get => skills; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new SkillTrainerComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new SkillTrainerComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

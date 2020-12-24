@@ -10,7 +10,16 @@ namespace AnyRPG {
 
         protected InteractableOptionProps interactableOptionProps = null;
 
+        // a reference to the interaction option component that was created from this objects properties
+        protected InteractableOptionComponent interactableOptionComponent = null;
+
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
+        public InteractableOptionComponent InteractableOptionComponent { get => interactableOptionComponent; set => interactableOptionComponent = value; }
+
+        public void SetComponent(InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log(gameObject.name + ".InteractableOption.SetComponent()");
+            this.interactableOptionComponent = interactableOptionComponent;
+        }
 
         public virtual void SetupScriptableObjects() {
             InteractableOptionProps.SetupScriptableObjects();

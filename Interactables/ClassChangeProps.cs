@@ -21,8 +21,12 @@ namespace AnyRPG {
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
-        public override InteractableOptionComponent GetInteractableOption(Interactable interactable) {
-            return new ClassChangeComponent(interactable, this);
+        public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            InteractableOptionComponent returnValue = new ClassChangeComponent(interactable, this);
+            if (interactableOption != null) {
+                interactableOption.SetComponent(returnValue);
+            }
+            return returnValue;
         }
 
         public override void SetupScriptableObjects() {

@@ -160,6 +160,11 @@ namespace AnyRPG {
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public DialogController DialogController { get => dialogController; }
+        public virtual GameObject InteractableGameObject {
+            get {
+                return gameObject;
+            }
+        }
 
         protected override void Awake() {
             base.Awake();
@@ -210,7 +215,7 @@ namespace AnyRPG {
             foreach (InteractableOption interactableOption in interactableOptionMonoList) {
                 if (interactableOption.InteractableOptionProps != null) {
                     interactableOption.SetupScriptableObjects();
-                    interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this));
+                    interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
                 }
             }
         }
