@@ -378,9 +378,9 @@ namespace AnyRPG {
                 }
             }
             // don't override an existing toughness
-            if (_characterUnit.BaseCharacter.UnitToughness == null) {
+            if (_characterUnit.BaseCharacter.UnitToughness == null && toughness != null) {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
-                _characterUnit.BaseCharacter.SetUnitToughness(toughness);
+                _characterUnit.BaseCharacter.SetUnitToughness(toughness, true);
             }
             spawnReferences.Add(unitController);
         }

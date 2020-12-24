@@ -395,8 +395,12 @@ namespace AnyRPG {
             characterStats.SetLevel(characterLevel);
         }
 
-        public void SetUnitToughness(UnitToughness newUnitToughness) {
+        public void SetUnitToughness(UnitToughness newUnitToughness, bool resetLevel = false) {
+            //Debug.Log(gameObject.name + ": BaseCharacter.SetUnitToughness(" + (newUnitToughness == null ? "null" : newUnitToughness.DisplayName) + ")");
             unitToughness = newUnitToughness;
+            if (resetLevel) {
+                characterStats.SetLevel(characterStats.Level);
+            }
         }
 
         public void SetCharacterName(string newName, bool notify = true) {
