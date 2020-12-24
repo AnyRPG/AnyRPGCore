@@ -231,27 +231,27 @@ namespace AnyRPG {
 
             if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
                 if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
+                    // prevent clicking on mount
+                    if (mouseOverhit.collider.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+                        Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
+                        if (newInteractable == null) {
+                            newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
+                        }
+                        //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null") + "; new: " + (newInteractable != null ? newInteractable.MyName : "null"));
 
-                    Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
-                    if (newInteractable == null) {
-                        newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
+                        if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
+                            // since we hit something, and our existing thing was not null, we have to exit the old one
+                            //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null")+ "; new: " + (newInteractable != null ? newInteractable.MyName : "null" ));
+                            mouseOverInteractable.OnMouseOut();
+                        }
+
+                        if (newInteractable != null && mouseOverInteractable != newInteractable) {
+                            // we have a new interactable, activate mouseover
+                            //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
+                            newInteractable.OnMouseHover();
+                        }
+                        mouseOverInteractable = newInteractable;
                     }
-                    //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null") + "; new: " + (newInteractable != null ? newInteractable.MyName : "null"));
-
-                    if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
-                        // since we hit something, and our existing thing was not null, we have to exit the old one
-                        //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null")+ "; new: " + (newInteractable != null ? newInteractable.MyName : "null" ));
-
-                        mouseOverInteractable.OnMouseOut();
-                    }
-
-                    if (newInteractable != null && mouseOverInteractable != newInteractable) {
-                        // we have a new interactable, activate mouseover
-
-                        //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
-                        newInteractable.OnMouseHover();
-                    }
-                    mouseOverInteractable = newInteractable;
                 }
             } else {
                 disableMouseOver = true;
@@ -716,11 +716,6 @@ namespace AnyRPG {
         public void HandleActivateMountedState(UnitController mountUnitController) {
 
             PlayerManager.MyInstance.SetActiveUnitController(mountUnitController);
-
-            // set the mount character Unit to be the player unit that is on the mount.
-            // this will theoretically allow the character to be attacked while mounted.
-            // TODO : test that this works
-            PlayerManager.MyInstance.ActiveUnitController.CharacterUnit = PlayerManager.MyInstance.UnitController.CharacterUnit;
 
             CameraManager.MyInstance.SwitchToMainCamera();
             CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
