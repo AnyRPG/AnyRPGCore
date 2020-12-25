@@ -451,7 +451,7 @@ namespace AnyRPG {
             if (Physics.Linecast(sourcePosition, targetPosition, out wallHit, layerMask)) {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
-                if (wallHit.collider.gameObject != target) {
+                if (wallHit.collider.gameObject != target.gameObject) {
                     //Debug.Log("return false; hit: " + wallHit.collider.gameObject + "; target: " + target);
                     return false;
                 }

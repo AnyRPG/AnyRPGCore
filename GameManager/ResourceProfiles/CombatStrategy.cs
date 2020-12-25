@@ -111,6 +111,7 @@ namespace AnyRPG {
         }
 
         public List<BaseAbility> GetAttackRangeAbilityList(BaseCharacter sourceCharacter) {
+            //Debug.Log(sourceCharacter.gameObject.name + ".CombatStrategy.GetAttackRangeAbilityList()");
 
             List<BaseAbility> returnList = new List<BaseAbility>();
 

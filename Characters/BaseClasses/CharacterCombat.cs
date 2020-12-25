@@ -436,7 +436,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //Debug.Log(gameObject.name + ".AICombat.GetMinAttackRange(): return " + returnValue);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetMinAttackRange(): return " + returnValue);
             return returnValue;
         }
 

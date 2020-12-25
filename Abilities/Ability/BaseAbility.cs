@@ -434,12 +434,12 @@ namespace AnyRPG {
         }
 
         public virtual float GetLOSMaxRange(IAbilityCaster source, Interactable target) {
-            //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source.AbilityManager.PerformLOSCheck(target, this)) {
-                //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + MaxRange);
+                //Debug.Log(DisplayName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + "): return max " + GetTargetOptions(source).MaxRange);
                 return GetTargetOptions(source).MaxRange;
             }
-            //Debug.Log(MyName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.Name) + ", " + (target == null ? "null" : target.name) + "): return " + source.GetMeleeRange());
+            //Debug.Log(DisplayName + ".BaseAbility.GetLOSMaxRange(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + "): return melee " + source.AbilityManager.GetMeleeRange());
             return source.AbilityManager.GetMeleeRange();
         }
 

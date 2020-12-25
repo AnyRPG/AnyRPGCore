@@ -196,7 +196,7 @@ namespace AnyRPG {
         }
 
         public Vector3 CorrectedNavmeshPosition(Vector3 testPosition, float minAttackRange = -1f) {
-            //Debug.Log(unitController.gameObject.name + ".UnitMotor.CorrectedNavmeshPosition(" + testPosition + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.CorrectedNavmeshPosition(" + testPosition + ", " + minAttackRange + ")");
 
             if (minAttackRange > 0f) {
                 currentMaxSampleRadius = minAttackRange;
@@ -211,31 +211,30 @@ namespace AnyRPG {
             }
 
             // we did not find a valid point on the current navmesh
-            // since unity prefers finding stuff downward rather than sideways, we want to shoot updward to find out if we landed under a hill
-            // attempt vertical updward shot to find position on current navmesh first
+            // raycast downward from 10 above the point in case the point was under a steep hill
             RaycastHit raycastHit;
             Vector3 firstTestPosition = Vector3.zero;
             bool foundMatch = false;
-            //if (Physics.Raycast(testPosition + new Vector3(0f, -0.1f, 0f), Vector3.up, out raycastHit, 10f, (PlayerManager.MyInstance.MyCharacter.MyCharacterController as PlayerController).movementMask)) {
             if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
-                //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; collider: " + raycastHit.collider.name);
+                //Debug.Log(unitController.gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; collider: " + raycastHit.collider.name);
             }
 
             float sampleRadius = 0.5f;
             if (foundMatch) {
-                // our upward raycast found a walkable area.  is it the same area?  check outward for valid point on same area
+                // our raycast found a walkable area.  is it the same area?  check outward for valid point on same area
                 while (sampleRadius <= currentMaxSampleRadius) {
-                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + "; radius: " + sampleRadius);
+                    //Debug.Log(unitController.gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + "; radius: " + sampleRadius);
                     if (NavMesh.SamplePosition(firstTestPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
-                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + " got hit above on walkable ground at : " + hit.position);
+                        //Debug.Log(unitController.gameObject.name + ": CharacterMotor.FixedUpdate(): testPosition " + firstTestPosition + " got hit above on walkable ground at : " + hit.position);
                         return hit.position;
                     }
                     sampleRadius += navMeshSampleStepSize;
                 }
                 // if we actually got a hit, but did not detect a navmesh, then don't try raycast downward.  the hit was probably on a steep up hill and trying a downcast from our current
                 // level would result in a ray inside the hill shooting downward to a potentially inaccessible navmesh below
+                //Debug.Log(unitController.gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + "return vector3.zero");
                 return Vector3.zero;
             }
 
@@ -282,7 +281,7 @@ namespace AnyRPG {
                 sampleRadius += navMeshSampleStepSize;
             }
 
-            //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", RETURNING VECTOR3.ZERO!!!");
+            //Debug.Log(unitController.gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", " + currentMaxSampleRadius + "; minAttackRange: " + minAttackRange + "; RETURNING VECTOR3.ZERO!!!");
             return Vector3.zero;
         }
 
