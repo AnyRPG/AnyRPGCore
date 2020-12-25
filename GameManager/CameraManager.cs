@@ -117,7 +117,9 @@ namespace AnyRPG {
                 return;
             }
             SceneNode activeScene = LevelManager.MyInstance.GetActiveSceneNode();
-            if (activeScene == LevelManager.MyInstance.MainMenuSceneNode || activeScene == LevelManager.MyInstance.InitializationSceneNode || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
+            if (activeScene == LevelManager.MyInstance.MainMenuSceneNode
+                || activeScene == LevelManager.MyInstance.InitializationSceneNode
+                || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }

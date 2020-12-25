@@ -194,7 +194,7 @@ namespace AnyRPG {
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName);
                         Color textColor;
-                        if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene.MyUseDefaultFactionColors == true) {
+                        if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null && UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene.MyUseDefaultFactionColors == true) {
                             if (unitNamePlateController.Faction != null) {
                                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING DEFAULT");
                                 textColor = unitNamePlateController.Faction.GetFactionColor();
@@ -372,12 +372,12 @@ namespace AnyRPG {
         //private void LateUpdate() {
         public void UpdatePosition() {   
             //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
-            if (unitNamePlateController != null && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null)) {
+            if (unitNamePlateController != null && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
                 Camera currentCamera;
-                if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null) {
+                if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null) {
                     currentCamera = CutsceneCameraController.MyInstance.GetComponent<Camera>();
                 } else {
                     currentCamera = CameraManager.MyInstance.MyActiveMainCamera;
@@ -389,7 +389,7 @@ namespace AnyRPG {
                     //Debug.Log("outisde viewport, not rendering");
                     renderNamePlate = false;
                 }
-                if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null) {
+                if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null) {
                     //Debug.Log("NamePlateController.LateUpdate(): cutscene: calculating distance from camera");
                     float unitDistance = Mathf.Abs(Vector3.Distance(CutsceneCameraController.MyInstance.gameObject.transform.position, unitNamePlateController.NamePlateTransform.position));
                     if (unitDistance > 40f) {
@@ -433,7 +433,7 @@ namespace AnyRPG {
 
         private void SetFactionColor() {
             //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor()");
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene == null) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == false && UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene == null) {
                 //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
@@ -445,7 +445,7 @@ namespace AnyRPG {
             //CheckForPlayerOwnerShip();
             if (unitNamePlateController.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
-                if (UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene != null && UIManager.MyInstance.MyCutSceneBarController.MyCurrentCutscene.MyUseDefaultFactionColors == true) {
+                if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null && UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene.MyUseDefaultFactionColors == true) {
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.MyDisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.MyName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.MyDisplayName + "; color: USING DEFAULT");
                         MyHealthSlider.color = unitNamePlateController.Faction.GetFactionColor();

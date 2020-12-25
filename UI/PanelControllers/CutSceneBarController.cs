@@ -48,7 +48,7 @@ namespace AnyRPG {
 
         private Cutscene currentCutscene = null;
 
-        public Cutscene MyCurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
+        public Cutscene CurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
 
         public void ClearCoRoutine() {
             if (dialogCoroutine != null) {
@@ -76,9 +76,15 @@ namespace AnyRPG {
         }
 
         public void StartCutScene(Cutscene cutscene) {
-            //Debug.Log("CutSceneBarController.StartCutScene()");
+            //Debug.Log("CutSceneBarController.StartCutScene(" + cutscene.DisplayName + ")");
 
-            if (cutscene.TimelineName != null && cutscene.TimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.TimelineName)) {
+            if (currentCutscene != null) {
+                return;
+            }
+
+            if (cutscene.TimelineName != null
+                && cutscene.TimelineName != string.Empty
+                && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(cutscene.TimelineName)) {
                 SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[cutscene.TimelineName].Play();
             }
 
@@ -110,7 +116,10 @@ namespace AnyRPG {
         public void EndCutScene() {
             //Debug.Log("CutSceneBarController.EndCutScene()");
 
-            if (currentCutscene != null && currentCutscene.TimelineName != null && currentCutscene.TimelineName != string.Empty && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
+            if (currentCutscene != null
+                && currentCutscene.TimelineName != null
+                && currentCutscene.TimelineName != string.Empty
+                && SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
                 SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[currentCutscene.TimelineName].Stop();
             }
 

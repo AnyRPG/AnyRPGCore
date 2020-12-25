@@ -21,7 +21,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            if (Props.Cutscene != null) {
+            if (Props.Cutscene != null && UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene == null) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
                     if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
