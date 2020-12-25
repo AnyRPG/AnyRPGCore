@@ -224,7 +224,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.CleanupEverything()");
             base.CleanupEverything();
             ClearFromPlayerRangeTable();
-            dialogController.Cleanup();
+            if (dialogController != null) {
+                dialogController.Cleanup();
+            }
         }
 
 

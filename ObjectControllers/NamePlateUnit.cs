@@ -189,7 +189,7 @@ namespace AnyRPG {
 
         public virtual void OnEnable() {
             // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
-            if (startHasRun) {
+            if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
             }
         }

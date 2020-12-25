@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".PressureSwitch.Interact(" + (source == null ? "null" : source.name) +")");
+            Debug.Log(interactable.gameObject.name + ".PressureSwitch.Interact(" + (source == null ? "null" : source.DisplayName) +")");
             float totalWeight = 0f;
             if (interactable.Collider != null) {
                 //Debug.Log(gameObject.name + ".PressureSwitch.Interact(" + (source == null ? "null" : source.name) + "): interactable center: " + interactable.transform.position);

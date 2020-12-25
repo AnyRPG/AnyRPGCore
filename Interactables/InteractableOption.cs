@@ -14,10 +14,10 @@ namespace AnyRPG {
         protected InteractableOptionComponent interactableOptionComponent = null;
 
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; set => interactableOptionProps = value; }
-        public InteractableOptionComponent InteractableOptionComponent { get => interactableOptionComponent; set => interactableOptionComponent = value; }
+        public InteractableOptionComponent InteractableOptionComponent { get => interactableOptionComponent; }
 
         public void SetComponent(InteractableOptionComponent interactableOptionComponent) {
-            //Debug.Log(gameObject.name + ".InteractableOption.SetComponent()");
+            //Debug.Log(gameObject.name + ".InteractableOption.SetComponent(" + (interactableOptionComponent == null ? "null" : interactableOptionComponent.Interactable.gameObject.name) + ")");
             this.interactableOptionComponent = interactableOptionComponent;
         }
 

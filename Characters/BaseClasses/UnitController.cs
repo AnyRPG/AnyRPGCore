@@ -1292,7 +1292,9 @@ namespace AnyRPG {
             base.OnDestroy();
             StopAllCoroutines();
             persistentObjectComponent.Cleanup();
-            behaviorController.Cleanup();
+            if (behaviorController != null) {
+                behaviorController.Cleanup();
+            }
             OnUnitDestroy(unitProfile);
         }
 

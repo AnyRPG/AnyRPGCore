@@ -23,7 +23,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log("ControlSwitchComponent.Interact()");
+            //Debug.Log(interactable.gameObject.name + ".ControlSwitchComponent.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (Props.ActivationLimit > 0 && activationCount >= Props.ActivationLimit) {
                 // this has already been activated the number of allowed times
@@ -49,7 +49,6 @@ namespace AnyRPG {
 
             if (Props.ControlObjects != null) {
                 foreach (InteractableOptionComponent interactableOption in Props.ControlObjects) {
-                    //Debug.Log(interactable.gameObject.name + ".ControlSwitchComponent.Interact(): " + interactableOption.Interactable.gameObject.name);
                     interactableOption.Interact(source);
                 }
             }
