@@ -15,6 +15,15 @@ namespace AnyRPG {
         public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
+        public override bool MyPrerequisitesMet {
+            get {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
+                    return false;
+                }
+                return base.MyPrerequisitesMet;
+            }
+        }
+
         public override void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
