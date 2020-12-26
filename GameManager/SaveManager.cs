@@ -1246,6 +1246,14 @@ namespace AnyRPG {
             UIManager.MyInstance.MyActionBarManager.ClearActionBars(true);
             QuestLog.MyInstance.ClearLog();
             PlayerManager.MyInstance.ResetInitialLevel();
+
+            // clear describable resource mutable data dictionaries
+            questSaveDataDictionary.Clear();
+            behaviorSaveDataDictionary.Clear();
+            DialogSaveDataDictionary.Clear();
+            sceneNodeSaveDataDictionary.Clear();
+            cutsceneSaveDataDictionary.Clear();
+            questObjectiveSaveDataDictionary.Clear();
         }
 
         public void LoadWindowPositions() {
