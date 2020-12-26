@@ -469,6 +469,7 @@ namespace AnyRPG {
         public void SubscribeToPlayerEvents() {
             activeCharacter.CharacterStats.OnImmuneToEffect += HandleImmuneToEffect;
             activeCharacter.CharacterStats.OnDie += HandleDie;
+            activeCharacter.CharacterStats.OnReviveBegin += HandleReviveBegin;
             activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
             MyCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
             activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
@@ -498,6 +499,7 @@ namespace AnyRPG {
         public void UnsubscribeFromPlayerEvents() {
             activeCharacter.CharacterStats.OnImmuneToEffect -= HandleImmuneToEffect;
             activeCharacter.CharacterStats.OnDie -= HandleDie;
+            activeCharacter.CharacterStats.OnReviveBegin -= HandleReviveBegin;
             activeCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
             activeCharacter.CharacterStats.OnLevelChanged -= HandleLevelChanged;
             activeCharacter.CharacterStats.OnGainXP -= HandleGainXP;

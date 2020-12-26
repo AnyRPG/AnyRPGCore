@@ -98,6 +98,7 @@ namespace AnyRPG {
             TurnInput = new Vector3(inputTurn, 0, 0);
 
             if (HasMoveInput()) {
+                //Debug.Log("PlayerController.CollectMoveInput(): hasMoveInput");
                 PlayerManager.MyInstance.ActiveUnitController.CommonMovementNotifier();
             }
         }

@@ -102,7 +102,7 @@ namespace AnyRPG {
                         foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
                             //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                             if (factionDisposition.Faction == faction) {
-                                Debug.Log(baseCharacter.gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.Faction.DisplayName + ": " + factionDisposition.disposition);
+                                //Debug.Log(baseCharacter.gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.Faction.DisplayName + ": " + factionDisposition.disposition);
                                 return true;
                             }
                         }

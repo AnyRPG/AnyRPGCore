@@ -1092,7 +1092,7 @@ namespace AnyRPG {
         }
 
         public void ReviveComplete() {
-            //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
             ReviveRaw();
             OnReviveComplete();
             baseCharacter.UnitController.FreezeRotation();
@@ -1104,7 +1104,7 @@ namespace AnyRPG {
         }
 
         public void ReviveRaw() {
-            //Debug.Log(MyBaseCharacter.MyCharacterName + ".CharacterStats.ReviveRaw()");
+            //Debug.Log(BaseCharacter.CharacterName + ".CharacterStats.ReviveRaw()");
             isReviving = false;
             baseCharacter.UnitController.CharacterUnit.DisableCollider();
             baseCharacter.UnitController.CharacterUnit.EnableCollider();

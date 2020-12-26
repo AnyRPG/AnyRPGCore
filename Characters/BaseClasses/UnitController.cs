@@ -1334,6 +1334,7 @@ namespace AnyRPG {
         }
 
         public void FreezeRotation() {
+            //Debug.Log(gameObject.name + ".UnitController.FreezeRotation()");
             RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
