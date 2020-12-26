@@ -48,6 +48,7 @@ namespace AnyRPG {
         private string returnSceneName = string.Empty;
 
         private Coroutine loadCutSceneCoroutine = null;
+        private bool loadingLevel = false;
 
         private bool levelManagerInitialized = false;
 
@@ -67,6 +68,7 @@ namespace AnyRPG {
         public string OverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
         public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
         public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
+        public bool LoadingLevel { get => loadingLevel; set => loadingLevel = value; }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -189,6 +191,7 @@ namespace AnyRPG {
         public void PerformLevelLoadActivities() {
             // determine if this is the game manager loading scene
             //Debug.Log("Levelmanager.PerformLevelLoadActivities(): Finding Scene Settings. SceneManager.GetActiveScene().name: " + SceneManager.GetActiveScene().name + " == " + initializationScene);
+            loadingLevel = false;
             SetActiveSceneNode();
             if (activeSceneNode != null) {
                 activeSceneNode.Visit();
@@ -268,16 +271,20 @@ namespace AnyRPG {
         }
 
         public void LoadCutSceneWithDelay(Cutscene cutscene) {
+            //Debug.Log("Levelmanager.LoadCutSceneWithDelay(" + (cutscene == null ? null : cutscene.DisplayName) + ")");
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
-            if (loadCutSceneCoroutine == null) {
+
+            if (loadingLevel == false) {
+                loadingLevel = true;
                 loadCutSceneCoroutine = StartCoroutine(LoadCutSceneDelay(cutscene));
             }
         }
 
         private IEnumerator LoadCutSceneDelay(Cutscene cutscene) {
-            yield return new WaitForSeconds(1);
-            LoadCutScene(cutscene);
+            //yield return new WaitForSeconds(1);
+            yield return null;
             loadCutSceneCoroutine = null;
+            LoadCutScene(cutscene);
         }
 
         public void LoadCutScene(Cutscene cutscene) {
