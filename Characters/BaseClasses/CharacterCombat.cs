@@ -659,7 +659,7 @@ namespace AnyRPG {
                         // TODO: fix this code. it would remove a sword hit if swords are dual wielded
                         // check all equipped weapons and compare similar to ability providers logic
                         if (defaultHitEffects.Contains(abilityEffect)) {
-                            Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
+                            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
                             defaultHitEffects.Remove(abilityEffect);
                         }
                     }

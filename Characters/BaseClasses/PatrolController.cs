@@ -67,7 +67,7 @@ namespace AnyRPG {
 
             foreach (PatrolProfile patrolProfile in patrolProfiles) {
                 //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
-                if (patrolProfile.AutoStart == true) {
+                if (patrolProfile.PatrolProperties.AutoStart == true) {
                     //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found autostart profile");
                     currentPatrol = patrolProfile;
                     currentPatrol.CurrentUnitController = unitController;

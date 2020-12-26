@@ -13,8 +13,6 @@ namespace AnyRPG {
 
         public BehaviorProps Props { get => interactableOptionProps as BehaviorProps; }
 
-        private bool suppressNameplateImage = false;
-
         private UnitController unitController = null;
 
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
@@ -85,7 +83,7 @@ namespace AnyRPG {
             if (!base.CanInteract()) {
                 return false;
             }
-            if (GetCurrentOptionCount() == 0 || suppressNameplateImage == true) {
+            if (GetCurrentOptionCount() == 0 || unitController.BehaviorController.SuppressNameplateImage == true) {
                 return false;
             }
             return true;
@@ -153,7 +151,7 @@ namespace AnyRPG {
         */
 
         public override bool CanShowMiniMapIcon() {
-            if (suppressNameplateImage == true) {
+            if (unitController.BehaviorController.SuppressNameplateImage == true) {
                 return false;
             }
             return base.CanShowMiniMapIcon();

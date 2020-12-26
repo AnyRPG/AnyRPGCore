@@ -75,7 +75,7 @@ namespace AnyRPG {
         private GameObject unitModel = null;
 
         // track startup state
-        private bool profileReady = false;
+        //private bool profileReady = false;
         private bool modelReady = false;
 
         // control logic

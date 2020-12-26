@@ -28,6 +28,7 @@ namespace AnyRPG {
         public int MyBehaviorIndex { get => behaviorIndex; }
         public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
+        public bool SuppressNameplateImage { get => suppressNameplateImage; }
 
         public BehaviorController(UnitController unitController) {
             //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");

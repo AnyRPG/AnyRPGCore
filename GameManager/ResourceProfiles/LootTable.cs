@@ -9,9 +9,6 @@ namespace AnyRPG {
     [System.Serializable]
     public class LootTable : DescribableResource {
 
-        [SerializeField]
-        private LootTableProps lootTableProps = new LootTableProps();
-
         [Header("Loot Table")]
 
         [Tooltip("If set to true, the items on this list will ignore any parent drop limits.")]

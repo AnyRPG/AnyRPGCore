@@ -72,6 +72,13 @@ namespace AnyRPG {
             }
         }
 
+        public bool UseTags { get => useTags; set => useTags = value; }
+        public List<string> DestinationTagList { get => destinationTagList; set => destinationTagList = value; }
+        public List<Vector3> DestinationList { get => destinationList; set => destinationList = value; }
+        public bool RandomDestinations { get => randomDestinations; set => randomDestinations = value; }
+        public int MaxDestinations { get => maxDestinations; set => maxDestinations = value; }
+        public bool LoopDestinations { get => loopDestinations; set => loopDestinations = value; }
+        public float MaxDistanceFromSpawnPoint { get => maxDistanceFromSpawnPoint; set => maxDistanceFromSpawnPoint = value; }
     }
 
 }

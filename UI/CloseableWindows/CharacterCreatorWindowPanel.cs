@@ -33,7 +33,7 @@ namespace AnyRPG {
         [SerializeField]
         private UMACharacterEditorPanelController umaCharacterPanel = null;
 
-        private string playerName = "Player Name";
+        //private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
