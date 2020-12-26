@@ -21,10 +21,18 @@ namespace AnyRPG {
                 return;
             }
             Interactable _interactable = GetComponentInParent<Interactable>();
-            if (_interactable.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+            //if (_interactable.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                 // player unit is spawned, but this is not the player unit.  Disable collider
                 rangeCollider.enabled = false;
-            }
+            //}
+        }
+
+        public void EnableCollider() {
+            rangeCollider.enabled = true;
+        }
+
+        public void DisableCollider() {
+            rangeCollider.enabled = false;
         }
 
         private void OnTriggerEnter(Collider collider) {
