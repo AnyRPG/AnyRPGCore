@@ -90,6 +90,8 @@ namespace AnyRPG {
 
             if (image.sprite == null) {
                 image.color = new Color32(0, 0, 0, 0);
+            } else {
+                image.color = Color.white;
             }
             if (mainTarget.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
