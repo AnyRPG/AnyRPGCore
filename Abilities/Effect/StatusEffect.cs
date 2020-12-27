@@ -149,7 +149,6 @@ namespace AnyRPG {
         [SerializeField]
         protected List<string> weaponHitAbilityEffectNames = new List<string>();
 
-        [SerializeField]
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
 
         public int StatAmount { get => statAmount; }

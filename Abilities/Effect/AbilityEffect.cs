@@ -11,65 +11,9 @@ namespace AnyRPG {
         [SerializeField]
         private AbilityEffectTargetProps targetOptions = new AbilityEffectTargetProps();
 
-        /*
-        [Tooltip("If true, the character must have a target selected to cast this ability.")]
+        [Tooltip("The chance this ability will be cast.  100 = 100%")]
         [SerializeField]
-        protected bool requiresTarget = false;
-
-        [Tooltip("If true, the character must have an uninterrupted line of sight to the target.")]
-        [SerializeField]
-        private bool requireLineOfSight = false;
-
-        [Tooltip("If line of sight is required, where should it be calculated from. Useful for splash damage and ground target explosions.")]
-        [SerializeField]
-        protected LineOfSightSourceLocation lineOfSightSourceLocation;
-
-        [Tooltip("If true, the target must be a character and must be alive.")]
-        [SerializeField]
-        protected bool requiresLiveTarget = false;
-
-        [Tooltip("If true, the target must be a character and must be dead.")]
-        [SerializeField]
-        protected bool requireDeadTarget = false;
-
-        [Tooltip("Can the character cast this ability on itself?")]
-        [SerializeField]
-        protected bool canCastOnSelf = false;
-
-        [Tooltip("Can the character cast this ability on others?")]
-        [SerializeField]
-        protected bool canCastOnOthers = false;
-
-        [Tooltip("Can the character cast this ability on a character belonging to an enemy faction?")]
-        [SerializeField]
-        protected bool canCastOnEnemy = false;
-
-        [Tooltip("Can the character cast this ability on a character with no relationship?")]
-        [SerializeField]
-        protected bool canCastOnNeutral = false;
-
-        [Tooltip("Can the character cast this ability on a character belonging to a friendly faction?")]
-        [SerializeField]
-        protected bool canCastOnFriendly = false;
-
-        [Tooltip("If no target is given, automatically cast on the caster")]
-        [SerializeField]
-        protected bool autoSelfCast = false;
-
-        [Header("Range Settings")]
-
-        [Tooltip("Where to calculate max range from.  Useful for splash damage and ground target explosions.")]
-        [SerializeField]
-        protected TargetRangeSourceLocation targetRangeSourceLocation;
-
-        [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
-        [SerializeField]
-        protected bool useMeleeRange = false;
-
-        [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
-        [SerializeField]
-        protected int maxRange;
-        */
+        private float chanceToCast = 100f;
 
         [Header("Material Changes")]
 
@@ -127,6 +71,8 @@ namespace AnyRPG {
         //public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public IAbilityCaster SourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
+        public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
+
         //public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
         //public LineOfSightSourceLocation LineOfSightSourceLocation { get => lineOfSightSourceLocation; set => lineOfSightSourceLocation = value; }
         //public TargetRangeSourceLocation TargetRangeSourceLocation { get => targetRangeSourceLocation; set => targetRangeSourceLocation = value; }
@@ -210,7 +156,8 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             foreach (AbilityEffect abilityEffect in abilityEffectList) {
-                if (abilityEffect != null) {
+                if (abilityEffect != null
+                    && (abilityEffect.chanceToCast >= 100f || abilityEffect.chanceToCast >= Random.Range(0f, 100f))) {
                     //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.DisplayName : "null"));
                     if (SystemResourceManager.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");

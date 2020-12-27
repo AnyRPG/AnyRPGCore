@@ -980,13 +980,15 @@ namespace AnyRPG {
         }
 
         public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            //Debug.Log(gameObject.name + ".CharacterStats.RecoverResource(" + amount + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.RecoverResource(" + amount + ")");
 
             bool returnValue = AddResourceAmount(powerResource.DisplayName, amount);
             if (returnValue == false) {
                 return false;
             }
-            if (showCombatText && (baseCharacter.UnitController.gameObject == PlayerManager.MyInstance.UnitController.gameObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.UnitController.gameObject)) {
+            if (PlayerManager.MyInstance.PlayerUnitSpawned == true
+                && showCombatText
+                && (baseCharacter.UnitController.gameObject == PlayerManager.MyInstance.UnitController.gameObject || source.AbilityManager.UnitGameObject == PlayerManager.MyInstance.UnitController.gameObject)) {
                 // spawn text over the player
                 CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }

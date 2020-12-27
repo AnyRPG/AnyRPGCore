@@ -167,22 +167,6 @@ namespace AnyRPG {
         [SerializeField]
         public float abilityCoolDown = 0f;
 
-        /*
-        [Header("Ground Target")]
-
-        [Tooltip("If true, casting this spell will require choosing a target point on the ground, instead of a target character or object.")]
-        [SerializeField]
-        private bool requiresGroundTarget = false;
-
-        [Tooltip("If this is a ground targeted spell, tint it with this color.")]
-        [SerializeField]
-        protected Color groundTargetColor = new Color32(255, 255, 255, 255);
-
-        [Tooltip("How big should the projector be on the ground if this is ground targeted. Used to show accurate effect size.")]
-        [SerializeField]
-        protected float groundTargetRadius = 0f;
-        */
-
         [Header("Target Properties")]
 
         [Tooltip("Ignore the below target options and use the check from the first ability effect instead")]
@@ -191,57 +175,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private AbilityTargetProps targetOptions = new AbilityTargetProps();
-        /*
-        [Tooltip("If true, the character must have a target selected to cast this ability.")]
-        [SerializeField]
-        private bool requiresTarget = false;
-
-        [Tooltip("If true, the character must have an uninterrupted line of sight to the target.")]
-        [SerializeField]
-        private bool requireLineOfSight = false;
-
-        [Tooltip("If true, the target must be a character and must be alive.")]
-        [SerializeField]
-        private bool requiresLiveTarget = true;
-
-        [Tooltip("If true, the target must be a character and must be dead.")]
-        [SerializeField]
-        private bool requireDeadTarget = false;
-
-        [Tooltip("Can the character cast this ability on itself?")]
-        [SerializeField]
-        protected bool canCastOnSelf = false;
-
-        [Tooltip("Can the character cast this ability on others?")]
-        [SerializeField]
-        protected bool canCastOnOthers = false;
-
-        [Tooltip("Can the character cast this ability on a character belonging to an enemy faction?")]
-        [SerializeField]
-        protected bool canCastOnEnemy = false;
-
-        [Tooltip("Can the character cast this ability on a character with no relationship?")]
-        [SerializeField]
-        protected bool canCastOnNeutral = false;
-
-        [Tooltip("Can the character cast this ability on a character belonging to a friendly faction?")]
-        [SerializeField]
-        protected bool canCastOnFriendly = false;
-
-        [Tooltip("If no target is given, automatically cast on the caster")]
-        [SerializeField]
-        private bool autoSelfCast = false;
-
-        [Header("Range")]
-
-        [Tooltip("If true, the target must be within melee range (within hitbox) to cast this ability.")]
-        [SerializeField]
-        protected bool useMeleeRange = false;
-
-        [Tooltip("If melee range is not used, this ability can be cast on targets this many meters away.")]
-        [SerializeField]
-        protected int maxRange;
-        */
 
         [Header("Cast Complete Ability Effects")]
 
@@ -450,7 +383,9 @@ namespace AnyRPG {
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
-                _abilityEffect.Cast(source, target, target, abilityEffectContext);
+                if (_abilityEffect.ChanceToCast >= 100f || _abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f)) {
+                    _abilityEffect.Cast(source, target, target, abilityEffectContext);
+                }
             }
         }
 
@@ -559,7 +494,9 @@ namespace AnyRPG {
                 }
                 AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
-                if (_abilityEffect != null && _abilityEffect.CanUseOn(target, source, abilityEffectContext)) {
+                if (_abilityEffect != null
+                    && _abilityEffect.CanUseOn(target, source, abilityEffectContext)
+                    && (_abilityEffect.ChanceToCast >= 100f || _abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f))) {
                     _abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
                     //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ") COULD NOT FIND " + abilityEffect.DisplayName);
