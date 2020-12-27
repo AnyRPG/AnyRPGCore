@@ -104,10 +104,13 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMARecipe(loadGameButton.MySaveData);
 
             // testing avoid naked spawn
-            LoadUMARecipe();
+            //LoadUMARecipe();
 
             // ensure the correct unit and character model is spawned
             characterPreviewPanel.ReloadUnit();
+
+            // testing get proper appearance
+            LoadUMARecipe();
 
             // apply capabilities to it so equipment can work
             //CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
