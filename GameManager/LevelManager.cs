@@ -197,7 +197,7 @@ namespace AnyRPG {
                 activeSceneNode.Visit();
             }
             string activeSceneName = SceneManager.GetActiveScene().name;
-            if (activeSceneName == initializationSceneNode.SceneFile) {
+            if (activeSceneName == initializationSceneNode?.SceneFile) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Loading Main Menu");
                 LoadLevel(mainMenuScene);
                 return;
