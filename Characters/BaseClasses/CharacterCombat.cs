@@ -220,9 +220,16 @@ namespace AnyRPG {
                     target.AbilityManager.IsPlayerControlled()) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
+                    /*
                     if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
                         combatTextType = CombatTextType.normal;
                     } else if ((abilityEffect as AttackEffect).DamageType == DamageType.ability) {
+                        combatTextType = CombatTextType.ability;
+                    }
+                    */
+                    if ((abilityEffectContext.baseAbility is AnimatedAbility) && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack) {
+                        combatTextType = CombatTextType.normal;
+                    } else {
                         combatTextType = CombatTextType.ability;
                     }
                     CombatTextManager.MyInstance.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
