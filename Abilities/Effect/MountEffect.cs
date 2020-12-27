@@ -35,6 +35,14 @@ namespace AnyRPG {
             base.CancelEffect(targetCharacter);
         }
 
+        public override bool CanCast() {
+            if (LevelManager.MyInstance.GetActiveSceneNode()?.AllowMount == false) {
+                //Debug.Log(DisplayName + ".MountEffect.CanCast(): scene does not allow mount");
+                return false;
+            }
+            return base.CanCast();
+        }
+
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target? target.name : "null") + ")");
             if (!CanUseOn(target, source)) {

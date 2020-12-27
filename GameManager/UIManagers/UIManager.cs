@@ -324,6 +324,9 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HandlePlayerUnitSpawn()");
             ActivatePlayerUI();
 
+            // some visuals can be dependent on zone restrictions so visuals should be updated
+            MyActionBarManager.UpdateVisuals();
+
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
             //SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
 

@@ -53,6 +53,10 @@ namespace AnyRPG {
 
         [Header("Scene Options")]
 
+        [Tooltip("If false, mounts cannot be used in this scene")]
+        [SerializeField]
+        private bool allowMount = true;
+
         [Tooltip("Prevent the player unit from spawning in this scene.  Useful for cutscenes that are separate scenes or menu / game over scenes.")]
         [SerializeField]
         private bool suppressCharacterSpawn = false;
@@ -104,6 +108,8 @@ namespace AnyRPG {
                 SaveManager.MyInstance.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
+
+        public bool AllowMount { get => allowMount; set => allowMount = value; }
 
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
             SceneNodeSaveData saveData = SaveManager.MyInstance.GetSceneNodeSaveData(this);

@@ -178,6 +178,10 @@ namespace AnyRPG {
             return returnList;
         }
 
+        public virtual bool CanCast() {
+            return true;
+        }
+
         /// <summary>
         /// allow ability effects to chain and perform proper retargeting
         /// </summary>

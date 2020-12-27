@@ -318,7 +318,9 @@ namespace AnyRPG {
         /// </summary>
         public void UpdateVisual(bool removeStaleActions = false) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.MyName));
-
+            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyCharacter == null) {
+                return;
+            }
             // attempt to remove unlearned spells from the bars
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
@@ -430,20 +432,18 @@ namespace AnyRPG {
                 }
 
                 if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat) {
-                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                         //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
                         EnableFullCoolDownIcon();
                         return;
                     }
                 }
 
-                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).WeaponAffinityNames.Count > 0) {
-                    if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null) {
-                        if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
-                            //Debug.Log("ActionButton.UpdateVisual(): can't cast due to missing weaponaffinity");
-                            EnableFullCoolDownIcon();
-                            return;
-                        }
+                if ((Useable as BaseAbility) is BaseAbility) {
+                    if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
+                        //Debug.Log(Useable.DisplayName + ".ActionButton.UpdateVisual(): can't cast due to spell restrictions");
+                        EnableFullCoolDownIcon();
+                        return;
                     }
                 }
 

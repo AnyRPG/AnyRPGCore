@@ -390,6 +390,12 @@ namespace AnyRPG {
         }
 
         public bool CanCast(IAbilityCaster sourceCharacter, bool playerInitiated = false) {
+            if (useAbilityEffectTargetting) {
+                List<AbilityEffect> abilityEffects = GetAbilityEffects(sourceCharacter);
+                if (abilityEffects != null && abilityEffects.Count > 0 && abilityEffects[0].CanCast() == false) {
+                    return false;
+                }
+            }
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 return true;

@@ -104,6 +104,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.LoadUMARecipe(loadGameButton.MySaveData);
 
             // testing avoid naked spawn
+            // seems to make no difference to have this disabled here
             //LoadUMARecipe();
 
             // ensure the correct unit and character model is spawned
