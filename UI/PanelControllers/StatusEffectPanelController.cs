@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void ClearTarget() {
-            //Debug.Log("StatusEffectPanelController.ClearTarget()");
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearTarget()");
 
             // do this first or there will be no character to unsubscribe from
             CleanupEventSubscriptions();
@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public void CleanupEventSubscriptions() {
-            //Debug.Log("StatusEffectPanelController.CleanupEventSubscriptions()");
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.CleanupEventSubscriptions()");
             if (targetUnitController != null) {
                 targetUnitController.OnStatusEffectAdd -= HandleStatusEffectAdd;
             }
@@ -105,8 +105,15 @@ namespace AnyRPG {
         }
 
         public override void OnDisable() {
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnDisable()");
             base.OnDisable();
             CleanupEventSubscriptions();
+        }
+
+        public override void OnEnable() {
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnEnable()");
+            base.OnEnable();
+            CreateEventSubscriptions();
         }
     }
 
