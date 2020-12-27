@@ -43,14 +43,22 @@ namespace AnyRPG {
         /// <param name="weapon"></param>
         /// <returns></returns>
         public bool IsWeaponSupported(Weapon weapon) {
+            if (weapon.WeaponSkill == null) {
+                return true;
+            }
+            return IsWeaponSkillSupported(weapon.WeaponSkill);
+        }
+
+        public bool IsWeaponSkillSupported(WeaponSkill weaponSkill) {
             foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
                 CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(capabilityConsumer);
-                if (capabilityProps.WeaponSkillList.Contains(weapon.WeaponSkill)) {
+                if (capabilityProps.WeaponSkillList.Contains(weaponSkill)) {
                     return true;
                 }
             }
             return false;
         }
+
 
         /// <summary>
         /// query a capability consumer's capability providers for an armor class

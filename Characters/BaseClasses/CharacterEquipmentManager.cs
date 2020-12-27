@@ -597,21 +597,8 @@ namespace AnyRPG {
             if (weaponCount == 0) {
                 // there are no weapons equipped
                 // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
-                if (baseCharacter.CharacterClass != null) {
-                    if (baseCharacter.CharacterClass.GetFilteredCapabilities(baseCharacter).WeaponSkillList.Contains(weaponAffinity)) {
-                        if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
-                            return true;
-                        }
-                    }
-                }
-
-                // check if the unit profile is set and contains a weapon skill that is considered to be active when no weapon is equipped
-                if (baseCharacter.UnitProfile != null) {
-                    if (baseCharacter.UnitProfile.GetFilteredCapabilities(baseCharacter).WeaponSkillList.Contains(weaponAffinity)) {
-                        if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill) {
-                            return true;
-                        }
-                    }
+                if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill && baseCharacter.CapabilityConsumerProcessor.IsWeaponSkillSupported(weaponAffinity)) {
+                    return true;
                 }
             }
             return false;
