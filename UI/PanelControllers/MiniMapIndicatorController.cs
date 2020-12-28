@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
-            //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
+            //Debug.Log(_interactable.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
             if (miniMapLayers[_interactable] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");
                 return;

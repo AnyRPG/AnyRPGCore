@@ -75,6 +75,10 @@ namespace AnyRPG {
         [SerializeField]
         protected bool suppressInteractionWindow = false;
 
+        [Tooltip("For everything except character unit interactions, the interactor must be within this range of this objects collider. This does not apply to interactions triggered by switches.")]
+        [SerializeField]
+        private float interactionMaxRange = 2f;
+
         [Header("Additional Spawn Options")]
 
         [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
@@ -140,6 +144,10 @@ namespace AnyRPG {
         }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public Collider Collider { get => myCollider; }
+        public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
+        public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
+        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public DialogController DialogController { get => dialogController; }
 
         public override bool MyPrerequisitesMet {
             get {
@@ -157,9 +165,6 @@ namespace AnyRPG {
             }
         }
 
-        public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
-        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
-        public DialogController DialogController { get => dialogController; }
         public virtual GameObject InteractableGameObject {
             get {
                 return gameObject;
@@ -401,7 +406,7 @@ namespace AnyRPG {
             }
 
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
-            if (validInteractables == null || validInteractables.Count == 0) {
+            if (validInteractables.Count == 0) {
                 //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
@@ -479,11 +484,7 @@ namespace AnyRPG {
             }
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
             //List<InteractableOptionComponent> validInteractables = GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit);
-            int validInteractableCount = 0;
-            if (validInteractables != null) {
-                validInteractableCount = validInteractables.Count;
-            }
-            if (validInteractableCount > 0) {
+            if (validInteractables.Count > 0) {
                 return true;
             } else {
                 return false;
@@ -494,31 +495,63 @@ namespace AnyRPG {
         /// Return true if the object trying to interact is in the trigger list (it is inside the collider and allowed to interact)
         /// </summary>
         /// <returns></returns>
-        public virtual bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + ")");
+        public virtual bool Interact(CharacterUnit source, bool processRangeCheck = false) {
+            //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.DisplayName + ", " + processRangeCheck + ")");
             if (notInteractable == true) {
                 return false;
             }
+            bool passedRangeCheck = false;
+            if (processRangeCheck) {
+                Collider[] colliders = new Collider[0];
+                int playerMask = 1 << LayerMask.NameToLayer("Player");
+                int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+                int interactableMask = 1 << LayerMask.NameToLayer("Interactable");
+                int validMask = (playerMask | characterMask | interactableMask);
+                Vector3 bottomPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
+                    source.Interactable.Collider.bounds.center.y - source.Interactable.Collider.bounds.extents.y,
+                    source.Interactable.Collider.bounds.center.z);
+                Vector3 topPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
+                    source.Interactable.Collider.bounds.center.y + source.Interactable.Collider.bounds.extents.y,
+                    source.Interactable.Collider.bounds.center.z);
+                colliders = Physics.OverlapCapsule(bottomPoint, topPoint, interactionMaxRange, validMask);
+                foreach (Collider collider in colliders) {
+                    if (collider.gameObject == gameObject) {
+                        passedRangeCheck = true;
+                        break;
+                    }
+                }
+            }
 
             // get a list of valid interactables to determine if there is an action we can treat as default
-            List<InteractableOptionComponent> validInteractables = GetValidInteractables();
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(processRangeCheck, passedRangeCheck);
             //List<InteractableOptionComponent> validInteractables = GetValidInteractables(source);
-            if (validInteractables == null) {
-                return false;
-            }
-            foreach (InteractableOptionComponent validInteractable in validInteractables) {
-                //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
+            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables();
+            List<InteractableOptionComponent> finalInteractables = new List<InteractableOptionComponent>();
+            if (processRangeCheck) {
+                foreach (InteractableOptionComponent validInteractable in validInteractables) {
+                    //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
+                    if (validInteractable.CanInteract(processRangeCheck, passedRangeCheck)) {
+                        finalInteractables.Add(validInteractable);
+                    }
+                }
+            } else {
+                finalInteractables = validInteractables;
             }
             // perform default interaction or open a window if there are multiple valid interactions
             //Debug.Log(gameObject.name + ".Interactable.Interact(): validInteractables.Count: " + validInteractables.Count);
             // changed code, window will always be opened, and it will decide if to pop another one or not
-            if (validInteractables.Count > 0) {
-                if (suppressInteractionWindow == true) {
+            if (finalInteractables.Count > 0) {
+                if (suppressInteractionWindow == true || validInteractables.Count == 1) {
                     validInteractables[0].Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
                 } else {
                     OpenInteractionWindow();
                 }
                 return true;
+            }
+            if (validInteractables.Count > 0 && finalInteractables.Count == 0) {
+                if (processRangeCheck == true && passedRangeCheck == false) {
+                    source.BaseCharacter.UnitController.NotifyOnMessageFeed(DisplayName + " is out of range");
+                }
             }
             return false;
         }
@@ -547,33 +580,31 @@ namespace AnyRPG {
 
 
         public List<InteractableOptionComponent> GetValidInteractables() {
+            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(" + processRangeCheck + ", " + passedRangeCheck + ")");
+
+            List<InteractableOptionComponent> validInteractables = new List<InteractableOptionComponent>();
 
             if (notInteractable == true) {
-                return null;
+                return validInteractables;
             }
 
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
-                return null;
+                return validInteractables;
             }
 
-            List<InteractableOptionComponent> validInteractables = new List<InteractableOptionComponent>();
             foreach (InteractableOptionComponent _interactable in interactables) {
                 if (_interactable != null && !_interactable.Equals(null)) {
-                    if (_interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
+                    if (_interactable.GetValidOptionCount() > 0
+                        && _interactable.MyPrerequisitesMet
+                        //&& (processRangeCheck == false || _interactable.CanInteract())
+                        ) {
 
                         // HAD TO REMOVE THE FIRST CONDITION BECAUSE IT WAS BREAKING MINIMAP UPDATES - MONITOR FOR WHAT REMOVING THAT BREAKS...
                         //if (_interactable.CanInteract(source) && _interactable.GetValidOptionCount() > 0 && _interactable.MyPrerequisitesMet) {
 
                         //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                         validInteractables.Add(_interactable);
-                    } else {
-                        if (_interactable.GetValidOptionCount() <= 0) {
-                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; optionCount: " + _interactable.GetValidOptionCount());
-                        }
-                        if (!_interactable.MyPrerequisitesMet) {
-                            //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString() + "; prerequisitesmet: " + _interactable.MyPrerequisitesMet);
-                        }
                     }
                 }
             }
@@ -656,7 +687,7 @@ namespace AnyRPG {
 
             if (GetCurrentInteractables().Count == 0) {
                 //if (GetValidInteractables(PlayerManager.MyInstance.MyCharacter.MyCharacterUnit).Count == 0) {
-                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No valid Interactables.  Not glowing.");
+                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
 

@@ -98,7 +98,10 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
         }
 
-        public virtual bool CanInteract() {
+        public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+            if (processRangeCheck == true && passedRangeCheck == false) {
+                return false;
+            }
             return MyPrerequisitesMet;
         }
 
@@ -175,6 +178,11 @@ namespace AnyRPG {
 
         public virtual int GetValidOptionCount() {
             // overwrite me if this type of interactable option has a list of options instead of just one
+            /*
+            if (processRangeCheck == true && passedRangeCheck == false) {
+                return 0;
+            }
+            */
             return (MyPrerequisitesMet == true ? 1 : 0);
         }
 
@@ -189,6 +197,11 @@ namespace AnyRPG {
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
             }
+            CallMiniMapStatusUpdateHandler();
+        }
+
+        public virtual void CallMiniMapStatusUpdateHandler() {
+            //MiniMapStatusUpdateHandler(this);
         }
 
         public virtual void SetupScriptableObjects() {

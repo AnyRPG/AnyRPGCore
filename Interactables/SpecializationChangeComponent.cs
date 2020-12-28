@@ -88,8 +88,7 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

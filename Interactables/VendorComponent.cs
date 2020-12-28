@@ -46,8 +46,7 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

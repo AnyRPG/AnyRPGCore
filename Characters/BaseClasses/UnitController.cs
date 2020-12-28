@@ -32,6 +32,7 @@ namespace AnyRPG {
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
         public event System.Action<UnitController> OnActivateMountedState = delegate { };
         public event System.Action OnDeActivateMountedState = delegate { };
+        public event System.Action<string> OnMessageFeed = delegate { };
 
         // by default, a unit will enter AI mode if no mode is set before Start()
         [SerializeField]
@@ -1415,6 +1416,10 @@ namespace AnyRPG {
         }
         public void NotifyOnDeActivateMountedState() {
             OnDeActivateMountedState();
+        }
+        public void NotifyOnMessageFeed(string message) {
+            //Debug.Log(gameObject.name + ".NotifyOnMessageFeed(" + message + ")");
+            OnMessageFeed(message);
         }
 
         #endregion

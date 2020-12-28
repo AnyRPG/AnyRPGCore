@@ -72,6 +72,9 @@ namespace AnyRPG {
         }
 
         public override int GetValidOptionCount() {
+            if (base.GetValidOptionCount() == 0) {
+                return 0;
+            }
             return GetCurrentOptionCount();
         }
 
@@ -87,9 +90,9 @@ namespace AnyRPG {
             return optionCount;
         }
 
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
-            bool returnValue = ((GetCurrentOptionCount() > 0 && MyPrerequisitesMet) ? true : false);
+            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck)) ? true : false);
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
             return returnValue;
         }
@@ -98,9 +101,7 @@ namespace AnyRPG {
             return CanInteract();
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

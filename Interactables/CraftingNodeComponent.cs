@@ -92,9 +92,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + "CraftingNode.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

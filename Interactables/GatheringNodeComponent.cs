@@ -24,6 +24,11 @@ namespace AnyRPG {
             }
         }
 
+        public override void CallMiniMapStatusUpdateHandler() {
+            base.CallMiniMapStatusUpdateHandler();
+            MiniMapStatusUpdateHandler(this);
+        }
+
         public override void CreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {

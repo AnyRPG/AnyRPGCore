@@ -61,9 +61,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

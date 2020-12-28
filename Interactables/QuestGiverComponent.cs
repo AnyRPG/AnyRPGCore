@@ -62,12 +62,12 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
             if (Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count == 0) {
                 return false;
             }
-            return base.CanInteract();
+            return base.CanInteract(processRangeCheck, passedRangeCheck);
 
         }
 
@@ -299,9 +299,13 @@ namespace AnyRPG {
 
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.HandlePrerequisiteUpdates()");
-
-            base.HandlePrerequisiteUpdates();
+            // testing put this before the base since base calls minimap update
             UpdateQuestStatus();
+            base.HandlePrerequisiteUpdates();
+            //UpdateQuestStatus();
+        }
+
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

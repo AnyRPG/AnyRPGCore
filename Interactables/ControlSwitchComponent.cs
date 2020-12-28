@@ -57,9 +57,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".AnimatedObject.HandldePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

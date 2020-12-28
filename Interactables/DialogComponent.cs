@@ -89,9 +89,9 @@ namespace AnyRPG {
             return true;
         }
 
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             //Debug.Log(gameObject.name + ".DialogInteractable.CanInteract()");
-            if (!base.CanInteract()) {
+            if (!base.CanInteract(processRangeCheck, passedRangeCheck)) {
                 return false;
             }
             if (GetCurrentOptionList().Count == 0) {
@@ -130,9 +130,7 @@ namespace AnyRPG {
             return GetCurrentOptionList().Count;
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(interactable.gameObject.name + ".DialogComponent.HandlePrerequisiteUpdates(): " + GetCurrentOptionList().Count);
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

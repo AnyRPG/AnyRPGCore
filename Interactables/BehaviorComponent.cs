@@ -78,9 +78,9 @@ namespace AnyRPG {
             return currentList;
         }
 
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
-            if (!base.CanInteract()) {
+            if (!base.CanInteract(processRangeCheck, passedRangeCheck)) {
                 return false;
             }
             if (GetCurrentOptionCount() == 0 || unitController.BehaviorController.SuppressNameplateImage == true) {
@@ -135,9 +135,7 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

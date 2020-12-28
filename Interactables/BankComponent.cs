@@ -30,9 +30,7 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.bankWindow.CloseWindow();
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".Bank.HandldePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

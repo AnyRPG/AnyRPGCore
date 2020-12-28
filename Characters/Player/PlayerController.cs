@@ -352,12 +352,13 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             // get reference to name now since interactable could change scene and then target reference is lost
             string targetDisplayName = PlayerManager.MyInstance.UnitController.Target.DisplayName;
-            if (PlayerManager.MyInstance.UnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
+            if (PlayerManager.MyInstance.UnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit, true)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 SystemEventManager.MyInstance.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
+            
             return false;
             //}
             //return false;
@@ -692,6 +693,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange += HandleClassChange;
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
+            PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
         }
 
         public void UnsubscribeFromUnitEvents() {
@@ -712,6 +714,11 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange -= HandleClassChange;
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
+            PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
+        }
+
+        public void HandleMessageFeed(string message) {
+            MessageFeedManager.MyInstance.WriteMessage(message);
         }
 
         public void HandleActivateMountedState(UnitController mountUnitController) {

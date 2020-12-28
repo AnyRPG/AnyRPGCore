@@ -81,10 +81,15 @@ namespace AnyRPG {
 
         public virtual void DropLoot() {
             //Debug.Log(gameObject.name + ".LootableNode.DropLoot()");
+
+            // is the below code necessary?  it was causing stuff that was already dropped but not picked up to not pop a window again and just remain unlootable
+            /*
             if (lootDropped) {
                 // add this to prevent double drops from child classes like GatheringNode
                 return;
             }
+            */
+
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
@@ -177,6 +182,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
+            //Debug.Log(interactable.gameObject.name + ".LootableNode.SetMiniMapText()");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);
@@ -195,9 +201,7 @@ namespace AnyRPG {
         }
         */
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".LootableNode.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 
@@ -208,8 +212,9 @@ namespace AnyRPG {
         }
 
 
-        public override bool CanInteract() {
-            bool returnValue = base.CanInteract();
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+            //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
+            bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck);
             if (returnValue == false) {
                 return false;
             }

@@ -183,9 +183,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
-            if (base.CanInteract() == false || GetCurrentOptionCount() == 0) {
+            if (base.CanInteract(processRangeCheck, passedRangeCheck) == false || GetCurrentOptionCount() == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }
@@ -373,6 +373,9 @@ namespace AnyRPG {
         public override int GetValidOptionCount() {
             // this was commented out.  putting it back in because bunnies are 
             //if (MyCharacterUnit != null && MyCharacterUnit.MyCharacter != null && MyCharacterUnit.MyCharacter.MyCharacterStats != null) {
+            if (base.GetValidOptionCount() == 0) {
+                return 0;
+            }
                 return (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false ? 1 : 0);
             //}
             //return 0;
@@ -398,8 +401,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 

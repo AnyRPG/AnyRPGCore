@@ -15,7 +15,13 @@ namespace AnyRPG {
         public ItemPickupComponent(Interactable interactable, ItemPickupProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
+        public override void CallMiniMapStatusUpdateHandler() {
+            base.CallMiniMapStatusUpdateHandler();
+            MiniMapStatusUpdateHandler(this);
+        }
+
         public override int GetValidOptionCount() {
+            //Debug.Log(interactable.gameObject.name + ".ItemPickupComponent.GetValidOptionCount()");
             int returnValue = base.GetValidOptionCount();
             if (returnValue == 0) {
                 return returnValue;

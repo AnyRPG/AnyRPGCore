@@ -78,7 +78,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="targetCharacter"></param>
         /// <returns></returns>
-        public override bool CanInteract() {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
             if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, BaseCharacter) <= -1 && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Interact(" + source.name + ")");
+            //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
             if (CanInteract()) {
                 base.Interact(source);
 
@@ -184,9 +184,7 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HandlePrerequisiteUpdates()");
-            base.HandlePrerequisiteUpdates();
+        public override void CallMiniMapStatusUpdateHandler() {
             MiniMapStatusUpdateHandler(this);
         }
 
