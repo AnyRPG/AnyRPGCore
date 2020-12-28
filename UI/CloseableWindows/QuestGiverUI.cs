@@ -360,9 +360,9 @@ namespace AnyRPG {
 
                 QuestLog.MyInstance.AcceptQuest(currentQuest);
 
-                if (MyQuestGiver != null) {
+                if (questGiver != null) {
                     // notify a bag item so it can remove itself
-                    MyQuestGiver.HandleAcceptQuest();
+                    questGiver.HandleAcceptQuest();
                 }
                 UpdateButtons(currentQuest);
                 if (interactable != null) {
@@ -501,7 +501,7 @@ namespace AnyRPG {
                 // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
                 //Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
                 questGiver.UpdateQuestStatus();
-                MyQuestGiver.HandleCompleteQuest();
+                questGiver.HandleCompleteQuest();
             }
             if (MySelectedQuestGiverQuestScript != null) {
                 MySelectedQuestGiverQuestScript.DeSelect();
@@ -513,10 +513,10 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.OnOpenWindow()");
             // clear first because open window handler could show a description
             ClearDescription();
+            OnOpenWindow(this);
             if (interactable != null) {
                 PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }
-            OnOpenWindow(this);
         }
 
         public void OnDisable() {

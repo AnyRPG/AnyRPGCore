@@ -117,7 +117,8 @@ namespace AnyRPG {
         }
 
         public void ViewQuest() {
-            QuestGiverUI.MyInstance.MyInteractable = interactable;
+            // testing disable this because it was already set by showquests
+            //QuestGiverUI.MyInstance.MyInteractable = interactable;
             PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
             QuestGiverUI.MyInstance.ShowDescription(MyQuest);
             PopupWindowManager.MyInstance.dialogWindow.CloseWindow();

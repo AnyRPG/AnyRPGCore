@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -125,13 +126,14 @@ namespace AnyRPG {
         }
 
         public void InitWindow(ICloseableWindowContents questGiverUI) {
-            //Debug.Log(gameObject.name + ".QuestGiver.InitWindow()");
-            (questGiverUI as QuestGiverUI).ShowQuests(this);
+            Debug.Log(interactable.gameObject.name + ".QuestGiver.InitWindow()");
             PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
+            (questGiverUI as QuestGiverUI).ShowQuests(this);
+            QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0]);
         }
 
         public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".QuestGiver.Interact()");
+            Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
             base.Interact(source);
             if (Quest.GetCompleteQuests(Props.Quests, true).Count + Quest.GetAvailableQuests(Props.Quests).Count > 1) {
                 interactable.OpenInteractionWindow();
@@ -153,7 +155,6 @@ namespace AnyRPG {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
                 PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow += CloseWindowHandler;
-                QuestGiverUI.MyInstance.MyInteractable = this.interactable;
                 PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
                 return true;
             }

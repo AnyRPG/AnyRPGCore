@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    //public delegate void OnCheckCompletion();
 
     /// <summary>
     /// Maintains a list of all quests
@@ -54,10 +53,6 @@ namespace AnyRPG {
         private List<QuestScript> questScripts = new List<QuestScript>();
 
         private QuestScript selectedQuestScript = null;
-
-        //private string currentQuestName = null;
-
-        //private Quest currentQuest = null;
 
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 

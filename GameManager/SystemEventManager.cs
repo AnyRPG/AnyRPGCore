@@ -226,6 +226,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnInteractionWithOptionStarted(InteractableOptionComponent interactableOption) {
+            //Debug.Log("SystemEventManager.NotifyOnInteractionWithOptionStarted(" + interactableOption.DisplayName + ")");
             OnInteractionWithOptionStarted(interactableOption);
         }
 
