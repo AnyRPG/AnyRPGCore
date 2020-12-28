@@ -27,11 +27,11 @@ namespace AnyRPG {
         public ICapabilityConsumer CapabilityConsumer { get => capabilityConsumer; set => capabilityConsumer = value; }
 
         public override void RecieveClosedWindowNotification() {
-            //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
+            //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
-            previewCameraController.ClearTarget();
             characterReady = false;
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
+            previewCameraController.ClearTarget();
             OnCloseWindow(this);
         }
 
@@ -59,11 +59,11 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
+            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
             if (CharacterCreatorManager.MyInstance.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
+                //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
 

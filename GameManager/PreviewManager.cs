@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public void HandleCloseWindow() {
-            //Debug.Log("PreviewManager.HandleCloseWindow();");
+            //Debug.Log("PreviewManager.HandleCloseWindow()");
             if (unitController != null) {
                 Destroy(unitController.gameObject);
                 unitController = null;
@@ -50,6 +50,7 @@ namespace AnyRPG {
         }
 
         public void OpenWindowCommon() {
+            //Debug.Log("PreviewManager.OpenWindowCommon()");
 
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {

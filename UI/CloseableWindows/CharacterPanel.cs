@@ -152,10 +152,10 @@ namespace AnyRPG {
         }
 
         public override void RecieveClosedWindowNotification() {
-            //Debug.Log("CharacterPanel.OnCloseWindow()");
-            previewCameraController.ClearTarget();
+            //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             CharacterCreatorManager.MyInstance.HandleCloseWindow();
+            previewCameraController.ClearTarget();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -361,6 +361,7 @@ namespace AnyRPG {
 
         public void OpenPetWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
+            PopupWindowManager.MyInstance.characterPanelWindow.CloseWindow();
             SystemWindowManager.MyInstance.petSpawnWindow.ToggleOpenClose();
         }
 

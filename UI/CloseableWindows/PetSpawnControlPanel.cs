@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class PetSpawnControlPanel : WindowContentController {
+    public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer {
 
         #region Singleton
         private static PetSpawnControlPanel instance;
@@ -36,13 +36,19 @@ namespace AnyRPG {
         private GameObject buttonArea = null;
 
         [SerializeField]
-        private PetPreviewCameraController previewCameraController = null;
+        private CharacterPreviewPanelController characterPreviewPanel = null;
 
         [SerializeField]
         private Button spawnButton = null;
 
         [SerializeField]
         private Button despawnButton = null;
+
+        [SerializeField]
+        private TextMeshProUGUI nameText = null;
+
+        [SerializeField]
+        private GameObject classLabel = null;
 
         [SerializeField]
         private TextMeshProUGUI classText = null;
@@ -53,11 +59,29 @@ namespace AnyRPG {
 
         //private DynamicCharacterAvatar umaAvatar;
 
+        private UnitProfile unitProfile = null;
+        private UnitType unitType = null;
+        private CharacterRace characterRace = null;
+        private CharacterClass characterClass = null;
+        private ClassSpecialization classSpecialization = null;
+        private Faction faction = null;
+
+        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
+
         private int unitLevel;
 
         private int unitToughness;
 
-        public PetPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
+
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitType UnitType { get => unitType; set => unitType = value; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
+        public Faction Faction { get => faction; set => faction = value; }
+        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
+
         public PetSpawnButton MySelectedPetSpawnButton { get => selectedPetSpawnButton; set => selectedPetSpawnButton = value; }
         //public List<UnitProfile> MyUnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
@@ -69,21 +93,40 @@ namespace AnyRPG {
 
             selectedPetSpawnButton = petSpawnButton;
 
-            ClearPreviewTarget();
-            SetPreviewTarget();
+            unitProfile = petSpawnButton.MyUnitProfile;
+            /*
+            unitType = unitProfile.UnitType;
+            characterRace = unitProfile.CharacterRace;
+            characterClass = unitProfile.CharacterClass;
+            classSpecialization = unitProfile.ClassSpecialization;
+            faction = unitProfile.Faction;
+            */
+
+            // ensure the correct unit and character model is spawned
+            characterPreviewPanel.ReloadUnit();
+
+            // testing get proper appearance
+            //LoadUMARecipe();
+
             UpdateButtons(petSpawnButton);
             UpdateUnitInformation();
         }
-
+   
         public void UpdateUnitInformation() {
-            BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
+            BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
+            //BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
             if (baseCharacter != null && baseCharacter.CharacterClass != null) {
                 classText.text = baseCharacter.CharacterClass.DisplayName;
             }
+            nameText.text = unitProfile.DisplayName;
         }
 
         public void UpdateButtons(PetSpawnButton petSpawnButton) {
             if (petSpawnButton.MyUnitProfile != null) {
+                //spawnButton.enabled = true;
+                //despawnButton.enabled = true;
+                spawnButton.gameObject.SetActive(true);
+                despawnButton.gameObject.SetActive(true);
                 if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
                     spawnButton.interactable = false;
                     despawnButton.interactable = true;
@@ -94,37 +137,14 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearPreviewTarget() {
-            //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
-            // not really close window, but it will despawn the preview unit
-            PetPreviewManager.MyInstance.HandleCloseWindow();
-        }
-
-        public void SetPreviewTarget() {
-            //Debug.Log("CharacterPanel.SetPreviewTarget()");
-            if (PetPreviewManager.MyInstance.PreviewUnitController != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
-                return;
-            }
-            //spawn correct preview unit
-            PetPreviewManager.MyInstance.HandleOpenWindow();
-
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.UnitPreviewCamera != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
-                if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(PetPreviewManager.MyInstance.PreviewUnitController);
-                    //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                } else {
-                    Debug.LogError("UnitSpawnController.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
-                }
-            }
-        }
-
-        public void TargetReadyCallback() {
-            //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
-            MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
-
+        public void ClearPanel() {
+            //spawnButton.enabled = false;
+            //despawnButton.enabled = false;
+            spawnButton.gameObject.SetActive(false);
+            despawnButton.gameObject.SetActive(false);
+            classLabel.SetActive(false);
+            classText.text = string.Empty;
+            nameText.text = "No Pets Available";
         }
 
         public void ClosePanel() {
@@ -133,11 +153,16 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         }
 
+        public void HandleTargetReady() {
+            //LoadUMARecipe();
+            // not doing anything for now since pets don't have equipment yet
+        }
+
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            previewCameraController.ClearTarget();
-            PetPreviewManager.MyInstance.HandleCloseWindow();
+            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            characterPreviewPanel.RecieveClosedWindowNotification();
             //SaveManager.MyInstance.ClearSharedData();
             OnCloseWindow(this);
         }
@@ -145,19 +170,29 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
 
+            ClearPanel();
+
             if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager != null) {
                 unitProfileList = PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyUnitProfiles;
             }
             ShowPreviewButtonsCommon();
+
+            // inform the preview panel so the character can be rendered
+            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
+
+            // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
+            //LoadUMARecipe();
         }
 
         public void ShowPreviewButtonsCommon() {
             //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
-            ClearPreviewTarget();
+            //ClearPreviewTarget();
             ClearPreviewButtons();
 
             foreach (UnitProfile unitProfile in unitProfileList) {
-                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
                 GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
                 PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                 if (petSpawnButton != null) {

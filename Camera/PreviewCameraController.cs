@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public void ClearTarget() {
-            //Debug.Log("AnyRPGCharacterPreviewCameraController.ClearTarget()");
+            //Debug.Log("PreviewCameraController.ClearTarget()");
             unitController = null;
             followTransform = null;
             initialTargetString = string.Empty;
@@ -101,7 +101,14 @@ namespace AnyRPG {
         }
 
         public virtual void DisableCamera() {
+            //Debug.Log("PreviewCameraController.DisableCamera()");
             if (currentCamera != null) {
+                // blank out the display so the next panel that opens doesn't have the previous character rendered for the first frame
+                // since the gameObject is not destroyed until the end of the frame, it is necessary to update the culling mask before rendering the blank frame
+                int oldMask = currentCamera.cullingMask;
+                currentCamera.cullingMask = 0;
+                currentCamera.Render();
+                currentCamera.cullingMask = oldMask;
                 currentCamera.enabled = false;
             }
         }

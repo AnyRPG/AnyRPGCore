@@ -63,7 +63,7 @@ namespace AnyRPG {
         public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
         public override void RecieveClosedWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnCloseWindow()");
+            //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
@@ -185,7 +185,7 @@ namespace AnyRPG {
         }
 
         public void ClosePanel() {
-            //Debug.Log("CharacterCreatorPanel.ClosePanel()");
+            Debug.Log("LoadGamePanel.ClosePanel()");
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
         }
 
