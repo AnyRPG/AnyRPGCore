@@ -49,9 +49,21 @@ namespace AnyRPG {
         public virtual void DespawnPet(UnitProfile unitProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.DeSpawnPet(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
-                UnityEngine.Object.Destroy(activeUnitProfiles[unitProfile].gameObject);
+                if (activeUnitProfiles[unitProfile] != null) {
+                    UnityEngine.Object.Destroy(activeUnitProfiles[unitProfile].gameObject);
+                }
             }
             activeUnitProfiles.Remove(unitProfile);
+        }
+
+        public void DespawnAllPets() {
+            foreach (UnitProfile unitProfile in activeUnitProfiles.Keys) {
+                // check that the controller is not null.  It may have already been destroyed somehow
+                if (activeUnitProfiles[unitProfile] != null) {
+                    UnityEngine.Object.Destroy(activeUnitProfiles[unitProfile].gameObject);
+                }
+            }
+            activeUnitProfiles.Clear();
         }
 
         public virtual void HandleUnitDestroy(UnitProfile unitProfile) {
@@ -73,6 +85,10 @@ namespace AnyRPG {
                 unitController.OnUnitDestroy += HandleUnitDestroy;
             }
             activeUnitProfiles.Add(unitProfile, unitController);
+        }
+
+        public void ProcessLevelUnload() {
+            DespawnAllPets();
         }
 
 

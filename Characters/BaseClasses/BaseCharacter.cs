@@ -222,6 +222,7 @@ namespace AnyRPG {
             characterStats.ProcessLevelUnload();
             characterAbilityManager.ProcessLevelUnload();
             characterCombat.ProcessLevelUnload();
+            characterPetManager.ProcessLevelUnload();
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {

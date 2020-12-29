@@ -260,6 +260,7 @@ namespace AnyRPG {
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+            characterUnit.BaseCharacter.CharacterPetManager.DespawnAllPets();
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
         }
 
