@@ -245,6 +245,7 @@ namespace AnyRPG {
         public void ChangeClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newClassSpecialization != null && newClassSpecialization != classSpecialization) {
+                characterStats.ClearStatusEffects();
                 SetClassSpecialization(newClassSpecialization);
             }
         }
@@ -252,6 +253,7 @@ namespace AnyRPG {
         public void ChangeCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterClass != null && newCharacterClass != characterClass) {
+                characterStats.ClearStatusEffects();
                 SetCharacterClass(newCharacterClass);
             }
         }

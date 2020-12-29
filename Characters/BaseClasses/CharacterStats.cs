@@ -1116,7 +1116,7 @@ namespace AnyRPG {
             ResetResourceAmounts();
         }
 
-        protected void ClearStatusEffects(bool clearAll = true) {
+        public void ClearStatusEffects(bool clearAll = true) {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
