@@ -504,6 +504,8 @@ namespace AnyRPG {
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
 
+                // moved inside attackEffect to prevent bows doing damage at the moment the arrow is released instead of when it hits
+                /*
                 AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
                 foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
@@ -512,6 +514,7 @@ namespace AnyRPG {
                         statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, targetCharacterUnit.Interactable, abilityAffectInput);
                     }
                 }
+                */
 
                 // moved inside attackEffect
                 /*

@@ -94,7 +94,9 @@ namespace AnyRPG {
 
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
                 // attempt to put the caster in combat so it can unsheath bows, wands, etc
-                source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
+                // disabled for now since this is re-enabled inside ability cast
+                // this isn't processed from an action button click so the code made more sense in a common pathway
+                //source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
 
                 source.BaseCharacter.CharacterCombat.Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();

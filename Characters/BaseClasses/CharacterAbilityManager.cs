@@ -1236,9 +1236,10 @@ namespace AnyRPG {
             return base.GetOutgoingDamageModifiers();
         }
 
-        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectOutput) {
-            base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectOutput);
+        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
+            base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
             // handle weapon on hit effects
+
             if (baseCharacter.CharacterCombat != null
                 && baseCharacter.CharacterCombat.OnHitEffects != null
                 && attackEffect.DamageType == DamageType.physical) {
@@ -1249,10 +1250,21 @@ namespace AnyRPG {
                         onHitEffectList.Add(abilityEffect);
                     }
                 }
-                attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectOutput, onHitEffectList);
+                attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectContext, onHitEffectList);
             } else {
                 //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");
             }
+            
+            AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
+            foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
+                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
+                // this could maybe be done better through an event subscription
+                if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
+                    statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityAffectInput);
+                }
+            }
+            
+
 
         }
 
@@ -1333,11 +1345,11 @@ namespace AnyRPG {
 
                         // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                        /*
-                        if (baseCharacter.MyCharacterCombat.GetInCombat() == false) {
-                            baseCharacter.MyCharacterCombat.EnterCombat(targetCharacterUnit.MyCharacter);
+                        // ...re-enable this because rangers need to pull out their weapons when doing their animation when clicking on action bar
+                        if (baseCharacter.CharacterCombat.GetInCombat() == false) {
+                            baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
                         }
-                        */
+                        
                         baseCharacter.CharacterCombat.ActivateAutoAttack();
                         OnAttack(targetCharacterUnit.BaseCharacter);
                     }
