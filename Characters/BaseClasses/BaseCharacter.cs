@@ -246,6 +246,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newClassSpecialization != null && newClassSpecialization != classSpecialization) {
                 characterStats.ClearStatusEffects();
+                characterPetManager.DespawnAllPets();
                 SetClassSpecialization(newClassSpecialization);
             }
         }
@@ -254,6 +255,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterClass != null && newCharacterClass != characterClass) {
                 characterStats.ClearStatusEffects();
+                characterPetManager.DespawnAllPets();
                 SetCharacterClass(newCharacterClass);
             }
         }
