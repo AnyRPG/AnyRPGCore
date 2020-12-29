@@ -139,8 +139,12 @@ namespace AnyRPG {
         }
 
         public void ClearPanel() {
-            //spawnButton.enabled = false;
-            //despawnButton.enabled = false;
+            unitProfile = null;
+            unitType = null;
+            characterRace = null;
+            characterClass = null;
+            classSpecialization = null;
+            faction = null;
             spawnButton.gameObject.SetActive(false);
             despawnButton.gameObject.SetActive(false);
             classLabel.SetActive(false);
@@ -194,13 +198,14 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
-                GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
-                PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
-                if (petSpawnButton != null) {
-                    petSpawnButton.AddUnitProfile(unitProfile);
-                    petSpawnButtons.Add(petSpawnButton);
+                if (PlayerManager.MyInstance.MyCharacter.CharacterClass.ValidPetTypeList.Contains(unitProfile.UnitType)) {
+                    GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                    PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
+                    if (petSpawnButton != null) {
+                        petSpawnButton.AddUnitProfile(unitProfile);
+                        petSpawnButtons.Add(petSpawnButton);
+                    }
                 }
-
             }
             if (petSpawnButtons.Count > 0) {
                 petSpawnButtons[0].Select();

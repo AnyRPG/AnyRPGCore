@@ -96,6 +96,7 @@ namespace AnyRPG {
                 confirmDestroyMenuWindow.CloseWindow();
                 confirmSellItemMenuWindow.CloseWindow();
                 inGameMainMenuWindow.CloseWindow();
+                petSpawnWindow.CloseWindow();
 
                 // testing - do not allow accidentally closing this while dead
                 if (PlayerManager.MyInstance.PlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
