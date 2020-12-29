@@ -93,6 +93,9 @@ namespace AnyRPG {
                 base.Interact(source);
 
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
+                // attempt to put the caster in combat so it can unsheath bows, wands, etc
+                source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
+
                 source.BaseCharacter.CharacterCombat.Attack(baseCharacter);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
                 return true;

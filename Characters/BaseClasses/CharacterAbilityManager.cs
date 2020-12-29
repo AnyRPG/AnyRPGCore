@@ -1085,24 +1085,25 @@ namespace AnyRPG {
                 if (ability.CastingAudioClip != null) {
                     baseCharacter.UnitController.UnitComponentController.PlayCast(ability.CastingAudioClip);
                 }
-                
 
-                // added target condition to allow channeled spells to stop casting if target disappears
-                while (currentCastPercent < 1f
-                    && (ability.GetTargetOptions(baseCharacter).RequireTarget == false
-                    || (target != null && target.gameObject.activeInHierarchy == true))) {
-                    yield return null;
-                    currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(baseCharacter));
+                if (ability.GetAbilityCastingTime(baseCharacter) > 0f) {
+                    // added target condition to allow channeled spells to stop casting if target disappears
+                    while (currentCastPercent < 1f
+                        && (ability.GetTargetOptions(baseCharacter).RequireTarget == false
+                        || (target != null && target.gameObject.activeInHierarchy == true))) {
+                        yield return null;
+                        currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(baseCharacter));
 
-                    // call this first because it updates the cast bar
-                    //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime + "; calling OnCastTimeChanged()");
-                    OnCastTimeChanged(baseCharacter, ability, currentCastPercent);
-                    if (baseCharacter.UnitController != null) {
-                        baseCharacter.UnitController.NotifyOnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                        // call this first because it updates the cast bar
+                        Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.GetAbilityCastingTime(baseCharacter) + "; calling OnCastTimeChanged()");
+                        OnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                        if (baseCharacter.UnitController != null) {
+                            baseCharacter.UnitController.NotifyOnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                        }
+
+                        // now call the ability on casttime changed (really only here for channeled stuff to do damage)
+                        nextTickPercent = ability.OnCastTimeChanged(currentCastPercent, nextTickPercent, baseCharacter, target, abilityEffectContext);
                     }
-
-                    // now call the ability on casttime changed (really only here for channeled stuff to do damage)
-                    nextTickPercent = ability.OnCastTimeChanged(currentCastPercent, nextTickPercent, baseCharacter, target, abilityEffectContext);
                 }
 
             }
@@ -1176,7 +1177,7 @@ namespace AnyRPG {
         }
 
         public void AttemptAutoAttack() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
 
             if (autoAttackAbility != null) {
                 BeginAbility(autoAttackAbility);
@@ -1581,27 +1582,32 @@ namespace AnyRPG {
         }
 
         public void StopCasting() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting()");
+            bool stoppedCast = false;
             if (currentCastCoroutine != null) {
                 // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
                 //if (currentCast != null && isCasting == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
                 abilityCaster.StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
+                stoppedCast = true;
+            }
+            if (waitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting() was waiting for animated ability");
+                stoppedCast = true;
+            }
+            if (stoppedCast) {
                 if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
                     DespawnAbilityObjects();
                 }
-
                 // testing put below logic inside this condition
                 // it is causing unnecessary setting of animator speed in clearAnimationBlockers, which interferes with movement speed
                 if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
                     BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
                 }
                 NotifyOnCastStop();
-
-            } else {
-                //Debug.Log(gameObject.name + ".currentCast is null, nothing to stop");
             }
+
             /*
             // testing moved above
             if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {

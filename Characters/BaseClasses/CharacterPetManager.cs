@@ -29,7 +29,7 @@ namespace AnyRPG {
         }
 
         public virtual void AddPet(UnitProfile unitProfile) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfile.DisplayName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfile.DisplayName + ")");
             // need more logic in here about whether this class or spec is allowed to capture this type of pet
             if (unitProfile != null && unitProfiles != null && unitProfiles.Contains(unitProfile) == false && unitProfile.IsPet == true) {
                 unitProfiles.Add(unitProfile);
@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public virtual void AddPet(string unitProfileName) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfileName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfileName + ")");
             UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
             if (unitProfile != null) {
                 AddPet(unitProfile);

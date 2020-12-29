@@ -119,24 +119,26 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            if (baseCharacter == null) {
-                return;
-            }
-            if (!baseCharacter.CharacterStats.IsAlive) {
+            if (inCombat == false 
+                || baseCharacter == null
+                || baseCharacter.CharacterStats.IsAlive == false) {
                 return;
             }
 
-            if (inCombat && baseCharacter.UnitController.Target == null) {
+            if (baseCharacter.UnitController.Target == null
+                || aggroTable.MyTopAgroNode == null) {
                 TryToDropCombat();
             }
 
             // leave combat if the combat cooldown has expired
-            if ((Time.time - lastCombatEvent > combatCooldown) && inCombat) {
+            if (Time.time - lastCombatEvent > combatCooldown) {
                 //Debug.Log(gameObject.name + " Leaving Combat");
                 TryToDropCombat();
             }
 
-            OnUpdate();
+            if (inCombat) {
+                OnUpdate();
+            }
         }
 
         public bool WaitingForAction() {
@@ -170,7 +172,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="characterTarget"></param>
         public void Attack(BaseCharacter characterTarget) {
-            //Debug.Log(gameObject.name + ".PlayerCombat.Attack(" + characterTarget.name + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
                 //CombatLogUI.MyInstance.WriteCombatMessage("You must have a target to attack");
@@ -179,7 +181,8 @@ namespace AnyRPG {
                 swingTarget = characterTarget;
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                if (WaitingForAction() == false) {
+                if (WaitingForAction() == false && waitingForAutoAttack == false) {
+                    // in order to support attacks from bows (or wands in the future), the weapon needs to be unsheathed
                     baseCharacter.CharacterAbilityManager.AttemptAutoAttack();
                 }
             }

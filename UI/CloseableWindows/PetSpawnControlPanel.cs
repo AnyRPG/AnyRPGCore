@@ -113,10 +113,11 @@ namespace AnyRPG {
         }
    
         public void UpdateUnitInformation() {
-            BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
+            //BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
             //BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
-            if (baseCharacter != null && baseCharacter.CharacterClass != null) {
-                classText.text = baseCharacter.CharacterClass.DisplayName;
+            //if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+            if (unitProfile != null && unitProfile.CharacterClass != null) {
+                classText.text = unitProfile.CharacterClass.DisplayName;
             }
             nameText.text = unitProfile.DisplayName;
         }
@@ -192,7 +193,7 @@ namespace AnyRPG {
             ClearPreviewButtons();
 
             foreach (UnitProfile unitProfile in unitProfileList) {
-                Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
+                //Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
                 GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
                 PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                 if (petSpawnButton != null) {
