@@ -468,7 +468,7 @@ namespace AnyRPG {
 
             if (useAbilityEffectTargetting == true
                 && GetAbilityEffects(sourceCharacter).Count > 0) {
-                return TargetProps.CanUseOn(GetAbilityEffects(sourceCharacter)[0], target, sourceCharacter, abilityEffectContext, playerInitiated);
+                return GetAbilityEffects(sourceCharacter)[0].CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
             }
 
             return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated);

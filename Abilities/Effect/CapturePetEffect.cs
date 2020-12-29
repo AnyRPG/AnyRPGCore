@@ -14,6 +14,7 @@ namespace AnyRPG {
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+            //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn()");
             if (unitTypeRestrictionList != null && unitTypeRestrictionList.Count > 0) {
                 BaseCharacter targetCharacter = target.GetComponent<BaseCharacter>();
                 if (targetCharacter == null) {
