@@ -116,6 +116,7 @@ namespace AnyRPG {
             //BaseCharacter baseCharacter = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter;
             //BaseCharacter baseCharacter = PetPreviewManager.MyInstance.PreviewUnitController.GetComponent<BaseCharacter>();
             //if (baseCharacter != null && baseCharacter.CharacterClass != null) {
+            classLabel.SetActive(true);
             if (unitProfile != null && unitProfile.CharacterClass != null) {
                 classText.text = unitProfile.CharacterClass.DisplayName;
             }
