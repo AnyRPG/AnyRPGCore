@@ -35,6 +35,8 @@ namespace AnyRPG {
 
         void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile);
 
+        AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode);
+
         /// <summary>
         /// return a list of weapon ability objects
         /// </summary>

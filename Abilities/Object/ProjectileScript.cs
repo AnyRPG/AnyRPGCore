@@ -8,6 +8,9 @@ namespace AnyRPG {
 
         public event System.Action<IAbilityCaster, Interactable, GameObject, AbilityEffectContext> OnCollission = delegate { };
 
+        [SerializeField]
+        private AudioSource audioSource = null;
+
         private IAbilityCaster source;
 
         private Interactable target;
@@ -22,6 +25,8 @@ namespace AnyRPG {
 
         private AbilityEffectContext abilityEffectInput = null;
 
+        //public AudioSource AudioSource { get => audioSource; }
+
         private void Update() {
             MoveTowardTarget();
         }
@@ -34,6 +39,22 @@ namespace AnyRPG {
             this.positionOffset = positionOffset;
             this.abilityEffectInput = abilityEffectInput;
             initialized = true;
+        }
+
+        public void PlayFlightAudio(List<AudioProfile> audioProfiles, bool randomAudioProfiles = false) {
+            List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
+            audioSource.enabled = true;
+            if (randomAudioProfiles == true) {
+                usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
+            } else {
+                usedAudioProfiles = audioProfiles;
+            }
+            foreach (AudioProfile audioProfile in usedAudioProfiles) {
+                if (audioProfile.AudioClip != null) {
+                    //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+                    audioSource.PlayOneShot(audioProfile.AudioClip);
+                }
+            }
         }
 
         private void UpdateTargetPosition() {

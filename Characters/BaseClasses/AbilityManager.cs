@@ -62,6 +62,19 @@ namespace AnyRPG {
             this.abilityCaster = abilityCaster;
         }
 
+        public virtual AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
+            if (attachmentNode.UseUniversalAttachment == false) {
+                AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
+                attachmentPointNode.TargetBone = attachmentNode.HoldableObject.TargetBone;
+                attachmentPointNode.Position = attachmentNode.HoldableObject.Position;
+                attachmentPointNode.Rotation = attachmentNode.HoldableObject.Rotation;
+                attachmentPointNode.RotationIsGlobal = attachmentNode.HoldableObject.RotationIsGlobal;
+                return attachmentPointNode;
+            }
+
+            return null;
+        }
+
         public virtual List<AbilityEffect> GetDefaultHitEffects() {
             return new List<AbilityEffect>();
         }

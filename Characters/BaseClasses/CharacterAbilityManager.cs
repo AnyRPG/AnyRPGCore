@@ -184,7 +184,7 @@ namespace AnyRPG {
             }
         }
 
-        public AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
+        public override AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
             if (attachmentNode.UseUniversalAttachment == false) {
                 AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
                 attachmentPointNode.TargetBone = attachmentNode.HoldableObject.TargetBone;

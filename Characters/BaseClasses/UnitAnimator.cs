@@ -1081,7 +1081,7 @@ namespace AnyRPG {
 
         // special melee attack
         public float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
-            Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
             if (animator == null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
                 return 0f;
@@ -1200,7 +1200,7 @@ namespace AnyRPG {
         }
 
         public void ClearAnimatedAttack(BaseAbility baseAbility) {
-            Debug.Log(unitController.gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
             unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
             (baseAbility as AnimatedAbility).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
             SetAttacking(false);
@@ -1352,7 +1352,7 @@ namespace AnyRPG {
         }
 
         public void SetAttacking(bool varValue, bool swapAnimator = true) {
-            Debug.Log(unitController.gameObject.name + ".SetAttacking(" + varValue + ")");
+            //Debug.Log(unitController.gameObject.name + ".SetAttacking(" + varValue + ")");
             if (animator == null) {
                 return;
             }
