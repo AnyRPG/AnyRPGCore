@@ -184,6 +184,12 @@ namespace AnyRPG {
         [SerializeField]
         private BehaviorProps behaviorConfig = new BehaviorProps();
 
+        [Header("Interaction")]
+
+        [Tooltip("The maximum range at which interacables on this unit can be interacted with")]
+        [SerializeField]
+        private float interactionMaxRange = 3f;
+
         [Header("Builtin Interactables")]
 
         /*
@@ -277,6 +283,7 @@ namespace AnyRPG {
         public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
         public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
         public bool IsMobile { get => isMobile; set => isMobile = value; }
+        public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
 
         // disabled because it was too high maintenance
         /*

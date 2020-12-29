@@ -248,7 +248,16 @@ namespace AnyRPG {
                 }
                 return base.InteractableGameObject;
             }
-        } 
+        }
+
+        public override float InteractionMaxRange {
+            get {
+                if (unitProfile != null) {
+                    return unitProfile.InteractionMaxRange;
+                }
+                return base.InteractionMaxRange;
+            }
+        }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);

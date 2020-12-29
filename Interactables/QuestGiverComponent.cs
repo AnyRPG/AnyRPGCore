@@ -126,14 +126,14 @@ namespace AnyRPG {
         }
 
         public void InitWindow(ICloseableWindowContents questGiverUI) {
-            Debug.Log(interactable.gameObject.name + ".QuestGiver.InitWindow()");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.InitWindow()");
             PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
             (questGiverUI as QuestGiverUI).ShowQuests(this);
             QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0]);
         }
 
         public override bool Interact(CharacterUnit source) {
-            Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
             base.Interact(source);
             if (Quest.GetCompleteQuests(Props.Quests, true).Count + Quest.GetAvailableQuests(Props.Quests).Count > 1) {
                 interactable.OpenInteractionWindow();

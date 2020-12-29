@@ -144,7 +144,7 @@ namespace AnyRPG {
         }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public Collider Collider { get => myCollider; }
-        public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
+        public virtual float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public DialogController DialogController { get => dialogController; }
@@ -513,7 +513,7 @@ namespace AnyRPG {
                 Vector3 topPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
                     source.Interactable.Collider.bounds.center.y + source.Interactable.Collider.bounds.extents.y,
                     source.Interactable.Collider.bounds.center.z);
-                colliders = Physics.OverlapCapsule(bottomPoint, topPoint, interactionMaxRange, validMask);
+                colliders = Physics.OverlapCapsule(bottomPoint, topPoint, InteractionMaxRange, validMask);
                 foreach (Collider collider in colliders) {
                     if (collider.gameObject == gameObject) {
                         passedRangeCheck = true;

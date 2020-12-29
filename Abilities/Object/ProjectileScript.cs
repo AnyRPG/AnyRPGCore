@@ -43,16 +43,18 @@ namespace AnyRPG {
 
         public void PlayFlightAudio(List<AudioProfile> audioProfiles, bool randomAudioProfiles = false) {
             List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
-            audioSource.enabled = true;
-            if (randomAudioProfiles == true) {
-                usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
-            } else {
-                usedAudioProfiles = audioProfiles;
-            }
-            foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                if (audioProfile.AudioClip != null) {
-                    //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
-                    audioSource.PlayOneShot(audioProfile.AudioClip);
+            if (audioSource != null && audioProfiles != null && audioProfiles.Count > 0) {
+                audioSource.enabled = true;
+                if (randomAudioProfiles == true) {
+                    usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
+                } else {
+                    usedAudioProfiles = audioProfiles;
+                }
+                foreach (AudioProfile audioProfile in usedAudioProfiles) {
+                    if (audioProfile.AudioClip != null) {
+                        //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+                        audioSource.PlayOneShot(audioProfile.AudioClip);
+                    }
                 }
             }
         }
