@@ -78,7 +78,7 @@ namespace AnyRPG {
         public Canvas MySpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
         private void Awake() {
-            //Debug.Log("NamePlateController.Awake(): namePlateUnit: " + (namePlateUnit == null ? "null" : namePlateUnit.MyDisplayName));
+            //Debug.Log("NamePlateController.Awake()");
             CreateEventSubscriptions();
             HideSpeechBubble();
         }

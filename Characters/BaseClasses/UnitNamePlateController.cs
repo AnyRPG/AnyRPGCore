@@ -74,8 +74,9 @@ namespace AnyRPG {
         }
 
         public override void InitializeNamePlate() {
-            //Debug.Log("UnitNamePlateController.InitializeNamePlate()");
+            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
+                //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.InitializeNamePlate(): namePlate suppressed.  Returning.");
                 return;
             }
             if (unitController != null) {
