@@ -27,6 +27,9 @@ namespace AnyRPG {
         // the last power resource affected
         public PowerResource powerResource = null;
 
+        // prevent multiple onHit effects from casting each other
+        public bool weaponHitHasCast = false;
+
         public AbilityEffectContext GetCopy() {
             // make a new ability effect context
             AbilityEffectContext returnValue = new AbilityEffectContext();
@@ -42,6 +45,7 @@ namespace AnyRPG {
             returnValue.originalTarget = originalTarget;
             returnValue.baseAbility = baseAbility;
             returnValue.powerResource = powerResource;
+            returnValue.weaponHitHasCast = weaponHitHasCast;
 
             // return the new object
             return returnValue;

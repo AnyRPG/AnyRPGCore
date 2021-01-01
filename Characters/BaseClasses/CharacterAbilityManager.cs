@@ -116,14 +116,14 @@ namespace AnyRPG {
                 }
                 return returnAbilityList;
             }
-            
+
         }
         public bool WaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool IsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
         public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
         public BaseAbility AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
-        
+
         // direct access for save manager so we don't miss saving abilities we know but belong to another class
         public Dictionary<string, BaseAbility> RawAbilityList { get => abilityList; set => abilityList = value; }
 
@@ -350,7 +350,7 @@ namespace AnyRPG {
             return base.GetMeleeRange();
         }
 
-        
+
 
         public override float GetThreatModifiers() {
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
@@ -876,7 +876,7 @@ namespace AnyRPG {
             }
         }
 
-        public void UnLearnCapabilityProviderAbilities (List<BaseAbility> abilities, bool updateActionBars = false) {
+        public void UnLearnCapabilityProviderAbilities(List<BaseAbility> abilities, bool updateActionBars = false) {
             if (abilities == null) {
                 return;
             }
@@ -1238,34 +1238,27 @@ namespace AnyRPG {
 
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
-            // handle weapon on hit effects
+            if (attackEffect.DamageType == DamageType.physical) {
+                if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
+                    // handle weapon on hit effects
+                    List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+                    foreach (AbilityEffect abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
+                        // prevent accidental infinite recursion of ability effect
+                        if (abilityEffect.DisplayName != attackEffect.DisplayName) {
+                            onHitEffectList.Add(abilityEffect);
+                        }
+                    }
+                    attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectContext, onHitEffectList);
+                }
 
-            if (baseCharacter.CharacterCombat != null
-                && baseCharacter.CharacterCombat.OnHitEffects != null
-                && attackEffect.DamageType == DamageType.physical) {
-                List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                foreach (AbilityEffect abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
-                    // prevent accidental infinite recursion of ability effect
-                    if (abilityEffect.DisplayName != attackEffect.DisplayName) {
-                        onHitEffectList.Add(abilityEffect);
+                foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
+                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
+                    // this could maybe be done better through an event subscription
+                    if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
+                        statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityEffectContext);
                     }
                 }
-                attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectContext, onHitEffectList);
-            } else {
-                //Debug.Log(MyName + ".AttackEffect.PerformAbilityHit(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + "): no on hit effect set");
             }
-            
-            AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
-            foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
-                // this could maybe be done better through an event subscription
-                if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
-                    statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityAffectInput);
-                }
-            }
-            
-
-
         }
 
         /// <summary>
@@ -1273,7 +1266,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public override float GetPhysicalDamage() {
-            if (baseCharacter != null  && baseCharacter.CharacterStats != null) {
+            if (baseCharacter != null && baseCharacter.CharacterStats != null) {
 
                 // not needed anymore after stat system upgrade ?
                 // +damage stat from gear
@@ -1349,7 +1342,7 @@ namespace AnyRPG {
                         if (baseCharacter.CharacterCombat.GetInCombat() == false) {
                             baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
                         }
-                        
+
                         baseCharacter.CharacterCombat.ActivateAutoAttack();
                         OnAttack(targetCharacterUnit.BaseCharacter);
                     }
@@ -1460,7 +1453,7 @@ namespace AnyRPG {
                 }
                 return false;
             }
-            
+
             if (!PerformMovementCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
                 if (playerInitiated) {

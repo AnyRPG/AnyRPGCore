@@ -336,14 +336,14 @@ namespace AnyRPG {
             secondaryStats[SecondaryStatType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
 
-        
+
         public void ProcessLevelUnload() {
             // commented out for now.  should not clear all effects because some are self casted buffs
             // i think the point was to dismount, but unit controller now handles that
             // TODO: possibly should clear pet effects ?
             //ClearStatusEffects();
         }
-        
+
 
         public void CalculateRunSpeed() {
             float oldRunSpeed = currentRunSpeed;
@@ -616,7 +616,7 @@ namespace AnyRPG {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.StatusEffect.OutgoingDamageMultiplier != 1) {
-                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
+                    //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: " + statusEffectNode.StatusEffect.DisplayName);
                     returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.OutgoingDamageMultiplier;
                 }
             }
@@ -1043,7 +1043,7 @@ namespace AnyRPG {
                 NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
 
-            
+
         }
 
         public void TrySpawnDead() {

@@ -14,13 +14,28 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyAbilityEffectName + ".AttackAbility.PerformAbilityEffect(" + source.name + ", " + target.name + ")");
 
             // handle regular effects
-            base.PerformAbilityHit(source, target, abilityEffectInput);
+            base.PerformAbilityHit(source, target, abilityEffectContext);
+        }
 
-            source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectInput);
+        public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+
+            if (abilityEffectContext.weaponHitHasCast == true) {
+                // can't cast weapon hit effects more than once
+                return base.ProcessAbilityEffectContext(source, target, abilityEffectContext);
+            }
+            // since this is called from any attackeffect (even stuff like fireballs) and sets the weapon cast to true,
+            // this will also limit cast time multipliers on future effects.
+            // This should be ok because the primary hit of a fireball would be regular damage, and any hit after that is likely
+            // on hit, burn effect, etc, which should not be multiplied by cast time
+            abilityEffectContext.weaponHitHasCast = true;
+
+            source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
+
+            return abilityEffectContext;
         }
 
 
