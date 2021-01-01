@@ -522,6 +522,9 @@ namespace AnyRPG {
             if (baseCharacter.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 baseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
+                if (target?.CharacterUnit != null) {
+                    target.CharacterUnit.BaseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
+                }
                 return false;
             }
             return base.AbilityHit(target, abilityEffectContext);
