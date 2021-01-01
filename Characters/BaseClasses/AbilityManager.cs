@@ -27,6 +27,9 @@ namespace AnyRPG {
 
         public virtual GameObject UnitGameObject {
             get {
+                if (abilityCaster != null) {
+                    return abilityCaster.gameObject;
+                }
                 return null;
             }
         }
