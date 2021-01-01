@@ -160,11 +160,13 @@ namespace AnyRPG {
                 case CombatTextType.gainResource:
                     if (abilityEffectContext != null && abilityEffectContext.powerResource != null) {
                         textColor = abilityEffectContext.powerResource.DisplayColor;
+                        postText += " " + abilityEffectContext.powerResource.DisplayName;
                     } else {
                         textColor = Color.blue;
                     }
                     preText += "+";
-                    tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                    // rage looks funny bigger
+                    //tmpProtext.fontSize = tmpProtext.fontSize * 2;
                     break;
                 default:
                     break;
