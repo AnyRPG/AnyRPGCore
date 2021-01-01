@@ -10,10 +10,11 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InanimateUnit : NamePlateUnit {
 
+        /*
         protected override void Awake() {
             base.Awake();
-            namePlateController = new BaseNamePlateController(this);
         }
+        */
 
         /*
         public override void HandlePrerequisiteUpdates() {

@@ -168,6 +168,7 @@ namespace AnyRPG {
             namePlateCanvasGroup.blocksRaycasts = false;
             UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
             isPlayerUnitNamePlate = true;
+            CheckForDisabledHealthBar();
         }
 
         public void Highlight() {
@@ -260,7 +261,7 @@ namespace AnyRPG {
         }
 
         public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.UnitDisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
+            //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.DisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             unitNamePlateController = namePlateUnit.NamePlateController;
             if (usePositionOffset == false) {
@@ -317,7 +318,7 @@ namespace AnyRPG {
         }
 
         public void CheckForDisabledHealthBar() {
-            //Debug.Log(namePlateUnit.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (unitNamePlateController.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {

@@ -383,10 +383,6 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
                 KeyBindManager.MyInstance.SendKeyBindEvents();
             }
-
-            // test - move this here to its initialized
-            NamePlateController.NamePlate.SetPlayerOwnerShip();
-
         }
 
         /// <summary>
@@ -1382,6 +1378,10 @@ namespace AnyRPG {
             OnBeforeDie(characterStats);
         }
         public void NotifyOnReviveComplete() {
+            FreezeRotation();
+            InitializeNamePlate();
+            CharacterUnit.HandleReviveComplete();
+
             OnReviveComplete();
         }
         public void NotifyOnLevelChanged(int newLevel) {

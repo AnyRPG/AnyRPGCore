@@ -1097,9 +1097,6 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ReviveComplete() Recieved Revive Complete Signal. Resetting Character Stats.");
             ReviveRaw();
             OnReviveComplete();
-            baseCharacter.UnitController.FreezeRotation();
-            baseCharacter.UnitController.NamePlateController.InitializeNamePlate();
-            baseCharacter.UnitController.CharacterUnit.HandleReviveComplete();
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.NotifyOnReviveComplete();
             }

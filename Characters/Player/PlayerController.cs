@@ -676,6 +676,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
+            //Debug.Log("PlayerController.SubscribeToUnitEvents()");
             PlayerManager.MyInstance.ActiveUnitController.OnSetTarget += HandleSetTarget;
             PlayerManager.MyInstance.ActiveUnitController.OnClearTarget += HandleClearTarget;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
@@ -694,6 +695,10 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
+
+            // subscribe and call since the namePlate is already spawned
+            PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
+            HandleInitializeNamePlate();
         }
 
         public void UnsubscribeFromUnitEvents() {
@@ -715,6 +720,12 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
+            PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
+        }
+
+        public void HandleInitializeNamePlate() {
+            //Debug.Log("PlayerController.HandleInitializeNamePlate()");
+            PlayerManager.MyInstance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
         }
 
         public void HandleMessageFeed(string message) {

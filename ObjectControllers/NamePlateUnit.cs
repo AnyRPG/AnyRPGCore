@@ -10,6 +10,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NamePlateUnit : Interactable {
 
+        public event System.Action OnInitializeNamePlate = delegate { };
+
         [SerializeField]
         protected NamePlateProps namePlateProps = new NamePlateProps();
 
@@ -43,14 +45,24 @@ namespace AnyRPG {
             //InitializeNamePlateController();
         }
 
-
+        /// <summary>
+        /// initialize a nameplate if it has not been initialied yet
+        /// </summary>
         public virtual void InitializeNamePlateController() {
             //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
             if (namePlateReady == true) {
                 return;
             }
-            namePlateController.InitializeNamePlate();
+            InitializeNamePlate();
             namePlateReady = true;
+        }
+
+        /// <summary>
+        /// directly initialize a nameplate
+        /// </summary>
+        protected void InitializeNamePlate() {
+            NamePlateController.InitializeNamePlate();
+            OnInitializeNamePlate();
         }
 
         public override void HandlePrerequisiteUpdates() {
