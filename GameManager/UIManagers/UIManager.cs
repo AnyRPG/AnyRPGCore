@@ -467,14 +467,16 @@ namespace AnyRPG {
             }
             ShowToolTip(new Vector2(pivotX, pivotY), position, describable, showSellPrice);
         }
+
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
             ShowToolTip(pivot, position, describable, string.Empty);
         }
+
         /// <summary>
         /// Show the tooltip
         /// </summary>
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.MyName) + ")");
+            //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
             if (describable == null) {
                 HideToolTip();
                 return;
@@ -487,7 +489,7 @@ namespace AnyRPG {
         }
 
         public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyDisplayName) + ")");
+            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
             if (describable == null) {
                 HideToolTip();
                 return;

@@ -81,7 +81,8 @@ namespace AnyRPG {
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
                 //UIManager.MyInstance.RefreshTooltip(describable as IDescribable);
-                UIManager.MyInstance.ShowToolTip(transform.position, describable as IDescribable);
+                //UIManager.MyInstance.ShowToolTip(transform.position, describable as IDescribable);
+                ProcessMouseEnter();
             }
 
         }
@@ -140,6 +141,10 @@ namespace AnyRPG {
 
         public virtual void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("DescribableIcon.OnPointerEnter()");
+            ProcessMouseEnter();
+        }
+
+        public virtual void ProcessMouseEnter() {
             IDescribable tmp = null;
 
             if (Describable != null && Describable is IDescribable) {
@@ -158,6 +163,7 @@ namespace AnyRPG {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
                 ShowToolTip(tmp);
             }
+
         }
 
         public virtual void ShowToolTip(IDescribable describable) {

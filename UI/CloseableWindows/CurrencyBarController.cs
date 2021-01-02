@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCurrencyAmount(Currency currency, int currencyAmount, string priceString) {
-            //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.MyName + ", " + currencyAmount + ")");
+            //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ", " + priceString + ")");
 
             Dictionary<Currency, int> currencyList = CurrencyConverter.RedistributeCurrency(currency, currencyAmount);
 
