@@ -223,7 +223,14 @@ namespace AnyRPG {
         public bool Mounted { get => mounted; set => mounted = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
-        public UUID UUID { get => uuid; set => uuid = value; }
+        public IUUID UUID {
+            get {
+                if (unitProfile != null && unitProfile.OverwriteUnitUUID) {
+                    return unitProfile;
+                }
+                return uuid;
+            }
+        }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
         public UnitProfile UnitProfile { get => unitProfile; }

@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
-    public class UnitProfile : DescribableResource, IStatProvider, ICapabilityProvider {
+    public class UnitProfile : DescribableResource, IStatProvider, ICapabilityProvider, ISerializationCallbackReceiver, IUUID {
 
         [Header("Unit Prefab")]
 
@@ -240,6 +240,45 @@ namespace AnyRPG {
 
         private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();
 
+        [Header("UUID")]
+
+        [Tooltip("If true, this UUID will overwrite any UUID on the spawned unit.  Only use this for unique units")]
+        [SerializeField]
+        private bool overwriteUnitUUID = false;
+
+        [Tooltip("This is an automatically generated unique string")]
+        [SerializeField]
+        private string m_UUID = null;
+
+        //[Tooltip("If true, this object will overwrite any references to any other objects with the same UUID in the UUID manager.  This option should be true for non static (spawned) objects")]
+        //[SerializeField]
+        private bool forceUpdateUUID = false;
+
+        // prevent this UUID from overwriting itself as soon as it's instantiated in the factory
+        // this option only applies at runtime
+        private bool ignoreDuplicateUUID = true;
+
+        private string m_IDBackup = null;
+
+        public string ID { get => m_UUID; set => m_UUID = value; }
+        public string IDBackup { get => m_IDBackup; set => m_IDBackup = value; }
+
+        public void OnAfterDeserialize() {
+            if (m_UUID == null || m_UUID != m_IDBackup) {
+                UUIDManager.RegisterUUID(this);
+            }
+        }
+        public void OnBeforeSerialize() {
+            if (m_UUID == null || m_UUID != m_IDBackup) {
+                UUIDManager.RegisterUUID(this);
+            }
+        }
+
+        void OnDestroy() {
+            UUIDManager.UnregisterUUID(this);
+            m_UUID = null;
+        }
+
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
@@ -284,6 +323,9 @@ namespace AnyRPG {
         public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
         public bool IsMobile { get => isMobile; set => isMobile = value; }
         public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
+        public bool ForceUpdateUUID { get => forceUpdateUUID; set => forceUpdateUUID = value; }
+        public bool OverwriteUnitUUID { get => overwriteUnitUUID; set => overwriteUnitUUID = value; }
+        public bool IgnoreDuplicateUUID { get => ignoreDuplicateUUID; set => ignoreDuplicateUUID = value; }
 
         // disabled because it was too high maintenance
         /*

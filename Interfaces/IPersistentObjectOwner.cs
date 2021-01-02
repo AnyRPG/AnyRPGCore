@@ -12,8 +12,9 @@ namespace AnyRPG {
     /// </summary>
     public interface IPersistentObjectOwner {
 
-        UUID UUID { get; }
+        IUUID UUID { get; }
         Transform transform { get; }
+        GameObject gameObject { get; }
         PersistentObjectComponent PersistentObjectComponent { get; }
     }
 

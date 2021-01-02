@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         private UUID uuid = null;
 
-        public UUID UUID { get => uuid; set => uuid = value; }
+        public IUUID UUID { get => uuid; }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
 
         private void Awake() {
@@ -19,7 +19,6 @@ namespace AnyRPG {
             persistentObjectComponent.Setup(this);
         }
 
-        // Start is called before the first frame update
         void Start() {
             persistentObjectComponent.Init();
         }

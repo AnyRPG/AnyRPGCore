@@ -335,6 +335,8 @@ namespace AnyRPG {
             if (unitController.PersistentObjectComponent.PersistObjectPosition == true) {
                 PersistentState persistentState = unitController.PersistentObjectComponent.GetPersistentState();
                 if (persistentState != null) {
+                    // since we will be using navMeshAgent.warp, do not attempt to move unit manually
+                    unitController.PersistentObjectComponent.MoveOnStart = false;
                     newSpawnLocation = persistentState.Position;
                     newSpawnForward = persistentState.Forward;
                 } else {
