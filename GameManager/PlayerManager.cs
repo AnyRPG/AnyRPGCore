@@ -317,6 +317,13 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.Revive();
         }
 
+        public Vector3 SpawnPlayerUnit() {
+            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+            Vector3 spawnLocation = LevelManager.MyInstance.GetSpawnLocation();
+            SpawnPlayerUnit(spawnLocation);
+            return spawnLocation;
+        }
+
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
             //Debug.Log("PlayerManager.SpawnPlayerUnit(" + spawnLocation + ")");
 
@@ -385,13 +392,6 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("UnitProfile.SpawnUnitPrefab(): active unit controller had no characterUnit!");
             }
-        }
-
-        public Vector3 SpawnPlayerUnit() {
-            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
-            Vector3 spawnLocation = LevelManager.MyInstance.GetSpawnLocation();
-            SpawnPlayerUnit(spawnLocation);
-            return spawnLocation;
         }
 
         public void HandleModelReady() {

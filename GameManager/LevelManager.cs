@@ -121,13 +121,17 @@ namespace AnyRPG {
                     //Debug.Log("Levelmanager.GetSpawnLocation(). usedTag: " + usedTag);
                     GameObject defaultspawnLocationMarker = GameObject.FindWithTag(usedTag);
                     overrideSpawnLocationTag = string.Empty;
+
+                    // if the prefered tag was found, us it, otherwise fall back to the default tag
                     if (defaultspawnLocationMarker != null) {
                         //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + usedTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                        spawnRotationOverride = defaultspawnLocationMarker.transform.forward;
                         return defaultspawnLocationMarker.transform.position;
                     } else {
                         defaultspawnLocationMarker = GameObject.FindWithTag(defaultSpawnLocationTag);
                         if (defaultspawnLocationMarker != null) {
                             //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                            spawnRotationOverride = defaultspawnLocationMarker.transform.forward;
                             return defaultspawnLocationMarker.transform.position;
                         }
                     }
@@ -139,7 +143,7 @@ namespace AnyRPG {
         }
 
         public Vector3 GetSpawnRotation() {
-            //Debug.Log("Levelmanager.GetSpawnLocation(). SpawnLocationOverride is set.  returning " + spawnLocationOverride);
+            //Debug.Log("Levelmanager.GetSpawnRotation() " + spawnRotationOverride);
             Vector3 returnValue = spawnRotationOverride;
 
             // reset to default so the next level loaded will not attempt to use this spawn location override
