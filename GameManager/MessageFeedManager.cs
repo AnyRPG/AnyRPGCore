@@ -32,6 +32,12 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject messageFeedGameObject = null;
 
+        [SerializeField]
+        private Canvas messageFeedCanvas = null;
+
+        [SerializeField]
+        private GraphicRaycaster raycaster = null;
+
         public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
 
         public void WriteMessage(string message) {
@@ -52,6 +58,13 @@ namespace AnyRPG {
         }
 
         public void LockUI() {
+            if (PlayerPrefs.HasKey("LockUI")) {
+                if (PlayerPrefs.GetInt("LockUI") == 0) {
+                    raycaster.enabled = true;
+                } else {
+                    raycaster.enabled = false;
+                }
+            }
             MessageFeedGameObject.GetComponent<DraggableWindow>().LockUI();
         }
     }
