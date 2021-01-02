@@ -392,7 +392,8 @@ namespace AnyRPG {
                 return null;
             }
 
-            GameObject prefabObject = Instantiate(spawnPrefab, position, Quaternion.LookRotation(forward), parentTransform);
+            
+            GameObject prefabObject = Instantiate(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
 
             return prefabObject;
         }
