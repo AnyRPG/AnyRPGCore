@@ -13,12 +13,11 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-
-        protected virtual void Start() {
-            //Debug.Log("TransparencyButton.Start()");
+        protected virtual void Awake() {
             GetComponentReferences();
             SetBackGroundTransparency();
             CreateEventSubscriptions();
+
         }
 
         private void CreateEventSubscriptions() {

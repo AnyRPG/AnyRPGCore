@@ -415,6 +415,7 @@ namespace AnyRPG {
         /// <param name="backgroundImage"></param>
         /// <param name="defaultColor"></param>
         public void SetItemBackground(Item item, Image backgroundImage, Color defaultColor) {
+            //Debug.Log("UIManager.SetItemBackground(" + item.DisplayName + ")");
             Color finalColor;
             if (item.ItemQuality != null) {
                 if (item.ItemQuality.IconBackgroundImage != null) {
@@ -435,7 +436,7 @@ namespace AnyRPG {
                 finalColor = defaultColor;
             }
             if (backgroundImage != null) {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + finalColor);
                 backgroundImage.color = finalColor;
             } else {
                 //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
