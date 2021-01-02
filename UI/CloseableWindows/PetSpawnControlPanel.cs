@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         private int unitToughness;
 
-        private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
+        //private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }

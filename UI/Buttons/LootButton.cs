@@ -31,7 +31,8 @@ namespace AnyRPG {
             }
         }
 
-        private void Awake() {
+        protected override void Awake() {
+            base.Awake();
             lootWindow = GetComponentInParent<LootUI>();
         }
 

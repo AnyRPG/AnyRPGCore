@@ -17,7 +17,6 @@ namespace AnyRPG {
             GetComponentReferences();
             SetBackGroundTransparency();
             CreateEventSubscriptions();
-
         }
 
         private void CreateEventSubscriptions() {

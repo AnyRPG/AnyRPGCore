@@ -33,9 +33,6 @@ namespace AnyRPG {
         private GameObject messageFeedGameObject = null;
 
         [SerializeField]
-        private Canvas messageFeedCanvas = null;
-
-        [SerializeField]
         private GraphicRaycaster raycaster = null;
 
         public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
