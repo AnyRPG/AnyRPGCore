@@ -235,6 +235,10 @@ namespace AnyRPG {
 
         public void SpawnAbilityObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObjects()");
+
+            // ensure that any current ability objects are cleared before spawning new ones
+            DespawnAbilityObjects();
+
             Dictionary<AbilityAttachmentNode, GameObject> holdableObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
             foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAttachmentNodes) {
                 if (abilityAttachmentNode != null) {

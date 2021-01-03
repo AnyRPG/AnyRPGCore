@@ -1197,6 +1197,10 @@ namespace AnyRPG {
                 unitController.CharacterUnit.BaseCharacter.CharacterCombat.SetWaitingForAutoAttack(false);
             }
             SetAttacking(false);
+            currentAbilityEffectContext = null;
+            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.DespawnAbilityObjects();
+            }
         }
 
         public void ClearAnimatedAttack(BaseAbility baseAbility) {
