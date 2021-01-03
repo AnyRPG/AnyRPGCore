@@ -144,7 +144,7 @@ namespace AnyRPG {
                 AudioManager.MyInstance.PlayMusic(SystemConfigurationManager.MyInstance.NewGameAudioProfile.AudioClip);
             }
         }
-
+         
         public void SetupSaveData() {
             //Debug.Log("NewGamePanel.SetupSaveData()");
 

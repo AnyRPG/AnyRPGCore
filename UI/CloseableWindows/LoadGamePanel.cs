@@ -205,7 +205,12 @@ namespace AnyRPG {
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
-            SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
+            if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
+                ClosePanel();
+                SystemWindowManager.MyInstance.newGameWindow.OpenWindow();
+            } else {
+                SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
+            }
         }
 
         public void DeleteGame() {
