@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
-            characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<AnyRPG.CharacterController>();
             if (characterController == null) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
             }
