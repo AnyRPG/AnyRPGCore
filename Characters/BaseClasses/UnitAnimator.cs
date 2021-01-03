@@ -1227,13 +1227,13 @@ namespace AnyRPG {
 
         public void ClearAnimationBlockers() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers()");
-            ClearAutoAttack();
             if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE HAVE AN ANIMATED ABILITY");
                 ClearAnimatedAttack(currentAbilityEffectContext.baseAbility);
             } else {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE DO NOT HAVE AN ANIMATED ABILITY");
             }
+            ClearAutoAttack();
             ClearCasting();
             if (attackCoroutine != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility(): STOPPING OUTSTANDING CAST OR REGULAR ATTACK FOR CAST");
