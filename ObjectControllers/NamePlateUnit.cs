@@ -11,6 +11,7 @@ namespace AnyRPG {
     public class NamePlateUnit : Interactable {
 
         public event System.Action OnInitializeNamePlate = delegate { };
+        public virtual event System.Action OnCameraTargetReady = delegate { };
 
         [SerializeField]
         protected NamePlateProps namePlateProps = new NamePlateProps();
@@ -20,6 +21,7 @@ namespace AnyRPG {
 
         // track startup state
         protected bool namePlateReady = false;
+        protected bool cameraTargetReady = true;
 
         public virtual BaseNamePlateController NamePlateController { get => namePlateController; }
         public virtual NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
@@ -31,6 +33,8 @@ namespace AnyRPG {
                 return base.DisplayName;
             }
         }
+
+        public virtual bool CameraTargetReady { get => cameraTargetReady; }
 
         protected override void Awake() {
             base.Awake();

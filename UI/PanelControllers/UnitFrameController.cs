@@ -115,7 +115,7 @@ namespace AnyRPG {
 
         protected void Start() {
             //Debug.Log(gameObject.name + ".UnitFrameController.Start()");
-            InitializeController();
+            //InitializeController();
             if (!targetInitialized) {
                 this.gameObject.SetActive(false);
             }
@@ -144,12 +144,12 @@ namespace AnyRPG {
         }
 
         private void Update() {
-            if (!targetInitialized) {
+            if (!targetInitialized || !UnitNamePlateController.NamePlateUnit.CameraTargetReady) {
                 //Debug.Log("UnitFrameController.Update(). Not initialized yet.  Exiting.");
                 return;
             }
-            if (followTransform == null) {
-                //Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null.  Exiting.");
+            if (UnitNamePlateController.NamePlateUnit.CameraTargetReady == true && followTransform == null) {
+                Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null.  Exiting.");
                 ClearTarget();
                 return;
             }
@@ -173,11 +173,31 @@ namespace AnyRPG {
             InitializeStats();
             InitializePosition();
             gameObject.SetActive(true);
+            targetInitialized = true;
             if (isActiveAndEnabled) {
-                GetFollowTarget();
+                if (namePlateController.NamePlateUnit.CameraTargetReady) {
+                    HandleTargetReady();
+                } else {
+                    SubscribeToTargetReady();
+                }
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run StartCoroutien() on enable instead.");
             }
+        }
+
+        public void SubscribeToTargetReady() {
+            namePlateController.NamePlateUnit.OnCameraTargetReady += HandleTargetReady;
+        }
+
+        public void UnsubscribeFromTargetReady() {
+            if (namePlateController?.NamePlateUnit != null) {
+                namePlateController.NamePlateUnit.OnCameraTargetReady -= HandleTargetReady;
+            }
+        }
+
+        public void HandleTargetReady() {
+            UnsubscribeFromTargetReady();
+            GetFollowTarget();
         }
 
         public void InitializePosition() {
@@ -261,6 +281,7 @@ namespace AnyRPG {
 
         public void ClearTarget(bool closeWindowOnClear = true) {
             //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
+            UnsubscribeFromTargetReady();
 
             if (namePlateController != null && namePlateController.Interactable.CharacterUnit != null) {
                 (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
@@ -369,7 +390,6 @@ namespace AnyRPG {
                 }
             }
             this.followTransform = targetBone;
-            targetInitialized = true;
         }
 
         private void DeActivateCastBar() {
@@ -512,6 +532,12 @@ namespace AnyRPG {
             base.OnEnable();
             // just in case something was targetted before the canvas became active
             TargetInitialization();
+        }
+
+        public override void OnDisable() {
+            //Debug.Log(gameObject.name + ".UnitFrameController.OnDisable()");
+            base.OnDisable();
+            UnsubscribeFromTargetReady();
         }
     }
 

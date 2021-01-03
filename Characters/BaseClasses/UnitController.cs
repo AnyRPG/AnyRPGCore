@@ -33,6 +33,7 @@ namespace AnyRPG {
         public event System.Action<UnitController> OnActivateMountedState = delegate { };
         public event System.Action OnDeActivateMountedState = delegate { };
         public event System.Action<string> OnMessageFeed = delegate { };
+        public override event System.Action OnCameraTargetReady = delegate { };
 
         // by default, a unit will enter AI mode if no mode is set before Start()
         [SerializeField]
@@ -263,6 +264,12 @@ namespace AnyRPG {
                     return unitProfile.InteractionMaxRange;
                 }
                 return base.InteractionMaxRange;
+            }
+        }
+
+        public override bool CameraTargetReady {
+            get {
+                return modelReady;
             }
         }
 
@@ -663,6 +670,7 @@ namespace AnyRPG {
             modelReady = true;
             characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             OnModelReady();
+            OnCameraTargetReady();
         }
 
         public void UnsubscribeFromUMACreate() {
