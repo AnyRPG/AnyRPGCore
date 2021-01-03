@@ -15,6 +15,9 @@ namespace AnyRPG {
         private bool windowEventSubscriptionsInitialized = false;
 
         public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
+                interactableOptionProps.InteractionPanelTitle = "Change Class";
+            }
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
