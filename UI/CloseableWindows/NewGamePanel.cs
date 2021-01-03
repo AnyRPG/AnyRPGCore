@@ -158,7 +158,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(NewGameUnitButton newGameUnitButton) {
-            //Debug.Log("NewGamePanel.SetUnitProfile()");
+            //Debug.Log("NewGamePanel.SetUnitProfile(" + newGameUnitButton.UnitProfile.DisplayName + ")");
 
             unitProfile = newGameUnitButton.UnitProfile;
             saveData.unitProfileName = unitProfile.DisplayName;
@@ -236,7 +236,7 @@ namespace AnyRPG {
         }
 
         public void UpdateEquipmentList() {
-            //Debug.Log("NameGamePanel.EquipCharacter()");
+            //Debug.Log("NameGamePanel.UpdateEquipmentList()");
 
             equipmentList.Clear();
 
@@ -309,6 +309,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
+            //Debug.Log("NewGameCharacterPanelController.HandleTargetReady()");
             EquipCharacter();
         }
 
@@ -337,7 +338,7 @@ namespace AnyRPG {
                     }
                 }
                 foreach (Equipment equipment in removeList) {
-                    characterEquipmentManager.Unequip(equipment);
+                    characterEquipmentManager.Unequip(equipment, false);
                 }
 
                 // equip equipment in list but not yet equipped
@@ -349,8 +350,8 @@ namespace AnyRPG {
                             characterEquipmentManager.Equip(equipment, null, false, false);
                         }
                     }
-                    //RebuildUMA();
                 }
+                characterPreviewPanel.RebuildUMA();
             }
         }
 

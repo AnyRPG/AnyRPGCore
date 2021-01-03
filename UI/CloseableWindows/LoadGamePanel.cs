@@ -185,7 +185,7 @@ namespace AnyRPG {
         }
 
         public void ClosePanel() {
-            Debug.Log("LoadGamePanel.ClosePanel()");
+            //Debug.Log("LoadGamePanel.ClosePanel()");
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
         }
 

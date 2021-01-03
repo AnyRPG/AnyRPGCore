@@ -508,10 +508,10 @@ namespace AnyRPG {
             return null;
         }
 
-        public Equipment Unequip(Equipment equipment) {
+        public Equipment Unequip(Equipment equipment, bool rebuildUMA = true) {
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] == equipment) {
-                    return Unequip(equipmentSlotProfile);
+                    return Unequip(equipmentSlotProfile, -1, rebuildUMA);
                 }
             }
             return null;
