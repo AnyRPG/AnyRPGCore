@@ -9,6 +9,11 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
 
+        [Header("Loot")]
+
+        [SerializeField]
+        protected Image lootBackGroundImage;
+
         [SerializeField]
         private Image icon = null;
 
@@ -27,7 +32,7 @@ namespace AnyRPG {
             set {
                 lootDrop = value;
                 MyIcon.sprite = lootDrop.Icon;
-                lootDrop.SetBackgroundImage(backGroundImage);
+                lootDrop.SetBackgroundImage(lootBackGroundImage);
             }
         }
 
