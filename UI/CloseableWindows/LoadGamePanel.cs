@@ -135,6 +135,7 @@ namespace AnyRPG {
         public void ShowLoadButtonsCommon() {
             //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
             ClearLoadButtons();
+            characterPreviewPanel.ClearPreviewTarget();
 
             foreach (AnyRPGSaveData anyRPGSaveData in SaveManager.MyInstance.GetSaveDataList()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
