@@ -115,6 +115,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
+            //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
             LoadUMARecipe();
             umaCharacterPanel.HandleTargetReady();
         }

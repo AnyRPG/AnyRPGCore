@@ -50,14 +50,22 @@ namespace AnyRPG {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
+
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController.ModelReady == true) {
+                SetupOptions();
+            }
         }
 
-        public void HandleTargetReady() {
-            //Debug.Log("NewGameCharacterPanelController.TargetReadyCallback()");
-
+        public void SetupOptions() {
+            //Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
             CloseOptionsAreas();
             OpenAppearanceOptionsArea();
             InitializeSexButtons();
+        }
+
+        public void HandleTargetReady() {
+            //Debug.Log("UMACharacterEditorPanelController.HandleTargetReady()");
+            SetupOptions();
         }
 
 
