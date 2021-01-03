@@ -96,6 +96,7 @@ namespace AnyRPG {
 
         public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.MyDisplayName + ")");
+            namePlateUnit.NamePlateController.NamePlateNeedsRemoval -= RemoveNamePlate;
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
                     Destroy(namePlates[namePlateUnit].gameObject);

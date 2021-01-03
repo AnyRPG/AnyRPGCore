@@ -13,7 +13,6 @@ namespace AnyRPG {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
         public override event Action<NamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        //public event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public override event Action OnNameChange = delegate { };
 
         private UnitController unitController = null;

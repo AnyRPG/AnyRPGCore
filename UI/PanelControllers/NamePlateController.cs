@@ -121,14 +121,14 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
             CleanupEventSubscriptions();
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.HandleReputationChange()");
             SetFactionColor();
         }
-
 
         private void InitializeLocalComponents() {
             //Debug.Log(namePlateUnit.MyDisplayName + "NamePlateController.InitializeLocalComponents()");
@@ -464,10 +464,9 @@ namespace AnyRPG {
         }
 
         private void OnDestroy() {
-            //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy()");
+            //Debug.Log((unitNamePlateController == null ? "null" : unitNamePlateController.UnitDisplayName) + ".NamePlateController.OnDestroy()");
             if (unitNamePlateController != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
-                //unitNamePlateController.ResourceBarNeedsUpdate -= ProcessHealthChanged;
                 if (unitNamePlateController.Interactable.CharacterUnit != null) {
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;

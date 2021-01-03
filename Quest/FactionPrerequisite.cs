@@ -59,13 +59,11 @@ namespace AnyRPG {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }
             SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
-            //SystemEventManager.MyInstance.OnReputationChange += HandleReputationChange;
         }
 
         public void CleanupScriptableObjects() {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
-                //SystemEventManager.MyInstance.OnReputationChange -= HandleReputationChange;
             }
         }
     }

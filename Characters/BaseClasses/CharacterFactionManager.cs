@@ -25,6 +25,7 @@ namespace AnyRPG {
         }
 
         public virtual void NotifyOnReputationChange() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.NotifyOnReputationChange()");
             OnReputationChange();
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.NotifyOnReputationChange();
@@ -48,20 +49,23 @@ namespace AnyRPG {
 
         // adds to existing amount or sets to amount if not existing
         public virtual void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ")");
-            //bool foundReputation = false;
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ", " + notify + ")");
+            bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in DispositionDictionary) {
                 //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");
                 if (factionDisposition.Faction == faction) {
                     //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary MATCHED: adding reputation");
                     factionDisposition.disposition += (float)reputationAmount;
-                    return;
+                    foundReputation = true;
+                    break;
                 }
             }
-            FactionDisposition _factionDisposition = new FactionDisposition();
-            _factionDisposition.Faction = faction;
-            _factionDisposition.disposition = Faction.RelationWith(baseCharacter, faction) + (float)reputationAmount;
-            DispositionDictionary.Add(_factionDisposition);
+            if (!foundReputation) {
+                FactionDisposition _factionDisposition = new FactionDisposition();
+                _factionDisposition.Faction = faction;
+                _factionDisposition.disposition = Faction.RelationWith(baseCharacter, faction) + (float)reputationAmount;
+                DispositionDictionary.Add(_factionDisposition);
+            }
             if (notify) {
                 NotifyOnReputationChange();
             }
