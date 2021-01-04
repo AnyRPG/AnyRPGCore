@@ -98,7 +98,7 @@ namespace AnyRPG {
                 inGameMainMenuWindow.CloseWindow();
                 petSpawnWindow.CloseWindow();
 
-                // testing - do not allow accidentally closing this while dead
+                // do not allow accidentally closing this while dead
                 if (PlayerManager.MyInstance.PlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
