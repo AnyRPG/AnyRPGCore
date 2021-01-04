@@ -1166,7 +1166,6 @@ namespace AnyRPG {
             // spawn player connection so all the data can be loaded
             PlayerManager.MyInstance.SpawnPlayerConnection();
             PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
-            PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
 
             // testing: load this before setting providers so no duplicates on bars
             //LoadActionBarData(anyRPGSaveData);
@@ -1174,6 +1173,10 @@ namespace AnyRPG {
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
             PlayerManager.MyInstance.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+
+            // this must be called after the snapshot is applied, because the unit profile could contain a default name
+            PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
+
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             LoadUMARecipe(anyRPGSaveData);
