@@ -148,6 +148,7 @@ namespace AnyRPG {
         public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public DialogController DialogController { get => dialogController; }
+        public virtual bool CombatOnly { get => false; }
 
         public override bool MyPrerequisitesMet {
             get {

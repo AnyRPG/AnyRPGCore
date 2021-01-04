@@ -257,6 +257,9 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.GetCurrentOptionCount()");
+            if (interactable.CombatOnly) {
+                return 0;
+            }
             return Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count;
         }
 

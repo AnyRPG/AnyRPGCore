@@ -45,9 +45,6 @@ namespace AnyRPG {
 
             behaviorComponent = BehaviorComponent.GetBehaviorComponent(unitController);
 
-            // testing move this to constructor since it doesn't need unitProfile anymore
-            //SetupScriptableObjects();
-
             PlayAutomaticBehaviors();
         }
 
@@ -155,6 +152,10 @@ namespace AnyRPG {
 
         public void HandlePrerequisiteUpdates() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePrerequisiteUpdates()");
+            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                return;
+            }
+
             PlayAutomaticBehaviors();
 
             if (behaviorComponent != null) {
@@ -164,6 +165,10 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitSpawn() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePlayerUnitSpawn()");
+            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                return;
+            }
+
             // since player unit spawn doesn't trigger prerequisite update on individual behaviors, a manual check is needed
             foreach (BehaviorProfile behaviorProfile in behaviorList) {
                 behaviorProfile.UpdatePrerequisites(false);
@@ -178,6 +183,11 @@ namespace AnyRPG {
 
         public void PlayAutomaticBehaviors() {
             //Debug.Log(unitController.gameObject.name + ".Controller.PlayAutomaticBehaviors()");
+
+            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                return;
+            }
+
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
                 if (behaviorProfile.MyAutomatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     TryPlayBehavior(behaviorProfile);

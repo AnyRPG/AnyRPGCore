@@ -65,13 +65,15 @@ namespace AnyRPG {
         public List<BehaviorProfile> GetCurrentOptionList() {
             //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
-            foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList) {
-                //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
-                if (behaviorProfile.MyPrerequisitesMet == true
-                    && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)
-                    && behaviorProfile.AllowManualStart == true) {
-                    //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
-                    currentList.Add(behaviorProfile);
+            if (interactable.CombatOnly == false) {
+                foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList) {
+                    //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
+                    if (behaviorProfile.MyPrerequisitesMet == true
+                        && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)
+                        && behaviorProfile.AllowManualStart == true) {
+                        //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
+                        currentList.Add(behaviorProfile);
+                    }
                 }
             }
             //Debug.Log("BehaviorInteractable.GetValidOptionList(): List Size: " + validList.Count);
@@ -113,6 +115,9 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionCount()");
+            if (interactable.CombatOnly) {
+                return 0;
+            }
 
             if (unitController != null && unitController.BehaviorController.BehaviorPlaying == false) {
                 //return GetCurrentOptionList().Count;

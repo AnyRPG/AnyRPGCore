@@ -273,6 +273,15 @@ namespace AnyRPG {
             }
         }
 
+        public override bool CombatOnly {
+            get {
+                if (unitControllerMode == UnitControllerMode.Player) {
+                    return true;
+                }
+                return base.CombatOnly;
+            }
+        }
+
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             characterUnit.BaseCharacter.CharacterPetManager.DespawnAllPets();
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);

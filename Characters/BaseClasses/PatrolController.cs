@@ -64,6 +64,9 @@ namespace AnyRPG {
 
         private void FindAutomaticPatrol() {
             //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol()");
+            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                return;
+            }
 
             foreach (PatrolProfile patrolProfile in patrolProfiles) {
                 //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);

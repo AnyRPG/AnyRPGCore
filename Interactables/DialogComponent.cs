@@ -59,10 +59,12 @@ namespace AnyRPG {
         public List<Dialog> GetCurrentOptionList() {
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
-            foreach (Dialog dialog in Props.DialogList) {
-                //Debug.Log(interactable.gameObject.name + ".DialogInteractable.GetCurrentOptionList() : found dialog: " + dialog.DisplayName);
-                if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
-                    currentList.Add(dialog);
+            if (interactable.CombatOnly == false) {
+                foreach (Dialog dialog in Props.DialogList) {
+                    //Debug.Log(interactable.gameObject.name + ".DialogInteractable.GetCurrentOptionList() : found dialog: " + dialog.DisplayName);
+                    if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
+                        currentList.Add(dialog);
+                    }
                 }
             }
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList(): List Size: " + currentList.Count);

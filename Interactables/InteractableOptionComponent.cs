@@ -102,11 +102,21 @@ namespace AnyRPG {
             return (factionValue >= 0f ? true : false);
         }
 
+        public virtual bool ProcessCombatOnly() {
+            if (interactable.CombatOnly == true) {
+                return false;
+            }
+            return true;
+        }
+
         public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             if (processRangeCheck == true && passedRangeCheck == false) {
                 return false;
             }
             if (ProcessFactionValue(factionValue) == false) {
+                return false;
+            }
+            if (ProcessCombatOnly() == false) {
                 return false;
             }
             return MyPrerequisitesMet;
@@ -150,6 +160,9 @@ namespace AnyRPG {
 
         public virtual bool CanShowMiniMapIcon() {
             //Debug.Log(gameObject.name + ".InteractableOption.CanShowMiniMapIcon()");
+            if (interactable.CombatOnly) {
+                return false;
+            }
             return (GetCurrentOptionCount() > 0);
         }
 
@@ -190,12 +203,18 @@ namespace AnyRPG {
                 return 0;
             }
             */
+            if (interactable.CombatOnly) {
+                return 0;
+            }
             return (MyPrerequisitesMet == true ? 1 : 0);
         }
 
         public virtual int GetCurrentOptionCount() {
             // overwrite me or everything is valid as long as prerequisites are met, which isn't the case for things like dialog, which have multiple options
             //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            if (interactable.CombatOnly) {
+                return 0;
+            }
             return GetValidOptionCount();
         }
 

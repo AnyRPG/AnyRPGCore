@@ -63,6 +63,9 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount()");
+            if (interactable.CombatOnly) {
+                return 0;
+            }
             int optionCount = 0;
             foreach (Skill skill in Props.Skills) {
                 if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
