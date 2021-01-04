@@ -8,7 +8,6 @@ namespace AnyRPG {
 public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
 
     public event System.Action<bool> OnPageCountUpdate = delegate { };
-    public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
     public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
@@ -108,7 +107,6 @@ public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
 
     public void ReceiveOpenWindowNotification() {
         //Debug.Log("AchievementPanelUI.OnOpenWindow()");
-        OnOpenWindow(this);
         CreatePages();
     }
 

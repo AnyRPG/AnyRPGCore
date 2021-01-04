@@ -149,7 +149,7 @@ namespace AnyRPG {
                 return;
             }
             if (UnitNamePlateController.NamePlateUnit.CameraTargetReady == true && followTransform == null) {
-                Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null.  Exiting.");
+                //Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null. possibly dead unit despawned. Exiting.");
                 ClearTarget();
                 return;
             }

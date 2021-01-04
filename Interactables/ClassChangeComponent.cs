@@ -26,9 +26,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.classChangeWindow != null && PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.classChangeWindow != null && PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents != null && (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -76,9 +76,9 @@ namespace AnyRPG {
             }
             base.Interact(source);
 
-            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
-            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (PopupWindowManager.MyInstance.classChangeWindow.MyCloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
+            (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }

@@ -49,8 +49,6 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         public Interactable MyInteractable {
             get => interactable;
             set {

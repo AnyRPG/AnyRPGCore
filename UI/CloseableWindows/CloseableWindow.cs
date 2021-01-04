@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         protected bool windowInitialized = false;
 
-        public ICloseableWindowContents MyCloseableWindowContents { get => windowContents; set => windowContents = value; }
+        public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
 
         public bool IsOpen {
             get {
@@ -96,7 +96,7 @@ namespace AnyRPG {
         public virtual void DestroyWindowContents() {
             //Debug.Log("CloseableWindow.DestroyWindowContents()");
             if (windowContents != null) {
-                Destroy((MyCloseableWindowContents as MonoBehaviour).gameObject);
+                Destroy((CloseableWindowContents as MonoBehaviour).gameObject);
                 windowContents = null;
             }
 
@@ -166,8 +166,8 @@ namespace AnyRPG {
         }
 
         public void SetBackGroundColor(Color color) {
-            if (MyCloseableWindowContents != null) {
-                MyCloseableWindowContents.SetBackGroundColor(color);
+            if (CloseableWindowContents != null) {
+                CloseableWindowContents.SetBackGroundColor(color);
             }
         }
 

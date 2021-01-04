@@ -106,8 +106,6 @@ namespace AnyRPG {
 
         private List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         public override void Awake() {
             //Debug.Log("CombatLogUI.Awake()");
 
@@ -367,7 +365,6 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("QuestTrackerUI.OnOpenWindow()");
             ShowChatLog();
-            OnOpenWindow(this);
         }
     }
 

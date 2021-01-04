@@ -35,32 +35,14 @@ namespace AnyRPG {
         }
         */
 
-        /*
-        protected override void AddUnitProfileSettings() {
-            base.AddUnitProfileSettings();
-            if (unitProfile != null) {
-                interactableOptionProps = unitProfile.QuestGiverProps;
-                HandlePrerequisiteUpdates();
-            }
-        }
-        */
-
         public override void ProcessStatusIndicatorSourceInit() {
             base.ProcessStatusIndicatorSourceInit();
             HandlePrerequisiteUpdates();
         }
 
-        public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null && PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow -= CloseWindowHandler;
-            }
-        }
-
         public override void CleanupEventSubscriptions() {
             //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
@@ -125,13 +107,6 @@ namespace AnyRPG {
             */
         }
 
-        public void InitWindow(ICloseableWindowContents questGiverUI) {
-            //Debug.Log(interactable.gameObject.name + ".QuestGiver.InitWindow()");
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-            (questGiverUI as QuestGiverUI).ShowQuests(this);
-            QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0]);
-        }
-
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
             base.Interact(source);
@@ -140,7 +115,7 @@ namespace AnyRPG {
                 return true;
             } else if (Quest.GetAvailableQuests(Props.Quests).Count == 1 && Quest.GetCompleteQuests(Props.Quests).Count == 0) {
                 if (Quest.GetAvailableQuests(Props.Quests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].MyOpeningDialog.TurnedIn == false) {
-                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
+                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
@@ -153,16 +128,11 @@ namespace AnyRPG {
             // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
             if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnCloseWindow += CloseWindowHandler;
                 PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
+                QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
             return false;
-        }
-
-        public void CloseWindowHandler(ICloseableWindowContents questGiverUI) {
-            CleanupWindowEventSubscriptions();
         }
 
         public override void StopInteract() {
@@ -170,7 +140,6 @@ namespace AnyRPG {
             base.StopInteract();
             //vendorUI.ClearPages();
             PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
-            CleanupWindowEventSubscriptions();
         }
 
         public void UpdateQuestStatus() {

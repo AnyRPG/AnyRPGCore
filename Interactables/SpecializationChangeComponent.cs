@@ -23,9 +23,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.specializationChangeWindow != null && PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents != null && (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.specializationChangeWindow != null && PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents != null && (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -51,9 +51,9 @@ namespace AnyRPG {
             }
             base.Interact(source);
 
-            (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
-            (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (PopupWindowManager.MyInstance.specializationChangeWindow.MyCloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
+            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }

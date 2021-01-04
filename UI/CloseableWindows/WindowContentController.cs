@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
 public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
 
-    public virtual event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
     public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
     [SerializeField]
@@ -39,7 +38,6 @@ public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
 
     public virtual void ReceiveOpenWindowNotification() {
         //Debug.Log("WindowContentController.OnOpenWindow()");
-        OnOpenWindow(this);
     }
 
     public void SetBackGroundColor(Color color) {

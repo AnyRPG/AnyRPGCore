@@ -67,8 +67,6 @@ namespace AnyRPG {
 
         private Skill currentSkill = null;
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
 
         private void Start() {
@@ -237,8 +235,6 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.OnOpenWindow()");
             // clear before open window handler, because it shows quests
             ClearDescription();
-
-            OnOpenWindow(this);
         }
     }
 

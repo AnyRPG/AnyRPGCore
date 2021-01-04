@@ -18,25 +18,13 @@ namespace AnyRPG {
             }
         }
 
-        public override void Cleanup() {
-            base.Cleanup();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void InitWindow(ICloseableWindowContents musicPlayerUI) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.InitWindow()");
-            (musicPlayerUI as MusicPlayerUI).ShowMusicProfiles(this);
-        }
-
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
             base.Interact(source);
             if (!PopupWindowManager.MyInstance.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                //vendorWindow.MyVendorUI.CreatePages(items);
-                PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
-                PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventSubscriptions;
                 PopupWindowManager.MyInstance.musicPlayerWindow.OpenWindow();
+                (PopupWindowManager.MyInstance.musicPlayerWindow.CloseableWindowContents as MusicPlayerUI).ShowMusicProfiles(this);
                 return true;
             }
             return false;
@@ -47,18 +35,6 @@ namespace AnyRPG {
             base.StopInteract();
             //vendorUI.ClearPages();
             PopupWindowManager.MyInstance.musicPlayerWindow.CloseWindow();
-        }
-
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions(windowContents)");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.musicPlayerWindow != null && PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-                PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
-            }
         }
 
         public override void CallMiniMapStatusUpdateHandler() {

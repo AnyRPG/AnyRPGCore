@@ -805,8 +805,8 @@ namespace AnyRPG {
                     bagNode.MyBagButton.SetBackGroundColor();
                 }
             }
-            if (PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            if (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents != null) {
+                PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }
 
         }
@@ -814,36 +814,36 @@ namespace AnyRPG {
         public void UpdatePopupWindowOpacity() {
             //Debug.Log("UIManager.UpdatePopupWindowOpacity()");
             int opacityLevel = (int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255);
-            PopupWindowManager.MyInstance.abilityBookWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.achievementListWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.reputationBookWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.skillBookWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.musicPlayerWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.characterPanelWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.craftingWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.currencyListWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.interactionWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.lootWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.mainMapWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.questLogWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.abilityBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.achievementListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.reputationBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.mainMapWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.questGiverWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.questLogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.vendorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateSystemMenuOpacity() {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("SystemMenuOpacity") * 255);
-            SystemWindowManager.MyInstance.mainMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.nameChangeWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.deleteGameMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.characterCreatorWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.exitMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.inGameMainMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.keyBindConfirmWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.playMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.settingsMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.playerOptionsMenuWindow.MyCloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {

@@ -33,7 +33,6 @@ namespace AnyRPG {
         private int pageIndex = 0;
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         public void CreatePages(List<LootDrop> items) {
@@ -152,7 +151,6 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LootUI.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
-            OnOpenWindow(this);
             OnPageCountUpdate(true);
         }
 

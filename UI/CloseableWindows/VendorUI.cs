@@ -10,7 +10,6 @@ namespace AnyRPG {
     public class VendorUI : WindowContentController, IPagedWindowContents {
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
 
         [SerializeField]
         private List<VendorButton> vendorButtons = new List<VendorButton>();
@@ -128,7 +127,6 @@ namespace AnyRPG {
             ClearButtons();
             ClearPages();
             base.ReceiveOpenWindowNotification();
-            OnOpenWindow(this);
             LoadPage(0);
             OnPageCountUpdate(false);
         }

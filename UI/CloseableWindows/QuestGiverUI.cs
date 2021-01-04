@@ -85,17 +85,8 @@ namespace AnyRPG {
 
         private Quest currentQuest = null;
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         public QuestGiverQuestScript MySelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         public Interactable MyInteractable { get => interactable; set => interactable = value; }
-        public IQuestGiver MyQuestGiver {
-            get => questGiver;
-            set {
-                questGiver = value;
-                MyInteractable = questGiver.Interactable;
-            }
-        }
 
         private void Start() {
             DeactivateButtons();
@@ -222,7 +213,7 @@ namespace AnyRPG {
         }
 
         public void ShowQuests(IQuestGiver questGiver) {
-            //Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
+            Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
             this.questGiver = questGiver;
             ShowQuestsCommon(this.questGiver);
         }
@@ -261,12 +252,15 @@ namespace AnyRPG {
 
         }
 
-        public void ShowDescription(Quest quest) {
+        public void ShowDescription(Quest quest, IQuestGiver questGiver = null) {
             //Debug.Log("QuestGiverUI.ShowDescription()");
 
             if (quest == null) {
                 //Debug.Log("QuestGiverUI.ShowDescription(): quest is null, doing nothing");
                 return;
+            }
+            if (questGiver != null) {
+                this.questGiver = questGiver;
             }
 
             //currentQuestName = quest.MyName;
@@ -275,7 +269,7 @@ namespace AnyRPG {
             if (quest.MyHasOpeningDialog == true) {
                 if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    (PopupWindowManager.MyInstance.dialogWindow.MyCloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
                     if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
                         PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
@@ -353,7 +347,7 @@ namespace AnyRPG {
         }
 
         public void AcceptQuest() {
-            //Debug.Log("QuestGiverUI.AcceptQuest()");
+            Debug.Log("QuestGiverUI.AcceptQuest()");
             if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
@@ -362,7 +356,10 @@ namespace AnyRPG {
 
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
+                    Debug.Log("QuestGiverUI.AcceptQuest() questgiver was not null");
                     questGiver.HandleAcceptQuest();
+                } else {
+                    Debug.Log("QuestGiverUI.AcceptQuest() questgiver was null");
                 }
                 UpdateButtons(currentQuest);
                 if (interactable != null) {
@@ -390,8 +387,9 @@ namespace AnyRPG {
         }
 
         public void CompleteQuest() {
-            //Debug.Log("QuestGiverUI.CompleteQuest()");
+            Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!currentQuest.IsComplete) {
+                Debug.Log("QuestGiverUI.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
             }
 
@@ -498,11 +496,15 @@ namespace AnyRPG {
             // do this last
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
             if (questGiver != null) {
+                Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is not null");
                 // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
                 //Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
                 questGiver.UpdateQuestStatus();
                 questGiver.HandleCompleteQuest();
+            } else {
+                Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is null!");
             }
+
             if (MySelectedQuestGiverQuestScript != null) {
                 MySelectedQuestGiverQuestScript.DeSelect();
             }
@@ -513,7 +515,6 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.OnOpenWindow()");
             // clear first because open window handler could show a description
             ClearDescription();
-            OnOpenWindow(this);
             if (interactable != null) {
                 PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }

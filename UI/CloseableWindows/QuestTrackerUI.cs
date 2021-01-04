@@ -35,8 +35,6 @@ namespace AnyRPG {
 
         private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         private void Start() {
             //Debug.Log("QuestTrackerUI.Start()");
             InitializeReferences();
@@ -149,7 +147,6 @@ namespace AnyRPG {
             //Debug.Log("QuestTrackerUI.OnOpenWindow()");
             // clear first because open window handler could show a description
             ShowQuests();
-            OnOpenWindow(this);
         }
 
         // moved below functionality to OnDestroy because these are static objects that exist for the entire game

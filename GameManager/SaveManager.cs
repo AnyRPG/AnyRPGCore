@@ -1228,9 +1228,9 @@ namespace AnyRPG {
             InventoryManager.MyInstance.ClearData();
             if (PopupWindowManager.MyInstance != null) {
                 if (PopupWindowManager.MyInstance.bankWindow != null) {
-                    if (PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents != null) {
-                        (PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents as BankPanel).ClearSlots();
-                        (PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents as BankPanel).MyBagBarController.ClearBagButtons();
+                    if (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents != null) {
+                        (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).ClearSlots();
+                        (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.ClearBagButtons();
                     } else {
                         //Debug.Log("windowcontents was null");
                     }

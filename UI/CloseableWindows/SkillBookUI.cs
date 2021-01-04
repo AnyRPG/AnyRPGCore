@@ -8,7 +8,6 @@ namespace AnyRPG {
     public class SkillBookUI : MonoBehaviour, IPagedWindowContents {
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
         public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -101,7 +100,6 @@ namespace AnyRPG {
         }
 
         public void ReceiveOpenWindowNotification() {
-            OnOpenWindow(this);
             CreatePages();
         }
 

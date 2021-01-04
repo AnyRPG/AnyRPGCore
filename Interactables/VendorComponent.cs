@@ -24,17 +24,13 @@ namespace AnyRPG {
         }
         */
 
-        public void InitWindow(ICloseableWindowContents vendorUI) {
-            (vendorUI as VendorUI).PopulateDropDownList(Props.VendorCollections);
-        }
-
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);
             //Debug.Log(source + " attempting to interact with " + gameObject.name);
             if (!PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
                 PopupWindowManager.MyInstance.vendorWindow.OpenWindow();
+                (PopupWindowManager.MyInstance.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections);
                 return true;
             }
             return false;
@@ -43,7 +39,6 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
             PopupWindowManager.MyInstance.vendorWindow.CloseWindow();
-            PopupWindowManager.MyInstance.vendorWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
         }
 
         public override void CallMiniMapStatusUpdateHandler() {

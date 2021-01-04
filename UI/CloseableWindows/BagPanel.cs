@@ -7,8 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class BagPanel : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         [SerializeField]
         protected GameObject slotPrefab;
 

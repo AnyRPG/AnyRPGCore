@@ -18,7 +18,7 @@ namespace AnyRPG {
         public QuestGiverProps Props { get => questGiverProps; set => questGiverProps = value; }
 
         public override bool Use() {
-            //Debug.Log("QuestStartItem.Use()");
+            Debug.Log(DisplayName + ".QuestStartItem.Use()");
             // base is currently empty, so doesn't matter if we call it without checking anything
             bool returnValue = base.Use();
             if (returnValue == false) {
@@ -28,15 +28,14 @@ namespace AnyRPG {
                 if (QuestLog.MyInstance.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
                     MessageFeedManager.MyInstance.WriteMessage("You are already on that quest");
                 } else {
-                    //Debug.Log("QuestStartItem.Use(): showing quests");
+                    Debug.Log(DisplayName + ".QuestStartItem.Use(): showing quests");
                     //Debug.Log("QuestStartItem.Use(): opening questgiver window");
                     if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
                         // safety to prevent deletion
                         return false;
                     }
-                    QuestGiverUI.MyInstance.MyQuestGiver = this as IQuestGiver;
                     OpenQuestGiverWindow();
-                    QuestGiverUI.MyInstance.ShowDescription((this as IQuestGiver).Props.Quests[0].MyQuest);
+                    QuestGiverUI.MyInstance.ShowDescription(Props.Quests[0].MyQuest, this);
                 }
             }
             return returnValue;
@@ -78,12 +77,12 @@ namespace AnyRPG {
         }
 
         public void HandleAcceptQuest() {
-            //Debug.Log("QuestStartItem.HandleAcceptQuest()");
+            Debug.Log(DisplayName + ".QuestStartItem.HandleAcceptQuest()");
             Remove();
         }
 
         public void HandleCompleteQuest() {
-            //Debug.Log("QuestStartItem.HandleAcceptQuest()");
+            Debug.Log(DisplayName + ".QuestStartItem.HandleCompleteQuest()");
             Remove();
         }
 
@@ -94,7 +93,7 @@ namespace AnyRPG {
         }
 
         public void OpenQuestGiverWindow() {
-            //Debug.Log(gameObject.name + ".QuestStartItem.OpenQuestGiverWindow()");
+            Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
             if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
@@ -103,6 +102,7 @@ namespace AnyRPG {
         }
 
         public void UpdateQuestStatus() {
+            Debug.Log(DisplayName + ".QuestStartItem.UpdateQuestStatus()");
             // do nothing because we don't have an indicator over our head or a minimap icon
         }
 

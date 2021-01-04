@@ -27,8 +27,6 @@ namespace AnyRPG {
         }
         #endregion
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         [SerializeField]
         private GameObject abandonButton = null;
 
@@ -168,8 +166,6 @@ namespace AnyRPG {
             //Debug.Log("QuestLogUI.OnOpenWindow()");
 
             base.ReceiveOpenWindowNotification();
-
-            OnOpenWindow(this);
 
             ShowQuestsCommon();
         }

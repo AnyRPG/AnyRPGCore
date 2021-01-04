@@ -25,10 +25,10 @@ namespace AnyRPG {
         public void CleanupWindowEventSubscriptions() {
             if (PopupWindowManager.MyInstance != null
                 && PopupWindowManager.MyInstance.factionChangeWindow != null
-                && PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents != null
-                && (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+                && PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents != null
+                && (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -52,9 +52,9 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source);
-            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
-            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (PopupWindowManager.MyInstance.factionChangeWindow.MyCloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
+            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }

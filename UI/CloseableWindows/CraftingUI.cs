@@ -79,8 +79,6 @@ namespace AnyRPG {
 
         private Recipe currentRecipe = null;
 
-        public override event System.Action<ICloseableWindowContents> OnOpenWindow = delegate { };
-
         public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
         public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
 
@@ -252,7 +250,6 @@ namespace AnyRPG {
             craftingQueue.Clear();
 
             ClearDescription();
-            OnOpenWindow(this);
             UpdateCraftAmountArea();
             PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
 

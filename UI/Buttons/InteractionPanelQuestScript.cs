@@ -36,23 +36,10 @@ namespace AnyRPG {
 
         public QuestGiverComponent MyQuestGiver { get => questGiver; set => questGiver = value; }
 
-        public void InitWindow(ICloseableWindowContents questGiverUI) {
-            //Debug.Log(gameObject.name + ".QuestGiver.InitWindow()");
-            PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-            (questGiverUI as QuestGiverUI).ShowQuests(questGiver);
-            QuestGiverUI.MyInstance.ShowDescription(MyQuest);
-
-        }
-
         public void Select() {
-            //Debug.Log("InteractionPanelQuestScript.Select()");
-            QuestGiverUI.MyInstance.MyQuestGiver = questGiver;
-            //PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler -= InitWindow;
+            Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
             if (MyQuest == null) {
-                //Debug.Log("InteractionPanelQuestScript.Select(): MYQUEST IS NULL!");
                 return;
-            } else {
-                //Debug.Log("InteractionPanelQuestScript.Select(): MYQUEST: " + MyQuest.MyName);
             }
 
             if (MyQuest.MyHasOpeningDialog == true && MyQuest.MyOpeningDialog != null && MyQuest.MyOpeningDialog.TurnedIn == false) {
@@ -60,22 +47,10 @@ namespace AnyRPG {
                 QuestGiverUI.MyInstance.ShowDescription(MyQuest);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
-                //PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
-                //(PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents as QuestGiverUI).ShowQuests(questGiver);
-                //PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
-                //QuestGiverUI.MyInstance.ShowDescription(MyQuest);
                 PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
-
+                QuestGiverUI.MyInstance.ShowDescription(MyQuest, questGiver);
             }
 
-            /*
-            if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
-                //Debug.Log(source + " interacting with " + gameObject.name);
-                PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
-            }
-            */
         }
 
         public void DeSelect() {

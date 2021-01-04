@@ -16,11 +16,7 @@ namespace AnyRPG {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
-        }
-
-        public void InitWindow(ICloseableWindowContents skillTrainerUI) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.InitWindow()");
-            (skillTrainerUI as SkillTrainerUI).ShowSkills(this);
+            SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public override bool Interact(CharacterUnit source) {
@@ -29,10 +25,8 @@ namespace AnyRPG {
             if (!PopupWindowManager.MyInstance.skillTrainerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //vendorWindow.MyVendorUI.CreatePages(items);
-                PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow += InitWindow;
-                PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow += CleanupEventSubscriptions;
-                SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
                 PopupWindowManager.MyInstance.skillTrainerWindow.OpenWindow();
+                (PopupWindowManager.MyInstance.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
                 return true;
             }
             return false;
@@ -45,23 +39,10 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.skillTrainerWindow.CloseWindow();
         }
 
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions(windowContents)");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.skillTrainerWindow != null && PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnOpenWindow -= InitWindow;
-                PopupWindowManager.MyInstance.skillTrainerWindow.MyCloseableWindowContents.OnCloseWindow -= CleanupEventSubscriptions;
-                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
-            }
-        }
-
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+            SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
         }
 
         public void HandleSkillListChanged(Skill skill) {

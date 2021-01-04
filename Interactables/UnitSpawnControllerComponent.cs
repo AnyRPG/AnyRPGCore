@@ -21,9 +21,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.unitSpawnWindow != null && SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents != null) {
-                (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.unitSpawnWindow != null && SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents != null) {
+                (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
+                (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -34,11 +34,11 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             base.Interact(source);
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
             SystemWindowManager.MyInstance.unitSpawnWindow.OpenWindow();
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
-            (SystemWindowManager.MyInstance.unitSpawnWindow.MyCloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
+            (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
 

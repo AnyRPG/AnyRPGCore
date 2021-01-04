@@ -261,7 +261,7 @@ namespace AnyRPG {
                         bagNode.MyBagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.MyBagButton = (PopupWindowManager.MyInstance.bankWindow.MyCloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.MyBagButton = (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.MyBagButton != null) {
                         bagNode.MyBagButton.MyBagNode = bagNode;
@@ -331,7 +331,7 @@ namespace AnyRPG {
                 } else {
                     bagNode.MyBagWindow.InitalizeWindowContents(bagPrefab, bag.DisplayName);
                 }
-                bagNode.MyBagPanel = bagNode.MyBagWindow.MyCloseableWindowContents as BagPanel;
+                bagNode.MyBagPanel = bagNode.MyBagWindow.CloseableWindowContents as BagPanel;
                 if (bagNode.MyBagPanel != null) {
                     bagNode.MyBagPanel.AddSlots(bag.MySlots);
                     bag.MyBagNode = bagNode;

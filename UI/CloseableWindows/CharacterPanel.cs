@@ -45,7 +45,6 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public override event Action<ICloseableWindowContents> OnOpenWindow = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         public CharacterButton MySelectedButton { get; set; }
