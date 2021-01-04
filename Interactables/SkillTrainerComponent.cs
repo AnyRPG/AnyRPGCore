@@ -73,15 +73,16 @@ namespace AnyRPG {
             return optionCount;
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
-            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck)) ? true : false);
+            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck, factionValue)) ? true : false);
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
             return returnValue;
         }
 
         public override bool CanShowMiniMapIcon() {
-            return CanInteract();
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            return CanInteract(false, false, relationValue);
         }
 
         public override void CallMiniMapStatusUpdateHandler() {

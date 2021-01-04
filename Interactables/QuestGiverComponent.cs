@@ -45,12 +45,12 @@ namespace AnyRPG {
             base.CleanupEventSubscriptions();
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
             if (Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count == 0) {
                 return false;
             }
-            return base.CanInteract(processRangeCheck, passedRangeCheck);
+            return base.CanInteract(processRangeCheck, passedRangeCheck, factionValue);
 
         }
 
@@ -174,7 +174,8 @@ namespace AnyRPG {
                 return string.Empty;
             }
 
-            if (CanInteract() == false) {
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            if (CanInteract(false, false, relationValue) == false) {
                 //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
             }

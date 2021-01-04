@@ -73,13 +73,17 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
+        public override bool ProcessFactionValue(float factionValue) {
+            return (factionValue <= -1f ? true : false);
+        }
+
         /// <summary>
         /// The default interaction on any character is to be attacked.  Return true if the relationship is less than 0.
         /// </summary>
         /// <param name="targetCharacter"></param>
         /// <returns></returns>
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
-            if (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, BaseCharacter) <= -1 && baseCharacter.CharacterStats.IsAlive == true) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+            if (ProcessFactionValue(factionValue) == true && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }

@@ -98,8 +98,15 @@ namespace AnyRPG {
             SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
         }
 
-        public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+        public virtual bool ProcessFactionValue(float factionValue) {
+            return (factionValue >= 0f ? true : false);
+        }
+
+        public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             if (processRangeCheck == true && passedRangeCheck == false) {
+                return false;
+            }
+            if (ProcessFactionValue(factionValue) == false) {
                 return false;
             }
             return MyPrerequisitesMet;

@@ -95,12 +95,15 @@ namespace AnyRPG {
                     return;
                 }
             }
-            int currentInteractableCount = GetCurrentInteractables().Count;
+
+            List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
+
+            int currentInteractableCount = currentInteractables.Count;
             //Debug.Log(gameObject.name + ".Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
 
             // determine if one of our current interactables is a questgiver
             bool questGiverCurrent = false;
-            foreach (InteractableOptionComponent interactableOption in GetCurrentInteractables()) {
+            foreach (InteractableOptionComponent interactableOption in currentInteractables) {
                 if (interactableOption is QuestGiverComponent) {
                     questGiverCurrent = true;
                 }
@@ -115,10 +118,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
-                    if (GetCurrentInteractables()[0].InteractableOptionProps.NamePlateImage != null) {
+                    if (currentInteractables[0].InteractableOptionProps.NamePlateImage != null) {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = GetCurrentInteractables()[0].InteractableOptionProps.NamePlateImage;
+                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = currentInteractables[0].InteractableOptionProps.NamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }

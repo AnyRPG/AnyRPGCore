@@ -500,6 +500,8 @@ namespace AnyRPG {
             if (notInteractable == true) {
                 return false;
             }
+
+            // perform range check
             bool passedRangeCheck = false;
             if (processRangeCheck) {
                 Collider[] colliders = new Collider[0];
@@ -522,15 +524,17 @@ namespace AnyRPG {
                 }
             }
 
+            float factionValue = PerformFactionCheck(source.BaseCharacter);
+
             // get a list of valid interactables to determine if there is an action we can treat as default
             //List<InteractableOptionComponent> validInteractables = GetValidInteractables(processRangeCheck, passedRangeCheck);
             //List<InteractableOptionComponent> validInteractables = GetValidInteractables(source);
-            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables();
+            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables(source.BaseCharacter, true, factionValue);
             List<InteractableOptionComponent> finalInteractables = new List<InteractableOptionComponent>();
             if (processRangeCheck) {
                 foreach (InteractableOptionComponent validInteractable in validInteractables) {
                     //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.name + "): valid interactable name: " + validInteractable);
-                    if (validInteractable.CanInteract(processRangeCheck, passedRangeCheck)) {
+                    if (validInteractable.CanInteract(processRangeCheck, passedRangeCheck, factionValue)) {
                         finalInteractables.Add(validInteractable);
                     }
                 }
@@ -611,8 +615,22 @@ namespace AnyRPG {
             return validInteractables;
         }
 
-        public List<InteractableOptionComponent> GetCurrentInteractables() {
+        public virtual float PerformFactionCheck(BaseCharacter sourceCharacter) {
+            // interactables allow everything to interact by default.
+            // characters will override this
+            return 0;
+        }
+
+        public List<InteractableOptionComponent> GetCurrentInteractables(BaseCharacter sourceCharacter = null, bool overrideFactionValue = false, float factionValue = 0f) {
             //Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables()");
+
+            if (sourceCharacter == null) {
+                sourceCharacter = PlayerManager.MyInstance.ActiveCharacter;
+            }
+
+            if (overrideFactionValue == false) {
+                factionValue = PerformFactionCheck(sourceCharacter);
+            }
 
             if (notInteractable == true) {
                 return null;
@@ -625,7 +643,7 @@ namespace AnyRPG {
 
             List<InteractableOptionComponent> currentInteractables = new List<InteractableOptionComponent>();
             foreach (InteractableOptionComponent _interactable in interactables) {
-                if (_interactable.CanInteract()) {
+                if (_interactable.CanInteract(false, false, factionValue)) {
                     //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
                     currentInteractables.Add(_interactable);
                 } else {

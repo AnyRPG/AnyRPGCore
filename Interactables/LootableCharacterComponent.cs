@@ -183,9 +183,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
-            if (base.CanInteract(processRangeCheck, passedRangeCheck) == false || GetCurrentOptionCount() == 0) {
+            if (base.CanInteract(processRangeCheck, passedRangeCheck, factionValue) == false || GetCurrentOptionCount() == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }

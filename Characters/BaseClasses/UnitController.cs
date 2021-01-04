@@ -518,6 +518,11 @@ namespace AnyRPG {
             RemoveControlEffects();
         }
 
+        // for interactions
+        public override float PerformFactionCheck(BaseCharacter sourceCharacter) {
+            return Faction.RelationWith(sourceCharacter, characterUnit.BaseCharacter);
+        }
+
         public override void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
 
