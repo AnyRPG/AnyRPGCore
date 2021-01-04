@@ -37,14 +37,14 @@ namespace AnyRPG {
         public QuestGiverComponent MyQuestGiver { get => questGiver; set => questGiver = value; }
 
         public void Select() {
-            Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
+            //Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
             if (MyQuest == null) {
                 return;
             }
 
             if (MyQuest.MyHasOpeningDialog == true && MyQuest.MyOpeningDialog != null && MyQuest.MyOpeningDialog.TurnedIn == false) {
-                //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog");
-                QuestGiverUI.MyInstance.ShowDescription(MyQuest);
+                //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
+                QuestGiverUI.MyInstance.ShowDescription(MyQuest, questGiver);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
                 PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();

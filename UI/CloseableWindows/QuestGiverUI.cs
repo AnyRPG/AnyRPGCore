@@ -86,7 +86,7 @@ namespace AnyRPG {
         private Quest currentQuest = null;
 
         public QuestGiverQuestScript MySelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
-        public Interactable MyInteractable { get => interactable; set => interactable = value; }
+        //public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
         private void Start() {
             DeactivateButtons();
@@ -214,7 +214,7 @@ namespace AnyRPG {
 
         public void ShowQuests(IQuestGiver questGiver) {
             Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
-            this.questGiver = questGiver;
+            SetQuestGiver(questGiver);
             ShowQuestsCommon(this.questGiver);
         }
 
@@ -252,17 +252,21 @@ namespace AnyRPG {
 
         }
 
+        public void SetQuestGiver(IQuestGiver questGiver) {
+            if (questGiver != null) {
+                this.questGiver = questGiver;
+                interactable = questGiver.Interactable;
+            }
+        }
+
         public void ShowDescription(Quest quest, IQuestGiver questGiver = null) {
-            //Debug.Log("QuestGiverUI.ShowDescription()");
+            //Debug.Log("QuestGiverUI.ShowDescription(" + quest.DisplayName + ", " + (questGiver == null ? "null" : questGiver.ToString()) + ")");
 
             if (quest == null) {
                 //Debug.Log("QuestGiverUI.ShowDescription(): quest is null, doing nothing");
                 return;
             }
-            if (questGiver != null) {
-                this.questGiver = questGiver;
-            }
-
+            SetQuestGiver(questGiver);
             //currentQuestName = quest.MyName;
             currentQuest = quest;
 
@@ -387,7 +391,7 @@ namespace AnyRPG {
         }
 
         public void CompleteQuest() {
-            Debug.Log("QuestGiverUI.CompleteQuest()");
+            //Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!currentQuest.IsComplete) {
                 Debug.Log("QuestGiverUI.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
@@ -496,7 +500,7 @@ namespace AnyRPG {
             // do this last
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
             if (questGiver != null) {
-                Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is not null");
+                //Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is not null");
                 // MUST BE DONE IN CASE WINDOW WAS OPEN INBETWEEN SCENES BY ACCIDENT
                 //Debug.Log("QuestGiverUI.CompleteQuest() Updating questGiver queststatus");
                 questGiver.UpdateQuestStatus();

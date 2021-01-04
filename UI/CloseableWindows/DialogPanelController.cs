@@ -51,6 +51,7 @@ namespace AnyRPG {
         private int dialogIndex = 0;
 
         public void Setup(Quest quest, Interactable interactable) {
+            //Debug.Log("DialogPanelController.Setup(" + (quest == null ? "null" : quest.DisplayName) + ", " + (interactable == null ? "null" : interactable.DisplayName) + ")");
             ClearSettings();
             MyQuest = quest;
             MyInteractable = interactable;
@@ -59,6 +60,7 @@ namespace AnyRPG {
         }
 
         public void Setup(Dialog dialog, Interactable interactable) {
+            //Debug.Log("DialogPanelController.Setup(" + dialog.DisplayName + ", " + interactable.DisplayName + ")");
             ClearSettings();
             MyInteractable = interactable;
             MyDialog = dialog;
