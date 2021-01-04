@@ -42,7 +42,9 @@ namespace AnyRPG {
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
+            }
         }
 
         public void HandleSkillListChanged(Skill skill) {
