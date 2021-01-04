@@ -122,7 +122,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterFactionManager.RelationWith(" + faction.MyName + "): checking personal status dictionary and status effects to get special dispositions toward faction");
 
             List<FactionDisposition> usedDictionary = DispositionDictionary;
-            if (baseCharacter.UnitController.UnderControl == true) {
+            if (baseCharacter?.UnitController?.UnderControl == true) {
                 usedDictionary = baseCharacter.UnitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
             }
 

@@ -215,6 +215,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitController(" + unitController.gameObject.name + ")");
             this.unitController = unitController;
         }
 
