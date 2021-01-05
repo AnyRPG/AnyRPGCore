@@ -351,7 +351,7 @@ namespace AnyRPG {
         }
 
         public void AcceptQuest() {
-            Debug.Log("QuestGiverUI.AcceptQuest()");
+            //Debug.Log("QuestGiverUI.AcceptQuest()");
             if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
@@ -360,10 +360,10 @@ namespace AnyRPG {
 
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
-                    Debug.Log("QuestGiverUI.AcceptQuest() questgiver was not null");
+                    //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was not null");
                     questGiver.HandleAcceptQuest();
                 } else {
-                    Debug.Log("QuestGiverUI.AcceptQuest() questgiver was null");
+                    //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was null");
                 }
                 UpdateButtons(currentQuest);
                 if (interactable != null) {
