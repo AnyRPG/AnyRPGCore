@@ -580,7 +580,10 @@ namespace AnyRPG {
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
 
-
+            // do an early check for this just in case this is a third party controller unit with the avatar already on the unit, instead of on a second model
+            if (dynamicCharacterAvatar == null) {
+                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
+            }
 
         }
 

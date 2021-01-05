@@ -97,18 +97,21 @@ namespace AnyRPG {
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
-            if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar == null) {
-                Vector3 currentPlayerLocation = PlayerManager.MyInstance.ActiveUnitController.transform.position;
-                PlayerManager.MyInstance.DespawnPlayerUnit();
-                //PlayerManager.MyInstance.SetUMAPrefab();
-                PlayerManager.MyInstance.MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName);
-                PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
-                }
-
+            // testing : old if statement would cause a character that switched between 2 UMA profiles to not get unit profile properties set
+            // from the second profile.  Just go ahead and always despawn units if their appearance changes.
+            //if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar == null) {
+            Vector3 currentPlayerLocation = PlayerManager.MyInstance.ActiveUnitController.transform.position;
+            LevelManager.MyInstance.SpawnRotationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
+            PlayerManager.MyInstance.DespawnPlayerUnit();
+            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName);
+            PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
+            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
             }
-            SaveManager.MyInstance.LoadUMASettings();
+
+            //}
+            // testing this is not needed because subscribing to the player unit spawn already handles this through the playermanager
+            //SaveManager.MyInstance.LoadUMASettings();
             //ClosePanel();
 
             OnConfirmAction();
