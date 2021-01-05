@@ -116,6 +116,9 @@ namespace AnyRPG {
         }
 
         public override bool HasMiniMapText() {
+            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Preview || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.mount) {
+                return false;
+            }
             return true;
         }
 
