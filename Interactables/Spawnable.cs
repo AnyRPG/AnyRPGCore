@@ -187,7 +187,7 @@ namespace AnyRPG {
 
         public virtual bool CanSpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.CanSpawn()");
-            if (MyPrerequisitesMet) {
+            if (MyPrerequisitesMet && prefabProfile?.Prefab != null) {
                 return true;
             }
             return false;
@@ -210,7 +210,7 @@ namespace AnyRPG {
         public virtual void Spawn() {
             //Debug.Log(gameObject.name + ".Spawnable.Spawn()");
 
-            if (spawnReference == null && prefabProfile != null && prefabProfile.Prefab != null) {
+            if (spawnReference == null && prefabProfile?.Prefab != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
@@ -315,7 +315,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                        tmpPrerequisiteConditions.CleanupScriptableObjects(this);
                     }
                 }
             }

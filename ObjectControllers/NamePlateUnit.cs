@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         public void UpdateNamePlateImage() {
 
-            //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
+            Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
             if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.UnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
@@ -112,23 +112,24 @@ namespace AnyRPG {
 
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
-                NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(false);
+                Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage() set image inactive; currentInteractableCount: " + currentInteractableCount + "; questGiverCurrent: " + questGiverCurrent);
+                NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(false);
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
                     if (currentInteractables[0].InteractableOptionProps.NamePlateImage != null) {
-                        //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is not null");
-                        NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                        NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = currentInteractables[0].InteractableOptionProps.NamePlateImage;
+                        Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage(): Our count is 1 and image is not null");
+                        NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                        NamePlateController.NamePlate.GenericIndicatorImage.sprite = currentInteractables[0].InteractableOptionProps.NamePlateImage;
                     } else {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
-                    //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
-                    NamePlateController.NamePlate.MyGenericIndicatorImage.gameObject.SetActive(true);
-                    NamePlateController.NamePlate.MyGenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
+                    Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
+                    NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
                 }
             }
         }
@@ -159,16 +160,16 @@ namespace AnyRPG {
         public override void ProcessShowQuestIndicator(string indicatorText, QuestGiverComponent questGiverComponent) {
             base.ProcessShowQuestIndicator(indicatorText, questGiverComponent);
             if (NamePlateController != null && NamePlateController.NamePlate != null) {
-                NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(true);
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(true);
                 //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
-                questGiverComponent.SetIndicatorText(indicatorText, NamePlateController.NamePlate.MyQuestIndicator);
+                questGiverComponent.SetIndicatorText(indicatorText, NamePlateController.NamePlate.QuestIndicator);
             }
         }
 
         public override void ProcessHideQuestIndicator() {
             base.ProcessHideQuestIndicator();
             if (NamePlateController != null && NamePlateController.NamePlate != null) {
-                NamePlateController.NamePlate.MyQuestIndicatorBackground.SetActive(false);
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(false);
             }
         }
 
@@ -206,8 +207,9 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void OnEnable() {
+        public override void OnEnable() {
             // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            base.OnEnable();
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
             }

@@ -73,17 +73,17 @@ namespace AnyRPG {
         }
 
         public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
-            //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ")");
+            //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
             if (PlayerManager.MyInstance.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance.UnitController.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
             if (namePlateUnit.CharacterUnit != null && PlayerManager.MyInstance.UnitController != null) {
-                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
+                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
                 return GetFactionColor(PlayerManager.MyInstance.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
             } else {
-                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.MyDisplayName + ") : nameplate unit is NOT a character unit");
+                //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
 
             // finally, fallback on dispisition dictionaries and defaults

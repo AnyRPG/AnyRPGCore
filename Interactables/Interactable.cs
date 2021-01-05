@@ -359,6 +359,8 @@ namespace AnyRPG {
             }
             if (spawnReference == null && MyPrerequisitesMet == false) {
                 DisableInteraction();
+            } else {
+                EnableInteraction();
             }
 
             // give interaction panel a chance to update or close
@@ -645,7 +647,7 @@ namespace AnyRPG {
             List<InteractableOptionComponent> currentInteractables = new List<InteractableOptionComponent>();
             foreach (InteractableOptionComponent _interactable in interactables) {
                 if (_interactable.CanInteract(false, false, factionValue)) {
-                    //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): Adding valid interactable: " + _interactable.ToString());
+                    Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables(): Adding interactable: " + _interactable.ToString());
                     currentInteractables.Add(_interactable);
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString());
@@ -1019,15 +1021,36 @@ namespace AnyRPG {
             */
         }
 
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            foreach (InteractableOptionComponent interactable in interactables) {
+        public virtual void OnEnable() {
+            // NOTE : any interactable that gets disabled and then enabled will not have subscriptions to events from prerequisites on its options anymore
+            // this could be fixed if interactables were part of a pool by re-adding the Init() method to the interactable options or something similar
+            // currently the only interactables that get disabled and then re-enabled are the LunaMechs in the ManaSeal cutscene
+            // and they shouldn't require any specific interactable to be subscribed to anything since they just respond to cutscene timeline events
+            // and the objects that carry out those actions are permanent controllers, not interactable components
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
-                if (interactable != null) {
+                if (interactableOptionComponent != null) {
                     // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactable.Cleanup();
+                    interactableOptionComponent.Cleanup();
                 }
             }
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            /*
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
+                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
+                if (interactableOptionComponent != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    interactableOptionComponent.Cleanup();
+                }
+            }
+            */
             OnInteractableDestroy();
         }
 

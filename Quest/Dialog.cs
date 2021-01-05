@@ -136,7 +136,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                        tmpPrerequisiteConditions.CleanupScriptableObjects(this);
                     }
                 }
             }

@@ -700,7 +700,7 @@ namespace AnyRPG {
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.CleanupScriptableObjects();
+                conditions.CleanupScriptableObjects(this);
             }
         }
 

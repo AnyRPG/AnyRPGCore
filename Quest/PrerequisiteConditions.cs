@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -42,7 +43,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<FactionPrerequisite> factionPrerequisites = new List<FactionPrerequisite>();
 
-        private IPrerequisiteOwner prerequisiteOwner = null;
+        //private IPrerequisiteOwner prerequisiteOwner = null;
+        private List<IPrerequisiteOwner> prerequisiteOwners = new List<IPrerequisiteOwner>();
+
+        List<List<IPrerequisite>> allPrerequisites = new List<List<IPrerequisite>>();
 
         public bool MyReverseMatch {
             get => reverseMatch;
@@ -56,16 +60,37 @@ namespace AnyRPG {
             }
             */
             bool oldResult = lastResult;
-            if (IsMet() && prerequisiteOwner != null) {
+            if (IsMet()) {
                 // do callback to the owning object
                 //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates()");
-                prerequisiteOwner.HandlePrerequisiteUpdates();
+                SendPrerequisiteUpdates();
             } else {
                 if (oldResult != lastResult) {
                     //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): ismet: " + IsMet() + "; prerequisiteOwner: " + (prerequisiteOwner == null ? "null" : "set") + "; RESULT CHANGED!");
-                    prerequisiteOwner.HandlePrerequisiteUpdates();
+                    SendPrerequisiteUpdates();
                 }
                 //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): ismet: " + IsMet() + "; prerequisiteOwner: " + (prerequisiteOwner == null ? "null" : "set"));
+            }
+        }
+
+        private void SendPrerequisiteUpdates() {
+            foreach (IPrerequisiteOwner prerequisiteOwner in prerequisiteOwners) {
+                if (prerequisiteOwner != null) {
+                    prerequisiteOwner.HandlePrerequisiteUpdates();
+                }
+            }
+        }
+
+        private void CreateAllList() {
+            if (allPrerequisites.Count == 0) {
+                allPrerequisites.Add(levelPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(characterClassPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(tradeSkillPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(abilityPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(questPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(dialogPrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(visitZonePrerequisites.Cast<IPrerequisite>().ToList());
+                allPrerequisites.Add(factionPrerequisites.Cast<IPrerequisite>().ToList());
             }
         }
 
@@ -76,6 +101,28 @@ namespace AnyRPG {
             int tempCount = 0;
             int falseCount = 0;
 
+            foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
+                tempCount = 0;
+                foreach (IPrerequisite prerequisite in prerequisiteList) {
+                    prerequisiteCount++;
+                    bool checkResult = prerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                    if (requireAny && checkResult == true) {
+                        returnValue = true;
+                        break;
+                    }
+                    if (!checkResult && requireAny == false) {
+                        falseCount++;
+                        break;
+                    } else if (checkResult && requireAny == false) {
+                        tempCount++;
+                    }
+                }
+                if (tempCount > 0 && tempCount == prerequisiteList.Count && requireAny == false) {
+                    returnValue = true;
+                }
+            }
+
+            /*
             foreach (LevelPrerequisite levelPrerequisite in levelPrerequisites) {
                 prerequisiteCount++;
                 bool checkResult = levelPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
@@ -230,6 +277,7 @@ namespace AnyRPG {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking faction : setting return value true");
                 returnValue = true;
             }
+            */
             if (falseCount > 0) {
                 returnValue = false;
             }
@@ -245,6 +293,12 @@ namespace AnyRPG {
 
         // force prerequisite status update outside normal event notification
         public void UpdatePrerequisites(bool notify = true) {
+            foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
+                foreach (IPrerequisite prerequisite in prerequisiteList) {
+                    prerequisite.UpdateStatus(notify);
+                }
+            }
+            /*
             foreach (IPrerequisite prerequisite in levelPrerequisites) {
                 prerequisite.UpdateStatus(notify);
             }
@@ -269,11 +323,25 @@ namespace AnyRPG {
             foreach (IPrerequisite prerequisite in factionPrerequisites) {
                 prerequisite.UpdateStatus(notify);
             }
+            */
         }
 
         public void SetupScriptableObjects(IPrerequisiteOwner prerequisiteOwner) {
-            this.prerequisiteOwner = prerequisiteOwner;
+            CreateAllList();
 
+            if (prerequisiteOwners.Count == 0) {
+                foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
+                    foreach (IPrerequisite prerequisite in prerequisiteList) {
+                        prerequisite.SetupScriptableObjects();
+                        prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
+                    }
+                }
+            }
+
+            prerequisiteOwners.Add(prerequisiteOwner);
+            //this.prerequisiteOwner = prerequisiteOwner;
+
+            /*
             foreach (IPrerequisite prerequisite in levelPrerequisites) {
                 prerequisite.SetupScriptableObjects();
                 prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
@@ -306,6 +374,7 @@ namespace AnyRPG {
                 prerequisite.SetupScriptableObjects();
                 prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
             }
+            */
             /*
             foreach (FactionDisposition prerequisite in factionDispositionPrerequisites) {
                 prerequisite.SetupScriptableObjects();
@@ -313,7 +382,20 @@ namespace AnyRPG {
             */
         }
 
-        public void CleanupScriptableObjects() {
+        public void CleanupScriptableObjects(IPrerequisiteOwner prerequisiteOwner) {
+
+            prerequisiteOwners.Remove(prerequisiteOwner);
+
+            if (prerequisiteOwners.Count == 0) {
+                foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
+                    foreach (IPrerequisite prerequisite in prerequisiteList) {
+                        prerequisite.CleanupScriptableObjects();
+                        prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
+                    }
+                }
+            }
+
+            /*
             foreach (IPrerequisite prerequisite in levelPrerequisites) {
                 prerequisite.CleanupScriptableObjects();
                 prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
@@ -342,6 +424,7 @@ namespace AnyRPG {
                 prerequisite.CleanupScriptableObjects();
                 prerequisite.OnStatusUpdated -= HandlePrerequisiteUpdates;
             }
+            */
         }
 
     }

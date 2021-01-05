@@ -90,13 +90,15 @@ namespace AnyRPG {
                 interactable.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
                 return namePlate;
             }
-            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.MyDisplayName + "): key already existed.  returning null!!!");
+            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.DisplayName + "): key already existed.  returning null!!!");
             return null;
         }
 
         public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
-            //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.MyDisplayName + ")");
-            namePlateUnit.NamePlateController.NamePlateNeedsRemoval -= RemoveNamePlate;
+            //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
+            if (namePlateUnit?.NamePlateController != null) {
+                namePlateUnit.NamePlateController.NamePlateNeedsRemoval -= RemoveNamePlate;
+            }
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
                     Destroy(namePlates[namePlateUnit].gameObject);
@@ -107,7 +109,7 @@ namespace AnyRPG {
 
         public bool MouseOverNamePlate() {
             foreach (NamePlateController namePlateController in namePlates.Values) {
-                if (namePlateController.MyNamePlateCanvasController.MouseOverNamePlate() == true) {
+                if (namePlateController.NamePlateCanvasController.MouseOverNamePlate() == true) {
                     return true;
                 }
             }

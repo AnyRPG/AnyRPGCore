@@ -110,16 +110,25 @@ namespace AnyRPG {
         }
 
         public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+            Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.CanInteract(" + processRangeCheck + ", " + passedRangeCheck + ", " + factionValue + ")");
             if (processRangeCheck == true && passedRangeCheck == false) {
+                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): range check failed");
                 return false;
             }
             if (ProcessFactionValue(factionValue) == false) {
+                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): faction check failed");
                 return false;
             }
             if (ProcessCombatOnly() == false) {
+                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): combatOnly check failed");
                 return false;
             }
-            return MyPrerequisitesMet;
+
+            bool returnValue = MyPrerequisitesMet;
+            if (returnValue == false) {
+                Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.Interact(): prerequisites not met");
+            }
+            return returnValue;
         }
 
         public virtual bool Interact(CharacterUnit source) {
@@ -219,7 +228,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            //Debug.Log(interactable.gameObject.name + ".InteractableOption.HandlePrerequisiteUpdates()");
+            Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOption.HandlePrerequisiteUpdates()");
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
             }
@@ -247,7 +256,7 @@ namespace AnyRPG {
             if (interactableOptionProps.PrerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.CleanupScriptableObjects();
+                        tmpPrerequisiteConditions.CleanupScriptableObjects(this);
                     }
                 }
             }
