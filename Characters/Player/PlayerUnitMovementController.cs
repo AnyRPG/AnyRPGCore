@@ -22,6 +22,7 @@ namespace AnyRPG {
 
         [HideInInspector] public bool useMeshNav = false;
         [HideInInspector] public Vector3 lookDirection { get; private set; }
+        public CharacterController CharacterController { get => characterController; }
 
         //Jumping.
         [HideInInspector] public bool canJump;
@@ -266,7 +267,7 @@ namespace AnyRPG {
                 // note: disabled this to test if it was causing issues with moving platforms
                 // note : re-enabled to see if it was not preventing launching up hills
                 currentMoveVelocity = new Vector3(0, 0, 0);
-                
+
                 // disable gravity while this close to the ground so we don't slide down slight inclines
                 // freezing y position was causing character to not get lifted by bridges
                 PlayerManager.MyInstance.ActiveUnitController.FreezePositionXZ();
@@ -723,7 +724,7 @@ namespace AnyRPG {
             Collider[] hitColliders = Physics.OverlapBox(PlayerManager.MyInstance.ActiveUnitController.transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
             if (hitColliders.Length > 0) {
                 //foreach (Collider collider in hitColliders) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from overlapbox (" + maintainingGroundExtents + "): " + collider.gameObject.name);
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from overlapbox (" + maintainingGroundExtents + "): " + collider.gameObject.name);
                 //}
                 tempGrounded = true;
             }

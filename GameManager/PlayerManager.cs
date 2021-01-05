@@ -415,7 +415,21 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            playerUnitMovementController.Init();
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+                playerUnitMovementController.Init();
+            } else {
+                DisableMovementControllers();
+            }
+        }
+
+        public void DisableMovementControllers() {
+            playerUnitMovementController.enabled = false;
+            playerUnitMovementController.CharacterController.enabled = false;
+        }
+
+        public void EnableMovementControllers() {
+            playerUnitMovementController.enabled = true;
+            playerUnitMovementController.CharacterController.enabled = true;
         }
 
         public void SubscribeToModelReady() {

@@ -358,7 +358,7 @@ namespace AnyRPG {
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
-            
+
             return false;
             //}
             //return false;
@@ -740,9 +740,15 @@ namespace AnyRPG {
 
             CameraManager.MyInstance.SwitchToMainCamera();
             CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+                PlayerManager.MyInstance.EnableMovementControllers();
+            }
         }
 
         public void HandleDeActivateMountedState() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+                PlayerManager.MyInstance.DisableMovementControllers();
+            }
             PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);
             CameraManager.MyInstance.ActivateMainCamera();
             CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
