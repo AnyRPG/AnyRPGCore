@@ -47,7 +47,12 @@ namespace AnyRPG {
             UpdateNamePlates();
         }
 
-        
+        public void LateUpdate() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true) {
+                UpdateNamePlates();
+            }
+        }
+
         private void UpdateNamePlates() {
             foreach (NamePlateController namePlateController in namePlates.Values) {
                 namePlateController.UpdatePosition();
@@ -76,7 +81,7 @@ namespace AnyRPG {
         }
 
         public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.UnitDisplayName + ")");
+            //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
             NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
@@ -84,7 +89,7 @@ namespace AnyRPG {
         }
 
         public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.UnitDisplayName + ")");
+            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.DisplayName + ")");
             if (namePlates.ContainsKey(interactable) == false) {
                 NamePlateController namePlate = SpawnNamePlate(interactable, usePositionOffset);
                 interactable.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
