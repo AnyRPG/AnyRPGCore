@@ -80,6 +80,7 @@ namespace AnyRPG {
             //GameObject _gameObject = Instantiate(combatTextPrefab, target.transform.position, Quaternion.identity, combatTextCanvas.transform);
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
+                combatTextController.Image.sprite = null;
                 //Debug.Log("About to Set MainTarget on combat text");
                 combatTextController.MainTarget = target;
                 if (combatType == CombatTextType.miss) {
