@@ -185,7 +185,14 @@ namespace AnyRPG {
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
             //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
-            if (base.CanInteract(processRangeCheck, passedRangeCheck, factionValue) == false || GetCurrentOptionCount() == 0) {
+
+            // you can't loot friendly characters
+            if (factionValue > -1f ) {
+                return false;
+            }
+            // testing, this could include a a range check, and we want that to be processed, so send in a fake faction value
+            //if (base.CanInteract(processRangeCheck, passedRangeCheck, factionValue) == false || GetCurrentOptionCount() == 0) {
+            if (base.CanInteract(processRangeCheck, passedRangeCheck, 0f) == false || GetCurrentOptionCount() == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }

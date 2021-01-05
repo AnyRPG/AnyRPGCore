@@ -110,23 +110,23 @@ namespace AnyRPG {
         }
 
         public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
-            Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.CanInteract(" + processRangeCheck + ", " + passedRangeCheck + ", " + factionValue + ")");
+            //Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.CanInteract(" + processRangeCheck + ", " + passedRangeCheck + ", " + factionValue + ")");
             if (processRangeCheck == true && passedRangeCheck == false) {
-                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): range check failed");
+                //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): range check failed");
                 return false;
             }
             if (ProcessFactionValue(factionValue) == false) {
-                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): faction check failed");
+                //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): faction check failed");
                 return false;
             }
             if (ProcessCombatOnly() == false) {
-                Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): combatOnly check failed");
+                //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): combatOnly check failed");
                 return false;
             }
 
             bool returnValue = MyPrerequisitesMet;
             if (returnValue == false) {
-                Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.Interact(): prerequisites not met");
+                //Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.Interact(): prerequisites not met");
             }
             return returnValue;
         }

@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            Debug.Log(interactable.gameObject.name + ".NameChangeInteractable.GetCurrentOptionCount(): returning " + GetValidOptionCount());
+            //Debug.Log(interactable.gameObject.name + ".NameChangeInteractable.GetCurrentOptionCount(): returning " + GetValidOptionCount());
             return GetValidOptionCount();
         }
 

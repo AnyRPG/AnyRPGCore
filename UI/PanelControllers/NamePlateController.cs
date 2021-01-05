@@ -131,7 +131,7 @@ namespace AnyRPG {
         }
 
         private void InitializeLocalComponents() {
-            Debug.Log(unitNamePlateController.UnitDisplayName + "NamePlateController.InitializeLocalComponents()");
+            //Debug.Log(unitNamePlateController.UnitDisplayName + "NamePlateController.InitializeLocalComponents()");
             if (localComponentsInitialized == true) {
                 //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): already done.  exiting!");
 

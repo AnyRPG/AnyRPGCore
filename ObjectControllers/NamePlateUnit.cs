@@ -112,7 +112,7 @@ namespace AnyRPG {
 
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
-                Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage() set image inactive; currentInteractableCount: " + currentInteractableCount + "; questGiverCurrent: " + questGiverCurrent);
+                //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage() set image inactive; currentInteractableCount: " + currentInteractableCount + "; questGiverCurrent: " + questGiverCurrent);
                 NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(false);
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
@@ -127,7 +127,7 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
-                    Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
+                    //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
                     NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
                 }

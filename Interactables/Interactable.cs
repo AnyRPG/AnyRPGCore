@@ -647,7 +647,7 @@ namespace AnyRPG {
             List<InteractableOptionComponent> currentInteractables = new List<InteractableOptionComponent>();
             foreach (InteractableOptionComponent _interactable in interactables) {
                 if (_interactable.CanInteract(false, false, factionValue)) {
-                    Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables(): Adding interactable: " + _interactable.ToString());
+                    //Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables(): Adding interactable: " + _interactable.ToString());
                     currentInteractables.Add(_interactable);
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): invalid interactable: " + _interactable.ToString());
