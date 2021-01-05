@@ -36,6 +36,9 @@ namespace AnyRPG {
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
             SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
             if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
+                SaveManager.MyInstance.PerformInventorySetup();
+                SaveManager.MyInstance.SaveEquippedBagData(NewGamePanel.MyInstance.SaveData);
+                SaveManager.MyInstance.SaveInventorySlotData(NewGamePanel.MyInstance.SaveData);
                 SaveManager.MyInstance.LoadGame(NewGamePanel.MyInstance.SaveData);
             } else {
                 SaveManager.MyInstance.TryNewGame();

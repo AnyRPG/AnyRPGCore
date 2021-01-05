@@ -1073,17 +1073,21 @@ namespace AnyRPG {
             // do this so a new game doesn't reset window positions every time
             LoadWindowPositions();
 
-            // initialize inventory so there is a place to put the inventory
-            InventoryManager.MyInstance.PerformSetupActivities();
-
-            InventoryManager.MyInstance.CreateDefaultBankBag();
-            InventoryManager.MyInstance.CreateDefaultBackpack();
+            PerformInventorySetup();
 
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
             SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
 
             // load default scene
             LevelManager.MyInstance.LoadFirstScene();
+        }
+
+        public void PerformInventorySetup() {
+            // initialize inventory so there is a place to put the inventory
+            InventoryManager.MyInstance.PerformSetupActivities();
+
+            InventoryManager.MyInstance.CreateDefaultBankBag();
+            InventoryManager.MyInstance.CreateDefaultBackpack();
         }
 
         public void LoadGame() {
