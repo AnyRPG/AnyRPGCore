@@ -337,6 +337,25 @@ namespace AnyRPG {
                 rigidBody.constraints = RigidbodyConstraints.FreezeAll;
                 rigidBody.useGravity = false;
             }
+
+            MonoBehaviour[] monoBehaviours = GetComponents<MonoBehaviour>();
+
+            // disable third party components
+            foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
+                bool safe = false;
+                if ((monoBehaviour as BaseCharacter) is BaseCharacter) {
+                    safe = true;
+                }
+                if ((monoBehaviour as UnitController) is UnitController) {
+                    safe = true;
+                }
+                if ((monoBehaviour as DynamicCharacterAvatar) is DynamicCharacterAvatar) {
+                    safe = true;
+                }
+                if (!safe) {
+                    monoBehaviour.enabled = false;
+                }
+            }
         }
 
         /// <summary>
@@ -492,10 +511,13 @@ namespace AnyRPG {
                 SetUnitProfile(UnitProfile.GetUnitProfileReference(characterUnit.BaseCharacter.UnitProfileName), UnitControllerMode.AI);
                 // setUnitProfile will have spawned a model if it contained one.  If it did not,
                 // look for an animator.  If one is found, the model is already attached to this unit.
-                if (unitModel == null) {
-                    ConfigureAnimator();
-                }
             }
+
+            // no model was spawned.  try to find an animator or UMA on this unit
+            if (unitModel == null) {
+                ConfigureAnimator();
+            }
+
 
             base.Start();
             //Debug.Log(gameObject.name + ".UnitController.Start()");
@@ -515,6 +537,7 @@ namespace AnyRPG {
         }
 
         public override void InitializeNamePlateController() {
+            //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
             // mounts and preview units shouldn't have a namePlateController active
             if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
                 base.InitializeNamePlateController();
@@ -538,7 +561,7 @@ namespace AnyRPG {
             if (componentReferencesInitialized == true) {
                 return;
             }
-            
+
             // if base character exists, create a character unit and link them
             // do this before the base because the base will create things that need to query the character
             BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
@@ -557,7 +580,7 @@ namespace AnyRPG {
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
 
-            
+
 
         }
 
@@ -650,6 +673,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureAnimator(GameObject unitModel = null) {
+            //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator()");
 
             if (unitModel != null) {
                 this.unitModel = unitModel;
@@ -672,8 +696,15 @@ namespace AnyRPG {
         }
 
         public void ConfigureUnitModel() {
-            if (unitModel != null) {
+            //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
+
+            if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+            }
+            if (dynamicCharacterAvatar == null) {
+                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
+            }
+            if (unitModel != null || dynamicCharacterAvatar != null) {
                 if (dynamicCharacterAvatar != null) {
                     dynamicCharacterAvatar.Initialize();
                     SubscribeToUMACreate();
