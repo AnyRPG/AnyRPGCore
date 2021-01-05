@@ -211,7 +211,6 @@ namespace AnyRPG {
             SetOverrideController(overrideController, runUpdate);
         }
 
-
         public void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
@@ -1402,7 +1401,7 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            animator.SetBool("Strafing", varValue);
+            SetBool("Strafing", varValue);
         }
 
         public void SetMoving(bool varValue) {
@@ -1410,7 +1409,7 @@ namespace AnyRPG {
                 return;
             }
             if (ParameterExists("Moving")) {
-                animator.SetBool("Moving", varValue);
+                SetBool("Moving", varValue);
             }
             if (varValue) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetMoving()");
@@ -1444,14 +1443,14 @@ namespace AnyRPG {
                     //animator.transform.forward = varValue.normalized;
                 }
                 // if model is rotated, send through the magnitude so that all movement is considered in the forward direction
-                animator.SetFloat("Velocity X", 0f);
-                animator.SetFloat("Velocity Z", Mathf.Abs(varValue.magnitude));
+                SetFloat("Velocity X", 0f);
+                SetFloat("Velocity Z", Mathf.Abs(varValue.magnitude));
             } else {
                 // if model is not rotated, send through the normal values
-                animator.SetFloat("Velocity X", varValue.x);
-                animator.SetFloat("Velocity Z", varValue.z);
+                SetFloat("Velocity X", varValue.x);
+                SetFloat("Velocity Z", varValue.z);
             }
-            animator.SetFloat("Velocity Y", varValue.y);
+            SetFloat("Velocity Y", varValue.y);
 
             float absXValue = Mathf.Abs(varValue.x);
             float absYValue = Mathf.Abs(varValue.y);
@@ -1586,7 +1585,7 @@ namespace AnyRPG {
         public void SetAnimationSpeed(float animationSpeed) {
             //Debug.Log(unitController.gameObject.name + ".UnitAnimation.SetAnimationSpeed(" + animationSpeed + ")");
             if (animator != null && ParameterExists("AnimationSpeed")) {
-                animator.SetFloat("AnimationSpeed", animationSpeed);
+                SetFloat("AnimationSpeed", animationSpeed);
             }
         }
 
@@ -1594,14 +1593,14 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            animator.SetFloat("Velocity X", varValue);
+            SetFloat("Velocity X", varValue);
         }
 
         public void SetVelocityY(float varValue) {
             if (animator == null) {
                 return;
             }
-            animator.SetFloat("Velocity Y", varValue);
+            SetFloat("Velocity Y", varValue);
         }
 
         public void SetTurnVelocity(float varValue) {
@@ -1609,7 +1608,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetTurnVelocity(" + varValue + ")");
-            animator.SetFloat("TurnVelocity", varValue);
+            SetFloat("TurnVelocity", varValue);
         }
 
         public void SetBool(string varName, bool varValue) {
@@ -1621,10 +1620,16 @@ namespace AnyRPG {
             }
         }
 
+        public void SetFloat(string varName, float varValue) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
+            if (animator != null && ParameterExists(varName)) {
+                animator.SetFloat(varName, varValue);
+            }
+        }
 
         public void SetInteger(string varName, int varValue) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
-            if (animator != null) {
+            if (animator != null && ParameterExists(varName)) {
                 animator.SetInteger(varName, varValue);
             }
         }
@@ -1633,19 +1638,14 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            animator.SetInteger("Jumping", varValue);
+            SetInteger("Jumping", varValue);
         }
-
 
         public void SetTrigger(string varName) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.SetTrigger(" + varName + ")");
-            if (animator != null) {
-                if (ParameterExists(varName)) {
-                    // testing unity bug, so reset trigger in case character is triggered twice in a frame
-                    animator.ResetTrigger(varName);
-
-                    animator.SetTrigger(varName);
-                }
+            if (animator != null && ParameterExists(varName)) {
+                animator.ResetTrigger(varName);
+                animator.SetTrigger(varName);
             }
         }
 
