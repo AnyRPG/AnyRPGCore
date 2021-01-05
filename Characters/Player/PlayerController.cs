@@ -696,7 +696,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
 
-            // subscribe and call since the namePlate is already spawned
+            // subscribe and call in case the namePlate is already spawned
             PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
             HandleInitializeNamePlate();
         }
@@ -725,7 +725,9 @@ namespace AnyRPG {
 
         public void HandleInitializeNamePlate() {
             //Debug.Log("PlayerController.HandleInitializeNamePlate()");
-            PlayerManager.MyInstance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
+            if (PlayerManager.MyInstance?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
+                PlayerManager.MyInstance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
+            }
         }
 
         public void HandleMessageFeed(string message) {

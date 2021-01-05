@@ -587,6 +587,11 @@ namespace AnyRPG {
                 return;
             }
 
+            // mounts, pets, players, and preview units should not create interaction options or subscribe to prerequisite updates
+            if (unitControllerMode != UnitControllerMode.AI) {
+                return;
+            }
+
             // built-in interactable options
             if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
@@ -1394,6 +1399,12 @@ namespace AnyRPG {
 
         public override void ProcessPlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".UnitController.ProcessPlayerUnitSpawn()");
+
+            // players do not need to react to their own spawn, and previews should never react
+            if (unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Preview) {
+                return;
+            }
+
             behaviorController.HandlePlayerUnitSpawn();
             base.ProcessPlayerUnitSpawn();
         }

@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         public void UpdateNamePlateImage() {
 
-            Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
+            //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
             if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.UnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
@@ -120,7 +120,7 @@ namespace AnyRPG {
                 if (currentInteractableCount == 1) {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
                     if (currentInteractables[0].InteractableOptionProps.NamePlateImage != null) {
-                        Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage(): Our count is 1 and image is not null");
+                        //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
                         NamePlateController.NamePlate.GenericIndicatorImage.sprite = currentInteractables[0].InteractableOptionProps.NamePlateImage;
                     } else {
