@@ -84,6 +84,7 @@ namespace AnyRPG {
             tmpProtext.fontSize = defaultFontSize;
             fadeOutTimer = fadeTime;
             fadeRate = 1.0f / fadeTime;
+            directionMultiplier = 1;
 
             string preText = string.Empty;
             string postText = string.Empty;
