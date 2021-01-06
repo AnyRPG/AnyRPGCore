@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         // debugging variable to see how long paths are remaining pending for
         private int pathPendingCount = 0;
-        
+
         private bool useRootMotion = false;
 
         // properties
@@ -203,7 +203,7 @@ namespace AnyRPG {
             }
 
             NavMeshHit hit;
-            
+
             // attempt sample at 0.5f radius using current navmesharea.  if this works, we found a valid point on the current navmesh
             if (NavMesh.SamplePosition(testPosition, out hit, 0.5f, NavMesh.AllAreas)) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " was on current NavMesh near: " + hit.position + ")");
@@ -261,7 +261,7 @@ namespace AnyRPG {
 
             // we didn't find anything on the same navmesharea above the raycast hit, so it's probably a floor of another area.  try just searching outward for any navmesh instead
             // it's possible we are switching areas between navmesh boundaries
-            
+
             sampleRadius = 0.5f;
             while (sampleRadius <= currentMaxSampleRadius) {
                 if (NavMesh.SamplePosition(testPosition, out hit, sampleRadius, NavMesh.AllAreas)) {
@@ -460,7 +460,7 @@ namespace AnyRPG {
                 return;
             }
             if (unitController.NavMeshAgent.isActiveAndEnabled) {
-                //Debug.Log(gameObject.name + ".CharacterMotor.StopFollowingTarget()");
+                //Debug.Log(unitController.gameObject.name + ".CharacterMotor.StopFollowingTarget()");
                 unitController.NavMeshAgent.stoppingDistance = 0.2f;
                 unitController.NavMeshAgent.updateRotation = true;
                 target = null;
@@ -515,7 +515,11 @@ namespace AnyRPG {
             if (unitController.NavMeshAgent.enabled == true) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + unitController.MyAgent.hasPath + "; isOnNavMesh: " + unitController.MyAgent.isOnNavMesh + "; pathpending: " + unitController.MyAgent.pathPending);
                 if (unitController.NavMeshAgent.isOnNavMesh == true) {
+                    unitController.NavMeshAgent.isStopped = true;
+                    //Debug.Log(unitController.gameObject.name + ".UnitMotor.ResetPath() setting isStopped = true in frame: " + Time.frameCount);
                     unitController.NavMeshAgent.ResetPath();
+                    unitController.NavMeshAgent.velocity = Vector3.zero;
+                    unitController.ResetApparentVelocity();
                 }
                 lastResetFrame = Time.frameCount;
                 //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): AFTER RESETPATH: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);

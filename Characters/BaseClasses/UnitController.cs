@@ -106,7 +106,7 @@ namespace AnyRPG {
         private float maxCombatDistanceFromMasterOnMove = 15f;
 
         // movement tracking
-        private float apparentVelocity;
+        private float apparentVelocity = 0f;
         private Vector3 lastPosition = Vector3.zero;
 
         // disabled for now, should not have this number in multiple places, just increased hitbox size instead and multiplied capsule height by hitbox size directly.  end numbers should be the same
@@ -665,6 +665,10 @@ namespace AnyRPG {
                 correctedPosition = unitMotor.CorrectedNavmeshPosition(transform.position);
             }
             MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
+
+            // prevent apparent velocity on first update due to default lastPosition being Vector3.zero
+            lastPosition = transform.position;
+
         }
 
         public void SpawnUnitModel() {
@@ -1148,6 +1152,14 @@ namespace AnyRPG {
                     unitComponentController.StopMovement();
                 }
             }
+        }
+
+        /// <summary>
+        /// reset velocity calculation so that casting in the same frame as the unit stops will not be cancelled
+        /// </summary>
+        public void ResetApparentVelocity() {
+            lastPosition = transform.position;
+            apparentVelocity = 0f;
         }
 
         public void UpdateApparentVelocity() {
