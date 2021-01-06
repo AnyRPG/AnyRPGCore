@@ -240,7 +240,7 @@ namespace AnyRPG {
             if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
                 //CameraManager.MyInstance.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
-                CameraManager.MyInstance.ActivateMainCamera();
+                CameraManager.MyInstance.ActivateMainCamera(true);
                 CameraManager.MyInstance.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
             }
         }

@@ -110,7 +110,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ActivateMainCamera() {
+        public void ActivateMainCamera(bool prePositionCamera = false) {
             //Debug.Log("CameraManager.ActivateMainCamera()");
             if (SystemConfigurationManager.MyInstance == null) {
                 // can't get camera settings, so just return
@@ -124,7 +124,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
-                EnableThirdPartyCamera();
+                EnableThirdPartyCamera(prePositionCamera);
                 return;
             }
 
@@ -164,11 +164,16 @@ namespace AnyRPG {
             }
         }
 
-        public void EnableThirdPartyCamera() {
+        public void EnableThirdPartyCamera(bool prePositionCamera = false) {
             //Debug.Log("CameraManager.EnableThirdPartyCamera()");
             if (thirdPartyCameraGameObject != null) {
                 if (mainCameraGameObject != null) {
                     MainCameraGameObject.SetActive(false);
+                }
+                if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                    thirdPartyCameraGameObject.transform.position = PlayerManager.MyInstance.ActiveUnitController.transform.TransformPoint(new Vector3(0f, 2.5f, -3f));
+                    thirdPartyCameraGameObject.transform.forward = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
+                    //Debug.Log("Setting camera location : " + thirdPartyCameraGameObject.transform.position + "; forward: " + thirdPartyCameraGameObject.transform.forward);
                 }
                 thirdPartyCameraGameObject.SetActive(true);
             }
