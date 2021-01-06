@@ -903,7 +903,7 @@ namespace AnyRPG {
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
                 characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
-                SetMasterRelativeDestination();
+                SetMasterRelativeDestination(true);
             } else {
                 //Debug.Log("Can only be under the control of one master at a time");
             }
@@ -928,7 +928,7 @@ namespace AnyRPG {
             SetMasterRelativeDestination();
         }
 
-        public void SetMasterRelativeDestination() {
+        public void SetMasterRelativeDestination(bool forceUpdate = false) {
             if (UnderControl == false) {
                 // only do this stuff if we actually have a master
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
@@ -945,7 +945,9 @@ namespace AnyRPG {
                 usedMaxDistance = maxDistanceFromMasterOnMove;
             }
 
-            if (Vector3.Distance(gameObject.transform.position, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance && Vector3.Distance(LeashPosition, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance) {
+            if (forceUpdate
+                || (Vector3.Distance(gameObject.transform.position, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance
+                && Vector3.Distance(LeashPosition, masterUnit.UnitController.gameObject.transform.position) > usedMaxDistance)) {
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): setting master relative destination");
                 masterRelativeDestination = SetDestination(masterRelativeDestination);
                 LeashPosition = masterRelativeDestination;
