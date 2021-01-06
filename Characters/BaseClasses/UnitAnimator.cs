@@ -1230,11 +1230,12 @@ namespace AnyRPG {
             }
         }
 
-        public bool ClearCasting() {
+        public bool ClearCasting(bool stoppedCast = false) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearCasting()");
 
             //unitController.MyBaseCharacter.MyCharacterAbilityManager.StopCasting();
-            if (unitController?.CharacterUnit?.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null) {
+            if (unitController?.CharacterUnit?.BaseCharacter != null
+                && (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null || stoppedCast)) {
                 if (unitController != null) {
                     unitController.SetUseRootMotion(false);
                 }
@@ -1245,7 +1246,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public void ClearAnimationBlockers(bool clearAnimatedAbility = true, bool clearAutoAttack = true) {
+        public void ClearAnimationBlockers(bool clearAnimatedAbility = true, bool clearAutoAttack = true, bool stoppedCast = false) {
             //Debug.Log(unitController.gameObject.name + ".UnitAnimator.ClearAnimationBlockers()");
             bool clearedAnimation = false;
             if (clearAnimatedAbility && currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
@@ -1257,7 +1258,7 @@ namespace AnyRPG {
             if (clearAutoAttack == true && ClearAutoAttack()) {
                 clearedAnimation = true;
             }
-            if (ClearCasting()) {
+            if (ClearCasting(stoppedCast)) {
                 clearedAnimation = true;
             }
             if ((clearAnimatedAbility || clearAutoAttack) && attackCoroutine != null) {

@@ -1597,6 +1597,7 @@ namespace AnyRPG {
 
         public void StopCasting(bool stopCast = true, bool stopAutoAttack = true, bool stopAnimatedAbility = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting(" + stopCast + ", " + stopAutoAttack + ", " + stopAnimatedAbility + ")");
+            bool stoppedAttack = false;
             bool stoppedCast = false;
             if (stopCast == true && currentCastCoroutine != null) {
                 // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
@@ -1608,16 +1609,16 @@ namespace AnyRPG {
             }
             if ((stopAnimatedAbility == true && waitingForAnimatedAbility == true) || (stopAutoAttack == true && baseCharacter.CharacterCombat.WaitingForAutoAttack == true)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting() was waiting for animated ability");
-                stoppedCast = true;
+                stoppedAttack = true;
             }
-            if (stoppedCast) {
+            if (stoppedCast || stoppedAttack) {
                 if (baseCharacter != null && baseCharacter.CharacterEquipmentManager != null) {
                     DespawnAbilityObjects();
                 }
                 // testing put below logic inside this condition
                 // it is causing unnecessary setting of animator speed in clearAnimationBlockers, which interferes with movement speed
                 if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
-                    BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers();
+                    BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers(true, true, stoppedCast);
                 }
                 NotifyOnCastStop();
             }
