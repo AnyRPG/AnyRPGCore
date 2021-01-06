@@ -466,7 +466,7 @@ namespace AnyRPG {
                 target = null;
                 moveToDestination = false;
                 //lastTargetLocation = Vector3.zero;
-                ResetPath();
+                ResetPath(true);
             }
         }
 
@@ -510,16 +510,18 @@ namespace AnyRPG {
             }
         }
 
-        public void ResetPath() {
+        public void ResetPath(bool forceStop = false) {
             //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath() in frame: " + Time.frameCount);
             if (unitController.NavMeshAgent.enabled == true) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + unitController.MyAgent.hasPath + "; isOnNavMesh: " + unitController.MyAgent.isOnNavMesh + "; pathpending: " + unitController.MyAgent.pathPending);
                 if (unitController.NavMeshAgent.isOnNavMesh == true) {
-                    unitController.NavMeshAgent.isStopped = true;
                     //Debug.Log(unitController.gameObject.name + ".UnitMotor.ResetPath() setting isStopped = true in frame: " + Time.frameCount);
                     unitController.NavMeshAgent.ResetPath();
-                    unitController.NavMeshAgent.velocity = Vector3.zero;
-                    unitController.ResetApparentVelocity();
+                    if (forceStop) {
+                        unitController.NavMeshAgent.isStopped = true;
+                        unitController.NavMeshAgent.velocity = Vector3.zero;
+                        unitController.ResetApparentVelocity();
+                    }
                 }
                 lastResetFrame = Time.frameCount;
                 //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): AFTER RESETPATH: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
