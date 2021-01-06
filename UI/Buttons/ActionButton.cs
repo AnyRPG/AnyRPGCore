@@ -250,6 +250,8 @@ namespace AnyRPG {
                         abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as BaseAbility));
                     }
                 }
+            } else {
+                UpdateVisual();
             }
         }
 
