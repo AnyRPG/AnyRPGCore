@@ -98,9 +98,9 @@ namespace AnyRPG {
         protected bool componentReferencesInitialized = false;
 
         public bool applyRootMotion { get => (animator != null ? animator.applyRootMotion : false); }
-        public Animator MyAnimator { get => animator; }
-        public AbilityEffectContext MyCurrentAbilityEffectContext { get => currentAbilityEffectContext; set => currentAbilityEffectContext = value; }
-        public RuntimeAnimatorController MyAnimatorController {
+        public Animator Animator { get => animator; }
+        public AbilityEffectContext CurrentAbilityEffectContext { get => currentAbilityEffectContext; set => currentAbilityEffectContext = value; }
+        public RuntimeAnimatorController AnimatorController {
             get => animatorController;
             set => animatorController = value;
         }

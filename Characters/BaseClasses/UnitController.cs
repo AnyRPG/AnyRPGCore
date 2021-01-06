@@ -1212,7 +1212,7 @@ namespace AnyRPG {
             frozen = true;
             FreezePositionXZ();
             if (UnitAnimator != null) {
-                UnitAnimator.MyAnimator.enabled = false;
+                UnitAnimator.Animator.enabled = false;
             }
             if (UnitMotor != null) {
                 UnitMotor.FreezeCharacter();
@@ -1224,7 +1224,7 @@ namespace AnyRPG {
             frozen = false;
             FreezeRotation();
             if (unitAnimator != null) {
-                UnitAnimator.MyAnimator.enabled = true;
+                UnitAnimator.Animator.enabled = true;
             }
             if (unitMotor != null) {
                 unitMotor.UnFreezeCharacter();

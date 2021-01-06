@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -35,7 +36,7 @@ namespace AnyRPG {
             AbilityEffectContext returnValue = new AbilityEffectContext();
 
             // copy all properties
-            returnValue.resourceAmounts = resourceAmounts;
+            returnValue.resourceAmounts = resourceAmounts.ToList();
             returnValue.overrideDuration = overrideDuration;
             returnValue.savedEffect = savedEffect;
             returnValue.castTimeMultiplier = castTimeMultiplier;

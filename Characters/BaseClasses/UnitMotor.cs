@@ -532,7 +532,7 @@ namespace AnyRPG {
         public void ReceiveAnimatorMovment() {
             if (UseRootMotion) {
                 // will this work for navmeshAgents?  do we need to warp them?
-                unitController.transform.position += unitController.UnitAnimator.MyAnimator.deltaPosition;
+                unitController.transform.position += unitController.UnitAnimator.Animator.deltaPosition;
             }
         }
     }

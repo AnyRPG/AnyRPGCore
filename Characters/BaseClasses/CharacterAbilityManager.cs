@@ -1142,8 +1142,8 @@ namespace AnyRPG {
         public void SpawnAbilityObjects(int indexValue = -1) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
             BaseAbility usedBaseAbility = null;
-            if (BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                usedBaseAbility = BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility;
+            if (BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext != null) {
+                usedBaseAbility = BaseCharacter.UnitController.UnitAnimator.CurrentAbilityEffectContext.baseAbility;
             }
             if (usedBaseAbility == null) {
                 usedBaseAbility = currentCastAbility;

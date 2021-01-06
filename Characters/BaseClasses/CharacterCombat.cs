@@ -471,6 +471,13 @@ namespace AnyRPG {
                 targetCharacterUnit = CharacterUnit.GetCharacterUnit(BaseCharacter.UnitController.Target);
             }
 
+            // some attacks can hit more than once.
+            // in case this is one of those attacks, get a copy of the ability effect context so subsequent hits do not get input power from each other
+            AbilityEffectContext usedAbilityEffectContext = null;
+            if (BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext != null) {
+                usedAbilityEffectContext = BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext.GetCopy();
+            }
+
             if (BaseCharacter.UnitController.Target != null && targetCharacterUnit != null) {
 
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
@@ -478,13 +485,13 @@ namespace AnyRPG {
 
                 BaseAbility animatorCurrentAbility = null;
                 bool attackLanded = true;
-                if (BaseCharacter != null && BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null && BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                    animatorCurrentAbility = BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility;
+                if (usedAbilityEffectContext != null) {
+                    animatorCurrentAbility = usedAbilityEffectContext.baseAbility;
                     if (animatorCurrentAbility is AnimatedAbility) {
-                        attackLanded = (BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility as AnimatedAbility).HandleAbilityHit(
+                        attackLanded = (animatorCurrentAbility as AnimatedAbility).HandleAbilityHit(
                             BaseCharacter,
                             BaseCharacter.UnitController.Target,
-                            BaseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext);
+                            usedAbilityEffectContext);
                     }
                 }
 
@@ -525,8 +532,8 @@ namespace AnyRPG {
                 */
                 return true;
             } else {
-                if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null && baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext != null) {
-                    if (baseCharacter.UnitController.UnitAnimator.MyCurrentAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {
+                if (usedAbilityEffectContext != null) {
+                    if (usedAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, BaseCharacter.UnitController.Target);
                         return true;
                     }
