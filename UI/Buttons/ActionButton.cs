@@ -79,6 +79,7 @@ namespace AnyRPG {
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
+            DisableCoolDownIcon();
         }
 
         void Start() {
@@ -177,6 +178,9 @@ namespace AnyRPG {
                 }
                 UnsubscribeFromCombatEvents();
             }
+
+            DisableCoolDownIcon();
+
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
                 if (InventoryManager.MyInstance == null) {
@@ -204,7 +208,9 @@ namespace AnyRPG {
                 }
                 SubscribeToCombatEvents();
             }
-            UpdateVisual();
+
+            // there may be a global cooldown in progress.  if not, this call will still update the visual
+            ChooseMonitorCoroutine();
 
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
@@ -227,6 +233,10 @@ namespace AnyRPG {
 
         public void OnAttemptUseableUse(BaseAbility ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            ChooseMonitorCoroutine();
+        }
+
+        private void ChooseMonitorCoroutine() {
             if (Useable is BaseAbility) {
                 // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
@@ -243,23 +253,9 @@ namespace AnyRPG {
             }
         }
 
-
         public void OnUseableUse(BaseAbility ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
-            if (Useable is BaseAbility) {
-                // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
-                    //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
-                    if (autoAttackCoRoutine == null) {
-                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as BaseAbility));
-                    }
-                } else {
-                    //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
-                    if (abilityCoRoutine == null) {
-                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as BaseAbility));
-                    }
-                }
-            }
+            ChooseMonitorCoroutine();
         }
 
         public IEnumerator MonitorAutoAttack(BaseAbility ability) {
@@ -283,7 +279,8 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
-            while (Useable != null && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+            while (Useable != null
+                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
@@ -304,12 +301,13 @@ namespace AnyRPG {
         }
 
         private void DisableCoolDownIcon() {
+            //Debug.Log("ActionButton.DisableCoolDownIcon() useable: " + (useable == null ? "null" : useable.DisplayName));
             // testing
             // this was preventing cooldown icons from being reset on logout
             //if (coolDownIcon.isActiveAndEnabled != false) {
-                coolDownIcon.sprite = null;
-                coolDownIcon.color = new Color32(0, 0, 0, 0);
-                coolDownIcon.enabled = false;
+            coolDownIcon.sprite = null;
+            coolDownIcon.color = new Color32(0, 0, 0, 0);
+            coolDownIcon.enabled = false;
             //}
         }
 
@@ -448,9 +446,12 @@ namespace AnyRPG {
                 }
 
 
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
-                    //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown");
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName)
+                    || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                    || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
+                    //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown: " + (useable == null ? "null" : useable.DisplayName));
                     if (coolDownIcon.isActiveAndEnabled != true) {
+                        //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
                         coolDownIcon.enabled = true;
                     }
                     if (coolDownIcon.sprite != MyIcon.sprite) {
@@ -491,6 +492,7 @@ namespace AnyRPG {
         }
 
         public void EnableFullCoolDownIcon() {
+            //Debug.Log("ActionButton.EnableFullCoolDownIcon(): useable: " + (useable == null ? "null" : useable.DisplayName));
             if (coolDownIcon.isActiveAndEnabled == false) {
                 coolDownIcon.enabled = true;
             }
@@ -549,6 +551,7 @@ namespace AnyRPG {
                 savedUseable = Useable;
             }
             Useable = null;
+            DisableCoolDownIcon();
             UpdateVisual();
         }
     }
