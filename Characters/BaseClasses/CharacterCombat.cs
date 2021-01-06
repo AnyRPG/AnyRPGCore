@@ -57,10 +57,6 @@ namespace AnyRPG {
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
         public bool WaitingForAutoAttack {
             get => waitingForAutoAttack;
-            set {
-                //Debug.Log(gameObject.name + ".CharacterCombat.MyWaitingForHits Setting waitingforHits to: " + value);
-                waitingForAutoAttack = value;
-            }
         }
 
         public List<AudioClip> DefaultHitSoundEffects { get => defaultHitSoundEffects; set => defaultHitSoundEffects = value; }
@@ -114,12 +110,11 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
-            SetWaitingForAutoAttack(false);
             DropCombat();
         }
 
         public void Update() {
-            if (inCombat == false 
+            if (inCombat == false
                 || baseCharacter == null
                 || baseCharacter.CharacterStats.IsAlive == false) {
                 return;
@@ -151,7 +146,6 @@ namespace AnyRPG {
 
         public void HandleDie() {
             //Debug.Log(gameObject.name + ".OnDieHandler()");
-            SetWaitingForAutoAttack(false);
 
             BroadcastCharacterDeath();
 
@@ -163,8 +157,8 @@ namespace AnyRPG {
         }
 
         public void SetWaitingForAutoAttack(bool newValue) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
-            WaitingForAutoAttack = newValue;
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
+            waitingForAutoAttack = newValue;
         }
 
         /// <summary>
@@ -290,18 +284,21 @@ namespace AnyRPG {
 
         protected virtual void DropCombat() {
             //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
-            inCombat = false;
-            SetWaitingForAutoAttack(false);
-            if (baseCharacter != null && baseCharacter.CharacterAbilityManager != null) {
-                baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
+            if (inCombat) {
+                inCombat = false;
+
+                if (waitingForAutoAttack == true) {
+                    baseCharacter.CharacterAbilityManager.StopCasting();
+                }
+                if (baseCharacter?.UnitController?.UnitAnimator != null) {
+                    baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", false);
+                }
+
+                DeActivateAutoAttack();
+                //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
+                baseCharacter.CharacterEquipmentManager.SheathWeapons();
+                OnDropCombat();
             }
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
-                baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", false);
-            }
-            DeActivateAutoAttack();
-            //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
-            baseCharacter.CharacterEquipmentManager.SheathWeapons();
-            OnDropCombat();
         }
 
         public void ActivateAutoAttack() {
@@ -360,7 +357,7 @@ namespace AnyRPG {
                 OnEnterCombat(target);
             }
             baseCharacter.CharacterEquipmentManager.HoldWeapons();
-            return aggroTable.AddToAggroTable(CharacterUnit.GetCharacterUnit(target) , 0);
+            return aggroTable.AddToAggroTable(CharacterUnit.GetCharacterUnit(target), 0);
         }
 
         public BaseAbility GetValidAttackAbility() {

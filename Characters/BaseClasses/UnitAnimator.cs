@@ -196,7 +196,7 @@ namespace AnyRPG {
         }
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
             if (unitController.UnitControllerMode == UnitControllerMode.Player && SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
@@ -1166,7 +1166,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator WaitForAnimation(BaseAbility baseAbility, float animationLength, bool clearAutoAttack, bool clearAnimatedAttack, bool clearCasting) {
-            //Debug.Log(gameObject.name + ".WaitForAnimation(" + animationLength + ")");
+            //Debug.Log(unitController.gameObject.name + ".WaitForAnimation(" + baseAbility + ", " + animationLength + ", " + clearAutoAttack + ", " + clearAnimatedAttack + ", " + clearCasting + ")");
             float remainingTime = animationLength;
             //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + unitController.MyBaseCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + unitController.MyBaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + unitController.MyBaseCharacter.MyCharacterAbilityManager.MyIsCasting);
             while (remainingTime > 0f
@@ -1191,56 +1191,87 @@ namespace AnyRPG {
             //ClearAnimationBlockers();
         }
 
-        public void ClearAutoAttack() {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterCombat.SetWaitingForAutoAttack(false);
+        /// <summary>
+        /// return true if an auto attack was cleared
+        /// </summary>
+        /// <returns></returns>
+        public bool ClearAutoAttack() {
+            if (unitController?.CharacterUnit?.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterCombat.WaitingForAutoAttack == true) {
+                if (unitController.CharacterUnit.BaseCharacter.CharacterCombat != null) {
+                    unitController.CharacterUnit.BaseCharacter.CharacterCombat.SetWaitingForAutoAttack(false);
+                }
+                ClearAttackCommon();
+                return true;
             }
-            SetAttacking(false);
-            currentAbilityEffectContext = null;
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.DespawnAbilityObjects();
-            }
+            return false;
         }
 
-        public void ClearAnimatedAttack(BaseAbility baseAbility) {
+        /// <summary>
+        /// return true if an animated ability was cleared
+        /// </summary>
+        /// <param name="baseAbility"></param>
+        /// <returns></returns>
+        public bool ClearAnimatedAttack(BaseAbility baseAbility) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
-            unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
-            (baseAbility as AnimatedAbility).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
+            if (unitController?.CharacterUnit?.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
+                (baseAbility as AnimatedAbility).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
+                ClearAttackCommon();
+                return true;
+            }
+            return false;
+        }
+
+        private void ClearAttackCommon() {
             SetAttacking(false);
             currentAbilityEffectContext = null;
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
+            if (unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.DespawnAbilityObjects();
             }
         }
 
-        public void ClearCasting() {
+        public bool ClearCasting() {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearCasting()");
 
             //unitController.MyBaseCharacter.MyCharacterAbilityManager.StopCasting();
-            if (unitController != null) {
-                unitController.SetUseRootMotion(false);
+            if (unitController?.CharacterUnit?.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null) {
+                if (unitController != null) {
+                    unitController.SetUseRootMotion(false);
+                }
+                SetCasting(false);
+                return true;
             }
-            SetCasting(false);
 
+            return false;
         }
 
-        public void ClearAnimationBlockers() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers()");
-            if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
+        public void ClearAnimationBlockers(bool clearAnimatedAbility = true, bool clearAutoAttack = true) {
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.ClearAnimationBlockers()");
+            bool clearedAnimation = false;
+            if (clearAnimatedAbility && currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE HAVE AN ANIMATED ABILITY");
-                ClearAnimatedAttack(currentAbilityEffectContext.baseAbility);
-            } else {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE DO NOT HAVE AN ANIMATED ABILITY");
+                if (ClearAnimatedAttack(currentAbilityEffectContext.baseAbility)) {
+                    clearedAnimation = true;
+                }
             }
-            ClearAutoAttack();
-            ClearCasting();
-            if (attackCoroutine != null) {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility(): STOPPING OUTSTANDING CAST OR REGULAR ATTACK FOR CAST");
+            if (clearAutoAttack == true && ClearAutoAttack()) {
+                clearedAnimation = true;
+            }
+            if (ClearCasting()) {
+                clearedAnimation = true;
+            }
+            if ((clearAnimatedAbility || clearAutoAttack) && attackCoroutine != null) {
+                //Debug.Log(unitController.gameObject.name + ".UnitAnimator.ClearAnimationBlockers(): calling stopCoroutine");
                 unitController.StopCoroutine(attackCoroutine);
                 attackCoroutine = null;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
-            SetAnimationSpeed(1);
+
+            // if the unit was doing an attack or cast animation, it was likely not moving
+            // that means we can reset the animation speed to normal because it shouldn't interfere with the movement animation speed
+            if (clearedAnimation) {
+                SetAnimationSpeed(1);
+            }
         }
 
         private bool ParameterExists(string parameterName) {

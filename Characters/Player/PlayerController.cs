@@ -760,6 +760,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath() {
+            //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
         }

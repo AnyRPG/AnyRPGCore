@@ -399,7 +399,8 @@ namespace AnyRPG {
                     }
                 } else {
                     //Debug.Log("NamePlateController.LateUpdate(): not cutscene: calculating distance from player");
-                    if (Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, unitNamePlateController.NamePlateTransform.position)) > 40f) {
+                    if (PlayerManager.MyInstance.ActiveUnitController == null
+                        || Mathf.Abs(Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, unitNamePlateController.NamePlateTransform.position)) > 40f) {
                         renderNamePlate = false;
                     }
                 }

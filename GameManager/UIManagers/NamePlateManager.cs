@@ -48,7 +48,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true) {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true
+                && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
+                && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 UpdateNamePlates();
             }
         }

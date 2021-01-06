@@ -913,9 +913,10 @@ namespace AnyRPG {
 
 
         public void HandleDie(CharacterStats _characterStats) {
-            //Debug.Log(gameObject.name + ".OnDieHandler()");
-            StopCasting();
-            //MyWaitingForAnimatedAbility = false;
+            //Debug.Log(baseCharacter.gameObject.name + ".HandleDie()");
+
+            // auto attacks will be separately cancelled by characterCombat
+            StopCasting(true, false, true);
         }
 
 
@@ -1586,6 +1587,7 @@ namespace AnyRPG {
                     // do nothing
                     //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
                 } else {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): stop casting as a result of manual movement with velocity: " + BaseCharacter.UnitController.ApparentVelocity);
                     StopCasting();
                 }
             } else {
@@ -1593,10 +1595,10 @@ namespace AnyRPG {
             }
         }
 
-        public void StopCasting() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting()");
+        public void StopCasting(bool stopCast = true, bool stopAutoAttack = true, bool stopAnimatedAbility = true) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting(" + stopCast + ", " + stopAutoAttack + ", " + stopAnimatedAbility + ")");
             bool stoppedCast = false;
-            if (currentCastCoroutine != null) {
+            if (stopCast == true && currentCastCoroutine != null) {
                 // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
                 //if (currentCast != null && isCasting == true) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
@@ -1604,7 +1606,7 @@ namespace AnyRPG {
                 EndCastCleanup();
                 stoppedCast = true;
             }
-            if (waitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true) {
+            if ((stopAnimatedAbility == true && waitingForAnimatedAbility == true) || (stopAutoAttack == true && baseCharacter.CharacterCombat.WaitingForAutoAttack == true)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting() was waiting for animated ability");
                 stoppedCast = true;
             }
@@ -1630,8 +1632,8 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
-            StopCasting();
-            WaitingForAnimatedAbility = false;
+            // auto attacks will be separately cancelled by characterCombat
+            StopCasting(true, false, true);
         }
 
         public override AudioClip GetAnimatedAbilityHitSound() {
