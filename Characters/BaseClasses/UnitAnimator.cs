@@ -13,8 +13,6 @@ namespace AnyRPG {
         public event System.Action<bool> OnEndCasting = delegate { };
         public event System.Action<bool> OnStartAttacking = delegate { };
         public event System.Action<bool> OnEndAttacking = delegate { };
-        public event System.Action OnStartRiding = delegate { };
-        public event System.Action OnEndRiding = delegate { };
         public event System.Action OnStartLevitated = delegate { };
         public event System.Action<bool> OnEndLevitated = delegate { };
         public event System.Action OnStartStunned = delegate { };
@@ -207,7 +205,7 @@ namespace AnyRPG {
         }
 
         public void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetDefaultOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetDefaultOverrideController()");
             SetOverrideController(overrideController, runUpdate);
         }
 
@@ -1416,7 +1414,8 @@ namespace AnyRPG {
                 return;
             }
             if (varValue == true) {
-                OnStartRiding();
+                SetDefaultOverrideController();
+
             }
             if (ParameterExists("Riding")) {
                 animator.SetBool("Riding", varValue);
@@ -1424,9 +1423,11 @@ namespace AnyRPG {
             if (varValue == true) {
                 SetTrigger("RidingTrigger");
             }
+            /*
             if (varValue == false) {
                 OnEndRiding();
             }
+            */
         }
 
         public void SetStrafing(bool varValue) {

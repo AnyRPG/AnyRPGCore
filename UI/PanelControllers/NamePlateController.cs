@@ -371,7 +371,7 @@ namespace AnyRPG {
 
         //private void Update() {
         //private void LateUpdate() {
-        public void UpdatePosition() {   
+        public void UpdatePosition() {
             //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
             if (unitNamePlateController != null && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");

@@ -683,8 +683,6 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRiding += HandleStartRiding;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndRiding += HandleEndRiding;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
@@ -708,8 +706,6 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRiding -= HandleStartRiding;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndRiding -= HandleEndRiding;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
@@ -736,6 +732,8 @@ namespace AnyRPG {
 
         public void HandleActivateMountedState(UnitController mountUnitController) {
 
+            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+
             PlayerManager.MyInstance.SetActiveUnitController(mountUnitController);
 
             CameraManager.MyInstance.SwitchToMainCamera();
@@ -743,15 +741,27 @@ namespace AnyRPG {
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                 PlayerManager.MyInstance.EnableMovementControllers();
             }
+
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
         }
 
         public void HandleDeActivateMountedState() {
+
             if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
                 PlayerManager.MyInstance.DisableMovementControllers();
             }
             PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);
+            if (PlayerManager.MyInstance.UnitController != null) {
+                PlayerManager.MyInstance.UnitController.UnitAnimator.SetCorrectOverrideController();
+            }
+
             CameraManager.MyInstance.ActivateMainCamera();
             CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+
+            EventParamProperties eventParam = new EventParamProperties();
+            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
+
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
@@ -795,20 +805,6 @@ namespace AnyRPG {
                 EventParamProperties eventParam = new EventParamProperties();
                 SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
             }
-        }
-
-        public void HandleStartRiding() {
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
-        }
-
-        public void HandleEndRiding() {
-            if (PlayerManager.MyInstance.ActiveUnitController != null) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
-            }
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
         }
 
         public void HandleStartCasting(bool swapAnimator) {

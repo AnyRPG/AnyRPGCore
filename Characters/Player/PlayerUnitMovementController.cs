@@ -438,10 +438,8 @@ namespace AnyRPG {
                     characterController.enabled = true;
                 }
             }
-            if (PlayerManager.MyInstance.ActiveUnitController != null && PlayerManager.MyInstance.ActiveUnitController.UnitAnimator != null) {
-                if (PlayerManager.MyInstance.ActiveUnitController.UnitAnimator != null) {
-                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.DisableRootMotion();
-                }
+            if (PlayerManager.MyInstance?.ActiveUnitController?.UnitAnimator != null) {
+                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.DisableRootMotion();
             }
         }
 
