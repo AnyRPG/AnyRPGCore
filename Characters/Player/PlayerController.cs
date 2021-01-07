@@ -368,7 +368,7 @@ namespace AnyRPG {
                 //Debug.Log("Tab Target Registered");
                 Interactable oldTarget = PlayerManager.MyInstance.UnitController.Target;
                 // moving this inside getnexttabtarget
-                PlayerManager.MyInstance.UnitController.ClearTarget();
+                //PlayerManager.MyInstance.UnitController.ClearTarget();
                 GetNextTabTarget(oldTarget);
             }
         }
