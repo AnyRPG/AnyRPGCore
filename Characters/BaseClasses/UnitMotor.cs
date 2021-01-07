@@ -87,15 +87,18 @@ namespace AnyRPG {
         }
 
         protected void CheckSetMoveDestination() {
-            //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination()");
+            //Debug.Log(unitController.gameObject.name + ": CharacterMotor.CheckSetMoveDestination()");
             if (setMoveDestination && unitController.NavMeshAgent.pathPending == false && unitController.NavMeshAgent.hasPath == false) {
                 //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
-                moveToDestination = true;
-                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
-                unitController.NavMeshAgent.SetDestination(destinationPosition);
-                //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
-                lastCommandFrame = Time.frameCount;
-                setMoveDestination = false;
+                unitController.EnableAgent();
+                if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
+                    moveToDestination = true;
+                    //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
+                    unitController.NavMeshAgent.SetDestination(destinationPosition);
+                    //Debug.Log(gameObject.name + ": CharacterMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
+                    lastCommandFrame = Time.frameCount;
+                    setMoveDestination = false;
+                }
             }
             /*
             if (!setMoveDestination) {
@@ -311,12 +314,15 @@ namespace AnyRPG {
                 return Vector3.zero;
             }
 
+            // testing - don't bother with this check since patrolstate is really the only thing that checks for this
+            // and returning vector3.zero would result in it just in an endless loop anyway trying to get a new co-ordinate
+            /*
             unitController.EnableAgent();
             if (!unitController.NavMeshAgent.enabled) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.MoveToPoint(" + point + "): agent is disabled.  Will not give move instruction.");
                 return Vector3.zero;
             }
-
+            */
             // moving to a point only happens when we click on the ground.  Since we are not tracking a moving target, we can let the agent update the rotation
             unitController.NavMeshAgent.updateRotation = true;
             //Debug.Log(gameObject.name + ".CharacterMotor.MoveToPoint(" + point + "): calling unitController.MyAgent.ResetPath()");
@@ -457,25 +463,18 @@ namespace AnyRPG {
         public void StopFollowingTarget() {
             //Debug.Log(gameObject.name + ".CharacterMotor.StopFollowingTarget()");
             target = null;
-            moveToDestination = false;
             if (frozen) {
                 return;
             }
-            if (unitController == null) {
-                return;
-            }
-            if (unitController.NavMeshAgent == null) {
+            if (unitController?.NavMeshAgent == null) {
                 return;
             }
             if (unitController.NavMeshAgent.isActiveAndEnabled) {
                 //Debug.Log(unitController.gameObject.name + ".CharacterMotor.StopFollowingTarget()");
                 unitController.NavMeshAgent.stoppingDistance = 0.2f;
                 unitController.NavMeshAgent.updateRotation = true;
-                target = null;
-                moveToDestination = false;
-                //lastTargetLocation = Vector3.zero;
-                ResetPath(true);
             }
+            ResetPath(true);
         }
 
         public void FaceTarget(Interactable newTarget) {
@@ -513,6 +512,8 @@ namespace AnyRPG {
 
         public void ResetPath(bool forceStop = false) {
             //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath() in frame: " + Time.frameCount);
+            moveToDestination = false;
+            setMoveDestination = false;
             if (unitController.NavMeshAgent.enabled == true) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + unitController.MyAgent.hasPath + "; isOnNavMesh: " + unitController.MyAgent.isOnNavMesh + "; pathpending: " + unitController.MyAgent.pathPending);
                 if (unitController.NavMeshAgent.isOnNavMesh == true) {
