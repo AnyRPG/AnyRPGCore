@@ -56,7 +56,7 @@ namespace AnyRPG {
                                 returnList.Add(baseAbility);
                             }
                         } else {
-                            Debug.Log("CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
+                            //Debug.Log("CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
                         }
                     }
 

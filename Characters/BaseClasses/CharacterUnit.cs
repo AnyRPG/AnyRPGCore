@@ -93,7 +93,8 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
-            if (CanInteract()) {
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            if (CanInteract(false, false, relationValue)) {
                 base.Interact(source);
 
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
@@ -102,7 +103,7 @@ namespace AnyRPG {
                 // this isn't processed from an action button click so the code made more sense in a common pathway
                 //source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
 
-                source.BaseCharacter.CharacterCombat.Attack(baseCharacter);
+                source.BaseCharacter.CharacterCombat.Attack(baseCharacter, true);
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
                 return true;
             }

@@ -265,7 +265,9 @@ namespace AnyRPG {
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             yield return null;
 
-            while (Useable != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
+            while (Useable != null
+                && PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true
+                && PlayerManager.MyInstance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                 //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
@@ -396,7 +398,7 @@ namespace AnyRPG {
                         }
                     }
                     */
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
+                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true && PlayerManager.MyInstance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                         if (coolDownIcon.isActiveAndEnabled == false) {
                             coolDownIcon.enabled = true;
                         }

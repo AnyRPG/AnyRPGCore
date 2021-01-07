@@ -413,7 +413,6 @@ namespace AnyRPG {
         */
 
         public override bool IsTargetInMeleeRange(Interactable target) {
-            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.IsTargetInMeleeRange()");
             return baseCharacter.UnitController.IsTargetInHitBox(target);
         }
 
@@ -465,7 +464,7 @@ namespace AnyRPG {
         }
 
         public override bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
-            //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange()");
+            //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange(" + (target == null ? "null" : target.DisplayName) + ")");
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
 
             if (targetable.GetTargetOptions(baseCharacter).UseMeleeRange) {
@@ -1184,11 +1183,11 @@ namespace AnyRPG {
             }
         }
 
-        public void AttemptAutoAttack() {
+        public void AttemptAutoAttack(bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
 
             if (autoAttackAbility != null) {
-                BeginAbility(autoAttackAbility);
+                BeginAbility(autoAttackAbility, playerInitiated);
             }
         }
 
@@ -1331,31 +1330,39 @@ namespace AnyRPG {
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
             abilityEffectContext.baseAbility = ability;
 
-            // get final target before beginning casting
-            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
+            // testing - if this was player initiated, the attack attempt came through right click or action button press
+            // those things attempted to interact with a characterUnit which passed a faction check.  assume target is valid and perform quick sanity check
+            // if it passes, attempt to enter combat so weapons can be unsheathed even if out of range
+            if (playerInitiated) {
+                CharacterUnit targetCharacterUnit = null;
+                if (target != null) {
+                    targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
+                }
+                if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
+                    if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {
+                        if (targetCharacterUnit.BaseCharacter.CharacterCombat != null
+                            && usedAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy == true
+                            && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
 
-            CharacterUnit targetCharacterUnit = null;
-            if (finalTarget != null) {
-                targetCharacterUnit = CharacterUnit.GetCharacterUnit(finalTarget);
-            }
-            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
-                if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {
-                    if (targetCharacterUnit.BaseCharacter.CharacterCombat != null
-                        && usedAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy == true
-                        && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
+                            // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
+                            // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
+                            // ...re-enable this because rangers need to pull out their weapons when doing their animation when clicking on action bar
+                            if (baseCharacter.CharacterCombat.GetInCombat() == false) {
+                                baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
+                            }
 
-                        // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
-                        // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                        // ...re-enable this because rangers need to pull out their weapons when doing their animation when clicking on action bar
-                        if (baseCharacter.CharacterCombat.GetInCombat() == false) {
-                            baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
+                            baseCharacter.CharacterCombat.ActivateAutoAttack();
+                            OnAttack(targetCharacterUnit.BaseCharacter);
                         }
-
-                        baseCharacter.CharacterCombat.ActivateAutoAttack();
-                        OnAttack(targetCharacterUnit.BaseCharacter);
                     }
                 }
             }
+            
+            // get final target before beginning casting
+            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon() finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
+
+            
 
             OnAttemptPerformAbility(ability);
 

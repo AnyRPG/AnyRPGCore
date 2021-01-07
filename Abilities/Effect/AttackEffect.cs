@@ -15,7 +15,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyAbilityEffectName + ".AttackAbility.PerformAbilityEffect(" + source.name + ", " + target.name + ")");
+            //Debug.Log(DisplayName + ".AttackAbility.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + target.name + ")");
 
             // handle regular effects
             base.PerformAbilityHit(source, target, abilityEffectContext);

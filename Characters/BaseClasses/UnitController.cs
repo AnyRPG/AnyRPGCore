@@ -282,6 +282,8 @@ namespace AnyRPG {
             }
         }
 
+        public bool UseAgent { get => useAgent; }
+
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             characterUnit.BaseCharacter.CharacterPetManager.DespawnAllPets();
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
@@ -328,6 +330,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            useAgent = false;
             DisableAgent();
 
             // prevent preview unit from moving around
@@ -397,6 +400,7 @@ namespace AnyRPG {
             }
             rigidBody.isKinematic = false;
             rigidBody.useGravity = true;
+            useAgent = false;
             DisableAgent();
         }
 
@@ -410,6 +414,7 @@ namespace AnyRPG {
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
             DisableAggro();
             unitComponentController.InteractableRange.gameObject.SetActive(false);
+            useAgent = false;
             DisableAgent();
 
             // this code is a quick way to set speed on third party controllers when the player spawns
@@ -1343,23 +1348,31 @@ namespace AnyRPG {
         }
 
         public bool IsTargetInHitBox(Interactable newTarget) {
-            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + ")");
+            //Debug.Log(gameObject.name + ".UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + ")");
             if (newTarget == null) {
                 return false;
             }
-            Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, Quaternion.identity);
-            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "); center: " + GetHitBoxCenter() + "; size: " + GetHitBoxSize());
+            int playerMask = 1 << LayerMask.NameToLayer("Player");
+            int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+            int interactableMask = 1 << LayerMask.NameToLayer("Interactable");
+            int validMask = (playerMask | characterMask | interactableMask);
+
+            //Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, Quaternion.identity, validMask);
+            Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, transform.rotation, validMask);
+            Vector3 hitBoxCenter = GetHitBoxCenter();
+            //Debug.Log(gameObject.name + ".UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "); center: " + hitBoxCenter.x + " " + hitBoxCenter.y + " " + hitBoxCenter.z + "; size: " + GetHitBoxSize() + "; navEnabled: " + agent.enabled);
             int i = 0;
             //Check when there is a new collider coming into contact with the box
             while (i < hitColliders.Length) {
-                //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "]");
+                //Debug.Log(gameObject.name + ".UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "); center: " + GetHitBoxCenter() + "; size: " + GetHitBoxSize() + "Hit : " + hitColliders[i].gameObject.name + "[" + i + "]");
+
                 if (hitColliders[i].gameObject == newTarget.InteractableGameObject) {
-                    //Debug.Log(gameObject.name + ".Overlap Box Hit : " + hitColliders[i].gameObject.name + "[" + i + "] MATCH!!");
+                    //Debug.Log(gameObject.name + ".UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "): Hit : " + hitColliders[i].gameObject.name + "[" + i + "] return true");
                     return true;
                 }
                 i++;
             }
-            //Debug.Log(gameObject.name + ".BaseController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "): return false");
+            //Debug.Log(gameObject.name + ".UnitController.IsTargetInHitBox(" + (newTarget == null ? "null" : newTarget.gameObject.name) + "): return false");
             return false;
         }
 
@@ -1370,10 +1383,11 @@ namespace AnyRPG {
                     return;
                 }
 
-                //Debug.Log(gameObject.name + ".BaseController.OnDrawGizmos(): hit box center is :" + GetHitBoxCenter());
                 Gizmos.color = Color.red;
                 //Draw a cube where the OverlapBox is (positioned where your GameObject is as well as a size)
-                Gizmos.DrawWireCube(GetHitBoxCenter(), GetHitBoxSize());
+                Gizmos.color = new Color(1, 0, 0);
+                Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+                Gizmos.DrawWireCube(transform.InverseTransformPoint(GetHitBoxCenter()), GetHitBoxSize());
             }
         }
 
@@ -1427,9 +1441,12 @@ namespace AnyRPG {
             RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
+        /// <summary>
+        /// if this unit is configured to use the agent, enable it
+        /// </summary>
         public void EnableAgent() {
             //Debug.Log(gameObject.name + ".UnitController.EnableAgent()");
-            if (NavMeshAgent != null && useAgent == true) {
+            if (NavMeshAgent != null && useAgent == true && NavMeshAgent.enabled == false) {
                 NavMeshAgent.enabled = true;
             }
         }

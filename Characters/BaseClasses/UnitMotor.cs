@@ -70,7 +70,7 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            if (unitController != null && unitController.NavMeshAgent != null && unitController.NavMeshAgent.isActiveAndEnabled) {
+            if (unitController?.NavMeshAgent != null && unitController.NavMeshAgent.isActiveAndEnabled) {
                 SetMovementSpeed();
             } else {
                 //Debug.Log(gameObject.name + ": motor.FixedUpdate(): agent is disabled. Motor will do nothing");
@@ -118,54 +118,60 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            if (unitController != null && unitController.NavMeshAgent != null && unitController.NavMeshAgent.isActiveAndEnabled) {
-                //Debug.Log(gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + unitController.MyAgent.hasPath + "; isOnNavMesh: " + unitController.MyAgent.isOnNavMesh + "; pathpending: " + unitController.MyAgent.pathPending + "; ANIMATED UNIT IS NOT NULL, SETTING SPEED");
+            if (unitController.UseAgent == false) {
+                return;
+            }
+            //if (unitController?.NavMeshAgent != null && unitController.NavMeshAgent.isActiveAndEnabled) {
+            if (unitController?.NavMeshAgent != null && frozen == false) {
+                //Debug.Log(unitController.gameObject.name + ".CharacterMotor.FixedUpdate(): navhaspath: " + unitController.NavMeshAgent.hasPath + "; isOnNavMesh: " + unitController.NavMeshAgent.isOnNavMesh + "; pathpending: " + unitController.NavMeshAgent.pathPending + "; pathstatus: " + unitController.NavMeshAgent.pathStatus + "; remaining: " + unitController.NavMeshAgent.remainingDistance);
                 SetMovementSpeed();
+                /*
             } else {
                 return;
             }
+            */
+                CheckSetMoveDestination();
 
-            CheckSetMoveDestination();
 
-
-            if (target != null) {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate() target = " + target.name);
-                if (unitController.IsTargetInHitBox(target)) {
-                    StopFollowingTarget();
-                } else {
-                    // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
-                    // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
-                    if (Vector3.Distance(target.transform.position, unitController.transform.position) > (unitController.CharacterUnit.HitBoxSize * 2)) {
-                        // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
-                        // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), unitController.NavMeshAgent.destination) > (unitController.CharacterUnit.HitBoxSize * 1.5) && unitController.NavMeshAgent.pathPending == false) {
-                            // the target has moved more than 1 hitbox from our destination position, re-adjust heading
-                            if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
-                                // prevent anything from resetting movement twice in the same frame
-                                MoveToPoint(target.transform.position);
-                            }
-                        }
+                if (target != null) {
+                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate() target = " + target.name);
+                    if (unitController.IsTargetInHitBox(target)) {
+                        StopFollowingTarget();
                     } else {
-                        // they are not in our hitbox yet, but they are closer than 2 meters, we need to move directly to them.  we are likely 0.5 meters out of hitbox range at this point
-                        if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), unitController.NavMeshAgent.destination) > (unitController.CharacterUnit.HitBoxSize / 2) && unitController.NavMeshAgent.pathPending == false) {
-                            if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
-                                // prevent anything from resetting movement twice in the same frame
-                                MoveToPoint(target.transform.position);
+                        // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
+                        // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
+                        if (Vector3.Distance(target.transform.position, unitController.transform.position) > (unitController.CharacterUnit.HitBoxSize * 2)) {
+                            // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
+                            // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
+                            if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), unitController.NavMeshAgent.destination) > (unitController.CharacterUnit.HitBoxSize * 1.5) && unitController.NavMeshAgent.pathPending == false) {
+                                // the target has moved more than 1 hitbox from our destination position, re-adjust heading
+                                if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
+                                    // prevent anything from resetting movement twice in the same frame
+                                    MoveToPoint(target.transform.position);
+                                }
+                            }
+                        } else {
+                            // they are not in our hitbox yet, but they are closer than 2 meters, we need to move directly to them.  we are likely 0.5 meters out of hitbox range at this point
+                            if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), unitController.NavMeshAgent.destination) > (unitController.CharacterUnit.HitBoxSize / 2) && unitController.NavMeshAgent.pathPending == false) {
+                                if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
+                                    // prevent anything from resetting movement twice in the same frame
+                                    MoveToPoint(target.transform.position);
+                                }
                             }
                         }
+                        FaceTarget(target);
                     }
-                    FaceTarget(target);
-                }
-            } else {
-                //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL!");
-                if (moveToDestination == true && destinationPosition != unitController.NavMeshAgent.destination) {
-                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL! moveToDestination: true. current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; unitController.MyAgent.destination: " + unitController.MyAgent.destination + "; pathpending: " + unitController.MyAgent.pathPending);
-                    float agentDestinationDrift = Vector3.Distance(destinationPosition, unitController.NavMeshAgent.destination);
-                    if (agentDestinationDrift >= (unitController.NavMeshAgent.stoppingDistance + navMeshDistancePadding) && destinationPosition != unitController.NavMeshAgent.destination) {
-                        MoveToPoint(destinationPosition);
-                    } else {
-                        //Debug.Log(gameObject.name + ": FixedUpdate() agent.destination: " + unitController.MyAgent.destination + " matches point (within stopping distance): " + destinationPosition + ". Disable moveToDestination boolean");
-                        moveToDestination = false;
+                } else {
+                    //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL!");
+                    if (moveToDestination == true && destinationPosition != unitController.NavMeshAgent.destination) {
+                        //Debug.Log(gameObject.name + ": CharacterMotor.FixedUpdate(): TARGET IS NULL! moveToDestination: true. current location: " + transform.position + "; destinationPosition: " + destinationPosition + "; unitController.MyAgent.destination: " + unitController.MyAgent.destination + "; pathpending: " + unitController.MyAgent.pathPending);
+                        float agentDestinationDrift = Vector3.Distance(destinationPosition, unitController.NavMeshAgent.destination);
+                        if (agentDestinationDrift >= (unitController.NavMeshAgent.stoppingDistance + navMeshDistancePadding) && destinationPosition != unitController.NavMeshAgent.destination) {
+                            MoveToPoint(destinationPosition);
+                        } else {
+                            //Debug.Log(gameObject.name + ": FixedUpdate() agent.destination: " + unitController.MyAgent.destination + " matches point (within stopping distance): " + destinationPosition + ". Disable moveToDestination boolean");
+                            moveToDestination = false;
+                        }
                     }
                 }
             }
@@ -305,6 +311,7 @@ namespace AnyRPG {
                 return Vector3.zero;
             }
 
+            unitController.EnableAgent();
             if (!unitController.NavMeshAgent.enabled) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.MoveToPoint(" + point + "): agent is disabled.  Will not give move instruction.");
                 return Vector3.zero;
@@ -352,7 +359,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitController != null && unitController.NavMeshAgent != null && unitController.NavMeshAgent.enabled) {
+            if (unitController?.NavMeshAgent != null && unitController.NavMeshAgent.enabled) {
                 //Debug.Log(gameObject.name + ".CharacterMotor.Move(" + moveDirection + "): moving via navmeshagent");
 
                 //agent.Move(moveDirection);
@@ -430,6 +437,7 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
+            unitController.EnableAgent();
             unitController.NavMeshAgent.stoppingDistance = 0.2f;
             //agent.stoppingDistance = myStats.hitBox;
             // moving to a target happens when we click on an interactable.  Since it might be moving, we will manually update the rotation every frame
@@ -503,13 +511,6 @@ namespace AnyRPG {
         }
         */
 
-        public void StopNavAgent() {
-            //Debug.Log(gameObject.name + ".CharacterMotor.StopNavAgent()");
-            if (unitController.NavMeshAgent.enabled) {
-                unitController.DisableAgent();
-            }
-        }
-
         public void ResetPath(bool forceStop = false) {
             //Debug.Log(gameObject.name + ".CharacterMotor.ResetPath() in frame: " + Time.frameCount);
             if (unitController.NavMeshAgent.enabled == true) {
@@ -521,6 +522,7 @@ namespace AnyRPG {
                         unitController.NavMeshAgent.isStopped = true;
                         unitController.NavMeshAgent.velocity = Vector3.zero;
                         unitController.ResetApparentVelocity();
+                        unitController.DisableAgent();
                     }
                 }
                 lastResetFrame = Time.frameCount;
@@ -529,10 +531,12 @@ namespace AnyRPG {
             }
         }
 
-        public void ReceiveAnimatorMovment() {
+        public void ReceiveAnimatorMovement() {
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.ReceiveAnimatorMovement(): " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             if (UseRootMotion) {
                 // will this work for navmeshAgents?  do we need to warp them?
                 unitController.transform.position += unitController.UnitAnimator.Animator.deltaPosition;
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.ReceiveAnimatorMovement() userootmotion is true, apply position: " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             }
         }
     }

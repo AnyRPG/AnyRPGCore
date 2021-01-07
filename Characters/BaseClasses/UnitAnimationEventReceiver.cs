@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public void AttackHitEvent() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null) {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterCombat.AttackHit_AnimationEvent();
             }
         }
@@ -26,14 +26,14 @@ namespace AnyRPG {
         }
 
         public void AnimationHit() {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.AnimationHitAnimationEvent();
             }
         }
 
         public void AnimationPrefabCreate() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreate()");
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.SpawnAbilityObjects();
             }
         }
@@ -55,7 +55,7 @@ namespace AnyRPG {
         // for root motion
         public void OnAnimatorMove() {
             if (unitController != null && unitController.UnitMotor != null) {
-                unitController.UnitMotor.ReceiveAnimatorMovment();
+                unitController.UnitMotor.ReceiveAnimatorMovement();
             }
         }
 

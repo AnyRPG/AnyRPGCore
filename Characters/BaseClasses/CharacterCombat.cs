@@ -165,7 +165,7 @@ namespace AnyRPG {
         /// This is the entrypoint to a manual attack.
         /// </summary>
         /// <param name="characterTarget"></param>
-        public void Attack(BaseCharacter characterTarget) {
+        public void Attack(BaseCharacter characterTarget, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
@@ -177,7 +177,7 @@ namespace AnyRPG {
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
                 if (WaitingForAction() == false && waitingForAutoAttack == false) {
                     // in order to support attacks from bows (or wands in the future), the weapon needs to be unsheathed
-                    baseCharacter.CharacterAbilityManager.AttemptAutoAttack();
+                    baseCharacter.CharacterAbilityManager.AttemptAutoAttack(playerInitiated);
                 }
             }
         }
@@ -318,6 +318,7 @@ namespace AnyRPG {
         }
 
         public bool EnterCombat(IAbilityCaster target) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.EnterCombat(" + (target == null ? "null" : target.AbilityManager.Name) + ")");
             Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
             if (_interactable != null) {
                 CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
@@ -454,13 +455,7 @@ namespace AnyRPG {
             AttackHit_AnimationEvent();
         }
 
-        /// <summary>
-        /// After the attack animation reaches the point where it contacts the enemy, do damage to it
-        /// </summary>
-        public virtual bool AttackHit_AnimationEvent() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
-            //bool hitSucceeded = false;
-            // The character could die mid swing before the attack event fires.  We can't let a dead character do damage
+        public bool ProcessAttackHit() {
             if (!baseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() Character is not alive!");
                 return false;
@@ -508,28 +503,6 @@ namespace AnyRPG {
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
 
-                // moved inside attackEffect to prevent bows doing damage at the moment the arrow is released instead of when it hits
-                /*
-                AbilityEffectContext abilityAffectInput = new AbilityEffectContext();
-                foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
-                    // this could maybe be done better through an event subscription
-                    if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
-                        statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, targetCharacterUnit.Interactable, abilityAffectInput);
-                    }
-                }
-                */
-
-                // moved inside attackEffect
-                /*
-                // OnHitAbility will not fire if target is dead. This is ok because regular weapon onhit ability should be set to something that requires a target anyway
-                if (onHitEffect != null) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is not null!");
-                    baseCharacter.MyCharacterAbilityManager.BeginAbility(onHitEffect);
-                } else {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent() onHitAbility is null!!!");
-                }
-                */
                 return true;
             } else {
                 if (usedAbilityEffectContext != null) {
@@ -540,6 +513,14 @@ namespace AnyRPG {
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// After the attack animation reaches the point where it contacts the enemy, do damage to it
+        /// </summary>
+        public void AttackHit_AnimationEvent() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
+            ProcessAttackHit();
         }
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {

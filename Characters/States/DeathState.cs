@@ -12,7 +12,7 @@ namespace AnyRPG {
             this.baseController = baseController;
             //this.aiController.MyBaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
             if (this.baseController.CharacterUnit.BaseCharacter != null && this.baseController != null) {
-                this.baseController.UnitMotor.StopNavAgent();
+                this.baseController.DisableAgent();
                 this.baseController.DisableMotor();
             }
             this.baseController.DisableAggro();

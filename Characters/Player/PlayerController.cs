@@ -11,7 +11,6 @@ namespace AnyRPG {
         public event System.Action<int> AbilityButtonPressedHandler = delegate { };
         public event System.Action<bool> ToggleRunHandler = delegate { };
 
-
         //Inputs.
         [HideInInspector] public bool inputJump;
         [HideInInspector] public bool inputStrafe;
@@ -346,7 +345,7 @@ namespace AnyRPG {
                 return false;
             }
             if (PlayerManager.MyInstance.UnitController.Target == null) {
-                Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
+                //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
