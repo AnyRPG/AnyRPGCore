@@ -35,6 +35,15 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject buttonArea = null;
 
+        [SerializeField]
+        private Button loadGameButton = null;
+
+        [SerializeField]
+        private Button deleteGameButton = null;
+
+        [SerializeField]
+        private Button copyGameButton = null;
+
         private List<LoadGameButton> loadGameButtons = new List<LoadGameButton>();
 
         private UnitProfile unitProfile = null;
@@ -60,7 +69,7 @@ namespace AnyRPG {
         public Faction Faction { get => faction; set => faction = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
-        public LoadGameButton MySelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
+        public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
@@ -85,11 +94,11 @@ namespace AnyRPG {
             LoadUMARecipe();
         }
 
-        public void ShowSavedGame(LoadGameButton loadGameButton) {
+        public void ShowSavedGame(LoadGameButton loadButton) {
             //Debug.Log("LoadGamePanel.ShowSavedGame()");
 
-            selectedLoadGameButton = loadGameButton;
-            anyRPGSaveData = loadGameButton.MySaveData;
+            selectedLoadGameButton = loadButton;
+            anyRPGSaveData = loadButton.MySaveData;
 
             capabilityConsumerSnapshot = SaveManager.MyInstance.GetCapabilityConsumerSnapshot(selectedLoadGameButton.MySaveData);
 
@@ -101,7 +110,7 @@ namespace AnyRPG {
             faction = capabilityConsumerSnapshot.Faction;
 
             SaveManager.MyInstance.ClearSharedData();
-            SaveManager.MyInstance.LoadUMARecipe(loadGameButton.MySaveData);
+            SaveManager.MyInstance.LoadUMARecipe(loadButton.MySaveData);
 
             // testing avoid naked spawn
             // seems to make no difference to have this disabled here
@@ -116,6 +125,9 @@ namespace AnyRPG {
             // apply capabilities to it so equipment can work
             //CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
+            loadGameButton.interactable = true;
+            copyGameButton.interactable = true;
+            deleteGameButton.interactable = true;
         }
 
 
@@ -128,7 +140,10 @@ namespace AnyRPG {
                 }
             }
             loadGameButtons.Clear();
-            MySelectedLoadGameButton = null;
+            SelectedLoadGameButton = null;
+            loadGameButton.interactable = false;
+            copyGameButton.interactable = false;
+            deleteGameButton.interactable = false;
         }
 
 
@@ -201,7 +216,9 @@ namespace AnyRPG {
         */
 
         public void LoadGame() {
-            SaveManager.MyInstance.LoadGame(MySelectedLoadGameButton.MySaveData);
+            if (SelectedLoadGameButton != null) {
+                SaveManager.MyInstance.LoadGame(SelectedLoadGameButton.MySaveData);
+            }
         }
 
         public void NewGame() {
@@ -215,30 +232,38 @@ namespace AnyRPG {
         }
 
         public void DeleteGame() {
-            SystemWindowManager.MyInstance.deleteGameMenuWindow.OpenWindow();
-        }
-
-        public void DeleteGame(bool confirmDelete = false) {
-            if (confirmDelete) {
-                SaveManager.MyInstance.DeleteGame(MySelectedLoadGameButton.MySaveData);
-                SystemWindowManager.MyInstance.deleteGameMenuWindow.CloseWindow();
-                ShowLoadButtonsCommon();
-            } else {
+            if (SelectedLoadGameButton != null) {
                 SystemWindowManager.MyInstance.deleteGameMenuWindow.OpenWindow();
             }
         }
 
+        public void DeleteGame(bool confirmDelete = false) {
+            if (SelectedLoadGameButton != null) {
+                if (confirmDelete) {
+                    SaveManager.MyInstance.DeleteGame(SelectedLoadGameButton.MySaveData);
+                    SystemWindowManager.MyInstance.deleteGameMenuWindow.CloseWindow();
+                    ShowLoadButtonsCommon();
+                } else {
+                    SystemWindowManager.MyInstance.deleteGameMenuWindow.OpenWindow();
+                }
+            }
+        }
+
         public void CopyGame() {
-            SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+            if (SelectedLoadGameButton != null) {
+                SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+            }
         }
 
         public void CopyGame(bool confirmCopy = false) {
-            if (confirmCopy) {
-                SaveManager.MyInstance.CopyGame(MySelectedLoadGameButton.MySaveData);
-                SystemWindowManager.MyInstance.copyGameMenuWindow.CloseWindow();
-                ShowLoadButtonsCommon();
-            } else {
-                SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+            if (SelectedLoadGameButton != null) {
+                if (confirmCopy) {
+                    SaveManager.MyInstance.CopyGame(SelectedLoadGameButton.MySaveData);
+                    SystemWindowManager.MyInstance.copyGameMenuWindow.CloseWindow();
+                    ShowLoadButtonsCommon();
+                } else {
+                    SystemWindowManager.MyInstance.copyGameMenuWindow.OpenWindow();
+                }
             }
         }
 

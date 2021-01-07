@@ -83,8 +83,8 @@ namespace AnyRPG {
         */
 
         public void CommonSelect() {
-            if (LoadGamePanel.MyInstance.MySelectedLoadGameButton != null && LoadGamePanel.MyInstance.MySelectedLoadGameButton != this) {
-                LoadGamePanel.MyInstance.MySelectedLoadGameButton.DeSelect();
+            if (LoadGamePanel.MyInstance.SelectedLoadGameButton != null && LoadGamePanel.MyInstance.SelectedLoadGameButton != this) {
+                LoadGamePanel.MyInstance.SelectedLoadGameButton.DeSelect();
             }
             LoadGamePanel.MyInstance.ShowSavedGame(this);
         }
