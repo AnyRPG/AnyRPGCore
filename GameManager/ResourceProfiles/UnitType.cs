@@ -35,7 +35,7 @@ namespace AnyRPG {
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
 

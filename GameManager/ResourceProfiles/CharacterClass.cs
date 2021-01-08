@@ -66,8 +66,11 @@ namespace AnyRPG {
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
         public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
-            CapabilityProps returnValue = capabilities;
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
+            CapabilityProps returnValue = new CapabilityProps();
+            if (returnAll) {
+                returnValue = capabilities;
+            }
             foreach (UnitTypeCapabilityNode unitTypeCapabilityNode in unitTypeCapabilities) {
                 if (capabilityConsumer != null && capabilityConsumer.UnitType != null && unitTypeCapabilityNode.UnitTypeList.Contains(capabilityConsumer.UnitType)) {
                     returnValue = returnValue.Join(unitTypeCapabilityNode.Capabilities);

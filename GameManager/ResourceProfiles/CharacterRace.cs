@@ -61,7 +61,7 @@ namespace AnyRPG {
         public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
 

@@ -20,7 +20,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="capabilityConsumer"></param>
         /// <returns></returns>
-        CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer);
+        CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true);
 
     }
 

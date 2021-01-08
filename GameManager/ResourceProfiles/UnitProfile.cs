@@ -313,7 +313,7 @@ namespace AnyRPG {
             }
         }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
 

@@ -66,7 +66,7 @@ namespace AnyRPG {
         public List<CharacterClass> CharacterClasses { get => characterClasses; set => characterClasses = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
 

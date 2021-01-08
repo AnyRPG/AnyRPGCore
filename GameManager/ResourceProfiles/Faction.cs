@@ -62,8 +62,11 @@ namespace AnyRPG {
         public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
-        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer) {
-            CapabilityProps returnValue = capabilities;
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
+            CapabilityProps returnValue = new CapabilityProps();
+            if (returnAll) {
+                returnValue = capabilities;
+            }
             foreach (CharacterClassCapabilityNode characterClassCapabilityNode in classCapabilityList) {
                 if (capabilityConsumer != null && capabilityConsumer.CharacterClass != null && characterClassCapabilityNode.CharacterClassList.Contains(capabilityConsumer.CharacterClass)) {
                     returnValue = returnValue.Join(characterClassCapabilityNode.Capabilities);
