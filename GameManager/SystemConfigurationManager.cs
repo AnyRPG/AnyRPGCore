@@ -96,6 +96,7 @@ namespace AnyRPG {
 
         [Header("CONTROLLER")]
 
+        [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
 
@@ -103,8 +104,15 @@ namespace AnyRPG {
         [SerializeField]
         private bool allowAutoAttack = true;
 
+        [Header("CAMERA")]
+
+        [Tooltip("Use a third party camera (such as Invector) to follow the character.  Built-in camera will still be used for menus and cutscenes.")]
         [SerializeField]
         private bool useThirdPartyCameraControl = false;
+
+        [Tooltip("A reference to the third party camera prefab to be used")]
+        [SerializeField]
+        private GameObject thirdPartyCamera = null;
 
         [Header("UI")]
 
@@ -509,6 +517,7 @@ namespace AnyRPG {
         public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
+        public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");

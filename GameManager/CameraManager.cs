@@ -50,10 +50,10 @@ namespace AnyRPG {
         [SerializeField]
         private Camera petPreviewCamera = null;
 
-        [SerializeField]
+        //[SerializeField]
         private GameObject thirdPartyCameraGameObject = null;
 
-        [SerializeField]
+        //[SerializeField]
         private Camera thirdPartyCamera = null;
 
 
@@ -94,6 +94,18 @@ namespace AnyRPG {
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
 
+            if (thirdPartyCameraGameObject == null && SystemConfigurationManager.MyInstance.ThirdPartyCamera != null) {
+                thirdPartyCameraGameObject = Instantiate(SystemConfigurationManager.MyInstance.ThirdPartyCamera, transform);
+                if (thirdPartyCameraGameObject != null) {
+                    thirdPartyCamera = thirdPartyCameraGameObject.GetComponentInChildren<Camera>();
+                    if (thirdPartyCamera == null) {
+                        Debug.LogWarning("No camera was found on the third party camera GameObject");
+                    }
+                } else {
+                    Debug.LogWarning("Unable to instantiate third party camera GameObject");
+                }
+            }
+
             DisablePreviewCameras();
             DisableThirdPartyCamera();
             DisableFocusCamera();
@@ -105,7 +117,7 @@ namespace AnyRPG {
         }
 
         private void CheckConfiguration() {
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && SystemConfigurationManager.MyInstance.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
                 Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
             }
         }
