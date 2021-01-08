@@ -242,12 +242,14 @@ namespace AnyRPG {
                         if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
                             // since we hit something, and our existing thing was not null, we have to exit the old one
                             //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null")+ "; new: " + (newInteractable != null ? newInteractable.MyName : "null" ));
+                            mouseOverInteractable.IsMouseOverUnit = false;
                             mouseOverInteractable.OnMouseOut();
                         }
 
                         if (newInteractable != null && mouseOverInteractable != newInteractable) {
                             // we have a new interactable, activate mouseover
                             //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
+                            newInteractable.IsMouseOverUnit = true;
                             newInteractable.OnMouseHover();
                         }
                         mouseOverInteractable = newInteractable;
@@ -261,6 +263,7 @@ namespace AnyRPG {
             if (disableMouseOver) {
                 // we did not hit any interactable, check if a current interactable is set and unset it
                 if (mouseOverInteractable != null) {
+                    mouseOverInteractable.IsMouseOverUnit = false;
                     mouseOverInteractable.OnMouseOut();
                     mouseOverInteractable = null;
                 }

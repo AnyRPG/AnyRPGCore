@@ -496,12 +496,14 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
             if (unitNamePlateController.Interactable != null) {
+                unitNamePlateController.Interactable.IsMouseOverNameplate = true;
                 unitNamePlateController.Interactable.OnMouseHover();
             }
         }
 
         public void OnPointerExit(PointerEventData eventData) {
             if (unitNamePlateController.Interactable != null) {
+                unitNamePlateController.Interactable.IsMouseOverNameplate = false;
                 unitNamePlateController.Interactable.OnMouseOut();
             }
         }
@@ -511,7 +513,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.UnitController == null) {
                 return;
             }
-            if (unitNamePlateController.Interactable.gameObject != (PlayerManager.MyInstance.UnitController.gameObject)) {
+            if (unitNamePlateController.Interactable.gameObject != PlayerManager.MyInstance.UnitController.gameObject && unitNamePlateController.Interactable.IsTrigger == false) {
                 PlayerManager.MyInstance.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
             }
         }

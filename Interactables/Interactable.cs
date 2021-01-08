@@ -114,6 +114,8 @@ namespace AnyRPG {
         protected bool isFlashing = false;
         protected bool hasMeshRenderer = false;
         protected bool miniMapIndicatorReady = false;
+        protected bool isMouseOverUnit = false;
+        protected bool isMouseOverNameplate = false;
 
         // attached components
         protected Collider myCollider;
@@ -171,6 +173,9 @@ namespace AnyRPG {
                 return gameObject;
             }
         }
+
+        public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
+        public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
         protected override void Awake() {
             base.Awake();
@@ -754,6 +759,11 @@ namespace AnyRPG {
             }
 
             if (MyPrerequisitesMet == false) {
+                return;
+            }
+
+            // prevent moving mouse from unit to namePlate from stopping glow or hiding tooltip
+            if (isMouseOverNameplate || isMouseOverUnit) {
                 return;
             }
 
