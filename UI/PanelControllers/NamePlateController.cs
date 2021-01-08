@@ -122,6 +122,7 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
+            ProcessPointerExit();
             CleanupEventSubscriptions();
         }
 
@@ -466,8 +467,10 @@ namespace AnyRPG {
 
         private void OnDestroy() {
             //Debug.Log((unitNamePlateController == null ? "null" : unitNamePlateController.UnitDisplayName) + ".NamePlateController.OnDestroy()");
+            ProcessPointerExit();
             if (unitNamePlateController != null) {
                 //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
+
                 if (unitNamePlateController.Interactable.CharacterUnit != null) {
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                     (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
@@ -502,7 +505,11 @@ namespace AnyRPG {
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            if (unitNamePlateController.Interactable != null) {
+            ProcessPointerExit();
+        }
+
+        public void ProcessPointerExit() {
+            if (unitNamePlateController?.Interactable != null) {
                 unitNamePlateController.Interactable.IsMouseOverNameplate = false;
                 unitNamePlateController.Interactable.OnMouseOut();
             }
