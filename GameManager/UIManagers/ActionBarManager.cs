@@ -144,27 +144,6 @@ namespace AnyRPG {
                         if (finalTarget != null) {
                             inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
                         }
-                        /*
-                        if (baseAbility.UseMeleeRange == true) {
-                            if (PlayerManager.MyInstance.MyCharacter.CharacterUnit.HitBoxSize < distanceToTarget) {
-                                // red text
-                                inRange = false;
-                            } else {
-                                // white text
-                                inRange = true;
-                            }
-                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): melee " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
-                        } else {
-                            if (baseAbility.MaxRange > 0 && distanceToTarget > baseAbility.MaxRange) {
-                                // set text color to red
-                                inRange = false;
-                            } else {
-                                // set the text color to white
-                                inRange = true;
-                            }
-                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): " + baseAbility.MyName + "; distance: " + distanceToTarget + "; maxrange: " + baseAbility.MyMaxRange + "; inrange: " + inRange);
-                        }
-                        */
                         if (inRange) {
                             if (actionButton.KeyBindText.color != Color.white) {
                                 actionButton.KeyBindText.color = Color.white;

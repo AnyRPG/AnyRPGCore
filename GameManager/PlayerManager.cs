@@ -491,6 +491,7 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
             activeCharacter.CharacterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
             activeCharacter.CharacterStats.OnRecoverResource += HandleRecoverResource;
+            activeCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
             activeCharacter.CharacterStats.OnCalculateRunSpeed += HandleCalculateRunSpeed;
             activeCharacter.CharacterCombat.OnKillEvent += HandleKillEvent;
             activeCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
@@ -521,6 +522,7 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.OnGainXP -= HandleGainXP;
             activeCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
             activeCharacter.CharacterStats.OnRecoverResource -= HandleRecoverResource;
+            activeCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
             activeCharacter.CharacterStats.OnCalculateRunSpeed -= HandleCalculateRunSpeed;
             activeCharacter.CharacterCombat.OnKillEvent -= HandleKillEvent;
             activeCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
@@ -664,6 +666,10 @@ namespace AnyRPG {
 
         public void HandleRecoverResource(PowerResource powerResource, int amount) {
             CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+        }
+
+        public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
+            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
