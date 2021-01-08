@@ -106,10 +106,10 @@ namespace AnyRPG {
         }
 
 
-        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".AbilityEffect.CanUseOn(" + (target == null ? "null " : target.gameObject.name) + ", " + sourceCharacter.AbilityManager.Name + ")");
 
-            return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated);
+            return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
         public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {

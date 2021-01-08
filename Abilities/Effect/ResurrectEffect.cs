@@ -33,7 +33,7 @@ namespace AnyRPG {
             characterUnit.BaseCharacter.CharacterStats.Revive();
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
                 return false;
             }

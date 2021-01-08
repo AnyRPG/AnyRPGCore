@@ -461,17 +461,17 @@ namespace AnyRPG {
             sourceCharacter.AbilityManager.DespawnAbilityObjects();
         }
 
-        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (playerInitiated) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
             }
 
             if (useAbilityEffectTargetting == true
                 && GetAbilityEffects(sourceCharacter).Count > 0) {
-                return GetAbilityEffects(sourceCharacter)[0].CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
+                return GetAbilityEffects(sourceCharacter)[0].CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
             }
 
-            return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated);
+            return TargetProps.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
 
         }
 

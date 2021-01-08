@@ -10,7 +10,7 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New PetEffect", menuName = "AnyRPG/Abilities/Effects/PetEffect")]
     public class PetEffect : StatusEffect {
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
                 return false;
             }
@@ -24,7 +24,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
 

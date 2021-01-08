@@ -71,7 +71,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
                 if (playerInitiated) {
@@ -79,7 +79,7 @@ namespace AnyRPG {
                 }
                 return false;
             }
-            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
     }

@@ -140,16 +140,30 @@ namespace AnyRPG {
 
         public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
-            bool returnResult = PerformAbilityEffects(source, target, abilityEffectContext);
-            if (!returnResult) {
-                return false;
+            bool returnResult = true;
+
+            // perform a check that includes range to target
+            bool rangeResult = base.CanUseOn(target, source);
+            bool deactivateAutoAttack = false;
+            if (rangeResult == false) {
+                returnResult = false;
+                // if the range to target check failed, perform another check without range
+                // if that passes, do not deactivate auto-attack.  target just moved away mid swing and didn't die/change faction etc
+                if (!base.CanUseOn(target, source, true, null, false, false)) {
+                    deactivateAutoAttack = true;
+                }
+            }
+            source.AbilityManager.ProcessAnimatedAbilityHit(target, deactivateAutoAttack);
+
+            // if the range check passed, see if the ability hit or missed
+            if (returnResult == true) {
+                bool missResult = PerformAbilityEffects(source, target, abilityEffectContext);
+                if (!missResult) {
+                    returnResult = false;
+                }
             }
 
-            if (!source.AbilityManager.ProcessAnimatedAbilityHit(target, !base.CanUseOn(target, source))) {
-                return false;
-            }
-
-            return true;
+            return returnResult;
 
         }
 
@@ -159,14 +173,14 @@ namespace AnyRPG {
 
         }
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + ")");
             if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;
             }
 
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + "): returning base");
-            return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated);
+            return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
         public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {

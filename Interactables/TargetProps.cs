@@ -77,7 +77,7 @@ namespace AnyRPG {
         public virtual TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public virtual bool RequiresGroundTarget { get => false; }
 
-        public static bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public static bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             // create target booleans
             bool targetIsSelf = false;
             CharacterUnit targetCharacterUnit = null;
@@ -177,7 +177,7 @@ namespace AnyRPG {
             // if we made it this far we passed liveness and relationship checks.
             // since the target is not ourself, and it is valid, we should perform a range check
 
-            if (!sourceCharacter.AbilityManager.IsTargetInRange(target, targetable, abilityEffectContext)) {
+            if (performRangeCheck == true && !sourceCharacter.AbilityManager.IsTargetInRange(target, targetable, abilityEffectContext)) {
                 //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning false: NOT IN RANGE");
                 if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + ". target is not in range!");

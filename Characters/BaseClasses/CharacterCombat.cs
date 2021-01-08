@@ -309,7 +309,7 @@ namespace AnyRPG {
         }
 
         public void DeActivateAutoAttack() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.DeActivateAutoAttack()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.DeActivateAutoAttack()");
             autoAttackActive = false;
         }
 

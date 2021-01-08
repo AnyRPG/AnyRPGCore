@@ -542,6 +542,7 @@ namespace AnyRPG {
         }
 
         public override bool ProcessAnimatedAbilityHit(Interactable target, bool deactivateAutoAttack) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ProcessAnimatedAbilityHit(" + target.gameObject.name + ", " + deactivateAutoAttack + ")");
             // we can now continue because everything beyond this point is single target oriented and it's ok if we cancel attacking due to lack of alive/unfriendly target
             // check for friendly target in case it somehow turned friendly mid swing
             if (target == null || deactivateAutoAttack == true) {

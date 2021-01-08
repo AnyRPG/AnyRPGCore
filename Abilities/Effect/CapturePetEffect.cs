@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
 
-        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false) {
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn()");
             if (target == null) {
                 // capture pet effect requires a target under all circumstances
@@ -49,7 +49,7 @@ namespace AnyRPG {
                     return false;
                 }
             }
-            bool returnValue = base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated);
+            bool returnValue = base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
             //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): returning: " + returnValue);
             return returnValue;
         }
