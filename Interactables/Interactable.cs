@@ -511,7 +511,8 @@ namespace AnyRPG {
                 int playerMask = 1 << LayerMask.NameToLayer("Player");
                 int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
                 int interactableMask = 1 << LayerMask.NameToLayer("Interactable");
-                int validMask = (playerMask | characterMask | interactableMask);
+                int triggerMask = 1 << LayerMask.NameToLayer("Triggers");
+                int validMask = (playerMask | characterMask | interactableMask | triggerMask);
                 Vector3 bottomPoint = new Vector3(source.Interactable.Collider.bounds.center.x,
                     source.Interactable.Collider.bounds.center.y - source.Interactable.Collider.bounds.extents.y,
                     source.Interactable.Collider.bounds.center.z);

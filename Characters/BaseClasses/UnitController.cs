@@ -1355,7 +1355,8 @@ namespace AnyRPG {
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             int interactableMask = 1 << LayerMask.NameToLayer("Interactable");
-            int validMask = (playerMask | characterMask | interactableMask);
+            int triggerMask = 1 << LayerMask.NameToLayer("Triggers");
+            int validMask = (playerMask | characterMask | interactableMask | triggerMask);
 
             //Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, Quaternion.identity, validMask);
             Collider[] hitColliders = Physics.OverlapBox(GetHitBoxCenter(), GetHitBoxSize() / 2f, transform.rotation, validMask);
