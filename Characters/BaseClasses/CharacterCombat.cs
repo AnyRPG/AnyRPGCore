@@ -525,6 +525,7 @@ namespace AnyRPG {
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
+            lastCombatEvent = Time.time;
             OnReceiveCombatMiss(targetObject, abilityEffectContext);
         }
 
