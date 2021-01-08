@@ -155,6 +155,11 @@ namespace AnyRPG {
                                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to red for ability " + baseAbility.MyName);
                             }
                         }
+                    } else {
+                        if (actionButton.KeyBindText.color != Color.white) {
+                            actionButton.KeyBindText.color = Color.white;
+                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white");
+                        }
                     }
                 }
                 yield return null;
