@@ -123,8 +123,8 @@ namespace AnyRPG {
                     //Debug.Log("DescribableIcon.UpdateVisual(): Updating Icon for : " + MyDescribable.MyName);
                     MyIcon.sprite = null;
                     MyIcon.sprite = Describable.Icon;
-                    MyIcon.color = Color.white;
                 }
+                MyIcon.color = Color.white;
             } else if (Describable == null && MyIcon != null) {
                 MyIcon.sprite = null;
                 MyIcon.color = new Color32(0, 0, 0, 0);
