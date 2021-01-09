@@ -123,6 +123,9 @@ namespace AnyRPG {
                     if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
                         Vector3 spawnLocation = Vector3.zero;
                         Transform prefabParent = null;
+                        Vector3 nodePosition = abilityAttachmentNode.HoldableObject.Position;
+                        Vector3 nodeRotation = abilityAttachmentNode.HoldableObject.Rotation;
+                        Vector3 nodeScale = abilityAttachmentNode.HoldableObject.Scale;
                         if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                             //Debug.Log(resourceName + ".LengthEffect.Cast(): prefabspawnlocation: point; abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
@@ -139,7 +142,9 @@ namespace AnyRPG {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
-
+                            nodePosition = attachmentPointNode.Position;
+                            nodeRotation = attachmentPointNode.Rotation;
+                            nodeScale = attachmentPointNode.Scale;
                             spawnLocation = source.AbilityManager.UnitGameObject.transform.position;
                             prefabParent = source.AbilityManager.UnitGameObject.transform;
                             Transform usedPrefabSourceBone = null;
@@ -164,9 +169,9 @@ namespace AnyRPG {
                             //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
                             //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
                             //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);
-                            float finalX = (prefabParent == null ? spawnLocation.x + abilityAttachmentNode.HoldableObject.Position.x : prefabParent.TransformPoint(abilityAttachmentNode.HoldableObject.Position).x);
-                            float finalY = (prefabParent == null ? spawnLocation.y + abilityAttachmentNode.HoldableObject.Position.y : prefabParent.TransformPoint(abilityAttachmentNode.HoldableObject.Position).y);
-                            float finalZ = (prefabParent == null ? spawnLocation.z + abilityAttachmentNode.HoldableObject.Position.z : prefabParent.TransformPoint(abilityAttachmentNode.HoldableObject.Position).z);
+                            float finalX = (prefabParent == null ? spawnLocation.x + nodePosition.x : prefabParent.TransformPoint(nodePosition).x);
+                            float finalY = (prefabParent == null ? spawnLocation.y + nodePosition.y : prefabParent.TransformPoint(nodePosition).y);
+                            float finalZ = (prefabParent == null ? spawnLocation.z + nodePosition.z : prefabParent.TransformPoint(nodePosition).z);
                             //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
                             Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
                             //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
@@ -179,13 +184,16 @@ namespace AnyRPG {
                             if (prefabParent != null) {
                                 usedForwardDirection = prefabParent.transform.forward;
                             }
-                            GameObject prefabObject = Instantiate(abilityAttachmentNode.HoldableObject.Prefab, finalSpawnLocation, Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(abilityAttachmentNode.HoldableObject.Rotation), prefabParent);
+                            GameObject prefabObject = Instantiate(abilityAttachmentNode.HoldableObject.Prefab,
+                                finalSpawnLocation,
+                                Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
+                                prefabParent);
                             if (prefabObject == null) {
                                 //Debug.Log(MyName + ".LengthEffect.Cast(): prefabObject = null");
                             } else {
                                 //Debug.Log(MyName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
                             }
-                            prefabObject.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
+                            prefabObject.transform.localScale = nodeScale;
                             prefabObjects[abilityAttachmentNode.HoldableObject] = prefabObject;
                             //abilityEffectObject =
                         }

@@ -28,9 +28,16 @@ namespace AnyRPG {
 
                 foreach (PrefabProfile prefabProfile in prefabObjects.Keys) {
 
+                    // recently added code will properly spawn the object based on universal attachments
+                    // get references to the parent and rotation to pass them onto the channeled object script
+                    // since this object will switch parents to avoid moving/rotating with the character body
+                    GameObject prefabParent = prefabObjects[prefabProfile].transform.parent.gameObject;
+                    Vector3 sourcePosition = prefabObjects[prefabProfile].transform.localPosition;
+
                     prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
                     IChanneledObject channeledObjectScript = prefabObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
+                        /*
                         GameObject prefabParent = source.AbilityManager.UnitGameObject;
                         Transform usedPrefabSourceBone = null;
                         if (prefabProfile.TargetBone != null && prefabProfile.TargetBone != string.Empty) {
@@ -39,6 +46,7 @@ namespace AnyRPG {
                         if (usedPrefabSourceBone != null) {
                             prefabParent = usedPrefabSourceBone.gameObject;
                         }
+                        */
                         Vector3 endPosition = Vector3.zero;
                         Interactable usedTarget = target;
                         if (abilityEffectInput.baseAbility != null && abilityEffectInput.baseAbility.GetTargetOptions(source).RequiresGroundTarget == true) {
@@ -49,7 +57,7 @@ namespace AnyRPG {
                             endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                         }
                         
-                        channeledObjectScript.Setup(prefabParent, prefabProfile.Position, usedTarget?.gameObject, endPosition);
+                        channeledObjectScript.Setup(prefabParent, sourcePosition, usedTarget?.gameObject, endPosition);
                         //channeledObjectScript.MyStartObject = prefabParent;
                         //channeledObjectScript.MyStartPosition = source.AbilityManager.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;
