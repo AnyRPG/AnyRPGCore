@@ -1212,8 +1212,15 @@ namespace AnyRPG {
             }
         }
 
+        private void ApplyControlLock() {
+            if (characterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
+                characterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
+            }
+        }
+
         public void FreezeCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.FreezeCharacter(): ");
+            ApplyControlLock();
             frozen = true;
             FreezePositionXZ();
             if (UnitAnimator != null) {
@@ -1242,6 +1249,7 @@ namespace AnyRPG {
                 // testing -- avoid triggering stun animation multiple times
                 return;
             }
+            ApplyControlLock();
             stunned = true;
             FreezePositionXZ();
             if (UnitAnimator != null) {
@@ -1270,6 +1278,7 @@ namespace AnyRPG {
 
         public void LevitateCharacter() {
             //Debug.Log(gameObject.name + ".BaseController.LevitateCharacter(): ");
+            ApplyControlLock();
             levitated = true;
             FreezePositionXZ();
             if (UnitAnimator != null) {
