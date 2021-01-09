@@ -665,7 +665,9 @@ namespace AnyRPG {
 
 
         public void HandleRecoverResource(PowerResource powerResource, int amount) {
-            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+            if (CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+            }
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
@@ -683,9 +685,13 @@ namespace AnyRPG {
         }
 
         public void HandleGainXP(int xp) {
-            CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
+            if (CombatLogUI.MyInstance != null) {
+                CombatLogUI.MyInstance.WriteSystemMessage("You gain " + xp + " experience");
+            }
             if (activeUnitController != null) {
-                CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+                if (CombatTextManager.MyInstance != null) {
+                    CombatTextManager.MyInstance.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+                }
             }
             SystemEventManager.MyInstance.NotifyOnXPGained();
         }

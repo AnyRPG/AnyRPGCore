@@ -374,15 +374,22 @@ namespace AnyRPG {
         //private void LateUpdate() {
         public void UpdatePosition() {
             //Debug.Log("NamePlateController.UpdatePosition(): frame " + Time.frameCount + "; " + unitNamePlateController.UnitDisplayName);
-            if (unitNamePlateController != null && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null)) {
+            if (unitNamePlateController != null
+                && (PlayerManager.MyInstance.UnitController != null || UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null)) {
                 //Debug.Log("Setting the position of the nameplate transform in lateupdate");
                 bool renderNamePlate = true;
                 //Debug.Log("NamePlateController.LateUpdate(): the position of the character is " + characterUnit.transform.position);
                 Camera currentCamera;
                 if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null) {
+                    if (CutsceneCameraController.MyInstance == null) {
+                        return;
+                    }
                     currentCamera = CutsceneCameraController.MyInstance.GetComponent<Camera>();
                 } else {
                     currentCamera = CameraManager.MyInstance.MyActiveMainCamera;
+                }
+                if (currentCamera == null) {
+                    return;
                 }
                 //Debug.Log("NamePlateController.LateUpdate(): namePlateUnit: " + (namePlateUnit as MonoBehaviour).gameObject.name + "; currentcamera: " + (currentCamera == null ? "null" : currentCamera.name));
                 Vector3 relativePosition = currentCamera.WorldToViewportPoint(unitNamePlateController.NamePlateTransform.position);
