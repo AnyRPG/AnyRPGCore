@@ -12,17 +12,17 @@ namespace AnyRPG {
         Fall = 4,
         Roll = 8
     }
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PlayerMovementStateController))]
     public class PlayerUnitMovementController : AnyRPGStateMachine {
 
         //Components.
-        private CharacterController characterController;
+        private PlayerMovementStateController movementStateController;
 
         public AnyRPGCharacterState rpgCharacterState;
 
         [HideInInspector] public bool useMeshNav = false;
         [HideInInspector] public Vector3 lookDirection { get; private set; }
-        public CharacterController CharacterController { get => characterController; }
+        public PlayerMovementStateController MovementStateController { get => movementStateController; }
 
         //Jumping.
         [HideInInspector] public bool canJump;
@@ -107,14 +107,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
             rpgCharacterState = AnyRPGCharacterState.Idle;
-            if (characterController != null) {
-                characterController.Init();
+            if (movementStateController != null) {
+                movementStateController.Init();
             }
         }
 
         public void GetComponentReferences() {
-            characterController = GetComponent<AnyRPG.CharacterController>();
-            if (characterController == null) {
+            movementStateController = GetComponent<AnyRPG.PlayerMovementStateController>();
+            if (movementStateController == null) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
             }
         }
@@ -434,8 +434,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
             if (PlayerManager.MyInstance.ActiveUnitController != null) {
                 PlayerManager.MyInstance.PlayerController.canMove = true;
-                if (characterController != null) {
-                    characterController.enabled = true;
+                if (movementStateController != null) {
+                    movementStateController.enabled = true;
                 }
             }
             if (PlayerManager.MyInstance?.ActiveUnitController?.UnitAnimator != null) {
@@ -854,15 +854,15 @@ namespace AnyRPG {
 
         public void OnEnable() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnEnable()");
-            if (characterController != null) {
-                characterController.enabled = true;
+            if (movementStateController != null) {
+                movementStateController.enabled = true;
             }
         }
 
         public void OnDisable() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
-            if (characterController != null) {
-                characterController.enabled = false;
+            if (movementStateController != null) {
+                movementStateController.enabled = false;
             }
         }
 

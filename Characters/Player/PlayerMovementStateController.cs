@@ -9,7 +9,7 @@ namespace AnyRPG {
     /// Custom character controller, to be used by attaching the component to an object
     /// and writing scripts attached to the same object that recieve the "StateUpdate" message
     /// </summary>
-    public class CharacterController : MonoBehaviour {
+    public class PlayerMovementStateController : MonoBehaviour {
 
         public delegate void UpdateDelegate();
         public event UpdateDelegate AfterSingleUpdate;

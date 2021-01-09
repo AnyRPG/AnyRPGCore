@@ -424,13 +424,13 @@ namespace AnyRPG {
 
         public void DisableMovementControllers() {
             playerUnitMovementController.enabled = false;
-            playerUnitMovementController.CharacterController.enabled = false;
+            playerUnitMovementController.MovementStateController.enabled = false;
         }
 
         public void EnableMovementControllers() {
             //Debug.Log("PlayerManager.EnableMovementControllers()");
             playerUnitMovementController.enabled = true;
-            playerUnitMovementController.CharacterController.enabled = true;
+            playerUnitMovementController.MovementStateController.enabled = true;
             playerUnitMovementController.Init();
         }
 
