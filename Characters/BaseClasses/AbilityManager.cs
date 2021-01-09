@@ -19,6 +19,12 @@ namespace AnyRPG {
 
         protected MonoBehaviour abilityCaster = null;
 
+        public virtual bool ControlLocked {
+            get {
+                return false;
+            }
+        }
+
         public virtual bool IsDead {
             get {
                 return false;

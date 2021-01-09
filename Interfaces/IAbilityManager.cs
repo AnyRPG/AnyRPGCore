@@ -19,6 +19,7 @@ namespace AnyRPG {
         /// </summary>
         bool PerformingAbility { get; }
 
+        bool ControlLocked { get; }
 
         bool IsDead { get; }
 

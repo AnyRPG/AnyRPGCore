@@ -135,15 +135,21 @@ namespace AnyRPG {
 
             // test move this below death check to prevent player getting up after death
             ToggleRun();
-            CollectMoveInput();
 
             HandleLeftMouseClick();
+
+            RegisterTab();
+
+            // everything below this point cannot be done while control locked
+            if (PlayerManager.MyInstance?.ActiveUnitController != null && PlayerManager.MyInstance.ActiveUnitController.ControlLocked == true) {
+                return;
+            }
+            CollectMoveInput();
 
             HandleRightMouseClick();
 
             RegisterAbilityButtonPresses();
 
-            RegisterTab();
 
         }
 
@@ -679,7 +685,13 @@ namespace AnyRPG {
 
         public void SubscribeToUnitEvents() {
             //Debug.Log("PlayerController.SubscribeToUnitEvents()");
+            
+            // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             PlayerManager.MyInstance.ActiveUnitController.OnSetTarget += HandleSetTarget;
+            if (PlayerManager.MyInstance.ActiveUnitController.Target != null) {
+                HandleSetTarget(PlayerManager.MyInstance.ActiveUnitController.Target);
+            }
+
             PlayerManager.MyInstance.ActiveUnitController.OnClearTarget += HandleClearTarget;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;

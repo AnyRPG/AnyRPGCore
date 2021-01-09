@@ -67,6 +67,15 @@ namespace AnyRPG {
             }
         }
 
+        public override bool ControlLocked {
+            get {
+                if (baseCharacter?.UnitController != null) {
+                    return baseCharacter.UnitController.ControlLocked;
+                }
+                return base.ControlLocked;
+            }
+        }
+
         public override bool PerformingAbility {
             get {
                 if (WaitingForAnimatedAbility == true) {
@@ -1319,6 +1328,11 @@ namespace AnyRPG {
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return;
+            }
+            if (baseCharacter?.UnitController != null) {
+                if (baseCharacter.UnitController.ControlLocked == true) {
+                    return;
+                }
             }
 
             if (!CanCastAbility(usedAbility, playerInitiated)) {

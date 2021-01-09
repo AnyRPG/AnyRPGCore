@@ -118,6 +118,11 @@ namespace AnyRPG {
 
         public void OnPointerClick(PointerEventData eventData) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.OnPointerClick(): useable: " + (Useable != null ? Useable.MyName : "null"));
+            if (PlayerManager.MyInstance?.ActiveUnitController != null) {
+                if (PlayerManager.MyInstance.ActiveUnitController.ControlLocked == true) {
+                    return;
+                }
+            }
 
             // left click
             if (eventData.button == PointerEventData.InputButton.Left) {
