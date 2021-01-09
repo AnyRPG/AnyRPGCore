@@ -10,10 +10,10 @@ namespace AnyRPG {
     public class ActionButton : MonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
 
         // A reference to the useable on the actionbutton
-        private IUseable useable;
+        private IUseable useable = null;
 
         // keep track of the last usable that was on this button in case an ability is re-learned
-        private IUseable savedUseable;
+        private IUseable savedUseable = null;
 
         [SerializeField]
         private TextMeshProUGUI stackSizeText = null;
@@ -33,9 +33,9 @@ namespace AnyRPG {
 
         private bool initialized = false;
 
-        private Coroutine autoAttackCoRoutine = null;
-
-        private Coroutine abilityCoRoutine = null;
+        //private Coroutine autoAttackCoRoutine = null;
+        //private Coroutine abilityCoRoutine = null;
+        private Coroutine monitorCoroutine = null;
 
         /// <summary>
         /// A reference to the actual button that this button uses
@@ -46,8 +46,8 @@ namespace AnyRPG {
         public int MyCount { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI KeyBindText { get => keyBindText; }
-        public Coroutine AutoAttackCoRoutine { get => autoAttackCoRoutine; set => autoAttackCoRoutine = value; }
-        public Coroutine AbilityCoRoutine { get => abilityCoRoutine; set => abilityCoRoutine = value; }
+        //public Coroutine AutoAttackCoRoutine { get => autoAttackCoRoutine; set => autoAttackCoRoutine = value; }
+        //public Coroutine AbilityCoRoutine { get => abilityCoRoutine; set => abilityCoRoutine = value; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }
         public IUseable Useable {
             get {
@@ -55,7 +55,11 @@ namespace AnyRPG {
             }
             set {
                 //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.Useable = " + (useable == null ? "null" : useable.MyName) + "; new = " + value);
-                useable = value;
+                if (value == null) {
+                    useable = value;
+                    return;
+                }
+                useable = value.GetFactoryUseable();
                 //UpdateVisual(true);
             }
         }
@@ -107,10 +111,12 @@ namespace AnyRPG {
                 }
             }
 
-            if (Useable != null && (!(Useable is Item) || InventoryManager.MyInstance.GetUseableCount(Useable) > 0)) {
+            if (Useable != null) {
+                //if (Useable != null && (!(Useable is Item) || InventoryManager.MyInstance.GetUseableCount(Useable) > 0)) {
                 //Debug.Log("ActionButton.OnClick(): Using MyUseable");
                 //InventoryScript.MyInstance.GetUseable(MyUseable).Use();
-                Useable.Use();
+                //Useable.Use();
+                Useable.ActionButtonUse();
             } else {
                 //Debug.Log("ActionButton.OnClick(): MyUseable is null!!!");
             }
@@ -170,7 +176,7 @@ namespace AnyRPG {
         /// Sets the useable on the actionbutton
         /// </summary>
         /// <param name="useable"></param>
-        public void SetUseable(IUseable useable) {
+        public void SetUseable(IUseable useable, bool monitor = true) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + ")");
             // clear reference to any existing useable on this button.
             if (Useable != null && Useable is BaseAbility) {
@@ -215,7 +221,9 @@ namespace AnyRPG {
             }
 
             // there may be a global cooldown in progress.  if not, this call will still update the visual
-            ChooseMonitorCoroutine();
+            if (monitor == true) {
+                ChooseMonitorCoroutine();
+            }
 
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
@@ -242,20 +250,12 @@ namespace AnyRPG {
         }
 
         private void ChooseMonitorCoroutine() {
-            if (Useable is BaseAbility) {
-                // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
-                    //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
-                    if (autoAttackCoRoutine == null) {
-                        autoAttackCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAutoAttack(Useable as BaseAbility));
-                    }
-                } else {
-                    //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
-                    if (abilityCoRoutine == null) {
-                        abilityCoRoutine = SystemAbilityManager.MyInstance.StartCoroutine(MonitorAbility(Useable as BaseAbility));
-                    }
-                }
-            } else {
+            // if this action button is empty, there is nothing to monitor
+            if (useable == null) {
+                return;
+            }
+            monitorCoroutine = useable.ChooseMonitorCoroutine(this);
+            if (monitorCoroutine == null) {
                 UpdateVisual();
             }
         }
@@ -282,14 +282,17 @@ namespace AnyRPG {
                 // could switch buttons while an ability is on cooldown
                 UpdateVisual();
             }
-            autoAttackCoRoutine = null;
+            //autoAttackCoRoutine = null;
+            monitorCoroutine = null;
         }
 
         public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             while (Useable != null
-                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName) || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName)
+                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
@@ -306,7 +309,8 @@ namespace AnyRPG {
                 // could switch buttons while an ability is on cooldown
                 UpdateVisual();
             }
-            abilityCoRoutine = null;
+            //abilityCoRoutine = null;
+            monitorCoroutine = null;
         }
 
         private void DisableCoolDownIcon() {
@@ -331,13 +335,14 @@ namespace AnyRPG {
             // attempt to remove unlearned spells from the bars
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
-                if (Useable != null && (Useable is BaseAbility)) {
+                if (Useable != null && Useable.IsUseableStale(this)) {
                     if (!PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
                         savedUseable = Useable;
                         Useable = null;
                     }
                 }
             }
+
             if (Useable == null) {
                 //Debug.Log("ActionButton.UpdateVisual(): useable is null. clearing stack count and setting icon to empty");
                 UIManager.MyInstance.ClearStackCount(this);
@@ -358,13 +363,16 @@ namespace AnyRPG {
             if (Useable is Item) {
                 int count = InventoryManager.MyInstance.GetUseableCount(Useable);
                 // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
-                if ((count == 0 && removeStaleActions) || count > 0) {
+                //if ((count == 0 && removeStaleActions) || count > 0) {
+                if (count > 0) {
                     Useable = InventoryManager.MyInstance.GetUseable(Useable as IUseable);
                 }
                 UIManager.MyInstance.UpdateStackSize(this, count, true);
+
                 if (count == 0) {
                     EnableFullCoolDownIcon();
                 } else {
+                    // check for ability cooldown here and only disable if no cooldown exists
                     DisableCoolDownIcon();
                 }
             } else if (Useable is BaseAbility) {

@@ -259,6 +259,32 @@ namespace AnyRPG {
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
+
+        public virtual bool IsUseableStale(ActionButton actionButton) {
+            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
+                return false;
+            }
+            return true;
+        }
+
+        public bool ActionButtonUse() {
+            return Use();
+        }
+
+        public IUseable GetFactoryUseable() {
+            return SystemAbilityManager.MyInstance.GetResource(DisplayName);
+        }
+
+        public virtual Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
+                //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
+                //if (abilityCoRoutine == null) {
+                //if (monitorCoroutine == null) {
+                    return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(this));
+                //}
+            //return null;
+        }
+
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             if (useAbilityEffectTargetting == true && GetAbilityEffects(abilityCaster).Count > 0) {
                 return GetAbilityEffects(abilityCaster)[0].GetTargetOptions(abilityCaster);

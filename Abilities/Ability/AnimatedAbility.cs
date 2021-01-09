@@ -45,6 +45,17 @@ namespace AnyRPG {
             return 0f;
         }
 
+        public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && IsAutoAttack == true) {
+                //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
+                //if (autoAttackCoRoutine == null) {
+                //if (monitorCoroutine == null) {
+                    return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAutoAttack(this));
+                //}
+            }
+            return null;
+        }
+
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
             if (abilityPrefabSource == AbilityPrefabSource.Both) {
                 List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();

@@ -10,7 +10,7 @@ namespace AnyRPG {
     /// Superclass for all items
     /// </summary>
     [CreateAssetMenu(fileName = "New Item", menuName = "AnyRPG/Inventory/Item")]
-    public class Item : DescribableResource, IMoveable {
+    public class Item : DescribableResource, IMoveable, IUseable {
 
         [Header("Item")]
 
@@ -168,6 +168,32 @@ namespace AnyRPG {
         }
 
         public virtual void Awake() {
+        }
+
+        public IUseable GetFactoryUseable() {
+            return SystemItemManager.MyInstance.GetResource(DisplayName);
+        }
+
+        public bool ActionButtonUse() {
+            List<Item> itemList = InventoryManager.MyInstance?.GetItems(DisplayName, 1);
+            if (itemList == null || itemList.Count == 0) {
+                return false;
+            }
+            Item newItem = itemList[0];
+            if (newItem == null) {
+                return false;
+            }
+            return newItem.Use();
+        }
+
+        public virtual bool IsUseableStale(ActionButton actionButton) {
+            // items are never stale
+            // they should stay on action buttons in case the player picks up more
+            return false;
+        }
+
+        public virtual Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            return null;
         }
 
         public virtual bool Use() {

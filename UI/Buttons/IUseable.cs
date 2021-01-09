@@ -11,5 +11,9 @@ namespace AnyRPG {
         Sprite Icon { get; }
         string DisplayName { get; }
         bool Use();
+        bool ActionButtonUse();
+        Coroutine ChooseMonitorCoroutine(ActionButton actionButton);
+        bool IsUseableStale(ActionButton actionButton);
+        IUseable GetFactoryUseable();
     }
 }

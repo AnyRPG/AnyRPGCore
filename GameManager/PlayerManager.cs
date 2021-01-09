@@ -671,7 +671,7 @@ namespace AnyRPG {
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
-            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+            UIManager.MyInstance.MyActionBarManager.UpdateVisuals();
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {

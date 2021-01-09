@@ -8,10 +8,10 @@ namespace AnyRPG {
     public abstract class CastableItem : Item, IUseable {
 
         [SerializeField]
-        protected string abilityName;
+        protected string abilityName = string.Empty;
 
         //[SerializeField]
-        protected BaseAbility ability;
+        protected BaseAbility ability = null;
 
         public override bool Use() {
             //Debug.Log("CastableItem.Use()");
@@ -27,6 +27,13 @@ namespace AnyRPG {
                 Remove();
             }
             return returnValue;
+        }
+
+        public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            if (ability == null) {
+                return null;
+            }
+            return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
         /*

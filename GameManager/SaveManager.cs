@@ -1024,6 +1024,7 @@ namespace AnyRPG {
                 if (actionBarSaveData.isItem == true) {
                     // find item in bag
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
+                    /*
                     List<Item> itemList = InventoryManager.MyInstance.GetItems(actionBarSaveData.MyName, 1);
                     if (itemList.Count > 0) {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
@@ -1031,6 +1032,8 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
                     }
+                    */
+                    useable = SystemItemManager.MyInstance.GetResource(actionBarSaveData.MyName);
                 } else {
                     // find ability from system ability manager
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
@@ -1048,7 +1051,7 @@ namespace AnyRPG {
                 }
                 if (useable != null) {
                     //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
-                    UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SetUseable(useable);
+                    UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
