@@ -484,9 +484,29 @@ namespace AnyRPG {
             }
             tooltipRect.pivot = pivot;
             toolTip.SetActive(true);
+
             toolTip.transform.position = position;
             ShowToolTipCommon(describable, showSellPrice);
             //toolTipText.text = description.GetDescription();
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+            float topPoint = tooltipRect.rect.yMax + position.y;
+            float bottomPoint = tooltipRect.rect.yMin + position.y;
+            //Debug.Log("screen height : " + Screen.height + "; position: " + position + "; top: " + tooltipRect.rect.yMax + "; bottom: " + tooltipRect.rect.yMin);
+
+            // move up if too low
+            if (bottomPoint < 0f) {
+                toolTip.transform.position = new Vector3(toolTip.transform.position.x, (toolTip.transform.position.y - bottomPoint) + 20, toolTip.transform.position.z);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+            }
+
+            // move down if too high
+            if (topPoint > Screen.height) {
+                toolTip.transform.position = new Vector3(toolTip.transform.position.x, toolTip.transform.position.y - ((topPoint - Screen.height) + 20), toolTip.transform.position.z);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+            }
+
+
         }
 
         public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
