@@ -38,6 +38,8 @@ namespace AnyRPG {
 
         AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode);
 
+        void AddAbilityObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go);
+
         /// <summary>
         /// return a list of weapon ability objects
         /// </summary>

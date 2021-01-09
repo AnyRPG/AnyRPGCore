@@ -25,6 +25,10 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void AddAbilityObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
+            // do nothing
+        }
+
         public virtual bool IsDead {
             get {
                 return false;

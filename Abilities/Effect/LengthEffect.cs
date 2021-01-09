@@ -36,6 +36,10 @@ namespace AnyRPG {
         [SerializeField]
         protected float prefabDestroyDelay = 0f;
 
+        [Tooltip("If true, the prefab will be destroyed when casting ends, regardless of prefab lifetime")]
+        [SerializeField]
+        protected bool destroyOnEndCast = false;
+
         [Header("Tick")]
 
         [Tooltip("every <tickRate> seconds, the Tick() will occur")]
@@ -195,6 +199,9 @@ namespace AnyRPG {
                             }
                             prefabObject.transform.localScale = nodeScale;
                             prefabObjects[abilityAttachmentNode.HoldableObject] = prefabObject;
+                            if (destroyOnEndCast) {
+                                source.AbilityManager.AddAbilityObject(abilityAttachmentNode, prefabObject);
+                            }
                             //abilityEffectObject =
                         }
                     }

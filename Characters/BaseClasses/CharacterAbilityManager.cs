@@ -44,7 +44,7 @@ namespace AnyRPG {
         protected BaseAbility autoAttackAbility = null;
 
         // the holdable objects spawned during an ability cast and removed when the cast is complete
-        protected Dictionary<AbilityAttachmentNode, GameObject> abilityObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
+        protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
         public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
 
@@ -251,7 +251,6 @@ namespace AnyRPG {
             Dictionary<AbilityAttachmentNode, GameObject> holdableObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
             foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAttachmentNodes) {
                 if (abilityAttachmentNode != null) {
-                    // NEW CODE
                     if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
                         //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
                         // attach a mesh to a bone for weapons
@@ -274,14 +273,24 @@ namespace AnyRPG {
                             }
                         }
                     }
-                    // END NEW CODE
-
                 }
             }
             if (holdableObjects.Count > 0) {
-                abilityObjects = holdableObjects;
+                foreach (AbilityAttachmentNode abilityAttachmentNode in holdableObjects.Keys) {
+                    AddAbilityObject(abilityAttachmentNode, holdableObjects[abilityAttachmentNode]);
+                }
+                //abilityObjects = holdableObjects;
             }
 
+        }
+
+        public override void AddAbilityObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
+            base.AddAbilityObject(abilityAttachmentNode, go);
+            if (abilityObjects.ContainsKey(abilityAttachmentNode)) {
+                abilityObjects[abilityAttachmentNode].Add(go);
+            } else {
+                abilityObjects.Add(abilityAttachmentNode, new List<GameObject>() { go });
+            }
         }
 
         public override void DespawnAbilityObjects() {
@@ -291,9 +300,13 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (GameObject abilityObject in abilityObjects.Values) {
-                if (abilityObject != null) {
-                    UnityEngine.Object.Destroy(abilityObject);
+            foreach (List<GameObject> abilityObjectPrefabs in abilityObjects.Values) {
+                if (abilityObjectPrefabs != null) {
+                    foreach (GameObject abilityObject in abilityObjectPrefabs) {
+                        if (abilityObject != null) {
+                            UnityEngine.Object.Destroy(abilityObject);
+                        }
+                    }
                 }
             }
             abilityObjects.Clear();

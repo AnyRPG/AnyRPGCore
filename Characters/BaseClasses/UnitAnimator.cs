@@ -1223,7 +1223,7 @@ namespace AnyRPG {
         private void ClearAttackCommon() {
             SetAttacking(false);
             currentAbilityEffectContext = null;
-            if (unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.DespawnAbilityObjects();
             }
         }
