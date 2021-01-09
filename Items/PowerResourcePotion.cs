@@ -16,6 +16,7 @@ namespace AnyRPG {
         private PowerResource powerResource = null;
 
         public override bool Use() {
+            //Debug.Log(DisplayName + ".PowerResourcePotion.Use()");
             if (PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
                 //Debug.Log("The current resource amount was less than the max resource amount and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();

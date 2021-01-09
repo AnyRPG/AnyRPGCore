@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         void GeneratePower(BaseAbility ability);
 
-        void BeginAbility(string abilityName);
+        bool BeginAbility(string abilityName);
 
         bool CanCastAbility(BaseAbility ability, bool playerInitiated = false);
 

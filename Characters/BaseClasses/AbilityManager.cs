@@ -193,8 +193,9 @@ namespace AnyRPG {
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>
         /// <param name="abilityName"></param>
-        public virtual void BeginAbility(string abilityName) {
+        public virtual bool BeginAbility(string abilityName) {
             // nothing here
+            return true;
         }
 
 

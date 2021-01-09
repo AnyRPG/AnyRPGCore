@@ -1218,34 +1218,35 @@ namespace AnyRPG {
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>
         /// <param name="abilityName"></param>
-        public override void BeginAbility(string abilityName) {
+        public override bool BeginAbility(string abilityName) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
             // these have to be new resources because the ability stores a tick time
             //BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetNewResource(abilityName);
             if (baseAbility != null) {
-                BeginAbility(baseAbility);
+                return BeginAbility(baseAbility);
             }
+            return false;
         }
 
         /// <summary>
         /// The entrypoint to Casting a spell.  handles all logic such as instant/timed cast, current cast in progress, enough mana, target being alive etc
         /// </summary>
         /// <param name="ability"></param>
-        public void BeginAbility(BaseAbility ability, bool playerInitiated = false) {
+        public bool BeginAbility(BaseAbility ability, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
-                return;
+                return false;
             } else {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
             }
-            BeginAbilityCommon(ability, baseCharacter.UnitController.Target, playerInitiated);
+            return BeginAbilityCommon(ability, baseCharacter.UnitController.Target, playerInitiated);
         }
 
-        public void BeginAbility(BaseAbility ability, Interactable target) {
+        public bool BeginAbility(BaseAbility ability, Interactable target) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
-            BeginAbilityCommon(ability, target);
+            return BeginAbilityCommon(ability, target);
         }
 
         public override float GetSpeed() {
@@ -1335,16 +1336,16 @@ namespace AnyRPG {
             return base.GetCritChance();
         }
 
-        protected void BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
+        protected bool BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ")");
             BaseAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.DisplayName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
-                return;
+                return false;
             }
             if (baseCharacter?.UnitController != null) {
                 if (baseCharacter.UnitController.ControlLocked == true) {
-                    return;
+                    return false;
                 }
             }
 
@@ -1352,7 +1353,7 @@ namespace AnyRPG {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 }
-                return;
+                return false;
             }
 
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
@@ -1398,13 +1399,13 @@ namespace AnyRPG {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 }
-                return;
+                return false;
             }
             if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
                 if (playerInitiated) {
                     ReceiveCombatMessage("Target is not in line of sight");
                 }
-                return;
+                return false;
             }
 
             baseCharacter.UnitController.CancelMountEffects();
@@ -1446,6 +1447,8 @@ namespace AnyRPG {
                 }
 
             }
+
+            return true;
         }
 
         public override void ReceiveCombatMessage(string messageText) {

@@ -23,8 +23,9 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
-            Remove();
+            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
+                Remove();
+            }
             return returnValue;
         }
 
