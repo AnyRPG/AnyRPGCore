@@ -647,45 +647,6 @@ namespace AnyRPG {
             //return base.PerformFactionCheck(targetableEffect, targetCharacterUnit, targetIsSelf);
         }
 
-        // this ability exists to allow a caster to auto-self cast
-        /*
-        public override Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target) {
-            //Debug.Log("BaseAbility.ReturnTarget(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ", " + (target == null ? "null" : target.name) + ")");
-            CharacterUnit targetCharacterUnit = null;
-            if (target != null) {
-                targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-                if (targetCharacterUnit != null) {
-                    bool targetIsSelf = false;
-                    if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
-                        targetIsSelf = (target.gameObject == baseCharacter.UnitController.gameObject);
-                    }
-                    if (!PerformFactionCheck(abilityEffect, targetCharacterUnit, targetIsSelf)) {
-                        target = null;
-                    }
-                } else {
-                    //Debug.Log("target did not have a characterUnit.  set target to null");
-                    target = null;
-                }
-            }
-
-            // convert null target to self if possible
-            if (target == null) {
-                if (abilityEffect.GetTargetOptions(baseCharacter).AutoSelfCast == true) {
-                    //Debug.Log("target is null and autoselfcast is true.  setting target to self");
-                    target = baseCharacter.UnitController;
-                }
-            }
-
-            if (!abilityEffect.GetTargetOptions(baseCharacter).CanCastOnSelf && baseCharacter != null && baseCharacter.UnitController != null && target.gameObject == baseCharacter.UnitController.gameObject) {
-                //Debug.Log("we cannot cast this on ourself but the target was ourself.  set target to null");
-                target = null;
-            }
-
-            // intentionally not calling base as it always returns the original target
-            return target;
-        }
-        */
-
         public override void BeginAbilityCoolDown(BaseAbility baseAbility, float coolDownLength = -1f) {
 
             base.BeginAbilityCoolDown(baseAbility, coolDownLength);
@@ -1396,8 +1357,6 @@ namespace AnyRPG {
             Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon() finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
 
-            
-
             OnAttemptPerformAbility(ability);
 
             if (finalTarget == null && usedAbility.GetTargetOptions(baseCharacter).RequireTarget == true) {
@@ -1435,6 +1394,8 @@ namespace AnyRPG {
                     currentCastCoroutine = abilityCaster.StartCoroutine(PerformAbilityCast(usedAbility, finalTarget, abilityEffectContext));
                     currentCastAbility = usedAbility;
                 } else {
+                    // return false so that items in the inventory don't get used if this came from a castable item
+                    return false;
                     //CombatLogUI.MyInstance.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");

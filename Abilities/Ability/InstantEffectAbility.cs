@@ -26,14 +26,13 @@ namespace AnyRPG {
             if (!CanSimultaneousCast) {
                 if (source.AbilityManager.PerformingAbility) {
                     if (playerInitiated) {
-                        source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". another case is in progress");
+                        source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". another cast is in progress");
                     }
                     return false;
                 }
             }
             return true;
         }
-
 
     }
 

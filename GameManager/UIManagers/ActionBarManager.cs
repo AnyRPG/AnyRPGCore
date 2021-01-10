@@ -140,6 +140,8 @@ namespace AnyRPG {
 
                         Interactable finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter, target, false);
                         //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, target.transform.position);
+                        //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.DisplayName + "; finalTarget: " + (finalTarget == null ? "null" : finalTarget.gameObject.name));
+
                         inRange = false;
                         if (finalTarget != null) {
                             inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);

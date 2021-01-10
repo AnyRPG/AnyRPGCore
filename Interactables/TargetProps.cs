@@ -137,7 +137,6 @@ namespace AnyRPG {
 
                 // liveness checks
                 if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
-                    //Debug.Log("This ability requires a live target");
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a live target!");
                     }
@@ -178,7 +177,6 @@ namespace AnyRPG {
             // since the target is not ourself, and it is valid, we should perform a range check
 
             if (performRangeCheck == true && !sourceCharacter.AbilityManager.IsTargetInRange(target, targetable, abilityEffectContext)) {
-                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(): returning false: NOT IN RANGE");
                 if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + ". target is not in range!");
                 }
