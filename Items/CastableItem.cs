@@ -45,15 +45,23 @@ namespace AnyRPG {
             return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
-        /*
         public override string GetSummary() {
-            string abilityName = "Ability Not Set In Inspector!";
-            if (ability != null) {
-                abilityName = ability.MyName;
-            }
-            return string.Format("{0}\n<color=green>Use: Cast {1}</color>", base.GetSummary(), abilityName);
+
+            return base.GetSummary() + GetCastableInformation() + GetCooldownString();
         }
-        */
+
+        public virtual string GetCastableInformation() {
+            return string.Empty;
+        }
+
+        public string GetCooldownString() {
+            string coolDownString = string.Empty;
+            if (ability != null) {
+                coolDownString = ability.GetCooldownString();
+            }
+            return coolDownString;
+        }
+
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             ability = null;

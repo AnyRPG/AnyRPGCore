@@ -472,25 +472,7 @@ namespace AnyRPG {
                     durationLabel = "Duration: ";
                     printedDuration = (int)Duration;
                 }
-                if (printedDuration < 60 && printedDuration >= 0) {
-                    // less than 1 minute
-                    statusText = ((int)printedDuration).ToString() + " second";
-                    if ((int)printedDuration != 1) {
-                        statusText += "s";
-                    }
-                } else if (printedDuration < 3600) {
-                    //less than 1 hour
-                    statusText = ((int)(printedDuration / 60)).ToString() + " minute";
-                    if (((int)printedDuration / 60) != 1) {
-                        statusText += "s";
-                    }
-                } else if (printedDuration > 3600f) {
-                    //greater than 1 hour
-                    statusText = ((int)(printedDuration / 3600)).ToString() + " hour";
-                    if (((int)printedDuration / 3600) != 1) {
-                        statusText += "s";
-                    }
-                }
+                statusText = SystemAbilityController.GetTimeText(printedDuration);
                 if (durationLabel != string.Empty) {
                     durationString = "\n" + durationLabel + statusText;
                 }

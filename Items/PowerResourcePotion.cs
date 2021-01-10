@@ -30,8 +30,8 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetSummary() {
-            string returnString = base.GetSummary();
+        public override string GetCastableInformation() {
+            string returnString = string.Empty;
             if (ability != null) {
                 returnString += string.Format("\n<color=green>Use: {0}</color>", ability.MyDescription);
             }

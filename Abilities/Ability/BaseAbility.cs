@@ -438,7 +438,30 @@ namespace AnyRPG {
                 costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter) + " " + powerResource.DisplayName;
             }
 
-            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}", GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter).ToString("F1"), abilityCoolDown, costString, abilityRange, description, addString);
+            string coolDownString = GetCooldownString();
+
+            return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}{6}",
+                GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter).ToString("F1"),
+                abilityCoolDown,
+                costString,
+                abilityRange,
+                description,
+                addString,
+                coolDownString);
+        }
+
+        public string GetCooldownString() {
+            string coolDownString = string.Empty;
+            if (PlayerManager.MyInstance?.MyCharacter?.CharacterAbilityManager != null
+                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName))) {
+                float dictionaryCooldown = 0f;
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    dictionaryCooldown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
+                }
+                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown)); ;
+            }
+            return coolDownString;
         }
 
         public string GetShortDescription() {

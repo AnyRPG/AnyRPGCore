@@ -385,6 +385,12 @@ namespace AnyRPG {
             Useable.UpdateChargeCount(this);
             Useable.UpdateActionButtonVisual(this);
 
+            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+                //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
+                //UIManager.MyInstance.RefreshTooltip(describable as IDescribable);
+                //UIManager.MyInstance.ShowToolTip(transform.position, describable as IDescribable);
+                ProcessOnPointerEnter();
+            }
         }
 
         public void EnableFullCoolDownIcon() {
@@ -415,6 +421,11 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log(gameObject + ".ActionButton.OnPointerEnter()");
+
+            ProcessOnPointerEnter();
+        }
+
+        public void ProcessOnPointerEnter() {
             IDescribable tmp = null;
 
             if (Useable != null && Useable is IDescribable) {

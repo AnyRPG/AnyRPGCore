@@ -151,13 +151,6 @@ namespace AnyRPG {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
                 //UIManager.MyInstance.ShowToolTip(transform.position);
-            } else {
-                if (Describable == null) {
-                    //Debug.Log("DescribableIcon.OnPointerEnter(): describable is null");
-                }
-                if (!(Describable is IDescribable)) {
-                    //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not IDescribable");
-                }
             }
             if (tmp != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");

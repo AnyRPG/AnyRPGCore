@@ -101,6 +101,30 @@ namespace AnyRPG {
             abilityManager.DestroyAbilityEffectObjectCoroutine = null;
         }
 
+        public static string GetTimeText(float durationSeconds) {
+            string returnText = string.Empty;
+            if (durationSeconds < 60f && durationSeconds >= 0f) {
+                // less than 1 minute
+                returnText = ((int)durationSeconds).ToString() + " second";
+                if ((int)durationSeconds != 1) {
+                    returnText += "s";
+                }
+            } else if (durationSeconds < 3600) {
+                //less than 1 hour
+                returnText = ((int)(durationSeconds / 60)).ToString() + " minute";
+                if (((int)durationSeconds / 60) != 1) {
+                    returnText += "s";
+                }
+            } else if (durationSeconds > 3600f) {
+                //greater than 1 hour
+                returnText = ((int)(durationSeconds / 3600)).ToString() + " hour";
+                if (((int)durationSeconds / 3600) != 1) {
+                    returnText += "s";
+                }
+            }
+            return returnText;
+        }
+
         public void OnDestroy() {
             StopAllCoroutines();
         }
