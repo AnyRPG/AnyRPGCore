@@ -57,6 +57,9 @@ namespace AnyRPG {
         }
 
         private void UpdateCombatText() {
+            if (CameraManager.MyInstance?.MyActiveMainCamera == null) {
+                return;
+            }
             foreach (CombatTextController combatTextController in inUseCombatTextControllers) {
                 combatTextController.RunCombatTextUpdate();
             }
