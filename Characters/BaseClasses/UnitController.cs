@@ -969,6 +969,7 @@ namespace AnyRPG {
 
         public void OnMasterDropCombat() {
             characterUnit.BaseCharacter.CharacterCombat.TryToDropCombat();
+            SetMasterRelativeDestination();
         }
 
         public void UpdateTarget() {
