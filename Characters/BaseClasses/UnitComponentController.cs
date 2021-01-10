@@ -106,7 +106,7 @@ namespace AnyRPG {
         }
 
         public void StopMovement() {
-            Debug.Log(gameObject.name + "UnitAudio.StopMovement()");
+            //Debug.Log(gameObject.name + "UnitAudio.StopMovement()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopMovement();
             }

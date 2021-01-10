@@ -1144,12 +1144,15 @@ namespace AnyRPG {
 
         private void HandleMovementAudio() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            if (unitProfile == null || unitProfile.MovementAudioProfiles == null || unitProfile.MovementAudioProfiles.Count == 0 || unitProfile.PlayOnFootstep == true) {
+            if (unitProfile?.MovementAudioProfiles == null || unitProfile.MovementAudioProfiles.Count == 0 || unitProfile.PlayOnFootstep == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
 
-            if (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f)) {
+            if (UnitAnimator.IsInAir() == false
+                && mounted == false
+                && ControlLocked == false
+                && (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
                 if (!unitComponentController.MovementIsPlaying()) {
                     unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
