@@ -222,7 +222,7 @@ namespace AnyRPG {
             // we did not find a valid point on the current navmesh
             // raycast downward from 10 above the point in case the point was under a steep hill
             RaycastHit raycastHit;
-            Vector3 firstTestPosition = Vector3.zero;
+            Vector3 firstTestPosition = unitController.transform.position;
             bool foundMatch = false;
             if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
@@ -244,11 +244,11 @@ namespace AnyRPG {
                 // if we actually got a hit, but did not detect a navmesh, then don't try raycast downward.  the hit was probably on a steep up hill and trying a downcast from our current
                 // level would result in a ray inside the hill shooting downward to a potentially inaccessible navmesh below
                 //Debug.Log(unitController.gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + "return vector3.zero");
-                return Vector3.zero;
+                return unitController.transform.position;
             }
 
             // now try raycast downward in case we are at the top of a hill
-            firstTestPosition = Vector3.zero;
+            firstTestPosition = unitController.transform.position;
             foundMatch = false;
             if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, PlayerManager.MyInstance.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
@@ -291,7 +291,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log(unitController.gameObject.name + ".CharacterMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", " + currentMaxSampleRadius + "; minAttackRange: " + minAttackRange + "; RETURNING VECTOR3.ZERO!!!");
-            return Vector3.zero;
+            return unitController.transform.position;
         }
 
         public void FreezeCharacter() {
@@ -311,7 +311,7 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + unitController.transform.position + "; frame: " + Time.frameCount);
             if (frozen) {
                 //Debug.Log(gameObject.name + "CharacterMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");
-                return Vector3.zero;
+                return unitController.transform.position;
             }
 
             // testing - don't bother with this check since patrolstate is really the only thing that checks for this

@@ -665,13 +665,13 @@ namespace AnyRPG {
         }
 
         private void SetStartPosition() {
-            Vector3 correctedPosition = Vector3.zero;
+            Vector3 correctedPosition = transform.position;
             if (unitMotor != null) {
                 correctedPosition = unitMotor.CorrectedNavmeshPosition(transform.position);
             }
-            MyStartPosition = (correctedPosition != Vector3.zero ? correctedPosition : transform.position);
+            MyStartPosition = correctedPosition;
 
-            // prevent apparent velocity on first update due to default lastPosition being Vector3.zero
+            // prevent apparent velocity on first update by setting lastposition to currentposition
             lastPosition = transform.position;
 
         }
@@ -1029,7 +1029,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ": aicontroller.SetDestination(" + destination + "). current location: " + transform.position + ". WE ARE DEAD, DOING NOTHING");
             }
-            return Vector3.zero;
+            return transform.position;
         }
 
         /// <summary>
@@ -1339,7 +1339,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BaseController.GetHitBoxCenter()");
             if (characterUnit == null) {
                 //Debug.Log(gameObject.name + "BaseController.GetHitBoxCenter(): characterUnit.BaseCharacter.MyCharacterUnit is null!");
-                return Vector3.zero;
+                return myCollider.bounds.center;
             }
             Vector3 returnValue = myCollider.bounds.center + (transform.forward * (characterUnit.HitBoxSize / 2f));
             //Vector3 returnValue = transform.TransformPoint(myCollider.bounds.center) + (transform.forward * (characterUnit.HitBoxSize / 2f));
