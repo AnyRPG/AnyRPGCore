@@ -467,14 +467,14 @@ namespace AnyRPG {
             }
 
             Debug.DrawLine(sourcePosition, targetPosition, Color.cyan);
-            RaycastHit wallHit = new RaycastHit();
 
             int targetMask = 1 << target.gameObject.layer;
             int defaultMask = 1 << LayerMask.NameToLayer("Default");
+            //int layerMask = (defaultMask | targetMask);
 
-            int layerMask = (defaultMask | targetMask);
-
-            if (Physics.Linecast(sourcePosition, targetPosition, out wallHit, layerMask)) {
+            // first check if a wall was hit
+            RaycastHit wallHit = new RaycastHit();
+            if (Physics.Linecast(sourcePosition, targetPosition, out wallHit, defaultMask)) {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
                 if (wallHit.collider.gameObject != target.gameObject) {
@@ -482,6 +482,27 @@ namespace AnyRPG {
                     return false;
                 }
             }
+
+            // if there is no wall between the source and target, do we need to check for the target?
+            // we already know it's there and there is nothing inbetween it.
+            // we will ignore anything on the target layer other than them anyway
+
+            // if a wall was not hit, check if the character was hit
+            /*
+            RaycastHit[] colliders = new RaycastHit[0];
+            colliders = Physics.RaycastAll(sourcePosition, targetPosition, targetMask);
+            foreach (Collider collider in colliders) {
+            }
+            if () {
+                //Debug.Log("hit: " + wallHit.transform.name);
+                Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
+                if (wallHit.collider.gameObject != target.gameObject) {
+                    Debug.Log("return false; hit: " + wallHit.collider.gameObject + "; target: " + target);
+                    return false;
+                }
+            }
+            */
+
             //Debug.Log(gameObject.name + ".PerformLOSCheck(): return true;");
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
@@ -1352,7 +1373,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            
+
             // get final target before beginning casting
             Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon() finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
