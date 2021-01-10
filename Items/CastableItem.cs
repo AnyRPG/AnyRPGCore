@@ -29,7 +29,16 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public override bool HadSpecialIcon(ActionButton actionButton) {
+            if (ability != null) {
+                ability.UpdateActionButtonVisual(actionButton);
+                return true;
+            }
+            return base.HadSpecialIcon(actionButton);
+        }
+
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            //Debug.Log(DisplayName + ".CastableItem.ChooseMonitorCoroutine()");
             if (ability == null) {
                 return null;
             }

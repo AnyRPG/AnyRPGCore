@@ -45,6 +45,66 @@ namespace AnyRPG {
             return 0f;
         }
 
+        public override bool HadSpecialIcon(ActionButton actionButton) {
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && IsAutoAttack == true) {
+
+                /*
+                if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
+                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
+                        MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
+                        //Debug.Log("ActionButton.UpdateVisual(): setting icon");
+                    }
+                }
+                */
+                if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true && PlayerManager.MyInstance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                    if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
+                        actionButton.CoolDownIcon.enabled = true;
+                    }
+                    /*
+                    if (coolDownIcon.sprite != MyIcon.sprite) {
+                        Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match MyIcon");
+                        coolDownIcon.sprite = MyIcon.sprite;
+                    }
+                    */
+                    if (actionButton.CoolDownIcon.color == new Color32(255, 0, 0, 155)) {
+                        actionButton.CoolDownIcon.color = new Color32(255, 146, 146, 155);
+                    } else {
+                        actionButton.CoolDownIcon.color = new Color32(255, 0, 0, 155);
+                    }
+
+                    if (actionButton.CoolDownIcon.fillMethod != Image.FillMethod.Radial360) {
+                        actionButton.CoolDownIcon.fillMethod = Image.FillMethod.Radial360;
+                    }
+                    if (actionButton.CoolDownIcon.fillAmount != 1f) {
+                        actionButton.CoolDownIcon.fillAmount = 1f;
+                    }
+                } else {
+                    //Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
+                    actionButton.DisableCoolDownIcon();
+                }
+                // don't need to continue on and do radial fill on auto-attack icons
+                return true;
+            }
+            return base.HadSpecialIcon(actionButton);
+        }
+
+        public override void UpdateActionButtonVisual(ActionButton actionButton) {
+            // this must happen first because it's an image update that doesn't rely on cooldowns
+            // auto-attack buttons are special and display the current weapon of the character
+            if (IsAutoAttack == true) {
+                //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                    if (equipment != null && equipment is Weapon && (equipment as Weapon).UseDamagePerSecond == true) {
+                        if (actionButton.MyIcon.sprite != equipment.Icon) {
+                            actionButton.MyIcon.sprite = equipment.Icon;
+                            break;
+                        }
+                    }
+                }
+            }
+            base.UpdateActionButtonVisual(actionButton);
+        }
+
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
             if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && IsAutoAttack == true) {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");

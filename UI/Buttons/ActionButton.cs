@@ -64,6 +64,9 @@ namespace AnyRPG {
             }
         }
 
+        public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
+        public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
+
         [SerializeField]
         protected Image backGroundImage;
 
@@ -179,16 +182,23 @@ namespace AnyRPG {
         public void SetUseable(IUseable useable, bool monitor = true) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + ")");
             // clear reference to any existing useable on this button.
-            if (Useable != null && Useable is BaseAbility) {
-                //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
-                    // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
-                } else {
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
-                }
-                UnsubscribeFromCombatEvents();
+            // disabled if statement.  even items we can stick on the bars are still castable and so should be monitored
+            //if (Useable != null && Useable is BaseAbility) {
+            //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
+            /*
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
+                // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
+            } else {
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
             }
+            */
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+
+            UnsubscribeFromCombatEvents();
+            //}
 
             DisableCoolDownIcon();
 
@@ -206,19 +216,25 @@ namespace AnyRPG {
                 }
             }
             Useable = useable;
-            if (useable is BaseAbility) {
-                //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): setting ability");
-                //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
-                //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
-                //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
-                    // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
-                } else {
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
-                }
-                SubscribeToCombatEvents();
+            //if (useable is BaseAbility) {
+            //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): setting ability");
+            //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
+            //Debug.Log("id: " + SystemAbilityManager.MyInstance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
+            //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)useable));
+            /*
+            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
+                // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
+            } else {
+                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
             }
+            */
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
+            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+
+            SubscribeToCombatEvents();
+            //}
 
             // there may be a global cooldown in progress.  if not, this call will still update the visual
             if (monitor == true) {
@@ -249,12 +265,19 @@ namespace AnyRPG {
             ChooseMonitorCoroutine();
         }
 
+        public void HandleBeginAbilityCooldown() {
+            //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            ChooseMonitorCoroutine();
+        }
+
         private void ChooseMonitorCoroutine() {
             // if this action button is empty, there is nothing to monitor
             if (useable == null) {
                 return;
             }
-            monitorCoroutine = useable.ChooseMonitorCoroutine(this);
+            if (monitorCoroutine == null) {
+                monitorCoroutine = useable.ChooseMonitorCoroutine(this);
+            }
             if (monitorCoroutine == null) {
                 UpdateVisual();
             }
@@ -287,11 +310,10 @@ namespace AnyRPG {
         }
 
         public IEnumerator MonitorAbility(BaseAbility ability) {
-            //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.MyInstance.GetResource((BaseAbility)ability).GetInstanceID());
             while (Useable != null
-                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName)
-                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
                 || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
@@ -300,11 +322,11 @@ namespace AnyRPG {
                     remainingCooldown = PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown;
                 }
                 */
-                //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
+                //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): global cooldown : " + PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown + "dictionary cooldown: " + PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[ability.DisplayName].MyRemainingCoolDown);
                 UpdateVisual();
                 yield return null;
             }
-            //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + "): Done Monitoring");
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): Done Monitoring; Useable: " + (Useable == null ? "null" : Useable.DisplayName));
             if (Useable != null) {
                 // could switch buttons while an ability is on cooldown
                 UpdateVisual();
@@ -313,7 +335,7 @@ namespace AnyRPG {
             monitorCoroutine = null;
         }
 
-        private void DisableCoolDownIcon() {
+        public void DisableCoolDownIcon() {
             //Debug.Log("ActionButton.DisableCoolDownIcon() useable: " + (useable == null ? "null" : useable.DisplayName));
             // testing
             // this was preventing cooldown icons from being reset on logout
@@ -328,7 +350,7 @@ namespace AnyRPG {
         /// Updates the visual representation of the actionbutton
         /// </summary>
         public void UpdateVisual(bool removeStaleActions = false) {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.MyName));
+            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
             if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.MyCharacter == null) {
                 return;
             }
@@ -360,151 +382,8 @@ namespace AnyRPG {
             }
 
             //Debug.Log("ActionButton.UpdateVisual(): about to get useable count");
-            if (Useable is Item) {
-                int count = InventoryManager.MyInstance.GetUseableCount(Useable);
-                // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
-                //if ((count == 0 && removeStaleActions) || count > 0) {
-                if (count > 0) {
-                    Useable = InventoryManager.MyInstance.GetUseable(Useable as IUseable);
-                }
-                UIManager.MyInstance.UpdateStackSize(this, count, true);
-
-                if (count == 0) {
-                    EnableFullCoolDownIcon();
-                } else {
-                    // check for ability cooldown here and only disable if no cooldown exists
-                    DisableCoolDownIcon();
-                }
-            } else if (Useable is BaseAbility) {
-                UIManager.MyInstance.ClearStackCount(this);
-
-
-                //TESTING MOVING TO BEFORE BASEABILTY AND WEAPONAFFINITY CHECKS
-                // auto-attack buttons are special and display the current weapon of the character
-                if ((Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
-                    //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                    foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
-                        if (equipment != null && equipment is Weapon && (equipment as Weapon).UseDamagePerSecond == true) {
-                            if (MyIcon.sprite != equipment.Icon) {
-                                MyIcon.sprite = equipment.Icon;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // set cooldown icon on abilities that don't have enough resources to cast
-                if ((Useable as BaseAbility).PowerResource != null
-                    && ((Useable as BaseAbility).GetResourceCost(PlayerManager.MyInstance.ActiveCharacter) >= PlayerManager.MyInstance.ActiveCharacter.CharacterStats.GetPowerResourceAmount((Useable as BaseAbility).PowerResource))) {
-                    //Debug.Log("ActionButton.UpdateVisual(): not enough resources to cast this ability.  enabling full cooldown");
-                    EnableFullCoolDownIcon();
-                    return;
-                }
-
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && (Useable is AnimatedAbility) && (Useable as AnimatedAbility).IsAutoAttack == true) {
-
-                    /*
-                    if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
-                        if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
-                            MyIcon.sprite = PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
-                            //Debug.Log("ActionButton.UpdateVisual(): setting icon");
-                        }
-                    }
-                    */
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true && PlayerManager.MyInstance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
-                        if (coolDownIcon.isActiveAndEnabled == false) {
-                            coolDownIcon.enabled = true;
-                        }
-                        /*
-                        if (coolDownIcon.sprite != MyIcon.sprite) {
-                            Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match MyIcon");
-                            coolDownIcon.sprite = MyIcon.sprite;
-                        }
-                        */
-                        if (coolDownIcon.color == new Color32(255, 0, 0, 155)) {
-                            coolDownIcon.color = new Color32(255, 146, 146, 155);
-                        } else {
-                            coolDownIcon.color = new Color32(255, 0, 0, 155);
-                        }
-
-                        if (coolDownIcon.fillMethod != Image.FillMethod.Radial360) {
-                            coolDownIcon.fillMethod = Image.FillMethod.Radial360;
-                        }
-                        if (coolDownIcon.fillAmount != 1f) {
-                            coolDownIcon.fillAmount = 1f;
-                        }
-                    } else {
-                        //Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
-                        if (coolDownIcon.sprite != null) {
-                            coolDownIcon.sprite = null;
-                        }
-                        if (coolDownIcon.enabled != false) {
-                            coolDownIcon.enabled = false;
-                        }
-                    }
-                    // don't need to continue on and do radial fill on auto-attack icons
-                    return;
-                }
-
-                if ((Useable as BaseAbility) is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat) {
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
-                        //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
-                        EnableFullCoolDownIcon();
-                        return;
-                    }
-                }
-
-                if ((Useable as BaseAbility) is BaseAbility) {
-                    if (!((Useable as BaseAbility).CanCast(PlayerManager.MyInstance.MyCharacter))) {
-                        //Debug.Log(Useable.DisplayName + ".ActionButton.UpdateVisual(): can't cast due to spell restrictions");
-                        EnableFullCoolDownIcon();
-                        return;
-                    }
-                }
-
-
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName)
-                    || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
-                    || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(Useable.DisplayName)) {
-                    //Debug.Log("ActionButton.UpdateVisual(): Ability is on cooldown: " + (useable == null ? "null" : useable.DisplayName));
-                    if (coolDownIcon.isActiveAndEnabled != true) {
-                        //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
-                        coolDownIcon.enabled = true;
-                    }
-                    if (coolDownIcon.sprite != MyIcon.sprite) {
-                        //Debug.Log("Setting coolDownIcon to match MyIcon");
-                        coolDownIcon.sprite = MyIcon.sprite;
-                        coolDownIcon.color = new Color32(0, 0, 0, 230);
-                        coolDownIcon.fillMethod = Image.FillMethod.Radial360;
-                        //coolDownIcon.fillOrigin = Image.Origin360.Top;
-                        coolDownIcon.fillClockwise = false;
-                    }
-                    //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
-                    float abilityCoolDown = 0f;
-                    float initialCoolDown = 0f;
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey((Useable as BaseAbility).DisplayName)) {
-                        abilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as BaseAbility).DisplayName].MyRemainingCoolDown;
-                        initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[(Useable as BaseAbility).DisplayName].MyInitialCoolDown;
-                    } else {
-                        initialCoolDown = (Useable as BaseAbility).abilityCoolDown;
-                    }
-                    //float globalCoolDown
-                    float fillAmount = Mathf.Max(abilityCoolDown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
-                        (abilityCoolDown > PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
-                    //Debug.Log("Setting fill amount to: " + fillAmount);
-                    if (coolDownIcon.fillAmount != fillAmount) {
-                        coolDownIcon.fillAmount = fillAmount;
-                    }
-                } else {
-                    if (coolDownIcon.sprite != null) {
-                        coolDownIcon.sprite = null;
-                    }
-                    if (coolDownIcon.enabled != false) {
-                        coolDownIcon.enabled = false;
-                    }
-                }
-
-            }
+            Useable.UpdateChargeCount(this);
+            Useable.UpdateActionButtonVisual(this);
 
         }
 

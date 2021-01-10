@@ -22,6 +22,7 @@ namespace AnyRPG {
         public event System.Action<BaseAbility> OnLearnAbility = delegate { };
         public event System.Action<BaseAbility> OnActivateTargetingMode = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
+        public event System.Action OnBeginAbilityCoolDown = delegate { };
 
         protected BaseCharacter baseCharacter;
 
@@ -692,7 +693,7 @@ namespace AnyRPG {
             float abilityCoolDown = 0f;
 
             if (coolDownLength == -1f) {
-                abilityCoolDown = baseAbility.abilityCoolDown;
+                abilityCoolDown = baseAbility.AbilityCoolDown;
             } else {
                 abilityCoolDown = coolDownLength;
             }
@@ -727,6 +728,7 @@ namespace AnyRPG {
             Coroutine coroutine = abilityCaster.StartCoroutine(PerformAbilityCoolDown(baseAbility.DisplayName));
             abilityCoolDownNode.MyCoroutine = coroutine;
 
+            OnBeginAbilityCoolDown();
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
@@ -1114,6 +1116,9 @@ namespace AnyRPG {
                 }
                 if (ability.CastingAudioClip != null) {
                     baseCharacter.UnitController.UnitComponentController.PlayCast(ability.CastingAudioClip);
+                }
+                if (ability.CoolDownOnCast == true) {
+                    ability.BeginAbilityCoolDown(baseCharacter);
                 }
 
                 if (ability.GetAbilityCastingTime(baseCharacter) > 0f) {
@@ -1726,7 +1731,7 @@ namespace AnyRPG {
 
         public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (baseCharacter?.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
                 if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && baseAbility.IsAutoAttack) {
                     return;
                 }

@@ -165,7 +165,11 @@ namespace AnyRPG {
 
         [Tooltip("The cooldown in seconds before this ability can be cast again.  0 means no cooldown.")]
         [SerializeField]
-        public float abilityCoolDown = 0f;
+        protected float abilityCoolDown = 0f;
+
+        [Tooltip("By default an ability cooldown is initiated once a cast is complete.  Check this option to start the cooldown at the beginning of the cast")]
+        [SerializeField]
+        protected bool coolDownOnCast = false;
 
         [Header("Target Properties")]
 
@@ -259,6 +263,8 @@ namespace AnyRPG {
         public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
+        public bool CoolDownOnCast { get => coolDownOnCast; set => coolDownOnCast = value; }
+        public float AbilityCoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
 
         public virtual bool IsUseableStale(ActionButton actionButton) {
             if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
@@ -273,6 +279,79 @@ namespace AnyRPG {
 
         public IUseable GetFactoryUseable() {
             return SystemAbilityManager.MyInstance.GetResource(DisplayName);
+        }
+
+        public virtual void UpdateChargeCount(ActionButton actionButton) {
+            UIManager.MyInstance.UpdateStackSize(actionButton, 0, false);
+        }
+
+        public virtual bool HadSpecialIcon(ActionButton actionButton) {
+            return false;
+        }
+
+        public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
+            //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual()");
+            // set cooldown icon on abilities that don't have enough resources to cast
+            if (PowerResource != null
+                && (GetResourceCost(PlayerManager.MyInstance.ActiveCharacter) >= PlayerManager.MyInstance.ActiveCharacter.CharacterStats.GetPowerResourceAmount(PowerResource))) {
+                //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): not enough resources to cast this ability.  enabling full cooldown");
+                actionButton.EnableFullCoolDownIcon();
+                return;
+            }
+
+            if (HadSpecialIcon(actionButton)) {
+                return;
+            }
+
+            if (RequireOutOfCombat) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
+                    //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
+                    actionButton.EnableFullCoolDownIcon();
+                    return;
+                }
+            }
+
+            if (!CanCast(PlayerManager.MyInstance.MyCharacter)) {
+                //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
+                actionButton.EnableFullCoolDownIcon();
+                return;
+            }
+
+
+            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
+                if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
+                    //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
+                    actionButton.CoolDownIcon.enabled = true;
+                }
+                if (actionButton.CoolDownIcon.sprite != actionButton.MyIcon.sprite) {
+                    //Debug.Log("Setting coolDownIcon to match MyIcon");
+                    actionButton.CoolDownIcon.sprite = actionButton.MyIcon.sprite;
+                    actionButton.CoolDownIcon.color = new Color32(0, 0, 0, 230);
+                    actionButton.CoolDownIcon.fillMethod = Image.FillMethod.Radial360;
+                    //coolDownIcon.fillOrigin = Image.Origin360.Top;
+                    actionButton.CoolDownIcon.fillClockwise = false;
+                }
+                //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
+                float remainingAbilityCoolDown = 0f;
+                float initialCoolDown = 0f;
+                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    remainingAbilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
+                    initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyInitialCoolDown;
+                } else {
+                    initialCoolDown = abilityCoolDown;
+                }
+                //float globalCoolDown
+                float fillAmount = Mathf.Max(remainingAbilityCoolDown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
+                    (remainingAbilityCoolDown > PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
+                //Debug.Log("Setting fill amount to: " + fillAmount);
+                if (actionButton.CoolDownIcon.fillAmount != fillAmount) {
+                    actionButton.CoolDownIcon.fillAmount = fillAmount;
+                }
+            } else {
+                actionButton.DisableCoolDownIcon();
+            }
         }
 
         public virtual Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
@@ -452,7 +531,9 @@ namespace AnyRPG {
                 return false;
             }
 
-            BeginAbilityCoolDown(sourceCharacter);
+            if (coolDownOnCast == false) {
+                BeginAbilityCoolDown(sourceCharacter);
+            }
 
             ProcessAbilityPrefabs(sourceCharacter);
             ProcessGCDAuto(sourceCharacter);

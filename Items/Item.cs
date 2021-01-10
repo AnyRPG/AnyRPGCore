@@ -138,6 +138,37 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void UpdateChargeCount(ActionButton actionButton) {
+            //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
+            int chargeCount = InventoryManager.MyInstance.GetUseableCount(this);
+            UIManager.MyInstance.UpdateStackSize(actionButton, chargeCount, true);
+        }
+
+        public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
+            int count = InventoryManager.MyInstance.GetUseableCount(this);
+            // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
+            //if ((count == 0 && removeStaleActions) || count > 0) {
+            /*
+            if (count > 0) {
+                Useable = InventoryManager.MyInstance.GetUseable(Useable as IUseable);
+            }
+            */
+            UIManager.MyInstance.UpdateStackSize(actionButton, count, true);
+
+            if (count == 0) {
+                actionButton.EnableFullCoolDownIcon();
+            } else {
+                // check for ability cooldown here and only disable if no cooldown exists
+                if (!HadSpecialIcon(actionButton)) {
+                    actionButton.DisableCoolDownIcon();
+                }
+            }
+        }
+
+        public virtual bool HadSpecialIcon(ActionButton actionButton) {
+            return false;
+        }
+
         public KeyValuePair<Currency, int> MySellPrice {
             get {
                 //Debug.Log(MyName + ".Item.MySellPrice()");

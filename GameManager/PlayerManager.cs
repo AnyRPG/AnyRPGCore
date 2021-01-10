@@ -505,6 +505,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail += HandleCombatCheckFail;
             activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail += HandleAnimatedAbilityCheckFail;
             activeCharacter.CharacterAbilityManager.OnPerformAbility += HandlePerformAbility;
+            activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCoolDown;
             activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
             activeCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
             activeCharacter.CharacterAbilityManager.OnUnlearnAbility += HandleUnlearnAbility;
@@ -536,12 +537,17 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail -= HandleCombatCheckFail;
             activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail -= HandleAnimatedAbilityCheckFail;
             activeCharacter.CharacterAbilityManager.OnPerformAbility -= HandlePerformAbility;
+            activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCoolDown;
             activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
             activeCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
             activeCharacter.CharacterAbilityManager.OnUnlearnAbility -= HandleUnlearnAbility;
             activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
             activeCharacter.CharacterAbilityManager.OnCombatMessage -= HandleCombatMessage;
+        }
+
+        public void HandleBeginAbilityCoolDown() {
+            SystemEventManager.TriggerEvent("OnBeginAbilityCooldown", new EventParamProperties());
         }
 
         public void HandleCombatMessage(string messageText) {
