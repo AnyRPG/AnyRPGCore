@@ -72,7 +72,7 @@ namespace AnyRPG {
             //Debug.Log("DescribableIcon.SetDescribableCommon(" + (describable == null ? "null" : describable.MyName) + ")");
             this.Describable = describable;
             UpdateVisual();
-            
+
             //Debug.Log("Mouse Position: " + Input.mousePosition);
             //Debug.Log("RectTransformToScreenSpace: " + RectTransformToScreenSpace(MyIcon.rectTransform));
             //Debug.Log("Rect Contains Mouse: " + RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition));
@@ -87,7 +87,7 @@ namespace AnyRPG {
 
         }
 
-        
+
 
         public static Rect RectTransformToScreenSpace(RectTransform transform) {
             Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
@@ -167,7 +167,14 @@ namespace AnyRPG {
             UIManager.MyInstance.HideToolTip();
         }
 
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+                UIManager.MyInstance.HideToolTip();
+            }
+        }
+
         public virtual void OnDisable() {
+            CheckMouse();
         }
     }
 

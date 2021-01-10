@@ -144,6 +144,9 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LootUI.OnCloseWindow(): clearing pages");
             base.RecieveClosedWindowNotification();
+            foreach (LootButton lootButton in lootButtons) {
+                lootButton.CheckMouse();
+            }
             ClearPages();
             OnCloseWindow(this);
         }

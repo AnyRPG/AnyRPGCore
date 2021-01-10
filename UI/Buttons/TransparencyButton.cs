@@ -60,6 +60,12 @@ namespace AnyRPG {
             //Debug.Log("TransparencyButton.GetComponentReferences(): got opacity: " + opacityLevel);
             backGroundImage.color = new Color32(0, 0, 0, (byte)opacityLevel);
         }
+
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(transform as RectTransform)) {
+                UIManager.MyInstance.HideToolTip();
+            }
+        }
     }
 
 }
