@@ -539,7 +539,7 @@ namespace AnyRPG {
                 sourcePosition = abilityEffectContext.originalTarget.transform.position;
             }
             //Debug.Log(target.name + " range(" + maxRange + ": " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
-            if (maxRange > 0 && Vector3.Distance(sourcePosition, target.transform.position) > maxRange) {
+            if (maxRange > 0 && Vector3.Distance(sourcePosition, target.InteractableGameObject.transform.position) > maxRange) {
                 //Debug.Log(target.name + " is out of range(" + maxRange + "): " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
                 return false;
             }

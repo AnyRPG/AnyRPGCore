@@ -11,9 +11,11 @@ namespace AnyRPG {
         [SerializeField]
         private AudioSource audioSource = null;
 
-        private IAbilityCaster source;
+        private IAbilityCaster source = null;
 
-        private Interactable target;
+        private Interactable target = null;
+
+        private CharacterUnit characterUnit = null;
 
         private Vector3 positionOffset;
 
@@ -62,7 +64,11 @@ namespace AnyRPG {
         private void UpdateTargetPosition() {
             //Debug.Log("ProjectileScript.UpdateTargetPosition()");
             if (target != null) {
-                targetPosition = new Vector3(target.transform.position.x + positionOffset.x, target.transform.position.y + positionOffset.y, target.transform.position.z + positionOffset.z);
+                if (target.CharacterUnit != null) {
+                    targetPosition = new Vector3(target.InteractableGameObject.transform.position.x + positionOffset.x, target.InteractableGameObject.transform.position.y + positionOffset.y, target.InteractableGameObject.transform.position.z + positionOffset.z);
+                } else {
+                    targetPosition = new Vector3(target.transform.position.x + positionOffset.x, target.transform.position.y + positionOffset.y, target.transform.position.z + positionOffset.z);
+                }
             }
         }
 
@@ -83,7 +89,7 @@ namespace AnyRPG {
 
         private void OnTriggerEnter(Collider other) {
             //Debug.Log("ProjectileScript.OnTriggerEnter(" + other.name + ")");
-            if ((target != null && other.gameObject == target.gameObject) || target == null) {
+            if ((target != null && other.gameObject == target.InteractableGameObject) || target == null) {
                 if (abilityEffectInput != null && abilityEffectInput.groundTargetLocation != null) {
                     abilityEffectInput.groundTargetLocation = transform.position;
                 }

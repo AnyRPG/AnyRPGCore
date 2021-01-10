@@ -248,11 +248,18 @@ namespace AnyRPG {
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
-        // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
         public override GameObject InteractableGameObject {
             get {
+                // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
+                // this allows things like the mount hittin a portal or entering an enemy agro range to trigger the player interaction
                 if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
                     return riderUnitController.gameObject;
+                }
+                // allow collider checks to consider this collider to be the collider of the mount when the unit is mounted
+                // this allows things like projectile effects and hitbox collider checks to aim for the active collider on the mount
+                // instead of the inactive one on the rider
+                if (mounted && unitMountManager.MountUnitController != null) {
+                    return unitMountManager.MountUnitController.gameObject;
                 }
                 return base.InteractableGameObject;
             }
@@ -1149,10 +1156,12 @@ namespace AnyRPG {
                 return;
             }
 
+            // note : this will not work for third paty controllers without these parameters.  Third party controllers should be setup to use footstep hit audio
             if (UnitAnimator.IsInAir() == false
                 && mounted == false
                 && ControlLocked == false
-                && (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
+                //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
+                && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
                 if (!unitComponentController.MovementIsPlaying()) {
                     unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
