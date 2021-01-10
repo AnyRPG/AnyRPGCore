@@ -217,9 +217,11 @@ namespace AnyRPG {
 
         }
 
+        /*
         void FixedUpdate() {
             RunCombatTextUpdate();
         }
+        */
     }
 
 }

@@ -34,9 +34,32 @@ namespace AnyRPG {
 
         public Canvas MyCombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
+        private void Awake() {
+            //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
+            SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+        }
+
         public void Start() {
             //List<GameObject> foundObjects = combatTextCanvas.transform.fi
             PopulateObjectPool();
+        }
+
+        public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
+            UpdateCombatText();
+        }
+
+        public void LateUpdate() {
+            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true
+                && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
+                && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+                UpdateCombatText();
+            }
+        }
+
+        private void UpdateCombatText() {
+            foreach (CombatTextController combatTextController in inUseCombatTextControllers) {
+                combatTextController.RunCombatTextUpdate();
+            }
         }
 
         public void PopulateObjectPool() {
@@ -65,6 +88,11 @@ namespace AnyRPG {
         }
 
         public void returnControllerToPool(CombatTextController combatTextController) {
+            StartCoroutine(ReturnAtEndOFFrame(combatTextController));
+        }
+
+        public IEnumerator ReturnAtEndOFFrame(CombatTextController combatTextController) {
+            yield return new WaitForEndOfFrame();
             if (inUseCombatTextControllers.Contains(combatTextController)) {
                 inUseCombatTextControllers.Remove(combatTextController);
                 combatTextControllers.Add(combatTextController);
@@ -117,6 +145,15 @@ namespace AnyRPG {
                 combatTextController.InitializeCombatTextController();
             }
         }
+
+        public void CleanupEventSubscriptions() {
+            SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+        }
+
+        public void OnDestroy() {
+            CleanupEventSubscriptions();
+        }
+
 
     }
 

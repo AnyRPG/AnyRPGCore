@@ -35,7 +35,6 @@ namespace AnyRPG {
 
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
-            string wakeupString = NamePlateManager.MyInstance.gameObject.name;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
         }
 
