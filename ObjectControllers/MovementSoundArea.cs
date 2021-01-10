@@ -35,6 +35,8 @@ namespace AnyRPG {
         public void OnTriggerEnter(Collider other) {
             //Debug.Log(gameObject.name + ".MovementSoundArea.OnTriggerEnter()");
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
+            // stop playing sound in case movement sounds will change
+            unitController.UnitComponentController.StopMovement();
             if (unitController != null) {
                 unitController.SetMovementSoundArea(this);
             }
@@ -45,6 +47,8 @@ namespace AnyRPG {
             if (unitController != null) {
                 unitController.UnsetMovementSoundArea(this);
             }
+            // stop playing sound in case movement sounds will change
+            unitController.UnitComponentController.StopMovement();
         }
 
         private void SetupScriptableObjects() {

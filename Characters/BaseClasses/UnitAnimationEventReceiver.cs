@@ -83,10 +83,12 @@ namespace AnyRPG {
                 Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
             }
 
-            if (unitController.MovementHitProfile == null ||
-                unitController.MovementHitProfile.AudioClips == null || 
-                unitController.MovementHitProfile.AudioClips.Count == 0 ||
-                unitController.UnitProfile.PlayOnFootstep == false) {
+            if ((unitController?.MovementHitProfile  == null ||
+                unitController.MovementHitProfile?.AudioClips == null || 
+                unitController?.MovementHitProfile.AudioClips.Count == 0 ||
+                unitController?.UnitProfile.PlayOnFootstep == false)
+                //&& unitController?.MovementSoundArea?.MovementLoopProfile == null
+                && unitController?.MovementSoundArea?.MovementHitProfile == null) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
@@ -95,7 +97,7 @@ namespace AnyRPG {
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;
             }
-            unitController.UnitComponentController.PlayMovement(unitController.MovementHitProfile.AudioClips[stepIndex], false);
+            unitController.PlayMovement(unitController.MovementHitProfile.AudioClips[stepIndex], false);
             stepIndex++;
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;

@@ -290,6 +290,7 @@ namespace AnyRPG {
         }
 
         public bool UseAgent { get => useAgent; }
+        public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             characterUnit.BaseCharacter.CharacterPetManager.DespawnAllPets();
@@ -1149,9 +1150,18 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// play or stop movement loop
+        /// </summary>
         private void HandleMovementAudio() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            if (unitProfile?.MovementAudioProfiles == null || unitProfile.MovementAudioProfiles.Count == 0 || unitProfile.PlayOnFootstep == true) {
+            
+            // if this unit has no configured audio, or is set to use footstep events and is not in a movement area with no footstep events do nothing
+            if (unitProfile?.MovementAudioProfiles == null
+                || unitProfile.MovementAudioProfiles.Count == 0
+                || (unitProfile.PlayOnFootstep == true && (movementSoundArea == null || (movementSoundArea.MovementHitProfile != null && movementSoundArea.MovementLoopProfile == null)))
+                || (unitProfile.PlayOnFootstep == false && movementSoundArea != null && (movementSoundArea.MovementHitProfile != null && movementSoundArea.MovementLoopProfile == null))
+                ) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
                 return;
             }
@@ -1164,7 +1174,8 @@ namespace AnyRPG {
                 && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
                 if (!unitComponentController.MovementIsPlaying()) {
-                    unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
+                    PlayMovement(MovementLoopProfile.AudioClip, true);
+                    //unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");
@@ -1172,6 +1183,10 @@ namespace AnyRPG {
                     unitComponentController.StopMovement();
                 }
             }
+        }
+
+        public void PlayMovement(AudioClip audioClip, bool loop) {
+            unitComponentController.PlayMovement(audioClip, loop);
         }
 
         /// <summary>
