@@ -113,7 +113,7 @@ namespace AnyRPG {
                     return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAutoAttack(this));
                 //}
             }
-            return null;
+            return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(this));
         }
 
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
