@@ -110,6 +110,8 @@ namespace AnyRPG {
 
             UpdateButtons(petSpawnButton);
             UpdateUnitInformation();
+
+            nameText.text = unitProfile.CharacterName;
         }
    
         public void UpdateUnitInformation() {
@@ -224,6 +226,7 @@ namespace AnyRPG {
             }
             petSpawnButtons.Clear();
             MySelectedPetSpawnButton = null;
+            nameText.text = "";
         }
 
         public void SpawnUnit() {

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private Button copyGameButton = null;
+
+        [SerializeField]
+        private TextMeshProUGUI nameText = null;
 
         private List<LoadGameButton> loadGameButtons = new List<LoadGameButton>();
 
@@ -128,6 +132,8 @@ namespace AnyRPG {
             loadGameButton.interactable = true;
             copyGameButton.interactable = true;
             deleteGameButton.interactable = true;
+
+            nameText.text = anyRPGSaveData.playerName;
         }
 
 
@@ -144,6 +150,7 @@ namespace AnyRPG {
             loadGameButton.interactable = false;
             copyGameButton.interactable = false;
             deleteGameButton.interactable = false;
+            nameText.text = "";
         }
 
 

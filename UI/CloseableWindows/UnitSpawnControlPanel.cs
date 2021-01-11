@@ -56,6 +56,10 @@ namespace AnyRPG {
         [SerializeField]
         private UnitPreviewCameraController previewCameraController;
 
+        [SerializeField]
+        private TextMeshProUGUI nameText = null;
+
+
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
@@ -142,6 +146,8 @@ namespace AnyRPG {
             } else {
                 toughnessDropdown.value = 0;
             }
+
+            nameText.text = unitSpawnButton.MyUnitProfile.CharacterName;
         }
 
         public void ClearPreviewTarget() {
@@ -232,6 +238,7 @@ namespace AnyRPG {
             }
             unitSpawnButtons.Clear();
             MySelectedUnitSpawnButton = null;
+            nameText.text = "";
         }
 
 
