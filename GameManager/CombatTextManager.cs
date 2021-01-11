@@ -37,6 +37,7 @@ namespace AnyRPG {
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 
         public void Start() {
@@ -53,6 +54,14 @@ namespace AnyRPG {
                 && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 UpdateCombatText();
+            }
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            List<CombatTextController> removeList = new List<CombatTextController>();
+            removeList.AddRange(inUseCombatTextControllers);
+            foreach (CombatTextController combatTextController in removeList) {
+                returnControllerToPool(combatTextController);
             }
         }
 
@@ -154,6 +163,8 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+            SystemEventManager.StopListening("OnLevelUnload", HandleAfterCameraUpdate);
+
         }
 
         public void OnDestroy() {
