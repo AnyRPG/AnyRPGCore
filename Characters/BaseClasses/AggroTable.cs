@@ -24,6 +24,8 @@ namespace AnyRPG {
                     if (node.aggroTarget == null
                         || node.aggroTarget.Interactable == null
                         || node.aggroTarget.Interactable.gameObject == null
+                        || node.aggroTarget.BaseCharacter == null
+                        || node.aggroTarget.BaseCharacter.gameObject == null
                         || Faction.RelationWith(node.aggroTarget.BaseCharacter, MyBaseCharacter) > -1
                         || node.aggroTarget.BaseCharacter.CharacterStats.IsAlive == false
                         || node.aggroTarget.Interactable.gameObject.activeInHierarchy == false) {
