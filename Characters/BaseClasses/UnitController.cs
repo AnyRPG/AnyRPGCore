@@ -1517,6 +1517,7 @@ namespace AnyRPG {
             OnReputationChange();
         }
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
+            unitComponentController.StopMovement();
             OnBeforeDie(characterStats);
         }
         public void NotifyOnReviveComplete() {
