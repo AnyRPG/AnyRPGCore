@@ -146,11 +146,19 @@ namespace AnyRPG {
                 }
             }
             loadGameButtons.Clear();
-            SelectedLoadGameButton = null;
+            selectedLoadGameButton = null;
             loadGameButton.interactable = false;
             copyGameButton.interactable = false;
             deleteGameButton.interactable = false;
             nameText.text = "";
+            unitProfile = null;
+            unitType = null;
+            characterRace = null;
+            characterClass = null;
+            classSpecialization = null;
+            faction = null;
+            anyRPGSaveData = new AnyRPGSaveData();
+            capabilityConsumerSnapshot = null;
         }
 
 
