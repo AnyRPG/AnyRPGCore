@@ -167,6 +167,9 @@ namespace AnyRPG {
         public float ApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
         public float AggroRadius {
             get {
+                if (unitControllerMode == UnitControllerMode.Pet) {
+                    return 0f;
+                }
                 if (characterUnit.BaseCharacter != null && unitProfile != null) {
                     return unitProfile.AggroRadius;
                 }
