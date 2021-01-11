@@ -360,7 +360,7 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance.ActiveUnitController != null) {
                 bool canSave = true;
                 Collider playerCollider = PlayerManager.MyInstance.ActiveUnitController.Collider;
-                int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable"));
+                int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable") | 1 << LayerMask.NameToLayer("Ignore Raycast"));
                 Collider[] hitColliders = Physics.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
                     playerCollider.bounds.center - new Vector3(0, playerCollider.bounds.extents.y, 0),
                     PlayerManager.MyInstance.ActiveUnitController.Collider.bounds.extents.x, validMask);

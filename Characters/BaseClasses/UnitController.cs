@@ -950,7 +950,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
-            Vector3 masterRelativeDestination = masterUnit.UnitController.gameObject.transform.position + masterUnit.UnitController.gameObject.transform.TransformDirection(Vector3.right);
+            Vector3 masterRelativeDestination = masterUnit.UnitController.InteractableGameObject.transform.position + masterUnit.UnitController.InteractableGameObject.transform.TransformDirection(Vector3.right);
             float usedMaxDistance = 0f;
             if (characterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
                 usedMaxDistance = maxCombatDistanceFromMasterOnMove;
