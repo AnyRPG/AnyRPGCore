@@ -22,9 +22,9 @@ namespace AnyRPG {
         [SerializeField]
         private float yUnitOffset = 2.2f;
 
-        // pixels per second up or down
+        // pixels to move over the total fade time
         //[SerializeField]
-        private float movementSpeed = 1.0f;
+        private float distanceToMove = 200f;
 
         [SerializeField]
         private float fadeTime = 3f;
@@ -193,9 +193,9 @@ namespace AnyRPG {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is null");
             }
             if (fadeOutTimer > 0) {
-                fadeOutTimer -= Time.fixedDeltaTime;
+                fadeOutTimer -= Time.deltaTime;
 
-                alpha -= fadeRate * Time.fixedDeltaTime;
+                alpha -= fadeRate * Time.deltaTime;
 
                 // fade text
                 Color tmp = tmpProtext.color;
@@ -209,7 +209,8 @@ namespace AnyRPG {
                     image.color = imageColor;
                 }
 
-                randomY += (movementSpeed * directionMultiplier);
+                //randomY += (movementSpeed * directionMultiplier);
+                randomY = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
                 CombatTextManager.MyInstance.returnControllerToPool(this);
                 //Destroy(this.gameObject);
