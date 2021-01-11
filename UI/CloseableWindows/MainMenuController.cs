@@ -46,9 +46,11 @@ namespace AnyRPG {
 
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
-            SystemWindowManager.MyInstance.CloseAllWindows();
-            SaveManager.MyInstance.SaveGame();
-            MessageFeedManager.MyInstance.WriteMessage("Game Saved");
+            if (SaveManager.MyInstance.SaveGame()) {
+                SystemWindowManager.MyInstance.CloseAllWindows();
+                MessageFeedManager.MyInstance.WriteMessage("Game Saved");
+            }
+
         }
 
         public void ContinueGame() {

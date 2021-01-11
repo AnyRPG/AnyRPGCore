@@ -304,7 +304,7 @@ namespace AnyRPG {
         */
 
         // save a game for the first time
-        public void SaveGame() {
+        public bool SaveGame() {
             bool foundValidName = false;
             if (currentSaveData.DataFileName == null || currentSaveData.DataFileName == string.Empty) {
                 //if (currentSaveData.Equals(default(AnyRPGSaveData))) {
@@ -320,9 +320,10 @@ namespace AnyRPG {
                 foundValidName = true;
             }
             if (foundValidName) {
-                SaveGame(currentSaveData);
+                return SaveGame(currentSaveData);
             } else {
                 Debug.Log("Too Many save files(" + maxSaveFiles + "), delete some");
+                return false;
             }
         }
 
@@ -350,8 +351,33 @@ namespace AnyRPG {
         }
 
 
-        public void SaveGame(AnyRPGSaveData anyRPGSaveData) {
+        public bool SaveGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveGame()");
+
+            // check if the player is inside a trigger
+            // disallow saving if they are because we don't want to trigger boss spawns
+            // or cutscenes when the player loads back in the game
+            if (PlayerManager.MyInstance.ActiveUnitController != null) {
+                bool canSave = true;
+                Collider playerCollider = PlayerManager.MyInstance.ActiveUnitController.Collider;
+                int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable"));
+                Collider[] hitColliders = Physics.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
+                    playerCollider.bounds.center - new Vector3(0, playerCollider.bounds.extents.y, 0),
+                    PlayerManager.MyInstance.ActiveUnitController.Collider.bounds.extents.x, validMask);
+                foreach (Collider hitCollider in hitColliders) {
+                    if (hitCollider.isTrigger == true) {
+                        Interactable interactable = hitCollider.gameObject.GetComponent<Interactable>();
+                        if (interactable != null && interactable.IsTrigger == true) {
+                            canSave = false;
+                            break;
+                        }
+                    }
+                }
+                if (canSave == false) {
+                    MessageFeedManager.MyInstance.WriteMessage("You cannot save here");
+                    return false;
+                }
+            }
 
             // do this first because persistent objects need to add their locations to the scene node before we write it to disk
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
@@ -420,6 +446,8 @@ namespace AnyRPG {
             SaveDataFile(anyRPGSaveData);
 
             PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
+
+            return true;
         }
 
         public void SaveDataFile(AnyRPGSaveData dataToSave) {
