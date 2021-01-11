@@ -1,9 +1,10 @@
 using AnyRPG;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class PreviewCameraController : MonoBehaviour {
+    public class PreviewCameraController : MonoBehaviour, IPointerDownHandler {
         // public variables
         public event System.Action OnTargetReady = delegate { };
 
@@ -217,6 +218,7 @@ namespace AnyRPG {
                 */
             } else {
                 mouseOutsideWindow = false;
+                /*
                 if (InputManager.MyInstance.rightMouseButtonDown) {
                     rightMouseClickedOverThisWindow = true;
                 }
@@ -226,6 +228,7 @@ namespace AnyRPG {
                 if (InputManager.MyInstance.middleMouseButtonDown) {
                     middleMouseClickedOverThisWindow = true;
                 }
+                */
             }
 
             cameraPan = false;
@@ -240,7 +243,9 @@ namespace AnyRPG {
             }
 
             // pan with the left or turn with the right mouse button
-            if ((!mouseOutsideWindow || rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow) && (InputManager.MyInstance.rightMouseButtonDown || InputManager.MyInstance.leftMouseButtonDown)) {
+            if (!mouseOutsideWindow
+                && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
+                && (InputManager.MyInstance.rightMouseButtonDown || InputManager.MyInstance.leftMouseButtonDown)) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 currentXDegrees += xInput;
                 Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
@@ -262,7 +267,9 @@ namespace AnyRPG {
             }
 
             // move the rotation point away from the center of the target using middle mouse button
-            if ((!mouseOutsideWindow || middleMouseClickedOverThisWindow) && InputManager.MyInstance.middleMouseButtonDown) {
+            if (!mouseOutsideWindow
+                && middleMouseClickedOverThisWindow
+                && InputManager.MyInstance.middleMouseButtonDown) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float xInput = Input.GetAxis("Mouse X");
                 float yInput = Input.GetAxis("Mouse Y");
@@ -425,6 +432,21 @@ namespace AnyRPG {
             targetInitialized = true;
             JumpToFollowSpot();
             OnTargetReady();
+        }
+
+        public void OnPointerDown(PointerEventData eventData) {
+            //Debug.Log("PreviewCameraController.OnPointerDown()");
+
+            // Detect a left click on a slot in a bag
+            if (eventData.button == PointerEventData.InputButton.Left) {
+                leftMouseClickedOverThisWindow = true;
+            }
+            if (eventData.button == PointerEventData.InputButton.Middle) {
+                middleMouseClickedOverThisWindow = true;
+            }
+            if (eventData.button == PointerEventData.InputButton.Right) {
+                rightMouseClickedOverThisWindow = true;
+            }
         }
 
         public void OnDisable() {
