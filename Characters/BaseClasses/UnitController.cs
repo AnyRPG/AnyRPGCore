@@ -380,10 +380,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.SetPetMode()");
             SetUnitControllerMode(UnitControllerMode.Pet);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
-
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
-                characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
+                //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
+                ApplyControlEffects(masterBaseCharacter);
+                SetMasterRelativeDestination(true);
+                startPosition = LeashPosition;
             }
         }
 
@@ -391,8 +393,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.EnablePetMode()");
             InitializeNamePlateController();
             EnableAICommon();
+
+            // it is necessary to keep track of leash position because it was already set as destination by setting pet mode
+            // enabling idle state will reset the destination so we need to re-enable it
+            Vector3 leashDestination = LeashPosition;
             ChangeState(new IdleState());
             SetAggroRange();
+            SetDestination(LeashPosition);
         }
 
         /// <summary>
@@ -676,11 +683,15 @@ namespace AnyRPG {
         }
 
         private void SetStartPosition() {
-            Vector3 correctedPosition = transform.position;
-            if (unitMotor != null) {
-                correctedPosition = unitMotor.CorrectedNavmeshPosition(transform.position);
+            //Debug.Log(gameObject.name + ".UnitController.SetStartPosition()");
+            // pets have their start position set by master
+            if (unitControllerMode != UnitControllerMode.Pet) {
+                Vector3 correctedPosition = transform.position;
+                if (unitMotor != null) {
+                    correctedPosition = unitMotor.CorrectedNavmeshPosition(transform.position);
+                }
+                MyStartPosition = correctedPosition;
             }
-            MyStartPosition = correctedPosition;
 
             // prevent apparent velocity on first update by setting lastposition to currentposition
             lastPosition = transform.position;
@@ -919,7 +930,6 @@ namespace AnyRPG {
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
                 characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
-                SetMasterRelativeDestination(true);
             } else {
                 //Debug.Log("Can only be under the control of one master at a time");
             }
@@ -950,7 +960,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
                 return;
             }
-            //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination()");
+            //Debug.Log(gameObject.name + ".UnitController.SetMasterRelativeDestination()");
 
             // stand to the right of master by one meter
             Vector3 masterRelativeDestination = masterUnit.UnitController.InteractableGameObject.transform.position + masterUnit.UnitController.InteractableGameObject.transform.TransformDirection(Vector3.right);

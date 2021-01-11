@@ -73,9 +73,11 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void ApplyControlEffects(IAbilityCaster source) {
             baseCharacter.UnitController.ApplyControlEffects((source as BaseCharacter));
         }
+        */
 
         public void ProcessLevelLoad() {
             // remove scene specific status effects that are not valid in this scene

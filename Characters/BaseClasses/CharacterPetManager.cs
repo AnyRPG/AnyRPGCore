@@ -110,8 +110,8 @@ namespace AnyRPG {
             if (unitController != null) {
                 unitController.SetPetMode(baseCharacter);
                 unitController.OnUnitDestroy += HandleUnitDestroy;
+                activeUnitProfiles.Add(unitProfile, unitController);
             }
-            activeUnitProfiles.Add(unitProfile, unitController);
         }
 
         public void ProcessLevelUnload() {
