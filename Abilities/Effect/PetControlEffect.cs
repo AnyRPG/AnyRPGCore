@@ -39,7 +39,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                     if (petEffect.UnitProfile != null
-                        && characterPetManager.MyActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == false) {
+                        && characterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == false) {
                         //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding cast:" + petEffect.DisplayName);
                         castList.Add(petEffect);
                     }
@@ -58,7 +58,7 @@ namespace AnyRPG {
             foreach (SummonEffect petEffect in petEffectList) {
                 //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                 if (petEffect.UnitProfile != null
-                    && targetCharacter.CharacterPetManager.MyActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
+                    && targetCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
                     targetCharacter.CharacterPetManager.DespawnPet(petEffect.UnitProfile);
                 }
             }

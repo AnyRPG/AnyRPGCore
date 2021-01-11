@@ -21,11 +21,24 @@ namespace AnyRPG {
             set => baseCharacter = value;
         }
 
-        public List<UnitProfile> MyUnitProfiles { get => unitProfiles; set => unitProfiles = value; }
-        public Dictionary<UnitProfile, UnitController> MyActiveUnitProfiles { get => activeUnitProfiles; set => activeUnitProfiles = value; }
+        public List<UnitProfile> UnitProfiles { get => unitProfiles; set => unitProfiles = value; }
+        public Dictionary<UnitProfile, UnitController> ActiveUnitProfiles { get => activeUnitProfiles; set => activeUnitProfiles = value; }
 
         public CharacterPetManager(BaseCharacter baseCharacter) {
             this.baseCharacter = baseCharacter;
+        }
+
+        public void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
+
+            if (unitController == null) {
+                return;
+            }
+
+            if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
+                activeUnitProfiles.Add(unitProfile, unitController);
+                unitController.SetPetMode(baseCharacter);
+                unitController.OnUnitDestroy += HandleUnitDestroy;
+            }
         }
 
         public virtual void AddPet(UnitProfile unitProfile) {
@@ -88,6 +101,10 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
+            DespawnAllPets();
+        }
+
+        public void HandleDie() {
             DespawnAllPets();
         }
 

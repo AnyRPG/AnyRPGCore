@@ -70,6 +70,11 @@ namespace AnyRPG {
             // nothing here for now
         }
 
+        public virtual void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
+            // nothing here for now
+        }
+
+
 
         public AbilityManager(MonoBehaviour abilityCaster) {
             this.abilityCaster = abilityCaster;

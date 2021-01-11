@@ -233,6 +233,8 @@ namespace AnyRPG {
 
         void AddPet(CharacterUnit target);
 
+        void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController);
+
         /// <summary>
         /// give a chance to add the pet to the pet journal and set the current target as a currently active pet
         /// </summary>

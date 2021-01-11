@@ -774,7 +774,7 @@ namespace AnyRPG {
 
         public void SavePetData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyUnitProfiles) {
+            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.CharacterPetManager.UnitProfiles) {
                 PetSaveData saveData = new PetSaveData();
                 saveData.MyName = unitProfile.DisplayName;
                 anyRPGSaveData.petSaveData.Add(saveData);

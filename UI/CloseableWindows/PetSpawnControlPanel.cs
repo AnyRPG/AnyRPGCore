@@ -131,7 +131,7 @@ namespace AnyRPG {
                 //despawnButton.enabled = true;
                 spawnButton.gameObject.SetActive(true);
                 despawnButton.gameObject.SetActive(true);
-                if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
+                if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
                     spawnButton.interactable = false;
                     despawnButton.interactable = true;
                 } else {
@@ -181,7 +181,7 @@ namespace AnyRPG {
             ClearPanel();
 
             if (PlayerManager.MyInstance.MyCharacter.CharacterPetManager != null) {
-                unitProfileList = PlayerManager.MyInstance.MyCharacter.CharacterPetManager.MyUnitProfiles;
+                unitProfileList = PlayerManager.MyInstance.MyCharacter.CharacterPetManager.UnitProfiles;
             }
             ShowPreviewButtonsCommon();
 

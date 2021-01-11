@@ -413,12 +413,17 @@ namespace AnyRPG {
             }
         }
 
+        public override void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
+            base.AddTemporaryPet(unitProfile, unitController);
+            baseCharacter.CharacterPetManager.AddTemporaryPet(unitProfile, unitController);
+        }
+
         public override void CapturePet(UnitController targetUnitController) {
             base.CapturePet(targetUnitController);
             if (baseCharacter.CharacterPetManager != null && targetUnitController != null) {
                 //Debug.Log(gameObject.name + ".CapturePet(): adding to pet manager");
                 baseCharacter.CharacterPetManager.AddPet(targetUnitController.UnitProfile);
-                baseCharacter.CharacterPetManager.MyActiveUnitProfiles.Add(targetUnitController.UnitProfile, targetUnitController);
+                baseCharacter.CharacterPetManager.ActiveUnitProfiles.Add(targetUnitController.UnitProfile, targetUnitController);
             }
         }
 

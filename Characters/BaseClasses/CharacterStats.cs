@@ -761,7 +761,7 @@ namespace AnyRPG {
                 if (newStatusEffectNode.StatusEffect.ControlTarget == true) {
                     if (baseCharacter.UnitController != null) {
                         // control effects really shouldn't be on saved characters, but just in case, check if no unit is spawned yet
-                        baseCharacter.UnitController.SetPetMode((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter);
+                        sourceCharacter.AbilityManager.AddTemporaryPet(baseCharacter.UnitProfile, baseCharacter.UnitController);
                     }
 
                     // any control effect will add the pet to the pet journal if this is used.  This is already done in capture pet effect so should not be needed
@@ -1068,6 +1068,7 @@ namespace AnyRPG {
                 BeforeDie(this);
                 baseCharacter.UnitController.NotifyOnBeforeDie(this);
                 OnDie(this);
+                baseCharacter.CharacterPetManager.HandleDie();
                 baseCharacter.CharacterCombat.HandleDie();
                 baseCharacter.CharacterAbilityManager.HandleDie(this);
                 baseCharacter.UnitController.FreezePositionXZ();
