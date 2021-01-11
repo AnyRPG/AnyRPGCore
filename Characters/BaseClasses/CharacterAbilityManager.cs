@@ -422,8 +422,7 @@ namespace AnyRPG {
             base.CapturePet(targetUnitController);
             if (baseCharacter.CharacterPetManager != null && targetUnitController != null) {
                 //Debug.Log(gameObject.name + ".CapturePet(): adding to pet manager");
-                baseCharacter.CharacterPetManager.AddPet(targetUnitController.UnitProfile);
-                baseCharacter.CharacterPetManager.ActiveUnitProfiles.Add(targetUnitController.UnitProfile, targetUnitController);
+                baseCharacter.CharacterPetManager.CapturePet(targetUnitController.UnitProfile, targetUnitController);
             }
         }
 

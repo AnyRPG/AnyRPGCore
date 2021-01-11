@@ -65,7 +65,6 @@ namespace AnyRPG {
             UnitController targetUnitController = target.GetComponent<UnitController>();
             if (targetUnitController != null) {
                 //Debug.Log(DisplayName + ".CapturePetEffect.Cast(): applying control effects");
-                targetUnitController.SetPetMode((source.AbilityManager as CharacterAbilityManager).BaseCharacter);
                 source.AbilityManager.CapturePet(targetUnitController);
             }
 

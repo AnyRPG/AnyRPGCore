@@ -41,6 +41,20 @@ namespace AnyRPG {
             }
         }
 
+        public void CapturePet(UnitProfile unitProfile, UnitController unitController) {
+
+            if (unitController == null) {
+                return;
+            }
+
+            if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
+                activeUnitProfiles.Add(unitProfile, unitController);
+                unitProfiles.Add(unitProfile);
+                unitController.SetPetMode(baseCharacter);
+                unitController.OnUnitDestroy += HandleUnitDestroy;
+            }
+        }
+
         public virtual void AddPet(UnitProfile unitProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfile.DisplayName + ")");
             // need more logic in here about whether this class or spec is allowed to capture this type of pet
