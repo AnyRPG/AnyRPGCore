@@ -15,8 +15,6 @@ namespace AnyRPG {
 
         private Interactable target = null;
 
-        private CharacterUnit characterUnit = null;
-
         private Vector3 positionOffset;
 
         private Vector3 targetPosition;

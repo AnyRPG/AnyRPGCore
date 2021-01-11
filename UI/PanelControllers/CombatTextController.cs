@@ -78,7 +78,7 @@ namespace AnyRPG {
             randomX = Random.Range(0, randomXLimit);
             randomY = Random.Range(0, randomYLimit);
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
-            targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.transform.position);
+            targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
             //alpha = text.color.a;
             alpha = 1f;
             tmpProtext.fontSize = defaultFontSize;
@@ -94,7 +94,7 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.gameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+            if (mainTarget.InteractableGameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:
@@ -186,7 +186,7 @@ namespace AnyRPG {
             //Debug.Log("CombatTextController.FixedUpdate()");
             if (mainTarget != null) {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
-                targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.transform.position + new Vector3(0, yUnitOffset, 0));
+                targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
                 transform.position = targetPos + new Vector2(randomX + xUIOffset, randomY);
             } else {
