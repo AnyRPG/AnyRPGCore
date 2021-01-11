@@ -977,7 +977,7 @@ namespace AnyRPG {
 
         public void OnMasterDropCombat() {
             characterUnit.BaseCharacter.CharacterCombat.TryToDropCombat();
-            SetMasterRelativeDestination();
+            SetMasterRelativeDestination(true);
         }
 
         public void UpdateTarget() {
@@ -1155,7 +1155,7 @@ namespace AnyRPG {
         /// </summary>
         private void HandleMovementAudio() {
             //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
-            
+
             // if this unit has no configured audio, or is set to use footstep events and is not in a movement area with no footstep events do nothing
             if (unitProfile?.MovementAudioProfiles == null
                 || unitProfile.MovementAudioProfiles.Count == 0
