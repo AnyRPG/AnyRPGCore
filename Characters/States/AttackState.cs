@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
-
+            //Debug.Log(baseController.gameObject.name + ".AttackState.Exit()");
         }
 
         public void Update() {

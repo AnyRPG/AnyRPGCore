@@ -24,6 +24,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
+            //Debug.Log(baseController.gameObject.name + ": Exit return state at position: " + baseController.transform.position);
         }
 
         public void Update() {
@@ -33,12 +34,14 @@ namespace AnyRPG {
 
             if (baseController.Target != null && baseController.AggroEnabled() == true) {
                 baseController.ChangeState(new FollowState());
+                return;
             }
 
             float distanceToLeashPosition = Vector3.Distance(baseController.LeashPosition, baseController.transform.position);
             //Debug.Log(aiController.gameObject.name + ": ReturnState: Distance from spawn point: " + distance.ToString());
             if (distanceToLeashPosition <= 1) {
                 baseController.ChangeState(new IdleState());
+                return;
             } else {
                 float agentDestinationDrift = Vector3.Distance(baseController.LeashPosition, baseController.NavMeshAgent.destination);
                 if (agentDestinationDrift >= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {

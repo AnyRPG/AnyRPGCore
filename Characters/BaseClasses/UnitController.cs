@@ -843,7 +843,7 @@ namespace AnyRPG {
 
 
         public void FollowTarget(Interactable target, float minAttackRange = -1f) {
-            //Debug.Log(gameObject.name + ": AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
+            //Debug.Log(gameObject.name + ".AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
             if (!(currentState is DeathState)) {
                 UnitMotor.FollowTarget(target, minAttackRange);
             }

@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         public void BeginPatrolByIndex(int patrolIndex) {
             if (patrolIndex < 0 || patrolIndex >= patrolProfiles.Count) {
-                Debug.Log("PatrolController.BeginPatrolByIndex(" + patrolIndex + "): invalid index");
+                //Debug.Log("PatrolController.BeginPatrolByIndex(" + patrolIndex + "): invalid index");
                 return;
             }
             string patrolName = patrolProfiles[patrolIndex].DisplayName;
@@ -53,6 +53,7 @@ namespace AnyRPG {
                 tmpPatrolProfile.CurrentUnitController = unitController;
                 SetCurrentPatrol(tmpPatrolProfile);
                 unitController.ChangeState(new PatrolState());
+                return;
             } else {
                 Debug.LogError(unitController.gameObject.name + ".PatrolController.BeginPatrol() could not find patrol: " + (patrolName != null ? patrolName : "null") + ")");
             }

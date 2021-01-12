@@ -38,8 +38,8 @@ namespace AnyRPG {
             if (baseController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log("No Longer Dead!");
                 baseController.ChangeState(new ReturnState());
+                return;
             }
-            return;
         }
     }
 

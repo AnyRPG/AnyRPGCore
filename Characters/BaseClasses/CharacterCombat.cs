@@ -152,6 +152,7 @@ namespace AnyRPG {
             if ((baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet)
                 && !(baseCharacter.UnitController.CurrentState is DeathState)) {
                 (baseCharacter.UnitController as UnitController).ChangeState(new DeathState());
+                return;
             }
 
         }

@@ -15,6 +15,7 @@ namespace AnyRPG {
         }
 
         public void Exit() {
+            //Debug.Log(baseController.gameObject.name + ".FollowState.Exit()");
             baseController.UnitMotor.StopFollowingTarget();
             // stop following target code goes here
         }
@@ -51,6 +52,7 @@ namespace AnyRPG {
                 if (baseController.IsTargetInHitBox(baseController.Target)) {
                     // they are in the hitbox and we can attack them
                     baseController.ChangeState(new AttackState());
+                    return;
                 } else {
                     //Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                     // if within agro distance but out of hitbox range, move toward target
@@ -63,6 +65,7 @@ namespace AnyRPG {
             } else {
                 // there is no target so start idling.  should we return to our start position instead?
                 baseController.ChangeState(new ReturnState());
+                return;
             }
         }
     }

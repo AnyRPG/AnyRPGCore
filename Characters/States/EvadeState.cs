@@ -27,6 +27,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ": EvadeState.Update(): Distance from spawn point: " + distance.ToString());
             if (distance <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
                 baseController.ChangeState(new IdleState());
+                return;
             }
         }
     }
