@@ -119,7 +119,7 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventSubscriptions() {
+        public virtual void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + "Spawnable.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;

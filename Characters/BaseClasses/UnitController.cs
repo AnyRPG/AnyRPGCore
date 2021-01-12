@@ -295,6 +295,25 @@ namespace AnyRPG {
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
 
+        public override void CreateEventSubscriptions() {
+            if (eventSubscriptionsInitialized == true) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
+
+        }
+
+        public override void CleanupEventSubscriptions() {
+            base.CleanupEventSubscriptions();
+            SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
+        }
+
+        public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
+            // minimap indicator can change color if reputation changed
+            characterUnit.CallMiniMapStatusUpdateHandler();
+        }
+
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             characterUnit.BaseCharacter.CharacterPetManager.DespawnAllPets();
             unitMountManager.SetMountedState(mountUnitController, mountUnitProfile);
@@ -1527,6 +1546,8 @@ namespace AnyRPG {
         #region EventNotifications
 
         public void NotifyOnReputationChange() {
+            // minimap indicator can change color if reputation changed
+            characterUnit.CallMiniMapStatusUpdateHandler();
             OnReputationChange();
         }
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
