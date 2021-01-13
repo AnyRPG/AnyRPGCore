@@ -62,6 +62,9 @@ namespace AnyRPG {
         }
 
         public static GatheringNodeComponent GetGatheringNodeComponent(Interactable searchInteractable) {
+            if (searchInteractable == null) {
+                return null;
+            }
             return searchInteractable.GetFirstInteractableOption(typeof(GatheringNodeComponent)) as GatheringNodeComponent;
         }
 

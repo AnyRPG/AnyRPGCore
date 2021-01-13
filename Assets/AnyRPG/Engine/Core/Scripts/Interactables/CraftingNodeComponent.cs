@@ -1,6 +1,8 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +51,13 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChange;
             }
+        }
+
+        public static List<CraftingNodeComponent> GetCraftingNodeComponents(Interactable searchInteractable) {
+            if (searchInteractable == null) {
+                return new List<CraftingNodeComponent>();
+            }
+            return searchInteractable.GetInteractableOptionList(typeof(CraftingNodeComponent)).Cast<CraftingNodeComponent>().ToList();
         }
 
         public void HandleAbilityListChange(BaseAbility baseAbility) {

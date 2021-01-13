@@ -124,16 +124,18 @@ namespace AnyRPG {
 
             // if we made it this far, the target is not ourself
 
-            // the target is another unit, but this ability cannot be cast on others
-            if (targetable.GetTargetOptions(sourceCharacter).CanCastOnOthers == false) {
-                if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on others");
-                }
-                return false;
-            }
-
             targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
             if (targetCharacterUnit != null) {
+
+                // the target is another unit, but this ability cannot be cast on others
+                // this check moved to inside character unit checks because others is really only meant for abilities that target characters
+                // if crafting or gathering, just checking requires target should be enough and the ability will take care of any other checks
+                if (targetable.GetTargetOptions(sourceCharacter).CanCastOnOthers == false) {
+                    if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on others");
+                    }
+                    return false;
+                }
 
                 // liveness checks
                 if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
