@@ -1,0 +1,255 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621a5f1f29fd4ac41a1db478d5473374, type: 3}
+  m_Name: HumanAnimationProfile
+  m_EditorClassIdentifier: 
+  resourceName: Human
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  animationProps:
+    useRootMotion: 0
+    suppressAdjustAnimatorSpeed: 0
+    attackClips:
+    - {fileID: -3452266476488665084, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+    - {fileID: -4496910834445044422, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+    - {fileID: 1186758837348260008, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+    - {fileID: -929040297441082618, guid: abfaf6ab9a0e6a64f8806addbd068092, type: 3}
+    - {fileID: 6569951587725949560, guid: 5e30b3aeb878b7142b15b827acd5fbd2, type: 3}
+    - {fileID: 5913221249527592199, guid: 6e2419dd3ba133846a62009f8b440270, type: 3}
+    castClips: []
+    takeDamageClips: []
+    idleClip: {fileID: 7400000, guid: 987fd3ff86cadf049aeba1e6d622aac8, type: 2}
+    jumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
+      type: 3}
+    fallClip: {fileID: 7400000, guid: 9a21dc45af026604a82ac46acd23828d, type: 3}
+    landClip: {fileID: -7497848331705974981, guid: d4eca31749363e44da997a0b48022861,
+      type: 3}
+    moveForwardClip: {fileID: 7400000, guid: 450ad86e85ecd344f8b69b74a241724d, type: 2}
+    moveForwardFastClip: {fileID: 7400000, guid: 297dc976b541b7c4c853278d1d2b5fab,
+      type: 2}
+    moveBackClip: {fileID: 7400000, guid: 9a123cb3e407682488f0caa8de832f34, type: 2}
+    moveBackFastClip: {fileID: 7400000, guid: 3e68ebb6e6740e64183ab3db92c82c62, type: 2}
+    turnLeftClip: {fileID: 7400000, guid: e93db3e0c84721140abbf7ea72729932, type: 2}
+    turnRightClip: {fileID: 7400000, guid: bdc996c3f1a2bbf4eb8514798c39d50c, type: 2}
+    strafeLeftClip: {fileID: 7400000, guid: 395c30fd747576b4083726b8ea4b7860, type: 2}
+    jogStrafeLeftClip: {fileID: 7400000, guid: 5b21ddf6b7cc63a40a3ec200a44678d2, type: 2}
+    strafeRightClip: {fileID: 7400000, guid: 302f2a6f7cdc4b245b382432913f5e15, type: 2}
+    jogStrafeRightClip: {fileID: 7400000, guid: de5fde72b8445a443a7051e10988f9c1,
+      type: 2}
+    strafeForwardLeftClip: {fileID: 7400000, guid: e01afbded93a24a459d8c96e353f057d,
+      type: 2}
+    jogStrafeForwardLeftClip: {fileID: 7400000, guid: a3369e77aba8d6b4faf9da58f663494a,
+      type: 2}
+    strafeForwardRightClip: {fileID: 7400000, guid: 1585e360c7c079342b6d81364bd629bb,
+      type: 2}
+    jogStrafeForwardRightClip: {fileID: 7400000, guid: f40d8297da491a24091b5bc10c5ffea1,
+      type: 2}
+    strafeBackLeftClip: {fileID: 7400000, guid: b038d6509a2a92c43841a0cdc19e0b84,
+      type: 2}
+    jogStrafeBackLeftClip: {fileID: 7400000, guid: 27977c8854b818f4a8a1e17ec7007c56,
+      type: 2}
+    strafeBackRightClip: {fileID: 7400000, guid: b09848c40a64f294ba25015b7a7eb75c,
+      type: 2}
+    jogStrafeBackRightClip: {fileID: 7400000, guid: 7d14df5598c73c44a9bb84b418ec130e,
+      type: 2}
+    stunnedClip: {fileID: 5268444608904133969, guid: 7ad55fd1b862fd04cbde4ace5942ffa5,
+      type: 3}
+    fullCombatMirror: 0
+    combatIdleMirror: 0
+    combatIdleClip: {fileID: -8858722988403419511, guid: cfa4975c24eb41649b8d95e1620cf3d9,
+      type: 3}
+    combatJumpMirror: 0
+    combatJumpClip: {fileID: 2333413601598592880, guid: d4eca31749363e44da997a0b48022861,
+      type: 3}
+    combatFallMirror: 0
+    combatFallClip: {fileID: -8653736495142873681, guid: 9a21dc45af026604a82ac46acd23828d,
+      type: 3}
+    combatLandMirror: 0
+    combatLandClip: {fileID: -2282927781383292788, guid: d4eca31749363e44da997a0b48022861,
+      type: 3}
+    combatMoveForwardMirror: 0
+    combatMoveForwardClip: {fileID: 7400000, guid: eb9cbc3325f4bec4c855af2d3414b7df,
+      type: 2}
+    combatMoveForwardFastMirror: 0
+    combatMoveForwardFastClip: {fileID: 7400000, guid: fa0933a61999d4c4684a9d45c4e4f2e2,
+      type: 2}
+    combatMoveBackMirror: 0
+    combatMoveBackClip: {fileID: 7400000, guid: a1584cb71c52b784b8a2cc57bf1e93e7,
+      type: 2}
+    combatMoveBackFastMirror: 0
+    combatMoveBackFastClip: {fileID: 7400000, guid: 22a162bfc9e854140b018e65a8956b95,
+      type: 2}
+    combatTurnLeftMirror: 0
+    combatTurnLeftClip: {fileID: 7400000, guid: e93db3e0c84721140abbf7ea72729932,
+      type: 2}
+    combatTurnRightMirror: 0
+    combatTurnRightClip: {fileID: 7400000, guid: bdc996c3f1a2bbf4eb8514798c39d50c,
+      type: 2}
+    combatStrafeLeftMirror: 0
+    combatStrafeLeftClip: {fileID: 7400000, guid: a7b72881f56b53542a5bda3fe1d4b10b,
+      type: 2}
+    combatJogStrafeLeftMirror: 0
+    combatJogStrafeLeftClip: {fileID: 7400000, guid: 0ca64e92f70d07e4988f3bf4528aca84,
+      type: 2}
+    combatStrafeRightMirror: 0
+    combatStrafeRightClip: {fileID: 7400000, guid: 6b2569218078f9d478d9e7a2dfdd7507,
+      type: 2}
+    combatJogStrafeRightMirror: 0
+    combatJogStrafeRightClip: {fileID: 7400000, guid: 3eae2f1d75ba21149b40065ee3af9931,
+      type: 2}
+    combatStrafeForwardLeftMirror: 0
+    combatStrafeForwardLeftClip: {fileID: 7400000, guid: a96aede2df2411b49987b190826935c6,
+      type: 2}
+    combatJogStrafeForwardLeftMirror: 0
+    combatJogStrafeForwardLeftClip: {fileID: 7400000, guid: 71c0f09289a35c64bb45c7f8c8478946,
+      type: 2}
+    combatStrafeForwardRightMirror: 0
+    combatStrafeForwardRightClip: {fileID: 7400000, guid: 2c3dc75420958154b9f297f9f7626588,
+      type: 2}
+    combatJogStrafeForwardRightMirror: 0
+    combatJogStrafeForwardRightClip: {fileID: 7400000, guid: b61f6fb4f32cef7428e86f2e797b23fb,
+      type: 2}
+    combatStrafeBackLeftMirror: 0
+    combatStrafeBackLeftClip: {fileID: 7400000, guid: 83d0bcd2323073a40b66f32a1f9794e3,
+      type: 2}
+    combatJogStrafeBackLeftMirror: 0
+    combatJogStrafeBackLeftClip: {fileID: 7400000, guid: 1c89103ecc8bf864798abe3d0b4e21ba,
+      type: 2}
+    combatStrafeBackRightMirror: 0
+    combatStrafeBackRightClip: {fileID: 7400000, guid: 9f2cbb483bd3dd6419743b63edcc20f2,
+      type: 2}
+    combatJogStrafeBackRightMirror: 0
+    combatJogStrafeBackRightClip: {fileID: 7400000, guid: d4c3f944d6699e648a74fa626caee421,
+      type: 2}
+    combatStunnedMirror: 0
+    combatStunnedClip: {fileID: 2342052905833142417, guid: 7ad55fd1b862fd04cbde4ace5942ffa5,
+      type: 3}
+    deathClip: {fileID: 6472437491387499056, guid: 79d5a0c095a0132458a9b097be7d2ad3,
+      type: 3}
+    reviveClip: {fileID: 0}
+    levitatedClip: {fileID: 0}
+  useRootMotion: 0
+  suppressAdjustAnimatorSpeed: 0
+  attackClips:
+  - {fileID: -3452266476488665084, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+  - {fileID: -4496910834445044422, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+  - {fileID: 1186758837348260008, guid: 00b0e7be130015541b20e569d0dcb04c, type: 3}
+  - {fileID: -929040297441082618, guid: abfaf6ab9a0e6a64f8806addbd068092, type: 3}
+  - {fileID: 6569951587725949560, guid: 5e30b3aeb878b7142b15b827acd5fbd2, type: 3}
+  - {fileID: 5913221249527592199, guid: 6e2419dd3ba133846a62009f8b440270, type: 3}
+  castClips: []
+  takeDamageClips: []
+  idleClip: {fileID: 7400000, guid: 987fd3ff86cadf049aeba1e6d622aac8, type: 2}
+  jumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
+    type: 3}
+  fallClip: {fileID: 7400000, guid: 9a21dc45af026604a82ac46acd23828d, type: 3}
+  landClip: {fileID: -7497848331705974981, guid: d4eca31749363e44da997a0b48022861,
+    type: 3}
+  moveForwardClip: {fileID: 7400000, guid: 450ad86e85ecd344f8b69b74a241724d, type: 2}
+  moveForwardFastClip: {fileID: 7400000, guid: 297dc976b541b7c4c853278d1d2b5fab, type: 2}
+  moveBackClip: {fileID: 7400000, guid: 9a123cb3e407682488f0caa8de832f34, type: 2}
+  moveBackFastClip: {fileID: 7400000, guid: 3e68ebb6e6740e64183ab3db92c82c62, type: 2}
+  turnLeftClip: {fileID: 7400000, guid: e93db3e0c84721140abbf7ea72729932, type: 2}
+  turnRightClip: {fileID: 7400000, guid: bdc996c3f1a2bbf4eb8514798c39d50c, type: 2}
+  strafeLeftClip: {fileID: 7400000, guid: 395c30fd747576b4083726b8ea4b7860, type: 2}
+  jogStrafeLeftClip: {fileID: 7400000, guid: 5b21ddf6b7cc63a40a3ec200a44678d2, type: 2}
+  strafeRightClip: {fileID: 7400000, guid: 302f2a6f7cdc4b245b382432913f5e15, type: 2}
+  jogStrafeRightClip: {fileID: 7400000, guid: de5fde72b8445a443a7051e10988f9c1, type: 2}
+  strafeForwardLeftClip: {fileID: 7400000, guid: e01afbded93a24a459d8c96e353f057d,
+    type: 2}
+  jogStrafeForwardLeftClip: {fileID: 7400000, guid: a3369e77aba8d6b4faf9da58f663494a,
+    type: 2}
+  strafeForwardRightClip: {fileID: 7400000, guid: 1585e360c7c079342b6d81364bd629bb,
+    type: 2}
+  jogStrafeForwardRightClip: {fileID: 7400000, guid: f40d8297da491a24091b5bc10c5ffea1,
+    type: 2}
+  strafeBackLeftClip: {fileID: 7400000, guid: b038d6509a2a92c43841a0cdc19e0b84, type: 2}
+  jogStrafeBackLeftClip: {fileID: 7400000, guid: 27977c8854b818f4a8a1e17ec7007c56,
+    type: 2}
+  strafeBackRightClip: {fileID: 7400000, guid: b09848c40a64f294ba25015b7a7eb75c, type: 2}
+  jogStrafeBackRightClip: {fileID: 7400000, guid: 7d14df5598c73c44a9bb84b418ec130e,
+    type: 2}
+  stunnedClip: {fileID: 5268444608904133969, guid: 7ad55fd1b862fd04cbde4ace5942ffa5,
+    type: 3}
+  combatIdleMirror: 0
+  combatIdleClip: {fileID: -8858722988403419511, guid: cfa4975c24eb41649b8d95e1620cf3d9,
+    type: 3}
+  combatJumpMirror: 0
+  combatJumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
+    type: 3}
+  combatFallMirror: 0
+  combatFallClip: {fileID: 7400000, guid: 9a21dc45af026604a82ac46acd23828d, type: 3}
+  combatLandMirror: 0
+  combatLandClip: {fileID: -7497848331705974981, guid: d4eca31749363e44da997a0b48022861,
+    type: 3}
+  combatMoveForwardMirror: 0
+  combatMoveForwardClip: {fileID: 7400000, guid: 450ad86e85ecd344f8b69b74a241724d,
+    type: 2}
+  combatMoveForwardFastMirror: 0
+  combatMoveForwardFastClip: {fileID: 7400000, guid: 297dc976b541b7c4c853278d1d2b5fab,
+    type: 2}
+  combatMoveBackMirror: 0
+  combatMoveBackClip: {fileID: 7400000, guid: 9a123cb3e407682488f0caa8de832f34, type: 2}
+  combatMoveBackFastMirror: 0
+  combatMoveBackFastClip: {fileID: 7400000, guid: 3e68ebb6e6740e64183ab3db92c82c62,
+    type: 2}
+  combatTurnLeftMirror: 0
+  combatTurnLeftClip: {fileID: 7400000, guid: e93db3e0c84721140abbf7ea72729932, type: 2}
+  combatTurnRightMirror: 0
+  combatTurnRightClip: {fileID: 7400000, guid: bdc996c3f1a2bbf4eb8514798c39d50c, type: 2}
+  combatStrafeLeftMirror: 0
+  combatStrafeLeftClip: {fileID: 7400000, guid: 395c30fd747576b4083726b8ea4b7860,
+    type: 2}
+  combatJogStrafeLeftMirror: 0
+  combatJogStrafeLeftClip: {fileID: 7400000, guid: 5b21ddf6b7cc63a40a3ec200a44678d2,
+    type: 2}
+  combatStrafeRightMirror: 0
+  combatStrafeRightClip: {fileID: 7400000, guid: 302f2a6f7cdc4b245b382432913f5e15,
+    type: 2}
+  combatJogStrafeRightMirror: 0
+  combatJogStrafeRightClip: {fileID: 7400000, guid: de5fde72b8445a443a7051e10988f9c1,
+    type: 2}
+  combatStrafeForwardLeftMirror: 0
+  combatStrafeForwardLeftClip: {fileID: 7400000, guid: e01afbded93a24a459d8c96e353f057d,
+    type: 2}
+  combatJogStrafeForwardLeftMirror: 0
+  combatJogStrafeForwardLeftClip: {fileID: 7400000, guid: a3369e77aba8d6b4faf9da58f663494a,
+    type: 2}
+  combatStrafeForwardRightMirror: 0
+  combatStrafeForwardRightClip: {fileID: 7400000, guid: 1585e360c7c079342b6d81364bd629bb,
+    type: 2}
+  combatJogStrafeForwardRightMirror: 0
+  combatJogStrafeForwardRightClip: {fileID: 7400000, guid: f40d8297da491a24091b5bc10c5ffea1,
+    type: 2}
+  combatStrafeBackLeftMirror: 0
+  combatStrafeBackLeftClip: {fileID: 7400000, guid: b038d6509a2a92c43841a0cdc19e0b84,
+    type: 2}
+  combatJogStrafeBackLeftMirror: 0
+  combatJogStrafeBackLeftClip: {fileID: 7400000, guid: 27977c8854b818f4a8a1e17ec7007c56,
+    type: 2}
+  combatStrafeBackRightMirror: 0
+  combatStrafeBackRightClip: {fileID: 7400000, guid: b09848c40a64f294ba25015b7a7eb75c,
+    type: 2}
+  combatJogStrafeBackRightMirror: 0
+  combatJogStrafeBackRightClip: {fileID: 7400000, guid: 7d14df5598c73c44a9bb84b418ec130e,
+    type: 2}
+  combatStunnedMirror: 0
+  combatStunnedClip: {fileID: 8722450377315793245, guid: e3c052141a7f0d84cb698bf4bfe45dc3,
+    type: 3}
+  deathClip: {fileID: 6472437491387499056, guid: 79d5a0c095a0132458a9b097be7d2ad3,
+    type: 3}
+  reviveClip: {fileID: 0}
+  levitatedClip: {fileID: 0}

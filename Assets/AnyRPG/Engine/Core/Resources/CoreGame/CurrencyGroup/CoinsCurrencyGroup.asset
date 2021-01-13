@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b0e4496d92ea14096c6be0ab10bf70, type: 3}
+  m_Name: CoinsCurrencyGroup
+  m_EditorClassIdentifier: 
+  resourceName: Coins
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  baseCurrencyName: Silver
+  baseCurrency: {fileID: 11400000, guid: d796da16c348fca4ca115d3da16678e1, type: 2}
+  currencyGroupRates:
+  - currencyName: Gold
+    currency: {fileID: 11400000, guid: 71954d148a4d37842836034c24a0fa9d, type: 2}
+    baseMultiple: 100

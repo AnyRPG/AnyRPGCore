@@ -1,0 +1,401 @@
+using AnyRPG;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace AnyRPG {
+    /// <summary>
+    /// Superclass for all items
+    /// </summary>
+    [CreateAssetMenu(fileName = "New Item", menuName = "AnyRPG/Inventory/Item")]
+    public class Item : DescribableResource, IMoveable, IUseable {
+
+        [Header("Item")]
+
+        [Tooltip("Size of the stack, less than 2 is not stackable")]
+        [SerializeField]
+        private int stackSize = 1;
+
+        [Tooltip("The name of the item quality to use")]
+        [SerializeField]
+        protected string itemQuality = string.Empty;
+
+        [Tooltip("If true, a random item quality will be selected")]
+        [SerializeField]
+        protected bool randomItemQuality = false;
+
+        [Header("Item Level")]
+
+        [Tooltip("If true, this item level will scale to match the character level")]
+        [SerializeField]
+        protected bool dynamicLevel = false;
+
+        [Tooltip("If true, and dynamic level is true, the item level will be frozen at the level it dropped at")]
+        [SerializeField]
+        protected bool freezeDropLevel = false;
+
+        protected int dropLevel = 1;
+
+        [Tooltip("If dynamic level is true and this value is greater than zero, the item scaling will be capped at this level")]
+        [SerializeField]
+        protected int levelCap = 0;
+
+        [Tooltip("If dynamic level is not true, this value will be used for the static level")]
+        [SerializeField]
+        private int itemLevel = 1;
+
+        [Header("Price")]
+
+        [Tooltip("The currency used when buying or selling this item")]
+        [SerializeField]
+        private string currencyName = string.Empty;
+
+        [Tooltip("If true, the purchase and sale price will scale with level")]
+        [SerializeField]
+        protected bool dynamicCurrencyAmount = true;
+
+        [Tooltip("If dynamic currency amount is true, this is the amount per level this item will cost")]
+        [SerializeField]
+        protected int pricePerLevel = 10;
+
+        [Tooltip("Base item price. If dynamic currency is true, this price is added to the dynamic price.")]
+        [SerializeField]
+        private int basePrice = 0;
+
+        [Header("Restrictions")]
+
+        [Tooltip("if an item is unique, it will not drop from a loot table if it already exists in the bags")]
+        [SerializeField]
+        private bool uniqueItem = false;
+
+        [Tooltip("If not empty, the character must be one of these classes to use this item.")]
+        [SerializeField]
+        private List<string> characterClassRequirementList = new List<string>();
+
+        private List<CharacterClass> realCharacterClassRequirementList = new List<CharacterClass>();
+
+        // a reference to the real item quality
+        protected ItemQuality realItemQuality = null;
+
+        // a reference to the actual currency
+        private Currency currency = null;
+
+        // A reference to the slot that this item is sitting on
+        private SlotScript slot;
+
+        public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
+        public SlotScript MySlot { get => slot; set => slot = value; }
+        public int BuyPrice {
+            get {
+
+                if (dynamicCurrencyAmount) {
+                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+                }
+                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+            }
+            set => basePrice = value;
+        }
+
+        public int SellPrice {
+            get {
+
+                if (dynamicCurrencyAmount) {
+                    if (realItemQuality == null) {
+                        //Debug.Log("realItemQuality was null");
+                    }
+                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+                }
+                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+            }
+            set => basePrice = value;
+        }
+
+        public bool MyUniqueItem { get => uniqueItem; }
+        public Currency MyCurrency { get => currency; set => currency = value; }
+        public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
+        public int GetItemLevel(int characterLevel) {
+            int returnLevel = (int)Mathf.Clamp(itemLevel, 1, Mathf.Infinity);
+            
+            // frozen drop level overrides all other calculations
+            if (freezeDropLevel == true) {
+                return (int)Mathf.Clamp(dropLevel, 1, Mathf.Infinity);
+            }
+            if (dynamicLevel == true) {
+                returnLevel = (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
+            }
+
+            // item quality can override regular individual item scaling (example, heirlooms always scale)
+            if (ItemQuality == null) {
+                return returnLevel;
+            } else {
+                if (ItemQuality.MyDynamicItemLevel) {
+                    return (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
+                } else {
+                    return returnLevel;
+                }
+            }
+        }
+
+        public virtual void UpdateChargeCount(ActionButton actionButton) {
+            //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
+            int chargeCount = InventoryManager.MyInstance.GetUseableCount(this);
+            UIManager.MyInstance.UpdateStackSize(actionButton, chargeCount, true);
+        }
+
+        public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
+            int count = InventoryManager.MyInstance.GetUseableCount(this);
+            // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
+            //if ((count == 0 && removeStaleActions) || count > 0) {
+            /*
+            if (count > 0) {
+                Useable = InventoryManager.MyInstance.GetUseable(Useable as IUseable);
+            }
+            */
+            UIManager.MyInstance.UpdateStackSize(actionButton, count, true);
+
+            if (count == 0) {
+                actionButton.EnableFullCoolDownIcon();
+            } else {
+                // check for ability cooldown here and only disable if no cooldown exists
+                if (!HadSpecialIcon(actionButton)) {
+                    actionButton.DisableCoolDownIcon();
+                }
+            }
+        }
+
+        public virtual bool HadSpecialIcon(ActionButton actionButton) {
+            return false;
+        }
+
+        public KeyValuePair<Currency, int> MySellPrice {
+            get {
+                //Debug.Log(MyName + ".Item.MySellPrice()");
+                int sellAmount = SellPrice;
+                Currency currency = MyCurrency;
+                if (currency != null) {
+                    CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);
+                    if (currencyGroup != null) {
+                        int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
+                        currency = currencyGroup.MyBaseCurrency;
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    } else {
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                    }
+                }
+                return new KeyValuePair<Currency, int>(currency, sellAmount);
+            }
+        }
+
+        public List<CharacterClass> CharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
+        public bool RandomItemQuality { get => randomItemQuality; set => randomItemQuality = value; }
+        public bool FreezeDropLevel { get => freezeDropLevel; set => freezeDropLevel = value; }
+        public int DropLevel {
+            get => dropLevel;
+            set {
+                dropLevel = (int)Mathf.Clamp(Mathf.Min(value, (levelCap > 0 ? levelCap : value)), 1, Mathf.Infinity);
+            }
+        }
+
+        public virtual void Awake() {
+        }
+
+        public IUseable GetFactoryUseable() {
+            return SystemItemManager.MyInstance.GetResource(DisplayName);
+        }
+
+        public bool ActionButtonUse() {
+            List<Item> itemList = InventoryManager.MyInstance?.GetItems(DisplayName, 1);
+            if (itemList == null || itemList.Count == 0) {
+                return false;
+            }
+            Item newItem = itemList[0];
+            if (newItem == null) {
+                return false;
+            }
+            return newItem.Use();
+        }
+
+        public virtual bool IsUseableStale(ActionButton actionButton) {
+            // items are never stale
+            // they should stay on action buttons in case the player picks up more
+            return false;
+        }
+
+        public virtual Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            return null;
+        }
+
+        public virtual bool Use() {
+            //Debug.Log("Base item class: using " + itemName);
+            if (!CharacterClassRequirementIsMet(PlayerManager.MyInstance.MyCharacter)) {
+                MessageFeedManager.MyInstance.WriteMessage("You are not the right character class to use " + DisplayName);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// return true if the character class requirement of this item is met
+        /// </summary>
+        /// <returns></returns>
+        public bool CharacterClassRequirementIsMet(BaseCharacter baseCharacter) {
+            //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet()");
+            if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
+                if (!CharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
+                    //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return false");
+                    return false;
+                }
+            }
+            //Debug.Log(DisplayName + ".Item.CharacterClassRequirementIsMet(): return true");
+            return true;
+        }
+
+        public virtual bool RequirementsAreMet() {
+            //Debug.Log(DisplayName + ".Item.RequirementsAreMet()");
+
+            // NOTE : currently this is only called from places that apply to characters (quest and loot)
+            // if in the future this function is called from somewhere an npc or preview character is used, it would be better to accept the
+            // character as a parameter, rather than hard coding to the player
+            if (!CharacterClassRequirementIsMet(PlayerManager.MyInstance.MyCharacter)) {
+                //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
+                return false;
+            }
+
+            //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return true");
+            return true;
+        }
+
+        /// <summary>
+        /// removes the item from the inventory.  new inventory system.
+        /// </summary>
+        public void Remove() {
+            //Debug.Log("Item " + GetInstanceID().ToString() + " is about to ask the slot to remove itself");
+            if (MySlot != null) {
+                //Debug.Log("The item's myslot is not null");
+                MySlot.RemoveItem(this);
+                MySlot = null;
+            } else {
+                //Debug.Log("The item's myslot is null!!!");
+            }
+        }
+
+        public override string GetDescription() {
+            //Debug.Log(MyName + ".Item.GetDescription()");
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), DisplayName, GetSummary());
+            //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
+        }
+
+        
+        public override string GetSummary() {
+            //Debug.Log(MyDisplayName + ".Item.GetSummary()");
+            //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
+            string summaryString = string.Empty;
+            if (characterClassRequirementList.Count > 0) {
+                string colorString = "red";
+                if (realCharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
+                    colorString = "white";
+                }
+                summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
+            }
+            if (MyCurrency == null) {
+                summaryString += "\nNo Sell Price";
+            }
+
+
+            return string.Format("{0}", summaryString);
+        }
+
+        public virtual void InitializeNewItem() {
+            //Debug.Log(MyDisplayName + ".Item.InitializeNewItem()");
+
+            // choose the random item quality
+            if (randomItemQuality == true) {
+                // get number of item qualities that are valid for random item quality creation
+                List<ItemQuality> validItemQualities = new List<ItemQuality>();
+                foreach (ItemQuality itemQuality in SystemItemQualityManager.MyInstance.GetResourceList()) {
+                    if (itemQuality.AllowRandomItems) {
+                        validItemQualities.Add(itemQuality);
+                    }
+                }
+                if (validItemQualities.Count > 0) {
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
+
+                    int usedIndex = 0;
+
+                    int sum_of_weight = 0;
+
+                    int accumulatedWeight = 0;
+
+                    for (int i = 0; i < validItemQualities.Count; i++) {
+                        sum_of_weight += validItemQualities[i].RandomWeight;
+                    }
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                    int rnd = UnityEngine.Random.Range(0, sum_of_weight);
+                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                    for (int i = 0; i < validItemQualities.Count; i++) {
+                        //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                        accumulatedWeight += validItemQualities[i].RandomWeight;
+                        if (rnd < accumulatedWeight) {
+                            usedIndex = i;
+                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                            break;
+                        }
+                        //rnd -= validItemQualities[i].RandomWeight;
+                    }
+
+                    realItemQuality = validItemQualities[usedIndex];
+
+                    if (realItemQuality.RandomQualityPrefix != null && realItemQuality.RandomQualityPrefix != string.Empty) {
+                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + realItemQuality.RandomQualityPrefix + " " + MyDisplayName);
+                        displayName = realItemQuality.RandomQualityPrefix + " " + DisplayName;
+                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + displayName);
+                    }
+                }
+            }
+        }
+
+        public override void SetupScriptableObjects() {
+            base.SetupScriptableObjects();
+            currency = null;
+            if (currencyName != null && currencyName != string.Empty) {
+                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(currencyName);
+                if (tmpCurrency != null) {
+                    currency = tmpCurrency;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            realItemQuality = null;
+            if (itemQuality != null && itemQuality != string.Empty) {
+                ItemQuality tmpItemQuality = SystemItemQualityManager.MyInstance.GetResource(itemQuality);
+                if (tmpItemQuality != null) {
+                    realItemQuality = tmpItemQuality;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            realCharacterClassRequirementList = new List<CharacterClass>();
+            if (characterClassRequirementList != null) {
+                foreach (string characterClassName in characterClassRequirementList) {
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    if (tmpCharacterClass != null) {
+                        realCharacterClassRequirementList.Add(tmpCharacterClass);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+
+        }
+
+
+
+    }
+
+}

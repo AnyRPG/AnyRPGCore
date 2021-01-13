@@ -34,3 +34,18 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# AnyRPG
+Assets/_TerrainAutoUpgrade*
+Assets/ALostSoul*
+Assets/AnyRPG/Engine/Content*
+Assets/Import*
+Assets/NavMeshComponents*
+Assets/SampleScenes*
+Assets/Sketchfab*
+Assets/Standard*
+Assets/TextMesh*
+Assets/UMA*
+Assets/UnusedExternalContent*
+
+AssetBundles/

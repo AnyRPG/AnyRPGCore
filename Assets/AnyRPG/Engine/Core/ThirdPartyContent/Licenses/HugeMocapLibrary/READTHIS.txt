@@ -1,0 +1,23 @@
+Huge FBX Mocap Library
+
+This library is a conversion of the Carnegie-Mellon University mocap library. It contains 2,534 mocap FBX animations all organized into groups.
+This library was first converted to BVH by Bruce Hahn which Ward Dewaele then converted into an FBX library for the Unity community.
+The original library was free for all uses and since Bruce Hahn puts no extra restrictions on the BVH version I won't put any restrictions on this FBX version either. This means that every animation of this library can be used for any purpose, including commercial games and adding the animations to other assets. 
+
+I make no guarantee of any sort for these animations. You will find that a lot of the animations are quite good, some of them might require some cleaning up, and some might not be usable at all.
+There are definitely better ready-out-of-the box animation libraries out there, but all of them cost quite some money which not all indie developers can afford. This might be a good alternative to get a lot of animations for free.
+You can look up animations in the included spreadsheet, which was made by Bruce Hahn.
+
+If you appreciate my part of the work then please take a look at our other assets on the Asset Store and consider buying them if they suit your needs:
+http://u3d.as/2MW
+
+cInput – A customizable replacement for the built-in Input Manager which allows you to change your key bindings at runtime:
+http://u3d.as/80s
+cInput Pro - Includes source code:
+http://u3d.as/2NP
+
+
+
+Links:
+Original mocap library:  http://mocap.cs.cmu.edu/
+Bruce Hahn's BVH version of the library: https://sites.google.com/a/cgspeed.com/cgspeed/motion-capture
