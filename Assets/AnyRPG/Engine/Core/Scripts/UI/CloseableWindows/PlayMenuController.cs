@@ -11,6 +11,7 @@ namespace AnyRPG {
             //Debug.Log("PlayMenuController.NewGame()");
             if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
                 SystemWindowManager.MyInstance.newGameWindow.OpenWindow();
+                SystemWindowManager.MyInstance.playMenuWindow.CloseWindow();
             } else {
                 SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
             }
@@ -24,6 +25,7 @@ namespace AnyRPG {
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
             SystemWindowManager.MyInstance.loadGameWindow.OpenWindow();
+            SystemWindowManager.MyInstance.playMenuWindow.CloseWindow();
         }
 
     }
