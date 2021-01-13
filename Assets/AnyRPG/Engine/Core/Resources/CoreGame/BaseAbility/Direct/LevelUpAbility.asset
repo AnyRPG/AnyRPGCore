@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: LevelUpAbility
+  m_EditorClassIdentifier: 
+  resourceName: Level Up
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: Time to Celebrate!!!
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  requireOutOfCombat: 0
+  weaponAffinityNames: []
+  holdableObjectList: []
+  abilityPrefabSource: 0
+  animatorCreatePrefabs: 0
+  prefabDestroyDelay: 0
+  animationProfileName: 
+  useUnitCastAnimations: 0
+  animationHitAudioProfileName: 
+  castingAudioProfileName: 
+  requiredLevel: 1
+  characterClassRequirements: []
+  useableWithoutLearning: 1
+  autoLearn: 0
+  autoAddToBars: 1
+  canSimultaneousCast: 1
+  canCastWhileMoving: 0
+  ignoreGlobalCoolDown: 1
+  powerResourceName: 
+  baseResourceCost: 0
+  resourceCostPerLevel: 5
+  spendDelay: 0
+  generatePowerResourceName: 
+  baseResourceGain: 0
+  resourceGainPerLevel: 0
+  useSpeedMultipliers: 1
+  useAnimationCastTime: 1
+  abilityCastingTime: 0
+  abilityCoolDown: 0
+  coolDownOnCast: 0
+  useAbilityEffectTargetting: 0
+  targetOptions:
+    requireTarget: 1
+    requireLineOfSight: 0
+    requireLiveTarget: 0
+    requireDeadTarget: 0
+    canCastOnSelf: 0
+    canCastOnOthers: 1
+    canCastOnEnemy: 0
+    canCastOnNeutral: 0
+    canCastOnFriendly: 0
+    autoSelfCast: 0
+    useMeleeRange: 0
+    maxRange: 0
+    requiresGroundTarget: 0
+    groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+    groundTargetRadius: 0
+  abilityEffectNames:
+  - Yellow Particles
+  tickRate: 1
+  channeledAbilityEffectnames: []

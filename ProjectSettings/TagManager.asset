@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Action
+  - AutoCrouch
+  - Ragdoll
+  - Ignore Ragdoll
+  - Boss
+  - Enemy
+  - CompanionAI
+  - Weapon
+  - LookAt
+  - Dirt
+  - Wood
+  - Metal
+  - Concrete
+  - Glass
+  - Water
+  - LadderTrigger
+  - ExitWater
+  - Barrel
+  - FreeClimb
+  - ClimbDirection
+  - Zipline
+  - PlayerUI
+  - Collectable
+  - CoverPoint
+  - Interactable
+  - AIAction
+  - lb_bird
+  - FxTemporaire
+  - DefaultSpawnLocation
+  - NorthEntrance
+  - NamePlateCanvas
+  - MouseOverWindow
+  - WestEntrance
+  - SouthEntrance
+  - DungeonEntrance1
+  - EastEntrance
+  - Patrol1_1
+  - Patrol1_2
+  - Patrol1_3
+  - Patrol1_4
+  - Patrol1_5
+  - Patrol1_6
+  - Patrol1_7
+  - Patrol1_8
+  - Patrol1_9
+  - Patrol2_1
+  - Patrol2_2
+  - Patrol2_3
+  - Patrol2_4
+  - Patrol2_5
+  - Patrol2_6
+  - Patrol2_7
+  - Patrol2_8
+  - Patrol2_9
+  - Patrol3_1
+  - Patrol3_2
+  - Patrol3_4
+  - Patrol3_5
+  - Patrol3_6
+  - Patrol3_7
+  - Patrol3_8
+  - Patrol3_9
+  - Patrol4_1
+  - Patrol4_2
+  - Patrol4_3
+  - Patrol4_4
+  - Patrol4_5
+  - Patrol4_6
+  - Patrol4_7
+  - Patrol4_8
+  - Patrol4_9
+  - Patrol3_3
+  - Patrol5_1
+  - Patrol5_2
+  - Patrol5_3
+  - Patrol5_4
+  - Patrol5_5
+  - Patrol5_6
+  - Patrol5_7
+  - Patrol5_8
+  - Patrol5_9
+  - Patrol6_1
+  - Patrol6_2
+  - Patrol6_3
+  - Patrol6_4
+  - Patrol6_5
+  - Patrol6_6
+  - Patrol7_1
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Player
+  - Enemy
+  - CompanionAI
+  - Triggers
+  - StopMove
+  - Action
+  - HeadTrack
+  - BodyPart
+  - BlockAIRayCast
+  - Equipment
+  - FireLayer
+  - PlayerPreview
+  - SpellEffects
+  - MiniMap
+  - CharacterUnit
+  - UnitPreview
+  - PetPreview
+  - Interactable
+  - 
+  - 
+  - 
+  - 
+  - 
+  - AlwaysVisible
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2692339740015506113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2692339740015506124}
+  - component: {fileID: 1989923567832405290}
+  - component: {fileID: 1250077380304456852}
+  - component: {fileID: 2692339740015506112}
+  - component: {fileID: 8825756018799624975}
+  m_Layer: 19
+  m_Name: PlayerConnection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2692339740015506124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1989923567832405290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ab02dbc88264e4992ae4c3e9e339f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitProfileName: 
+--- !u!114 &1250077380304456852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ce6067153c97a743a8a827956f01d2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2692339740015506112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4705c0f5fc0b694bbeaf2aa222b2b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputJump: 0
+  inputStrafe: 0
+  inputHorizontal: 0
+  inputTurn: 0
+  inputVertical: 0
+  allowedInput: 1
+  canMove: 0
+  canAction: 0
+  NormalizedMoveInput: {x: 0, y: 0, z: 0}
+  TurnInput: {x: 0, y: 0, z: 0}
+  aimInput: {x: 0, y: 0}
+  movementMask:
+    serializedVersion: 2
+    m_Bits: 131073
+  tabTargetMaxDistance: 40
+--- !u!114 &8825756018799624975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ccc18f53ac80449997d80aacafe14e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rpgCharacterState: 0
+  useMeshNav: 0
+  canJump: 0
+  gravity: 50
+  jumpAcceleration: 5
+  jumpHeight: 3
+  currentMoveVelocity: {x: 0, y: 0, z: 0}
+  currentTurnVelocity: {x: 0, y: 0, z: 0}
+  isMoving: 0
+  rotationSpeed: 5
+  inAirSpeed: 6
+  stepHeight: 0.5
+  maxGroundAngle: 120
+  debug: 1
