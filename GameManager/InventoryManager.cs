@@ -307,7 +307,7 @@ namespace AnyRPG {
         }
 
         private void PopulateBagNode(BagNode bagNode, Bag bag) {
-            //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.MyName : "null" + ")");
+            //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.DisplayName : "null") + ")");
             if (bag != null) {
                 bagNode.MyBag = bag;
                 if (bagNode.MyIsBankNode) {
@@ -321,6 +321,7 @@ namespace AnyRPG {
                 }
                 bagNode.MyBagPanel = bagNode.MyBagWindow.CloseableWindowContents as BagPanel;
                 if (bagNode.MyBagPanel != null) {
+                    //Debug.Log("InventoryManager.PopulateBagNode() bagPanel: " + bagNode.MyBagPanel.gameObject.GetInstanceID() + " for window: " + bagNode.MyBagWindow.gameObject.name);
                     bagNode.MyBagPanel.AddSlots(bag.MySlots);
                     bag.MyBagNode = bagNode;
                     bag.MyBagPanel = bagNode.MyBagPanel;

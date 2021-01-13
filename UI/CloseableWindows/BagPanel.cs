@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
 
         public override void Awake() {
-            //Debug.Log("BagPanel.Awake()");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.Awake()");
             base.Awake();
         }
 
@@ -64,9 +64,9 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="slotCount"></param>
         public virtual void AddSlots(int slotCount) {
-            //Debug.Log("BagPanel.AddSlots(" + slotCount + ")");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
             for (int i = 0; i < slotCount; i++) {
-                //Debug.Log("BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
+                //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
                 SlotScript slot = Instantiate(slotPrefab, contentArea).GetComponent<SlotScript>();
                 slot.MyBag = this;
                 MySlots.Add(slot);
@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public virtual void Clear() {
-            //Debug.Log("BagPanel.Clear()");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.Clear()");
             foreach (SlotScript slot in slots) {
                 slot.Clear();
                 //Debug.Log("BagPanel.Clear(): cleared slot");
@@ -96,7 +96,7 @@ namespace AnyRPG {
         }
 
         public virtual void ClearSlots() {
-            //Debug.Log("BagPanel.ClearSlots()");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
                 slot.Clear();
@@ -119,6 +119,14 @@ namespace AnyRPG {
             foreach (SlotScript slotScript in slots) {
                 slotScript.CheckMouse();
             }
+        }
+
+        public void OnDisable() {
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.OnDisable()");
+        }
+
+        public void OnDestroy() {
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.OnDestroy()");
         }
     }
 

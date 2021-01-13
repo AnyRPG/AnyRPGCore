@@ -9,7 +9,7 @@ namespace AnyRPG {
         void RecieveClosedWindowNotification();
         void ReceiveOpenWindowNotification();
         void SetBackGroundColor(Color color);
-
+        GameObject gameObject { get; }
         Image MyBackGroundImage { get; }
     }
 }

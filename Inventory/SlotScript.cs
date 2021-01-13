@@ -395,6 +395,10 @@ namespace AnyRPG {
             UIManager.MyInstance.ShowToolTip(transform.position, describable, "Sell Price: ");
         }
 
+        public override void OnDestroy() {
+            //Debug.Log("SlotScript.OnDestroy()");
+            base.OnDestroy();
+        }
 
     }
 

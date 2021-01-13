@@ -176,6 +176,10 @@ namespace AnyRPG {
         public virtual void OnDisable() {
             CheckMouse();
         }
+
+        public virtual void OnDestroy() {
+            //Debug.Log("DescribableIcon.OnDestroy()");
+        }
     }
 
 }

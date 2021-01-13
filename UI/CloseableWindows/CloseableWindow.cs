@@ -58,6 +58,7 @@ namespace AnyRPG {
         protected virtual void InitializeWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
             if (windowInitialized) {
+                //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): window already initialized, returning");
                 return;
             }
             canvasGroup = GetComponent<CanvasGroup>();
@@ -70,10 +71,10 @@ namespace AnyRPG {
         }
 
         public void InitializeWindowContentsCommon() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon()");
             if (contentPrefab != null && windowContents == null && contentGameObject == null) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instantiating window Contents");
                 contentGameObject = Instantiate(contentPrefab, contentParent.transform);
+                //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon(): Instantiating window Contents: " + contentPrefab.name + " and got id: " + contentGameObject.GetInstanceID());
             }
             if (contentGameObject != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
@@ -82,7 +83,7 @@ namespace AnyRPG {
         }
 
         public virtual void InitalizeWindowContents(GameObject contentPrefab, string title) {
-            //Debug.Log("CloseableWindow.InitializeWindowContents(" + title + ")");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContents(" + contentPrefab.name + ", " + title + ")");
 
             this.contentPrefab = contentPrefab;
             this.windowTitle = title;
@@ -94,10 +95,12 @@ namespace AnyRPG {
         }
 
         public virtual void DestroyWindowContents() {
-            //Debug.Log("CloseableWindow.DestroyWindowContents()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.DestroyWindowContents()");
             if (windowContents != null) {
-                Destroy((CloseableWindowContents as MonoBehaviour).gameObject);
+                //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.DestroyWindowContents(): " + CloseableWindowContents.gameObject.name + CloseableWindowContents.gameObject.GetInstanceID());
+                Destroy(CloseableWindowContents.gameObject);
                 windowContents = null;
+                contentGameObject = null;
             }
 
         }
