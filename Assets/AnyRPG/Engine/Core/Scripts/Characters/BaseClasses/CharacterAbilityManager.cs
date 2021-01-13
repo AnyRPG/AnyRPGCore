@@ -514,16 +514,16 @@ namespace AnyRPG {
         public override bool IsTargetInRange(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
             //Debug.Log(baseCharacter.gameObject.name + ".IsTargetInRange(" + (target == null ? "null" : target.DisplayName) + ")");
             // if none of those is true, then we are casting on ourselves, so don't need to do range check
-
-            if (targetable.GetTargetOptions(baseCharacter).UseMeleeRange) {
+            TargetProps targetProps = targetable.GetTargetOptions(baseCharacter);
+            if (targetProps.UseMeleeRange) {
                 if (!IsTargetInMeleeRange(target)) {
                     return false;
                 }
             } else {
-                if (!IsTargetInMaxRange(target, targetable.GetTargetOptions(baseCharacter).MaxRange, targetable, abilityEffectContext)) {
+                if (!IsTargetInMaxRange(target, targetProps.MaxRange, targetable, abilityEffectContext)) {
                     return false;
                 }
-                if (!PerformLOSCheck(target, targetable, abilityEffectContext)) {
+                if (targetProps.RequireLineOfSight == true && !PerformLOSCheck(target, targetable, abilityEffectContext)) {
                     return false;
                 }
             }

@@ -592,7 +592,7 @@ namespace AnyRPG {
             if (levelUpAbilityName != null && levelUpAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpAbilityName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     levelUpAbility = testAbility;
@@ -602,7 +602,7 @@ namespace AnyRPG {
             if (deathAbilityName != null && deathAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathAbilityName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     deathAbility = testAbility;
@@ -611,19 +611,19 @@ namespace AnyRPG {
             if (lootSparkleAbilityName != null && lootSparkleAbilityName != string.Empty) {
                 testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbilityName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleAbilityName + " COULD NOT BE FOUND IN FACTORY.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleAbilityName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     lootSparkleAbility = testAbility;
                 }
             }
             if (defaultCurrencyGroup == null) {
-                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): NO DEFAULT CURRENCY GROUP SET.  CHECK INSPECTOR");
+                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): no default currency group set.  CHECK INSPECTOR");
                 return;
             }
             
             if (defaultAnimationProfile == null) {
-                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): NO DEFAULT ANIMATION PROFILE SET.  CHECK INSPECTOR");
+                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): no default animation profile set.  CHECK INSPECTOR");
                 return;
             }
 

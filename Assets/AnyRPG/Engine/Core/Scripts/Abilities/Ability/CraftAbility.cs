@@ -23,7 +23,7 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
+            Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
                 CraftingUI.MyInstance.CraftNextItemWait();
