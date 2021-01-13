@@ -44,10 +44,10 @@ A Unity package that includes this repository (and a complex sample game) is ava
 
 ### Github Installation
 
-* Create a new Unity 2019.4.17f1 project
-* Clone this repository into the root of the project
+* Clone this repository into a directory on your computer
+* Open the Unity Hub and add the project
 * Install the following unity packages:
-** Text Mesh Pro (already installed by default)
+** Text Mesh Pro.  This package is installed by default, but you will need to open the Window menu in Unity and choose 'TextMeshPro' > 'Import TMP Essential Resources'
 ** UMA 2 from the Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/uma-2-unity-multipurpose-avatar-35611) or github (https://github.com/umasteeringgroup/UMA/tree/master/UMAProject)
 ** NavMesh Components (from github: https://github.com/Unity-Technologies/NavMeshComponents/tree/2019.3)
 * Open the scene "CoreGame" and press play in the editor
