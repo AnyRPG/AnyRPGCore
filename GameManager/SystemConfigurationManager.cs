@@ -36,6 +36,25 @@ namespace AnyRPG {
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
 
+        [Header("Scenes")]
+
+        [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
+        [SerializeField]
+        private string initializationScene = "Core Game";
+
+        private SceneNode initializationSceneNode = null;
+
+        [Tooltip("The name of the main menu scene")]
+        [SerializeField]
+        private string mainMenuScene = "Main Menu";
+
+        // reference to the main menu scene node
+        private SceneNode mainMenuSceneNode = null;
+
+        [Tooltip("When a new game is started, the character will initially spawn in this scene if no scene is provided by their faction")]
+        [SerializeField]
+        private string defaultStartingZone = string.Empty;
+
         [Header("NEW GAME OPTIONS")]
 
         [Tooltip("If false, launch straight into a game with no character configuration")]
@@ -72,6 +91,10 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerUnitProfileName = string.Empty;
 
+        [Tooltip("If true, the default profiles will always be shown, in addition to any allowed by faction (if used)")]
+        [SerializeField]
+        private bool alwaysShowDefaultProfiles = true;
+
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
         private List<string> characterCreatorProfileNames = new List<string>();
@@ -86,13 +109,17 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerName = "New Player";
 
-        [Tooltip("When a new game is started, the character will initially spawn in this scene")]
-        [SerializeField]
-        private string defaultStartingZone = string.Empty;
+        [Header("Inventory")]
 
         [Tooltip("if false, default backpack goes in bank")]
         [SerializeField]
         private bool equipDefaultBackPack = true;
+
+        [SerializeField]
+        private string defaultBackpackItem = "Backpack";
+
+        [SerializeField]
+        private string defaultBankBagItem = "Bank";
 
         [Header("CONTROLLER")]
 
@@ -504,6 +531,8 @@ namespace AnyRPG {
         public string CharacterCreatorUnitProfileName { get => characterCreatorProfileNames[0]; }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
+        public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
+        public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
 
         public UnitProfile CharacterCreatorUnitProfile {
             get {
@@ -518,6 +547,9 @@ namespace AnyRPG {
         public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
+        public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
+        public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
+        public bool AlwaysShowDefaultProfiles { get => alwaysShowDefaultProfiles; set => alwaysShowDefaultProfiles = value; }
 
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
@@ -677,6 +709,25 @@ namespace AnyRPG {
 
                 }
             }
+
+            if (initializationScene != null && initializationScene != string.Empty) {
+                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(initializationScene);
+                if (tmpSceneNode != null) {
+                    initializationSceneNode = tmpSceneNode;
+                } else {
+                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
+                }
+            }
+
+            if (mainMenuScene != null && mainMenuScene != string.Empty) {
+                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(mainMenuScene);
+                if (tmpSceneNode != null) {
+                    mainMenuSceneNode = tmpSceneNode;
+                } else {
+                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + mainMenuScene + ". Check inspector.");
+                }
+            }
+
 
 
 

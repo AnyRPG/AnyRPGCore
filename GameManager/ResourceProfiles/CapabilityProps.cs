@@ -64,10 +64,10 @@ namespace AnyRPG {
                         if (baseAbility != null) {
                             abilityList.Add(baseAbility);
                         } else {
-                            Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
+                            Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): null or empty ability found while inititalizing capabilityProps.  CHECK INSPECTOR");
+                        Debug.LogError("CapabilityProps.SetupScriptableObjects(): null or empty ability found while inititalizing capabilityProps.  CHECK INSPECTOR");
                     }
                 }
             }
@@ -79,10 +79,10 @@ namespace AnyRPG {
                         if (statusEffect != null) {
                             traitList.Add(statusEffect);
                         } else {
-                            Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
+                            Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): null or empty status effect found while inititalizing capabilityProps.  CHECK INSPECTOR");
+                        Debug.LogError("CapabilityProps.SetupScriptableObjects(): null or empty status effect found while inititalizing capabilityProps.  CHECK INSPECTOR");
                     }
                 }
             }
@@ -94,10 +94,10 @@ namespace AnyRPG {
                         if (weaponSkill != null) {
                             weaponSkillList.Add(weaponSkill);
                         } else {
-                            Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
+                            Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find weapon Skill : " + weaponSkillName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): null or empty weapon Skill found while inititalizing capabilityProps.  CHECK INSPECTOR");
+                        Debug.LogError("CapabilityProps.SetupScriptableObjects(): null or empty weapon Skill found while inititalizing capabilityProps.  CHECK INSPECTOR");
                     }
                 }
             }

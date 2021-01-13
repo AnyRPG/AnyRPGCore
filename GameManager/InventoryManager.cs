@@ -31,12 +31,6 @@ namespace AnyRPG {
         private GameObject inventoryContainer = null;
 
         [SerializeField]
-        private string defaultBackpackItemName = null;
-
-        [SerializeField]
-        private string defaultBankBagItemName = null;
-
-        [SerializeField]
         private GameObject windowPrefab = null;
 
         [SerializeField]
@@ -47,9 +41,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private BagBarController bagBarController = null;
-
-        [SerializeField]
-        private Sprite defaultBackPackImage = null;
 
         // have trouble stopping grid from expanding windows, making holders instead
         [SerializeField]
@@ -100,9 +91,6 @@ namespace AnyRPG {
         private void Awake() {
             //Debug.Log("InventoryManager.Awake()");
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
-            if (defaultBackPackImage == null) {
-                Debug.LogError("InventoryManager.Awake(): WARNING: DEFAULT BACKPACK IMAGE IS NOT SET! PLEASE OPEN GAMEMANAGER/INVENTORYMAGER and set it in the inspector!");
-            }
         }
 
         private void Start() {
@@ -180,8 +168,8 @@ namespace AnyRPG {
 
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
-            if (defaultBackpackItemName != null && defaultBackpackItemName != string.Empty) {
-                Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBackpackItemName) as Bag;
+            if (SystemConfigurationManager.MyInstance?.DefaultBackpackItem != null && SystemConfigurationManager.MyInstance?.DefaultBackpackItem != string.Empty) {
+                Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.MyInstance?.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
@@ -196,7 +184,7 @@ namespace AnyRPG {
 
         public void CreateDefaultBankBag() {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
-            Bag bag = SystemItemManager.MyInstance.GetNewResource(defaultBankBagItemName) as Bag;
+            Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.MyInstance?.DefaultBankBagItem) as Bag;
             if (bag == null) {
                 Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBANKBAG TO VALID NAME");
                 return;

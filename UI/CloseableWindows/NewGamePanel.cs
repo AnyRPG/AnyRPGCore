@@ -50,6 +50,22 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameSpecializationPanelController specializationPanel = null;
 
+        [SerializeField]
+        private Button characterButton = null;
+
+        [SerializeField]
+        private Button appearanceButton = null;
+
+        [SerializeField]
+        private Button factionButton = null;
+
+        [SerializeField]
+        private Button classButton = null;
+
+        [SerializeField]
+        private Button specializationButton = null;
+
+
         private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
@@ -93,8 +109,61 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
+        public void ClearButtons() {
+            // disable character button if option not allowed or no faction exists
+            if (SystemConfigurationManager.MyInstance.NewGameAppearance == true) {
+                characterButton.gameObject.SetActive(true);
+            } else {
+                characterButton.gameObject.SetActive(false);
+            }
+
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+                appearanceButton.gameObject.SetActive(true);
+            } else {
+                appearanceButton.gameObject.SetActive(false);
+            }
+
+            // disable faction button if option not allowed or no faction exists
+            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+                foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
+                    if (faction.NewGameOption == true) {
+                        factionButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+                factionButton.gameObject.SetActive(false);
+            } else {
+                factionButton.gameObject.SetActive(false);
+            }
+
+            // disable class button if option not allowed or no faction exists
+            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+                foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
+                    if (characterClass.NewGameOption == true) {
+                        classButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+                classButton.gameObject.SetActive(false);
+            } else {
+                classButton.gameObject.SetActive(false);
+            }
+
+            // disable specialization button if option not allowed or class button disabled (specializations do not have a specific new game option)
+            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+                if (classButton.gameObject.activeSelf == true) {
+                    specializationButton.gameObject.SetActive(true);
+                } else {
+                    specializationButton.gameObject.SetActive(false);
+                }
+            } else {
+                specializationButton.gameObject.SetActive(false);
+            }
+        }
+
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
+            ClearButtons();
 
             SaveManager.MyInstance.ClearSharedData();
 
@@ -135,9 +204,6 @@ namespace AnyRPG {
             OpenDetailsPanel();
 
             // testing appearance last since it relies on at very minimum the unit profile being set
-            
-
-
 
             if (SystemConfigurationManager.MyInstance.NewGameAudioProfile != null) {
                 AudioManager.MyInstance.StopMusic();
@@ -193,11 +259,12 @@ namespace AnyRPG {
 
         public void OpenCharacterPanel() {
             ClosePanels();
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ShowPanel();
-            } else {
-                characterPanel.ShowPanel();
-            }
+            characterPanel.ShowPanel();
+        }
+
+        public void OpenAppearancePanel() {
+            ClosePanels();
+            umaCharacterPanel.ShowPanel();
         }
 
         public void OpenFactionPanel() {
@@ -413,9 +480,11 @@ namespace AnyRPG {
                 saveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
             }
 
+            /*
             if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
                 characterPanel.ShowOptionButtonsCommon();
             }
+            */
 
         }
 

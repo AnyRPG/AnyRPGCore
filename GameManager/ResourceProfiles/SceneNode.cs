@@ -178,7 +178,7 @@ namespace AnyRPG {
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + backgroundMusicProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

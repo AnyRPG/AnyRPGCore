@@ -104,7 +104,7 @@ namespace AnyRPG {
             // show trait rewards
             if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).TraitList.Count > 0) {
                 CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
-                traitLabel.gameObject.SetActive(true);
+                traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
                 for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
@@ -121,7 +121,7 @@ namespace AnyRPG {
                     }
                 }
             } else {
-                traitLabel.gameObject.SetActive(false);
+                traitLabel.SetActive(false);
             }
         }
 
@@ -132,7 +132,7 @@ namespace AnyRPG {
             // show ability rewards
             if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).AbilityList.Count > 0) {
                 CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
-                abilityLabel.gameObject.SetActive(true);
+                abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                     if (capabilityProps.AbilityList[i] != null) {
@@ -148,7 +148,7 @@ namespace AnyRPG {
                     }
                 }
             } else {
-                abilityLabel.gameObject.SetActive(false);
+                abilityLabel.SetActive(false);
             }
         }
 
@@ -173,6 +173,8 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
+            abilityLabel.SetActive(false);
+            traitLabel.SetActive(false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
 
             ShowOptionButtonsCommon();

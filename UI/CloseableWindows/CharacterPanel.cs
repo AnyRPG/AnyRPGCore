@@ -61,13 +61,6 @@ namespace AnyRPG {
                 if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.Icon != null) {
                     //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
                     characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.Icon;
-                } else {
-                    if (characterButton.MyEquipmentSlotProfile == null) {
-                        //Debug.Log("CharacterPanel.Start(): equipmentslotprofile is null");
-                    }
-                    if (characterButton.MyEquipmentSlotProfile.Icon == null) {
-                        //Debug.Log("CharacterPanel.Start(): equipmentslotprofile.myicon is null");
-                    }
                 }
                 characterButton.UpdateVisual();
             }

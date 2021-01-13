@@ -46,9 +46,13 @@ namespace AnyRPG {
 
             // format the button text
             string descriptionText = string.Empty;
-            descriptionText += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : MySaveData.playerFaction) + "\n";
-            descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
-            descriptionText += "Specialization: " + (mySaveData.classSpecialization == string.Empty ? "None" : MySaveData.classSpecialization) + "\n";
+            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+                descriptionText += "Faction: " + (mySaveData.playerFaction == null || mySaveData.playerFaction == string.Empty ? "None" : MySaveData.playerFaction) + "\n";
+            }
+            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+                descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
+                descriptionText += "Specialization: " + (mySaveData.classSpecialization == null || mySaveData.classSpecialization == string.Empty ? "None" : MySaveData.classSpecialization) + "\n";
+            }
 
             // set the text on the button
             description.text = descriptionText;

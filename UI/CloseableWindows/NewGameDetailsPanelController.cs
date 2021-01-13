@@ -35,7 +35,6 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameFactionButton factionButton = null;
 
-
         [SerializeField]
         private CanvasGroup canvasGroup = null;
 
@@ -48,6 +47,16 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
+            ClearLabels();
+        }
+
+        public void ClearLabels() {
+            factionLabel.SetActive(false);
+            factionButton.gameObject.SetActive(false);
+            characterClassLabel.SetActive(false);
+            characterClassButton.gameObject.SetActive(false);
+            classSpecializationLabel.SetActive(false);
+            classSpecializationButton.gameObject.SetActive(false);
         }
 
         public void SetPlayerName(string newPlayerName) {

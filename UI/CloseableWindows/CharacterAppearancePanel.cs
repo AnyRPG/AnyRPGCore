@@ -19,6 +19,12 @@ namespace AnyRPG {
         [Header("Appearance")]
 
         [SerializeField]
+        protected GameObject mainButtonsArea = null;
+
+        [SerializeField]
+        protected GameObject mainNoOptionsArea = null;
+
+        [SerializeField]
         protected HighlightButton appearanceButton = null;
 
         [SerializeField]

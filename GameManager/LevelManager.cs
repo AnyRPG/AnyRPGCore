@@ -23,22 +23,7 @@ namespace AnyRPG {
 
         #endregion
 
-        [Header("Level Manager")]
-
-        [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
-        [SerializeField]
-        private string initializationScene = "Load GameManager";
-
-        private SceneNode initializationSceneNode = null;
-
-        [Tooltip("The name of the main menu scene")]
-        [SerializeField]
-        private string mainMenuScene = "Main Menu";
-
-        // reference to the main menu scene node
-        private SceneNode mainMenuSceneNode = null;
-
-        [Header("LOADING SCREEN")]
+        [Header("Loading Screen")]
         public Slider loadBar;
         public TextMeshProUGUI finishedLoadingText;
 
@@ -66,8 +51,6 @@ namespace AnyRPG {
         public Vector3 SpawnLocationOverride { get => spawnLocationOverride; set => spawnLocationOverride = value; }
         public string ReturnSceneName { get => returnSceneName; set => returnSceneName = value; }
         public string OverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
-        public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
-        public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
         public bool LoadingLevel { get => loadingLevel; set => loadingLevel = value; }
 
         public void PerformSetupActivities() {
@@ -201,9 +184,9 @@ namespace AnyRPG {
                 activeSceneNode.Visit();
             }
             string activeSceneName = SceneManager.GetActiveScene().name;
-            if (activeSceneName == initializationSceneNode?.SceneFile) {
+            if (activeSceneName == SystemConfigurationManager.MyInstance?.InitializationSceneNode?.SceneFile) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Loading Main Menu");
-                LoadLevel(mainMenuScene);
+                LoadLevel(SystemConfigurationManager.MyInstance?.MainMenuSceneNode.DisplayName);
                 return;
             }
 
@@ -211,7 +194,7 @@ namespace AnyRPG {
             UIManager.MyInstance.ActivateInGameUI();
             UIManager.MyInstance.DeactivatePlayerUI();
             UIManager.MyInstance.ActivateSystemMenuUI();
-            if (activeSceneName == mainMenuSceneNode.SceneFile) {
+            if (activeSceneName == SystemConfigurationManager.MyInstance?.MainMenuSceneNode?.SceneFile) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): This is the main menu scene.  Activating Main Menu");
                 SystemWindowManager.MyInstance.OpenMainMenu();
             } else {
@@ -369,7 +352,7 @@ namespace AnyRPG {
 
         public void LoadMainMenu() {
             SystemEventManager.MyInstance.NotifyOnExitGame();
-            LoadLevel(mainMenuScene);
+            LoadLevel(SystemConfigurationManager.MyInstance?.MainMenuSceneNode?.DisplayName);
         }
 
         public void LoadFirstScene() {
@@ -418,23 +401,6 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
 
-            if (initializationScene != null && initializationScene != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(initializationScene);
-                if (tmpSceneNode != null) {
-                    initializationSceneNode = tmpSceneNode;
-                } else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
-                }
-            }
-
-            if (mainMenuScene != null && mainMenuScene != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(mainMenuScene);
-                if (tmpSceneNode != null) {
-                    mainMenuSceneNode = tmpSceneNode;
-                } else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + mainMenuScene + ". Check inspector.");
-                }
-            }
 
         }
 
