@@ -44,8 +44,37 @@ namespace AnyRPG {
         public Vector3 leftMouseButtonDownPosition = Vector3.zero;
         public Vector3 leftMouseButtonUpPosition = Vector3.zero;
         public bool mouseScrolled = false;
-
+        
         private int lastRegisteredFrame = 0;
+
+        public void Start() {
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
+        }
+
+        public void OnDestroy() {
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
+        }
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            ResetAllInput();
+        }
+
+        private void ResetAllInput() {
+            //Debug.Log("InputManager.ResetAllInput()");
+            rightMouseButtonClicked = false;
+            rightMouseButtonClickedOverUI = false;
+            rightMouseButtonDown = false;
+            rightMouseButtonUp = false;
+            leftMouseButtonClicked = false;
+            leftMouseButtonClickedOverUI = false;
+            leftMouseButtonDown = false;
+            leftMouseButtonUp = false;
+            middleMouseButtonClicked = false;
+            middleMouseButtonClickedOverUI = false;
+            middleMouseButtonDown = false;
+            middleMouseButtonUp = false;
+            mouseScrolled = false;
+        }
 
         void Update() {
             if (KeyBindManager.MyInstance.MyBindName != string.Empty) {

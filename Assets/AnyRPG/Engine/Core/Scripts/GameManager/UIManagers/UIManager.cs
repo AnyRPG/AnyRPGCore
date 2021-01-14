@@ -116,30 +116,30 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public StatusEffectPanelController MyStatusEffectPanelController { get => statusEffectPanelController; }
-        public UnitFrameController MyFocusUnitFrameController { get => focusUnitFrameController; }
-        public ActionBarManager MyActionBarManager { get => actionBarManager; set => actionBarManager = value; }
-        public GameObject MyMiniMapCanvasParent { get => miniMapCanvasParent; }
-        public UnitFrameController MyPlayerUnitFrameController { get => playerUnitFrameController; set => playerUnitFrameController = value; }
-        public CloseableWindow MyQuestTrackerWindow { get => questTrackerWindow; set => questTrackerWindow = value; }
-        public CloseableWindow MyCombatLogWindow { get => combatLogWindow; set => combatLogWindow = value; }
-        public CastBarController MyFloatingCastBarController { get => floatingCastBarController; set => floatingCastBarController = value; }
-        public MiniMapController MyMiniMapController { get => miniMapController; set => miniMapController = value; }
-        public XPBarController MyXPBarController { get => xpBarController; set => xpBarController = value; }
-        public GameObject MyBottomPanel { get => bottomPanel; set => bottomPanel = value; }
-        public GameObject MySidePanel { get => sidePanel; set => sidePanel = value; }
+        public StatusEffectPanelController StatusEffectPanelController { get => statusEffectPanelController; }
+        public UnitFrameController FocusUnitFrameController { get => focusUnitFrameController; }
+        public ActionBarManager ActionBarManager { get => actionBarManager; set => actionBarManager = value; }
+        public GameObject MiniMapCanvasParent { get => miniMapCanvasParent; }
+        public UnitFrameController PlayerUnitFrameController { get => playerUnitFrameController; set => playerUnitFrameController = value; }
+        public CloseableWindow QuestTrackerWindow { get => questTrackerWindow; set => questTrackerWindow = value; }
+        public CloseableWindow CombatLogWindow { get => combatLogWindow; set => combatLogWindow = value; }
+        public CastBarController FloatingCastBarController { get => floatingCastBarController; set => floatingCastBarController = value; }
+        public MiniMapController MiniMapController { get => miniMapController; set => miniMapController = value; }
+        public XPBarController XPBarController { get => xpBarController; set => xpBarController = value; }
+        public GameObject BottomPanel { get => bottomPanel; set => bottomPanel = value; }
+        public GameObject SidePanel { get => sidePanel; set => sidePanel = value; }
         public GameObject MouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
         public GameObject MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
-        public GameObject MyToolTip { get => toolTip; set => toolTip = value; }
-        public CutSceneBarController MyCutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
-        public GameObject MyPlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
-        public GameObject MyPopupWindowContainer { get => popupWindowContainer; set => popupWindowContainer = value; }
-        public GameObject MyPopupPanelContainer { get => popupPanelContainer; set => popupPanelContainer = value; }
-        public GameObject MyCombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
-        public bool MyDragInProgress { get => dragInProgress; set => dragInProgress = value; }
-        public GameObject MyCutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
-        public GameObject MyInventoryCanvas { get => inventoryCanvas; set => inventoryCanvas = value; }
-        public CurrencyBarController MyToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
+        public GameObject ToolTip { get => toolTip; set => toolTip = value; }
+        public CutSceneBarController CutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
+        public GameObject PlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
+        public GameObject PopupWindowContainer { get => popupWindowContainer; set => popupWindowContainer = value; }
+        public GameObject PopupPanelContainer { get => popupPanelContainer; set => popupPanelContainer = value; }
+        public GameObject CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
+        public bool DragInProgress { get => dragInProgress; set => dragInProgress = value; }
+        public GameObject CutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
+        public GameObject InventoryCanvas { get => inventoryCanvas; set => inventoryCanvas = value; }
+        public CurrencyBarController ToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
 
         public void PerformSetupActivities() {
             //Debug.Log("UIManager.PerformSetupActivities()");
@@ -177,6 +177,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn += HandleBeforePlayerConnectionSpawn;
@@ -190,6 +191,7 @@ namespace AnyRPG {
                 return;
             }
             if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
@@ -197,6 +199,10 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            dragInProgress = false;
         }
 
         public void OnDisable() {
@@ -232,6 +238,7 @@ namespace AnyRPG {
                 inGameUI.SetActive(false);
             }
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
+            dragInProgress = false;
         }
 
         public void ActivateInGameUI() {
@@ -246,6 +253,7 @@ namespace AnyRPG {
             } else {
                 InitializeMainCamera();
             }
+            dragInProgress = false;
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -275,10 +283,10 @@ namespace AnyRPG {
         public void ActivatePlayerUI() {
             //Debug.Log("UIManager.ActivatePlayerUI()");
             playerUI.SetActive(true);
-            MyPlayerInterfaceCanvas.SetActive(true);
-            MyPopupWindowContainer.SetActive(true);
-            MyPopupPanelContainer.SetActive(true);
-            MyCombatTextCanvas.SetActive(true);
+            PlayerInterfaceCanvas.SetActive(true);
+            PopupWindowContainer.SetActive(true);
+            PopupPanelContainer.SetActive(true);
+            CombatTextCanvas.SetActive(true);
             questTrackerWindow.OpenWindow();
             combatLogWindow.OpenWindow();
             UpdateLockUI();
@@ -325,7 +333,7 @@ namespace AnyRPG {
             ActivatePlayerUI();
 
             // some visuals can be dependent on zone restrictions so visuals should be updated
-            MyActionBarManager.UpdateVisuals();
+            ActionBarManager.UpdateVisuals();
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
             //SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
@@ -518,8 +526,8 @@ namespace AnyRPG {
 
             // show new price
             toolTipText.text = describable.GetDescription();
-            if (MyToolTipCurrencyBarController != null) {
-                MyToolTipCurrencyBarController.ClearCurrencyAmounts();
+            if (ToolTipCurrencyBarController != null) {
+                ToolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is Item && showSellPrice != string.Empty) {
                     //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + "): describable is item");
                     KeyValuePair<Currency, int> sellAmount = (describable as Item).MySellPrice;
@@ -528,7 +536,7 @@ namespace AnyRPG {
                         // don't print a s sell price on things that cannot be sold
                         return;
                     }
-                    MyToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
+                    ToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
                     //currencyAmountController.MyAmountText.text = "Vendor Price: " + sellAmount;
                 }
             }
@@ -791,12 +799,12 @@ namespace AnyRPG {
 
         public void UpdateQuestTrackerOpacity() {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("QuestTrackerOpacity") * 255);
-            MyQuestTrackerWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            QuestTrackerWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateCombatLogOpacity() {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("CombatLogOpacity") * 255);
-            MyCombatLogWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            CombatLogWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateActionBarOpacity() {

@@ -197,7 +197,7 @@ namespace AnyRPG {
 
             SystemEventManager.MyInstance.NotifyOnPlayerNameChanged();
             if (playerUnitSpawned) {
-                UIManager.MyInstance.MyPlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
+                UIManager.MyInstance.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
             }
         }
 
@@ -575,7 +575,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnAbility(bool updateActionBars) {
             if (updateActionBars) {
-                UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+                UIManager.MyInstance.ActionBarManager.UpdateVisuals(true);
             }
         }
 
@@ -625,7 +625,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnClassAbilities() {
             // now perform a single action bar update
-            UIManager.MyInstance.MyActionBarManager.UpdateVisuals(true);
+            UIManager.MyInstance.ActionBarManager.UpdateVisuals(true);
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
@@ -677,7 +677,7 @@ namespace AnyRPG {
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
-            UIManager.MyInstance.MyActionBarManager.UpdateVisuals();
+            UIManager.MyInstance.ActionBarManager.UpdateVisuals();
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {

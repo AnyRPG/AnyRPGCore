@@ -139,7 +139,7 @@ namespace AnyRPG {
 
             // pan with the left or turn with the right mouse button
             // IF START HAVING MORE ISSUES WITH PAN AND TURN IN FUTURE, JUST COMMENT BELOW LINE AND RE-ENABLE COMMENTED LINE BELOW IT SINCE QUATERNIONS ARE NOW ALWAYS CALCULATED IN SETWANTEDPOSITION
-            if (!UIManager.MyInstance.MyDragInProgress && ((InputManager.MyInstance.rightMouseButtonDown && !InputManager.MyInstance.rightMouseButtonClickedOverUI) || (InputManager.MyInstance.leftMouseButtonDown && !InputManager.MyInstance.leftMouseButtonClickedOverUI))) {
+            if (!UIManager.MyInstance.DragInProgress && ((InputManager.MyInstance.rightMouseButtonDown && !InputManager.MyInstance.rightMouseButtonClickedOverUI) || (InputManager.MyInstance.leftMouseButtonDown && !InputManager.MyInstance.leftMouseButtonClickedOverUI))) {
                 //if (!UIManager.MyInstance.MyDragInProgress && ((InputManager.MyInstance.rightMouseButtonDown && !InputManager.MyInstance.rightMouseButtonClickedOverUI && InputManager.MyInstance.rightMouseButtonDownPosition != Input.mousePosition) || (InputManager.MyInstance.leftMouseButtonDown && !InputManager.MyInstance.leftMouseButtonClickedOverUI && InputManager.MyInstance.leftMouseButtonDownPosition != Input.mousePosition))) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float usedTurnSpeed = 0f;

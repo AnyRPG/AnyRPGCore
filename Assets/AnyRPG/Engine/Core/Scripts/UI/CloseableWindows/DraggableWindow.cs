@@ -45,7 +45,7 @@ namespace AnyRPG {
             }
             startMousePosition = eventData.position;
             startWindowPosition = moveableTransform.position;
-            UIManager.MyInstance.MyDragInProgress = true;
+            UIManager.MyInstance.DragInProgress = true;
         }
 
         public void OnDrag(PointerEventData eventData) {
@@ -97,7 +97,7 @@ namespace AnyRPG {
             if (neverDraggable) {
                 return;
             }
-            UIManager.MyInstance.MyDragInProgress = false;
+            UIManager.MyInstance.DragInProgress = false;
             SaveManager.MyInstance.SaveWindowPositions();
         }
 
@@ -105,14 +105,14 @@ namespace AnyRPG {
             if (neverDraggable) {
                 return;
             }
-            UIManager.MyInstance.MyDragInProgress = true;
+            UIManager.MyInstance.DragInProgress = true;
         }
 
         public void OnPointerUp(PointerEventData eventData) {
             if (neverDraggable) {
                 return;
             }
-            UIManager.MyInstance.MyDragInProgress = false;
+            UIManager.MyInstance.DragInProgress = false;
         }
     }
 

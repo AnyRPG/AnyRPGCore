@@ -43,8 +43,8 @@ namespace AnyRPG {
                     SystemWindowManager.MyInstance.confirmDestroyMenuWindow.OpenWindow();
                 } else if (MyInstance.MyMoveable is BaseAbility) {
                     // DROP ABILITY SAFELY
-                    if (UIManager.MyInstance.MyActionBarManager.MyFromButton != null) {
-                        UIManager.MyInstance.MyActionBarManager.MyFromButton.ClearUseable();
+                    if (UIManager.MyInstance.ActionBarManager.MyFromButton != null) {
+                        UIManager.MyInstance.ActionBarManager.MyFromButton.ClearUseable();
                     }
                     Drop();
                 }
@@ -73,7 +73,7 @@ namespace AnyRPG {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
             InventoryManager.MyInstance.FromSlot = null;
-            UIManager.MyInstance.MyActionBarManager.MyFromButton = null;
+            UIManager.MyInstance.ActionBarManager.MyFromButton = null;
         }
 
         private void ClearMoveable() {

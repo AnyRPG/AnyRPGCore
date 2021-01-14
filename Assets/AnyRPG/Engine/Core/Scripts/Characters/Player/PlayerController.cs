@@ -571,7 +571,7 @@ namespace AnyRPG {
         public void HandleClearTarget() {
             //Debug.Log("PlayerController.HandleClearTarget()");
 
-            UIManager.MyInstance.MyFocusUnitFrameController.ClearTarget();
+            UIManager.MyInstance.FocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
         }
 
@@ -583,7 +583,7 @@ namespace AnyRPG {
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
             if (namePlateUnit != null && namePlateUnit.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.MyInstance.MyFocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
+                UIManager.MyInstance.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
                 NamePlateManager.MyInstance.SetFocus(namePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
@@ -678,7 +678,7 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.MyInstance.MyFocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.UnitController != null) {
+            if (UIManager.MyInstance.FocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.UnitController != null) {
                 PlayerManager.MyInstance.UnitController.ClearTarget();
             }
         }

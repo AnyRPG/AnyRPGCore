@@ -433,7 +433,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     Vector3 spawnPosition = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 9, gameObject.transform.position.z);
                     //miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, gameObject.transform);
-                    miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, UIManager.MyInstance.MyMiniMapCanvasParent.transform);
+                    miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, UIManager.MyInstance.MiniMapCanvasParent.transform);
                     miniMapIndicator.GetComponent<MiniMapIndicatorController>().SetInteractable(this);
                     miniMapIndicator.transform.localScale = new Vector3(0.0390625f, 0.0390625f, 0.0390625f);
                     miniMapIndicator.transform.Rotate(90f, 0f, 0f);

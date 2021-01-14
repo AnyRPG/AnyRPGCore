@@ -107,11 +107,11 @@ namespace AnyRPG {
             captionBar.gameObject.SetActive(true);
 
             UIManager.MyInstance.ActivatePlayerUI();
-            UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(false);
-            UIManager.MyInstance.MyPopupWindowContainer.SetActive(false);
-            UIManager.MyInstance.MyPopupPanelContainer.SetActive(false);
-            UIManager.MyInstance.MyCombatTextCanvas.SetActive(false);
-            UIManager.MyInstance.MyCutSceneBarsCanvas.SetActive(true);
+            UIManager.MyInstance.PlayerInterfaceCanvas.SetActive(false);
+            UIManager.MyInstance.PopupWindowContainer.SetActive(false);
+            UIManager.MyInstance.PopupPanelContainer.SetActive(false);
+            UIManager.MyInstance.CombatTextCanvas.SetActive(false);
+            UIManager.MyInstance.CutSceneBarsCanvas.SetActive(true);
             barsCoroutine = StartCoroutine(LoadCutSceneBars(cutSceneBarHeight));
         }
 
@@ -128,7 +128,7 @@ namespace AnyRPG {
             topBar.gameObject.SetActive(false);
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);
-            UIManager.MyInstance.MyCutSceneBarsCanvas.SetActive(false);
+            UIManager.MyInstance.CutSceneBarsCanvas.SetActive(false);
             /*
             UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(true);
             UIManager.MyInstance.MyPopupWindowContainer.SetActive(true);

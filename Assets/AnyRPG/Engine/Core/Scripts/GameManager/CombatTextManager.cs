@@ -69,7 +69,7 @@ namespace AnyRPG {
             if (CameraManager.MyInstance?.MyActiveMainCamera == null) {
                 return;
             }
-            if (UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene != null) {
+            if (UIManager.MyInstance.CutSceneBarController.CurrentCutscene != null) {
                 return;
             }
             foreach (CombatTextController combatTextController in inUseCombatTextControllers) {

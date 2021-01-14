@@ -22,14 +22,14 @@ namespace AnyRPG {
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
-                && UIManager.MyInstance.MyCutSceneBarController.CurrentCutscene == null
+                && UIManager.MyInstance.CutSceneBarController.CurrentCutscene == null
                 && LevelManager.MyInstance.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
                     if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
                             LevelManager.MyInstance.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
-                            UIManager.MyInstance.MyCutSceneBarController.StartCutScene(Props.Cutscene);
+                            UIManager.MyInstance.CutSceneBarController.StartCutScene(Props.Cutscene);
                         }
                     }
                 }

@@ -15,7 +15,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.ConfirmAction()");
             // might be something better to deactivate cutscene camera
-            UIManager.MyInstance.MyCutSceneBarController.EndCutScene();
+            UIManager.MyInstance.CutSceneBarController.EndCutScene();
             //UIManager.MyInstance.ActivateInGameUI();
             SystemWindowManager.MyInstance.confirmCancelCutsceneMenuWindow.CloseWindow();
         }

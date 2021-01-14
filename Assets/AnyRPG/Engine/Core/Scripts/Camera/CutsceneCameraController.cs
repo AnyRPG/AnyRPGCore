@@ -56,8 +56,8 @@ namespace AnyRPG {
 
         public void EndCutScene() {
             //Debug.Log("CutsceneCameraController.EndCutScene()");
-            if (UIManager.MyInstance != null && UIManager.MyInstance.MyCutSceneBarController != null) {
-                UIManager.MyInstance.MyCutSceneBarController.EndCutScene();
+            if (UIManager.MyInstance != null && UIManager.MyInstance.CutSceneBarController != null) {
+                UIManager.MyInstance.CutSceneBarController.EndCutScene();
             }
         }
 
@@ -69,7 +69,7 @@ namespace AnyRPG {
 
         public void AdvanceDialog() {
             //Debug.Log("AnyRPGCutsceneCameraController.AdvanceDialog()");
-            UIManager.MyInstance.MyCutSceneBarController.AdvanceDialog();
+            UIManager.MyInstance.CutSceneBarController.AdvanceDialog();
         }
 
         public void ActivateEnvironmentStateByIndex(int index) {

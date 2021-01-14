@@ -249,7 +249,7 @@ namespace AnyRPG {
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                         //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                        UIManager.MyInstance.MyCutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
+                        UIManager.MyInstance.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
                     //}
                 } else {
                     CameraManager.MyInstance.ActivateMainCamera();
@@ -281,7 +281,7 @@ namespace AnyRPG {
                 spawnLocationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
-            UIManager.MyInstance.MyCutSceneBarController.AssignCutScene(cutscene);
+            UIManager.MyInstance.CutSceneBarController.AssignCutScene(cutscene);
             LoadLevel(cutscene.MyLoadScene.ResourceName);
         }
 
@@ -293,10 +293,10 @@ namespace AnyRPG {
             } else {
 
                 //CameraManager.MyInstance.ActivateMainCamera();
-                UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(true);
-                UIManager.MyInstance.MyPopupWindowContainer.SetActive(true);
-                UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);
-                UIManager.MyInstance.MyCombatTextCanvas.SetActive(true);
+                UIManager.MyInstance.PlayerInterfaceCanvas.SetActive(true);
+                UIManager.MyInstance.PopupWindowContainer.SetActive(true);
+                UIManager.MyInstance.PopupPanelContainer.SetActive(true);
+                UIManager.MyInstance.CombatTextCanvas.SetActive(true);
 
                 if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                     PlayerManager.MyInstance.SpawnPlayerUnit();

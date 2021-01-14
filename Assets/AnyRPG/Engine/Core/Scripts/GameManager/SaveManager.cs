@@ -692,7 +692,7 @@ namespace AnyRPG {
 
         public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveActionBarData()");
-            foreach (ActionButton actionButton in UIManager.MyInstance.MyActionBarManager.GetActionButtons()) {
+            foreach (ActionButton actionButton in UIManager.MyInstance.ActionBarManager.GetActionButtons()) {
                 ActionBarSaveData saveData = new ActionBarSaveData();
                 saveData.MyName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
                 saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
@@ -1073,22 +1073,22 @@ namespace AnyRPG {
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
                         IUseable savedUseable = SystemAbilityManager.MyInstance.GetResource(actionBarSaveData.savedName);
                         if (savedUseable != null) {
-                            UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
+                            UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
                         }
                     }
                 }
                 if (useable != null) {
                     //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
-                    UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
+                    UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
-                    UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].ClearUseable();
+                    UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].ClearUseable();
                 }
                 counter++;
             }
-            UIManager.MyInstance.MyActionBarManager.UpdateVisuals();
+            UIManager.MyInstance.ActionBarManager.UpdateVisuals();
         }
 
         public void TryNewGame() {
@@ -1281,7 +1281,7 @@ namespace AnyRPG {
 
             //SystemGameManager.MyInstance.ReloadResourceLists();
 
-            UIManager.MyInstance.MyActionBarManager.ClearActionBars(true);
+            UIManager.MyInstance.ActionBarManager.ClearActionBars(true);
             QuestLog.MyInstance.ClearLog();
             PlayerManager.MyInstance.ResetInitialLevel();
 
@@ -1333,39 +1333,39 @@ namespace AnyRPG {
             if (PlayerPrefs.HasKey("MainMapWindowX") && PlayerPrefs.HasKey("MainMapWindowY"))
                 PopupWindowManager.MyInstance.mainMapWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
-                UIManager.MyInstance.MyQuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
+                UIManager.MyInstance.QuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
             if (PlayerPrefs.HasKey("CombatLogWindowX") && PlayerPrefs.HasKey("CombatLogWindowY"))
-                UIManager.MyInstance.MyCombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
+                UIManager.MyInstance.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
 
             if (PlayerPrefs.HasKey("MessageFeedManagerX") && PlayerPrefs.HasKey("MessageFeedManagerY"))
                 MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
 
             if (PlayerPrefs.HasKey("FloatingCastBarControllerX") && PlayerPrefs.HasKey("FloatingCastBarControllerY")) {
                 //Debug.Log("UIManager.MyInstance.MyFloatingCastBarController.transform.position: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position);
-                UIManager.MyInstance.MyFloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
+                UIManager.MyInstance.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
                 //Debug.Log("UIManager.MyInstance.MyFloatingCastBarController.transform.position after set: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position);
             }
 
             if (PlayerPrefs.HasKey("StatusEffectPanelControllerX") && PlayerPrefs.HasKey("StatusEffectPanelControllerY"))
-                UIManager.MyInstance.MyStatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
+                UIManager.MyInstance.StatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
 
             if (PlayerPrefs.HasKey("PlayerUnitFrameControllerX") && PlayerPrefs.HasKey("PlayerUnitFrameControllerY"))
-                UIManager.MyInstance.MyPlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
+                UIManager.MyInstance.PlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("FocusUnitFrameControllerX") && PlayerPrefs.HasKey("FocusUnitFrameControllerY"))
-                UIManager.MyInstance.MyFocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
+                UIManager.MyInstance.FocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
-                UIManager.MyInstance.MyMiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
+                UIManager.MyInstance.MiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
 
             if (PlayerPrefs.HasKey("XPBarControllerX") && PlayerPrefs.HasKey("XPBarControllerY"))
-                UIManager.MyInstance.MyXPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
+                UIManager.MyInstance.XPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
 
             if (PlayerPrefs.HasKey("BottomPanelX") && PlayerPrefs.HasKey("BottomPanelY"))
-                UIManager.MyInstance.MyBottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
+                UIManager.MyInstance.BottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
 
             if (PlayerPrefs.HasKey("SidePanelX") && PlayerPrefs.HasKey("SidePanelY"))
-                UIManager.MyInstance.MySidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
+                UIManager.MyInstance.SidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
 
             if (PlayerPrefs.HasKey("MouseOverWindowX") && PlayerPrefs.HasKey("MouseOverWindowY"))
                 UIManager.MyInstance.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
@@ -1411,38 +1411,38 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("CraftingWindowY", PopupWindowManager.MyInstance.craftingWindow.transform.position.y);
             PlayerPrefs.SetFloat("MainMapWindowX", PopupWindowManager.MyInstance.mainMapWindow.transform.position.x);
             PlayerPrefs.SetFloat("MainMapWindowY", PopupWindowManager.MyInstance.mainMapWindow.transform.position.y);
-            PlayerPrefs.SetFloat("QuestTrackerWindowX", UIManager.MyInstance.MyQuestTrackerWindow.transform.position.x);
-            PlayerPrefs.SetFloat("QuestTrackerWindowY", UIManager.MyInstance.MyQuestTrackerWindow.transform.position.y);
-            PlayerPrefs.SetFloat("CombatLogWindowX", UIManager.MyInstance.MyCombatLogWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CombatLogWindowY", UIManager.MyInstance.MyCombatLogWindow.transform.position.y);
+            PlayerPrefs.SetFloat("QuestTrackerWindowX", UIManager.MyInstance.QuestTrackerWindow.transform.position.x);
+            PlayerPrefs.SetFloat("QuestTrackerWindowY", UIManager.MyInstance.QuestTrackerWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CombatLogWindowX", UIManager.MyInstance.CombatLogWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CombatLogWindowY", UIManager.MyInstance.CombatLogWindow.transform.position.y);
 
             PlayerPrefs.SetFloat("MessageFeedManagerX", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.x);
             PlayerPrefs.SetFloat("MessageFeedManagerY", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.MyInstance.MyFloatingCastBarController.transform.position.x);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.MyInstance.FloatingCastBarController.transform.position.x);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.MyInstance.FloatingCastBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", UIManager.MyInstance.MyStatusEffectPanelController.transform.position.x);
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", UIManager.MyInstance.MyStatusEffectPanelController.transform.position.y);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", UIManager.MyInstance.StatusEffectPanelController.transform.position.x);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", UIManager.MyInstance.StatusEffectPanelController.transform.position.y);
 
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", UIManager.MyInstance.MyPlayerUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", UIManager.MyInstance.MyPlayerUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", UIManager.MyInstance.PlayerUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", UIManager.MyInstance.PlayerUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", UIManager.MyInstance.MyFocusUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", UIManager.MyInstance.MyFocusUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", UIManager.MyInstance.FocusUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", UIManager.MyInstance.FocusUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("MiniMapControllerX", UIManager.MyInstance.MyMiniMapController.transform.position.x);
-            PlayerPrefs.SetFloat("MiniMapControllerY", UIManager.MyInstance.MyMiniMapController.transform.position.y);
+            PlayerPrefs.SetFloat("MiniMapControllerX", UIManager.MyInstance.MiniMapController.transform.position.x);
+            PlayerPrefs.SetFloat("MiniMapControllerY", UIManager.MyInstance.MiniMapController.transform.position.y);
 
-            PlayerPrefs.SetFloat("XPBarControllerX", UIManager.MyInstance.MyXPBarController.transform.position.x);
-            PlayerPrefs.SetFloat("XPBarControllerY", UIManager.MyInstance.MyXPBarController.transform.position.y);
+            PlayerPrefs.SetFloat("XPBarControllerX", UIManager.MyInstance.XPBarController.transform.position.x);
+            PlayerPrefs.SetFloat("XPBarControllerY", UIManager.MyInstance.XPBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("BottomPanelX", UIManager.MyInstance.MyBottomPanel.transform.position.x);
-            PlayerPrefs.SetFloat("BottomPanelY", UIManager.MyInstance.MyBottomPanel.transform.position.y);
+            PlayerPrefs.SetFloat("BottomPanelX", UIManager.MyInstance.BottomPanel.transform.position.x);
+            PlayerPrefs.SetFloat("BottomPanelY", UIManager.MyInstance.BottomPanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("SidePanelX", UIManager.MyInstance.MySidePanel.transform.position.x);
-            PlayerPrefs.SetFloat("SidePanelY", UIManager.MyInstance.MySidePanel.transform.position.y);
+            PlayerPrefs.SetFloat("SidePanelX", UIManager.MyInstance.SidePanel.transform.position.x);
+            PlayerPrefs.SetFloat("SidePanelY", UIManager.MyInstance.SidePanel.transform.position.y);
 
             PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.MyInstance.MouseOverWindow.transform.position.x);
             PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.MyInstance.MouseOverWindow.transform.position.y);
