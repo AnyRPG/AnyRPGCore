@@ -123,20 +123,24 @@ namespace AnyRPG {
             //GameObject _gameObject = Instantiate(combatTextPrefab, target.transform.position, Quaternion.identity, combatTextCanvas.transform);
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
-                combatTextController.Image.sprite = null;
                 //Debug.Log("About to Set MainTarget on combat text");
-                combatTextController.MainTarget = target;
-                if (combatType == CombatTextType.miss) {
-                    combatTextController.DisplayText = "(Miss)";
-                } else if (combatType == CombatTextType.immune) {
-                    combatTextController.DisplayText = "(Immune)";
-                } else {
-                    combatTextController.DisplayText = damage.ToString();
-                }
-                combatTextController.CombatMagnitude = combatMagnitude;
-                combatTextController.CombatType = combatType;
-                combatTextController.AbilityEffectContext = abilityEffectContext;
-                combatTextController.InitializeCombatTextController();
+                combatTextController.InitializeCombatTextController(target,
+                    null,
+                    GetDisplayText(combatType, damage),
+                    combatType,
+                    combatMagnitude,
+                    abilityEffectContext
+                    );
+            }
+        }
+
+        private string GetDisplayText(CombatTextType combatType, int damage) {
+            if (combatType == CombatTextType.miss) {
+                return "(Miss)";
+            } else if (combatType == CombatTextType.immune) {
+                return "(Immune)";
+            } else {
+                return damage.ToString();
             }
         }
 
@@ -149,15 +153,11 @@ namespace AnyRPG {
             //Debug.Log("About to Set MainTarget on combat text");
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
-                combatTextController.MainTarget = target;
-                combatTextController.Image.sprite = statusEffect.Icon;
-                combatTextController.DisplayText = statusEffect.DisplayName;
-                if (gainEffect) {
-                    combatTextController.CombatType = CombatTextType.gainBuff;
-                } else {
-                    combatTextController.CombatType = CombatTextType.loseBuff;
-                }
-                combatTextController.InitializeCombatTextController();
+                combatTextController.InitializeCombatTextController(target,
+                    statusEffect.Icon,
+                    statusEffect.DisplayName,
+                    (gainEffect == true ? CombatTextType.gainBuff : CombatTextType.loseBuff)
+                    );
             }
         }
 

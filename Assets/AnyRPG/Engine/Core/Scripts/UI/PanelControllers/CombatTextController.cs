@@ -32,8 +32,8 @@ namespace AnyRPG {
         [SerializeField]
         private int defaultFontSize = 30;
 
-        private string displayText;
-        private Interactable mainTarget;
+        private string displayText = string.Empty;
+        private Interactable mainTarget = null;
         private float alpha;
         private Vector2 targetPos;
         private float fadeOutTimer;
@@ -41,7 +41,7 @@ namespace AnyRPG {
         private Color textColor;
         private CombatMagnitude combatMagnitude;
         private CombatTextType textType;
-        private AbilityEffectContext abilityEffectContext;
+        private AbilityEffectContext abilityEffectContext = null;
 
         private float randomXLimit = 100f;
         private float randomYLimit = 100f;
@@ -51,21 +51,14 @@ namespace AnyRPG {
         // change direction to downward text for hits against player
         private int directionMultiplier = 1;
 
+        public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
+            this.mainTarget = mainTarget;
+            image.sprite = sprite;
+            this.displayText = displayText;
+            this.textType = combatTextType;
+            this.combatMagnitude = combatMagnitude;
+            this.abilityEffectContext = abilityEffectContext;
 
-        public string DisplayText { get => displayText; set => displayText = value; }
-        public Interactable MainTarget { get => mainTarget; set => mainTarget = value; }
-        public CombatMagnitude CombatMagnitude { get => combatMagnitude; set => combatMagnitude = value; }
-        public CombatTextType CombatType { get => textType; set => textType = value; }
-        public Image Image { get => image; set => image = value; }
-        public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
-
-        /*
-        void Start() {
-            
-        }
-        */
-
-        public void InitializeCombatTextController() {
             gameObject.SetActive(true);
 
             // if the combat text ui is not active, then we should just immediately disable this
@@ -159,7 +152,7 @@ namespace AnyRPG {
                     //text.fontSize = text.fontSize * 2;
                     break;
                 case CombatTextType.gainResource:
-                    if (abilityEffectContext != null && abilityEffectContext.powerResource != null) {
+                    if (abilityEffectContext?.powerResource != null) {
                         textColor = abilityEffectContext.powerResource.DisplayColor;
                         postText += " " + abilityEffectContext.powerResource.DisplayName;
                     } else {
@@ -176,7 +169,7 @@ namespace AnyRPG {
             tmpProtext.color = textColor;
             string finalString = preText + displayText + postText;
             tmpProtext.text = finalString;
-            if (CombatMagnitude == CombatMagnitude.critical) {
+            if (combatMagnitude == CombatMagnitude.critical) {
                 tmpProtext.fontSize = tmpProtext.fontSize * 2;
             }
             RunCombatTextUpdate();
