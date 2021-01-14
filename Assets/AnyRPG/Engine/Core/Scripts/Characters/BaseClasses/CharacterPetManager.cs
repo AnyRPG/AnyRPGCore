@@ -42,23 +42,26 @@ namespace AnyRPG {
         }
 
         public void CapturePet(UnitProfile unitProfile, UnitController unitController) {
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.CapturePet(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             if (unitController == null) {
                 return;
             }
 
+            // you can only have one of the same pet active at a time
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
-                unitProfiles.Add(unitProfile);
                 unitController.SetPetMode(baseCharacter);
                 unitController.OnUnitDestroy += HandleUnitDestroy;
             }
+
+            AddPet(unitProfile);
         }
 
         public virtual void AddPet(UnitProfile unitProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfile.DisplayName + ")");
             // need more logic in here about whether this class or spec is allowed to capture this type of pet
-            if (unitProfile != null && unitProfiles != null && unitProfiles.Contains(unitProfile) == false && unitProfile.IsPet == true) {
+            if (unitProfiles != null && unitProfiles.Contains(unitProfile) == false && unitProfile.IsPet == true) {
                 unitProfiles.Add(unitProfile);
             }
         }
@@ -69,7 +72,7 @@ namespace AnyRPG {
             if (unitProfile != null) {
                 AddPet(unitProfile);
             } else {
-                Debug.Log("CharacterPetManager.AddPet: COULD NOT FIND unitProfile: " + unitProfileName + " WHILE LOADING");
+                Debug.LogWarning(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet() Could not find unitProfile: " + unitProfileName);
             }
         }
 

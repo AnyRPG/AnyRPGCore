@@ -47,5 +47,7 @@ Assets/Standard*
 Assets/TextMesh*
 Assets/UMA*
 Assets/UnusedExternalContent*
-
 AssetBundles/
+
+#Visual Studio
+.leu
