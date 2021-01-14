@@ -152,7 +152,7 @@ namespace AnyRPG {
 
         public void HandlePrerequisiteUpdates() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePrerequisiteUpdates()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
 
@@ -165,7 +165,7 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitSpawn() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePlayerUnitSpawn()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
 
@@ -184,7 +184,7 @@ namespace AnyRPG {
         public void PlayAutomaticBehaviors() {
             //Debug.Log(unitController.gameObject.name + ".Controller.PlayAutomaticBehaviors()");
 
-            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
 

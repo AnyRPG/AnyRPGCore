@@ -90,30 +90,30 @@ namespace AnyRPG {
         protected void CheckSetMoveDestination() {
             //Debug.Log(unitController.gameObject.name + ": UnitMotor.CheckSetMoveDestination()");
             if (setMoveDestination && unitController.NavMeshAgent.pathPending == false && unitController.NavMeshAgent.hasPath == false) {
-                //Debug.Log(gameObject.name + ": UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + unitController.transform.position);
                 unitController.EnableAgent();
                 if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
                     moveToDestination = true;
-                    Debug.Log(unitController.gameObject.name + ": UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + unitController.transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + unitController.NavMeshAgent.pathPending + "; pathstatus: " + unitController.NavMeshAgent.pathStatus + "; hasPath: " + unitController.NavMeshAgent.hasPath);
+                    //Debug.Log(unitController.gameObject.name + ".UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + unitController.transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + unitController.NavMeshAgent.pathPending + "; pathstatus: " + unitController.NavMeshAgent.pathStatus + "; hasPath: " + unitController.NavMeshAgent.hasPath);
                     unitController.NavMeshAgent.SetDestination(destinationPosition);
                     //Debug.Log(gameObject.name + ": UnitMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
                     lastCommandFrame = Time.frameCount;
                     setMoveDestination = false;
                 }
             }
-            /*
+            
             if (!setMoveDestination) {
-                Debug.Log(gameObject.name + ": UnitMotor.FixedUpdate(): setMoveDestination: false.  Set move destination: " + destinationPosition + "; current location: " + transform.position);
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.FixedUpdate(): setMoveDestination: false.  Set move destination: " + destinationPosition + "; current location: " + unitController.transform.position);
             }
-            */
+            
             if (unitController.NavMeshAgent.pathPending == true) {
                 pathPendingCount++;
-                //Debug.Log(gameObject.name + ": UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + transform.position + "; PATHPENDING: TRUE!!!; status: " + unitController.MyAgent.pathStatus + "; count: " + pathPendingCount);
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + unitController.transform.position + "; PATHPENDING: TRUE!!!; status: " + unitController.NavMeshAgent.pathStatus + "; count: " + pathPendingCount);
             } else {
                 pathPendingCount = 0;
             }
             if (unitController.NavMeshAgent.hasPath == true) {
-                //Debug.Log(gameObject.name + ": UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + transform.position + "; HASPATH: TRUE!!!; status: " + unitController.MyAgent.pathStatus);
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + unitController.transform.position + "; HASPATH: TRUE!!!; status: " + unitController.NavMeshAgent.pathStatus);
             }
         }
 
@@ -335,7 +335,7 @@ namespace AnyRPG {
             // leaving this unset so it gets picked up in the next fixedupdate because navmeshagent doesn't actually reset path until after current frame.
             //unitController.MyAgent.SetDestination(point);
 
-            Debug.Log(unitController.gameObject.name + "UnitMotor.MoveToPoint(" + point + "). current location: " + unitController.transform.position + "; frame: " + Time.frameCount + "; return: " + destinationPosition);
+            //Debug.Log(unitController.gameObject.name + "UnitMotor.MoveToPoint(" + point + "). current location: " + unitController.transform.position + "; frame: " + Time.frameCount + "; return: " + destinationPosition);
             return destinationPosition;
         }
 
@@ -512,7 +512,7 @@ namespace AnyRPG {
         */
 
         public void ResetPath(bool forceStop = false) {
-            //Debug.Log(gameObject.name + ".UnitMotor.ResetPath() in frame: " + Time.frameCount);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.ResetPath() in frame: " + Time.frameCount);
             moveToDestination = false;
             setMoveDestination = false;
             if (unitController.NavMeshAgent.enabled == true) {

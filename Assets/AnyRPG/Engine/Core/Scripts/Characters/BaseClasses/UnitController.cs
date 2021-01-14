@@ -395,14 +395,18 @@ namespace AnyRPG {
         /// set this unit to be the pet of characterUnit.BaseCharacter
         /// </summary>
         /// <param name="characterUnit.BaseCharacter"></param>
-        public void SetPetMode(BaseCharacter masterBaseCharacter) {
-            Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
+        public void SetPetMode(BaseCharacter masterBaseCharacter, bool enableMode = false) {
+            //Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
             SetUnitControllerMode(UnitControllerMode.Pet);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
                 //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
                 ApplyControlEffects(masterBaseCharacter);
+                if (enableMode == true) {
+                    ChangeState(new IdleState());
+                    SetAggroRange();
+                }
                 SetMasterRelativeDestination(true);
                 startPosition = LeashPosition;
             }
@@ -415,7 +419,7 @@ namespace AnyRPG {
 
             // it is necessary to keep track of leash position because it was already set as destination by setting pet mode
             // enabling idle state will reset the destination so we need to re-enable it
-            Vector3 leashDestination = LeashPosition;
+            //Vector3 leashDestination = LeashPosition;
             ChangeState(new IdleState());
             SetAggroRange();
             SetDestination(LeashPosition);
@@ -974,7 +978,7 @@ namespace AnyRPG {
         }
 
         public void SetMasterRelativeDestination(bool forceUpdate = false) {
-            Debug.Log(gameObject.name + ".UnitController.SetMasterRelativeDestination(" + forceUpdate + ")");
+            //Debug.Log(gameObject.name + ".UnitController.SetMasterRelativeDestination(" + forceUpdate + ")");
             if (UnderControl == false) {
                 // only do this stuff if we actually have a master
                 //Debug.Log(gameObject.name + ".AIController.SetMasterRelativeDestination(): not under control");
@@ -1063,7 +1067,7 @@ namespace AnyRPG {
         }
 
         public Vector3 SetDestination(Vector3 destination) {
-            Debug.Log(gameObject.name + ".UnitController.SetDestination(" + destination + "). current location: " + transform.position);
+            //Debug.Log(gameObject.name + ".UnitController.SetDestination(" + destination + "). current location: " + transform.position);
             if (!(currentState is DeathState)) {
                 CommonMovementNotifier();
                 return UnitMotor.MoveToPoint(destination);

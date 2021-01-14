@@ -36,13 +36,13 @@ namespace AnyRPG {
 
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
-                unitController.SetPetMode(baseCharacter);
+                unitController.SetPetMode(baseCharacter, true);
                 unitController.OnUnitDestroy += HandleUnitDestroy;
             }
         }
 
         public void CapturePet(UnitProfile unitProfile, UnitController unitController) {
-            Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.CapturePet(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.CapturePet(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             if (unitController == null) {
                 return;
@@ -51,7 +51,7 @@ namespace AnyRPG {
             // you can only have one of the same pet active at a time
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
-                unitController.SetPetMode(baseCharacter);
+                unitController.SetPetMode(baseCharacter, true);
                 unitController.OnUnitDestroy += HandleUnitDestroy;
             }
 

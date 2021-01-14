@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         private void FindAutomaticPatrol() {
             //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+            if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
 
