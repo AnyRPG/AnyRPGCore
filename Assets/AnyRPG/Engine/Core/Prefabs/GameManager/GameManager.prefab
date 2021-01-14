@@ -10168,7 +10168,7 @@ MonoBehaviour:
   defaultPlayerName: New Player
   equipDefaultBackPack: 1
   defaultBackpackItem: Backpack
-  defaultBankBagItem: BankBag
+  defaultBankBagItem: Bank Chest
   useThirdPartyMovementControl: 0
   allowAutoAttack: 1
   useThirdPartyCameraControl: 0

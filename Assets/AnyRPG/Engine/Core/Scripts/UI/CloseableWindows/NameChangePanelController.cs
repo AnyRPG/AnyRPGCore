@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangePanelController : WindowContentController {
 
-        public InputField textInput;
+        [SerializeField]
+        private TMP_InputField textInput;
+
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 

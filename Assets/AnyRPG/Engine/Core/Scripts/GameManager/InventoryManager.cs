@@ -186,7 +186,7 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
             Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.MyInstance?.DefaultBankBagItem) as Bag;
             if (bag == null) {
-                Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBANKBAG TO VALID NAME");
+                Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
                 return;
             }
             AddBag(bag, true);

@@ -13,7 +13,7 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Name")]
-        public InputField textInput;
+        public TMP_InputField textInput;
 
         [Header("Details")]
 
