@@ -155,9 +155,11 @@ namespace AnyRPG {
             */
             UIManager.MyInstance.UpdateStackSize(actionButton, count, true);
 
+            
             if (count == 0) {
                 actionButton.EnableFullCoolDownIcon();
             } else {
+            
                 // check for ability cooldown here and only disable if no cooldown exists
                 if (!HadSpecialIcon(actionButton)) {
                     actionButton.DisableCoolDownIcon();

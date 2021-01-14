@@ -401,11 +401,12 @@ namespace AnyRPG {
             if (coolDownIcon.sprite != MyIcon.sprite) {
                 //Debug.Log("Setting coolDownIcon to match MyIcon");
                 coolDownIcon.sprite = MyIcon.sprite;
-                coolDownIcon.color = new Color32(0, 0, 0, 150);
-                coolDownIcon.fillMethod = Image.FillMethod.Radial360;
-                //coolDownIcon.fillOrigin = Image.Origin360.Top;
-                coolDownIcon.fillClockwise = false;
             }
+            coolDownIcon.color = new Color32(0, 0, 0, 150);
+            coolDownIcon.fillMethod = Image.FillMethod.Radial360;
+            //coolDownIcon.fillOrigin = Image.Origin360.Top;
+            coolDownIcon.fillClockwise = false;
+            //}
             float fillAmount = 1f;
             if (coolDownIcon.fillAmount != fillAmount) {
                 coolDownIcon.fillAmount = fillAmount;
