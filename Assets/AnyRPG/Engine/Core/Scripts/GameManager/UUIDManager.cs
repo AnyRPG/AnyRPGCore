@@ -2,9 +2,15 @@
 using UnityEngine;
 
 namespace AnyRPG {
-    public class UUIDManager {
+    public class UUIDManager : MonoBehaviour {
         static Dictionary<IUUID, string> m_ObjToUUID = new Dictionary<IUUID, string>();
         static Dictionary<string, IUUID> m_UUIDtoObj = new Dictionary<string, IUUID>();
+
+        private static bool IsPlaying = false;
+
+        public void OnEnable() {
+            IsPlaying = true;
+        }
 
         public static void RegisterUUID(IUUID aID) {
             string UID;
@@ -64,7 +70,7 @@ namespace AnyRPG {
             }
 
             // duplicates should never be ignored at edit time, only run time
-            if (aID.IgnoreDuplicateUUID && Application.isPlaying) {
+            if (aID.IgnoreDuplicateUUID && IsPlaying) {
                 return;
             }
             //Debug.Log("we got a duplicate, generate new ID from: " + aID.ID);
