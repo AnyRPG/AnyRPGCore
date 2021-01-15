@@ -73,7 +73,9 @@ namespace AnyRPG {
                 }
             }
             //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount(); return: " + optionCount);
-            return optionCount;
+            // testing - having the actual skill count causes multiple interaction window items
+            // return 1 for anything other than no skills
+            return (optionCount == 0 ? 0 : 1);
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
