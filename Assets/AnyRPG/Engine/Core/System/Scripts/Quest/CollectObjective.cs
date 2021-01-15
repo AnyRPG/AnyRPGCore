@@ -30,9 +30,7 @@ namespace AnyRPG {
                 return;
             }
             CurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(MyType)) {
-                CurrentAmount++;
-            }
+            CurrentAmount += PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
 
             quest.CheckCompletion(true, printMessages);
             if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {

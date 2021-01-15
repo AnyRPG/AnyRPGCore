@@ -623,6 +623,18 @@ namespace AnyRPG {
             return false;
         }
 
+        public int GetEquipmentCount(string equipmentName) {
+            int returnValue = 0;
+            foreach (Equipment equipment in currentEquipment.Values) {
+                if (equipment != null) {
+                    if (SystemResourceManager.MatchResource(equipment.DisplayName, equipmentName)) {
+                        returnValue++;
+                    }
+                }
+            }
+            return returnValue;
+        }
+
         public void HandleCharacterUnitSpawn() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
             EquipCharacter();
