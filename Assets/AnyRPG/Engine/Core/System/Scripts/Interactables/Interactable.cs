@@ -553,7 +553,7 @@ namespace AnyRPG {
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (finalInteractables.Count > 0) {
                 if (suppressInteractionWindow == true || validInteractables.Count == 1) {
-                    if (validInteractables[0].GetCurrentOptionCount() > 0) {
+                    if (validInteractables[0].GetCurrentOptionCount() > 1) {
                         OpenInteractionWindow();
                     } else {
                         validInteractables[0].Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);

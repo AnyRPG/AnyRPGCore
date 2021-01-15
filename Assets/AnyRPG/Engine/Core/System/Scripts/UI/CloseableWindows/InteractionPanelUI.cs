@@ -231,6 +231,7 @@ namespace AnyRPG {
 
             // priority open - any other current interactable third, but only if there is one
             if (currentInteractables.Count > 1 || suppressAutoInteract == true) {
+                //Debug.Log("InteractionPanelUI.Interact(): currentInteractables count: " + currentInteractables.Count);
                 return;
             }
             foreach (GameObject interactionPanelScript in interactionPanelScripts) {

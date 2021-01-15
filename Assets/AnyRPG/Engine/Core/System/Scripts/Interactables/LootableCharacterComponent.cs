@@ -38,6 +38,10 @@ namespace AnyRPG {
 
         public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             CreateLootTables();
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
+                interactableOptionProps.InteractionPanelTitle = "Loot";
+            }
+
         }
 
         public static LootableCharacterComponent GetLootableCharacterComponent(Interactable searchInteractable) {
@@ -272,7 +276,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
+            //Debug.Log(interactable.gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
@@ -319,7 +323,7 @@ namespace AnyRPG {
                 drops.AddRange(itemDrops);
 
                 if (drops.Count > 0) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
+                    //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     LootUI.MyInstance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.MyInstance.lootWindow.OpenWindow();
