@@ -32,8 +32,8 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool Interact(CharacterUnit source) {
-            base.Interact(source);
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+            base.Interact(source, optionIndex);
             (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
             (SystemWindowManager.MyInstance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
             SystemWindowManager.MyInstance.unitSpawnWindow.OpenWindow();

@@ -144,11 +144,11 @@ namespace AnyRPG {
         }
 
         private void Update() {
-            if (!targetInitialized || !UnitNamePlateController.NamePlateUnit.CameraTargetReady) {
+            if (!targetInitialized || UnitNamePlateController?.NamePlateUnit?.CameraTargetReady == false) {
                 //Debug.Log("UnitFrameController.Update(). Not initialized yet.  Exiting.");
                 return;
             }
-            if (UnitNamePlateController.NamePlateUnit.CameraTargetReady == true && followTransform == null) {
+            if (UnitNamePlateController?.NamePlateUnit?.CameraTargetReady == true && followTransform == null) {
                 //Debug.Log(gameObject.name + "UnitFrameController.Update(). Follow transform is null. possibly dead unit despawned. Exiting.");
                 ClearTarget();
                 return;

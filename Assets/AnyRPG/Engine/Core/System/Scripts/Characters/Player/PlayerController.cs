@@ -128,7 +128,7 @@ namespace AnyRPG {
 
             HandleMouseOver();
 
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive == false) {
+            if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
                 return;
             }

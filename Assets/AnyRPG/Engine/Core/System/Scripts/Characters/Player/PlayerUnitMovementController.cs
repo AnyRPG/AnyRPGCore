@@ -163,7 +163,7 @@ namespace AnyRPG {
             }
 
             //If alive and is moving, set animator.
-            if (!useMeshNav && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive && PlayerManager.MyInstance.PlayerController.canMove) {
+            if (useMeshNav == false && PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == true && PlayerManager.MyInstance?.PlayerController?.canMove == true) {
 
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && PlayerManager.MyInstance.PlayerController.HasMoveInput()) {
@@ -187,7 +187,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive && PlayerManager.MyInstance.PlayerController.canMove) {
+            if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == true && PlayerManager.MyInstance?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
                 if (InputManager.MyInstance.rightMouseButtonDown && PlayerManager.MyInstance.PlayerController.HasMoveInput() && (!InputManager.MyInstance.rightMouseButtonClickedOverUI || (NamePlateManager.MyInstance != null ? NamePlateManager.MyInstance.MouseOverNamePlate() : false))) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting PlayerManager.MyInstance.ActiveUnitController.transform.forward");

@@ -17,16 +17,12 @@ namespace AnyRPG {
         [SerializeField]
         private Image icon = null;
 
-        public TextMeshProUGUI MyText {
-            get {
-                return text;
-            }
-        }
+        private InteractableOptionComponent interactableOption = null;
 
-        private InteractableOptionComponent interactableOption;
+        private int optionIndex = 0;
 
         public Image MyIcon { get => icon; set => icon = value; }
-        public InteractableOptionComponent MyInteractableOption {
+        public InteractableOptionComponent InteractableOption {
             get => interactableOption;
             set {
                 if (value.InteractableOptionProps.Icon != null) {
@@ -40,11 +36,19 @@ namespace AnyRPG {
             }
         }
 
+        public void Setup(InteractableOptionComponent interactableOptionComponent, int optionIndex) {
+
+            InteractableOption = interactableOptionComponent;
+            text.text = interactableOptionComponent?.InteractableOptionProps?.GetInteractionPanelTitle(optionIndex);
+            text.color = Color.white;
+            this.optionIndex = optionIndex;
+        }
+
         public void Interact() {
             if (PlayerManager.MyInstance.UnitController != null) {
-                MyInteractableOption.Interact(PlayerManager.MyInstance.UnitController.CharacterUnit);
+                InteractableOption.Interact(PlayerManager.MyInstance.UnitController.CharacterUnit, optionIndex);
             }
-            MyInteractableOption.Interactable.CloseInteractionWindow();
+            InteractableOption.Interactable.CloseInteractionWindow();
         }
 
     }

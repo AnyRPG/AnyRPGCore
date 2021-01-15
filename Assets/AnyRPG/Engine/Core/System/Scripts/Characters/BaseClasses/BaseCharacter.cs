@@ -366,10 +366,10 @@ namespace AnyRPG {
                 return;
             }
 
-            characterCombat.Update();
+            characterCombat?.Update();
 
             // do this after combat so regen ticks can use the proper combat state
-            characterStats.Update();
+            characterStats?.Update();
         }
 
         public void UpdateStatProviderList() {

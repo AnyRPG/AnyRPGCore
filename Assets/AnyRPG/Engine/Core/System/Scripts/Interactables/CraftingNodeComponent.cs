@@ -70,8 +70,8 @@ namespace AnyRPG {
             return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
         }
 
-        public override bool Interact(CharacterUnit source) {
-            base.Interact(source);
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+            base.Interact(source, optionIndex);
 
             CraftingUI.MyInstance.ViewRecipes(Props.Ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);

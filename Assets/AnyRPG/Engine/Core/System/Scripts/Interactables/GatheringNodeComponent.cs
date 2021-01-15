@@ -69,7 +69,7 @@ namespace AnyRPG {
         }
 
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
             if (Props.LootTables == null) {
                 //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
@@ -89,7 +89,7 @@ namespace AnyRPG {
             //if (lootCount > 0) {
             if (lootDropped == true) {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
-                Gather();
+                Gather(optionIndex);
             } else {
                 source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
             }
@@ -98,10 +98,10 @@ namespace AnyRPG {
             //return PickUp();
         }
 
-        public void Gather() {
+        public void Gather(int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
             if (PlayerManager.MyInstance.ActiveUnitController != null) {
-                base.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
+                base.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit, optionIndex);
             }
         }
 

@@ -16,9 +16,9 @@ namespace AnyRPG {
         }
         
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");

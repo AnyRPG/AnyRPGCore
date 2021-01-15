@@ -271,12 +271,12 @@ namespace AnyRPG {
             return currencyNode;
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".LootableCharacter.Interact()");
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!characterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
-                base.Interact(source);
+                base.Interact(source, optionIndex);
                 // keep track of currency drops for combining after
                 CurrencyLootDrop droppedCurrencies = new CurrencyLootDrop();
 

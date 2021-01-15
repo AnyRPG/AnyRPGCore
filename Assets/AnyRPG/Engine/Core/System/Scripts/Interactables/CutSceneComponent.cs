@@ -16,8 +16,8 @@ namespace AnyRPG {
         public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
-        public override bool Interact(CharacterUnit source) {
-            base.Interact(source);
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+            base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();

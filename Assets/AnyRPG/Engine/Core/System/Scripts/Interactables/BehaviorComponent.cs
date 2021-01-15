@@ -28,20 +28,22 @@ namespace AnyRPG {
             return searchInteractable.GetFirstInteractableOption(typeof(BehaviorComponent)) as BehaviorComponent;
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
             List<BehaviorProfile> currentList = GetCurrentOptionList();
             if (currentList.Count == 0) {
                 return false;
-            } else if (currentList.Count == 1) {
-                if (unitController != null) {
-                    unitController.BehaviorController.TryPlayBehavior(currentList[0], this);
-                }
-                base.Interact(source);
-                interactable.CloseInteractionWindow();
+                //} else if (currentList.Count == 1) {
             } else {
+                if (unitController != null) {
+                    unitController.BehaviorController.TryPlayBehavior(currentList[optionIndex], this);
+                }
+                base.Interact(source, optionIndex);
+                interactable.CloseInteractionWindow();
+            }/* else {
+
                 interactable.OpenInteractionWindow();
-            }
+            }*/
             return true;
         }
 

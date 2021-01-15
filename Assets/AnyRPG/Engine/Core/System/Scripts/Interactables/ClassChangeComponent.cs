@@ -15,7 +15,7 @@ namespace AnyRPG {
         private bool windowEventSubscriptionsInitialized = false;
 
         public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Change Class";
             }
         }
@@ -69,12 +69,12 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
             if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }
-            base.Interact(source);
+            base.Interact(source, optionIndex);
 
             (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
             (PopupWindowManager.MyInstance.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;

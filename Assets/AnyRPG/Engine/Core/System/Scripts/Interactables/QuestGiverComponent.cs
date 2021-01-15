@@ -107,9 +107,9 @@ namespace AnyRPG {
             */
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             if (Quest.GetCompleteQuests(Props.Quests, true).Count + Quest.GetAvailableQuests(Props.Quests).Count > 1) {
                 interactable.OpenInteractionWindow();
                 return true;

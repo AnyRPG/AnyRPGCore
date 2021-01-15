@@ -15,9 +15,9 @@ namespace AnyRPG {
         public LoadSceneComponent(Interactable interactable, LoadSceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
 
             LevelManager.MyInstance.LoadLevel(LoadSceneProps.SceneName);
             return true;

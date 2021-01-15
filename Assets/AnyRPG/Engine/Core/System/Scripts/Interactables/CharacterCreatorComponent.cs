@@ -31,9 +31,9 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             SystemWindowManager.MyInstance.characterCreatorWindow.OpenWindow();
             (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
             (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;

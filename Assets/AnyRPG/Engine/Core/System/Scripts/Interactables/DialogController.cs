@@ -29,7 +29,6 @@ namespace AnyRPG {
         }
 
         private void CleanupDialog() {
-            //nameplate
             if (dialogCoroutine != null) {
                 interactable.StopCoroutine(dialogCoroutine);
             }

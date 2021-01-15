@@ -12,15 +12,15 @@ namespace AnyRPG {
         public MusicPlayerProps Props { get => interactableOptionProps as MusicPlayerProps; }
 
         public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
                 interactableOptionProps.InteractionPanelTitle = "Music Player";
             }
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             if (!PopupWindowManager.MyInstance.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 PopupWindowManager.MyInstance.musicPlayerWindow.OpenWindow();

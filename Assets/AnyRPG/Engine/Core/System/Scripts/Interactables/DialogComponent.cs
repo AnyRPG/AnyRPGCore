@@ -71,23 +71,23 @@ namespace AnyRPG {
             return currentList;
         }
 
-        public override bool Interact(CharacterUnit source) {
-            //Debug.Log(gameObject.name + ".DialogInteractable.Interact()");
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
+            //Debug.Log(interactable.gameObject.name + ".DialogInteractable.Interact()");
             List<Dialog> currentList = GetCurrentOptionList();
             if (currentList.Count == 0) {
                 return false;
-            } else if (currentList.Count == 1) {
-                if (currentList[0].MyAutomatic) {
-                    interactable.DialogController.PlayDialog(currentList[0]);
+            } else /*if (currentList.Count == 1)*/ {
+                if (currentList[optionIndex].MyAutomatic) {
+                    interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[0], this.interactable);
+                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
                     (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
                     (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
                 }
-            } else {
+            }/* else {
                 interactable.OpenInteractionWindow();
-            }
-            base.Interact(source);
+            }*/
+            base.Interact(source, optionIndex);
             return true;
         }
 

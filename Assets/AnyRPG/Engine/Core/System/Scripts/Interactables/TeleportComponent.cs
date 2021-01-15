@@ -17,9 +17,9 @@ namespace AnyRPG {
         }
 
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
 
             source.BaseCharacter.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility);
             return true;

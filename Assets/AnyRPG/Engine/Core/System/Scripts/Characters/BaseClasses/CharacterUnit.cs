@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         private BaseCharacter baseCharacter = null;
 
-        public override string DisplayName { get => (BaseCharacter != null ? BaseCharacter.CharacterName : interactableOptionProps.InteractionPanelTitle); }
+        public override string DisplayName { get => (BaseCharacter != null ? BaseCharacter.CharacterName : interactableOptionProps.GetInteractionPanelTitle()); }
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
         }
@@ -91,11 +91,11 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
             float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
             if (CanInteract(false, false, relationValue)) {
-                base.Interact(source);
+                base.Interact(source, optionIndex);
 
                 //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
                 // attempt to put the caster in combat so it can unsheath bows, wands, etc

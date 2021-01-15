@@ -27,13 +27,13 @@ namespace AnyRPG {
             }
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             //if (coroutine != null) {
                 //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): coroutine is not null, exiting");
                 //return false;
             //}
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
 
             // loop through the animatedobjects prefabobjects

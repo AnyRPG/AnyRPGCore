@@ -884,13 +884,13 @@ namespace AnyRPG {
 
         protected override void Update() {
             base.Update();
-            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
+            if (characterUnit?.BaseCharacter?.CharacterStats?.IsAlive == false) {
                 // can't handle movement when dead
                 return;
             }
 
             if (motorEnabled) {
-                unitMotor.Update();
+                unitMotor?.Update();
             }
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
@@ -912,7 +912,7 @@ namespace AnyRPG {
                 currentState.Update();
             }
             if (motorEnabled) {
-                unitMotor.FixedUpdate();
+                unitMotor?.FixedUpdate();
             }
         }
 
@@ -1204,7 +1204,8 @@ namespace AnyRPG {
             }
 
             // note : this will not work for third paty controllers without these parameters.  Third party controllers should be setup to use footstep hit audio
-            if (UnitAnimator.IsInAir() == false
+            if (unitAnimator != null
+                && UnitAnimator.IsInAir() == false
                 && mounted == false
                 && ControlLocked == false
                 //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
@@ -1216,7 +1217,7 @@ namespace AnyRPG {
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");
-                if (unitComponentController.MovementIsPlaying()) {
+                if (unitComponentController?.MovementIsPlaying() == true) {
                     unitComponentController.StopMovement();
                 }
             }

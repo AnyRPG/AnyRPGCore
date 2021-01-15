@@ -12,16 +12,16 @@ namespace AnyRPG {
         public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
         public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
-            if (interactableOptionProps.InteractionPanelTitle == string.Empty) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
             SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             if (!PopupWindowManager.MyInstance.skillTrainerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //vendorWindow.MyVendorUI.CreatePages(items);

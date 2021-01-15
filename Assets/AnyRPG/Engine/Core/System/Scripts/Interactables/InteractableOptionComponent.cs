@@ -19,8 +19,8 @@ namespace AnyRPG {
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
         public virtual string DisplayName {
             get {
-                if (interactableOptionProps.InteractionPanelTitle != null && interactableOptionProps.InteractionPanelTitle != string.Empty) {
-                    return interactableOptionProps.InteractionPanelTitle;
+                if (interactableOptionProps.GetInteractionPanelTitle() != null && interactableOptionProps.GetInteractionPanelTitle() != string.Empty) {
+                    return interactableOptionProps.GetInteractionPanelTitle();
                 }
                 if (interactable != null) {
                     return interactable.DisplayName;
@@ -131,7 +131,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public virtual bool Interact(CharacterUnit source) {
+        public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
             SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(this);
@@ -180,7 +180,7 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
-            return string.Format("{0}", interactableOptionProps.InteractionPanelTitle);
+            return string.Format("{0}", interactableOptionProps.GetInteractionPanelTitle());
         }
         
 

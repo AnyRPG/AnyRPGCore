@@ -536,8 +536,6 @@ namespace AnyRPG {
             float factionValue = PerformFactionCheck(source.BaseCharacter);
 
             // get a list of valid interactables to determine if there is an action we can treat as default
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(processRangeCheck, passedRangeCheck);
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(source);
             List<InteractableOptionComponent> validInteractables = GetCurrentInteractables(source.BaseCharacter, true, factionValue);
             List<InteractableOptionComponent> finalInteractables = new List<InteractableOptionComponent>();
             if (processRangeCheck) {
@@ -555,7 +553,11 @@ namespace AnyRPG {
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (finalInteractables.Count > 0) {
                 if (suppressInteractionWindow == true || validInteractables.Count == 1) {
-                    validInteractables[0].Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
+                    if (validInteractables[0].GetCurrentOptionCount() > 0) {
+                        OpenInteractionWindow();
+                    } else {
+                        validInteractables[0].Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit);
+                    }
                 } else {
                     OpenInteractionWindow();
                 }

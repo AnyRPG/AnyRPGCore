@@ -44,13 +44,13 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
             if (windowEventSubscriptionsInitialized == true) {
                 //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT SUBSCRIPTIONS WERE ALREADY INITIALIZED!!! RETURNING");
                 return false;
             }
-            base.Interact(source);
+            base.Interact(source, optionIndex);
 
             SystemWindowManager.MyInstance.nameChangeWindow.OpenWindow();
             (SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;

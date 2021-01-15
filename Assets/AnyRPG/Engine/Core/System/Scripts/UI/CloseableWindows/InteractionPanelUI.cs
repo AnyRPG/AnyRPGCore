@@ -187,13 +187,14 @@ namespace AnyRPG {
                     // handle generic stuff
                     if (_interactable.DisplayName != null && _interactable.DisplayName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
-                        GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
-                        InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
-                        iPS.MyText.text = _interactable.InteractableOptionProps.InteractionPanelTitle;
-                        iPS.MyText.color = Color.white;
-                        iPS.MyInteractableOption = _interactable;
-                        //Interactables.Add(go);
-                        interactionPanelScripts.Add(go);
+                        for (int i = 0; i < _interactable.GetCurrentOptionCount(); i++) {
+                            GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
+                            InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
+                            if (iPS != null) {
+                                iPS.Setup(_interactable, i);
+                                interactionPanelScripts.Add(go);
+                            }
+                        }
                     }
 
                 }
@@ -235,9 +236,9 @@ namespace AnyRPG {
             foreach (GameObject interactionPanelScript in interactionPanelScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
-                if (iPS.MyInteractableOption.CanInteract()) {
+                if (iPS.InteractableOption.CanInteract() && iPS.InteractableOption.GetCurrentOptionCount() == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.MyInteractableOption.Interact(PlayerManager.MyInstance.UnitController.CharacterUnit);
+                    iPS.InteractableOption.Interact(PlayerManager.MyInstance.UnitController.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }

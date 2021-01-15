@@ -13,7 +13,7 @@ namespace AnyRPG {
         public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".PressureSwitch.Interact(" + (source == null ? "null" : source.DisplayName) +")");
             float totalWeight = 0f;
             if (interactable.Collider != null) {
@@ -36,10 +36,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + " totalWeight: " + totalWeight + "; minimumWeight: " + minimumWeight);
             if (totalWeight >= PressureSwitchProps.MinimumWeight && onState == false) {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
-                base.Interact(source);
+                base.Interact(source, optionIndex);
             } else if (totalWeight < PressureSwitchProps.MinimumWeight && onState == true) {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
-                base.Interact(source);
+                base.Interact(source, optionIndex);
             } else {
                 PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             }

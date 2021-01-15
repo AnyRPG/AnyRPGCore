@@ -14,9 +14,9 @@ namespace AnyRPG {
             interactableOptionProps.InteractionPanelTitle = "Bank";
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".Bank.Interact(" + (source == null ? "null" : source.name) +")");
-            base.Interact(source);
+            base.Interact(source, optionIndex);
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
             if (!PopupWindowManager.MyInstance.bankWindow.IsOpen) {
                 PopupWindowManager.MyInstance.bankWindow.OpenWindow();

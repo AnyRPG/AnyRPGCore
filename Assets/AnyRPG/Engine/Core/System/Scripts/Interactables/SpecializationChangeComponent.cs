@@ -44,12 +44,12 @@ namespace AnyRPG {
             CleanupWindowEventSubscriptions();
         }
 
-        public override bool Interact(CharacterUnit source) {
+        public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
             if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }
-            base.Interact(source);
+            base.Interact(source, optionIndex);
 
             (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
             (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
