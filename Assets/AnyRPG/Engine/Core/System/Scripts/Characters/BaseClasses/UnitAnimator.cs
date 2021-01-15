@@ -110,10 +110,10 @@ namespace AnyRPG {
 
         public UnitAnimator(UnitController unitController) {
             this.unitController = unitController;
-            systemAnimations = SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps;
-            currentAnimations = UnityEngine.Object.Instantiate(SystemConfigurationManager.MyInstance.MySystemAnimationProfile).AnimationProps;
-            animatorController = SystemConfigurationManager.MyInstance.MyDefaultAnimatorController;
-            defaultAnimationProps = SystemConfigurationManager.MyInstance.MyDefaultAnimationProfile.AnimationProps;
+            systemAnimations = SystemConfigurationManager.MyInstance.SystemAnimationProfile.AnimationProps;
+            currentAnimations = UnityEngine.Object.Instantiate(SystemConfigurationManager.MyInstance.SystemAnimationProfile).AnimationProps;
+            animatorController = SystemConfigurationManager.MyInstance.DefaultAnimatorController;
+            defaultAnimationProps = SystemConfigurationManager.MyInstance.DefaultAnimationProfile.AnimationProps;
 
         }
 
@@ -163,7 +163,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             }
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == true) {
                 if (thirdPartyAnimatorController == null) {
                     thirdPartyAnimatorController = animator.runtimeAnimatorController;
                 }
@@ -195,7 +195,7 @@ namespace AnyRPG {
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player && SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+            if (unitController.UnitControllerMode == UnitControllerMode.Player && SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
             }
@@ -1087,7 +1087,7 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null) {
                 // override the default attack animation
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.SystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
             }
             float animationLength = animationClip.length;
 
@@ -1130,7 +1130,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() Found clip from overrideController: " + tmpAnimationClip.name);
                 }
 
-                overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
+                overrideController[SystemConfigurationManager.MyInstance.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyCastClips[0].name].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
@@ -1329,7 +1329,7 @@ namespace AnyRPG {
             SetTrigger("ReviveTrigger");
             // add 1 to account for the transition
             if (SystemConfigurationManager.MyInstance != null) {
-                float animationLength = overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
+                float animationLength = overrideController[SystemConfigurationManager.MyInstance.SystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
                 resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrectionAnimation(animationLength));
             }
         }

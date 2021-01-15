@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         public void SetupController() {
             if (castTargettingProjector != null) {
-                castTargettingProjector.material = SystemConfigurationManager.MyInstance.MyDefaultCastingLightProjector;
+                castTargettingProjector.material = SystemConfigurationManager.MyInstance.DefaultCastingLightProjector;
             }
 
             circleColor = castTargettingProjector.material.color;

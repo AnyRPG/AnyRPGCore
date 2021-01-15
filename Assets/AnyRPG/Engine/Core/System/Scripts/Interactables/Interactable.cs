@@ -187,7 +187,7 @@ namespace AnyRPG {
                     Debug.LogError(gameObject.name + ": SystemConfigurationManager not found. Is the GameManager in the scene?");
                     return;
                 } else {
-                    temporaryMaterial = SystemConfigurationManager.MyInstance.MyTemporaryMaterial;
+                    temporaryMaterial = SystemConfigurationManager.MyInstance.TemporaryMaterial;
                 }
             }
             if (temporaryMaterial == null) {

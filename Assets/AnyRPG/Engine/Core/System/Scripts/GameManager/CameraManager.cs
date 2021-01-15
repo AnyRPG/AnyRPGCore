@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         private void CheckConfiguration() {
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true && SystemConfigurationManager.MyInstance.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true && SystemConfigurationManager.MyInstance.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
                 Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
             }
         }
@@ -133,11 +133,11 @@ namespace AnyRPG {
             SceneNode activeScene = LevelManager.MyInstance.GetActiveSceneNode();
             if (activeScene == SystemConfigurationManager.MyInstance?.MainMenuSceneNode
                 || activeScene == SystemConfigurationManager.MyInstance?.InitializationSceneNode
-                || SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == false) {
+                || SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
                 EnableThirdPartyCamera(prePositionCamera);
                 return;
             }
@@ -148,7 +148,7 @@ namespace AnyRPG {
 
         public void SwitchToMainCamera() {
             //Debug.Log("CameraManager.SwitchToMainCamera()");
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
             MainCameraGameObject.SetActive(true);
@@ -157,7 +157,7 @@ namespace AnyRPG {
         public void DeactivateMainCamera() {
             //Debug.Log("CameraManager.DeactivateMainCamera()");
             MainCameraGameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
         }

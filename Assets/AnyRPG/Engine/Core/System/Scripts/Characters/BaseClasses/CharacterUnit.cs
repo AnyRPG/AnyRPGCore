@@ -154,7 +154,7 @@ namespace AnyRPG {
                 // add all possible delays together
                 float extraTime = 0f;
                 if (addSystemDefaultTime) {
-                    extraTime = SystemConfigurationManager.MyInstance.MyDefaultDespawnTimer;
+                    extraTime = SystemConfigurationManager.MyInstance.DefaultDespawnTimer;
                 }
                 float totalDelay = despawnDelay + this.despawnDelay + extraTime;
                 while (totalDelay > 0f) {

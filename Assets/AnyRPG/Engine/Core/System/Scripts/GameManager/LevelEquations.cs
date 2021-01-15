@@ -162,7 +162,7 @@ namespace AnyRPG {
                 }
             }
 
-            return SystemConfigurationManager.MyInstance.MyStatBudgetPerLevel + extraStatPerLevel;
+            return SystemConfigurationManager.MyInstance.StatBudgetPerLevel + extraStatPerLevel;
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {

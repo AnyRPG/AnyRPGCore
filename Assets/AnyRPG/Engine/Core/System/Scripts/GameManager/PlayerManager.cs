@@ -252,21 +252,21 @@ namespace AnyRPG {
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (PlayerUnitSpawned == false) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.LevelUpAbility == null) {
                 return;
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-                abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.MyLevelUpAbility;
+                abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LevelUpAbility;
 
-                SystemConfigurationManager.MyInstance.MyLevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
+                SystemConfigurationManager.MyInstance.LevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
             }
         }
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (PlayerUnitSpawned == false) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.DeathAbility == null) {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
@@ -420,7 +420,7 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == false) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == false) {
                 playerUnitMovementController.Init();
             } else {
                 DisableMovementControllers();

@@ -11,7 +11,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class NameChangeProps : InteractableOptionProps {
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeInteractionPanelImage : base.Icon); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.NameChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.NameChangeInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyNameChangeNamePlateImage : base.NamePlateImage); }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

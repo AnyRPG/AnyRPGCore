@@ -16,8 +16,8 @@ namespace AnyRPG {
 
         private Faction faction;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyFactionChangeNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.FactionChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.FactionChangeInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.FactionChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.FactionChangeNamePlateImage : base.NamePlateImage); }
         public Faction Faction { get => faction; set => faction = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

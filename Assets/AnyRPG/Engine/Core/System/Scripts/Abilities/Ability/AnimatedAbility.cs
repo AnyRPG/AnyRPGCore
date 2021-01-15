@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {
-            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && IsAutoAttack == true) {
+            if (SystemConfigurationManager.MyInstance.AllowAutoAttack == true && IsAutoAttack == true) {
 
                 /*
                 if (PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.MyInstance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
@@ -106,7 +106,7 @@ namespace AnyRPG {
         }
 
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
-            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && IsAutoAttack == true) {
+            if (SystemConfigurationManager.MyInstance.AllowAutoAttack == true && IsAutoAttack == true) {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {

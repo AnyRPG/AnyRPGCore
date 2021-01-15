@@ -28,8 +28,8 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("BagBarController.Start()");
-            if (SystemConfigurationManager.MyInstance.MySystemBarMainMenu != null) {
-                mainMenuButton.Icon = SystemConfigurationManager.MyInstance.MySystemBarMainMenu;
+            if (SystemConfigurationManager.MyInstance.SystemBarMainMenu != null) {
+                mainMenuButton.Icon = SystemConfigurationManager.MyInstance.SystemBarMainMenu;
             }
             if (SystemConfigurationManager.MyInstance.SystemBarAbilityBook != null) {
                 abilityBookButton.Icon = SystemConfigurationManager.MyInstance.SystemBarAbilityBook;

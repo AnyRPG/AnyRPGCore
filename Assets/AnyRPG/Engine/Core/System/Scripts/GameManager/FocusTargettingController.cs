@@ -47,7 +47,7 @@ namespace AnyRPG {
                 }
             }
             */
-            foreach (ProjectorColorMapNode colorMapNode in SystemConfigurationManager.MyInstance.MyFocusProjectorColorMap) {
+            foreach (ProjectorColorMapNode colorMapNode in SystemConfigurationManager.MyInstance.FocusProjectorColorMap) {
                 colorDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor)] = colorMapNode.MyProjectorMaterial;
                 //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
             }
@@ -140,7 +140,7 @@ namespace AnyRPG {
                     targetingProjector.material = colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)];
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
                 } else {
-                    targetingProjector.material = SystemConfigurationManager.MyInstance.MyDefaultCastingLightProjector;
+                    targetingProjector.material = SystemConfigurationManager.MyInstance.DefaultCastingLightProjector;
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color " + ColorUtility.ToHtmlStringRGBA(materialColor) + ", setting to default casting projector");
                 }
             }

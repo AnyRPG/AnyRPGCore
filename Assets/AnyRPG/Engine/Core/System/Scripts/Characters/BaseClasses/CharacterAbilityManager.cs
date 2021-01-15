@@ -698,7 +698,7 @@ namespace AnyRPG {
             abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
-            if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
+            if (SystemConfigurationManager.MyInstance.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
             } else {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
@@ -1718,7 +1718,7 @@ namespace AnyRPG {
         public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
             if (baseCharacter?.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (SystemConfigurationManager.MyInstance.MyAllowAutoAttack == true && baseAbility.IsAutoAttack) {
+                if (SystemConfigurationManager.MyInstance.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
                     return;
                 }
             }

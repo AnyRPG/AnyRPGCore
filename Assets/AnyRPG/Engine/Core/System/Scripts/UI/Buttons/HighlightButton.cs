@@ -45,12 +45,12 @@ namespace AnyRPG {
 
             if (SystemConfigurationManager.MyInstance != null) {
                 if (highlightImage != null) {
-                    highlightColor = SystemConfigurationManager.MyInstance.MyDefaultUIColor;
+                    highlightColor = SystemConfigurationManager.MyInstance.DefaultUIColor;
                 }
                 if (highlightButton != null) {
                     Image highlightButtonImage = highlightButton.GetComponent<Image>();
                     if (highlightButtonImage != null) {
-                        highlightButtonImage.color = SystemConfigurationManager.MyInstance.MyDefaultUISolidColor;
+                        highlightButtonImage.color = SystemConfigurationManager.MyInstance.DefaultUISolidColor;
                     }
                 }
             }

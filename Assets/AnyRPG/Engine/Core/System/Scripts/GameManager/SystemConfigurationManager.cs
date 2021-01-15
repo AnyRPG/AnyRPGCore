@@ -452,39 +452,39 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         public BaseAbility LootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
-        public Material MyTemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
-        public BaseAbility MyLevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
-        public Sprite MyQuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
-        public Sprite MyQuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }
-        public Sprite MyDialogInteractionPanelImage { get => dialogInteractionPanelImage; set => dialogInteractionPanelImage = value; }
-        public Sprite MyDialogNamePlateImage { get => dialogNamePlateImage; set => dialogNamePlateImage = value; }
-        public Sprite MyNameChangeInteractionPanelImage { get => nameChangeInteractionPanelImage; set => nameChangeInteractionPanelImage = value; }
+        public Material TemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
+        public BaseAbility LevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
+        public Sprite QuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
+        public Sprite QuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }
+        public Sprite DialogInteractionPanelImage { get => dialogInteractionPanelImage; set => dialogInteractionPanelImage = value; }
+        public Sprite DialogNamePlateImage { get => dialogNamePlateImage; set => dialogNamePlateImage = value; }
+        public Sprite NameChangeInteractionPanelImage { get => nameChangeInteractionPanelImage; set => nameChangeInteractionPanelImage = value; }
         public Sprite MyNameChangeNamePlateImage { get => nameChangeNamePlateImage; set => nameChangeNamePlateImage = value; }
-        public Sprite MyCutSceneInteractionPanelImage { get => cutSceneInteractionPanelImage; set => cutSceneInteractionPanelImage = value; }
-        public Sprite MyCutSceneNamePlateImage { get => cutSceneNamePlateImage; set => cutSceneNamePlateImage = value; }
-        public Sprite MyLootableCharacterInteractionPanelImage { get => lootableCharacterInteractionPanelImage; set => lootableCharacterInteractionPanelImage = value; }
-        public Sprite MyLootableCharacterNamePlateImage { get => lootableCharacterNamePlateImage; set => lootableCharacterNamePlateImage = value; }
-        public Sprite MyCharacterCreatorInteractionPanelImage { get => characterCreatorInteractionPanelImage; set => characterCreatorInteractionPanelImage = value; }
-        public Sprite MyCharacterCreatorNamePlateImage { get => characterCreatorNamePlateImage; set => characterCreatorNamePlateImage = value; }
-        public Sprite MyFactionChangeInteractionPanelImage { get => factionChangeInteractionPanelImage; set => factionChangeInteractionPanelImage = value; }
-        public Sprite MyFactionChangeNamePlateImage { get => factionChangeNamePlateImage; set => factionChangeNamePlateImage = value; }
-        public Sprite MyClassChangeInteractionPanelImage { get => classChangeInteractionPanelImage; set => classChangeInteractionPanelImage = value; }
-        public Sprite MyClassChangeNamePlateImage { get => classChangeNamePlateImage; set => classChangeNamePlateImage = value; }
-        public Sprite MyPortalInteractionPanelImage { get => portalInteractionPanelImage; set => portalInteractionPanelImage = value; }
-        public Sprite MyPortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
-        public Sprite MySkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
-        public Sprite MySkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
+        public Sprite CutSceneInteractionPanelImage { get => cutSceneInteractionPanelImage; set => cutSceneInteractionPanelImage = value; }
+        public Sprite CutSceneNamePlateImage { get => cutSceneNamePlateImage; set => cutSceneNamePlateImage = value; }
+        public Sprite LootableCharacterInteractionPanelImage { get => lootableCharacterInteractionPanelImage; set => lootableCharacterInteractionPanelImage = value; }
+        public Sprite LootableCharacterNamePlateImage { get => lootableCharacterNamePlateImage; set => lootableCharacterNamePlateImage = value; }
+        public Sprite CharacterCreatorInteractionPanelImage { get => characterCreatorInteractionPanelImage; set => characterCreatorInteractionPanelImage = value; }
+        public Sprite CharacterCreatorNamePlateImage { get => characterCreatorNamePlateImage; set => characterCreatorNamePlateImage = value; }
+        public Sprite FactionChangeInteractionPanelImage { get => factionChangeInteractionPanelImage; set => factionChangeInteractionPanelImage = value; }
+        public Sprite FactionChangeNamePlateImage { get => factionChangeNamePlateImage; set => factionChangeNamePlateImage = value; }
+        public Sprite ClassChangeInteractionPanelImage { get => classChangeInteractionPanelImage; set => classChangeInteractionPanelImage = value; }
+        public Sprite ClassChangeNamePlateImage { get => classChangeNamePlateImage; set => classChangeNamePlateImage = value; }
+        public Sprite PortalInteractionPanelImage { get => portalInteractionPanelImage; set => portalInteractionPanelImage = value; }
+        public Sprite PortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
+        public Sprite SkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
+        public Sprite SkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
         public BaseAbility DeathAbility { get => deathAbility; set => deathAbility = value; }
-        public Sprite MyMultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
-        public float MyDefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
-        public Sprite MyBankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
-        public Sprite MyBankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
-        public Sprite MyVendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
-        public Sprite MyVendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
+        public Sprite MultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
+        public float DefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
+        public Sprite BankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
+        public Sprite BankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
+        public Sprite VendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
+        public Sprite VendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
         public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
         public string GameName { get => gameName; set => gameName = value; }
         public string GameVersion { get => gameVersion; set => gameVersion = value; }
-        public Sprite MySystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
+        public Sprite SystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
         public Sprite SystemBarAbilityBook { get => systemBarAbilityBook; set => systemBarAbilityBook = value; }
         public Sprite SystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
         public Sprite SystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
@@ -493,24 +493,24 @@ namespace AnyRPG {
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
         public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
-        public RuntimeAnimatorController MyDefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
-        public AnimationProfile MyDefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
-        public Material MyDefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
-        public Color MyDefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
-        public Color MyDefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
-        public Color MyDefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
-        public List<string> MyLoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
-        public int MyMaxLevel { get => maxLevel; set => maxLevel = value; }
-        public float MyStatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
-        public CurrencyGroup MyDefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
-        public float MyVendorPriceMultiplier { get => vendorPriceMultiplier; set => vendorPriceMultiplier = value; }
-        public float MyWeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
-        public string MyDefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
-        public AnimationProfile MySystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
-        public List<ProjectorColorMapNode> MyFocusProjectorColorMap { get => focusProjectorColorMap; set => focusProjectorColorMap = value; }
-        public bool MyUseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
-        public bool MyUseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
-        public bool MyAllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
+        public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
+        public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
+        public Material DefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
+        public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
+        public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
+        public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
+        public List<string> LoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
+        public int MaxLevel { get => maxLevel; set => maxLevel = value; }
+        public float StatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
+        public CurrencyGroup DefaultCurrencyGroup { get => defaultCurrencyGroup; set => defaultCurrencyGroup = value; }
+        public float VendorPriceMultiplier { get => vendorPriceMultiplier; set => vendorPriceMultiplier = value; }
+        public float WeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
+        public string DefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
+        public AnimationProfile SystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
+        public List<ProjectorColorMapNode> FocusProjectorColorMap { get => focusProjectorColorMap; set => focusProjectorColorMap = value; }
+        public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
+        public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
+        public bool AllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
         public int XpRequiredPerLevel { get => xpRequiredPerLevel; set => xpRequiredPerLevel = value; }
         public int BaseQuestXP { get => baseQuestXP; set => baseQuestXP = value; }
         public int QuestXPPerLevel { get => questXPPerLevel; set => questXPPerLevel = value; }

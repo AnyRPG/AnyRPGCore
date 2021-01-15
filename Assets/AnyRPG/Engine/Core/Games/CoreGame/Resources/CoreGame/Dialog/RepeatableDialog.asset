@@ -26,7 +26,7 @@ MonoBehaviour:
   - startTime: 0
     showTime: 0
     description: This is a repeatable dialog.
-    nextOption: Oh Really?
+    nextOption: Repeatable?
   - startTime: 0
     showTime: 0
     description: Yes, you can repeat it as many times as you want

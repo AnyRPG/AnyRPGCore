@@ -201,7 +201,7 @@ namespace AnyRPG {
             //InventoryManager.MyInstance.RemoveItem(item);
             item.MySlot.RemoveItem(item);
 
-            if (SystemConfigurationManager.MyInstance.VendorAudioProfile != null && SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip != null) {
+            if (SystemConfigurationManager.MyInstance?.VendorAudioProfile?.AudioClip != null) {
                 AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);

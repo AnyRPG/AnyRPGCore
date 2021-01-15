@@ -18,8 +18,8 @@ namespace AnyRPG {
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyVendorInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyVendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyVendorNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.VendorInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.VendorInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.VendorNamePlateImage != null ? SystemConfigurationManager.MyInstance.VendorNamePlateImage : base.NamePlateImage); }
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

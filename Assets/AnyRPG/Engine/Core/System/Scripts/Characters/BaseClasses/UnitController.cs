@@ -359,7 +359,7 @@ namespace AnyRPG {
         private void SetPreviewMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
             useAgent = false;
             DisableAgent();
 
@@ -398,7 +398,7 @@ namespace AnyRPG {
         public void SetPetMode(BaseCharacter masterBaseCharacter, bool enableMode = false) {
             //Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
             SetUnitControllerMode(UnitControllerMode.Pet);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
                 //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
@@ -435,7 +435,7 @@ namespace AnyRPG {
             namePlateController.SetNamePlatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
             if (myCollider != null) {
                 myCollider.isTrigger = false;
             }
@@ -468,7 +468,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
             }
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl) {
                 KeyBindManager.MyInstance.SendKeyBindEvents();
             }
         }
@@ -490,7 +490,7 @@ namespace AnyRPG {
         }
 
         private void EnableAICommon() {
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.MyDefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
             if (unitProfile != null && unitProfile.IsMobile == true) {

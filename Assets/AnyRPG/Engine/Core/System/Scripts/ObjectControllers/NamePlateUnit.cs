@@ -129,7 +129,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
-                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MyMultipleInteractionNamePlateImage;
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MultipleInteractionNamePlateImage;
                 }
             }
         }

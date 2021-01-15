@@ -752,7 +752,7 @@ namespace AnyRPG {
 
             CameraManager.MyInstance.SwitchToMainCamera();
             CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == true) {
                 PlayerManager.MyInstance.EnableMovementControllers();
             }
 
@@ -762,7 +762,7 @@ namespace AnyRPG {
 
         public void HandleDeActivateMountedState() {
 
-            if (SystemConfigurationManager.MyInstance.MyUseThirdPartyMovementControl == true) {
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == true) {
                 PlayerManager.MyInstance.DisableMovementControllers();
             }
             PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);

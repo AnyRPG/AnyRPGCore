@@ -119,7 +119,7 @@ namespace AnyRPG {
                 }
                 PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
-            if (SystemConfigurationManager.MyInstance.VendorAudioProfile != null && SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip != null) {
+            if (SystemConfigurationManager.MyInstance?.VendorAudioProfile?.AudioClip != null) {
                 AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip);
             }
             MessageFeedManager.MyInstance.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);

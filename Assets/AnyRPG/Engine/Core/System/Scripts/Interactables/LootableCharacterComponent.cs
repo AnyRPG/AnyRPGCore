@@ -116,7 +116,7 @@ namespace AnyRPG {
                 lootCount = GetLootCount();
             }
             lootCalculated = true;
-            if (lootCount > 0) {
+            if (lootCount > 0 && SystemConfigurationManager.MyInstance?.LootSparkleAbility != null) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
                 //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);

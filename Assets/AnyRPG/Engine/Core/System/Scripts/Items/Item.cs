@@ -181,9 +181,9 @@ namespace AnyRPG {
                     if (currencyGroup != null) {
                         int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
                         currency = currencyGroup.MyBaseCurrency;
-                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.MyInstance.VendorPriceMultiplier);
                     } else {
-                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.MyVendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.MyInstance.VendorPriceMultiplier);
                     }
                 }
                 return new KeyValuePair<Currency, int>(currency, sellAmount);

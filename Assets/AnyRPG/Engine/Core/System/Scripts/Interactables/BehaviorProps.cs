@@ -20,8 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool useBehaviorCopy = false;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.MyDialogInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.MyDialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.MyDialogNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.DialogInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.DialogInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.DialogNamePlateImage != null ? SystemConfigurationManager.MyInstance.DialogNamePlateImage : base.NamePlateImage); }
 
         public bool UseBehaviorCopy { get => useBehaviorCopy; }
         public List<string> BehaviorNames { get => behaviorNames; }
