@@ -82,7 +82,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="targetCharacter"></param>
         /// <returns></returns>
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             if (ProcessFactionValue(factionValue) == true && baseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;

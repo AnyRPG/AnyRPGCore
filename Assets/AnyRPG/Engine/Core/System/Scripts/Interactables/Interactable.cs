@@ -151,6 +151,7 @@ namespace AnyRPG {
         public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public DialogController DialogController { get => dialogController; }
         public virtual bool CombatOnly { get => false; }
+        public virtual bool NonCombatOptionsAvailable { get => true; }
 
         public override bool MyPrerequisitesMet {
             get {

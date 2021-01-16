@@ -212,9 +212,9 @@ namespace AnyRPG {
         }
 
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
-            bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck, factionValue);
+            bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
             if (returnValue == false) {
                 return false;
             }

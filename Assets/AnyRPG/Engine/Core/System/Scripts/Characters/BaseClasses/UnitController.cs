@@ -283,6 +283,16 @@ namespace AnyRPG {
             }
         }
 
+        public override bool NonCombatOptionsAvailable {
+            get {
+                if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
+                    return false;
+                }
+                return base.NonCombatOptionsAvailable;
+            }
+        }
+
+
         public override bool CombatOnly {
             get {
                 if (unitControllerMode == UnitControllerMode.Player) {
@@ -1563,9 +1573,7 @@ namespace AnyRPG {
         public void NotifyOnReviveComplete() {
             FreezeRotation();
             InitializeNamePlate();
-            //UpdateNamePlateImage();
             CharacterUnit.HandleReviveComplete();
-
             OnReviveComplete();
         }
         public void NotifyOnLevelChanged(int newLevel) {

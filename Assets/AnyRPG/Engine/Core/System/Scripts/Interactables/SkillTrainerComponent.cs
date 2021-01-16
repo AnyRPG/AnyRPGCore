@@ -78,9 +78,9 @@ namespace AnyRPG {
             return (optionCount == 0 ? 0 : 1);
         }
 
-        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+        public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
-            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck, factionValue)) ? true : false);
+            bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck)) ? true : false);
             //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
             return returnValue;
         }

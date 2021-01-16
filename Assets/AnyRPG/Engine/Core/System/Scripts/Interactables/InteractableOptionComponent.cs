@@ -109,7 +109,14 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f) {
+        public virtual bool NonCombatOptionsAvailable() {
+            if (interactable.NonCombatOptionsAvailable == false) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.CanInteract(" + processRangeCheck + ", " + passedRangeCheck + ", " + factionValue + ")");
             if (processRangeCheck == true && passedRangeCheck == false) {
                 //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): range check failed");
@@ -121,6 +128,9 @@ namespace AnyRPG {
             }
             if (ProcessCombatOnly() == false) {
                 //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact(): combatOnly check failed");
+                return false;
+            }
+            if (processNonCombatCheck == true && NonCombatOptionsAvailable() == false) {
                 return false;
             }
 
